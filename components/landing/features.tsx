@@ -49,7 +49,7 @@ export function Features() {
           {features.map((feature) => (
             <div
               key={feature.tag}
-              className="group relative rounded-xl border border-gray-100 p-6 transition-all hover:border-gray-200 hover:shadow-md hover:shadow-gray-100/50 sm:p-7"
+              className="group relative rounded-xl border border-gray-100 bg-white p-6 transition-all hover:border-gray-200 hover:shadow-lg hover:shadow-gray-100/60 sm:p-7"
             >
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2.5">

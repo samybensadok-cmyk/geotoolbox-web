@@ -1,6 +1,6 @@
 export function HeroMockup() {
   return (
-    <div className="rounded-xl border border-gray-200/80 bg-white shadow-2xl shadow-gray-300/30 overflow-hidden ring-1 ring-gray-900/5">
+    <div className="rounded-xl border border-gray-200/60 bg-white shadow-[0_20px_70px_-10px_rgba(0,0,0,0.15)] overflow-hidden ring-1 ring-gray-900/5">
       {/* Browser chrome */}
       <div className="flex items-center gap-2 border-b border-gray-100 bg-gradient-to-b from-gray-50 to-gray-50/80 px-4 py-2">
         <div className="flex gap-1.5">
