@@ -9,31 +9,39 @@ export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-gray-100 bg-white/80 backdrop-blur-sm">
+    <header className="sticky top-0 z-50 w-full border-b border-gray-100 bg-white/90 backdrop-blur-md">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-6">
-        {/* Logo — serif GEO as brand mark */}
+        {/* Logo */}
         <Link href="/" className="flex items-center gap-1.5">
           <span className="font-display text-xl tracking-tight text-gray-900">GEO</span>
           <span className="text-[13px] font-medium text-gray-400">Toolbox</span>
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden items-center gap-7 md:flex">
+        <nav className="hidden items-center gap-1 md:flex">
           {siteConfig.nav.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="text-[13px] font-medium text-gray-500 transition-colors hover:text-gray-900"
+              className="rounded-md px-3 py-1.5 text-[13px] font-medium text-gray-500 transition-colors hover:text-gray-900 hover:bg-gray-50"
             >
               {item.label}
             </Link>
           ))}
-          <Link
-            href={siteConfig.appUrl}
-            className="rounded-full bg-gray-900 px-4 py-1.5 text-[13px] font-medium text-white transition-colors hover:bg-gray-800"
-          >
-            Start free
-          </Link>
+          <div className="ml-3 flex items-center gap-2">
+            <Link
+              href={siteConfig.appUrl}
+              className="rounded-full border border-gray-200 px-3.5 py-1.5 text-[13px] font-medium text-gray-600 transition-colors hover:border-gray-300 hover:text-gray-900"
+            >
+              Log in
+            </Link>
+            <Link
+              href={siteConfig.appUrl}
+              className="rounded-full bg-gray-900 px-3.5 py-1.5 text-[13px] font-medium text-white transition-colors hover:bg-gray-800"
+            >
+              Start free
+            </Link>
+          </div>
         </nav>
 
         {/* Mobile Toggle */}
@@ -61,13 +69,22 @@ export function Header() {
                 {item.label}
               </Link>
             ))}
-            <Link
-              href={siteConfig.appUrl}
-              onClick={() => setMobileOpen(false)}
-              className="mt-2 rounded-full bg-gray-900 px-4 py-2 text-center text-sm font-medium text-white"
-            >
-              Start free
-            </Link>
+            <div className="mt-2 flex flex-col gap-2">
+              <Link
+                href={siteConfig.appUrl}
+                onClick={() => setMobileOpen(false)}
+                className="rounded-full border border-gray-200 py-2 text-center text-sm font-medium text-gray-600"
+              >
+                Log in
+              </Link>
+              <Link
+                href={siteConfig.appUrl}
+                onClick={() => setMobileOpen(false)}
+                className="rounded-full bg-gray-900 py-2 text-center text-sm font-medium text-white"
+              >
+                Start free
+              </Link>
+            </div>
           </nav>
         </div>
       )}
