@@ -34,7 +34,7 @@ export function Features() {
               tag: "Intel",
             },
           ].map((feature) => (
-            <div key={feature.tag} className="border-t border-gray-100 pt-6">
+            <div key={feature.tag} className="border-t border-gray-100 pt-6 transition-colors hover:border-accent-200">
               <span className="text-xs font-semibold tracking-wider text-accent-600 uppercase">
                 {feature.tag}
               </span>

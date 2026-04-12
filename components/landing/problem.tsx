@@ -24,7 +24,7 @@ export function Problem() {
               body: "Google Analytics, Search Console, Ahrefs — none of them track AI citations. It's a total blind spot.",
             },
           ].map((item, i) => (
-            <div key={i} className="border-t border-gray-800 pt-6">
+            <div key={i} className="border-t border-accent-900/40 pt-6">
               <h3 className="text-[15px] font-semibold text-white">
                 {item.title}
               </h3>
