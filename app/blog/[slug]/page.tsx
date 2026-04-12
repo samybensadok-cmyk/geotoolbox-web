@@ -4,7 +4,6 @@ import { MDXRemote } from "next-mdx-remote/rsc"
 import rehypeShiki from "@shikijs/rehype"
 import { getPostBySlug, getAllPosts } from "@/lib/content"
 import { mdxComponents } from "@/components/mdx"
-import { Badge } from "@/components/ui/badge"
 import { formatDate } from "@/lib/utils"
 import { siteConfig } from "@/lib/config"
 import Link from "next/link"
@@ -54,30 +53,36 @@ export default async function BlogPost({
   if (!post) notFound()
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
+    <div className="mx-auto max-w-2xl px-6 py-16 sm:py-24">
       {/* Back link */}
       <Link
         href="/blog"
-        className="inline-flex items-center gap-1 text-sm text-text-muted hover:text-text-primary transition-colors mb-8"
+        className="inline-flex items-center gap-1.5 text-sm text-slate-400 hover:text-slate-700 transition-colors mb-10"
       >
-        &larr; Back to blog
+        <span aria-hidden="true">&larr;</span>
+        Blog
       </Link>
 
       {/* Post header */}
-      <header className="mb-12">
+      <header className="mb-14">
         {post.tags.length > 0 && (
-          <div className="mb-4 flex flex-wrap gap-2">
+          <div className="mb-4 flex flex-wrap gap-3">
             {post.tags.map((tag) => (
-              <Badge key={tag}>{tag}</Badge>
+              <span
+                key={tag}
+                className="text-xs font-medium tracking-wider text-accent-600 uppercase"
+              >
+                {tag}
+              </span>
             ))}
           </div>
         )}
 
-        <h1 className="text-3xl font-bold tracking-tight text-text-primary sm:text-4xl lg:text-[42px] lg:leading-[1.15]">
+        <h1 className="font-display text-[clamp(1.75rem,4vw,2.75rem)] leading-[1.15] text-slate-900">
           {post.title}
         </h1>
 
-        <div className="mt-4 flex items-center gap-3 text-sm text-text-muted">
+        <div className="mt-5 flex items-center gap-3 text-sm text-slate-400">
           <span>{post.author}</span>
           <span>&middot;</span>
           <time dateTime={post.date}>{formatDate(post.date)}</time>

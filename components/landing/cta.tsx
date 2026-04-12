@@ -1,27 +1,23 @@
-import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
 export function CTA() {
   return (
-    <section className="relative overflow-hidden py-24 px-6">
-      {/* Gradient background */}
-      <div className="absolute inset-0 -z-10 bg-gradient-to-br from-brand-600 via-purple-600 to-blue-600" />
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.1),transparent_70%)]" />
-
-      <div className="mx-auto max-w-3xl text-center">
-        <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-          Start tracking your AI visibility
+    <section className="border-t border-slate-200 px-6 py-24 sm:py-32">
+      <div className="mx-auto max-w-6xl text-center">
+        <h2 className="font-display text-[clamp(1.75rem,4vw,2.75rem)] leading-[1.15] text-slate-900">
+          Stop guessing what AI<br className="hidden sm:block" /> says about your brand
         </h2>
-        <p className="mt-4 text-lg text-white/80">
-          See what AI engines say about your brand — before your competitors do.
+        <p className="mx-auto mt-5 max-w-lg text-lg text-slate-500">
+          Run your first scan in under a minute. See your visibility score, competitor benchmarks, and citability analysis — free.
         </p>
-        <div className="mt-8">
-          <Button
+        <div className="mt-10">
+          <Link
             href="/app"
-            size="lg"
-            className="bg-white text-brand-700 hover:bg-white/90 hover:shadow-white/25"
+            className="inline-flex items-center gap-2 bg-slate-900 text-cream px-8 py-3.5 text-sm font-medium transition-colors hover:bg-slate-800"
           >
-            Try GEO Toolbox Free
-          </Button>
+            Scan your brand now
+            <span aria-hidden="true">&rarr;</span>
+          </Link>
         </div>
       </div>
     </section>

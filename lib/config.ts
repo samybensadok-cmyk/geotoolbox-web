@@ -5,12 +5,11 @@ export const siteConfig = {
   appUrl: "/app",
   author: "Samy Mahmoudi",
   links: {
-    twitter: "https://twitter.com/stubgroup",
-    github: "https://github.com/samy-sg/geotoolbox-web",
+    twitter: "https://twitter.com/geotoolbox",
+    github: "https://github.com/samybensadok-cmyk/geotoolbox-web",
   },
   nav: [
     { label: "Features", href: "/#features" },
     { label: "Blog", href: "/blog" },
-    { label: "About", href: "/about" },
   ],
 }

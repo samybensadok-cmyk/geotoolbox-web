@@ -1,13 +1,12 @@
 import type { Metadata } from "next"
 import { getAllPosts, getAllTags } from "@/lib/content"
 import { BlogCard } from "@/components/blog/blog-card"
-import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 
 export const metadata: Metadata = {
   title: "Blog",
   description:
-    "Insights on Generative Engine Optimization, AI visibility, and the future of search.",
+    "Research and insights on Generative Engine Optimization, AI visibility, and the future of search.",
 }
 
 export default function BlogIndex({
@@ -32,36 +31,44 @@ async function BlogIndexInner({
     : allPosts
 
   return (
-    <div className="mx-auto max-w-7xl px-6 py-16 sm:py-24">
+    <div className="mx-auto max-w-6xl px-6 py-16 sm:py-24">
       {/* Header */}
-      <div className="max-w-2xl">
-        <h1 className="text-4xl font-bold tracking-tight text-text-primary">
+      <div className="max-w-xl">
+        <p className="text-sm font-medium tracking-widest text-accent-600 uppercase">
+          Research
+        </p>
+        <h1 className="mt-3 font-display text-[clamp(2rem,4vw,3rem)] leading-[1.1] text-slate-900">
           Blog
         </h1>
-        <p className="mt-4 text-lg text-text-secondary leading-relaxed">
+        <p className="mt-4 text-lg text-slate-500 leading-relaxed">
           Insights on GEO, AI visibility, and the future of search.
         </p>
       </div>
 
       {/* Tag Filter */}
       {allTags.length > 0 && (
-        <div className="mt-8 flex flex-wrap gap-2">
-          <Link href="/blog">
-            <Badge
-              variant={!activeTag ? "default" : "outline"}
-              className="cursor-pointer"
-            >
-              All
-            </Badge>
+        <div className="mt-10 flex flex-wrap gap-4">
+          <Link
+            href="/blog"
+            className={`text-sm transition-colors ${
+              !activeTag
+                ? "font-medium text-slate-900"
+                : "text-slate-400 hover:text-slate-700"
+            }`}
+          >
+            All
           </Link>
           {allTags.map((tag) => (
-            <Link key={tag} href={`/blog?tag=${tag}`}>
-              <Badge
-                variant={activeTag === tag ? "default" : "outline"}
-                className="cursor-pointer"
-              >
-                {tag}
-              </Badge>
+            <Link
+              key={tag}
+              href={`/blog?tag=${tag}`}
+              className={`text-sm transition-colors ${
+                activeTag === tag
+                  ? "font-medium text-slate-900"
+                  : "text-slate-400 hover:text-slate-700"
+              }`}
+            >
+              {tag}
             </Link>
           ))}
         </div>
@@ -69,14 +76,14 @@ async function BlogIndexInner({
 
       {/* Posts Grid */}
       {posts.length > 0 ? (
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-14 grid gap-12 sm:grid-cols-2 lg:grid-cols-3">
           {posts.map((post) => (
             <BlogCard key={post.slug} post={post} />
           ))}
         </div>
       ) : (
-        <div className="mt-16 text-center">
-          <p className="text-text-muted">No posts yet. Check back soon!</p>
+        <div className="mt-20">
+          <p className="text-slate-400">No posts yet. Check back soon.</p>
         </div>
       )}
     </div>

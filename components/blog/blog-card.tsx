@@ -1,6 +1,4 @@
 import Link from "next/link"
-import Image from "next/image"
-import { Badge } from "@/components/ui/badge"
 import { formatDate } from "@/lib/utils"
 import type { Post } from "@/lib/content"
 
@@ -8,48 +6,37 @@ export function BlogCard({ post }: { post: Post }) {
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className="group flex flex-col overflow-hidden rounded-xl border border-surface-border bg-surface-secondary transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:border-brand-200"
+      className="group flex flex-col"
     >
-      {/* Image */}
-      {post.image && (
-        <div className="aspect-video overflow-hidden">
-          <Image
-            src={post.image}
-            alt={post.title}
-            width={640}
-            height={360}
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-          />
+      {/* Tags */}
+      {post.tags.length > 0 && (
+        <div className="mb-3 flex gap-2">
+          {post.tags.slice(0, 2).map((tag) => (
+            <span
+              key={tag}
+              className="text-xs font-medium tracking-wider text-accent-600 uppercase"
+            >
+              {tag}
+            </span>
+          ))}
         </div>
       )}
 
-      {/* Content */}
-      <div className="flex flex-1 flex-col p-6">
-        {/* Tags */}
-        {post.tags.length > 0 && (
-          <div className="mb-3 flex flex-wrap gap-2">
-            {post.tags.slice(0, 2).map((tag) => (
-              <Badge key={tag}>{tag}</Badge>
-            ))}
-          </div>
-        )}
+      {/* Title */}
+      <h3 className="text-lg font-semibold text-slate-900 leading-snug group-hover:text-accent-700 transition-colors line-clamp-2">
+        {post.title}
+      </h3>
 
-        {/* Title */}
-        <h3 className="mb-2 text-lg font-semibold text-text-primary line-clamp-2 group-hover:text-brand-600 transition-colors">
-          {post.title}
-        </h3>
+      {/* Excerpt */}
+      <p className="mt-2 text-sm text-slate-500 leading-relaxed line-clamp-2">
+        {post.description}
+      </p>
 
-        {/* Excerpt */}
-        <p className="mb-4 text-sm text-text-secondary line-clamp-2 leading-relaxed">
-          {post.description}
-        </p>
-
-        {/* Meta */}
-        <div className="mt-auto flex items-center gap-3 text-xs text-text-muted">
-          <time dateTime={post.date}>{formatDate(post.date)}</time>
-          <span>&middot;</span>
-          <span>{post.readingTime} min read</span>
-        </div>
+      {/* Meta */}
+      <div className="mt-4 flex items-center gap-3 text-xs text-slate-400">
+        <time dateTime={post.date}>{formatDate(post.date)}</time>
+        <span>&middot;</span>
+        <span>{post.readingTime} min</span>
       </div>
     </Link>
   )

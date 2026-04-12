@@ -1,41 +1,58 @@
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import Link from "next/link"
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden">
-      {/* Gradient background */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-b from-brand-50/50 via-transparent to-transparent dark:from-brand-950/20" />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 h-[500px] w-[800px] rounded-full bg-brand-400/10 blur-3xl" />
-      </div>
+    <section className="relative px-6 pt-20 pb-28 sm:pt-28 sm:pb-36 lg:pt-36 lg:pb-44">
+      <div className="mx-auto max-w-6xl">
+        <div className="max-w-3xl">
+          {/* Eyebrow */}
+          <p className="animate-fade-up text-sm font-medium tracking-widest text-accent-600 uppercase">
+            Generative Engine Optimization
+          </p>
 
-      <div className="mx-auto max-w-7xl px-6 py-24 text-center sm:py-32 lg:py-40">
-        <div className="animate-fade-up">
-          <Badge variant="outline" className="mb-6">
-            Now in Beta
-          </Badge>
+          {/* Headline — serif for authority */}
+          <h1 className="animate-fade-up-delay-1 mt-5 font-display text-[clamp(2.5rem,6vw,4.5rem)] leading-[1.08] text-slate-900">
+            AI search is your
+            <br />
+            biggest blind spot
+          </h1>
+
+          {/* Subhead */}
+          <p className="animate-fade-up-delay-2 mt-6 max-w-xl text-lg leading-relaxed text-slate-500">
+            ChatGPT, Perplexity, and Gemini are answering questions about your brand right now.
+            You have no idea what they&apos;re saying. We fix that.
+          </p>
+
+          {/* CTAs */}
+          <div className="animate-fade-up-delay-3 mt-10 flex items-center gap-6">
+            <Link
+              href="/app"
+              className="inline-flex items-center gap-2 bg-slate-900 text-cream px-6 py-3 text-sm font-medium transition-colors hover:bg-slate-800"
+            >
+              Scan your brand
+              <span aria-hidden="true">&rarr;</span>
+            </Link>
+            <Link
+              href="/blog"
+              className="text-sm text-slate-500 underline underline-offset-4 decoration-slate-300 hover:text-slate-900 hover:decoration-slate-500 transition-colors"
+            >
+              Read the research
+            </Link>
+          </div>
         </div>
 
-        <h1 className="animate-fade-up mx-auto max-w-4xl text-4xl font-bold tracking-tight text-text-primary sm:text-5xl lg:text-[56px] lg:leading-[1.1]">
-          See How AI Engines{" "}
-          <span className="bg-gradient-to-r from-brand-500 via-purple-500 to-blue-500 bg-clip-text text-transparent">
-            See Your Brand
-          </span>
-        </h1>
-
-        <p className="animate-fade-up-delay mx-auto mt-6 max-w-2xl text-lg text-text-secondary leading-relaxed">
-          Track your visibility across ChatGPT, Perplexity, Gemini, Claude, and more.
-          Know when AI recommends you — and when it doesn&apos;t.
-        </p>
-
-        <div className="animate-fade-up-delay-2 mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <Button href="/app" size="lg">
-            Try It Free
-          </Button>
-          <Button href="/blog" variant="outline" size="lg">
-            Read the Blog
-          </Button>
+        {/* Metric strip — social proof, data-forward */}
+        <div className="animate-fade-up-delay-3 mt-20 flex flex-wrap gap-x-12 gap-y-4 border-t border-slate-200 pt-8">
+          {[
+            { value: "7", label: "AI engines scanned" },
+            { value: "830+", label: "brand scans run" },
+            { value: "19", label: "citability signals" },
+          ].map((stat) => (
+            <div key={stat.label} className="flex items-baseline gap-2">
+              <span className="font-display text-3xl text-slate-900">{stat.value}</span>
+              <span className="text-sm text-slate-400">{stat.label}</span>
+            </div>
+          ))}
         </div>
       </div>
     </section>
