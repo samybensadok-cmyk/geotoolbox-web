@@ -70,7 +70,7 @@ export default function RootLayout({
       lang="en"
       className={`${dmSans.variable} ${dmMono.variable} ${instrumentSerif.variable} h-full`}
     >
-      <body className="min-h-full flex flex-col bg-cream text-slate-900 antialiased">
+      <body className="min-h-full flex flex-col antialiased">
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />

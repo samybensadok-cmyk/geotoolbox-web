@@ -54,35 +54,30 @@ export default async function BlogPost({
 
   return (
     <div className="mx-auto max-w-2xl px-6 py-16 sm:py-24">
-      {/* Back link */}
       <Link
         href="/blog"
-        className="inline-flex items-center gap-1.5 text-sm text-slate-400 hover:text-slate-700 transition-colors mb-10"
+        className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-600 transition-colors mb-10"
       >
         <span aria-hidden="true">&larr;</span>
         Blog
       </Link>
 
-      {/* Post header */}
-      <header className="mb-14">
+      <header className="mb-12">
         {post.tags.length > 0 && (
-          <div className="mb-4 flex flex-wrap gap-3">
+          <div className="mb-3 flex flex-wrap gap-3">
             {post.tags.map((tag) => (
-              <span
-                key={tag}
-                className="text-xs font-medium tracking-wider text-accent-600 uppercase"
-              >
+              <span key={tag} className="text-xs font-medium tracking-wider text-accent-600 uppercase">
                 {tag}
               </span>
             ))}
           </div>
         )}
 
-        <h1 className="font-display text-[clamp(1.75rem,4vw,2.75rem)] leading-[1.15] text-slate-900">
+        <h1 className="text-[clamp(1.75rem,4vw,2.5rem)] font-bold leading-[1.15] tracking-tight text-gray-900">
           {post.title}
         </h1>
 
-        <div className="mt-5 flex items-center gap-3 text-sm text-slate-400">
+        <div className="mt-4 flex items-center gap-3 text-sm text-gray-400">
           <span>{post.author}</span>
           <span>&middot;</span>
           <time dateTime={post.date}>{formatDate(post.date)}</time>
@@ -91,7 +86,6 @@ export default async function BlogPost({
         </div>
       </header>
 
-      {/* Post content */}
       <article className="prose max-w-none">
         <MDXRemote
           source={post.content}
@@ -99,15 +93,7 @@ export default async function BlogPost({
           options={{
             mdxOptions: {
               rehypePlugins: [
-                [
-                  rehypeShiki,
-                  {
-                    themes: {
-                      light: "github-light",
-                      dark: "one-dark-pro",
-                    },
-                  },
-                ],
+                [rehypeShiki, { themes: { light: "github-light", dark: "one-dark-pro" } }],
               ],
             },
           }}

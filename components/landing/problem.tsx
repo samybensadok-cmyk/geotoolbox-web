@@ -1,38 +1,34 @@
 export function Problem() {
   return (
-    <section className="bg-slate-900 px-6 py-24 sm:py-32">
+    <section className="bg-gray-950 px-6 py-20 sm:py-28">
       <div className="mx-auto max-w-6xl">
-        <p className="text-sm font-medium tracking-widest text-accent-400 uppercase">
-          The problem
-        </p>
-        <h2 className="mt-4 max-w-2xl font-display text-[clamp(1.75rem,4vw,2.75rem)] leading-[1.15] text-cream">
-          Google Analytics can&apos;t track what AI says about you
+        <h2 className="max-w-lg text-2xl font-bold tracking-tight text-white sm:text-3xl">
+          Your biggest search channel has zero analytics
         </h2>
+        <p className="mt-4 max-w-lg text-base text-gray-400 leading-relaxed">
+          AI engines answer millions of brand queries daily. None of it shows up in your existing tools.
+        </p>
 
-        <div className="mt-16 grid gap-px bg-slate-800 sm:grid-cols-3">
+        <div className="mt-14 grid gap-6 sm:grid-cols-3">
           {[
             {
-              number: "01",
-              title: "Your competitor gets recommended",
-              body: "When users ask AI for solutions in your space, someone else shows up. You don't even know it's happening.",
+              title: "Competitors get recommended",
+              body: "When users ask AI about your category, someone else shows up. You don't even know it's happening.",
             },
             {
-              number: "02",
-              title: "Your info is outdated or wrong",
-              body: "AI engines cite cached content — wrong pricing, old features, missing context. Correcting it requires knowing it's there.",
+              title: "Your info is outdated",
+              body: "AI engines cite cached content — wrong pricing, old features, missing context. You can't fix what you can't see.",
             },
             {
-              number: "03",
-              title: "You're flying completely blind",
-              body: "No analytics tool tracks AI citations. The fastest-growing search channel is invisible to your current stack.",
+              title: "No tool tracks this",
+              body: "Google Analytics, Search Console, Ahrefs — none of them track AI citations. It's a total blind spot.",
             },
-          ].map((item) => (
-            <div key={item.number} className="bg-slate-900 p-8 sm:p-10">
-              <span className="font-mono text-xs text-accent-500">{item.number}</span>
-              <h3 className="mt-4 text-lg font-medium text-cream">
+          ].map((item, i) => (
+            <div key={i} className="border-t border-gray-800 pt-6">
+              <h3 className="text-[15px] font-semibold text-white">
                 {item.title}
               </h3>
-              <p className="mt-3 text-sm leading-relaxed text-slate-400">
+              <p className="mt-2 text-sm leading-relaxed text-gray-500">
                 {item.body}
               </p>
             </div>
