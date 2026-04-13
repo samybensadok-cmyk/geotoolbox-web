@@ -14,7 +14,7 @@ export function HeroMockup() {
       </div>
 
       {/* Dashboard layout — sidebar + main */}
-      <div className="flex min-h-[340px] sm:min-h-[380px]">
+      <div className="flex min-h-[280px] sm:min-h-[380px]">
         {/* Sidebar */}
         <div className="hidden w-44 shrink-0 border-r border-gray-100 bg-gray-50/50 p-3 sm:block">
           <div className="flex items-center gap-2 mb-4">
@@ -44,7 +44,7 @@ export function HeroMockup() {
         </div>
 
         {/* Main content */}
-        <div className="flex-1 p-4 sm:p-5">
+        <div className="flex-1 min-w-0 p-3 sm:p-5">
           {/* Top bar */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
@@ -55,7 +55,7 @@ export function HeroMockup() {
           </div>
 
           {/* Score cards row */}
-          <div className="grid grid-cols-3 gap-3 mb-4">
+          <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-4">
             <div className="rounded-lg bg-gray-50 p-3">
               <p className="text-[9px] font-medium text-gray-400 uppercase tracking-wider">Visibility</p>
               <div className="mt-1 flex items-baseline gap-1">

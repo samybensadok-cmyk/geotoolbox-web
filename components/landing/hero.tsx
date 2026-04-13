@@ -5,8 +5,8 @@ export function Hero() {
   return (
     <section className="relative overflow-hidden px-6 pt-14 pb-0 sm:pt-20 lg:pt-24">
       {/* Subtle gradient blob */}
-      <div className="pointer-events-none absolute -top-40 right-0 h-[600px] w-[600px] rounded-full bg-accent-100/40 blur-3xl" />
-      <div className="pointer-events-none absolute -top-20 left-1/4 h-[400px] w-[400px] rounded-full bg-accent-50/60 blur-3xl" />
+      <div className="pointer-events-none absolute -top-40 right-0 h-[300px] w-[300px] sm:h-[600px] sm:w-[600px] rounded-full bg-accent-100/40 blur-3xl" />
+      <div className="pointer-events-none absolute -top-20 left-1/4 h-[200px] w-[200px] sm:h-[400px] sm:w-[400px] rounded-full bg-accent-50/60 blur-3xl" />
 
       <div className="relative mx-auto max-w-6xl">
         {/* Hero text */}

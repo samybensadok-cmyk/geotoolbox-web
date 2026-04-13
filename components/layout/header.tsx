@@ -47,7 +47,7 @@ export function Header() {
         {/* Mobile Toggle */}
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="flex flex-col gap-1 md:hidden p-1"
+          className="flex flex-col items-center justify-center gap-1 md:hidden min-h-[44px] min-w-[44px]"
           aria-label="Toggle menu"
         >
           <span className={cn("h-px w-4 bg-gray-900 transition-all duration-200", mobileOpen && "translate-y-[5px] rotate-45")} />
@@ -73,14 +73,14 @@ export function Header() {
               <Link
                 href={siteConfig.appUrl}
                 onClick={() => setMobileOpen(false)}
-                className="rounded-full border border-gray-200 py-2 text-center text-sm font-medium text-gray-600"
+                className="rounded-full border border-gray-200 py-3 text-center text-sm font-medium text-gray-600"
               >
                 Log in
               </Link>
               <Link
                 href={siteConfig.appUrl}
                 onClick={() => setMobileOpen(false)}
-                className="rounded-full bg-gray-900 py-2 text-center text-sm font-medium text-white"
+                className="rounded-full bg-gray-900 py-3 text-center text-sm font-medium text-white"
               >
                 Start free
               </Link>
