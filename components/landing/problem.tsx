@@ -4,7 +4,7 @@ export function Problem() {
       <div className="mx-auto max-w-6xl">
         <div className="grid gap-10 lg:grid-cols-[1fr,1fr] lg:gap-16 lg:items-start">
           {/* Left — headline */}
-          <div className="lg:sticky lg:top-24">
+          <div>
             <p className="text-xs font-semibold tracking-wider text-accent-400 uppercase">The problem</p>
             <h2 className="mt-3 text-2xl font-bold tracking-tight text-white sm:text-[1.75rem] leading-snug">
               Your biggest search channel has zero analytics
