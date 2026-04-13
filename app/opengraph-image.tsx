@@ -20,9 +20,11 @@ export default function OGImage() {
         }}
       >
         {/* Logo */}
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 40 }}>
-          <span style={{ fontFamily: "Georgia, serif", fontSize: 32, color: "#111827" }}>GEO</span>
-          <span style={{ fontSize: 18, color: "#9ca3af" }}>Toolbox</span>
+        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 40 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 40, height: 40, borderRadius: 10, background: "#0d9488" }}>
+            <span style={{ fontFamily: "system-ui, sans-serif", fontSize: 20, fontWeight: 700, color: "#ffffff" }}>G</span>
+          </div>
+          <span style={{ fontSize: 24, fontWeight: 700, color: "#111827", letterSpacing: "-0.01em" }}>GEO Toolbox</span>
         </div>
 
         {/* Headline */}

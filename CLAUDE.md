@@ -7,7 +7,7 @@ Marketing site + blog for geotoolbox.ai. Next.js 15 (App Router) + Tailwind v4 +
 ## Stack
 - **Framework**: Next.js 15 with App Router, React 19
 - **Styling**: Tailwind CSS v4 (CSS-first config in globals.css, no tailwind.config)
-- **Fonts**: DM Sans (body), DM Mono (code), Instrument Serif (display/logo only)
+- **Fonts**: DM Sans (body + logo), DM Mono (code)
 - **Content**: MDX files in `content/blog/`, loaded via `lib/content.ts`
 - **Hosting**: Vercel (auto-deploys on push to main)
 - **Repo**: github.com/samybensadok-cmyk/geotoolbox-web
@@ -19,7 +19,7 @@ Marketing site + blog for geotoolbox.ai. Next.js 15 (App Router) + Tailwind v4 +
 
 ## Design System
 - **Colors**: Teal/emerald accent (--color-accent-*), standard Tailwind grays
-- **Typography**: DM Sans body, bold sans headings, serif "GEO" logotype only
+- **Typography**: DM Sans body, bold sans headings, bold sans "GEO Toolbox" logotype with teal icon mark
 - **CTAs**: Rounded-full pills, gray-900 primary, border secondary
 - **Sections**: Alternating white/dark (gray-950)/gray-50 backgrounds
 - **Prose**: Manual typography in @layer components (no @tailwindcss/typography)
@@ -27,4 +27,4 @@ Marketing site + blog for geotoolbox.ai. Next.js 15 (App Router) + Tailwind v4 +
 ## Rules
 - No @tailwindcss/typography (incompatible with v4) — prose styles are manual in globals.css
 - Tailwind v4 arbitrary values in brackets (e.g. grid-cols-[1fr,2fr]) may not work — use standard utilities
-- Instrument Serif loaded as local font from public/fonts/
+- Logo: teal rounded-lg icon mark (white "G") + bold sans "GEO Toolbox" wordmark — no serif fonts

@@ -12,9 +12,11 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-gray-100 bg-white/90 backdrop-blur-md">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-6">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-1.5">
-          <span className="font-display text-xl tracking-tight text-gray-900">GEO</span>
-          <span className="text-[13px] font-medium text-gray-400">Toolbox</span>
+        <Link href="/" className="flex items-center gap-2">
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-accent-600">
+            <span className="text-xs font-bold text-white leading-none">G</span>
+          </div>
+          <span className="text-[15px] font-bold tracking-tight text-gray-900">GEO Toolbox</span>
         </Link>
 
         {/* Desktop Nav */}

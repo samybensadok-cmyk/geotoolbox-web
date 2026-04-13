@@ -7,9 +7,11 @@ export function Footer() {
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
           <div>
-            <Link href="/" className="flex items-center gap-1.5">
-              <span className="font-display text-xl tracking-tight text-gray-900">GEO</span>
-              <span className="text-[13px] font-medium text-gray-400">Toolbox</span>
+            <Link href="/" className="flex items-center gap-2">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-accent-600">
+                <span className="text-xs font-bold text-white leading-none">G</span>
+              </div>
+              <span className="text-[15px] font-bold tracking-tight text-gray-900">GEO Toolbox</span>
             </Link>
             <p className="mt-3 text-sm text-gray-400 leading-relaxed max-w-xs">
               AI search analytics for brands that want to be found. Track your visibility across 7 AI engines.

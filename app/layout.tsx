@@ -1,6 +1,5 @@
 import type { Metadata } from "next"
 import { DM_Sans, DM_Mono } from "next/font/google"
-import localFont from "next/font/local"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { siteConfig } from "@/lib/config"
@@ -16,23 +15,6 @@ const dmMono = DM_Mono({
   variable: "--font-mono",
   subsets: ["latin"],
   weight: ["400", "500"],
-})
-
-const instrumentSerif = localFont({
-  src: [
-    {
-      path: "../public/fonts/InstrumentSerif-Regular.ttf",
-      weight: "400",
-      style: "normal",
-    },
-    {
-      path: "../public/fonts/InstrumentSerif-Italic.ttf",
-      weight: "400",
-      style: "italic",
-    },
-  ],
-  variable: "--font-display",
-  display: "swap",
 })
 
 export const metadata: Metadata = {
@@ -68,7 +50,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${dmSans.variable} ${dmMono.variable} ${instrumentSerif.variable} h-full`}
+      className={`${dmSans.variable} ${dmMono.variable} h-full`}
     >
       <body className="min-h-full flex flex-col antialiased">
         <Header />
