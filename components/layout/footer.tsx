@@ -44,6 +44,8 @@ export function Footer() {
             <ul className="mt-3 space-y-2">
               <li><Link href="/about" className="text-sm text-gray-500 hover:text-gray-700 transition-colors">About</Link></li>
               <li><a href="mailto:hello@geotoolbox.ai" className="text-sm text-gray-500 hover:text-gray-700 transition-colors">Contact</a></li>
+              <li><Link href="/privacy" className="text-sm text-gray-500 hover:text-gray-700 transition-colors">Privacy Policy</Link></li>
+              <li><Link href="/terms" className="text-sm text-gray-500 hover:text-gray-700 transition-colors">Terms of Service</Link></li>
             </ul>
           </div>
         </div>
@@ -53,8 +55,8 @@ export function Footer() {
             &copy; {new Date().getFullYear()} GEO Toolbox. All rights reserved.
           </p>
           <div className="flex gap-4">
-            <Link href="/about" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Privacy</Link>
-            <Link href="/about" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Terms</Link>
+            <Link href="/privacy" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Privacy</Link>
+            <Link href="/terms" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Terms</Link>
           </div>
         </div>
       </div>
