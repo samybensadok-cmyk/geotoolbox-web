@@ -37,7 +37,7 @@ export function Problem() {
           {/* Left: tracked */}
           <div>
             <div className="flex items-center gap-3">
-              <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-500">
+              <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-400">
                 What you see
               </span>
               <span className="h-px flex-1 bg-gray-800" />

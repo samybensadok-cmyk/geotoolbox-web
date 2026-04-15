@@ -67,7 +67,7 @@ export function Header() {
               onClick={() => setFeaturesOpen(!featuresOpen)}
               aria-expanded={featuresOpen}
               aria-haspopup="true"
-              className="flex items-center gap-1 rounded-md px-3 py-1.5 text-[13px] font-medium text-gray-700 transition-colors hover:text-gray-900 hover:bg-gray-50"
+              className="flex min-h-[40px] items-center gap-1 rounded-md px-3 text-[13px] font-medium text-gray-700 transition-colors hover:text-gray-900 hover:bg-gray-50"
             >
               Features
               <svg
@@ -128,7 +128,7 @@ export function Header() {
 
           <Link
             href="/blog"
-            className="rounded-md px-3 py-1.5 text-[13px] font-medium text-gray-700 transition-colors hover:text-gray-900 hover:bg-gray-50"
+            className="flex min-h-[40px] items-center rounded-md px-3 text-[13px] font-medium text-gray-700 transition-colors hover:text-gray-900 hover:bg-gray-50"
           >
             Blog
           </Link>
@@ -136,13 +136,13 @@ export function Header() {
           <div className="ml-3 flex items-center gap-2">
             <Link
               href={siteConfig.appUrl}
-              className="rounded-full border border-gray-200 px-3.5 py-1.5 text-[13px] font-medium text-gray-700 transition-colors hover:border-gray-400 hover:text-gray-900"
+              className="flex min-h-[40px] items-center rounded-full border border-gray-200 px-3.5 text-[13px] font-medium text-gray-700 transition-colors hover:border-gray-400 hover:text-gray-900"
             >
               Log in
             </Link>
             <Link
               href={siteConfig.appUrl}
-              className="rounded-full bg-accent-900 px-3.5 py-1.5 text-[13px] font-medium text-white transition-colors hover:bg-accent-800"
+              className="flex min-h-[40px] items-center rounded-full bg-accent-900 px-3.5 text-[13px] font-medium text-white transition-colors hover:bg-accent-800"
             >
               Start free
             </Link>

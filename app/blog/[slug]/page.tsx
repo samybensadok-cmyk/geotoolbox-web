@@ -6,7 +6,7 @@ import { getPostBySlug, getAllPosts } from "@/lib/content"
 import { mdxComponents } from "@/components/mdx"
 import { formatDate } from "@/lib/utils"
 import { siteConfig } from "@/lib/config"
-import Link from "next/link"
+import { Breadcrumbs } from "@/components/features/breadcrumbs"
 
 export async function generateStaticParams() {
   return getAllPosts().map((p) => ({ slug: p.slug }))
@@ -54,19 +54,19 @@ export default async function BlogPost({
 
   return (
     <div className="mx-auto max-w-2xl px-6 py-16 sm:py-24">
-      <Link
-        href="/blog"
-        className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-600 transition-colors mb-10"
-      >
-        <span aria-hidden="true">&larr;</span>
-        Blog
-      </Link>
+      <Breadcrumbs
+        trail={[
+          { name: "Home", href: "/" },
+          { name: "Blog", href: "/blog" },
+          { name: post.title, href: "" },
+        ]}
+      />
 
       <header className="mb-12">
         {post.tags.length > 0 && (
           <div className="mb-3 flex flex-wrap gap-3">
             {post.tags.map((tag) => (
-              <span key={tag} className="text-xs font-medium tracking-wider text-accent-600 uppercase">
+              <span key={tag} className="font-mono text-[11px] font-semibold tracking-widest text-accent-700 uppercase">
                 {tag}
               </span>
             ))}
@@ -77,11 +77,11 @@ export default async function BlogPost({
           {post.title}
         </h1>
 
-        <div className="mt-4 flex items-center gap-3 text-sm text-gray-400">
+        <div className="mt-4 flex items-center gap-3 text-sm text-gray-600">
           <span>{post.author}</span>
-          <span>&middot;</span>
+          <span aria-hidden="true" className="text-gray-300">&middot;</span>
           <time dateTime={post.date}>{formatDate(post.date)}</time>
-          <span>&middot;</span>
+          <span aria-hidden="true" className="text-gray-300">&middot;</span>
           <span>{post.readingTime} min read</span>
         </div>
       </header>

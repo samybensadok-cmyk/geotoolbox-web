@@ -1,21 +1,26 @@
 import Link from "next/link"
 import { siteConfig } from "@/lib/config"
 
-export function Breadcrumbs({ featureName }: { featureName: string }) {
-  const items = [
-    { name: "Home", url: siteConfig.url + "/" },
-    { name: "Features", url: siteConfig.url + "/features" },
-    { name: featureName, url: "" },
-  ]
+type Crumb = { name: string; href: string }
+
+export function Breadcrumbs({ featureName, trail }: { featureName?: string; trail?: Crumb[] }) {
+  // Support both the legacy featureName API (Features > X) and an arbitrary trail
+  const crumbs: Crumb[] = trail
+    ? trail
+    : [
+        { name: "Home", href: "/" },
+        { name: "Features", href: "/features" },
+        { name: featureName ?? "", href: "" },
+      ]
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
-    itemListElement: items.map((item, i) => ({
+    itemListElement: crumbs.map((c, i) => ({
       "@type": "ListItem",
       position: i + 1,
-      name: item.name,
-      ...(item.url ? { item: item.url } : {}),
+      name: c.name,
+      ...(c.href ? { item: siteConfig.url + c.href } : {}),
     })),
   }
 
@@ -27,21 +32,23 @@ export function Breadcrumbs({ featureName }: { featureName: string }) {
       />
       <nav aria-label="Breadcrumb" className="mb-8">
         <ol className="flex items-center gap-2 text-[13px]">
-          <li>
-            <Link href="/" className="font-medium text-gray-600 hover:text-accent-700">
-              Home
-            </Link>
-          </li>
-          <li aria-hidden="true" className="text-gray-300">/</li>
-          <li>
-            <Link href="/features" className="font-medium text-gray-600 hover:text-accent-700">
-              Features
-            </Link>
-          </li>
-          <li aria-hidden="true" className="text-gray-300">/</li>
-          <li aria-current="page" className="font-semibold text-gray-900">
-            {featureName}
-          </li>
+          {crumbs.map((c, i) => {
+            const isLast = i === crumbs.length - 1
+            return (
+              <li key={`${c.name}-${i}`} className="flex items-center gap-2">
+                {i > 0 && <span aria-hidden="true" className="text-gray-300">/</span>}
+                {isLast || !c.href ? (
+                  <span aria-current={isLast ? "page" : undefined} className="font-semibold text-gray-900">
+                    {c.name}
+                  </span>
+                ) : (
+                  <Link href={c.href} className="font-medium text-gray-600 hover:text-accent-700">
+                    {c.name}
+                  </Link>
+                )}
+              </li>
+            )
+          })}
         </ol>
       </nav>
     </>
