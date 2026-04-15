@@ -41,7 +41,7 @@ export function HeroMockup() {
                 className={
                   e.variant === "cited"
                     ? "text-xs font-semibold text-accent-700 tabular-nums"
-                    : "text-xs text-gray-400 tabular-nums"
+                    : "text-xs text-gray-500 tabular-nums"
                 }
               >
                 {e.status}

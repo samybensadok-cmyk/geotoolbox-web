@@ -39,7 +39,7 @@ function EngineRow({ name, cited, delay }: { name: string; cited: boolean; delay
       ) : (
         <span className="inline-flex h-2 w-2 shrink-0 rounded-full border border-gray-300" />
       )}
-      <span className={`text-sm font-medium ${cited ? "text-gray-900" : "text-gray-400"}`}>
+      <span className={`text-sm font-medium ${cited ? "text-gray-900" : "text-gray-500"}`}>
         {name}
       </span>
     </div>
@@ -119,17 +119,17 @@ function IntelVisual() {
   return (
     <div className="flex h-full min-h-[260px] flex-col justify-center gap-3 p-8">
       {rows.map((r) => (
-        <div key={r.prompt} className="rounded-xl border border-gray-100 bg-gray-50/50 p-3">
-          <p className="truncate font-mono text-[12px] text-gray-500">{r.prompt}</p>
+        <div key={r.prompt} className="rounded-xl border border-gray-100 bg-gray-50 p-3">
+          <p className="truncate font-mono text-[12px] text-gray-600">{r.prompt}</p>
           <div className="mt-2 flex items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               <StatusDot cited={r.you} />
               <span className="text-[13px] font-medium text-gray-900">you</span>
             </div>
-            <span className="text-[11px] text-gray-300">vs</span>
+            <span className="text-[11px] text-gray-500">vs</span>
             <div className="flex items-center gap-2">
               <StatusDot cited={r.compCited} />
-              <span className="text-[13px] font-medium text-gray-600">{r.comp}</span>
+              <span className="text-[13px] font-medium text-gray-700">{r.comp}</span>
             </div>
           </div>
         </div>
