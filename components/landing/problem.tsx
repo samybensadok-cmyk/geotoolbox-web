@@ -81,9 +81,8 @@ export function Problem() {
 
         {/* Bottom editorial pull-quote */}
         <p className="mt-16 max-w-3xl text-lg leading-relaxed text-gray-400">
-          The fastest-growing search channel is the one you don&apos;t measure.
-          Your competitors already know what AI says about them.
-          <span className="text-white"> Do you?</span>
+          The fastest-growing search channel is the one you don&apos;t measure. AI visibility is already the metric your competitors track.
+          <span className="text-white"> What about you?</span>
         </p>
       </div>
     </section>

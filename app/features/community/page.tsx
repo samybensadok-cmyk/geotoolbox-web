@@ -5,9 +5,9 @@ import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
 
 export const metadata: Metadata = {
-  title: "Community — Reddit + forum citations AI engines use",
+  title: "Community — Reddit + forum citations AI engines quote",
   description:
-    "See which Reddit and forum threads AI cites when answering queries in your space. Catch misinformation, find subreddits worth engaging, build a community participation plan.",
+    "See which Reddit threads and forum discussions ChatGPT, Perplexity, Claude, and Gemini cite when answering queries in your space. Catch misinformation, find subreddits worth engaging, build a community participation plan — because AI engines lean heavily on third-party mentions to build authority.",
 }
 
 const threads = [

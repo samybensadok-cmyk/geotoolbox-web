@@ -5,9 +5,9 @@ import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
 
 export const metadata: Metadata = {
-  title: "Competitor Intel — AI citation tracking for competitors",
+  title: "Competitor Intel — AI visibility tracking for competitors",
   description:
-    "Track how competitors gain or lose AI citations. Content gap matrix, SERP feature ownership, and real-time threat alerts when a rival starts outranking you in AI search.",
+    "Track how competitors gain or lose AI citations across ChatGPT, Perplexity, Claude, Gemini, Google AI Overviews, and Bing Copilot. AI share-of-voice, content gap matrix, and real-time threat alerts when a rival starts outranking you in AI answer engines.",
 }
 
 const competitors = [

@@ -5,9 +5,9 @@ import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
 
 export const metadata: Metadata = {
-  title: "GEO Scan — 6-engine AI visibility scan",
+  title: "GEO Scan — AI visibility tool + ChatGPT rank tracker",
   description:
-    "Run a single prompt across ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot. See who's cited, who isn't, and how you compare to competitors.",
+    "Run generative engine optimization (GEO) scans across ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot. The AI search tracking tool that shows who's cited, who isn't, and how you compare to competitors — in minutes.",
 }
 
 const engines = [

@@ -5,9 +5,9 @@ import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
 
 export const metadata: Metadata = {
-  title: "Content Analyzer — page-level AI citability audit",
+  title: "Content Analyzer — AI SEO audit + LLMs.txt and citability check",
   description:
-    "Grade any URL A–F for AI citability. 19 signals: schema, bot access, X-Robots, freshness, structure, entity clarity. Know exactly what to fix so AI starts citing your content.",
+    "Grade any URL A–F for AI citability. 19 signals across schema markup, llms.txt, 9 AI bot access checks, X-Robots-Tag, freshness, and entity clarity. The AI SEO audit that tells you exactly why ChatGPT, Perplexity, and Google AI Overviews aren't citing your pages.",
 }
 
 const signals = [
@@ -96,6 +96,11 @@ const outcomes = [
     body: "Nine bot user agents including GPTBot, ClaudeBot, PerplexityBot, Google-Extended, CCBot, and Amazonbot. If one is blocked, we tell you where — robots.txt, X-Robots-Tag, or CDN firewall.",
   },
   {
+    tag: "llms.txt",
+    title: "The new signal AI engines read",
+    body: "We check for a valid llms.txt file at your root, validate its structure, and flag the sections that would help AI engines prioritize your best content. If it's missing, the analyzer generates a starter spec you can ship to your team.",
+  },
+  {
     tag: "JS parity",
     title: "What AI actually sees",
     body: "Some AI engines render JS, most don't. We fetch with and without JS execution and flag any content that's only visible to renderers.",
@@ -108,7 +113,7 @@ const outcomes = [
   {
     tag: "Schema validation",
     title: "Structured data that helps",
-    body: "Not just 'has schema yes/no'. We check the schema type matches the content, required fields are present, and the markup is AI-legible.",
+    body: "Not just 'has schema yes/no'. We check the schema type matches the content, required fields are present, and the markup is AI-legible for FAQ, HowTo, Article, Product, and Organization types.",
   },
 ]
 

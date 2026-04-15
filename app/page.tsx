@@ -1,6 +1,7 @@
 import { Hero } from "@/components/landing/hero"
 import { Engines } from "@/components/landing/engines"
 import { Problem } from "@/components/landing/problem"
+import { Playbook } from "@/components/landing/playbook"
 import { HowItWorks } from "@/components/landing/how-it-works"
 import { Features } from "@/components/landing/features"
 import { LatestPosts } from "@/components/landing/latest-posts"
@@ -12,6 +13,7 @@ export default function Home() {
       <Hero />
       <Engines />
       <Problem />
+      <Playbook />
       <HowItWorks />
       <Features />
       <LatestPosts />

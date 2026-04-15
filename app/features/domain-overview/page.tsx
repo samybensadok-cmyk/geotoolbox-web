@@ -5,9 +5,9 @@ import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
 
 export const metadata: Metadata = {
-  title: "Domain Overview — AI visibility command center",
+  title: "Domain Overview — AI brand monitoring dashboard",
   description:
-    "Every citation, competitor, and topical authority signal for your domain, aggregated across every scan. The dashboard agencies and brand teams keep open all day.",
+    "Every citation, AI competitor, co-cited domain, and topical authority signal for your domain, aggregated across every scan. AI brand monitoring for ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot — the dashboard agencies keep open all day.",
 }
 
 const headlineStats = [

@@ -5,9 +5,9 @@ import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
 
 export const metadata: Metadata = {
-  title: "Analytics — GSC + GA4 for AI search attribution",
+  title: "Analytics — GSC + GA4 for AI search tracking",
   description:
-    "Connect Google Search Console and GA4. See AI-driven traffic, cited-vs-clicked pages, and attribute real sessions to your AI visibility — not just impressions.",
+    "Connect Google Search Console and GA4 for AI search tracking. See AI-driven traffic, cited-vs-clicked pages, and attribute real sessions to your AI visibility — not just impressions. 13 sub-dashboards built for generative engine optimization reporting.",
 }
 
 const subDashboards = [

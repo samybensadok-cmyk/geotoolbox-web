@@ -5,9 +5,9 @@ import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
 
 export const metadata: Metadata = {
-  title: "Content Brief & Draft — AI-ready content workflow",
+  title: "Content Brief & Draft — AI content optimization for GEO",
   description:
-    "Brief any keyword, draft the article, grade the result. Outline, entities, facts coverage, SERP gap analysis, and citability scoring — all in one workflow.",
+    "Brief, draft, and grade content built for generative engine optimization. Outline, entities, facts coverage, SERP gap analysis, and dual Structure + AI Readiness scoring — the AI content optimization workflow that earns citations in ChatGPT and AI Overviews.",
 }
 
 const briefSections = [
