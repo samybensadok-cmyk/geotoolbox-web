@@ -26,29 +26,34 @@ const gapMatrix = [
 
 const faqs = [
   {
-    question: "How many competitor domains can I track in Competitor Intel?",
+    question: "What does Competitor Intel track?",
     answer:
-      "Up to three competitor domains on the current plan. Higher limits are planned for upper tiers as they roll out.",
+      "How competitor domains' AI citations change over time — which engines cite them, for which keywords, and how their AI visibility trends compare to yours. It's longitudinal tracking across ChatGPT, Perplexity, Claude, Gemini, Google AI Overviews, and Bing Copilot, not a one-shot snapshot.",
+  },
+  {
+    question: "How many competitors can I track?",
+    answer:
+      "Up to three competitor domains on the current plan, with higher limits planned for upper tiers as they ship. Every tracked competitor gets side-by-side citation tracking across all six AI engines, aggregated for AI visibility trends.",
+  },
+  {
+    question: "How is this different from the competitor comparison in GEO Scan?",
+    answer:
+      "GEO Scan shows a snapshot for one keyword. Competitor Intel tracks trends across every keyword over time — it's the longitudinal view. Scan answers 'who's cited right now?'; Intel answers 'who's gaining and losing AI citations month over month?'.",
+  },
+  {
+    question: "Can I see which specific pages competitors are getting cited for?",
+    answer:
+      "Yes. The tool surfaces the exact competitor URLs that AI engines reference most frequently, plus which prompts those URLs win. That maps directly to a content gap list: pages you need to publish or rewrite to compete.",
   },
   {
     question: "How are threat alerts delivered?",
     answer:
-      "By email. When a competitor starts gaining citations on a prompt you used to own, you get an email with a one-sentence analysis of why.",
+      "By email. When a competitor starts gaining citations on a prompt you used to own, an alert fires with a one-sentence analysis of why — so you can react before the citation share compounds.",
   },
   {
-    question: "What does share-of-voice mean in this context?",
+    question: "How often does the data update?",
     answer:
-      "Your competitors' citations aggregated across every prompt you've scanned, ranked by how often AI recommends them instead of you. Includes week-over-week movement.",
-  },
-  {
-    question: "How does the content gap matrix work?",
-    answer:
-      "A literal table: topics down the rows, tracked competitors across the columns. Green cell means they rank, red cell means they don't. Use it as a quarterly content roadmap.",
-  },
-  {
-    question: "What actually triggers a threat alert?",
-    answer:
-      "Claude-powered analysis runs on every scan. When a competitor's citation count on a prompt you own moves materially, an alert fires by email.",
+      "Data refreshes with each new scan you run. More scans across more keywords builds a richer competitive picture; weekly cadence on core keywords is usually enough to catch meaningful movement early.",
   },
 ]
 

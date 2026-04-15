@@ -14,7 +14,7 @@ export function Footer() {
               <span className="text-[15px] font-bold tracking-tight text-gray-900">GEO Toolbox</span>
             </Link>
             <p className="mt-3 text-sm text-gray-600 leading-relaxed max-w-xs">
-              AI search analytics for brands that want to be found. Track your visibility across 6 AI engines.
+              Generative engine optimization (GEO) for brands that want to be cited. Track AI visibility across six engines.
             </p>
           </div>
 

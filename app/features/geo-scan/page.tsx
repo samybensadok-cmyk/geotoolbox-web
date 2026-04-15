@@ -45,29 +45,39 @@ const steps = [
 
 const faqs = [
   {
-    question: "Does GEO Scan query AI engines live, or is it training-data lookup?",
+    question: "What AI engines does GEO Scan check?",
     answer:
-      "Live. Every scan runs the prompt through each engine in real time, so you see what your customers see today — not what the model memorized months ago.",
+      "Six today: ChatGPT, Perplexity, Claude, Gemini, Google AI Overviews, and Bing Copilot. Every generative engine optimization (GEO) scan queries all six in parallel so you see your full AI search visibility picture in one pass.",
   },
   {
-    question: "How many competitor domains can I compare in one scan?",
+    question: "How does GEO Scan determine if my brand is cited?",
     answer:
-      "Up to two competitor domains per scan. We surface which prompts they win, which they lose, and the citations they earn that you don't.",
+      "We submit your keyword as a real user query, then parse each AI response for explicit domain mentions and direct citations. You get a per-engine status — cited, mentioned, or missing — plus the verbatim snippet where your brand appears.",
   },
   {
-    question: "Which countries are supported?",
+    question: "Can I scan keywords for markets outside the US?",
     answer:
-      "Eight markets today: United States, United Kingdom, Australia, Canada, Ireland, France, Spain, and Germany. Engines with native locale (Google AI Overviews, Gemini) query in-country; the others get prompt augmentation for market-specific answers.",
+      "Yes. GEO Scan supports eight markets: United States, United Kingdom, Australia, Canada, Ireland, France, Spain, and Germany. Engines with native locale support (Google AI Overviews, Gemini) query in-country; the others receive localized prompt augmentation so the response reflects the chosen market.",
   },
   {
-    question: "How long does a scan take?",
+    question: "How is this different from traditional rank tracking?",
     answer:
-      "One to two minutes end to end, depending on engine load across the six providers.",
+      "Traditional rank trackers measure blue-link positions on a SERP. GEO Scan measures a different signal altogether: whether AI-generated answers cite your brand at all. It's answer engine optimization (AEO), not ranking — there's no top 10 to climb, just whether your domain is or isn't in the generated response.",
   },
   {
-    question: "Is my scan history saved for comparison?",
+    question: "Can I compare my domain against competitors in the same scan?",
     answer:
-      "Yes — every scan is stored automatically. Weekly score trend, per-engine trajectory, and competitor movement all feed Domain Overview without extra work.",
+      "Yes — add up to four competitor domains and the scan returns side-by-side citation status for each, across all six engines. You'll see which prompts they win, which they lose, and the citations they earn that you don't.",
+  },
+  {
+    question: "How often should I run scans for the same keyword?",
+    answer:
+      "AI responses are non-deterministic, so weekly is the sweet spot for tracking AI visibility trends. Every scan is stored; the trajectory feeds Domain Overview automatically so you can spot citation drift before it compounds.",
+  },
+  {
+    question: "Can I export my scan results?",
+    answer:
+      "Yes. CSV, PDF, and XLSX exports are free and available without an account. Use them to brief writers, update leadership, or feed citation data into your own LLM SEO dashboards.",
   },
 ]
 
@@ -80,7 +90,7 @@ const outcomes = [
   {
     tag: "Competitor deltas",
     title: "Know who beats you",
-    body: "Add up to two competitor domains. We show which prompts they win, which they lose, and the citations they earn that you don't.",
+    body: "Add up to four competitor domains. We show which prompts they win, which they lose, and the citations they earn that you don't.",
   },
   {
     tag: "Country-aware",

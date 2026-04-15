@@ -58,29 +58,34 @@ const steps = [
 
 const faqs = [
   {
-    question: "Which AI crawlers does Content Analyzer check?",
+    question: "What does the Citability Score measure?",
     answer:
-      "Six today: GPTBot (OpenAI), ClaudeBot (Anthropic), PerplexityBot, Google-Extended, CCBot (CommonCrawl), and Amazonbot. If one is blocked, we identify the source — robots.txt, X-Robots-Tag, or CDN firewall.",
+      "An A–F grade reflecting how easily AI engines can access, read, and cite your page. It rolls up 19 signals across three categories: technical access (bot permissions, JS rendering), content structure (schema markup, heading hierarchy, entity clarity), and authority (freshness, author byline, external citations). It's the core AI citability metric behind every generative engine optimization (GEO) fix list.",
   },
   {
-    question: "Can I analyze a competitor's URL, or only my own pages?",
+    question: "What's the difference between Content Analyzer and GEO Scan?",
     answer:
-      "Any URL. Competitor pages, product pages, blog posts — it works on static HTML, server-rendered sites, and client-rendered React.",
+      "GEO Scan asks whether AI engines currently cite you for a given keyword — it's a live AI visibility check. Content Analyzer audits a specific URL to identify why that page is or isn't citable in the first place. Use Scan to measure, Analyzer to fix.",
   },
   {
-    question: "What do the 19 signals cover?",
+    question: "Does it check if AI bots can actually crawl my page?",
     answer:
-      "Three categories: Clarity (entity clarity, schema, structure, heading hierarchy), Authority (freshness, author byline, external citations), and Access (bot access, JS vs no-JS parity, X-Robots-Tag). Every signal maps to a concrete code or editorial fix.",
+      "Yes. Content Analyzer probes your page with nine different AI bot user agents — including GPTBot, ClaudeBot, PerplexityBot, Google-Extended, CCBot, and Amazonbot — and reports which ones are blocked. If a bot is refused, we identify the source: robots.txt, X-Robots-Tag header, or CDN firewall rule.",
   },
   {
-    question: "What does the A–F grade represent?",
+    question: "What schema markup does it check?",
     answer:
-      "An aggregate readiness score across Clarity, Authority, and Access. It translates the 19 signal results into a single shareable output — clean enough for a stakeholder, detailed enough for a developer.",
+      "It validates JSON-LD structured data including FAQ, HowTo, Article, Product, and Organization schemas. Missing required fields, type mismatches, and invalid syntax are flagged with the exact repair needed — because well-formed schema is a core signal for AI overview SEO.",
   },
   {
-    question: "How fast is the analysis?",
+    question: "How does it evaluate content freshness?",
     answer:
-      "Under 60 seconds from paste to grade. Rerun anytime to verify the fix shipped.",
+      "We detect year mentions in your content and measure staleness — the gap between the most recent year referenced and today. Pages that still cite 2023 data rank lower for AI citations than pages with current data, so staleness gets its own signal in the grade.",
+  },
+  {
+    question: "Can I export the analysis as a report?",
+    answer:
+      "Yes. Every analysis downloads as a PDF with the full grade, the nine-bot access matrix, per-signal evidence, and prioritized recommendations. Clean enough to hand to a developer, detailed enough to debug.",
   },
 ]
 
@@ -88,7 +93,7 @@ const outcomes = [
   {
     tag: "Multi-bot",
     title: "Every AI crawler checked",
-    body: "GPTBot, ClaudeBot, PerplexityBot, Google-Extended, CCBot, Amazonbot. If one bot is blocked, we tell you where — robots.txt, X-Robots-Tag, or CDN firewall.",
+    body: "Nine bot user agents including GPTBot, ClaudeBot, PerplexityBot, Google-Extended, CCBot, and Amazonbot. If one is blocked, we tell you where — robots.txt, X-Robots-Tag, or CDN firewall.",
   },
   {
     tag: "JS parity",

@@ -43,29 +43,29 @@ const threads = [
 
 const faqs = [
   {
-    question: "Which platforms does Community cover?",
+    question: "What does Community Insights track?",
     answer:
-      "Reddit is the primary source. Other forums appear when AI engines cite their threads in responses to your tracked prompts. Everything is ranked by citation frequency.",
+      "The Reddit and forum threads AI engines cite when answering queries in your topic space. Each thread is tagged with the engines that reference it, its sentiment, and whether it introduces misinformation risks — everything you need to shape a community participation plan for generative engine optimization.",
   },
   {
-    question: "How is sentiment classified?",
+    question: "Why does community content matter for AI citations?",
     answer:
-      "Each thread is tagged Positive, Mixed, or Negative based on how it frames your brand or category. Negative threads AI is amplifying get flagged as misinformation risks.",
+      "AI engines frequently cite Reddit threads, Quora answers, and forum discussions, especially for experiential or opinion-driven queries. If AI consistently points users at third-party conversations about your category, those threads are shaping buying decisions — and knowing which ones get cited lets you participate strategically.",
   },
   {
-    question: "How often is the community map refreshed?",
+    question: "What is the Misinformation Check?",
     answer:
-      "On every scan. New threads AI starts citing between runs appear the next time you scan.",
+      "It flags threads where incorrect information about your brand or products is being cited by AI engines. You see the exact thread, the engines pulling from it, and the claim being surfaced — so you can respond, correct, or engage before the bad take compounds.",
   },
   {
-    question: "Can I use this to find subreddits worth engaging?",
+    question: "Does it show which subreddits matter most?",
     answer:
-      "Yes. The subreddit map ranks communities by how often AI cites threads from them. The action plan identifies specific threads worth a reply and FAQ-shaped questions AI keeps answering without citing you.",
+      "Yes. The subreddit map ranks communities by how often AI cites content from them for your keywords. That ranking doubles as a community prioritization list — the highest-signal subreddits first, so participation effort goes where it actually moves AI visibility.",
   },
   {
-    question: "Does Community include non-Reddit forums?",
+    question: "What's in the Action Plan?",
     answer:
-      "Yes, but indirectly. Reddit is the primary dataset; non-Reddit forums only appear when AI engines cite them in responses to your tracked prompts.",
+      "Prioritized recommendations: which threads to respond to, which communities to participate in sustainably, and where misinformation needs correction. Each suggestion links directly to the thread so you can act without hunting for context.",
   },
 ]
 

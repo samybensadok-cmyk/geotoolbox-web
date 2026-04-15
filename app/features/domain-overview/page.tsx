@@ -33,29 +33,34 @@ const aiCompetitors = [
 
 const faqs = [
   {
-    question: "What's actually inside the overview?",
+    question: "What data does Domain Overview pull together?",
     answer:
-      "Six views: top cited pages, AI competitors, co-cited domains, topical authority, GSC-enhanced traffic data, and a prioritized action list.",
+      "Your entire AI visibility footprint in one view: top cited pages, AI competitors, co-cited domains, topical authority, keyword volume, and a prioritized action list. Scan history feeds it automatically; the search APIs layered on top keep the picture current even before you've built up scan depth.",
   },
   {
-    question: "Do I need to connect Google Search Console?",
+    question: "What are co-cited domains?",
     answer:
-      "No — but it helps. Core visibility, competitors, and cited pages work without GSC. Connecting it cross-references cited URLs with real clicks and impressions, so you can spot pages with AI love but no organic traffic (or vice versa).",
+      "Domains that AI engines consistently mention alongside yours when answering questions in your space. These are your peers in the AI knowledge graph — useful as backlink targets, partnership prospects, and authoritative cluster maps for generative engine optimization planning.",
   },
   {
-    question: "How fresh is the data?",
+    question: "Do I need to run scans first before using Domain Overview?",
     answer:
-      "The overview rebuilds on a 7-day rolling window, updating automatically every time you run a scan. No manual refresh or scheduled job.",
+      "The overview is richer with scan history — that's where AI competitors and cited pages come from. But it also pulls fresh data from search APIs independently, so the snapshot is useful even on day one.",
   },
   {
-    question: "How many scans do I need before the overview is useful?",
+    question: "Can I see which of my pages get cited most?",
     answer:
-      "Even one scan populates top cited pages and AI competitors. Depth and trend accuracy improve with each additional scan.",
+      "Yes. The Top Cited Pages section ranks your URLs by how frequently AI engines reference them, with the verbatim snippets they use. If Google Search Console is connected, each page also shows its organic clicks and impressions side-by-side.",
   },
   {
-    question: "Where do the recommended actions come from?",
+    question: "What is the Topical Authority section?",
     answer:
-      "Pattern analysis across your scan history. The list surfaces the pages that should be cited but aren't and links each to the specific Content Analyzer fix that matters most.",
+      "It maps the topic clusters where AI engines consider your domain an authority versus where competitors dominate. Built from entity extraction across every cited page, so you can see AI visibility by topic — not just by URL.",
+  },
+  {
+    question: "Can I connect Google Search Console to enrich the overview?",
+    answer:
+      "Yes. One-click GSC integration overlays organic traffic data on your AI citation data. You get a complete picture of where AI citations drive real sessions — and where pages get clicks but no citations (or vice versa).",
   },
 ]
 

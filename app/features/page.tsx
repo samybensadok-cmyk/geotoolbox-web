@@ -4,7 +4,7 @@ import Link from "next/link"
 export const metadata: Metadata = {
   title: "Features",
   description:
-    "Seven connected tools for AI search visibility. Scan, analyze, brief, and monitor your brand across ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot.",
+    "Seven connected tools for generative engine optimization (GEO) and AI search visibility. Scan, analyze, brief, and monitor your brand across ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot.",
 }
 
 const groups = [

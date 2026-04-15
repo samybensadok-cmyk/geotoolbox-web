@@ -37,29 +37,34 @@ const aiTraffic = [
 
 const faqs = [
   {
-    question: "Are GSC and GA4 both required?",
+    question: "What does the Analytics tab show?",
     answer:
-      "GSC is required — it's the source for query and page performance data. GA4 is optional but recommended, because it unlocks attribution: which AI-cited pages actually drove sessions.",
+      "Your Google Search Console and GA4 data, layered with AI citation data from GEO Toolbox. That means you can see whether AI-cited pages actually drive traffic — the missing attribution layer in most AI visibility tools.",
   },
   {
-    question: "Is Analytics available to everyone yet?",
+    question: "How do I connect Google Search Console?",
     answer:
-      "Not quite. Google OAuth verification is in progress; access is currently on the test-user list. Email hello@geotoolbox.ai to be added.",
+      "One-click OAuth: authorize access, select your property, and your GSC data is live in the dashboard. No API keys, no CSV imports. (Google OAuth verification is still in progress — email hello@geotoolbox.ai to be added to the test user list for early access.)",
   },
   {
-    question: "What are the 13 sub-dashboards?",
+    question: "Does it support Google Analytics 4 (GA4)?",
     answer:
-      "Overview, Compare, Quick Wins, Content Decay, Click Potential, Cannibalization, Health, Trajectory, Pages, Sections, Keywords, Keyword Cloud, and Clusters. Each answers a different question.",
+      "Yes. GA4 integration shows AI-driven traffic metrics alongside your GSC data — the same OAuth flow and the same one-screen view.",
   },
   {
-    question: "What does intent classification do?",
+    question: "What is AI traffic in the Analytics view?",
     answer:
-      "Every query is auto-tagged as informational, commercial, navigational, or transactional. Filter any view by intent to see whether your AI citations convert or just look good.",
+      "Traffic arriving from AI-powered search surfaces — Google AI Overviews, ChatGPT with browsing, Perplexity, Bing Copilot — segmented from traditional organic traffic. If it's a session that came via an AI citation, you'll see it here.",
   },
   {
-    question: "Is my GSC data stored on your servers?",
+    question: "Can I see which keywords bring AI traffic vs. traditional traffic?",
     answer:
-      "GSC data is cached in your browser via localStorage, scoped per property and period. Only OAuth tokens and scan results live server-side.",
+      "Yes. The view overlays AI citation status on your keyword performance data. You see which queries earn AI citations, which drive organic traffic, and where the two intersect — the highest-leverage intersection for generative engine optimization work.",
+  },
+  {
+    question: "Is my Search Console data stored on your servers?",
+    answer:
+      "Connection credentials are stored securely. Query data is fetched on-demand from the Google API and cached locally in your browser per property and period for performance. Only OAuth tokens and scan results live server-side.",
   },
 ]
 

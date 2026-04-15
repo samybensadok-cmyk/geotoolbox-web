@@ -43,29 +43,34 @@ const steps = [
 
 const faqs = [
   {
-    question: "What's the difference between Structure and AI Readiness scores?",
+    question: "What does the AI content brief include?",
     answer:
-      "Structure measures how well the draft matches the brief — right headings, covered entities, included facts. AI Readiness uses the same 19-signal model as Content Analyzer to estimate how citable the page will be once published.",
+      "A complete generative engine optimization brief: target keyword analysis, content framework (pillar, cluster, comparison, or FAQ), outline with H2/H3 structure, entity checklist, differentiation rules, and SERP gap analysis. Everything a writer needs to ship something AI engines will cite.",
   },
   {
-    question: "Which article frameworks does the brief support?",
+    question: "Which AI model generates the brief?",
     answer:
-      "Pillar, cluster, comparison, and FAQ formats. We pick based on the keyword and live SERP shape, and you can switch manually.",
+      "The brief is generated with advanced AI models tuned on current search results, competitor content, and AI citation patterns. Because it's built from live SERPs and live AI responses — not a generic LLM prompt — the framework reflects what's actually winning citations today.",
   },
   {
-    question: "Can I write the draft inside the tool?",
+    question: "Can I use it to optimize existing content or only new articles?",
     answer:
-      "Yes. Brief and draft live side-by-side — headings pre-filled, entity checklist pinned, inline citation suggestions. You can also paste an existing draft to score it against the brief.",
+      "Both. Paste an existing URL and the brief identifies gaps relative to the winning pages in the SERP. Start from a blank slate and it delivers the full framework. Either way you get Structure and AI Readiness scores on the final draft.",
   },
   {
-    question: "What export formats are supported?",
+    question: "How is this different from other AI brief generators?",
     answer:
-      "PDF, XLSX, or the in-line draft itself. No proprietary lock-in.",
+      "It's built for generative engine optimization, not traditional ranking. The brief optimizes for AI citability — structure, entities, facts coverage, schema suggestions — using the same 19-signal model as Content Analyzer. Most brief tools score structure only; ours scores both structure and AI readiness.",
   },
   {
-    question: "Where do the facts-coverage data points come from?",
+    question: "Can I download the brief?",
     answer:
-      "Competitor extraction. We parse the top-ranked pages for the target keyword and pull out the concrete facts and data points they use. Your draft gets flagged when a high-value fact is missing.",
+      "Yes. PDF or XLSX export is free, no account required. Use PDF to share with freelancers and stakeholders; XLSX for spreadsheet-based workflows or ingestion into your own editorial pipeline.",
+  },
+  {
+    question: "Does it incorporate my Search Console data?",
+    answer:
+      "When GSC is connected, the brief factors in your existing rankings, clicks, and impressions to prioritize the highest-impact opportunities first — the keywords where better content most directly translates to AI citations and organic traffic.",
   },
 ]
 

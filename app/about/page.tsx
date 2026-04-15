@@ -22,7 +22,7 @@ export default function AboutPage() {
             Built for the AI search era.
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-gray-700">
-            GEO Toolbox is a measurement and intelligence layer for AI search. One scan, six engines, every citation &mdash; so teams can see, track, and shape how ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot describe their brand.
+            GEO Toolbox is a measurement and intelligence layer for generative engine optimization. One scan, six engines, every citation &mdash; so teams can see, track, and shape how ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot describe their brand.
           </p>
         </div>
       </section>
@@ -32,10 +32,10 @@ export default function AboutPage() {
         <div className="mx-auto max-w-3xl">
           <div className="space-y-6 text-[17px] leading-relaxed text-gray-700">
             <p>
-              AI engines are becoming the default interface between questions and answers. That shift rewrites the rules of visibility: there&apos;s no SERP to scroll, no ten blue links, just a generated response that either names you or doesn&apos;t.
+              AI engines are becoming the default interface between questions and answers. That shift rewrites the rules of visibility: there&apos;s no SERP to scroll, no ten blue links, just a generated response that either cites you or doesn&apos;t. Generative engine optimization (GEO) is the discipline that forms around that new reality &mdash; and measurement is the foundation.
             </p>
             <p>
-              GEO Toolbox exists to make that layer legible. Every scan runs a prompt across six engines, aggregates every domain and URL cited, and returns a 0&ndash;100 visibility score alongside the raw citations &mdash; yours and your competitors&apos;. Seven connected tools build on top of that primitive: scanning, content grading, briefing, competitive tracking, community monitoring, and AI-driven analytics.
+              GEO Toolbox exists to make that layer legible. Every scan runs a prompt across six engines, aggregates every domain and URL cited, and returns a 0&ndash;100 AI visibility score alongside the raw citations &mdash; yours and your competitors&apos;. Seven connected tools build on top of that primitive: scanning, content grading, briefing, competitive tracking, community monitoring, and AI-driven analytics.
             </p>
             <p>
               The tool is built and operated by Samy Mahmoudi out of StubGroup, an SEO agency that builds in public. It&apos;s currently free while in beta, supports eight countries, and is used daily by agency teams and in-house SEO professionals tracking how AI sees their brands.
