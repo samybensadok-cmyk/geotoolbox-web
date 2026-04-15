@@ -12,7 +12,7 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-gray-100 bg-white/90 backdrop-blur-md">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-6">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2 -mx-2 px-2 py-2 rounded-md">
           <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-accent-600">
             <span className="text-xs font-bold text-white leading-none">G</span>
           </div>
@@ -51,6 +51,8 @@ export function Header() {
           onClick={() => setMobileOpen(!mobileOpen)}
           className="flex flex-col items-center justify-center gap-1 md:hidden min-h-[44px] min-w-[44px]"
           aria-label="Toggle menu"
+          aria-expanded={mobileOpen}
+          aria-controls="mobile-nav-panel"
         >
           <span className={cn("h-px w-4 bg-gray-900 transition-all duration-200", mobileOpen && "translate-y-[5px] rotate-45")} />
           <span className={cn("h-px w-4 bg-gray-900 transition-all duration-200", mobileOpen && "opacity-0")} />
@@ -59,7 +61,7 @@ export function Header() {
       </div>
 
       {mobileOpen && (
-        <div className="border-t border-gray-100 bg-white px-6 py-5 md:hidden">
+        <div id="mobile-nav-panel" className="border-t border-gray-100 bg-white px-6 py-5 md:hidden">
           <nav className="flex flex-col gap-3">
             {siteConfig.nav.map((item) => (
               <Link

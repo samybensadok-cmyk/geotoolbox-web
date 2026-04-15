@@ -14,21 +14,21 @@ export function Features() {
       title: "Visibility score 0–100",
       body: "A single number that quantifies your AI presence. Track weekly, benchmark against competitors, set alerts for drops. The number your CMO actually understands.",
       stat: "0–100",
-      color: "bg-blue-500",
+      color: "bg-accent-600",
     },
     {
       tag: "Analyze",
       title: "19-signal citability analysis",
       body: "Structure, authority, entity clarity, freshness, schema markup — see exactly what helps AI cite your content and what holds it back. Per-page scoring.",
       stat: "19 signals",
-      color: "bg-purple-500",
+      color: "bg-accent-700",
     },
     {
       tag: "Intel",
       title: "Competitor intelligence",
       body: "Who AI recommends instead of you. Content gaps, co-cited domains, real-time alerts when competitors gain visibility. Know before they outrank you in AI.",
       stat: "Real-time",
-      color: "bg-orange-500",
+      color: "bg-accent-400",
     },
   ]
 

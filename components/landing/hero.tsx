@@ -21,11 +21,11 @@ export function Hero() {
           <h1 className="stagger-1 text-[clamp(2.25rem,5.5vw,4rem)] font-bold leading-[1.08] tracking-tight text-gray-900">
             See what AI search
             <br />
-            <span className="text-gray-300">says about your brand</span>
+            <span className="text-accent-600">says about your brand</span>
           </h1>
 
-          <p className="stagger-2 mx-auto mt-5 max-w-xl text-base leading-relaxed text-gray-500 sm:text-[17px]">
-            Track your visibility across ChatGPT, Perplexity, Gemini, Claude, and 3 more AI engines. One scan, every answer.
+          <p className="stagger-2 mx-auto mt-5 max-w-xl text-base leading-relaxed text-gray-600 sm:text-[17px]">
+            Track your visibility across ChatGPT, Perplexity, Gemini, Claude, Copilot, Meta AI, and Grok. One scan, every answer.
           </p>
 
           {/* CTAs — bigger, bolder */}
@@ -44,13 +44,13 @@ export function Hero() {
             </Link>
           </div>
 
-          <p className="stagger-3 mt-3.5 text-xs text-gray-400">
+          <p className="stagger-3 mt-3.5 text-xs text-gray-600">
             No credit card required &middot; Results in 30 seconds
           </p>
         </div>
 
         {/* Product mockup — large, prominent */}
-        <div className="stagger-3 relative mx-auto mt-14 max-w-4xl">
+        <div className="stagger-3 relative mx-auto mt-14 max-w-4xl" aria-hidden="true">
           <div className="absolute -inset-6 rounded-2xl bg-gradient-to-b from-accent-100/20 via-accent-50/10 to-transparent blur-2xl" />
           <div className="relative">
             <HeroMockup />
