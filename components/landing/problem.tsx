@@ -36,9 +36,14 @@ export function Problem() {
         <div className="mt-16 grid grid-cols-1 gap-12 lg:grid-cols-[3fr_9fr] lg:gap-20">
           {/* Left — sidebar, tiny, muted. "You already have this covered." */}
           <aside className="lg:pt-2">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-gray-600">
-              What you track today
-            </p>
+            <div className="flex items-baseline gap-2">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-gray-600">
+                What you track today
+              </p>
+              <span className="font-mono text-[11px] font-semibold tabular-nums text-gray-500">
+                &middot;{tracked.length}
+              </span>
+            </div>
             <ul className="mt-5 space-y-2">
               {tracked.map((item) => (
                 <li
@@ -49,33 +54,24 @@ export function Problem() {
                 </li>
               ))}
             </ul>
-            <p className="mt-6 max-w-[18ch] text-xs leading-relaxed text-gray-600 italic">
-              Traditional search channels. Already measured.
+            <p className="mt-6 text-xs italic text-gray-600">
+              Already measured.
             </p>
           </aside>
 
           {/* Right — hero column, the alarm */}
           <div>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
               <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-400">
                 What you miss
               </span>
+              <span className="font-mono text-[11px] font-bold tabular-nums text-accent-300">
+                &middot;{untracked.length}
+              </span>
+              <span className="font-mono text-[10px] font-semibold uppercase tracking-widest text-accent-100/80">
+                &middot; 0 visibility today
+              </span>
               <span className="h-px flex-1 bg-accent-800/60" />
-            </div>
-
-            {/* Count badge — the quantitative anchor */}
-            <div className="mt-6 inline-flex flex-wrap items-center gap-x-3 gap-y-1 rounded-full border border-accent-900/60 bg-accent-950/50 px-5 py-2.5">
-              <span className="font-mono text-xl font-bold tabular-nums text-accent-300">
-                6
-              </span>
-              <span className="text-sm text-accent-100">AI engines</span>
-              <span className="text-accent-800" aria-hidden="true">·</span>
-              <span className="font-mono text-xl font-bold tabular-nums text-white">
-                0
-              </span>
-              <span className="text-sm text-accent-100">
-                visibility today
-              </span>
             </div>
 
             <ul className="mt-8 divide-y divide-accent-900/40">
