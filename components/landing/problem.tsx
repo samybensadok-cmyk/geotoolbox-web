@@ -4,7 +4,7 @@ export function Problem() {
     "Search Console clicks",
     "GA4 sessions",
     "Ahrefs rankings",
-    "Bing results",
+    "Bing organic",
   ]
 
   const untracked = [
