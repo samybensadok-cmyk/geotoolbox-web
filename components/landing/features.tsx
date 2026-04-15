@@ -145,10 +145,10 @@ function StatusDot({ cited }: { cited: boolean }) {
 /* ——— Section ——— */
 export function Features() {
   const cards = [
-    { visual: <ScanVisual />, tag: "Scan", title: "Every engine, one run", body: "ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot — scanned on a single prompt.", span: "md:col-span-2" },
-    { visual: <ScoreVisual />, tag: "Score", title: "A number your team can align on", body: "Visibility 0–100. Track weekly, set alerts, benchmark competitors.", span: "md:col-span-1" },
-    { visual: <AnalyzeVisual />, tag: "Analyze", title: "19 signals, per page", body: "Entity clarity, schema, authority, freshness, structure. See what helps AI cite you.", span: "md:col-span-1" },
-    { visual: <IntelVisual />, tag: "Intel", title: "Catch the day they beat you", body: "Who gets recommended instead. Co-cited domains, content gaps, real-time alerts.", span: "md:col-span-2" },
+    { visual: <ScanVisual />, tag: "Scan", title: "Every engine, one run", body: "ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot scanned on a single prompt.", span: "md:col-span-2" },
+    { visual: <ScoreVisual />, tag: "Score", title: "A number your team can align on", body: "AI visibility from 0 to 100. Track weekly, set alerts, benchmark competitors.", span: "md:col-span-1" },
+    { visual: <AnalyzeVisual />, tag: "Analyze", title: "19 signals per page", body: "Entity clarity, schema, authority, freshness, structure. See what helps AI cite you.", span: "md:col-span-1" },
+    { visual: <IntelVisual />, tag: "Intel", title: "Catch the day they beat you", body: "See who gets recommended instead. Co-cited domains, content gaps, real-time alerts.", span: "md:col-span-2" },
   ]
 
   return (
@@ -162,7 +162,7 @@ export function Features() {
             Full-spectrum AI visibility.
           </h2>
           <p className="mt-4 text-base text-gray-600">
-            From scanning to strategy — the workflow SEO teams use to own their presence in AI search.
+            From scanning to strategy. The workflow SEO teams run to stay visible in AI search.
           </p>
         </div>
 

@@ -5,9 +5,14 @@ import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
 
 export const metadata: Metadata = {
-  title: "Competitor Intel — AI visibility tracking for competitors",
+  title: "Competitor Intel: AI visibility tracking for competitors",
   description:
     "Track how competitors gain or lose AI citations across ChatGPT, Perplexity, Claude, Gemini, Google AI Overviews, and Bing Copilot. AI share-of-voice, content gap matrix, and real-time threat alerts when a rival starts outranking you in AI answer engines.",
+  openGraph: {
+    title: "Competitor Intel: AI visibility tracking for competitors",
+    description:
+      "Track how competitors gain or lose AI citations across six engines. AI share-of-voice, content gap matrix, and real-time threat alerts when a rival starts outranking you.",
+  },
 }
 
 const competitors = [
@@ -28,7 +33,7 @@ const faqs = [
   {
     question: "What does Competitor Intel track?",
     answer:
-      "How competitor domains' AI citations change over time — which engines cite them, for which keywords, and how their AI visibility trends compare to yours. It's longitudinal tracking across ChatGPT, Perplexity, Claude, Gemini, Google AI Overviews, and Bing Copilot, not a one-shot snapshot.",
+      "How competitor domains' AI citations change over time, which engines cite them, for which keywords, and how their AI visibility trends compare to yours. It's longitudinal tracking across ChatGPT, Perplexity, Claude, Gemini, Google AI Overviews, and Bing Copilot, not a one-shot snapshot.",
   },
   {
     question: "How many competitors can I track?",
@@ -38,7 +43,7 @@ const faqs = [
   {
     question: "How is this different from the competitor comparison in GEO Scan?",
     answer:
-      "GEO Scan shows a snapshot for one keyword. Competitor Intel tracks trends across every keyword over time — it's the longitudinal view. Scan answers 'who's cited right now?'; Intel answers 'who's gaining and losing AI citations month over month?'.",
+      "GEO Scan shows a snapshot for one keyword. Competitor Intel tracks trends across every keyword over time. It's the longitudinal view. Scan answers 'who's cited right now?'; Intel answers 'who's gaining and losing AI citations month over month?'.",
   },
   {
     question: "Can I see which specific pages competitors are getting cited for?",
@@ -48,7 +53,7 @@ const faqs = [
   {
     question: "How are threat alerts delivered?",
     answer:
-      "By email. When a competitor starts gaining citations on a prompt you used to own, an alert fires with a one-sentence analysis of why — so you can react before the citation share compounds.",
+      "By email. When a competitor starts gaining citations on a prompt you used to own, an alert fires with a one-sentence analysis of why, so you can react before the citation share compounds.",
   },
   {
     question: "How often does the data update?",
@@ -66,7 +71,7 @@ const sections = [
   {
     tag: "Content gap matrix",
     title: "Topics they cover, you don't",
-    body: "Side-by-side matrix of topics across you and up to 10 competitors. Red cells where they rank and you don't — your next-action list.",
+    body: "Side-by-side matrix of topics across you and up to 3 competitors (more on higher tiers). Red cells show where they rank and you don't. That's your next-action list.",
   },
   {
     tag: "SERP feature ownership",
@@ -107,7 +112,7 @@ export default function CompetitorIntelPage() {
                 Know the day they outrank you.
               </h1>
               <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-                Track how competitors gain or lose AI citations. Content gap matrix, SERP feature ownership, and real-time threat alerts — so you find out the moment a rival starts beating you in AI search.
+                Track how competitors gain or lose AI citations. Content gap matrix, SERP feature ownership, and real-time threat alerts so you find out the moment a rival starts beating you in AI search.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Link href="/app" prefetch={false} className="rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px]">

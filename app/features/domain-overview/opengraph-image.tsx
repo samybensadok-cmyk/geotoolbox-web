@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og"
 
-export const alt = "Domain Overview — AI visibility command center"
+export const alt = "Domain Overview: AI visibility command center"
 export const size = { width: 1200, height: 630 }
 export const contentType = "image/png"
 
@@ -33,7 +33,7 @@ export default function OGImage() {
             The command center for your AI visibility.
           </div>
           <div style={{ fontSize: 20, color: "#4b5563", marginTop: 20, lineHeight: 1.4 }}>
-            Every scan, every citation, every competitor &mdash; aggregated.
+            Every scan, every citation, every competitor, aggregated.
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: "auto", fontSize: 15, color: "#6b7280" }}>

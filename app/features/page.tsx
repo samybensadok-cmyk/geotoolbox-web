@@ -14,7 +14,7 @@ const groups = [
       {
         slug: "geo-scan",
         name: "GEO Scan",
-        blurb: "Run a single prompt across 6 AI engines and see who gets cited. Your domain, competitors, and every mention — in minutes.",
+        blurb: "Run a single prompt across 6 AI engines and see who gets cited. Your domain, competitors, and every mention, in minutes.",
         highlights: ["6 AI engines", "8 countries", "Competitor comparison"],
         deepLink: true,
       },
@@ -26,7 +26,7 @@ const groups = [
       {
         slug: "content-analyzer",
         name: "Content Analyzer",
-        blurb: "Grade any page A–F for AI citability. Checks 19 signals — schema, bot access, freshness, structure, entity clarity — and tells you what to fix.",
+        blurb: "Grade any page from A to F for AI citability. Checks 19 signals across schema, bot access, freshness, structure, and entity clarity, and tells you what to fix.",
         highlights: ["19 signals", "Multi-bot access check", "A–F score"],
         deepLink: true,
       },
@@ -45,7 +45,7 @@ const groups = [
       {
         slug: "domain-overview",
         name: "Domain Overview",
-        blurb: "A command-center view of everything AI says about your domain. Top cited pages, AI competitors, co-cited domains, topical authority — all one screen.",
+        blurb: "A command-center view of everything AI says about your domain. Top cited pages, AI competitors, co-cited domains, and topical authority, all on one screen.",
         highlights: ["Cross-scan aggregation", "Co-cited domains", "GSC-enhanced"],
         deepLink: true,
       },
@@ -97,7 +97,7 @@ export default function FeaturesPage() {
               </h1>
             </div>
             <p className="max-w-xl text-base leading-relaxed text-gray-600">
-              Everything you need to measure and own your presence in AI search — from running the first scan, to grading your pages, to tracking competitors and attributing AI-driven traffic.
+              Everything you need to measure and own your presence in AI search: running the first scan, grading your pages, tracking competitors, and attributing AI-driven traffic.
             </p>
           </div>
         </div>
@@ -219,7 +219,7 @@ export default function FeaturesPage() {
                 One scan unlocks all seven.
               </h2>
               <p className="mt-3 max-w-xl text-base text-gray-300">
-                Run a GEO Scan once and every other capability activates for that domain — Domain Overview, Competitor Intel, Community, the lot.
+                Run a GEO Scan once and every other capability activates for that domain: Domain Overview, Competitor Intel, Community, and the rest.
               </p>
               <div className="mt-5 flex flex-wrap items-center gap-1.5">
                 {["GEO Scan", "Domain Overview", "Content Analyzer", "Content Brief", "Competitor Intel", "Analytics", "Community"].map((f) => (

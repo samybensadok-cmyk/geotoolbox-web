@@ -5,9 +5,14 @@ import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
 
 export const metadata: Metadata = {
-  title: "Domain Overview — AI brand monitoring dashboard",
+  title: "Domain Overview: AI brand monitoring dashboard",
   description:
-    "Every citation, AI competitor, co-cited domain, and topical authority signal for your domain, aggregated across every scan. AI brand monitoring for ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot — the dashboard agencies keep open all day.",
+    "Every citation, AI competitor, co-cited domain, and topical authority signal for your domain, aggregated across every scan. AI brand monitoring for ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot. The dashboard agencies keep open all day.",
+  openGraph: {
+    title: "Domain Overview: AI brand monitoring dashboard",
+    description:
+      "Every citation, AI competitor, co-cited domain, and topical authority signal for your domain, aggregated across every scan. AI brand monitoring for six engines in one dashboard.",
+  },
 }
 
 const headlineStats = [
@@ -40,12 +45,12 @@ const faqs = [
   {
     question: "What are co-cited domains?",
     answer:
-      "Domains that AI engines consistently mention alongside yours when answering questions in your space. These are your peers in the AI knowledge graph — useful as backlink targets, partnership prospects, and authoritative cluster maps for generative engine optimization planning.",
+      "Domains that AI engines consistently mention alongside yours when answering questions in your space. These are your peers in the AI knowledge graph, useful as backlink targets, partnership prospects, and authoritative cluster maps for generative engine optimization planning.",
   },
   {
     question: "Do I need to run scans first before using Domain Overview?",
     answer:
-      "The overview is richer with scan history — that's where AI competitors and cited pages come from. But it also pulls fresh data from search APIs independently, so the snapshot is useful even on day one.",
+      "The overview is richer with scan history, since that's where AI competitors and cited pages come from. But it also pulls fresh data from search APIs independently, so the snapshot is useful even on day one.",
   },
   {
     question: "Can I see which of my pages get cited most?",
@@ -55,12 +60,12 @@ const faqs = [
   {
     question: "What is the Topical Authority section?",
     answer:
-      "It maps the topic clusters where AI engines consider your domain an authority versus where competitors dominate. Built from entity extraction across every cited page, so you can see AI visibility by topic — not just by URL.",
+      "It maps the topic clusters where AI engines consider your domain an authority versus where competitors dominate. Built from entity extraction across every cited page, so you can see AI visibility by topic, not just by URL.",
   },
   {
     question: "Can I connect Google Search Console to enrich the overview?",
     answer:
-      "Yes. One-click GSC integration overlays organic traffic data on your AI citation data. You get a complete picture of where AI citations drive real sessions — and where pages get clicks but no citations (or vice versa).",
+      "Yes. One-click GSC integration overlays organic traffic data on your AI citation data. You see where AI citations drive real sessions, and where pages get clicks but no citations (or vice versa).",
   },
 ]
 
@@ -93,7 +98,7 @@ const sections = [
   {
     tag: "Recommended actions",
     title: "What to do this week",
-    body: "Prioritized action list based on the patterns in your data. 'These 3 pages should be cited but aren't — here's why.' Shows the specific Content Analyzer fixes that matter most.",
+    body: "Prioritized action list based on the patterns in your data. 'These 3 pages should be cited but aren't. Here's why.' Shows the specific Content Analyzer fixes that matter most.",
   },
 ]
 
@@ -114,7 +119,7 @@ export default function DomainOverviewPage() {
                 The command center for your AI visibility.
               </h1>
               <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-                Every scan, every citation, every competitor — aggregated. The dashboard agencies and brand teams keep open all day to track how AI sees their domain.
+                Every scan, every citation, every competitor, aggregated. The dashboard agencies and brand teams keep open all day to track how AI sees their domain.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Link href="/app" prefetch={false} className="rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px]">
@@ -198,7 +203,7 @@ export default function DomainOverviewPage() {
               </h2>
             </div>
             <p className="max-w-xl text-base leading-relaxed text-gray-600">
-              Every view updates automatically as you scan. No manual refresh, no scheduled cron to remember — the overview rebuilds itself on a 7-day rolling window.
+              Every view updates automatically as you scan. No manual refresh, no scheduled cron to remember. The overview rebuilds itself on a 7-day rolling window.
             </p>
           </div>
 

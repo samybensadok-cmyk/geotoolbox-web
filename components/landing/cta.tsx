@@ -35,7 +35,7 @@ export function CTA() {
           {/* Right: action block */}
           <div className="flex flex-col gap-4 lg:items-start">
             <p className="max-w-md text-base leading-relaxed text-gray-300">
-              Run your first scan in minutes. Visibility score, engine-by-engine citations, and competitor benchmarks — free while in beta.
+              Run your first scan in minutes. Visibility score, engine-by-engine citations, and competitor benchmarks. Free while in beta.
             </p>
             <div className="mt-2 flex flex-wrap items-center gap-3">
               <Link

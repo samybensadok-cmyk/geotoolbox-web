@@ -5,9 +5,14 @@ import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
 
 export const metadata: Metadata = {
-  title: "Content Analyzer — AI SEO audit + LLMs.txt and citability check",
+  title: "Content Analyzer: AI SEO audit + LLMs.txt and citability check",
   description:
-    "Grade any URL A–F for AI citability. 19 signals across schema markup, llms.txt, 9 AI bot access checks, X-Robots-Tag, freshness, and entity clarity. The AI SEO audit that tells you exactly why ChatGPT, Perplexity, and Google AI Overviews aren't citing your pages.",
+    "Grade any URL from A to F for AI citability. 19 signals across schema markup, llms.txt, 9 AI bot access checks, X-Robots-Tag, freshness, and entity clarity. The AI SEO audit that tells you exactly why ChatGPT, Perplexity, and Google AI Overviews aren't citing your pages.",
+  openGraph: {
+    title: "Content Analyzer: AI SEO audit + LLMs.txt and citability check",
+    description:
+      "Grade any URL from A to F on 19 signals: schema markup, llms.txt, 9 AI bot access checks, X-Robots-Tag, freshness, and entity clarity. The AI SEO audit that tells you why ChatGPT, Perplexity, and Google AI Overviews aren't citing your pages.",
+  },
 }
 
 const signals = [
@@ -65,22 +70,22 @@ const faqs = [
   {
     question: "What's the difference between Content Analyzer and GEO Scan?",
     answer:
-      "GEO Scan asks whether AI engines currently cite you for a given keyword — it's a live AI visibility check. Content Analyzer audits a specific URL to identify why that page is or isn't citable in the first place. Use Scan to measure, Analyzer to fix.",
+      "GEO Scan asks whether AI engines currently cite you for a given keyword; it's a live AI visibility check. Content Analyzer audits a specific URL to identify why that page is or isn't citable in the first place. Use Scan to measure, Analyzer to fix.",
   },
   {
     question: "Does it check if AI bots can actually crawl my page?",
     answer:
-      "Yes. Content Analyzer probes your page with nine different AI bot user agents — including GPTBot, ClaudeBot, PerplexityBot, Google-Extended, CCBot, and Amazonbot — and reports which ones are blocked. If a bot is refused, we identify the source: robots.txt, X-Robots-Tag header, or CDN firewall rule.",
+      "Yes. Content Analyzer probes your page with nine different AI bot user agents, including GPTBot, ClaudeBot, PerplexityBot, Google-Extended, CCBot, and Amazonbot, and reports which ones are blocked. If a bot is refused, we identify the source: robots.txt, X-Robots-Tag header, or CDN firewall rule.",
   },
   {
     question: "What schema markup does it check?",
     answer:
-      "It validates JSON-LD structured data including FAQ, HowTo, Article, Product, and Organization schemas. Missing required fields, type mismatches, and invalid syntax are flagged with the exact repair needed — because well-formed schema is a core signal for AI overview SEO.",
+      "It validates JSON-LD structured data including FAQ, HowTo, Article, Product, and Organization schemas. Missing required fields, type mismatches, and invalid syntax are flagged with the exact repair needed, because well-formed schema is a core signal for AI overview SEO.",
   },
   {
     question: "How does it evaluate content freshness?",
     answer:
-      "We detect year mentions in your content and measure staleness — the gap between the most recent year referenced and today. Pages that still cite 2023 data rank lower for AI citations than pages with current data, so staleness gets its own signal in the grade.",
+      "We detect year mentions in your content and measure staleness, the gap between the most recent year referenced and today. Pages that still cite 2023 data rank lower for AI citations than pages with current data, so staleness gets its own signal in the grade.",
   },
   {
     question: "Can I export the analysis as a report?",
@@ -93,7 +98,7 @@ const outcomes = [
   {
     tag: "Multi-bot",
     title: "Every AI crawler checked",
-    body: "Nine bot user agents including GPTBot, ClaudeBot, PerplexityBot, Google-Extended, CCBot, and Amazonbot. If one is blocked, we tell you where — robots.txt, X-Robots-Tag, or CDN firewall.",
+    body: "Nine bot user agents including GPTBot, ClaudeBot, PerplexityBot, Google-Extended, CCBot, and Amazonbot. If one is blocked, we tell you where (robots.txt, X-Robots-Tag, or CDN firewall).",
   },
   {
     tag: "llms.txt",
@@ -244,7 +249,7 @@ export default function ContentAnalyzerPage() {
               </h2>
             </div>
             <p className="max-w-xl text-base leading-relaxed text-gray-600">
-              Every signal maps to a concrete technical or editorial change. No fluff metrics, no AI-era buzzwords — just checks that correlate with getting cited.
+              Every signal maps to a concrete technical or editorial change. No fluff metrics, no AI-era buzzwords, just checks that correlate with getting cited.
             </p>
           </div>
 

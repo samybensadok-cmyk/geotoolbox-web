@@ -5,9 +5,14 @@ import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
 
 export const metadata: Metadata = {
-  title: "GEO Scan — AI visibility tool + ChatGPT rank tracker",
+  title: "GEO Scan: AI visibility tool + ChatGPT rank tracker",
   description:
-    "Run generative engine optimization (GEO) scans across ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot. The AI search tracking tool that shows who's cited, who isn't, and how you compare to competitors — in minutes.",
+    "Run generative engine optimization (GEO) scans across ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot. The AI search tracking tool that shows who's cited, who isn't, and how you compare to competitors, in minutes.",
+  openGraph: {
+    title: "GEO Scan: AI visibility tool + ChatGPT rank tracker",
+    description:
+      "Run generative engine optimization scans across six AI engines. The AI search tracking tool that shows who's cited, who isn't, and how you compare to competitors, in minutes.",
+  },
 }
 
 const engines = [
@@ -52,7 +57,7 @@ const faqs = [
   {
     question: "How does GEO Scan determine if my brand is cited?",
     answer:
-      "We submit your keyword as a real user query, then parse each AI response for explicit domain mentions and direct citations. You get a per-engine status — cited, mentioned, or missing — plus the verbatim snippet where your brand appears.",
+      "We submit your keyword as a real user query, then parse each AI response for explicit domain mentions and direct citations. You get a per-engine status (cited, mentioned, or missing) plus the verbatim snippet where your brand appears.",
   },
   {
     question: "Can I scan keywords for markets outside the US?",
@@ -62,12 +67,12 @@ const faqs = [
   {
     question: "How is this different from traditional rank tracking?",
     answer:
-      "Traditional rank trackers measure blue-link positions on a SERP. GEO Scan measures a different signal altogether: whether AI-generated answers cite your brand at all. It's answer engine optimization (AEO), not ranking — there's no top 10 to climb, just whether your domain is or isn't in the generated response.",
+      "Traditional rank trackers measure blue-link positions on a SERP. GEO Scan measures a different signal altogether: whether AI-generated answers cite your brand at all. It's answer engine optimization (AEO), not ranking. There's no top 10 to climb, just whether your domain is or isn't in the generated response.",
   },
   {
     question: "Can I compare my domain against competitors in the same scan?",
     answer:
-      "Yes — add up to four competitor domains and the scan returns side-by-side citation status for each, across all six engines. You'll see which prompts they win, which they lose, and the citations they earn that you don't.",
+      "Yes. Add up to four competitor domains and the scan returns side-by-side citation status for each, across all six engines. You'll see which prompts they win, which they lose, and the citations they earn that you don't.",
   },
   {
     question: "How often should I run scans for the same keyword?",
@@ -100,7 +105,7 @@ const outcomes = [
   {
     tag: "History + trends",
     title: "Track over time",
-    body: "Every scan is stored. Weekly score trend, per-engine trajectory, competitor movement — all surfaced on Domain Overview.",
+    body: "Every scan is stored. Weekly score trend, per-engine trajectory, and competitor movement all appear on Domain Overview.",
   },
 ]
 
@@ -121,7 +126,7 @@ export default function GeoScanPage() {
                 See who AI cites for your keywords.
               </h1>
               <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-                One prompt, six engines, every citation. Your domain, competitors, and a 0–100 visibility score — in minutes, without training-data guesses.
+                One prompt, six engines, every citation. Your domain, competitors, and a visibility score from 0 to 100, in minutes, without training-data guesses.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Link

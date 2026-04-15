@@ -14,7 +14,7 @@ export default function NotFound() {
               Lost in AI search.
             </h1>
             <p className="mt-5 max-w-xl text-base leading-relaxed text-gray-600">
-              This page isn&apos;t cited anywhere we can find &mdash; maybe it moved, maybe it never existed. Here are three places worth a visit instead.
+              This page isn&apos;t cited anywhere we can find. Maybe it moved, maybe it never existed. Here are three places worth a visit instead.
             </p>
 
             {/* Link cards */}
@@ -76,7 +76,7 @@ export default function NotFound() {
               </div>
               {/* Mock query */}
               <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-500">Query</p>
-              <p className="mt-2 text-2xl font-bold tracking-tight text-gray-900">404 &mdash; page not found</p>
+              <p className="mt-2 text-2xl font-bold tracking-tight text-gray-900">404: page not found</p>
               {/* Mock results */}
               <div className="mt-6 space-y-2.5">
                 {["ChatGPT", "Perplexity", "Gemini", "Claude", "Google AI Overviews", "Bing Copilot"].map((engine) => (

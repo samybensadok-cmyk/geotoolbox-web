@@ -5,9 +5,14 @@ import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
 
 export const metadata: Metadata = {
-  title: "Content Brief & Draft — AI content optimization for GEO",
+  title: "Content Brief & Draft: AI content optimization for GEO",
   description:
-    "Brief, draft, and grade content built for generative engine optimization. Outline, entities, facts coverage, SERP gap analysis, and dual Structure + AI Readiness scoring — the AI content optimization workflow that earns citations in ChatGPT and AI Overviews.",
+    "Brief, draft, and grade content built for generative engine optimization. Outline, entities, facts coverage, SERP gap analysis, and dual Structure + AI Readiness scoring. The AI content optimization workflow that earns citations in ChatGPT and AI Overviews.",
+  openGraph: {
+    title: "Content Brief & Draft: AI content optimization for GEO",
+    description:
+      "Brief, draft, and grade content built for generative engine optimization. Outline, entities, facts coverage, SERP gap analysis, and dual Structure + AI Readiness scoring.",
+  },
 }
 
 const briefSections = [
@@ -29,7 +34,7 @@ const steps = [
     num: "02",
     verb: "Draft",
     title: "The article, in-line",
-    body: "Write inside the tool — headings pre-filled, entity checklist pinned, inline citation suggestions. Or paste an existing draft to score it.",
+    body: "Write inside the tool. Headings pre-filled, entity checklist pinned, inline citation suggestions. Or paste an existing draft to score it.",
     output: "Draft + entity coverage checklist",
   },
   {
@@ -50,7 +55,7 @@ const faqs = [
   {
     question: "Which AI model generates the brief?",
     answer:
-      "The brief is generated with advanced AI models tuned on current search results, competitor content, and AI citation patterns. Because it's built from live SERPs and live AI responses — not a generic LLM prompt — the framework reflects what's actually winning citations today.",
+      "The brief is generated with advanced AI models tuned on current search results, competitor content, and AI citation patterns. It's built from live SERPs and live AI responses, not a generic LLM prompt, so the framework reflects what's actually winning citations today.",
   },
   {
     question: "Can I use it to optimize existing content or only new articles?",
@@ -60,7 +65,7 @@ const faqs = [
   {
     question: "How is this different from other AI brief generators?",
     answer:
-      "It's built for generative engine optimization, not traditional ranking. The brief optimizes for AI citability — structure, entities, facts coverage, schema suggestions — using the same 19-signal model as Content Analyzer. Most brief tools score structure only; ours scores both structure and AI readiness.",
+      "It's built for generative engine optimization, not traditional ranking. The brief optimizes for AI citability (structure, entities, facts coverage, schema suggestions) using the same 19-signal model as Content Analyzer. Most brief tools score structure only; ours scores both structure and AI readiness.",
   },
   {
     question: "Can I download the brief?",
@@ -70,7 +75,7 @@ const faqs = [
   {
     question: "Does it incorporate my Search Console data?",
     answer:
-      "When GSC is connected, the brief factors in your existing rankings, clicks, and impressions to prioritize the highest-impact opportunities first — the keywords where better content most directly translates to AI citations and organic traffic.",
+      "When GSC is connected, the brief factors in your existing rankings, clicks, and impressions to prioritize the highest-impact opportunities first: the keywords where better content most directly translates to AI citations and organic traffic.",
   },
 ]
 
@@ -78,7 +83,7 @@ const outcomes = [
   {
     tag: "Dual scoring",
     title: "Structure and AI readiness",
-    body: "Most brief tools score structure only. We score both: how well your draft follows the brief AND how citable it is for AI engines — using the same 19-signal model as Content Analyzer.",
+    body: "Most brief tools score structure only. We score both: how well your draft follows the brief AND how citable it is for AI engines, using the same 19-signal model as Content Analyzer.",
   },
   {
     tag: "Facts coverage",
@@ -88,7 +93,7 @@ const outcomes = [
   {
     tag: "SERP gap matrix",
     title: "Topics no one's covered",
-    body: "Side-by-side the top 10 results. Highlights sub-topics the SERP universally misses — the fastest path to differentiated positioning.",
+    body: "Side-by-side the top 10 results. Highlights sub-topics the SERP universally misses. That's the fastest path to differentiated positioning.",
   },
   {
     tag: "Export anywhere",
@@ -122,7 +127,7 @@ export default function ContentBriefPage() {
                 Brief it. Draft it. Ship something AI will cite.
               </h1>
               <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-                Generate the brief, write the draft, grade the result — all in one tool. Framework, entities, facts coverage, and citability scoring, built for the AI-search era.
+                Generate the brief, write the draft, grade the result, all in one tool. Framework, entities, facts coverage, and citability scoring, built for the AI-search era.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Link href="/app" prefetch={false} className="rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px]">
@@ -184,7 +189,7 @@ export default function ContentBriefPage() {
               </h2>
             </div>
             <p className="max-w-xl text-base leading-relaxed text-gray-600">
-              Most brief tools stop at the outline. We keep going — you can draft the article inline, score it against the brief, and iterate until both structure and AI readiness clear your threshold.
+              Most brief tools stop at the outline. We keep going. You can draft the article inline, score it against the brief, and iterate until both structure and AI readiness clear your threshold.
             </p>
           </div>
 

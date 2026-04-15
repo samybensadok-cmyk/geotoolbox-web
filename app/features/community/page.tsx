@@ -5,9 +5,14 @@ import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
 
 export const metadata: Metadata = {
-  title: "Community — Reddit + forum citations AI engines quote",
+  title: "Community: Reddit and forum citations AI engines quote",
   description:
-    "See which Reddit threads and forum discussions ChatGPT, Perplexity, Claude, and Gemini cite when answering queries in your space. Catch misinformation, find subreddits worth engaging, build a community participation plan — because AI engines lean heavily on third-party mentions to build authority.",
+    "See which Reddit threads and forum discussions ChatGPT, Perplexity, Claude, and Gemini cite when answering queries in your space. Catch misinformation, find subreddits worth engaging, and build a community participation plan, because AI engines lean heavily on third-party mentions to build authority.",
+  openGraph: {
+    title: "Community: Reddit and forum citations AI engines quote",
+    description:
+      "See which Reddit threads and forum discussions AI engines cite when answering queries in your space. Catch misinformation, find subreddits worth engaging, and build a community participation plan.",
+  },
 }
 
 const threads = [
@@ -45,22 +50,22 @@ const faqs = [
   {
     question: "What does Community Insights track?",
     answer:
-      "The Reddit and forum threads AI engines cite when answering queries in your topic space. Each thread is tagged with the engines that reference it, its sentiment, and whether it introduces misinformation risks — everything you need to shape a community participation plan for generative engine optimization.",
+      "The Reddit and forum threads AI engines cite when answering queries in your topic space. Each thread is tagged with the engines that reference it, its sentiment, and whether it introduces misinformation risks. That's everything you need to shape a community participation plan for generative engine optimization.",
   },
   {
     question: "Why does community content matter for AI citations?",
     answer:
-      "AI engines frequently cite Reddit threads, Quora answers, and forum discussions, especially for experiential or opinion-driven queries. If AI consistently points users at third-party conversations about your category, those threads are shaping buying decisions — and knowing which ones get cited lets you participate strategically.",
+      "AI engines frequently cite Reddit threads, Quora answers, and forum discussions, especially for experiential or opinion-driven queries. If AI consistently points users at third-party conversations about your category, those threads are shaping buying decisions. Knowing which ones get cited lets you participate strategically.",
   },
   {
     question: "What is the Misinformation Check?",
     answer:
-      "It flags threads where incorrect information about your brand or products is being cited by AI engines. You see the exact thread, the engines pulling from it, and the claim being surfaced — so you can respond, correct, or engage before the bad take compounds.",
+      "It flags threads where incorrect information about your brand or products is being cited by AI engines. You see the exact thread, the engines pulling from it, and the claim being surfaced, so you can respond, correct, or engage before the bad take compounds.",
   },
   {
     question: "Does it show which subreddits matter most?",
     answer:
-      "Yes. The subreddit map ranks communities by how often AI cites content from them for your keywords. That ranking doubles as a community prioritization list — the highest-signal subreddits first, so participation effort goes where it actually moves AI visibility.",
+      "Yes. The subreddit map ranks communities by how often AI cites content from them for your keywords. That ranking doubles as a community prioritization list, highest-signal subreddits first, so participation effort goes where it actually moves AI visibility.",
   },
   {
     question: "What's in the Action Plan?",
@@ -109,7 +114,7 @@ export default function CommunityPage() {
                 The Reddit threads AI quotes back to your customers.
               </h1>
               <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-                AI engines cite forums constantly. See exactly which threads they use in your space — plus the misinformation risks and subreddits worth engaging.
+                AI engines cite forums constantly. See exactly which threads they use in your space, plus the misinformation risks and subreddits worth engaging.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Link href="/app" prefetch={false} className="rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px]">

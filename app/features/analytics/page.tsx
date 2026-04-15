@@ -5,9 +5,14 @@ import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
 
 export const metadata: Metadata = {
-  title: "Analytics — GSC + GA4 for AI search tracking",
+  title: "Analytics: GSC + GA4 for AI search tracking",
   description:
-    "Connect Google Search Console and GA4 for AI search tracking. See AI-driven traffic, cited-vs-clicked pages, and attribute real sessions to your AI visibility — not just impressions. 13 sub-dashboards built for generative engine optimization reporting.",
+    "Connect Google Search Console and GA4 for AI search tracking. See AI-driven traffic, cited-vs-clicked pages, and attribute real sessions to your AI visibility, not just impressions. 13 sub-dashboards built for generative engine optimization reporting.",
+  openGraph: {
+    title: "Analytics: GSC + GA4 for AI search tracking",
+    description:
+      "Connect Google Search Console and GA4 for AI search tracking. See AI-driven traffic, cited-vs-clicked pages, and attribute real sessions to your AI visibility, not just impressions.",
+  },
 }
 
 const subDashboards = [
@@ -39,27 +44,27 @@ const faqs = [
   {
     question: "What does the Analytics tab show?",
     answer:
-      "Your Google Search Console and GA4 data, layered with AI citation data from GEO Toolbox. That means you can see whether AI-cited pages actually drive traffic — the missing attribution layer in most AI visibility tools.",
+      "Your Google Search Console and GA4 data, layered with AI citation data from GEO Toolbox. You can see whether AI-cited pages actually drive traffic. That's the missing attribution layer in most AI visibility tools.",
   },
   {
     question: "How do I connect Google Search Console?",
     answer:
-      "One-click OAuth: authorize access, select your property, and your GSC data is live in the dashboard. No API keys, no CSV imports. (Google OAuth verification is still in progress — email hello@geotoolbox.ai to be added to the test user list for early access.)",
+      "One-click OAuth: authorize access, select your property, and your GSC data is live in the dashboard. No API keys, no CSV imports. (Google OAuth verification is still in progress, so email hello@geotoolbox.ai to be added to the test user list for early access.)",
   },
   {
     question: "Does it support Google Analytics 4 (GA4)?",
     answer:
-      "Yes. GA4 integration shows AI-driven traffic metrics alongside your GSC data — the same OAuth flow and the same one-screen view.",
+      "Yes. GA4 integration shows AI-driven traffic metrics alongside your GSC data, using the same OAuth flow and the same one-screen view.",
   },
   {
     question: "What is AI traffic in the Analytics view?",
     answer:
-      "Traffic arriving from AI-powered search surfaces — Google AI Overviews, ChatGPT with browsing, Perplexity, Bing Copilot — segmented from traditional organic traffic. If it's a session that came via an AI citation, you'll see it here.",
+      "Traffic arriving from AI-powered search surfaces like Google AI Overviews, ChatGPT with browsing, Perplexity, and Bing Copilot, segmented from traditional organic traffic. If it's a session that came via an AI citation, you'll see it here.",
   },
   {
     question: "Can I see which keywords bring AI traffic vs. traditional traffic?",
     answer:
-      "Yes. The view overlays AI citation status on your keyword performance data. You see which queries earn AI citations, which drive organic traffic, and where the two intersect — the highest-leverage intersection for generative engine optimization work.",
+      "Yes. The view overlays AI citation status on your keyword performance data. You see which queries earn AI citations, which drive organic traffic, and where the two intersect. That overlap is the highest-leverage area for generative engine optimization work.",
   },
   {
     question: "Is my Search Console data stored on your servers?",
@@ -72,7 +77,7 @@ const outcomes = [
   {
     tag: "AI traffic attribution",
     title: "Cited AND clicked",
-    body: "Every AI-cited URL cross-referenced with GA4 session data. See which citations actually drive traffic, which don't, and which pages have the inverse problem — clicks without citations.",
+    body: "Every AI-cited URL cross-referenced with GA4 session data. See which citations actually drive traffic, which don't, and which pages have the inverse problem (clicks without citations).",
   },
   {
     tag: "13 sub-dashboards",
@@ -82,7 +87,7 @@ const outcomes = [
   {
     tag: "Intent classification",
     title: "What queries actually mean",
-    body: "Every query auto-tagged informational / commercial / navigational / transactional. Filter any view by intent — know whether your AI citations convert or just look good.",
+    body: "Every query auto-tagged informational, commercial, navigational, or transactional. Filter any view by intent to know whether your AI citations convert or just look good.",
   },
   {
     tag: "Cluster view",
@@ -108,7 +113,7 @@ export default function AnalyticsPage() {
                 AI citations, attributed to real traffic.
               </h1>
               <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-                Connect Search Console and GA4. See AI-driven sessions, cited-vs-clicked pages, and 13 sub-dashboards built for the AI-search era — not a generic GSC rewrapper.
+                Connect Search Console and GA4. See AI-driven sessions, cited-vs-clicked pages, and 13 sub-dashboards built for the AI-search era, not a generic GSC rewrapper.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Link href="/app" prefetch={false} className="rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px]">
@@ -253,7 +258,7 @@ export default function AnalyticsPage() {
               Connect your analytics.
             </h2>
             <p className="mt-2 text-base text-gray-300">
-              Free while in beta. Google OAuth verification in progress — email{" "}
+              Free while in beta. Google OAuth verification in progress; email{" "}
               <a href="mailto:hello@geotoolbox.ai" className="font-semibold text-white underline underline-offset-2 hover:text-accent-400">
                 hello@geotoolbox.ai
               </a>{" "}

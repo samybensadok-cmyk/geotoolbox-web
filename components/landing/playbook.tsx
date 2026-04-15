@@ -6,7 +6,7 @@ const steps = [
     q: "How do I see where AI cites my brand?",
     short: "Measure AI visibility",
     body:
-      "Run a generative engine optimization (GEO) scan across ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot. You get a 0–100 AI visibility score, verbatim citation snippets, and a side-by-side competitor read-out — the baseline every answer engine optimization (AEO) program starts from.",
+      "Run a generative engine optimization (GEO) scan across ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot. You get a visibility score from 0 to 100, verbatim citation snippets, and a side-by-side competitor read-out. Every answer engine optimization (AEO) program starts from that baseline.",
     tag: "GEO Scan",
     slug: "geo-scan",
     cta: "Scan your domain",
@@ -16,7 +16,7 @@ const steps = [
     q: "Why isn't AI citing my pages?",
     short: "Audit for citability",
     body:
-      "Grade any URL A–F on 19 signals — schema markup, llms.txt, AI bot access (GPTBot, ClaudeBot, PerplexityBot, Google-Extended), entity clarity, and freshness. AI crawlers can't cite what they can't read or can't understand. The audit maps every signal to the exact fix.",
+      "Grade any URL from A to F on 19 signals: schema markup, llms.txt, AI bot access (GPTBot, ClaudeBot, PerplexityBot, Google-Extended), entity clarity, and freshness. AI crawlers can't cite what they can't read or can't understand. The audit maps every signal to a specific fix.",
     tag: "Content Analyzer",
     slug: "content-analyzer",
     cta: "Audit a URL",
@@ -26,7 +26,7 @@ const steps = [
     q: "What do I change to get cited?",
     short: "Ship answer-first content",
     body:
-      "Brief and draft content AI will actually quote: framework-aware outline (pillar, cluster, comparison, FAQ), entity checklist, competitor facts coverage, and dual Structure + AI Readiness scoring. The answer-first format optimized for ChatGPT, AI Overviews, and every AI answer engine.",
+      "Brief and draft content AI will actually quote. You get a framework-aware outline (pillar, cluster, comparison, or FAQ), an entity checklist, competitor facts coverage, and dual Structure and AI Readiness scoring. It's the answer-first format optimized for ChatGPT, AI Overviews, and every AI answer engine.",
     tag: "Content Brief & Draft",
     slug: "content-brief",
     cta: "Generate a brief",
@@ -44,7 +44,7 @@ export function Playbook() {
               The playbook
             </p>
             <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.75rem)] font-bold leading-tight tracking-tight text-gray-900">
-              How to rank in AI search &mdash; the 3-step method.
+              How to rank in AI search in three steps.
             </h2>
           </div>
           <p className="max-w-xl text-base leading-relaxed text-gray-600">
@@ -101,7 +101,7 @@ export function Playbook() {
         {/* Closing line + link to deeper explainer */}
         <div className="mt-10 flex flex-col items-start gap-4 border-t border-gray-100 pt-8 md:flex-row md:items-center md:justify-between">
           <p className="max-w-2xl text-[15px] leading-relaxed text-gray-600">
-            GEO, AEO, LLM SEO &mdash; different names for the same job: being the source AI engines cite when your customer asks a question.
+            GEO, AEO, LLM SEO. Different names for the same job: being the source AI engines cite when your customer asks a question.
           </p>
           <Link
             href="/blog/what-is-geo"
