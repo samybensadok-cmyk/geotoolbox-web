@@ -19,7 +19,7 @@ export function Problem() {
   return (
     <section className="bg-gray-950 px-6 py-24 sm:py-32">
       <div className="mx-auto max-w-7xl">
-        {/* Left-aligned editorial header */}
+        {/* Editorial header */}
         <div className="max-w-2xl">
           <p className="text-xs font-semibold uppercase tracking-widest text-accent-400">
             The problem
@@ -32,29 +32,29 @@ export function Problem() {
           </p>
         </div>
 
-        {/* Asymmetric split: what you see vs what you miss */}
-        <div className="mt-16 grid grid-cols-1 gap-10 lg:grid-cols-[5fr_7fr] lg:gap-16">
-          {/* Left: tracked */}
-          <div>
-            <div className="flex items-center gap-3">
-              <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-400">
-                What you see
-              </span>
-              <span className="h-px flex-1 bg-gray-800" />
-            </div>
-            <ul className="mt-5 divide-y divide-gray-900">
+        {/* Flipped asymmetric split — left minimal, right dominant */}
+        <div className="mt-16 grid grid-cols-1 gap-12 lg:grid-cols-[3fr_9fr] lg:gap-20">
+          {/* Left — sidebar, tiny, muted. "You already have this covered." */}
+          <aside className="lg:pt-2">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-gray-600">
+              What you track today
+            </p>
+            <ul className="mt-5 space-y-2">
               {tracked.map((item) => (
-                <li key={item} className="flex items-center gap-3 py-3">
-                  <svg className="h-3.5 w-3.5 shrink-0 text-gray-500" viewBox="0 0 14 14" fill="none">
-                    <path d="M3 7l3 3 5-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                  <span className="text-[15px] text-gray-300">{item}</span>
+                <li
+                  key={item}
+                  className="text-sm text-gray-500"
+                >
+                  {item}
                 </li>
               ))}
             </ul>
-          </div>
+            <p className="mt-6 max-w-[18ch] text-xs leading-relaxed text-gray-600 italic">
+              Traditional search channels. Already measured.
+            </p>
+          </aside>
 
-          {/* Right: untracked — emphasized with accent */}
+          {/* Right — hero column, the alarm */}
           <div>
             <div className="flex items-center gap-3">
               <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-400">
@@ -62,27 +62,50 @@ export function Problem() {
               </span>
               <span className="h-px flex-1 bg-accent-800/60" />
             </div>
-            <ul className="mt-5 divide-y divide-accent-900/40">
+
+            {/* Count badge — the quantitative anchor */}
+            <div className="mt-6 inline-flex flex-wrap items-center gap-x-3 gap-y-1 rounded-full border border-accent-900/60 bg-accent-950/50 px-5 py-2.5">
+              <span className="font-mono text-xl font-bold tabular-nums text-accent-300">
+                6
+              </span>
+              <span className="text-sm text-accent-100">AI engines</span>
+              <span className="text-accent-800" aria-hidden="true">·</span>
+              <span className="font-mono text-xl font-bold tabular-nums text-white">
+                0
+              </span>
+              <span className="text-sm text-accent-100">
+                visibility today
+              </span>
+            </div>
+
+            <ul className="mt-8 divide-y divide-accent-900/40">
               {untracked.map((item, i) => (
-                <li key={item} className="flex items-center gap-3 py-3">
-                  <span className="relative inline-flex h-2.5 w-2.5 shrink-0">
-                    <span
-                      className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-400 opacity-60"
-                      style={{ animationDelay: `${i * 160}ms` }}
-                    />
-                    <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-accent-500" />
+                <li
+                  key={item}
+                  className="flex items-center gap-5 py-5"
+                >
+                  <span className="relative inline-flex h-3 w-3 shrink-0" aria-hidden="true">
+                    {i === 0 && (
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-400 opacity-60" />
+                    )}
+                    <span className="relative inline-flex h-3 w-3 rounded-full bg-accent-500" />
                   </span>
-                  <span className="text-[15px] font-medium text-white">{item}</span>
+                  <span className="text-xl font-semibold text-white md:text-2xl">
+                    {item}
+                  </span>
                 </li>
               ))}
             </ul>
           </div>
         </div>
 
-        {/* Bottom editorial pull-quote */}
-        <p className="mt-16 max-w-3xl text-lg leading-relaxed text-gray-400">
-          The fastest-growing search channel is the one you don&apos;t measure. AI visibility is already the metric your competitors track.
-          <span className="text-white"> What about you?</span>
+        {/* Bigger editorial pull-quote — now actually reads as a pull quote */}
+        <p className="mt-20 max-w-4xl text-[clamp(1.25rem,2.2vw,1.75rem)] font-semibold leading-snug tracking-tight text-gray-300">
+          The fastest-growing search channel is the one you don&apos;t measure.{" "}
+          <span className="text-accent-300">
+            AI visibility is already the metric your competitors track.
+          </span>{" "}
+          <span className="text-white">What about you?</span>
         </p>
       </div>
     </section>
