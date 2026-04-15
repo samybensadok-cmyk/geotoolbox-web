@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
 import { RelatedFeatures } from "@/components/features/related-features"
+import { FeatureFaq } from "@/components/features/feature-faq"
 
 export const metadata: Metadata = {
   title: "Domain Overview — AI visibility command center",
@@ -28,6 +29,34 @@ const aiCompetitors = [
   { domain: "semrush.com", share: 62, delta: "-3" },
   { domain: "moz.com", share: 48, delta: "+1" },
   { domain: "searchenginejournal.com", share: 41, delta: "+6" },
+]
+
+const faqs = [
+  {
+    question: "What's actually inside the overview?",
+    answer:
+      "Six views: top cited pages, AI competitors, co-cited domains, topical authority, GSC-enhanced traffic data, and a prioritized action list.",
+  },
+  {
+    question: "Do I need to connect Google Search Console?",
+    answer:
+      "No — but it helps. Core visibility, competitors, and cited pages work without GSC. Connecting it cross-references cited URLs with real clicks and impressions, so you can spot pages with AI love but no organic traffic (or vice versa).",
+  },
+  {
+    question: "How fresh is the data?",
+    answer:
+      "The overview rebuilds on a 7-day rolling window, updating automatically every time you run a scan. No manual refresh or scheduled job.",
+  },
+  {
+    question: "How many scans do I need before the overview is useful?",
+    answer:
+      "Even one scan populates top cited pages and AI competitors. Depth and trend accuracy improve with each additional scan.",
+  },
+  {
+    question: "Where do the recommended actions come from?",
+    answer:
+      "Pattern analysis across your scan history. The list surfaces the pages that should be cited but aren't and links each to the specific Content Analyzer fix that matters most.",
+  },
 ]
 
 const sections = [
@@ -83,7 +112,7 @@ export default function DomainOverviewPage() {
                 Every scan, every citation, every competitor — aggregated. The dashboard agencies and brand teams keep open all day to track how AI sees their domain.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
-                <Link href="/app" className="rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px]">
+                <Link href="/app" prefetch={false} className="rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px]">
                   See your first overview
                 </Link>
                 <Link href="#whats-inside" className="rounded-full border border-gray-200 px-6 py-3.5 text-[15px] font-medium text-gray-700 hover:border-gray-400 hover:text-gray-900">
@@ -192,7 +221,7 @@ export default function DomainOverviewPage() {
               <p className="mt-5 text-base leading-relaxed text-gray-600">
                 Share-of-voice across every prompt you've scanned. Ranked by how often AI recommends them instead of you, with week-over-week movement.
               </p>
-              <Link href="/app" className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-accent-700">
+              <Link href="/app" prefetch={false} className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-accent-700">
                 Run your first overview
                 <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
@@ -233,6 +262,8 @@ export default function DomainOverviewPage() {
         </div>
       </section>
 
+      <FeatureFaq items={faqs} />
+
       <RelatedFeatures current="domain-overview" related={["geo-scan", "competitor-intel", "analytics"]} />
 
       {/* CTA */}
@@ -244,7 +275,7 @@ export default function DomainOverviewPage() {
             </h2>
             <p className="mt-2 text-base text-gray-300">Runs on every scan you do. Free while in beta.</p>
           </div>
-          <Link href="/app" className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]">
+          <Link href="/app" prefetch={false} className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]">
             Start free trial
             <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />

@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
 import { RelatedFeatures } from "@/components/features/related-features"
+import { FeatureFaq } from "@/components/features/feature-faq"
 
 export const metadata: Metadata = {
   title: "Analytics — GSC + GA4 for AI search attribution",
@@ -32,6 +33,34 @@ const aiTraffic = [
   { source: "Gemini", sessions: 128, delta: "+8%" },
   { source: "Claude", sessions: 94, delta: "+12%" },
   { source: "Bing Copilot", sessions: 67, delta: "+4%" },
+]
+
+const faqs = [
+  {
+    question: "Are GSC and GA4 both required?",
+    answer:
+      "GSC is required — it's the source for query and page performance data. GA4 is optional but recommended, because it unlocks attribution: which AI-cited pages actually drove sessions.",
+  },
+  {
+    question: "Is Analytics available to everyone yet?",
+    answer:
+      "Not quite. Google OAuth verification is in progress; access is currently on the test-user list. Email hello@geotoolbox.ai to be added.",
+  },
+  {
+    question: "What are the 13 sub-dashboards?",
+    answer:
+      "Overview, Compare, Quick Wins, Content Decay, Click Potential, Cannibalization, Health, Trajectory, Pages, Sections, Keywords, Keyword Cloud, and Clusters. Each answers a different question.",
+  },
+  {
+    question: "What does intent classification do?",
+    answer:
+      "Every query is auto-tagged as informational, commercial, navigational, or transactional. Filter any view by intent to see whether your AI citations convert or just look good.",
+  },
+  {
+    question: "Is my GSC data stored on your servers?",
+    answer:
+      "GSC data is cached in your browser via localStorage, scoped per property and period. Only OAuth tokens and scan results live server-side.",
+  },
 ]
 
 const outcomes = [
@@ -77,7 +106,7 @@ export default function AnalyticsPage() {
                 Connect Search Console and GA4. See AI-driven sessions, cited-vs-clicked pages, and 13 sub-dashboards built for the AI-search era — not a generic GSC rewrapper.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
-                <Link href="/app" className="rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px]">
+                <Link href="/app" prefetch={false} className="rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px]">
                   Connect GSC + GA4
                 </Link>
                 <Link href="#dashboards" className="rounded-full border border-gray-200 px-6 py-3.5 text-[15px] font-medium text-gray-700 hover:border-gray-400 hover:text-gray-900">
@@ -207,6 +236,8 @@ export default function AnalyticsPage() {
         </div>
       </section>
 
+      <FeatureFaq items={faqs} />
+
       <RelatedFeatures current="analytics" related={["domain-overview", "geo-scan", "content-analyzer"]} />
 
       {/* CTA */}
@@ -224,7 +255,7 @@ export default function AnalyticsPage() {
               to be whitelisted.
             </p>
           </div>
-          <Link href="/app" className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]">
+          <Link href="/app" prefetch={false} className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]">
             Start free trial
             <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />

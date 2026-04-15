@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
 import { RelatedFeatures } from "@/components/features/related-features"
+import { FeatureFaq } from "@/components/features/feature-faq"
 
 export const metadata: Metadata = {
   title: "GEO Scan — 6-engine AI visibility scan",
@@ -39,6 +40,34 @@ const steps = [
     title: "The full citation map",
     body: "Each engine's verbatim response, whether your domain was cited, which competitors appeared, and a 0–100 visibility score.",
     output: "72/100 visibility · 4 competitors",
+  },
+]
+
+const faqs = [
+  {
+    question: "Does GEO Scan query AI engines live, or is it training-data lookup?",
+    answer:
+      "Live. Every scan runs the prompt through each engine in real time, so you see what your customers see today — not what the model memorized months ago.",
+  },
+  {
+    question: "How many competitor domains can I compare in one scan?",
+    answer:
+      "Up to two competitor domains per scan. We surface which prompts they win, which they lose, and the citations they earn that you don't.",
+  },
+  {
+    question: "Which countries are supported?",
+    answer:
+      "Eight markets today: United States, United Kingdom, Australia, Canada, Ireland, France, Spain, and Germany. Engines with native locale (Google AI Overviews, Gemini) query in-country; the others get prompt augmentation for market-specific answers.",
+  },
+  {
+    question: "How long does a scan take?",
+    answer:
+      "One to two minutes end to end, depending on engine load across the six providers.",
+  },
+  {
+    question: "Is my scan history saved for comparison?",
+    answer:
+      "Yes — every scan is stored automatically. Weekly score trend, per-engine trajectory, and competitor movement all feed Domain Overview without extra work.",
   },
 ]
 
@@ -86,7 +115,7 @@ export default function GeoScanPage() {
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Link
-                  href="/app"
+                  href="/app" prefetch={false}
                   className="rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px]"
                 >
                   Run a scan
@@ -231,6 +260,8 @@ export default function GeoScanPage() {
         </div>
       </section>
 
+      <FeatureFaq items={faqs} />
+
       <RelatedFeatures current="geo-scan" related={["domain-overview", "content-analyzer", "competitor-intel"]} />
 
       {/* CTA */}
@@ -245,7 +276,7 @@ export default function GeoScanPage() {
             </p>
           </div>
           <Link
-            href="/app"
+            href="/app" prefetch={false}
             className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]"
           >
             Start free trial

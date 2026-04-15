@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
 import { RelatedFeatures } from "@/components/features/related-features"
+import { FeatureFaq } from "@/components/features/feature-faq"
 
 export const metadata: Metadata = {
   title: "Content Brief & Draft — AI-ready content workflow",
@@ -37,6 +38,34 @@ const steps = [
     title: "Structure + AI readiness",
     body: "Dual scoring: Structure (how well the draft matches the brief) and AI Readiness (how likely AI engines are to cite it, 0–100).",
     output: "Structure 91 · AI Readiness 78",
+  },
+]
+
+const faqs = [
+  {
+    question: "What's the difference between Structure and AI Readiness scores?",
+    answer:
+      "Structure measures how well the draft matches the brief — right headings, covered entities, included facts. AI Readiness uses the same 19-signal model as Content Analyzer to estimate how citable the page will be once published.",
+  },
+  {
+    question: "Which article frameworks does the brief support?",
+    answer:
+      "Pillar, cluster, comparison, and FAQ formats. We pick based on the keyword and live SERP shape, and you can switch manually.",
+  },
+  {
+    question: "Can I write the draft inside the tool?",
+    answer:
+      "Yes. Brief and draft live side-by-side — headings pre-filled, entity checklist pinned, inline citation suggestions. You can also paste an existing draft to score it against the brief.",
+  },
+  {
+    question: "What export formats are supported?",
+    answer:
+      "PDF, XLSX, or the in-line draft itself. No proprietary lock-in.",
+  },
+  {
+    question: "Where do the facts-coverage data points come from?",
+    answer:
+      "Competitor extraction. We parse the top-ranked pages for the target keyword and pull out the concrete facts and data points they use. Your draft gets flagged when a high-value fact is missing.",
   },
 ]
 
@@ -91,7 +120,7 @@ export default function ContentBriefPage() {
                 Generate the brief, write the draft, grade the result — all in one tool. Framework, entities, facts coverage, and citability scoring, built for the AI-search era.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
-                <Link href="/app" className="rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px]">
+                <Link href="/app" prefetch={false} className="rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px]">
                   Generate a brief
                 </Link>
                 <Link href="#how" className="rounded-full border border-gray-200 px-6 py-3.5 text-[15px] font-medium text-gray-700 hover:border-gray-400 hover:text-gray-900">
@@ -201,6 +230,8 @@ export default function ContentBriefPage() {
         </div>
       </section>
 
+      <FeatureFaq items={faqs} />
+
       <RelatedFeatures current="content-brief" related={["content-analyzer", "geo-scan", "domain-overview"]} />
 
       {/* CTA */}
@@ -212,7 +243,7 @@ export default function ContentBriefPage() {
             </h2>
             <p className="mt-2 text-base text-gray-300">Free while in beta. No credit card.</p>
           </div>
-          <Link href="/app" className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]">
+          <Link href="/app" prefetch={false} className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]">
             Start free trial
             <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />

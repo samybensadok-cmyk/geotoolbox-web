@@ -25,6 +25,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: `${siteConfig.url}/about`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+    {
       url: `${siteConfig.url}/features/geo-scan`,
       lastModified: new Date(),
       changeFrequency: "monthly",

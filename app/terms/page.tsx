@@ -9,7 +9,7 @@ export default function TermsPage() {
   return (
     <div className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
       <h1 className="text-3xl font-bold tracking-tight text-gray-900">Terms of Service</h1>
-      <p className="mt-2 text-sm text-gray-400">Last updated: April 13, 2026</p>
+      <p className="mt-2 text-sm text-gray-600">Last updated: April 13, 2026</p>
 
       <div className="mt-10 space-y-8 text-[15px] leading-relaxed text-gray-600">
         <section>
@@ -49,7 +49,7 @@ export default function TermsPage() {
           <h2 className="text-lg font-semibold text-gray-900">5. Data and Privacy</h2>
           <p className="mt-2">
             Your use of the Service is also governed by our{" "}
-            <a href="/privacy" className="text-accent-600 underline hover:text-accent-700">Privacy Policy</a>.
+            <a href="/privacy" className="text-accent-700 underline hover:text-accent-800">Privacy Policy</a>.
             You retain ownership of your data. We do not claim any rights to data you provide or that we access on your behalf through connected services.
           </p>
         </section>
@@ -86,7 +86,7 @@ export default function TermsPage() {
           <h2 className="text-lg font-semibold text-gray-900">10. Contact</h2>
           <p className="mt-2">
             Questions about these Terms? Email{" "}
-            <a href="mailto:hello@geotoolbox.ai" className="text-accent-600 underline hover:text-accent-700">hello@geotoolbox.ai</a>.
+            <a href="mailto:hello@geotoolbox.ai" className="text-accent-700 underline hover:text-accent-800">hello@geotoolbox.ai</a>.
           </p>
         </section>
       </div>

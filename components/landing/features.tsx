@@ -189,7 +189,7 @@ export function Features() {
 
         <div className="mt-14">
           <Link
-            href="/app"
+            href="/app" prefetch={false}
             className="inline-flex items-center gap-2 rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px]"
           >
             Run your first scan

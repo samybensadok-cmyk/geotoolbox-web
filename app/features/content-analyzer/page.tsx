@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
 import { RelatedFeatures } from "@/components/features/related-features"
+import { FeatureFaq } from "@/components/features/feature-faq"
 
 export const metadata: Metadata = {
   title: "Content Analyzer — page-level AI citability audit",
@@ -55,6 +56,34 @@ const steps = [
   },
 ]
 
+const faqs = [
+  {
+    question: "Which AI crawlers does Content Analyzer check?",
+    answer:
+      "Six today: GPTBot (OpenAI), ClaudeBot (Anthropic), PerplexityBot, Google-Extended, CCBot (CommonCrawl), and Amazonbot. If one is blocked, we identify the source — robots.txt, X-Robots-Tag, or CDN firewall.",
+  },
+  {
+    question: "Can I analyze a competitor's URL, or only my own pages?",
+    answer:
+      "Any URL. Competitor pages, product pages, blog posts — it works on static HTML, server-rendered sites, and client-rendered React.",
+  },
+  {
+    question: "What do the 19 signals cover?",
+    answer:
+      "Three categories: Clarity (entity clarity, schema, structure, heading hierarchy), Authority (freshness, author byline, external citations), and Access (bot access, JS vs no-JS parity, X-Robots-Tag). Every signal maps to a concrete code or editorial fix.",
+  },
+  {
+    question: "What does the A–F grade represent?",
+    answer:
+      "An aggregate readiness score across Clarity, Authority, and Access. It translates the 19 signal results into a single shareable output — clean enough for a stakeholder, detailed enough for a developer.",
+  },
+  {
+    question: "How fast is the analysis?",
+    answer:
+      "Under 60 seconds from paste to grade. Rerun anytime to verify the fix shipped.",
+  },
+]
+
 const outcomes = [
   {
     tag: "Multi-bot",
@@ -98,7 +127,7 @@ export default function ContentAnalyzerPage() {
                 Grade any page A–F. 19 signals across clarity, authority, and access. Know exactly what to fix so AI starts citing your pages instead of your competitors&apos;.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
-                <Link href="/app" className="rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px]">
+                <Link href="/app" prefetch={false} className="rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px]">
                   Analyze a page
                 </Link>
                 <Link href="#signals" className="rounded-full border border-gray-200 px-6 py-3.5 text-[15px] font-medium text-gray-700 hover:border-gray-400 hover:text-gray-900">
@@ -266,6 +295,8 @@ export default function ContentAnalyzerPage() {
         </div>
       </section>
 
+      <FeatureFaq items={faqs} />
+
       <RelatedFeatures current="content-analyzer" related={["content-brief", "geo-scan", "domain-overview"]} />
 
       {/* CTA */}
@@ -277,7 +308,7 @@ export default function ContentAnalyzerPage() {
             </h2>
             <p className="mt-2 text-base text-gray-300">Free while in beta. No credit card. Results in under a minute.</p>
           </div>
-          <Link href="/app" className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]">
+          <Link href="/app" prefetch={false} className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]">
             Analyze a page
             <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />

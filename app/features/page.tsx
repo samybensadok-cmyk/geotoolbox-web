@@ -105,6 +105,24 @@ export default function FeaturesPage() {
 
       {/* Feature groups */}
       <section className="bg-white px-6 pb-24 sm:pb-32">
+        {/* Mobile sticky jump-nav */}
+        <nav
+          aria-label="Feature groups"
+          className="sticky top-14 z-20 -mx-6 mb-10 overflow-x-auto border-b border-gray-200 bg-white/90 px-6 py-3 backdrop-blur-md lg:hidden"
+        >
+          <ul className="mx-auto flex max-w-7xl gap-2 whitespace-nowrap">
+            {groups.map((g) => (
+              <li key={g.label}>
+                <a
+                  href={`#group-${g.label.toLowerCase()}`}
+                  className="inline-block rounded-full bg-gray-100 px-3 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-700 transition-colors hover:bg-gray-200 hover:text-gray-900"
+                >
+                  {g.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
         <div className="mx-auto max-w-7xl divide-y divide-gray-200">
           {groups.map((group) => {
             const groupColor = {
@@ -115,7 +133,11 @@ export default function FeaturesPage() {
             }[group.label] || { dot: "bg-gray-400", border: "border-l-gray-400", eyebrow: "text-gray-700", highlight: "bg-gray-400", pillHover: "hover:border-gray-400 hover:text-gray-900" }
 
             return (
-              <div key={group.label} className="grid grid-cols-1 gap-8 py-12 lg:grid-cols-[4fr_8fr] lg:gap-16 lg:py-16">
+              <div
+                key={group.label}
+                id={`group-${group.label.toLowerCase()}`}
+                className="scroll-mt-28 grid grid-cols-1 gap-8 py-12 lg:grid-cols-[4fr_8fr] lg:gap-16 lg:py-16"
+              >
                 {/* Group label */}
                 <div className="lg:sticky lg:top-20 lg:h-fit">
                   <div className="flex items-center gap-2">
@@ -212,7 +234,7 @@ export default function FeaturesPage() {
             </div>
             <div className="flex flex-col items-start gap-3 lg:items-end">
               <Link
-                href="/app"
+                href="/app" prefetch={false}
                 className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]"
               >
                 Start free trial

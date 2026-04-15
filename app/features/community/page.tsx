@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
 import { RelatedFeatures } from "@/components/features/related-features"
+import { FeatureFaq } from "@/components/features/feature-faq"
 
 export const metadata: Metadata = {
   title: "Community — Reddit + forum citations AI engines use",
@@ -37,6 +38,34 @@ const threads = [
     engines: ["Perplexity"],
     sentiment: "Mixed",
     risk: false,
+  },
+]
+
+const faqs = [
+  {
+    question: "Which platforms does Community cover?",
+    answer:
+      "Reddit is the primary source. Other forums appear when AI engines cite their threads in responses to your tracked prompts. Everything is ranked by citation frequency.",
+  },
+  {
+    question: "How is sentiment classified?",
+    answer:
+      "Each thread is tagged Positive, Mixed, or Negative based on how it frames your brand or category. Negative threads AI is amplifying get flagged as misinformation risks.",
+  },
+  {
+    question: "How often is the community map refreshed?",
+    answer:
+      "On every scan. New threads AI starts citing between runs appear the next time you scan.",
+  },
+  {
+    question: "Can I use this to find subreddits worth engaging?",
+    answer:
+      "Yes. The subreddit map ranks communities by how often AI cites threads from them. The action plan identifies specific threads worth a reply and FAQ-shaped questions AI keeps answering without citing you.",
+  },
+  {
+    question: "Does Community include non-Reddit forums?",
+    answer:
+      "Yes, but indirectly. Reddit is the primary dataset; non-Reddit forums only appear when AI engines cite them in responses to your tracked prompts.",
   },
 ]
 
@@ -83,7 +112,7 @@ export default function CommunityPage() {
                 AI engines cite forums constantly. See exactly which threads they use in your space — plus the misinformation risks and subreddits worth engaging.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
-                <Link href="/app" className="rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px]">
+                <Link href="/app" prefetch={false} className="rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px]">
                   See your community map
                 </Link>
                 <Link href="#outcomes" className="rounded-full border border-gray-200 px-6 py-3.5 text-[15px] font-medium text-gray-700 hover:border-gray-400 hover:text-gray-900">
@@ -253,6 +282,8 @@ export default function CommunityPage() {
         </div>
       </section>
 
+      <FeatureFaq items={faqs} />
+
       <RelatedFeatures current="community" related={["competitor-intel", "domain-overview", "geo-scan"]} />
 
       {/* CTA */}
@@ -264,7 +295,7 @@ export default function CommunityPage() {
             </h2>
             <p className="mt-2 text-base text-gray-300">Free while in beta. Runs on every scan.</p>
           </div>
-          <Link href="/app" className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]">
+          <Link href="/app" prefetch={false} className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]">
             Start free trial
             <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
