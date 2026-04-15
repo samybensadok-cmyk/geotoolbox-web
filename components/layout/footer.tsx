@@ -22,9 +22,10 @@ export function Footer() {
           <div>
             <h4 className="text-xs font-semibold text-gray-900 uppercase tracking-wider">Product</h4>
             <ul className="mt-3 space-y-2">
-              <li><Link href="/app" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Brand Scanner</Link></li>
-              <li><Link href="/#features" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Features</Link></li>
-              <li><Link href="/app" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Pricing</Link></li>
+              <li><Link href="/features/geo-scan" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">GEO Scan</Link></li>
+              <li><Link href="/features/content-analyzer" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Content Analyzer</Link></li>
+              <li><Link href="/features/domain-overview" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Domain Overview</Link></li>
+              <li><Link href="/features" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">All features</Link></li>
             </ul>
           </div>
 

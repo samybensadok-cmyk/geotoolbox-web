@@ -9,7 +9,7 @@ export const siteConfig = {
     github: "https://github.com/samybensadok-cmyk/geotoolbox-web",
   },
   nav: [
-    { label: "Features", href: "/#features" },
+    { label: "Features", href: "/features" },
     { label: "Blog", href: "/blog" },
   ],
 }
