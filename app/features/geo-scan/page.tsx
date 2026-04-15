@@ -114,27 +114,39 @@ export default function GeoScanPage() {
                   <span className="truncate">best CRM software for small business</span>
                 </div>
                 <div className="mt-5 divide-y divide-gray-100">
-                  {engines.map((e) => (
-                    <div key={e.name} className="flex items-center justify-between py-2.5">
-                      <span className="text-sm font-medium text-gray-800">{e.name}</span>
-                      <div className="flex items-center gap-2.5">
-                        {e.variant === "cited" ? (
-                          <span className="relative inline-flex h-2 w-2">
-                            <span
-                              className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-400 opacity-60"
-                              style={{ animationDelay: `${e.delay}ms` }}
-                            />
-                            <span className="relative inline-flex h-2 w-2 rounded-full bg-accent-500" />
+                  {engines.map((e) => {
+                    const isMentioned = e.status === "Mentioned"
+                    const dotClass = e.variant === "cited"
+                      ? (isMentioned ? "bg-amber-500" : "bg-accent-500")
+                      : "border border-gray-300"
+                    const pingClass = e.variant === "cited"
+                      ? (isMentioned ? "bg-amber-400" : "bg-accent-400")
+                      : ""
+                    const textClass = e.variant === "cited"
+                      ? (isMentioned ? "text-amber-700" : "text-accent-700")
+                      : "text-gray-500"
+                    return (
+                      <div key={e.name} className="flex items-center justify-between py-2.5">
+                        <span className="text-sm font-medium text-gray-800">{e.name}</span>
+                        <div className="flex items-center gap-2.5">
+                          {e.variant === "cited" ? (
+                            <span className="relative inline-flex h-2 w-2">
+                              <span
+                                className={`absolute inline-flex h-full w-full animate-ping rounded-full ${pingClass} opacity-60`}
+                                style={{ animationDelay: `${e.delay}ms` }}
+                              />
+                              <span className={`relative inline-flex h-2 w-2 rounded-full ${dotClass}`} />
+                            </span>
+                          ) : (
+                            <span className={`h-2 w-2 rounded-full ${dotClass}`} />
+                          )}
+                          <span className={`text-xs font-semibold tabular-nums ${textClass}`}>
+                            {e.status}
                           </span>
-                        ) : (
-                          <span className="h-2 w-2 rounded-full border border-gray-300" />
-                        )}
-                        <span className={e.variant === "cited" ? "text-xs font-semibold text-accent-700 tabular-nums" : "text-xs text-gray-500 tabular-nums"}>
-                          {e.status}
-                        </span>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
                 <div className="mt-5 flex items-center justify-between rounded-xl border border-gray-100 bg-gray-50 px-4 py-3">
                   <span className="text-[11px] font-semibold uppercase tracking-widest text-gray-600">Visibility</span>

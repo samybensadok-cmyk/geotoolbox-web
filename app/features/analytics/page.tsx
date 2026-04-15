@@ -60,8 +60,8 @@ const outcomes = [
 export default function AnalyticsPage() {
   return (
     <>
-      {/* Hero */}
-      <section className="bg-white px-6 pt-20 pb-16 sm:pt-24 sm:pb-20">
+      {/* Hero — cool clinical atmosphere */}
+      <section className="bg-[var(--surface-cool)] px-6 pt-20 pb-16 sm:pt-24 sm:pb-20">
         <div className="mx-auto max-w-7xl">
           <Breadcrumbs featureName="Analytics" />
 

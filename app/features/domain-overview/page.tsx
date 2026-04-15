@@ -92,49 +92,59 @@ export default function DomainOverviewPage() {
               </div>
             </div>
 
-            {/* Dashboard visual */}
+            {/* Dashboard visual — dark command-center treatment */}
             <div className="lg:col-span-6" aria-hidden="true">
-              <div className="relative rounded-[2rem] border border-gray-200 bg-white p-6 shadow-[0_20px_60px_-20px_rgba(15,23,42,0.12)] sm:p-8">
-                {/* Domain header */}
-                <div className="flex items-center justify-between border-b border-gray-100 pb-4">
-                  <div className="flex items-center gap-2.5">
-                    <span className="relative inline-flex h-2 w-2">
-                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-400 opacity-60" />
-                      <span className="relative inline-flex h-2 w-2 rounded-full bg-accent-500" />
-                    </span>
-                    <span className="font-mono text-[13px] font-semibold text-gray-900">stubgroup.com</span>
-                  </div>
-                  <span className="font-mono text-[11px] text-gray-500">updated 4m ago</span>
-                </div>
-
-                {/* Headline stats grid */}
-                <div className="mt-5 grid grid-cols-2 gap-3">
-                  {headlineStats.map((s) => (
-                    <div key={s.label} className="rounded-xl border border-gray-100 bg-gray-50 p-3">
-                      <p className="text-[10px] font-semibold uppercase tracking-widest text-gray-600">{s.label}</p>
-                      <div className="mt-1 flex items-baseline gap-1.5">
-                        <span className="font-mono text-xl font-bold tabular-nums text-gray-900">{s.value}</span>
-                        <span className="font-mono text-[10px] text-gray-500">{s.unit}</span>
-                      </div>
-                      <p className={`mt-0.5 font-mono text-[10px] font-semibold ${s.positive ? "text-accent-700" : "text-red-600"}`}>
-                        {s.trend} wk
-                      </p>
+              <div className="relative rounded-[2rem] border border-gray-800 bg-[var(--surface-ink)] p-6 shadow-[0_30px_80px_-20px_rgba(11,18,32,0.45)] sm:p-8">
+                {/* Subtle grid overlay */}
+                <div
+                  className="pointer-events-none absolute inset-0 rounded-[2rem] opacity-[0.05]"
+                  style={{
+                    backgroundImage: "linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)",
+                    backgroundSize: "32px 32px",
+                  }}
+                />
+                <div className="relative">
+                  {/* Domain header */}
+                  <div className="flex items-center justify-between border-b border-gray-800 pb-4">
+                    <div className="flex items-center gap-2.5">
+                      <span className="relative inline-flex h-2 w-2">
+                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-400 opacity-75" />
+                        <span className="relative inline-flex h-2 w-2 rounded-full bg-accent-400" />
+                      </span>
+                      <span className="font-mono text-[13px] font-semibold text-white">stubgroup.com</span>
                     </div>
-                  ))}
-                </div>
+                    <span className="font-mono text-[11px] text-gray-500">updated 4m ago</span>
+                  </div>
 
-                {/* Cited pages */}
-                <div className="mt-5">
-                  <p className="font-mono text-[10px] font-semibold uppercase tracking-widest text-gray-600 mb-2">Top cited pages</p>
-                  <div className="divide-y divide-gray-100">
-                    {citedPages.slice(0, 3).map((p) => (
-                      <div key={p.url} className="flex items-center justify-between py-2">
-                        <span className="truncate font-mono text-[12px] text-gray-700">{p.url}</span>
-                        <span className="font-mono text-[11px] font-semibold text-accent-700 tabular-nums">
-                          {p.cites} cites
-                        </span>
+                  {/* Headline stats grid */}
+                  <div className="mt-5 grid grid-cols-2 gap-3">
+                    {headlineStats.map((s) => (
+                      <div key={s.label} className="rounded-xl border border-gray-800 bg-gray-900/40 p-3">
+                        <p className="text-[10px] font-semibold uppercase tracking-widest text-gray-500">{s.label}</p>
+                        <div className="mt-1 flex items-baseline gap-1.5">
+                          <span className="font-mono text-xl font-bold tabular-nums text-white">{s.value}</span>
+                          <span className="font-mono text-[10px] text-gray-500">{s.unit}</span>
+                        </div>
+                        <p className={`mt-0.5 font-mono text-[10px] font-semibold ${s.positive ? "text-accent-400" : "text-red-400"}`}>
+                          {s.trend} wk
+                        </p>
                       </div>
                     ))}
+                  </div>
+
+                  {/* Cited pages */}
+                  <div className="mt-5">
+                    <p className="font-mono text-[10px] font-semibold uppercase tracking-widest text-gray-500 mb-2">Top cited pages</p>
+                    <div className="divide-y divide-gray-800">
+                      {citedPages.slice(0, 3).map((p) => (
+                        <div key={p.url} className="flex items-center justify-between py-2">
+                          <span className="truncate font-mono text-[12px] text-gray-300">{p.url}</span>
+                          <span className="font-mono text-[11px] font-semibold text-accent-400 tabular-nums">
+                            {p.cites} cites
+                          </span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>

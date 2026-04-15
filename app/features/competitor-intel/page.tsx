@@ -115,9 +115,15 @@ export default function CompetitorIntelPage() {
                     )
                   })}
                 </div>
-                <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-3">
-                  <p className="font-mono text-[10px] font-semibold uppercase tracking-widest text-amber-700">Threat alert · 2h ago</p>
-                  <p className="mt-1 text-[13px] text-amber-900">
+                <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3">
+                  <div className="flex items-center gap-2">
+                    <span className="relative inline-flex h-1.5 w-1.5">
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-60" />
+                      <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-red-600" />
+                    </span>
+                    <p className="font-mono text-[10px] font-semibold uppercase tracking-widest text-red-700">Threat alert · 2h ago</p>
+                  </div>
+                  <p className="mt-1.5 text-[13px] text-red-900">
                     <span className="font-mono font-semibold">searchenginejournal.com</span>
                     {" "}gained 3 new citations on &ldquo;ai content optimization&rdquo;.
                   </p>

@@ -66,9 +66,17 @@ const outcomes = [
 export default function ContentBriefPage() {
   return (
     <>
-      {/* Hero */}
-      <section className="bg-white px-6 pt-20 pb-16 sm:pt-24 sm:pb-20">
-        <div className="mx-auto max-w-7xl">
+      {/* Hero — cream/editorial atmosphere */}
+      <section className="relative overflow-hidden bg-[var(--surface-warm)] px-6 pt-20 pb-16 sm:pt-24 sm:pb-20">
+        {/* Editorial ruled lines — subtle paper texture */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage: "repeating-linear-gradient(to bottom, transparent 0, transparent 31px, #8a7a4c 31px, #8a7a4c 32px)",
+          }}
+        />
+        <div className="relative mx-auto max-w-7xl">
           <Breadcrumbs featureName="Content Brief & Draft" />
 
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center lg:gap-16">
@@ -92,9 +100,13 @@ export default function ContentBriefPage() {
               </div>
             </div>
 
-            {/* Brief visual */}
+            {/* Brief visual — notebook card treatment */}
             <div className="lg:col-span-6" aria-hidden="true">
-              <div className="relative rounded-[2rem] border border-gray-200 bg-white p-6 sm:p-8 shadow-[0_20px_60px_-20px_rgba(15,23,42,0.12)]">
+              <div className="relative rounded-[2rem] border border-[var(--surface-warm-border)] bg-white p-6 sm:p-8 shadow-[0_20px_60px_-20px_rgba(137,120,70,0.18)]">
+                {/* Left-edge ruling — notebook spine */}
+                <div className="absolute left-4 top-6 bottom-6 w-px bg-amber-200/60" />
+                <div className="absolute left-5 top-6 bottom-6 w-px bg-amber-200/40" />
+
                 <div className="flex items-center justify-between border-b border-gray-100 pb-3">
                   <span className="font-mono text-[13px] font-semibold text-gray-900">best project management software</span>
                   <span className="rounded-full bg-accent-50 px-2 py-0.5 font-mono text-[10px] font-semibold text-accent-700">Pillar</span>
@@ -128,7 +140,7 @@ export default function ContentBriefPage() {
       </section>
 
       {/* How it works */}
-      <section id="how" className="bg-white px-6 py-24 sm:py-28">
+      <section id="how" className="bg-[var(--surface-warm)] px-6 py-24 sm:py-28">
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-[5fr_7fr] lg:items-end lg:gap-16">
             <div>

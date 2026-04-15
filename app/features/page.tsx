@@ -106,20 +106,31 @@ export default function FeaturesPage() {
       {/* Feature groups */}
       <section className="bg-white px-6 pb-24 sm:pb-32">
         <div className="mx-auto max-w-7xl divide-y divide-gray-200">
-          {groups.map((group) => (
-            <div key={group.label} className="grid grid-cols-1 gap-8 py-12 lg:grid-cols-[4fr_8fr] lg:gap-16 lg:py-16">
-              {/* Group label */}
-              <div className="lg:sticky lg:top-20 lg:h-fit">
-                <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-500">
-                  {group.label}
-                </p>
-                <h2 className="mt-2 text-2xl font-bold tracking-tight text-gray-900">
-                  {group.label === "Scanning" && "See who's cited"}
-                  {group.label === "Analysis" && "Grade what you own"}
-                  {group.label === "Intelligence" && "Know the field"}
-                  {group.label === "Reporting" && "Measure the outcome"}
-                </h2>
-              </div>
+          {groups.map((group) => {
+            const groupColor = {
+              Scanning: { dot: "bg-accent-500", border: "border-l-accent-500", eyebrow: "text-accent-700", highlight: "bg-accent-500" },
+              Analysis: { dot: "bg-emerald-500", border: "border-l-emerald-500", eyebrow: "text-emerald-700", highlight: "bg-emerald-500" },
+              Intelligence: { dot: "bg-indigo-500", border: "border-l-indigo-500", eyebrow: "text-indigo-700", highlight: "bg-indigo-500" },
+              Reporting: { dot: "bg-amber-500", border: "border-l-amber-500", eyebrow: "text-amber-700", highlight: "bg-amber-500" },
+            }[group.label] || { dot: "bg-gray-400", border: "border-l-gray-400", eyebrow: "text-gray-700", highlight: "bg-gray-400" }
+
+            return (
+              <div key={group.label} className="grid grid-cols-1 gap-8 py-12 lg:grid-cols-[4fr_8fr] lg:gap-16 lg:py-16">
+                {/* Group label */}
+                <div className="lg:sticky lg:top-20 lg:h-fit">
+                  <div className="flex items-center gap-2">
+                    <span className={`h-2 w-2 rounded-full ${groupColor.dot}`} />
+                    <p className={`font-mono text-[11px] font-semibold uppercase tracking-widest ${groupColor.eyebrow}`}>
+                      {group.label}
+                    </p>
+                  </div>
+                  <h2 className="mt-3 text-2xl font-bold tracking-tight text-gray-900">
+                    {group.label === "Scanning" && "See who's cited"}
+                    {group.label === "Analysis" && "Grade what you own"}
+                    {group.label === "Intelligence" && "Know the field"}
+                    {group.label === "Reporting" && "Measure the outcome"}
+                  </h2>
+                </div>
 
               {/* Features in group */}
               <div className="flex flex-col gap-10">
@@ -135,7 +146,7 @@ export default function FeaturesPage() {
                       <ul className="mt-4 flex flex-wrap gap-x-5 gap-y-2">
                         {f.highlights.map((h) => (
                           <li key={h} className="flex items-center gap-2 text-[13px] text-gray-700">
-                            <span className="h-1.5 w-1.5 rounded-full bg-accent-500" />
+                            <span className={`h-1.5 w-1.5 rounded-full ${groupColor.highlight}`} />
                             {h}
                           </li>
                         ))}
@@ -162,7 +173,8 @@ export default function FeaturesPage() {
                 ))}
               </div>
             </div>
-          ))}
+            )
+          })}
         </div>
       </section>
 

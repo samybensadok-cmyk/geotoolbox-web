@@ -211,19 +211,32 @@ export default function ContentAnalyzerPage() {
 
           <div className="mt-14 overflow-hidden rounded-[2rem] border border-gray-200 bg-white">
             <ul className="divide-y divide-gray-100">
-              {signals.map((s) => (
-                <li key={s.name} className="grid grid-cols-[auto_1fr_auto] items-center gap-4 px-6 py-4 md:px-8">
-                  <span className="font-mono text-[10px] font-semibold uppercase tracking-widest text-gray-500 w-20">
-                    {s.group}
-                  </span>
-                  <span className="text-[15px] font-medium text-gray-900">{s.name}</span>
-                  <div className="flex gap-1">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <span key={i} className={`h-2 w-2 rounded-full ${i < s.strength ? "bg-accent-600" : "bg-gray-200"}`} />
-                    ))}
-                  </div>
-                </li>
-              ))}
+              {signals.map((s) => {
+                const dotColor =
+                  s.strength >= 4 ? "bg-accent-600"
+                  : s.strength >= 3 ? "bg-amber-500"
+                  : "bg-red-400"
+                const gradeLabel =
+                  s.strength >= 4 ? { text: "Strong", color: "text-accent-700" }
+                  : s.strength >= 3 ? { text: "Mixed", color: "text-amber-700" }
+                  : { text: "Weak", color: "text-red-600" }
+                return (
+                  <li key={s.name} className="grid grid-cols-[auto_1fr_auto_auto] items-center gap-4 px-6 py-4 md:px-8">
+                    <span className="font-mono text-[10px] font-semibold uppercase tracking-widest text-gray-500 w-20">
+                      {s.group}
+                    </span>
+                    <span className="text-[15px] font-medium text-gray-900">{s.name}</span>
+                    <span className={`font-mono text-[11px] font-semibold ${gradeLabel.color}`}>
+                      {gradeLabel.text}
+                    </span>
+                    <div className="flex gap-1">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <span key={i} className={`h-2 w-2 rounded-full ${i < s.strength ? dotColor : "bg-gray-200"}`} />
+                      ))}
+                    </div>
+                  </li>
+                )
+              })}
             </ul>
           </div>
           <p className="mt-4 text-xs text-gray-600">

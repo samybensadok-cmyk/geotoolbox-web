@@ -66,8 +66,8 @@ const outcomes = [
 export default function CommunityPage() {
   return (
     <>
-      {/* Hero */}
-      <section className="bg-white px-6 pt-20 pb-16 sm:pt-24 sm:pb-20">
+      {/* Hero — warm social atmosphere */}
+      <section className="bg-[var(--surface-peach)] px-6 pt-20 pb-16 sm:pt-24 sm:pb-20">
         <div className="mx-auto max-w-7xl">
           <Breadcrumbs featureName="Community" />
 
