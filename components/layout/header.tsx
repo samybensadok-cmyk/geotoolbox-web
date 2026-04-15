@@ -142,7 +142,7 @@ export function Header() {
             </Link>
             <Link
               href={siteConfig.appUrl}
-              className="rounded-full bg-gray-900 px-3.5 py-1.5 text-[13px] font-medium text-white transition-colors hover:bg-gray-800"
+              className="rounded-full bg-accent-900 px-3.5 py-1.5 text-[13px] font-medium text-white transition-colors hover:bg-accent-800"
             >
               Start free
             </Link>
@@ -235,7 +235,7 @@ export function Header() {
               <Link
                 href={siteConfig.appUrl}
                 onClick={() => setMobileOpen(false)}
-                className="rounded-full bg-gray-900 py-3 text-center text-sm font-medium text-white"
+                className="rounded-full bg-accent-900 py-3 text-center text-sm font-medium text-white"
               >
                 Start free
               </Link>
