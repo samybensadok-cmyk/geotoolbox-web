@@ -136,12 +136,14 @@ export function Header() {
           <div className="ml-3 flex items-center gap-2">
             <Link
               href={siteConfig.appUrl}
+              prefetch={false}
               className="flex min-h-[40px] items-center rounded-full border border-gray-200 px-3.5 text-[13px] font-medium text-gray-700 transition-colors hover:border-gray-400 hover:text-gray-900"
             >
               Log in
             </Link>
             <Link
               href={siteConfig.appUrl}
+              prefetch={false}
               className="flex min-h-[40px] items-center rounded-full bg-accent-900 px-3.5 text-[13px] font-medium text-white transition-colors hover:bg-accent-800"
             >
               Start free
@@ -227,6 +229,7 @@ export function Header() {
             <div className="mt-4 flex flex-col gap-2">
               <Link
                 href={siteConfig.appUrl}
+                prefetch={false}
                 onClick={() => setMobileOpen(false)}
                 className="rounded-full border border-gray-200 py-3 text-center text-sm font-medium text-gray-700"
               >
@@ -234,6 +237,7 @@ export function Header() {
               </Link>
               <Link
                 href={siteConfig.appUrl}
+                prefetch={false}
                 onClick={() => setMobileOpen(false)}
                 className="rounded-full bg-accent-900 py-3 text-center text-sm font-medium text-white"
               >
