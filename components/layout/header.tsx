@@ -25,7 +25,7 @@ export function Header() {
             <Link
               key={item.href}
               href={item.href}
-              className="rounded-md px-3 py-1.5 text-[13px] font-medium text-gray-500 transition-colors hover:text-gray-900 hover:bg-gray-50"
+              className="rounded-md px-3 py-1.5 text-[13px] font-medium text-gray-700 transition-colors hover:text-gray-900 hover:bg-gray-50"
             >
               {item.label}
             </Link>
@@ -33,7 +33,7 @@ export function Header() {
           <div className="ml-3 flex items-center gap-2">
             <Link
               href={siteConfig.appUrl}
-              className="rounded-full border border-gray-200 px-3.5 py-1.5 text-[13px] font-medium text-gray-600 transition-colors hover:border-gray-300 hover:text-gray-900"
+              className="rounded-full border border-gray-200 px-3.5 py-1.5 text-[13px] font-medium text-gray-700 transition-colors hover:border-gray-400 hover:text-gray-900"
             >
               Log in
             </Link>
@@ -68,7 +68,7 @@ export function Header() {
                 key={item.href}
                 href={item.href}
                 onClick={() => setMobileOpen(false)}
-                className="text-sm text-gray-600 hover:text-gray-900"
+                className="text-sm font-medium text-gray-700 hover:text-gray-900"
               >
                 {item.label}
               </Link>
@@ -77,7 +77,7 @@ export function Header() {
               <Link
                 href={siteConfig.appUrl}
                 onClick={() => setMobileOpen(false)}
-                className="rounded-full border border-gray-200 py-3 text-center text-sm font-medium text-gray-600"
+                className="rounded-full border border-gray-200 py-3 text-center text-sm font-medium text-gray-700"
               >
                 Log in
               </Link>
