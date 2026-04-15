@@ -4,7 +4,7 @@ const engines = [
   { name: "Gemini", status: "Not found", variant: "missing", delay: 0 },
   { name: "Claude", status: "Mentioned", variant: "cited", delay: 240 },
   { name: "Copilot", status: "Not found", variant: "missing", delay: 0 },
-  { name: "Meta AI", status: "Recommended", variant: "cited", delay: 360 },
+  { name: "AI Overviews", status: "Recommended", variant: "cited", delay: 360 },
   { name: "Grok", status: "Not found", variant: "missing", delay: 0 },
 ]
 

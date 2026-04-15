@@ -1,5 +1,5 @@
 const engines = [
-  "ChatGPT", "Perplexity", "Gemini", "Claude", "Copilot", "Meta AI", "Grok",
+  "ChatGPT", "Perplexity", "Gemini", "Claude", "Copilot", "AI Overviews", "Grok",
 ]
 
 export function Engines() {

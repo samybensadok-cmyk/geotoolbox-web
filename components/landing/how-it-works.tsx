@@ -8,7 +8,7 @@ export function HowItWorks() {
     {
       num: "02",
       title: "We query 7 AI engines",
-      body: "Our system asks ChatGPT, Perplexity, Gemini, Claude, Copilot, Meta AI, and Grok about your brand in real time.",
+      body: "Our system asks ChatGPT, Perplexity, Gemini, Claude, Copilot, Google AI Overviews, and Grok about your brand in real time.",
     },
     {
       num: "03",

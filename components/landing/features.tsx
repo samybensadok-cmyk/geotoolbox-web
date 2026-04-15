@@ -8,7 +8,7 @@ function ScanVisual() {
     { name: "Gemini", cited: false, delay: 0 },
     { name: "Claude", cited: true, delay: 300 },
     { name: "Copilot", cited: false, delay: 0 },
-    { name: "Meta AI", cited: true, delay: 450 },
+    { name: "AI Overviews", cited: true, delay: 450 },
     { name: "Grok", cited: false, delay: 0 },
   ]
   return (
@@ -149,7 +149,7 @@ function StatusDot({ cited }: { cited: boolean }) {
 /* ——— Section ——— */
 export function Features() {
   const cards = [
-    { visual: <ScanVisual />, tag: "Scan", title: "Every engine, one run", body: "ChatGPT, Perplexity, Gemini, Claude, Copilot, Meta AI, Grok — scanned on a single prompt.", span: "md:col-span-2" },
+    { visual: <ScanVisual />, tag: "Scan", title: "Every engine, one run", body: "ChatGPT, Perplexity, Gemini, Claude, Copilot, Google AI Overviews, Grok — scanned on a single prompt.", span: "md:col-span-2" },
     { visual: <ScoreVisual />, tag: "Score", title: "A number your team can align on", body: "Visibility 0–100. Track weekly, set alerts, benchmark competitors.", span: "md:col-span-1" },
     { visual: <AnalyzeVisual />, tag: "Analyze", title: "19 signals, per page", body: "Entity clarity, schema, authority, freshness, structure. See what helps AI cite you.", span: "md:col-span-1" },
     { visual: <IntelVisual />, tag: "Intel", title: "Catch the day they beat you", body: "Who gets recommended instead. Co-cited domains, content gaps, real-time alerts.", span: "md:col-span-2" },
