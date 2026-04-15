@@ -7,19 +7,19 @@ const faqs = [
   },
   {
     q: "Why isn't AI citing my pages?",
-    a: "Grade any URL from A to F on 19 signals: schema markup, llms.txt, AI bot access, entity clarity, and freshness. AI crawlers can't cite what they can't read. The audit maps every signal to a specific fix.",
+    a: "Grade any URL from A to F on 19 signals: schema markup, AI bot access, entity clarity, freshness, and answer-first formatting. AI crawlers can't cite what they can't read. The audit maps every signal to a specific fix.",
   },
   {
     q: "What do I change to get cited?",
     a: "Brief and draft content AI will actually quote. You get a framework-aware outline (pillar, cluster, comparison, or FAQ), an entity checklist, competitor facts coverage, and dual Structure and AI Readiness scoring. Answer-first content, built to earn citations.",
   },
   {
-    q: "Does llms.txt help my AI visibility?",
-    a: "llms.txt is a growing convention for telling AI crawlers which pages to prioritize. It isn't a ranking factor on its own, but it's one of 19 signals the Content Analyzer grades. Sites with a clean llms.txt, proper schema, and AI bot access are more likely to be cited. Run the analyzer to see which fixes actually move the needle.",
+    q: "How do I know my changes are working?",
+    a: "Run a baseline scan, ship your changes, re-scan. GEO Toolbox keeps scan history so you can see the before/after visibility score, new citation snippets you picked up, and which engines moved. Schedule weekly or monthly auto-scans to watch the trend line in Domain Overview. Indexing speed varies by engine, but every scan cycle makes progress observable.",
   },
   {
     q: "What's the difference between GEO, AEO, and LLM SEO?",
-    a: "Three names for the same job: being the source AI engines cite when your customer asks a question. Generative engine optimization (GEO) covers the full workflow across ChatGPT, Perplexity, Claude, Gemini, Google AI Overviews, and Bing Copilot. Answer engine optimization (AEO) focuses on earning citations in answer engines specifically. LLM SEO is the crawler-facing work: robots.txt, llms.txt, schema, entity clarity. GEO Toolbox covers all three.",
+    a: "Three names for the same job: being the source AI engines cite when your customer asks a question. Generative engine optimization (GEO) covers the full workflow across ChatGPT, Perplexity, Claude, Gemini, Google AI Overviews, and Bing Copilot. Answer engine optimization (AEO) focuses on earning citations in answer engines specifically. LLM SEO is the crawler-facing work: robots.txt, schema markup, entity clarity, and bot access. GEO Toolbox covers all three.",
   },
 ]
 
@@ -55,7 +55,7 @@ export function Playbook() {
             </h2>
           </div>
           <p className="max-w-xl text-base leading-relaxed text-gray-600">
-            Short answers to the things visitors ask about generative engine optimization, LLM SEO, llms.txt, and AI citation tracking. Tap any question to expand.
+            Short answers to the things visitors ask about generative engine optimization, AI visibility, LLM SEO, and AI citation tracking. Tap any question to expand.
           </p>
         </div>
 
