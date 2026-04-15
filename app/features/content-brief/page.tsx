@@ -71,9 +71,9 @@ export default function ContentBriefPage() {
         {/* Editorial ruled lines — subtle paper texture */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 opacity-[0.04]"
+          className="pointer-events-none absolute inset-0 opacity-[0.12]"
           style={{
-            backgroundImage: "repeating-linear-gradient(to bottom, transparent 0, transparent 31px, #8a7a4c 31px, #8a7a4c 32px)",
+            backgroundImage: "repeating-linear-gradient(to bottom, transparent 0, transparent 31px, #a68f5a 31px, #a68f5a 32px)",
           }}
         />
         <div className="relative mx-auto max-w-7xl">
@@ -104,8 +104,8 @@ export default function ContentBriefPage() {
             <div className="lg:col-span-6" aria-hidden="true">
               <div className="relative rounded-[2rem] border border-[var(--surface-warm-border)] bg-white p-6 sm:p-8 shadow-[0_20px_60px_-20px_rgba(137,120,70,0.18)]">
                 {/* Left-edge ruling — notebook spine */}
-                <div className="absolute left-4 top-6 bottom-6 w-px bg-amber-200/60" />
-                <div className="absolute left-5 top-6 bottom-6 w-px bg-amber-200/40" />
+                <div className="absolute left-4 top-6 bottom-6 w-px bg-amber-400/70" />
+                <div className="absolute left-5 top-6 bottom-6 w-px bg-amber-300/50" />
 
                 <div className="flex items-center justify-between border-b border-gray-100 pb-3">
                   <span className="font-mono text-[13px] font-semibold text-gray-900">best project management software</span>

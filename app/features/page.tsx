@@ -108,11 +108,11 @@ export default function FeaturesPage() {
         <div className="mx-auto max-w-7xl divide-y divide-gray-200">
           {groups.map((group) => {
             const groupColor = {
-              Scanning: { dot: "bg-accent-500", border: "border-l-accent-500", eyebrow: "text-accent-700", highlight: "bg-accent-500" },
-              Analysis: { dot: "bg-emerald-500", border: "border-l-emerald-500", eyebrow: "text-emerald-700", highlight: "bg-emerald-500" },
-              Intelligence: { dot: "bg-indigo-500", border: "border-l-indigo-500", eyebrow: "text-indigo-700", highlight: "bg-indigo-500" },
-              Reporting: { dot: "bg-amber-500", border: "border-l-amber-500", eyebrow: "text-amber-700", highlight: "bg-amber-500" },
-            }[group.label] || { dot: "bg-gray-400", border: "border-l-gray-400", eyebrow: "text-gray-700", highlight: "bg-gray-400" }
+              Scanning: { dot: "bg-accent-500", border: "border-l-accent-500", eyebrow: "text-accent-700", highlight: "bg-accent-500", pillHover: "hover:border-accent-400 hover:text-accent-800" },
+              Analysis: { dot: "bg-emerald-500", border: "border-l-emerald-500", eyebrow: "text-emerald-700", highlight: "bg-emerald-500", pillHover: "hover:border-emerald-400 hover:text-emerald-800" },
+              Intelligence: { dot: "bg-indigo-500", border: "border-l-indigo-500", eyebrow: "text-indigo-700", highlight: "bg-indigo-500", pillHover: "hover:border-indigo-400 hover:text-indigo-800" },
+              Reporting: { dot: "bg-amber-500", border: "border-l-amber-500", eyebrow: "text-amber-700", highlight: "bg-amber-500", pillHover: "hover:border-amber-400 hover:text-amber-800" },
+            }[group.label] || { dot: "bg-gray-400", border: "border-l-gray-400", eyebrow: "text-gray-700", highlight: "bg-gray-400", pillHover: "hover:border-gray-400 hover:text-gray-900" }
 
             return (
               <div key={group.label} className="grid grid-cols-1 gap-8 py-12 lg:grid-cols-[4fr_8fr] lg:gap-16 lg:py-16">
@@ -156,10 +156,10 @@ export default function FeaturesPage() {
                       {f.deepLink && f.slug ? (
                         <Link
                           href={`/features/${f.slug}`}
-                          className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-4 py-2 text-[13px] font-semibold text-gray-900 transition-colors hover:border-gray-400"
+                          className={`group/pill inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-4 py-2 text-[13px] font-semibold text-gray-900 transition-colors ${groupColor.pillHover}`}
                         >
                           Learn more
-                          <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
+                          <svg className="h-3.5 w-3.5 transition-transform group-hover/pill:translate-x-0.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
                             <path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
                         </Link>
@@ -178,27 +178,52 @@ export default function FeaturesPage() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="bg-gray-950 px-6 py-20 sm:py-24">
-        <div className="mx-auto max-w-7xl">
-          <div className="flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between md:gap-12">
+      {/* CTA — features-index variant with capability pills */}
+      <section className="relative overflow-hidden bg-gray-950 px-6 py-20 sm:py-24">
+        {/* subtle grid backdrop */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 opacity-[0.05]"
+          style={{
+            backgroundImage:
+              "linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)",
+            backgroundSize: "64px 64px",
+          }}
+        />
+        <div className="relative mx-auto max-w-7xl">
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-[7fr_5fr] lg:items-end lg:gap-16">
             <div>
-              <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
-                Run your first scan.
+              <h2 className="text-[clamp(1.5rem,3.5vw,2.5rem)] font-bold leading-tight tracking-tight text-white">
+                One scan unlocks all seven.
               </h2>
-              <p className="mt-2 text-base text-gray-300">
-                Free while in beta. No credit card. Results in minutes.
+              <p className="mt-3 max-w-xl text-base text-gray-300">
+                Run a GEO Scan once and every other capability activates for that domain — Domain Overview, Competitor Intel, Community, the lot.
+              </p>
+              <div className="mt-5 flex flex-wrap items-center gap-1.5">
+                {["GEO Scan", "Domain Overview", "Content Analyzer", "Content Brief", "Competitor Intel", "Analytics", "Community"].map((f) => (
+                  <span
+                    key={f}
+                    className="rounded-full border border-gray-800 bg-gray-900/50 px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-widest text-gray-400"
+                  >
+                    {f}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className="flex flex-col items-start gap-3 lg:items-end">
+              <Link
+                href="/app"
+                className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]"
+              >
+                Start free trial
+                <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </Link>
+              <p className="font-mono text-[11px] text-gray-500">
+                Free while in beta &middot; No credit card
               </p>
             </div>
-            <Link
-              href="/app"
-              className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]"
-            >
-              Start free trial
-              <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </Link>
           </div>
         </div>
       </section>

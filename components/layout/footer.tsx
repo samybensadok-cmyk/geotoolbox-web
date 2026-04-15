@@ -4,7 +4,7 @@ export function Footer() {
   return (
     <footer className="border-t border-gray-100 bg-gray-50 px-6 py-12">
       <div className="mx-auto max-w-6xl">
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
           {/* Brand */}
           <div>
             <Link href="/" className="flex items-center gap-2">
@@ -19,16 +19,24 @@ export function Footer() {
           </div>
 
           {/* Product */}
+          {/* Scan & Analyze */}
           <div>
-            <h4 className="text-xs font-semibold text-gray-900 uppercase tracking-wider">Product</h4>
+            <h4 className="text-xs font-semibold text-gray-900 uppercase tracking-wider">Scan &amp; Analyze</h4>
             <ul className="mt-3 space-y-2">
               <li><Link href="/features/geo-scan" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">GEO Scan</Link></li>
               <li><Link href="/features/content-analyzer" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Content Analyzer</Link></li>
               <li><Link href="/features/content-brief" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Content Brief &amp; Draft</Link></li>
+            </ul>
+          </div>
+
+          {/* Intelligence & Reporting */}
+          <div>
+            <h4 className="text-xs font-semibold text-gray-900 uppercase tracking-wider">Intelligence</h4>
+            <ul className="mt-3 space-y-2">
               <li><Link href="/features/domain-overview" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Domain Overview</Link></li>
               <li><Link href="/features/competitor-intel" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Competitor Intel</Link></li>
-              <li><Link href="/features/analytics" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Analytics</Link></li>
               <li><Link href="/features/community" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Community</Link></li>
+              <li><Link href="/features/analytics" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Analytics</Link></li>
               <li><Link href="/features" className="pt-2 inline-block text-sm font-semibold text-gray-900 hover:text-accent-700 transition-colors">All features →</Link></li>
             </ul>
           </div>
