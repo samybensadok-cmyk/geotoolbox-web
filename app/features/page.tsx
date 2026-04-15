@@ -4,7 +4,7 @@ import Link from "next/link"
 export const metadata: Metadata = {
   title: "Features",
   description:
-    "Seven connected tools for AI search visibility. Scan, analyze, brief, and monitor your brand across ChatGPT, Perplexity, Gemini, Claude, Copilot, Google AI Overviews, and Grok.",
+    "Seven connected tools for AI search visibility. Scan, analyze, brief, and monitor your brand across ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot.",
 }
 
 const groups = [
@@ -14,8 +14,8 @@ const groups = [
       {
         slug: "geo-scan",
         name: "GEO Scan",
-        blurb: "Run a single prompt across 7 AI engines and see who gets cited. Your domain, competitors, and every mention — in minutes.",
-        highlights: ["7 AI engines", "8 countries", "Competitor comparison"],
+        blurb: "Run a single prompt across 6 AI engines and see who gets cited. Your domain, competitors, and every mention — in minutes.",
+        highlights: ["6 AI engines", "8 countries", "Competitor comparison"],
         deepLink: true,
       },
     ],
@@ -72,7 +72,7 @@ const groups = [
         slug: "analytics",
         name: "Analytics (GSC + GA4)",
         blurb: "Connect Google Search Console and GA4. See AI-driven traffic, which pages get AI citations, and whether your AI visibility is converting to sessions.",
-        highlights: ["GSC + GA4 connect", "12 sub-dashboards", "AI traffic attribution"],
+        highlights: ["GSC + GA4 connect", "13 sub-dashboards", "AI traffic attribution"],
         deepLink: true,
       },
     ],

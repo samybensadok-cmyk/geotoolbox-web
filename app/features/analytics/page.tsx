@@ -19,14 +19,17 @@ const subDashboards = [
   { tag: "Pages", desc: "Every URL, click-share %", cat: "Deep dive" },
   { tag: "Sections", desc: "By URL path segment", cat: "Deep dive" },
   { tag: "Keywords", desc: "Query-level view, intent-classified", cat: "Deep dive" },
+  { tag: "Keyword Cloud", desc: "Visual weight by click share", cat: "Deep dive" },
   { tag: "Clusters", desc: "Semantic grouping of queries", cat: "Deep dive" },
 ]
 
 const aiTraffic = [
   { source: "ChatGPT", sessions: 487, delta: "+23%" },
   { source: "Perplexity", sessions: 342, delta: "+41%" },
+  { source: "AI Overviews", sessions: 203, delta: "+18%" },
   { source: "Gemini", sessions: 128, delta: "+8%" },
   { source: "Claude", sessions: 94, delta: "+12%" },
+  { source: "Bing Copilot", sessions: 67, delta: "+4%" },
 ]
 
 const outcomes = [
@@ -36,7 +39,7 @@ const outcomes = [
     body: "Every AI-cited URL cross-referenced with GA4 session data. See which citations actually drive traffic, which don't, and which pages have the inverse problem — clicks without citations.",
   },
   {
-    tag: "12 sub-dashboards",
+    tag: "13 sub-dashboards",
     title: "Not just another GSC wrapper",
     body: "Overview, Compare, Quick Wins, Content Decay, Click Potential, Cannibalization, Health, Trajectory, Pages, Sections, Keywords, Clusters. Every view answers a different question.",
   },
@@ -74,23 +77,29 @@ export default function AnalyticsPage() {
                 AI citations, attributed to real traffic.
               </h1>
               <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-                Connect Search Console and GA4. See AI-driven sessions, cited-vs-clicked pages, and 12 sub-dashboards built for the AI-search era — not a generic GSC rewrapper.
+                Connect Search Console and GA4. See AI-driven sessions, cited-vs-clicked pages, and 13 sub-dashboards built for the AI-search era — not a generic GSC rewrapper.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Link href="/app" className="rounded-full bg-gray-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-gray-800 hover:shadow-xl hover:shadow-gray-900/10 active:translate-y-[1px]">
-                  Connect your data
+                  Connect GSC + GA4
                 </Link>
                 <Link href="#dashboards" className="rounded-full border border-gray-200 px-6 py-3.5 text-[15px] font-medium text-gray-700 hover:border-gray-400 hover:text-gray-900">
-                  See all 12 views
+                  See all 13 views
                 </Link>
               </div>
-              <p className="mt-4 text-xs text-gray-600">
-                Beta: Google OAuth verification in progress. Email{" "}
-                <a href="mailto:hello@geotoolbox.ai" className="font-semibold text-accent-700 hover:underline">
-                  hello@geotoolbox.ai
-                </a>{" "}
-                to be added to the test user list.
-              </p>
+              <div className="mt-5 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
+                <svg className="mt-0.5 h-4 w-4 shrink-0 text-amber-700" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="8" cy="8" r="6.5" />
+                  <path d="M8 5v3.5M8 11.25v.01" strokeLinecap="round" />
+                </svg>
+                <p className="text-[13px] leading-relaxed text-amber-900">
+                  <span className="font-semibold">Beta access:</span> Google OAuth verification is in progress. Email{" "}
+                  <a href="mailto:hello@geotoolbox.ai" className="font-semibold text-amber-900 underline underline-offset-2 hover:no-underline">
+                    hello@geotoolbox.ai
+                  </a>{" "}
+                  to be added to the test user list.
+                </p>
+              </div>
             </div>
 
             {/* AI traffic visual */}
@@ -105,23 +114,23 @@ export default function AnalyticsPage() {
                   </span>
                 </div>
                 <div className="mt-4 flex items-end gap-3 font-mono">
-                  <p className="text-4xl font-bold tabular-nums text-gray-900">1,051</p>
-                  <p className="pb-1 text-sm text-gray-600">sessions</p>
+                  <p className="text-4xl font-bold tabular-nums text-gray-900">1,321</p>
+                  <p className="pb-1 text-sm text-gray-600">AI-attributed sessions</p>
                   <p className="pb-1 ml-auto text-sm font-semibold text-accent-700">+27%</p>
                 </div>
                 <div className="mt-5 divide-y divide-gray-100">
                   {aiTraffic.map((t) => {
-                    const pct = Math.round((t.sessions / 1051) * 100)
+                    const pct = Math.round((t.sessions / 1321) * 100)
                     return (
-                      <div key={t.source} className="py-3">
+                      <div key={t.source} className="py-2.5">
                         <div className="flex items-center justify-between">
-                          <span className="text-sm font-medium text-gray-900">{t.source}</span>
+                          <span className="text-[13px] font-medium text-gray-900">{t.source}</span>
                           <div className="flex items-center gap-3">
-                            <span className="font-mono text-sm font-semibold tabular-nums text-gray-900">{t.sessions}</span>
+                            <span className="font-mono text-[13px] font-semibold tabular-nums text-gray-900">{t.sessions}</span>
                             <span className="font-mono text-[11px] font-semibold text-accent-700">{t.delta}</span>
                           </div>
                         </div>
-                        <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-gray-100">
+                        <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-gray-100">
                           <div className="h-full rounded-full bg-accent-500" style={{ width: `${pct}%` }} />
                         </div>
                       </div>
@@ -134,18 +143,18 @@ export default function AnalyticsPage() {
         </div>
       </section>
 
-      {/* 12 sub-dashboards */}
+      {/* 13 sub-dashboards */}
       <section id="dashboards" className="bg-gray-50 px-6 py-24 sm:py-28">
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-[5fr_7fr] lg:items-end lg:gap-16">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">12 sub-dashboards</p>
+              <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">13 sub-dashboards</p>
               <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.5rem)] font-bold leading-tight tracking-tight text-gray-900">
                 Every question has its own view.
               </h2>
             </div>
             <p className="max-w-xl text-base leading-relaxed text-gray-600">
-              Most analytics tools dump GSC into a single dashboard and call it a feature. We split GSC + GA4 into 12 answer-shaped views, grouped by what you're actually trying to figure out.
+              Most analytics tools dump GSC into a single dashboard and call it a feature. We split GSC + GA4 into 13 answer-shaped views, grouped by what you're actually trying to figure out.
             </p>
           </div>
 

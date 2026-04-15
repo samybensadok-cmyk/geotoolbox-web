@@ -2,9 +2,9 @@ import type { Metadata } from "next"
 import Link from "next/link"
 
 export const metadata: Metadata = {
-  title: "GEO Scan — 7-engine AI visibility scan",
+  title: "GEO Scan — 6-engine AI visibility scan",
   description:
-    "Run a single prompt across ChatGPT, Perplexity, Gemini, Claude, Copilot, Google AI Overviews, and Grok. See who's cited, who isn't, and how you compare to competitors.",
+    "Run a single prompt across ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot. See who's cited, who isn't, and how you compare to competitors.",
 }
 
 const engines = [
@@ -12,9 +12,8 @@ const engines = [
   { name: "Perplexity", status: "Cited", variant: "cited", delay: 120 },
   { name: "Gemini", status: "Not found", variant: "missing", delay: 0 },
   { name: "Claude", status: "Mentioned", variant: "cited", delay: 240 },
-  { name: "Copilot", status: "Not found", variant: "missing", delay: 0 },
   { name: "AI Overviews", status: "Recommended", variant: "cited", delay: 360 },
-  { name: "Grok", status: "Not found", variant: "missing", delay: 0 },
+  { name: "Bing Copilot", status: "Not found", variant: "missing", delay: 0 },
 ]
 
 const steps = [
@@ -28,8 +27,8 @@ const steps = [
   {
     num: "02",
     verb: "Run",
-    title: "Seven engines in parallel",
-    body: "We query ChatGPT, Perplexity, Gemini, Claude, Copilot, AI Overviews, and Grok with identical prompts in your chosen country.",
+    title: "Six engines in parallel",
+    body: "We query ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot with identical prompts in your chosen country.",
     output: "8 countries · 6 live engines",
   },
   {
@@ -86,7 +85,7 @@ export default function GeoScanPage() {
                 See who AI cites for your keywords.
               </h1>
               <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-                One prompt, seven engines, every citation. Your domain, competitors, and a 0–100 visibility score — in minutes, without training-data guesses.
+                One prompt, six engines, every citation. Your domain, competitors, and a 0–100 visibility score — in minutes, without training-data guesses.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Link

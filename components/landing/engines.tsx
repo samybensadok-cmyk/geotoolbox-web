@@ -1,5 +1,5 @@
 const engines = [
-  "ChatGPT", "Perplexity", "Gemini", "Claude", "Copilot", "AI Overviews", "Grok",
+  "ChatGPT", "Perplexity", "Gemini", "Claude", "AI Overviews", "Bing Copilot",
 ]
 
 export function Engines() {
@@ -7,7 +7,7 @@ export function Engines() {
     <section className="border-y border-gray-100 px-6 py-6">
       <div className="mx-auto max-w-6xl flex flex-col sm:flex-row items-center justify-center gap-5 sm:gap-6">
         <span className="text-[11px] font-semibold text-gray-600 uppercase tracking-widest shrink-0">
-          Scans 7 engines
+          Scans 6 engines
         </span>
         <div className="h-4 w-px bg-gray-200 hidden sm:block" />
         <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">

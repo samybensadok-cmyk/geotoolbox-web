@@ -121,7 +121,8 @@ export default function CompetitorIntelPage() {
                 <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-3">
                   <p className="font-mono text-[10px] font-semibold uppercase tracking-widest text-amber-700">Threat alert · 2h ago</p>
                   <p className="mt-1 text-[13px] text-amber-900">
-                    <span className="font-mono font-semibold">searchenginejournal.com</span> gained 3 new citations on &ldquo;ai content optimization&rdquo;.
+                    <span className="font-mono font-semibold">searchenginejournal.com</span>
+                    {" "}gained 3 new citations on &ldquo;ai content optimization&rdquo;.
                   </p>
                 </div>
               </div>
@@ -206,7 +207,7 @@ export default function CompetitorIntelPage() {
             <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
               Track your first competitor.
             </h2>
-            <p className="mt-2 text-base text-gray-300">Free while in beta. No credit card. Add up to 10 rivals.</p>
+            <p className="mt-2 text-base text-gray-300">Free while in beta. No credit card.</p>
           </div>
           <Link href="/app" className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]">
             Start free trial

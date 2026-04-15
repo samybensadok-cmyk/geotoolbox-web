@@ -135,7 +135,10 @@ export default function ContentAnalyzerPage() {
                 </div>
 
                 <div className="mt-6 border-t border-gray-100 pt-5">
-                  <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-500 mb-3">Bot access</p>
+                  <div className="flex items-center justify-between mb-3">
+                    <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-500">Bot access</p>
+                    <span className="font-mono text-[10px] text-gray-500">sample</span>
+                  </div>
                   <div className="space-y-1.5">
                     {botTable.map((b) => (
                       <div key={b.bot} className="flex items-center justify-between py-1.5">

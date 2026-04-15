@@ -80,7 +80,7 @@ export default function OGImage() {
             <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#14b8a6" }} />
             geotoolbox.ai
           </div>
-          <span style={{ fontSize: 14, color: "#9ca3af" }}>7 AI engines &middot; Visibility score &middot; Citability analysis</span>
+          <span style={{ fontSize: 14, color: "#9ca3af" }}>6 AI engines &middot; Visibility score &middot; Citability analysis</span>
         </div>
       </div>
     ),

@@ -18,7 +18,7 @@ const citedPages = [
   { url: "/blog/ai-seo-guide", cites: 18, engines: ["ChatGPT", "Perplexity", "Claude"] },
   { url: "/product/citability", cites: 12, engines: ["Gemini", "AI Overviews"] },
   { url: "/tools/scanner", cites: 9, engines: ["ChatGPT", "Perplexity"] },
-  { url: "/blog/what-is-geo", cites: 7, engines: ["Claude", "Grok"] },
+  { url: "/blog/what-is-geo", cites: 7, engines: ["Claude", "Bing Copilot"] },
 ]
 
 const aiCompetitors = [
@@ -87,7 +87,7 @@ export default function DomainOverviewPage() {
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Link href="/app" className="rounded-full bg-gray-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-gray-800 hover:shadow-xl hover:shadow-gray-900/10 active:translate-y-[1px]">
-                  Open my overview
+                  See your first overview
                 </Link>
                 <Link href="#whats-inside" className="rounded-full border border-gray-200 px-6 py-3.5 text-[15px] font-medium text-gray-700 hover:border-gray-400 hover:text-gray-900">
                   What's inside

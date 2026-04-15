@@ -24,7 +24,7 @@ export function Hero() {
             </h1>
 
             <p className="stagger-2 mt-6 max-w-xl text-lg leading-relaxed text-gray-600">
-              One scan, every answer across ChatGPT, Perplexity, Gemini, Claude, Copilot, Google AI Overviews, and Grok.
+              One scan, every answer across ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot.
             </p>
 
             <div className="stagger-2 mt-8 flex flex-wrap items-center gap-3">

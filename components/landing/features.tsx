@@ -1,23 +1,19 @@
 import Link from "next/link"
 
-/* ——— Card 1: Scan — 7 engines with pulsing citation dots ——— */
+/* ——— Card 1: Scan — 6 engines with pulsing citation dots ——— */
 function ScanVisual() {
   const engines = [
     { name: "ChatGPT", cited: true, delay: 0 },
     { name: "Perplexity", cited: true, delay: 150 },
     { name: "Gemini", cited: false, delay: 0 },
     { name: "Claude", cited: true, delay: 300 },
-    { name: "Copilot", cited: false, delay: 0 },
     { name: "AI Overviews", cited: true, delay: 450 },
-    { name: "Grok", cited: false, delay: 0 },
+    { name: "Bing Copilot", cited: false, delay: 0 },
   ]
   return (
     <div className="flex h-full min-h-[260px] items-center justify-center p-8">
-      <div className="grid w-full grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-4 lg:grid-cols-4">
-        {engines.slice(0, 4).map((e) => (
-          <EngineRow key={e.name} {...e} />
-        ))}
-        {engines.slice(4).map((e) => (
+      <div className="grid w-full grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-3">
+        {engines.map((e) => (
           <EngineRow key={e.name} {...e} />
         ))}
       </div>
@@ -149,7 +145,7 @@ function StatusDot({ cited }: { cited: boolean }) {
 /* ——— Section ——— */
 export function Features() {
   const cards = [
-    { visual: <ScanVisual />, tag: "Scan", title: "Every engine, one run", body: "ChatGPT, Perplexity, Gemini, Claude, Copilot, Google AI Overviews, Grok — scanned on a single prompt.", span: "md:col-span-2" },
+    { visual: <ScanVisual />, tag: "Scan", title: "Every engine, one run", body: "ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot — scanned on a single prompt.", span: "md:col-span-2" },
     { visual: <ScoreVisual />, tag: "Score", title: "A number your team can align on", body: "Visibility 0–100. Track weekly, set alerts, benchmark competitors.", span: "md:col-span-1" },
     { visual: <AnalyzeVisual />, tag: "Analyze", title: "19 signals, per page", body: "Entity clarity, schema, authority, freshness, structure. See what helps AI cite you.", span: "md:col-span-1" },
     { visual: <IntelVisual />, tag: "Intel", title: "Catch the day they beat you", body: "Who gets recommended instead. Co-cited domains, content gaps, real-time alerts.", span: "md:col-span-2" },

@@ -12,9 +12,8 @@ export function Problem() {
     "Perplexity citations",
     "Gemini answers",
     "Claude mentions",
-    "Copilot responses",
     "Google AI Overviews",
-    "Grok conversations",
+    "Bing Copilot responses",
   ]
 
   return (

@@ -12,7 +12,6 @@ const briefSections = [
   { label: "Entities", value: "18 required, 12 covered", cited: true },
   { label: "Facts coverage", value: "7 of 9 competitor facts", cited: false },
   { label: "SERP gaps", value: "3 topics missing from top 10", cited: true },
-  { label: "AI readiness", value: "78 / 100", cited: true },
 ]
 
 const steps = [
@@ -91,7 +90,7 @@ export default function ContentBriefPage() {
                   Generate a brief
                 </Link>
                 <Link href="#how" className="rounded-full border border-gray-200 px-6 py-3.5 text-[15px] font-medium text-gray-700 hover:border-gray-400 hover:text-gray-900">
-                  How it works
+                  See the workflow
                 </Link>
               </div>
             </div>
