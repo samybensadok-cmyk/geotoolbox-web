@@ -52,6 +52,7 @@ export default function PrivacyPage() {
             <li>Your connected GSC property and GA4 property identifiers</li>
             <li>Analysis outputs you explicitly generate (scan reports, domain overviews, content briefs, citability analyses, competitor radar scans), automatically purged 90 days after creation</li>
             <li>Error telemetry (anonymized, no PII) for up to 90 days</li>
+            <li>AI visibility tracking data — the scheduled scans you&apos;ve configured plus their historical results — is retained for 24 months to provide year-over-year trend analysis. Removing a tracked brand from your dashboard soft-deletes the brand and its watchlist; aggregated scan history remains available for trend continuity for 24 months and is then purged.</li>
           </ul>
         </section>
 
