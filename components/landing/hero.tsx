@@ -43,7 +43,7 @@ export function Hero() {
             </div>
 
             <p className="stagger-3 mt-4 text-xs text-gray-600">
-              No credit card &middot; Results in 30 seconds
+              No credit card &middot; Results in minutes
             </p>
           </div>
 

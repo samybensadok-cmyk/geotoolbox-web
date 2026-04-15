@@ -13,7 +13,7 @@ export function HowItWorks() {
     {
       num: "03",
       title: "Get your visibility report",
-      body: "Visibility score, engine-by-engine results, citability analysis, and competitor benchmarks — in under 30 seconds.",
+      body: "Visibility score, engine-by-engine results, citability analysis, and competitor benchmarks — in under 2 minutes.",
     },
   ]
 
@@ -23,7 +23,7 @@ export function HowItWorks() {
         <div className="mx-auto max-w-2xl text-center mb-14">
           <p className="text-xs font-semibold tracking-wider text-accent-600 uppercase">How it works</p>
           <h2 className="mt-3 text-[clamp(1.5rem,3.5vw,2.25rem)] font-bold tracking-tight text-gray-900">
-            From URL to insights in 30 seconds
+            From URL to insights in minutes
           </h2>
         </div>
 
