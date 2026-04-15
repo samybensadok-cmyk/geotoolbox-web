@@ -55,7 +55,7 @@ export function CTA() {
               </Link>
             </div>
             <p className="mt-1 text-xs text-gray-400">
-              No credit card &middot; Results in minutes
+              Free during beta &middot; Your first scan takes 90 seconds
             </p>
           </div>
         </div>

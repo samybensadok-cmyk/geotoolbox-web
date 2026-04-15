@@ -176,10 +176,10 @@ export function Features() {
                 <p className="text-[11px] font-semibold uppercase tracking-widest text-accent-700">
                   {card.tag}
                 </p>
-                <h3 className="mt-1.5 text-lg font-semibold tracking-tight text-gray-900">
+                <h3 className="mt-2 text-[22px] font-bold leading-tight tracking-tight text-gray-900 md:text-[24px]">
                   {card.title}
                 </h3>
-                <p className="mt-1 text-[15px] leading-relaxed text-gray-600">
+                <p className="mt-2 text-[15px] leading-relaxed text-gray-600">
                   {card.body}
                 </p>
               </div>
@@ -187,10 +187,13 @@ export function Features() {
           ))}
         </div>
 
-        <div className="mt-14">
+        <div className="mt-16 flex flex-col items-start gap-5 border-t border-gray-100 pt-10 sm:flex-row sm:items-center sm:justify-between">
+          <p className="max-w-lg text-[15px] leading-relaxed text-gray-600">
+            One scan. All four capabilities. See where you stand in AI search in under two minutes.
+          </p>
           <Link
             href="/app" prefetch={false}
-            className="inline-flex items-center gap-2 rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px]"
+            className="inline-flex shrink-0 items-center gap-2 rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px]"
           >
             Run your first scan
             <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
