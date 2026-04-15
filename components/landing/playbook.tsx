@@ -6,7 +6,7 @@ const steps = [
     q: "How do I see where AI cites my brand?",
     short: "Measure AI visibility",
     body:
-      "Run a generative engine optimization (GEO) scan across ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot. You get a visibility score from 0 to 100, verbatim citation snippets, and a side-by-side competitor read-out. Every answer engine optimization (AEO) program starts from that baseline.",
+      "Run a GEO scan and get a visibility score from 0 to 100, verbatim citation snippets, and a side-by-side competitor read-out across all six engines. That baseline is where every answer engine optimization (AEO) program starts.",
     tag: "GEO Scan",
     slug: "geo-scan",
     cta: "Scan your domain",
@@ -16,7 +16,7 @@ const steps = [
     q: "Why isn't AI citing my pages?",
     short: "Audit for citability",
     body:
-      "Grade any URL from A to F on 19 signals: schema markup, llms.txt, AI bot access (GPTBot, ClaudeBot, PerplexityBot, Google-Extended), entity clarity, and freshness. AI crawlers can't cite what they can't read or can't understand. The audit maps every signal to a specific fix.",
+      "Grade any URL from A to F on 19 signals: schema markup, llms.txt, AI bot access, entity clarity, and freshness. AI crawlers can't cite what they can't read. The audit maps every signal to a specific fix.",
     tag: "Content Analyzer",
     slug: "content-analyzer",
     cta: "Audit a URL",
@@ -26,7 +26,7 @@ const steps = [
     q: "What do I change to get cited?",
     short: "Ship answer-first content",
     body:
-      "Brief and draft content AI will actually quote. You get a framework-aware outline (pillar, cluster, comparison, or FAQ), an entity checklist, competitor facts coverage, and dual Structure and AI Readiness scoring. It's the answer-first format optimized for ChatGPT, AI Overviews, and every AI answer engine.",
+      "Brief and draft content AI will actually quote. You get a framework-aware outline (pillar, cluster, comparison, or FAQ), an entity checklist, competitor facts coverage, and dual Structure and AI Readiness scoring. Answer-first content, built to earn citations.",
     tag: "Content Brief & Draft",
     slug: "content-brief",
     cta: "Generate a brief",

@@ -65,7 +65,7 @@ const faqs = [
   {
     question: "What does the Citability Score measure?",
     answer:
-      "An A–F grade reflecting how easily AI engines can access, read, and cite your page. It rolls up 19 signals across three categories: technical access (bot permissions, JS rendering), content structure (schema markup, heading hierarchy, entity clarity), and authority (freshness, author byline, external citations). It's the core AI citability metric behind every generative engine optimization (GEO) fix list.",
+      "A grade from A to F that reflects how easily AI engines can access, read, and cite your page. It rolls up 19 signals across three categories: technical access (bot permissions, JS rendering), content structure (schema markup, heading hierarchy, entity clarity), and authority (freshness, author byline, external citations). Every Content Analyzer fix list maps back to this grade.",
   },
   {
     question: "What's the difference between Content Analyzer and GEO Scan?",
@@ -80,7 +80,7 @@ const faqs = [
   {
     question: "What schema markup does it check?",
     answer:
-      "It validates JSON-LD structured data including FAQ, HowTo, Article, Product, and Organization schemas. Missing required fields, type mismatches, and invalid syntax are flagged with the exact repair needed, because well-formed schema is a core signal for AI overview SEO.",
+      "It validates JSON-LD structured data for FAQ, HowTo, Article, Product, and Organization schemas. Missing required fields, type mismatches, and invalid syntax get flagged with the exact repair needed. Well-formed schema is one of the clearest signals AI engines read.",
   },
   {
     question: "How does it evaluate content freshness?",

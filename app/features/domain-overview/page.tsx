@@ -45,7 +45,7 @@ const faqs = [
   {
     question: "What are co-cited domains?",
     answer:
-      "Domains that AI engines consistently mention alongside yours when answering questions in your space. These are your peers in the AI knowledge graph, useful as backlink targets, partnership prospects, and authoritative cluster maps for generative engine optimization planning.",
+      "Domains that AI engines consistently mention alongside yours when answering questions in your space. These are your peers in the AI knowledge graph. Use them as backlink targets, partnership leads, or signals for where to expand your content.",
   },
   {
     question: "Do I need to run scans first before using Domain Overview?",

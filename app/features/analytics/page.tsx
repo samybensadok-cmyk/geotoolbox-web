@@ -64,7 +64,7 @@ const faqs = [
   {
     question: "Can I see which keywords bring AI traffic vs. traditional traffic?",
     answer:
-      "Yes. The view overlays AI citation status on your keyword performance data. You see which queries earn AI citations, which drive organic traffic, and where the two intersect. That overlap is the highest-leverage area for generative engine optimization work.",
+      "Yes. The view overlays AI citation status on your keyword performance data. You see which queries earn AI citations, which drive organic traffic, and where they overlap. That overlap is where your fastest ROI lives.",
   },
   {
     question: "Is my Search Console data stored on your servers?",

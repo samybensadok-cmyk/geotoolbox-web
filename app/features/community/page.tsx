@@ -50,7 +50,7 @@ const faqs = [
   {
     question: "What does Community Insights track?",
     answer:
-      "The Reddit and forum threads AI engines cite when answering queries in your topic space. Each thread is tagged with the engines that reference it, its sentiment, and whether it introduces misinformation risks. That's everything you need to shape a community participation plan for generative engine optimization.",
+      "The Reddit and forum threads AI engines cite when answering queries in your topic space. Each thread shows which engines reference it, its sentiment, and whether it introduces a misinformation risk. From there, you can decide where to engage and where to respond.",
   },
   {
     question: "Why does community content matter for AI citations?",

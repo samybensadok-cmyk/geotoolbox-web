@@ -24,7 +24,7 @@ export function Hero() {
             </h1>
 
             <p className="stagger-2 mt-6 max-w-xl text-lg leading-relaxed text-gray-600">
-              One scan shows how ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot describe your brand. Generative engine optimization (GEO) and AI search visibility, measured.
+              One scan shows exactly how ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot describe your brand. The measurement layer for generative engine optimization and AI search visibility.
             </p>
 
             <div className="stagger-2 mt-8 flex flex-wrap items-center gap-3">

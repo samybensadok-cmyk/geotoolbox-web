@@ -216,7 +216,7 @@ export default function FeaturesPage() {
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-[7fr_5fr] lg:items-end lg:gap-16">
             <div>
               <h2 className="text-[clamp(1.5rem,3.5vw,2.5rem)] font-bold leading-tight tracking-tight text-white">
-                One scan unlocks all seven.
+                One scan, all seven tools.
               </h2>
               <p className="mt-3 max-w-xl text-base text-gray-300">
                 Run a GEO Scan once and every other capability activates for that domain: Domain Overview, Competitor Intel, Community, and the rest.

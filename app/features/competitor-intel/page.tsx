@@ -43,7 +43,7 @@ const faqs = [
   {
     question: "How is this different from the competitor comparison in GEO Scan?",
     answer:
-      "GEO Scan shows a snapshot for one keyword. Competitor Intel tracks trends across every keyword over time. It's the longitudinal view. Scan answers 'who's cited right now?'; Intel answers 'who's gaining and losing AI citations month over month?'.",
+      "GEO Scan shows a snapshot for one keyword. Competitor Intel tracks trends across every keyword over time. Scan answers 'who's cited right now?' Intel answers 'who's gaining and losing AI citations month over month?'",
   },
   {
     question: "Can I see which specific pages competitors are getting cited for?",

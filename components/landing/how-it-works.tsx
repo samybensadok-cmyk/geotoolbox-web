@@ -37,7 +37,7 @@ export function HowItWorks() {
             </h2>
           </div>
           <p className="max-w-xl text-base leading-relaxed text-gray-600">
-            No integrations, no tagging, no waiting. The AI visibility tool runs in parallel across every supported engine and returns a score you can defend to your CMO. The same scan feeds your ChatGPT rank tracker, your AI Overviews check, and your Perplexity citation monitor.
+            No integrations, no tagging, no waiting. The scan runs in parallel and returns an AI visibility score you can defend to your CMO. One run powers your ChatGPT rank tracker, AI Overviews check, and Perplexity citation monitor.
           </p>
         </div>
 

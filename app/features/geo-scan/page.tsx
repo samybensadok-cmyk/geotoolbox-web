@@ -52,7 +52,7 @@ const faqs = [
   {
     question: "What AI engines does GEO Scan check?",
     answer:
-      "Six today: ChatGPT, Perplexity, Claude, Gemini, Google AI Overviews, and Bing Copilot. Every generative engine optimization (GEO) scan queries all six in parallel so you see your full AI search visibility picture in one pass.",
+      "Six engines today: ChatGPT, Perplexity, Claude, Gemini, Google AI Overviews, and Bing Copilot. Every generative engine optimization (GEO) scan queries all six in parallel, so you get the full picture in one pass.",
   },
   {
     question: "How does GEO Scan determine if my brand is cited?",
@@ -67,7 +67,7 @@ const faqs = [
   {
     question: "How is this different from traditional rank tracking?",
     answer:
-      "Traditional rank trackers measure blue-link positions on a SERP. GEO Scan measures a different signal altogether: whether AI-generated answers cite your brand at all. It's answer engine optimization (AEO), not ranking. There's no top 10 to climb, just whether your domain is or isn't in the generated response.",
+      "Traditional rank trackers measure blue-link positions on a SERP. GEO Scan measures a different signal: whether AI-generated answers cite your brand at all. It's answer engine optimization (AEO), not ranking. There's no top 10 to climb, just whether your domain is in the response or isn't.",
   },
   {
     question: "Can I compare my domain against competitors in the same scan?",
