@@ -6,7 +6,7 @@ export function Hero() {
     <section className="relative overflow-hidden bg-white px-6 pt-14 pb-16 sm:pt-20 sm:pb-24 lg:pt-24">
       {/* Editorial rule line — anchors asymmetric layout */}
       <div className="mx-auto max-w-7xl">
-        <div className="grid gap-12 lg:grid-cols-12 lg:items-center lg:gap-16">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center lg:gap-16">
           {/* Text column — left, spans 6 on desktop */}
           <div className="lg:col-span-6">
             <div className="animate-fade-up">
