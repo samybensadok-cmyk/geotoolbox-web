@@ -3,6 +3,9 @@ import Link from "next/link"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
 import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
+import { siteConfig } from "@/lib/config"
+import { JsonLd } from "@/components/seo/json-ld"
+import { softwareApplicationSchema, breadcrumbsSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
   title: "Content Brief & Draft: AI content optimization for GEO",
@@ -13,6 +16,7 @@ export const metadata: Metadata = {
     description:
       "Brief, draft, and grade content built for generative engine optimization. Outline, entities, facts coverage, SERP gap analysis, and dual Structure + AI Readiness scoring.",
   },
+  alternates: { canonical: `${siteConfig.url}/features/content-brief` },
 }
 
 const briefSections = [
@@ -107,6 +111,19 @@ export default function ContentBriefPage() {
     <>
       {/* Hero — cream/editorial atmosphere */}
       <section className="relative overflow-hidden bg-[var(--surface-warm)] px-6 pt-20 pb-16 sm:pt-24 sm:pb-20">
+      <JsonLd data={[
+        softwareApplicationSchema({
+          name: "Content Brief & Draft",
+          description: "Generate briefs and drafts AI engines quote. Framework-aware outline, entity checklist, competitor facts coverage, and dual Structure and AI Readiness scoring.",
+          url: `${siteConfig.url}/features/content-brief`,
+        }),
+        breadcrumbsSchema([
+          { name: "Home", url: "/" },
+          { name: "Features", url: "/features" },
+          { name: "Content Brief & Draft", url: "/features/content-brief" },
+        ]),
+      ]} />
+
         {/* Editorial ruled lines — subtle paper texture */}
         <div
           aria-hidden="true"

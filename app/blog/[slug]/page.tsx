@@ -7,6 +7,8 @@ import { mdxComponents } from "@/components/mdx"
 import { formatDate } from "@/lib/utils"
 import { siteConfig } from "@/lib/config"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
+import { JsonLd } from "@/components/seo/json-ld"
+import { articleSchema, breadcrumbsSchema } from "@/lib/seo-schema"
 
 export async function generateStaticParams() {
   return getAllPosts().map((p) => ({ slug: p.slug }))
@@ -54,6 +56,23 @@ export default async function BlogPost({
 
   return (
     <div className="mx-auto max-w-2xl px-6 py-16 sm:py-24">
+      <JsonLd
+        data={[
+          articleSchema({
+            slug: post.slug,
+            title: post.title,
+            description: post.description,
+            date: post.date,
+            author: post.author,
+            image: post.image,
+          }),
+          breadcrumbsSchema([
+            { name: "Home", url: "/" },
+            { name: "Blog", url: "/blog" },
+            { name: post.title, url: `/blog/${post.slug}` },
+          ]),
+        ]}
+      />
       <Breadcrumbs
         trail={[
           { name: "Home", href: "/" },

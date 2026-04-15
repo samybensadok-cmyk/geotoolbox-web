@@ -3,6 +3,9 @@ import Link from "next/link"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
 import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
+import { siteConfig } from "@/lib/config"
+import { JsonLd } from "@/components/seo/json-ld"
+import { softwareApplicationSchema, breadcrumbsSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
   title: "Domain Overview: AI brand monitoring dashboard",
@@ -13,6 +16,7 @@ export const metadata: Metadata = {
     description:
       "Every citation, AI competitor, co-cited domain, and topical authority signal for your domain, aggregated across every scan. AI brand monitoring for six engines in one dashboard.",
   },
+  alternates: { canonical: `${siteConfig.url}/features/domain-overview` },
 }
 
 const headlineStats = [
@@ -107,6 +111,19 @@ export default function DomainOverviewPage() {
     <>
       {/* Hero */}
       <section className="bg-white px-6 pt-20 pb-16 sm:pt-24 sm:pb-20">
+      <JsonLd data={[
+        softwareApplicationSchema({
+          name: "Domain Overview",
+          description: "Your AI visibility command center. Track citation share, co-cited domains, cited pages, and AI competitors for any domain over time.",
+          url: `${siteConfig.url}/features/domain-overview`,
+        }),
+        breadcrumbsSchema([
+          { name: "Home", url: "/" },
+          { name: "Features", url: "/features" },
+          { name: "Domain Overview", url: "/features/domain-overview" },
+        ]),
+      ]} />
+
         <div className="mx-auto max-w-7xl">
           <Breadcrumbs featureName="Domain Overview" />
 

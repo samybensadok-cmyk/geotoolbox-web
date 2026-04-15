@@ -3,6 +3,9 @@ import Link from "next/link"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
 import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
+import { siteConfig } from "@/lib/config"
+import { JsonLd } from "@/components/seo/json-ld"
+import { softwareApplicationSchema, breadcrumbsSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
   title: "Competitor Intel: AI visibility tracking for competitors",
@@ -13,6 +16,7 @@ export const metadata: Metadata = {
     description:
       "Track how competitors gain or lose AI citations across six engines. AI share-of-voice, content gap matrix, and real-time threat alerts when a rival starts outranking you.",
   },
+  alternates: { canonical: `${siteConfig.url}/features/competitor-intel` },
 }
 
 const competitors = [
@@ -100,6 +104,19 @@ export default function CompetitorIntelPage() {
     <>
       {/* Hero */}
       <section className="bg-white px-6 pt-20 pb-16 sm:pt-24 sm:pb-20">
+      <JsonLd data={[
+        softwareApplicationSchema({
+          name: "Competitor Intel",
+          description: "Track new content published by competitors. Detect new pages, lost rankings, publishing velocity, and AI threat alerts across six engines.",
+          url: `${siteConfig.url}/features/competitor-intel`,
+        }),
+        breadcrumbsSchema([
+          { name: "Home", url: "/" },
+          { name: "Features", url: "/features" },
+          { name: "Competitor Intel", url: "/features/competitor-intel" },
+        ]),
+      ]} />
+
         <div className="mx-auto max-w-7xl">
           <Breadcrumbs featureName="Competitor Intel" />
 

@@ -1,8 +1,10 @@
 import type { Metadata } from "next"
+import { siteConfig } from "@/lib/config"
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description: "How GEO Toolbox collects, uses, and protects your data.",
+  alternates: { canonical: `${siteConfig.url}/privacy` },
 }
 
 export default function PrivacyPage() {

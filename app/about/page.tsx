@@ -1,11 +1,13 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
+import { siteConfig } from "@/lib/config"
 
 export const metadata: Metadata = {
   title: "About",
   description:
     "GEO Toolbox is a measurement and intelligence layer for AI search. It's built to answer one question: when someone asks an AI engine about your space, who gets cited?",
+  alternates: { canonical: `${siteConfig.url}/about` },
 }
 
 export default function AboutPage() {

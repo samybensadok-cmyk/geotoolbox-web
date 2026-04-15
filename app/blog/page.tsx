@@ -2,11 +2,15 @@ import type { Metadata } from "next"
 import { getAllPosts, getAllTags } from "@/lib/content"
 import { formatDate } from "@/lib/utils"
 import Link from "next/link"
+import { siteConfig } from "@/lib/config"
+import { JsonLd } from "@/components/seo/json-ld"
+import { breadcrumbsSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
   title: "Blog",
   description:
     "Research and insights on Generative Engine Optimization, AI visibility, and the future of search.",
+  alternates: { canonical: `${siteConfig.url}/blog` },
 }
 
 export default function BlogIndex({
@@ -37,6 +41,8 @@ async function BlogIndexInner({
     <>
       {/* Editorial header */}
       <section className="bg-white px-6 pt-20 pb-12 sm:pt-28">
+      <JsonLd data={breadcrumbsSchema([{ name: "Home", url: "/" }, { name: "Blog", url: "/blog" }])} />
+
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-[6fr_6fr] lg:items-end lg:gap-16">
             <div>

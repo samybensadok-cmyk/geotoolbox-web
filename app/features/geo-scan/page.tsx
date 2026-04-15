@@ -3,6 +3,9 @@ import Link from "next/link"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
 import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
+import { siteConfig } from "@/lib/config"
+import { JsonLd } from "@/components/seo/json-ld"
+import { softwareApplicationSchema, breadcrumbsSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
   title: "GEO Scan: AI visibility tool + ChatGPT rank tracker",
@@ -13,6 +16,7 @@ export const metadata: Metadata = {
     description:
       "Run generative engine optimization scans across six AI engines. The AI search tracking tool that shows who's cited, who isn't, and how you compare to competitors, in minutes.",
   },
+  alternates: { canonical: `${siteConfig.url}/features/geo-scan` },
 }
 
 const engines = [
@@ -114,6 +118,19 @@ export default function GeoScanPage() {
     <>
       {/* Hero */}
       <section className="bg-white px-6 pt-20 pb-16 sm:pt-24 sm:pb-20">
+      <JsonLd data={[
+        softwareApplicationSchema({
+          name: "GEO Scan",
+          description: "Run generative engine optimization (GEO) scans across ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot. See who's cited, who isn't, and how you compare to competitors in minutes.",
+          url: `${siteConfig.url}/features/geo-scan`,
+        }),
+        breadcrumbsSchema([
+          { name: "Home", url: "/" },
+          { name: "Features", url: "/features" },
+          { name: "GEO Scan", url: "/features/geo-scan" },
+        ]),
+      ]} />
+
         <div className="mx-auto max-w-7xl">
           <Breadcrumbs featureName="GEO Scan" />
 

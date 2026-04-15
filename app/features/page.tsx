@@ -1,10 +1,14 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import { siteConfig } from "@/lib/config"
+import { JsonLd } from "@/components/seo/json-ld"
+import { breadcrumbsSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
   title: "Features",
   description:
     "Seven connected tools for generative engine optimization (GEO) and AI search visibility. Scan, analyze, brief, and monitor your brand across ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot.",
+  alternates: { canonical: `${siteConfig.url}/features` },
 }
 
 const groups = [
@@ -84,6 +88,8 @@ export default function FeaturesPage() {
     <>
       {/* Hero */}
       <section className="bg-white px-6 pt-20 pb-16 sm:pt-28 sm:pb-20">
+      <JsonLd data={breadcrumbsSchema([{ name: "Home", url: "/" }, { name: "Features", url: "/features" }])} />
+
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-[6fr_6fr] lg:items-end lg:gap-16">
             <div>

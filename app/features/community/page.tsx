@@ -3,6 +3,9 @@ import Link from "next/link"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
 import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
+import { siteConfig } from "@/lib/config"
+import { JsonLd } from "@/components/seo/json-ld"
+import { softwareApplicationSchema, breadcrumbsSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
   title: "Community: Reddit and forum citations AI engines quote",
@@ -13,6 +16,7 @@ export const metadata: Metadata = {
     description:
       "See which Reddit threads and forum discussions AI engines cite when answering queries in your space. Catch misinformation, find subreddits worth engaging, and build a community participation plan.",
   },
+  alternates: { canonical: `${siteConfig.url}/features/community` },
 }
 
 const threads = [
@@ -102,6 +106,19 @@ export default function CommunityPage() {
     <>
       {/* Hero — warm social atmosphere */}
       <section className="bg-[var(--surface-peach)] px-6 pt-20 pb-16 sm:pt-24 sm:pb-20">
+      <JsonLd data={[
+        softwareApplicationSchema({
+          name: "Community Insights",
+          description: "See which Reddit, Quora, and forum threads are already cited by AI engines in your topic area. Build presence where AI is already looking.",
+          url: `${siteConfig.url}/features/community`,
+        }),
+        breadcrumbsSchema([
+          { name: "Home", url: "/" },
+          { name: "Features", url: "/features" },
+          { name: "Community Insights", url: "/features/community" },
+        ]),
+      ]} />
+
         <div className="mx-auto max-w-7xl">
           <Breadcrumbs featureName="Community" />
 

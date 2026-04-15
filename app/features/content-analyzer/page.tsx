@@ -3,6 +3,9 @@ import Link from "next/link"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
 import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
+import { siteConfig } from "@/lib/config"
+import { JsonLd } from "@/components/seo/json-ld"
+import { softwareApplicationSchema, breadcrumbsSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
   title: "Content Analyzer: AI SEO audit + LLMs.txt and citability check",
@@ -13,6 +16,7 @@ export const metadata: Metadata = {
     description:
       "Grade any URL from A to F on 19 signals: schema markup, llms.txt, 9 AI bot access checks, X-Robots-Tag, freshness, and entity clarity. The AI SEO audit that tells you why ChatGPT, Perplexity, and Google AI Overviews aren't citing your pages.",
   },
+  alternates: { canonical: `${siteConfig.url}/features/content-analyzer` },
 }
 
 const signals = [
@@ -127,6 +131,19 @@ export default function ContentAnalyzerPage() {
     <>
       {/* Hero */}
       <section className="bg-white px-6 pt-20 pb-16 sm:pt-24 sm:pb-20">
+      <JsonLd data={[
+        softwareApplicationSchema({
+          name: "Content Analyzer",
+          description: "Grade any URL from A to F for AI citability across 19 signals: schema markup, AI bot access, entity clarity, freshness, and answer-first formatting.",
+          url: `${siteConfig.url}/features/content-analyzer`,
+        }),
+        breadcrumbsSchema([
+          { name: "Home", url: "/" },
+          { name: "Features", url: "/features" },
+          { name: "Content Analyzer", url: "/features/content-analyzer" },
+        ]),
+      ]} />
+
         <div className="mx-auto max-w-7xl">
           <Breadcrumbs featureName="Content Analyzer" />
 

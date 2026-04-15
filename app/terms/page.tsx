@@ -1,8 +1,10 @@
 import type { Metadata } from "next"
+import { siteConfig } from "@/lib/config"
 
 export const metadata: Metadata = {
   title: "Terms of Service",
   description: "Terms and conditions for using GEO Toolbox.",
+  alternates: { canonical: `${siteConfig.url}/terms` },
 }
 
 export default function TermsPage() {
