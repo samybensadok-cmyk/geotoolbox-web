@@ -1,5 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import { Breadcrumbs } from "@/components/features/breadcrumbs"
+import { RelatedFeatures } from "@/components/features/related-features"
 
 export const metadata: Metadata = {
   title: "Community — Reddit + forum citations AI engines use",
@@ -67,12 +69,7 @@ export default function CommunityPage() {
       {/* Hero */}
       <section className="bg-white px-6 pt-20 pb-16 sm:pt-24 sm:pb-20">
         <div className="mx-auto max-w-7xl">
-          <Link href="/features" className="mb-8 inline-flex items-center gap-1.5 text-[13px] font-semibold text-gray-600 hover:text-accent-700">
-            <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M10 7H4m0 0 3-3m-3 3 3 3" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            All features
-          </Link>
+          <Breadcrumbs featureName="Community" />
 
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center lg:gap-16">
             <div className="lg:col-span-6">
@@ -164,6 +161,99 @@ export default function CommunityPage() {
           </div>
         </div>
       </section>
+
+      {/* What it catches — concrete examples */}
+      <section className="bg-white px-6 py-24 sm:py-28">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-[5fr_7fr] lg:items-end lg:gap-16">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">What it catches</p>
+              <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.5rem)] font-bold leading-tight tracking-tight text-gray-900">
+                Three patterns you'll see on day one.
+              </h2>
+            </div>
+            <p className="max-w-xl text-base leading-relaxed text-gray-600">
+              Every scan surfaces community citations grouped by pattern. Here's what the output actually looks like, the shape of threat it catches, and the recommended next move.
+            </p>
+          </div>
+
+          <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-3">
+            {/* Pattern 1 — Misinformation */}
+            <div className="rounded-2xl border border-amber-200 bg-amber-50/60 p-6">
+              <div className="flex items-center gap-2">
+                <span className="rounded-full bg-amber-100 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-widest text-amber-800">
+                  Misinformation
+                </span>
+              </div>
+              <p className="mt-4 font-mono text-[12px] text-amber-900">r/TechSEO</p>
+              <h3 className="mt-1 text-base font-semibold tracking-tight text-gray-900">
+                &ldquo;Schema markup no longer matters?&rdquo;
+              </h3>
+              <p className="mt-3 text-[13px] leading-relaxed text-gray-700">
+                Gemini is citing this 2-month-old thread answering a widely-asked query. The top comment is factually wrong.
+              </p>
+              <div className="mt-4 rounded-lg border border-amber-200 bg-white/70 p-3">
+                <p className="font-mono text-[10px] font-semibold uppercase tracking-widest text-amber-800">
+                  Recommended action
+                </p>
+                <p className="mt-1 text-[13px] text-gray-800">
+                  Post a corrected, cited reply. Monitor re-citation over 30 days.
+                </p>
+              </div>
+            </div>
+
+            {/* Pattern 2 — High-engagement opportunity */}
+            <div className="rounded-2xl border border-accent-200 bg-accent-50/40 p-6">
+              <div className="flex items-center gap-2">
+                <span className="rounded-full bg-accent-100 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-widest text-accent-800">
+                  Opportunity
+                </span>
+              </div>
+              <p className="mt-4 font-mono text-[12px] text-accent-800">r/marketing</p>
+              <h3 className="mt-1 text-base font-semibold tracking-tight text-gray-900">
+                &ldquo;Best AI SEO tools comparison&rdquo;
+              </h3>
+              <p className="mt-3 text-[13px] leading-relaxed text-gray-700">
+                Cited by 3 engines (ChatGPT, Claude, Perplexity). Positive sentiment. Your product is not mentioned anywhere in the thread.
+              </p>
+              <div className="mt-4 rounded-lg border border-accent-200 bg-white/70 p-3">
+                <p className="font-mono text-[10px] font-semibold uppercase tracking-widest text-accent-800">
+                  Recommended action
+                </p>
+                <p className="mt-1 text-[13px] text-gray-800">
+                  Thoughtful reply from a team account with concrete comparison details.
+                </p>
+              </div>
+            </div>
+
+            {/* Pattern 3 — Subreddit focus */}
+            <div className="rounded-2xl border border-gray-200 bg-white p-6">
+              <div className="flex items-center gap-2">
+                <span className="rounded-full bg-gray-100 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-widest text-gray-700">
+                  Subreddit focus
+                </span>
+              </div>
+              <p className="mt-4 font-mono text-[12px] text-gray-700">r/SEO · r/bigSEO · r/TechSEO</p>
+              <h3 className="mt-1 text-base font-semibold tracking-tight text-gray-900">
+                Your top 3 high-signal communities
+              </h3>
+              <p className="mt-3 text-[13px] leading-relaxed text-gray-700">
+                AI engines cited content from these subreddits 24 times across your tracked queries. Worth sustained participation, not one-off replies.
+              </p>
+              <div className="mt-4 rounded-lg border border-gray-200 bg-gray-50 p-3">
+                <p className="font-mono text-[10px] font-semibold uppercase tracking-widest text-gray-600">
+                  Recommended action
+                </p>
+                <p className="mt-1 text-[13px] text-gray-800">
+                  Assign one team member as the recurring contributor. Track citations quarterly.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <RelatedFeatures current="community" related={["competitor-intel", "domain-overview", "geo-scan"]} />
 
       {/* CTA */}
       <section className="bg-gray-950 px-6 py-20 sm:py-24">

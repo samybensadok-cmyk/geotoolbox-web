@@ -1,5 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import { Breadcrumbs } from "@/components/features/breadcrumbs"
+import { RelatedFeatures } from "@/components/features/related-features"
 
 export const metadata: Metadata = {
   title: "Competitor Intel — AI citation tracking for competitors",
@@ -60,12 +62,7 @@ export default function CompetitorIntelPage() {
       {/* Hero */}
       <section className="bg-white px-6 pt-20 pb-16 sm:pt-24 sm:pb-20">
         <div className="mx-auto max-w-7xl">
-          <Link href="/features" className="mb-8 inline-flex items-center gap-1.5 text-[13px] font-semibold text-gray-600 hover:text-accent-700">
-            <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M10 7H4m0 0 3-3m-3 3 3 3" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            All features
-          </Link>
+          <Breadcrumbs featureName="Competitor Intel" />
 
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center lg:gap-16">
             <div className="lg:col-span-6">
@@ -199,6 +196,8 @@ export default function CompetitorIntelPage() {
           </div>
         </div>
       </section>
+
+      <RelatedFeatures current="competitor-intel" related={["domain-overview", "geo-scan", "community"]} />
 
       {/* CTA */}
       <section className="bg-gray-950 px-6 py-20 sm:py-24">

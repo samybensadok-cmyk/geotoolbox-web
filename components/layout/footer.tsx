@@ -24,8 +24,12 @@ export function Footer() {
             <ul className="mt-3 space-y-2">
               <li><Link href="/features/geo-scan" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">GEO Scan</Link></li>
               <li><Link href="/features/content-analyzer" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Content Analyzer</Link></li>
+              <li><Link href="/features/content-brief" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Content Brief &amp; Draft</Link></li>
               <li><Link href="/features/domain-overview" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Domain Overview</Link></li>
-              <li><Link href="/features" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">All features</Link></li>
+              <li><Link href="/features/competitor-intel" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Competitor Intel</Link></li>
+              <li><Link href="/features/analytics" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Analytics</Link></li>
+              <li><Link href="/features/community" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Community</Link></li>
+              <li><Link href="/features" className="pt-2 inline-block text-sm font-semibold text-gray-900 hover:text-accent-700 transition-colors">All features →</Link></li>
             </ul>
           </div>
 

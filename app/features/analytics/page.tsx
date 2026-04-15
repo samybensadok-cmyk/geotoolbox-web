@@ -1,5 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import { Breadcrumbs } from "@/components/features/breadcrumbs"
+import { RelatedFeatures } from "@/components/features/related-features"
 
 export const metadata: Metadata = {
   title: "Analytics — GSC + GA4 for AI search attribution",
@@ -61,12 +63,7 @@ export default function AnalyticsPage() {
       {/* Hero */}
       <section className="bg-white px-6 pt-20 pb-16 sm:pt-24 sm:pb-20">
         <div className="mx-auto max-w-7xl">
-          <Link href="/features" className="mb-8 inline-flex items-center gap-1.5 text-[13px] font-semibold text-gray-600 hover:text-accent-700">
-            <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M10 7H4m0 0 3-3m-3 3 3 3" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            All features
-          </Link>
+          <Breadcrumbs featureName="Analytics" />
 
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center lg:gap-16">
             <div className="lg:col-span-6">
@@ -159,13 +156,32 @@ export default function AnalyticsPage() {
           </div>
 
           <div className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {subDashboards.map((d) => (
-              <div key={d.tag} className="rounded-2xl border border-gray-200 bg-white p-5 transition-shadow hover:shadow-[0_12px_24px_-12px_rgba(15,23,42,0.12)]">
-                <p className="font-mono text-[10px] font-semibold uppercase tracking-widest text-gray-500">{d.cat}</p>
-                <h3 className="mt-2 text-base font-semibold tracking-tight text-gray-900">{d.tag}</h3>
-                <p className="mt-1 text-[13px] leading-relaxed text-gray-600">{d.desc}</p>
-              </div>
-            ))}
+            {subDashboards.map((d) => {
+              const tint = {
+                Core: "border-l-accent-500 bg-accent-50/40",
+                Opportunity: "border-l-emerald-500 bg-emerald-50/40",
+                Diagnostic: "border-l-amber-500 bg-amber-50/40",
+                "Deep dive": "border-l-slate-500 bg-slate-50/60",
+              }[d.cat] || "border-l-gray-400"
+              const catTextTint = {
+                Core: "text-accent-700",
+                Opportunity: "text-emerald-700",
+                Diagnostic: "text-amber-700",
+                "Deep dive": "text-slate-600",
+              }[d.cat] || "text-gray-500"
+              return (
+                <div
+                  key={d.tag}
+                  className={`rounded-2xl border border-gray-200 border-l-[3px] ${tint} bg-white p-5 transition-shadow hover:shadow-[0_12px_24px_-12px_rgba(15,23,42,0.12)]`}
+                >
+                  <p className={`font-mono text-[10px] font-semibold uppercase tracking-widest ${catTextTint}`}>
+                    {d.cat}
+                  </p>
+                  <h3 className="mt-2 text-base font-semibold tracking-tight text-gray-900">{d.tag}</h3>
+                  <p className="mt-1 text-[13px] leading-relaxed text-gray-600">{d.desc}</p>
+                </div>
+              )
+            })}
           </div>
         </div>
       </section>
@@ -190,6 +206,8 @@ export default function AnalyticsPage() {
           </div>
         </div>
       </section>
+
+      <RelatedFeatures current="analytics" related={["domain-overview", "geo-scan", "content-analyzer"]} />
 
       {/* CTA */}
       <section className="bg-gray-950 px-6 py-20 sm:py-24">
