@@ -45,10 +45,10 @@ export default function AboutPage() {
             <p className="text-base text-gray-600">
               Questions, partnerships, or feedback?{" "}
               <a
-                href="mailto:hello@geotoolbox.ai"
+                href="mailto:samy@geotoolbox.ai"
                 className="font-semibold text-accent-700 underline hover:text-accent-800"
               >
-                hello@geotoolbox.ai
+                samy@geotoolbox.ai
               </a>
               .
             </p>

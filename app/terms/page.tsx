@@ -88,7 +88,7 @@ export default function TermsPage() {
           <h2 className="text-lg font-semibold text-gray-900">10. Contact</h2>
           <p className="mt-2">
             Questions about these Terms? Email{" "}
-            <a href="mailto:hello@geotoolbox.ai" className="text-accent-700 underline hover:text-accent-800">hello@geotoolbox.ai</a>.
+            <a href="mailto:samy@geotoolbox.ai" className="text-accent-700 underline hover:text-accent-800">samy@geotoolbox.ai</a>.
           </p>
         </section>
       </div>

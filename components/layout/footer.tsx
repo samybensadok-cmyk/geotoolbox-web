@@ -56,7 +56,7 @@ export function Footer() {
             <h4 className="text-xs font-semibold text-gray-900 uppercase tracking-wider">Company</h4>
             <ul className="mt-3 space-y-2">
               <li><Link href="/about" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">About</Link></li>
-              <li><a href="mailto:hello@geotoolbox.ai" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Contact</a></li>
+              <li><a href="mailto:samy@geotoolbox.ai" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Contact</a></li>
               <li><Link href="/privacy" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Privacy Policy</Link></li>
               <li><Link href="/terms" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Terms of Service</Link></li>
             </ul>

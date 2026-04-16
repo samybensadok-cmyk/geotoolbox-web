@@ -78,7 +78,7 @@ export default function PrivacyPage() {
           <ul className="mt-2 list-disc pl-5 space-y-1">
             <li>Revoke GEO Toolbox&apos;s access to your Google account at any time at <a href="https://myaccount.google.com/permissions" className="text-accent-700 underline hover:text-accent-800">https://myaccount.google.com/permissions</a></li>
             <li>Disconnect GSC or GA4 from within the app&apos;s Analytics tab (the &ldquo;disconnect&rdquo; link under the connected-account badge)</li>
-            <li>Request deletion of all server-side data by emailing <a href="mailto:hello@geotoolbox.ai" className="text-accent-700 underline hover:text-accent-800">hello@geotoolbox.ai</a>; we respond within 14 days</li>
+            <li>Request deletion of all server-side data by emailing <a href="mailto:samy@geotoolbox.ai" className="text-accent-700 underline hover:text-accent-800">samy@geotoolbox.ai</a>; we respond within 14 days</li>
             <li>Clear locally cached data by clearing your browser storage</li>
           </ul>
         </section>
@@ -94,7 +94,7 @@ export default function PrivacyPage() {
           <h2 className="text-lg font-semibold text-gray-900">7. Contact</h2>
           <p className="mt-2">
             For privacy questions or data deletion requests, email{" "}
-            <a href="mailto:hello@geotoolbox.ai" className="text-accent-700 underline hover:text-accent-800">hello@geotoolbox.ai</a>.
+            <a href="mailto:samy@geotoolbox.ai" className="text-accent-700 underline hover:text-accent-800">samy@geotoolbox.ai</a>.
           </p>
         </section>
       </div>

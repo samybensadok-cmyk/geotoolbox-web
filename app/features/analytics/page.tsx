@@ -53,7 +53,7 @@ const faqs = [
   {
     question: "How do I connect Google Search Console?",
     answer:
-      "One-click OAuth: authorize access, select your property, and your GSC data is live in the dashboard. No API keys, no CSV imports. (Google OAuth verification is still in progress, so email hello@geotoolbox.ai to be added to the test user list for early access.)",
+      "One-click OAuth: authorize access, select your property, and your GSC data is live in the dashboard. No API keys, no CSV imports. (Google OAuth verification is still in progress, so email samy@geotoolbox.ai to be added to the test user list for early access.)",
   },
   {
     question: "Does it support Google Analytics 4 (GA4)?",
@@ -147,8 +147,8 @@ export default function AnalyticsPage() {
                 </svg>
                 <p className="text-[13px] leading-relaxed text-amber-900">
                   <span className="font-semibold">Beta access:</span> Google OAuth verification is in progress. Email{" "}
-                  <a href="mailto:hello@geotoolbox.ai" className="font-semibold text-amber-900 underline underline-offset-2 hover:no-underline">
-                    hello@geotoolbox.ai
+                  <a href="mailto:samy@geotoolbox.ai" className="font-semibold text-amber-900 underline underline-offset-2 hover:no-underline">
+                    samy@geotoolbox.ai
                   </a>{" "}
                   to be added to the test user list.
                 </p>
@@ -276,8 +276,8 @@ export default function AnalyticsPage() {
             </h2>
             <p className="mt-2 text-base text-gray-300">
               Free while in beta. Google OAuth verification in progress; email{" "}
-              <a href="mailto:hello@geotoolbox.ai" className="font-semibold text-white underline underline-offset-2 hover:text-accent-400">
-                hello@geotoolbox.ai
+              <a href="mailto:samy@geotoolbox.ai" className="font-semibold text-white underline underline-offset-2 hover:text-accent-400">
+                samy@geotoolbox.ai
               </a>{" "}
               to be whitelisted.
             </p>
