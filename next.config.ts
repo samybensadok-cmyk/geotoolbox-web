@@ -4,6 +4,10 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
+        source: "/app",
+        destination: "https://sg-geo-tool.replit.app/",
+      },
+      {
         source: "/app/:path*",
         destination: "https://sg-geo-tool.replit.app/app/:path*",
       },
