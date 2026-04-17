@@ -5,18 +5,32 @@ import { HeroMockup } from "./hero-mockup"
 export function Hero() {
   return (
     <section className="relative overflow-hidden bg-white px-6 pt-14 pb-16 sm:pt-20 sm:pb-24 lg:pt-24">
-      {/* Editorial rule line — anchors asymmetric layout */}
-      <div className="mx-auto max-w-7xl">
+      {/* Subtle dotted-grid backdrop — mirrors the final CTA's grid pattern
+          in light mode. Adds texture / editorial-technical tone without
+          competing with the mockup. Strictly decorative. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-[0.05]"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle at 1px 1px, rgb(15 23 42 / 1) 1px, transparent 0)",
+          backgroundSize: "22px 22px",
+        }}
+      />
+
+      <div className="relative mx-auto max-w-7xl">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center lg:gap-16">
           {/* Text column — left, spans 6 on desktop */}
           <div className="lg:col-span-6">
             <div className="animate-fade-up">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-accent-200 bg-accent-50 px-3 py-1 text-xs font-medium text-accent-700">
+              <span className="inline-flex items-center gap-2 rounded-full border border-accent-200 bg-accent-50 px-3 py-1 text-xs font-medium text-accent-800">
                 <span className="relative inline-flex h-1.5 w-1.5">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-500 opacity-75" />
                   <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent-600" />
                 </span>
-                Now in beta
+                <span className="font-semibold">Free while in beta</span>
+                <span aria-hidden="true" className="text-accent-400">&middot;</span>
+                <span>no signup required</span>
               </span>
             </div>
 
@@ -44,7 +58,7 @@ export function Hero() {
             </div>
 
             <p className="stagger-3 mt-4 text-xs text-gray-600">
-              No credit card &middot; Results in minutes
+              First scan in under two minutes &middot; runs anonymously
             </p>
 
             {/* Engines strip — merged in from deleted Engines section.
