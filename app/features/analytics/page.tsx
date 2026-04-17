@@ -19,20 +19,22 @@ export const metadata: Metadata = {
   alternates: { canonical: `${siteConfig.url}/features/analytics` },
 }
 
-const subDashboards = [
-  { tag: "Overview", desc: "Headline metrics + weekly trend", cat: "Core" },
-  { tag: "Compare", desc: "Two periods, side by side", cat: "Core" },
-  { tag: "Quick Wins", desc: "Ranked pages with fixable issues", cat: "Opportunity" },
-  { tag: "Content Decay", desc: "Pages losing impressions over time", cat: "Opportunity" },
-  { tag: "Click Potential", desc: "High-impression, low-CTR pages", cat: "Opportunity" },
-  { tag: "Cannibalization", desc: "Pages competing for same keywords", cat: "Diagnostic" },
-  { tag: "Health", desc: "Indexation, coverage, crawl errors", cat: "Diagnostic" },
-  { tag: "Trajectory", desc: "12-month history per query", cat: "Diagnostic" },
-  { tag: "Pages", desc: "Every URL, click-share %", cat: "Deep dive" },
-  { tag: "Sections", desc: "By URL path segment", cat: "Deep dive" },
-  { tag: "Keywords", desc: "Query-level view, intent-classified", cat: "Deep dive" },
-  { tag: "Keyword Cloud", desc: "Visual weight by click share", cat: "Deep dive" },
-  { tag: "Clusters", desc: "Semantic grouping of queries", cat: "Deep dive" },
+type Viz = "bars" | "sparkDown" | "sparkUp" | "gauge" | "rows" | "dots" | "scatter" | "cloud" | "clusters" | "grid" | "compare"
+
+const subDashboards: { tag: string; desc: string; cat: string; viz: Viz }[] = [
+  { tag: "Overview",       desc: "Headline metrics + weekly trend",      cat: "Core",        viz: "grid" },
+  { tag: "Compare",        desc: "Two periods, side by side",             cat: "Core",        viz: "compare" },
+  { tag: "Quick Wins",     desc: "Ranked pages with fixable issues",      cat: "Opportunity", viz: "gauge" },
+  { tag: "Content Decay",  desc: "Pages losing impressions over time",    cat: "Opportunity", viz: "sparkDown" },
+  { tag: "Click Potential",desc: "High-impression, low-CTR pages",        cat: "Opportunity", viz: "sparkUp" },
+  { tag: "Cannibalization",desc: "Pages competing for same keywords",     cat: "Diagnostic",  viz: "scatter" },
+  { tag: "Health",         desc: "Indexation, coverage, crawl errors",    cat: "Diagnostic",  viz: "dots" },
+  { tag: "Trajectory",     desc: "12-month history per query",            cat: "Diagnostic",  viz: "sparkUp" },
+  { tag: "Pages",          desc: "Every URL, click-share %",              cat: "Deep dive",   viz: "rows" },
+  { tag: "Sections",       desc: "By URL path segment",                   cat: "Deep dive",   viz: "bars" },
+  { tag: "Keywords",       desc: "Query-level view, intent-classified",   cat: "Deep dive",   viz: "rows" },
+  { tag: "Keyword Cloud",  desc: "Visual weight by click share",          cat: "Deep dive",   viz: "cloud" },
+  { tag: "Clusters",       desc: "Semantic grouping of queries",          cat: "Deep dive",   viz: "clusters" },
 ]
 
 const aiTraffic = [
@@ -99,6 +101,137 @@ const outcomes = [
     body: "Queries grouped by semantic similarity. See which topic clusters you own, which you're losing, and where a handful of related queries share the same underlying opportunity.",
   },
 ]
+
+/**
+ * Pictogram — tiny 56x32 SVG that hints at the shape of each dashboard view.
+ * Stroke color is passed in (matches the card's group accent) so the whole
+ * zone reads as visually consistent. Each picto is decorative (aria-hidden).
+ */
+function Pictogram({ kind, color }: { kind: Viz; color: string }) {
+  const stroke = color
+  const base = { width: 56, height: 32, viewBox: "0 0 56 32", fill: "none", "aria-hidden": true, className: "shrink-0" }
+
+  switch (kind) {
+    case "bars":
+      return (
+        <svg {...base}>
+          <rect x="4"  y="18" width="6" height="10" rx="1" fill={stroke} opacity="0.35" />
+          <rect x="14" y="10" width="6" height="18" rx="1" fill={stroke} opacity="0.55" />
+          <rect x="24" y="6"  width="6" height="22" rx="1" fill={stroke} opacity="0.75" />
+          <rect x="34" y="14" width="6" height="14" rx="1" fill={stroke} opacity="0.5" />
+          <rect x="44" y="4"  width="6" height="24" rx="1" fill={stroke} />
+        </svg>
+      )
+    case "sparkDown":
+      return (
+        <svg {...base}>
+          <polyline
+            points="4,6 14,11 22,9 30,16 38,21 46,24 52,28"
+            stroke={stroke} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"
+          />
+          <circle cx="52" cy="28" r="2" fill={stroke} />
+        </svg>
+      )
+    case "sparkUp":
+      return (
+        <svg {...base}>
+          <polyline
+            points="4,26 14,22 22,24 30,16 38,12 46,8 52,4"
+            stroke={stroke} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"
+          />
+          <circle cx="52" cy="4" r="2" fill={stroke} />
+        </svg>
+      )
+    case "gauge":
+      return (
+        <svg {...base}>
+          <path d="M6 26 A 22 22 0 0 1 50 26" stroke={stroke} strokeWidth="2" opacity="0.25" fill="none" strokeLinecap="round" />
+          <path d="M6 26 A 22 22 0 0 1 38 7"  stroke={stroke} strokeWidth="2.5" fill="none" strokeLinecap="round" />
+          <circle cx="38" cy="7" r="2.5" fill={stroke} />
+        </svg>
+      )
+    case "rows":
+      return (
+        <svg {...base}>
+          <rect x="4"  y="6"  width="44" height="3" rx="1.5" fill={stroke} opacity="0.85" />
+          <rect x="4"  y="14" width="32" height="3" rx="1.5" fill={stroke} opacity="0.55" />
+          <rect x="4"  y="22" width="38" height="3" rx="1.5" fill={stroke} opacity="0.35" />
+        </svg>
+      )
+    case "dots":
+      return (
+        <svg {...base}>
+          <circle cx="8"  cy="10" r="3" fill={stroke} />
+          <circle cx="20" cy="10" r="3" fill={stroke} />
+          <circle cx="32" cy="10" r="3" fill={stroke} opacity="0.35" />
+          <circle cx="8"  cy="22" r="3" fill={stroke} opacity="0.35" />
+          <circle cx="20" cy="22" r="3" fill={stroke} />
+          <circle cx="32" cy="22" r="3" fill={stroke} />
+          <circle cx="44" cy="16" r="3" fill={stroke} opacity="0.55" />
+        </svg>
+      )
+    case "scatter":
+      // two overlapping circles — cannibalization
+      return (
+        <svg {...base}>
+          <circle cx="20" cy="16" r="10" stroke={stroke} strokeWidth="2" fill={stroke} fillOpacity="0.12" />
+          <circle cx="34" cy="16" r="10" stroke={stroke} strokeWidth="2" fill={stroke} fillOpacity="0.12" />
+        </svg>
+      )
+    case "cloud":
+      // keyword cloud — varied-size tokens
+      return (
+        <svg {...base}>
+          <rect x="4"  y="10" width="14" height="6" rx="2" fill={stroke} opacity="0.85" />
+          <rect x="22" y="6"  width="18" height="8" rx="2" fill={stroke} />
+          <rect x="44" y="11" width="10" height="5" rx="1.5" fill={stroke} opacity="0.5" />
+          <rect x="8"  y="20" width="8"  height="4" rx="1.5" fill={stroke} opacity="0.35" />
+          <rect x="20" y="18" width="12" height="6" rx="2" fill={stroke} opacity="0.65" />
+          <rect x="36" y="20" width="16" height="5" rx="1.5" fill={stroke} opacity="0.85" />
+        </svg>
+      )
+    case "clusters":
+      // three grouped dot clusters
+      return (
+        <svg {...base}>
+          <circle cx="9"  cy="10" r="2" fill={stroke} />
+          <circle cx="14" cy="14" r="2" fill={stroke} />
+          <circle cx="10" cy="18" r="2" fill={stroke} />
+          <circle cx="28" cy="8"  r="2" fill={stroke} />
+          <circle cx="32" cy="13" r="2" fill={stroke} />
+          <circle cx="26" cy="16" r="2" fill={stroke} />
+          <circle cx="44" cy="12" r="2" fill={stroke} />
+          <circle cx="48" cy="18" r="2" fill={stroke} />
+          <circle cx="43" cy="22" r="2" fill={stroke} />
+        </svg>
+      )
+    case "grid":
+      // KPI grid — 2x2 rounded tiles
+      return (
+        <svg {...base}>
+          <rect x="6"  y="4"  width="20" height="11" rx="2" fill={stroke} opacity="0.65" />
+          <rect x="30" y="4"  width="20" height="11" rx="2" fill={stroke} opacity="0.35" />
+          <rect x="6"  y="19" width="20" height="11" rx="2" fill={stroke} opacity="0.5" />
+          <rect x="30" y="19" width="20" height="11" rx="2" fill={stroke} opacity="0.85" />
+        </svg>
+      )
+    case "compare":
+      // side-by-side bar clusters, 2 periods
+      return (
+        <svg {...base}>
+          <rect x="6"  y="14" width="4" height="14" rx="1" fill={stroke} opacity="0.35" />
+          <rect x="12" y="8"  width="4" height="20" rx="1" fill={stroke} opacity="0.55" />
+          <rect x="18" y="4"  width="4" height="24" rx="1" fill={stroke} opacity="0.75" />
+          <rect x="32" y="10" width="4" height="18" rx="1" fill={stroke} opacity="0.55" />
+          <rect x="38" y="16" width="4" height="12" rx="1" fill={stroke} opacity="0.75" />
+          <rect x="44" y="6"  width="4" height="22" rx="1" fill={stroke} />
+          <path d="M26 6 v20" stroke={stroke} strokeWidth="1" opacity="0.25" strokeDasharray="2 2" />
+        </svg>
+      )
+    default:
+      return null
+  }
+}
 
 export default function AnalyticsPage() {
   return (
@@ -211,57 +344,69 @@ export default function AnalyticsPage() {
             </p>
           </div>
 
-          {/* Grouped by intent — each group renders its own grid with a col
-              count that matches its card count, so no group has orphan cells.
-              CORE (2) → 2-col. OPPORTUNITY + DIAGNOSTIC (3 each) → 3-col.
-              DEEP DIVE (5) → 5-col wide-only, falling back gracefully on
-              small screens. */}
-          <div className="mt-14 space-y-12">
+          {/* Grouped by intent as 4 bento zones. Each zone has its own tinted
+              panel + dot accent + subtitle, making the category coding
+              genuinely visual instead of a 3px left border. Cards inside use
+              white tiles with per-card mini-pictograms that hint at what the
+              view actually looks like (bars/sparkline/gauge/dots/etc). */}
+          <div className="mt-14 space-y-6">
             {(["Core", "Opportunity", "Diagnostic", "Deep dive"] as const).map((cat) => {
               const items = subDashboards.filter((d) => d.cat === cat)
-              const tint = {
-                Core: "border-l-accent-500 bg-accent-50/40",
-                Opportunity: "border-l-emerald-500 bg-emerald-50/40",
-                Diagnostic: "border-l-amber-500 bg-amber-50/40",
-                "Deep dive": "border-l-slate-500 bg-slate-50/60",
-              }[cat]
-              const catTextTint = {
-                Core: "text-accent-700",
-                Opportunity: "text-emerald-700",
-                Diagnostic: "text-amber-700",
-                "Deep dive": "text-slate-600",
+              const zone = {
+                Core:         { bg: "bg-accent-50/50",   border: "border-accent-100",   dot: "bg-accent-500",   text: "text-accent-700",   pictoHex: "#0f766e" },
+                Opportunity:  { bg: "bg-emerald-50/50",  border: "border-emerald-100",  dot: "bg-emerald-500",  text: "text-emerald-700",  pictoHex: "#059669" },
+                Diagnostic:   { bg: "bg-amber-50/60",    border: "border-amber-100",    dot: "bg-amber-500",    text: "text-amber-700",    pictoHex: "#b45309" },
+                "Deep dive":  { bg: "bg-slate-100/50",   border: "border-slate-200",    dot: "bg-slate-500",    text: "text-slate-700",    pictoHex: "#475569" },
               }[cat]
               const gridCols = {
-                Core: "sm:grid-cols-2",
+                Core:        "sm:grid-cols-2",
                 Opportunity: "sm:grid-cols-2 lg:grid-cols-3",
-                Diagnostic: "sm:grid-cols-2 lg:grid-cols-3",
+                Diagnostic:  "sm:grid-cols-2 lg:grid-cols-3",
                 "Deep dive": "sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5",
               }[cat]
               const subtitle = {
-                Core: "Start here. Headline metrics + period comparison.",
+                Core:        "Start here. Headline metrics + period comparison.",
                 Opportunity: "Three places to move the needle fastest.",
-                Diagnostic: "What's broken, what's slipping, what's competing.",
+                Diagnostic:  "What's broken, what's slipping, what's competing.",
                 "Deep dive": "Per-URL, per-query, per-intent drill-downs.",
               }[cat]
               return (
-                <div key={cat}>
-                  <div className="mb-5 flex flex-wrap items-baseline gap-x-4 gap-y-1">
-                    <p className={`font-mono text-[11px] font-semibold uppercase tracking-widest ${catTextTint}`}>
-                      {cat}
-                    </p>
-                    <span className="font-mono text-[11px] text-gray-500">
-                      {items.length} {items.length === 1 ? "view" : "views"}
-                    </span>
-                    <span className="text-[13px] text-gray-500">&middot; {subtitle}</span>
+                <div
+                  key={cat}
+                  className={`rounded-3xl border ${zone.border} ${zone.bg} p-5 sm:p-7`}
+                >
+                  {/* Zone header */}
+                  <div className="mb-5 flex flex-wrap items-center gap-x-4 gap-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className={`inline-block h-2 w-2 rounded-full ${zone.dot}`} aria-hidden="true" />
+                      <p className={`font-mono text-[11px] font-semibold uppercase tracking-widest ${zone.text}`}>
+                        {cat}
+                      </p>
+                      <span className="font-mono text-[11px] text-gray-500">
+                        &middot; {items.length} {items.length === 1 ? "view" : "views"}
+                      </span>
+                    </div>
+                    <span className="text-[13px] text-gray-600">{subtitle}</span>
                   </div>
-                  <div className={`grid grid-cols-1 gap-4 ${gridCols}`}>
+
+                  {/* Tile grid */}
+                  <div className={`grid grid-cols-1 gap-3 ${gridCols}`}>
                     {items.map((d) => (
                       <div
                         key={d.tag}
-                        className={`rounded-2xl border border-gray-200 border-l-[3px] ${tint} bg-white p-5 transition-shadow hover:shadow-[0_12px_24px_-12px_rgba(15,23,42,0.12)]`}
+                        className="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 transition-all hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-[0_12px_24px_-12px_rgba(15,23,42,0.14)]"
                       >
-                        <h3 className="text-base font-semibold tracking-tight text-gray-900">{d.tag}</h3>
-                        <p className="mt-1 text-[13px] leading-relaxed text-gray-600">{d.desc}</p>
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <h3 className="text-[15px] font-semibold tracking-tight text-gray-900">
+                              {d.tag}
+                            </h3>
+                            <p className="mt-1 text-[13px] leading-relaxed text-gray-600">
+                              {d.desc}
+                            </p>
+                          </div>
+                          <Pictogram kind={d.viz} color={zone.pictoHex} />
+                        </div>
                       </div>
                     ))}
                   </div>
