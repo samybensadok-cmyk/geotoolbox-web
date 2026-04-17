@@ -1,7 +1,30 @@
 import fs from "fs"
 import path from "path"
 import matter from "gray-matter"
-import { calculateReadingTime } from "./utils"
+import { calculateReadingTime, slugify } from "./utils"
+
+export type Heading = { level: 2 | 3; text: string; slug: string }
+
+/**
+ * Parse MDX content for `## Heading` and `### Heading` lines and
+ * return them as a flat list. Used to build the sticky TOC sidebar
+ * on blog post pages. Ignores headings inside fenced code blocks.
+ */
+export function extractHeadings(content: string): Heading[] {
+  const headings: Heading[] = []
+  let inFence = false
+  for (const line of content.split("\n")) {
+    if (line.startsWith("```")) { inFence = !inFence; continue }
+    if (inFence) continue
+    const m = /^(#{2,3})\s+(.+?)\s*$/.exec(line)
+    if (!m) continue
+    const level = (m[1].length as 2 | 3)
+    const text = m[2].replace(/[*_`]/g, "").trim()
+    if (!text) continue
+    headings.push({ level, text, slug: slugify(text) })
+  }
+  return headings
+}
 
 const CONTENT_DIR = path.join(process.cwd(), "content", "blog")
 

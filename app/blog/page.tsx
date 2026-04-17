@@ -39,8 +39,8 @@ async function BlogIndexInner({
 
   return (
     <>
-      {/* Editorial header */}
-      <section className="bg-white px-6 pt-20 pb-12 sm:pt-28">
+      {/* Editorial header — warm cream atmosphere (research / magazine feel) */}
+      <section className="bg-[var(--surface-warm)] px-6 pt-20 pb-12 sm:pt-28">
       <JsonLd data={breadcrumbsSchema([{ name: "Home", url: "/" }, { name: "Blog", url: "/blog" }])} />
 
         <div className="mx-auto max-w-7xl">
@@ -88,8 +88,8 @@ async function BlogIndexInner({
         </div>
       </section>
 
-      {/* Posts */}
-      <section className="bg-white px-6 pb-24 sm:pb-32">
+      {/* Posts — atmosphere carries through the editorial surface */}
+      <section className="bg-[var(--surface-warm)] px-6 pb-24 sm:pb-32">
         <div className="mx-auto max-w-7xl">
           {posts.length === 0 ? (
             <div className="mt-8 rounded-2xl border border-gray-200 bg-gray-50 px-6 py-16 text-center">
