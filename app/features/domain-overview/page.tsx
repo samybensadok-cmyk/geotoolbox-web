@@ -115,8 +115,8 @@ const sections = [
 export default function DomainOverviewPage() {
   return (
     <>
-      {/* Hero */}
-      <section className="bg-white px-6 pt-20 pb-16 sm:pt-24 sm:pb-20">
+      {/* Hero — steel atmosphere (command-center / dashboard feel) */}
+      <section className="relative overflow-hidden bg-[var(--surface-steel)] px-6 pt-20 pb-16 sm:pt-24 sm:pb-20">
       <JsonLd data={[
         softwareApplicationSchema({
           name: "Domain Overview",

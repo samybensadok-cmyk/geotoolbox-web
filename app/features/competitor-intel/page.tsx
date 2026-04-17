@@ -110,8 +110,8 @@ const sections = [
 export default function CompetitorIntelPage() {
   return (
     <>
-      {/* Hero */}
-      <section className="bg-white px-6 pt-20 pb-16 sm:pt-24 sm:pb-20">
+      {/* Hero — blush atmosphere (vigilance / threat-feed feel) */}
+      <section className="relative overflow-hidden bg-[var(--surface-blush)] px-6 pt-20 pb-16 sm:pt-24 sm:pb-20">
       <JsonLd data={[
         softwareApplicationSchema({
           name: "Competitor Intel",
