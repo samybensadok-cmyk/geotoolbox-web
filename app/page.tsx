@@ -1,6 +1,5 @@
 import type { Metadata } from "next"
 import { Hero } from "@/components/landing/hero"
-import { Engines } from "@/components/landing/engines"
 import { Problem } from "@/components/landing/problem"
 import { Playbook } from "@/components/landing/playbook"
 import { HowItWorks } from "@/components/landing/how-it-works"
@@ -20,11 +19,10 @@ export default function Home() {
     <>
       <JsonLd data={[organizationSchema(), websiteSchema()]} />
       <Hero />
-      <Engines />
       <Problem />
       <HowItWorks />
-      <Playbook />
       <Features />
+      <Playbook />
       <LatestPosts />
       <CTA />
     </>

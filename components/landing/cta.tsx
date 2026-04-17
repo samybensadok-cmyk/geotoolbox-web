@@ -40,23 +40,23 @@ export function CTA() {
             </p>
             <div className="mt-2 flex flex-wrap items-center gap-3">
               <Link
-                href={siteConfig.appSignupUrl} prefetch={false}
+                href={siteConfig.appUrl} prefetch={false}
                 className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 hover:shadow-xl hover:shadow-black/30 active:translate-y-[1px]"
               >
-                Start free trial
+                Try it for free
                 <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </Link>
               <Link
                 href="/blog"
-                className="text-sm font-semibold text-gray-300 transition-colors hover:text-white"
+                className="text-[13px] font-medium text-gray-400 transition-colors hover:text-white"
               >
                 Read the research &rarr;
               </Link>
             </div>
             <p className="mt-1 text-xs text-gray-400">
-              Free during beta &middot; Your first scan takes 90 seconds
+              No signup required &middot; First scan in under two minutes
             </p>
           </div>
         </div>

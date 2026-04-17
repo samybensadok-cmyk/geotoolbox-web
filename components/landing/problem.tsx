@@ -17,7 +17,7 @@ export function Problem() {
   ]
 
   return (
-    <section className="bg-gray-950 px-6 py-24 sm:py-32">
+    <section className="bg-gray-950 px-6 py-20 sm:py-24">
       <div className="mx-auto max-w-7xl">
         {/* Editorial header */}
         <div className="max-w-2xl">
@@ -33,7 +33,7 @@ export function Problem() {
         </div>
 
         {/* Flipped asymmetric split — left minimal, right dominant */}
-        <div className="mt-16 grid grid-cols-1 gap-12 lg:grid-cols-[3fr_9fr] lg:gap-20">
+        <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-[3fr_9fr] lg:gap-16">
           {/* Left — sidebar, tiny, muted. "You already have this covered." */}
           <aside className="lg:pt-2">
             <div className="flex items-baseline gap-2">
@@ -74,11 +74,11 @@ export function Problem() {
               <span className="h-px flex-1 bg-accent-800/60" />
             </div>
 
-            <ul className="mt-8 divide-y divide-accent-900/40">
+            <ul className="mt-6 divide-y divide-accent-900/40">
               {untracked.map((item, i) => (
                 <li
                   key={item}
-                  className="flex items-center gap-5 py-5"
+                  className="flex items-center gap-5 py-3.5"
                 >
                   <span className="relative inline-flex h-3 w-3 shrink-0" aria-hidden="true">
                     {i === 0 && (
@@ -86,7 +86,7 @@ export function Problem() {
                     )}
                     <span className="relative inline-flex h-3 w-3 rounded-full bg-accent-500" />
                   </span>
-                  <span className="text-xl font-semibold text-white md:text-2xl">
+                  <span className="text-lg font-semibold text-white md:text-xl">
                     {item}
                   </span>
                 </li>
@@ -96,7 +96,7 @@ export function Problem() {
         </div>
 
         {/* Bigger editorial pull-quote — now actually reads as a pull quote */}
-        <p className="mt-20 max-w-4xl text-[clamp(1.25rem,2.2vw,1.75rem)] font-semibold leading-snug tracking-tight text-gray-300">
+        <p className="mt-14 max-w-4xl text-[clamp(1.25rem,2.2vw,1.75rem)] font-semibold leading-snug tracking-tight text-gray-300">
           The fastest-growing search channel is the one you don&apos;t measure.{" "}
           <span className="text-accent-300">
             AI visibility is already the metric your competitors track.

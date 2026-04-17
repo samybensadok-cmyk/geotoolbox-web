@@ -36,7 +36,7 @@ export function Hero() {
                 Try it for free
               </Link>
               <Link
-                href="/#features"
+                href="/#how-it-works"
                 className="rounded-full border border-gray-200 px-6 py-3.5 text-[15px] font-medium text-gray-700 transition-colors hover:border-gray-400 hover:text-gray-900"
               >
                 See how it works
@@ -46,6 +46,24 @@ export function Hero() {
             <p className="stagger-3 mt-4 text-xs text-gray-600">
               No credit card &middot; Results in minutes
             </p>
+
+            {/* Engines strip — merged in from deleted Engines section.
+                Visual anchors which engines we scan without consuming a whole
+                section of scroll. */}
+            <div className="stagger-3 mt-8 flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-gray-100 pt-5 text-[11px] font-mono font-semibold uppercase tracking-widest text-gray-500">
+              <span className="text-gray-600">Works with</span>
+              <span className="text-gray-700">ChatGPT</span>
+              <span className="text-gray-300" aria-hidden="true">&middot;</span>
+              <span className="text-gray-700">Perplexity</span>
+              <span className="text-gray-300" aria-hidden="true">&middot;</span>
+              <span className="text-gray-700">Gemini</span>
+              <span className="text-gray-300" aria-hidden="true">&middot;</span>
+              <span className="text-gray-700">Claude</span>
+              <span className="text-gray-300" aria-hidden="true">&middot;</span>
+              <span className="text-gray-700">AI Overviews</span>
+              <span className="text-gray-300" aria-hidden="true">&middot;</span>
+              <span className="text-gray-700">Bing Copilot</span>
+            </div>
           </div>
 
           {/* Visual column — right, spans 6 on desktop */}

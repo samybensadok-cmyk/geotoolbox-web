@@ -145,14 +145,14 @@ function StatusDot({ cited }: { cited: boolean }) {
 /* ——— Section ——— */
 export function Features() {
   const cards = [
-    { visual: <ScanVisual />, tag: "Scan", title: "Every engine, one run", body: "ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot scanned on a single prompt.", span: "md:col-span-2" },
-    { visual: <ScoreVisual />, tag: "Score", title: "A number your team can align on", body: "AI visibility from 0 to 100. Track weekly, set alerts, benchmark competitors.", span: "md:col-span-1" },
-    { visual: <AnalyzeVisual />, tag: "Analyze", title: "19 signals per page", body: "Entity clarity, schema, authority, freshness, structure. See what helps AI cite you.", span: "md:col-span-1" },
-    { visual: <IntelVisual />, tag: "Intel", title: "Catch the day they beat you", body: "See who gets recommended instead. Co-cited domains, content gaps, real-time alerts.", span: "md:col-span-2" },
+    { visual: <ScanVisual />, tag: "Scan", title: "Every engine on a single prompt", body: "ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot — scanned in one run, side by side.", span: "md:col-span-2" },
+    { visual: <ScoreVisual />, tag: "Score", title: "One visibility score, week over week", body: "A single 0-100 number your team can align on. Tracked weekly, alerted on change, benchmarked against competitors.", span: "md:col-span-1" },
+    { visual: <AnalyzeVisual />, tag: "Analyze", title: "See what makes AI cite you", body: "19 on-page signals graded per URL: entity clarity, schema, authority, freshness, structure. Fix the lowest-scoring first.", span: "md:col-span-1" },
+    { visual: <IntelVisual />, tag: "Intel", title: "See who gets recommended instead", body: "Per-prompt competitor citations, co-cited domains, and real-time alerts the day a competitor overtakes you.", span: "md:col-span-2" },
   ]
 
   return (
-    <section id="features" className="bg-white px-6 py-20 sm:py-28">
+    <section id="features" className="bg-accent-50/40 px-6 py-20 sm:py-28">
       <div className="mx-auto max-w-7xl">
         <div className="max-w-2xl">
           <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">
