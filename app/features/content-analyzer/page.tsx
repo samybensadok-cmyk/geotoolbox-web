@@ -47,7 +47,7 @@ const steps = [
     verb: "Paste",
     title: "Any URL",
     body: "Your page, a competitor's page, a PDP, a blog post. We handle static HTML, SSR, and client-rendered React.",
-    output: "https://stubgroup.com/ai-seo",
+    output: "https://acme.co/guide/ai-seo",
   },
   {
     num: "02",
@@ -124,13 +124,18 @@ const outcomes = [
     title: "Structured data that helps",
     body: "Not just 'has schema yes/no'. We check the schema type matches the content, required fields are present, and the markup is AI-legible for FAQ, HowTo, Article, Product, and Organization types.",
   },
+  {
+    tag: "Rerun anytime",
+    title: "Prove the fix shipped",
+    body: "Every analysis is stored. Fix the issue, hit Rerun, and watch the grade move. Audit trail you can show a developer, a client, or your leadership.",
+  },
 ]
 
 export default function ContentAnalyzerPage() {
   return (
     <>
-      {/* Hero */}
-      <section className="bg-white px-6 pt-20 pb-16 sm:pt-24 sm:pb-20">
+      {/* Hero — lilac atmosphere (audit / report-card feel) */}
+      <section className="relative overflow-hidden bg-[var(--surface-lilac)] px-6 pt-20 pb-16 sm:pt-24 sm:pb-20">
       <JsonLd data={[
         softwareApplicationSchema({
           name: "Content Analyzer",
@@ -173,7 +178,7 @@ export default function ContentAnalyzerPage() {
               <div className="relative rounded-[2rem] border border-gray-200 bg-white p-8 shadow-[0_20px_60px_-20px_rgba(15,23,42,0.12)]">
                 <div className="flex items-start justify-between gap-6">
                   <div className="min-w-0 flex-1">
-                    <p className="truncate font-mono text-[12px] text-gray-500">stubgroup.com/ai-seo</p>
+                    <p className="truncate font-mono text-[12px] text-gray-500">acme.co/guide/ai-seo</p>
                     <p className="mt-3 text-[11px] font-semibold uppercase tracking-widest text-gray-600">Citability grade</p>
                     <p className="mt-1 font-mono text-[80px] font-bold leading-none tracking-tight text-accent-700">B+</p>
                   </div>
@@ -214,8 +219,8 @@ export default function ContentAnalyzerPage() {
         </div>
       </section>
 
-      {/* How it works */}
-      <section className="bg-white px-6 py-24 sm:py-28">
+      {/* How it works — atmosphere continues */}
+      <section className="bg-[var(--surface-lilac)] px-6 py-24 sm:py-28">
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-[5fr_7fr] lg:items-end lg:gap-16">
             <div>
