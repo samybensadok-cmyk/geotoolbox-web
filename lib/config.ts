@@ -2,7 +2,9 @@ export const siteConfig = {
   name: "GEO Toolbox",
   description: "Generative engine optimization (GEO) measured across six AI engines. Track AI search visibility on ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot.",
   url: "https://geotoolbox.ai",
-  appUrl: "/app",
+  appUrl: "/app/",
+  appLoginUrl: "/app/?page=login",
+  appSignupUrl: "/app/?page=signup",
   author: "Samy Mahmoudi",
   links: {
     twitter: "https://twitter.com/geotoolbox",

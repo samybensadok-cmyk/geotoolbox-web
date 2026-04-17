@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { siteConfig } from "@/lib/config"
 
 export function CTA() {
   return (
@@ -39,7 +40,7 @@ export function CTA() {
             </p>
             <div className="mt-2 flex flex-wrap items-center gap-3">
               <Link
-                href="/app" prefetch={false}
+                href={siteConfig.appSignupUrl} prefetch={false}
                 className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 hover:shadow-xl hover:shadow-black/30 active:translate-y-[1px]"
               >
                 Start free trial
