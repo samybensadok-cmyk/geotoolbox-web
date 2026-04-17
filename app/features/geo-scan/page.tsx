@@ -116,8 +116,8 @@ const outcomes = [
 export default function GeoScanPage() {
   return (
     <>
-      {/* Hero */}
-      <section className="bg-white px-6 pt-20 pb-16 sm:pt-24 sm:pb-20">
+      {/* Hero — mint atmosphere (scanning / live / fresh) */}
+      <section className="relative overflow-hidden bg-[var(--surface-mint)] px-6 pt-20 pb-16 sm:pt-24 sm:pb-20">
       <JsonLd data={[
         softwareApplicationSchema({
           name: "GEO Scan",
@@ -164,33 +164,74 @@ export default function GeoScanPage() {
               </p>
             </div>
 
-            {/* Scan result visual */}
+            {/* Scan result visual — verbatim quote + live scanning state */}
             <div className="lg:col-span-6" aria-hidden="true">
-              <div className="relative rounded-[2rem] border border-gray-200 bg-white p-6 sm:p-8 shadow-[0_20px_60px_-20px_rgba(15,23,42,0.12)]">
-                <div className="flex items-center gap-3 rounded-xl bg-gray-50 px-4 py-3 font-mono text-[13px] text-gray-700">
+              <div className="relative rounded-[2rem] border border-[var(--surface-mint-border)] bg-white p-6 sm:p-8 shadow-[0_20px_60px_-20px_rgba(15,23,42,0.12)]">
+                {/* Query bar with live indicator */}
+                <div className="flex items-center gap-3 rounded-xl border border-gray-100 bg-gray-50 px-4 py-3 font-mono text-[13px] text-gray-700">
                   <svg className="h-4 w-4 shrink-0 text-accent-600" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
                     <circle cx="9" cy="9" r="6" />
                     <path d="m14 14 3.5 3.5" strokeLinecap="round" />
                   </svg>
-                  <span className="truncate">best CRM software for small business</span>
+                  <span className="flex-1 truncate">best CRM software for small business</span>
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-accent-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-accent-700">
+                    <span className="relative inline-flex h-1.5 w-1.5">
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-400 opacity-60" />
+                      <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent-500" />
+                    </span>
+                    Live
+                  </span>
                 </div>
-                <div className="mt-5 divide-y divide-gray-100">
-                  {engines.map((e) => {
+
+                {/* ChatGPT — expanded with verbatim quote + brand highlight */}
+                <div className="mt-5 rounded-xl border border-accent-200 bg-accent-50/40 p-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold text-gray-900">ChatGPT</span>
+                    <div className="flex items-center gap-2.5">
+                      <span className="relative inline-flex h-2 w-2">
+                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-400 opacity-60" />
+                        <span className="relative inline-flex h-2 w-2 rounded-full bg-accent-500" />
+                      </span>
+                      <span className="font-mono text-[11px] font-semibold text-accent-700">CITED</span>
+                    </div>
+                  </div>
+                  <blockquote className="mt-2.5 text-[13px] leading-relaxed text-gray-700">
+                    &ldquo;For small businesses, popular options include{" "}
+                    <mark className="rounded bg-accent-200/70 px-1 py-0.5 font-semibold text-accent-900">
+                      acme.co
+                    </mark>
+                    , Pipedrive, and HubSpot &mdash; each with strong free tiers and simple onboarding.&rdquo;
+                  </blockquote>
+                </div>
+
+                {/* Remaining engines — compact rows, one in live "scanning" state */}
+                <div className="mt-3 divide-y divide-gray-100 rounded-xl border border-gray-100">
+                  {engines.slice(1).map((e, idx) => {
+                    // Mark Bing Copilot (last) as "scanning" to show live state
+                    const isScanning = idx === engines.slice(1).length - 1
                     const isMentioned = e.status === "Mentioned"
-                    const dotClass = e.variant === "cited"
-                      ? (isMentioned ? "bg-amber-500" : "bg-accent-500")
-                      : "border border-gray-300"
-                    const pingClass = e.variant === "cited"
-                      ? (isMentioned ? "bg-amber-400" : "bg-accent-400")
-                      : ""
-                    const textClass = e.variant === "cited"
-                      ? (isMentioned ? "text-amber-700" : "text-accent-700")
-                      : "text-gray-500"
+                    const dotClass = isScanning
+                      ? "bg-amber-400"
+                      : e.variant === "cited"
+                        ? (isMentioned ? "bg-amber-500" : "bg-accent-500")
+                        : "border border-gray-300"
+                    const pingClass = isScanning
+                      ? "bg-amber-400"
+                      : e.variant === "cited"
+                        ? (isMentioned ? "bg-amber-400" : "bg-accent-400")
+                        : ""
+                    const textClass = isScanning
+                      ? "text-amber-700"
+                      : e.variant === "cited"
+                        ? (isMentioned ? "text-amber-700" : "text-accent-700")
+                        : "text-gray-500"
+                    const label = isScanning ? "Scanning…" : e.status
+                    const showPulse = isScanning || e.variant === "cited"
                     return (
-                      <div key={e.name} className="flex items-center justify-between py-2.5">
+                      <div key={e.name} className="flex items-center justify-between px-4 py-2.5">
                         <span className="text-sm font-medium text-gray-800">{e.name}</span>
                         <div className="flex items-center gap-2.5">
-                          {e.variant === "cited" ? (
+                          {showPulse ? (
                             <span className="relative inline-flex h-2 w-2">
                               <span
                                 className={`absolute inline-flex h-full w-full animate-ping rounded-full ${pingClass} opacity-60`}
@@ -202,19 +243,21 @@ export default function GeoScanPage() {
                             <span className={`h-2 w-2 rounded-full ${dotClass}`} />
                           )}
                           <span className={`text-xs font-semibold tabular-nums ${textClass}`}>
-                            {e.status}
+                            {label}
                           </span>
                         </div>
                       </div>
                     )
                   })}
                 </div>
+
+                {/* Bottom bar — runtime metrics (trend belongs on Domain Overview) */}
                 <div className="mt-5 flex items-center justify-between rounded-xl border border-gray-100 bg-gray-50 px-4 py-3">
                   <span className="text-[11px] font-semibold uppercase tracking-widest text-gray-600">Visibility</span>
                   <div className="flex items-baseline gap-1.5">
                     <span className="font-mono text-xl font-bold tabular-nums text-gray-900">57</span>
                     <span className="font-mono text-xs text-gray-500">/100</span>
-                    <span className="ml-2 text-xs font-semibold text-accent-700">+8 wk</span>
+                    <span className="ml-3 font-mono text-[11px] text-gray-500">6 engines &middot; 2.3s</span>
                   </div>
                 </div>
               </div>
@@ -223,8 +266,8 @@ export default function GeoScanPage() {
         </div>
       </section>
 
-      {/* How it works */}
-      <section id="how" className="bg-white px-6 py-24 sm:py-28">
+      {/* How it works — atmosphere continues */}
+      <section id="how" className="bg-[var(--surface-mint)] px-6 py-24 sm:py-28">
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-[5fr_7fr] lg:items-end lg:gap-16">
             <div>
@@ -311,7 +354,7 @@ export default function GeoScanPage() {
             href="/app" prefetch={false}
             className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]"
           >
-            Start free trial
+            Try it for free
             <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
