@@ -1,6 +1,19 @@
 type FAQItem = { question: string; answer: string }
 
-export function FeatureFaq({ items, heading = "Frequently asked" }: { items: FAQItem[]; heading?: string }) {
+export function FeatureFaq({
+  items,
+  heading = "Frequently asked",
+  defaultOpenIndex = 0,
+}: {
+  items: FAQItem[]
+  heading?: string
+  /**
+   * Index of the FAQ item to render expanded by default. Set to -1 to leave
+   * all items collapsed. First-item default gives the reader immediate
+   * payoff instead of a wall of collapsed rows.
+   */
+  defaultOpenIndex?: number
+}) {
   if (items.length === 0) return null
 
   const jsonLd = {
@@ -31,7 +44,10 @@ export function FeatureFaq({ items, heading = "Frequently asked" }: { items: FAQ
         <ul className="space-y-3">
           {items.map((item, i) => (
             <li key={i}>
-              <details className="group rounded-2xl border border-gray-200 bg-white p-6 transition-colors open:border-gray-300">
+              <details
+                open={i === defaultOpenIndex}
+                className="group rounded-2xl border border-gray-200 bg-white p-6 transition-colors open:border-gray-300"
+              >
                 <summary className="flex cursor-pointer list-none items-start justify-between gap-6 [&::-webkit-details-marker]:hidden">
                   <div className="flex items-start gap-4 min-w-0 flex-1">
                     <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700 mt-1 tabular-nums shrink-0">

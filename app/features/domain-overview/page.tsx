@@ -75,31 +75,37 @@ const faqs = [
 
 const sections = [
   {
+    num: "01",
     tag: "Top cited pages",
     title: "Which URLs AI actually recommends",
     body: "Ranked by citation count across all engines and scans. Each page shows which engines cite it, verbatim quoted phrases, and inbound AI traffic if GSC is connected.",
   },
   {
+    num: "02",
     tag: "AI competitors",
     title: "Who shows up when you don't",
     body: "Aggregated from every prompt you've scanned. Share-of-voice per competitor, week-over-week delta, and which prompts they win that you lose.",
   },
   {
+    num: "03",
     tag: "Co-cited domains",
     title: "Your AI citation neighborhood",
     body: "Domains frequently cited alongside yours. Useful for backlink targets, partnership ideas, and understanding what AI considers the authoritative cluster for your topics.",
   },
   {
+    num: "04",
     tag: "Topical authority",
     title: "What AI thinks you're about",
     body: "Entity extraction across all cited pages. Shows the topics AI associates with your brand, gaps where you should exist but don't, and drift over time.",
   },
   {
+    num: "05",
     tag: "GSC enhancement",
     title: "Citations + real traffic",
     body: "Connect Search Console and the overview cross-references AI-cited URLs with actual clicks and impressions. Spot pages that get AI love but no organic traffic (or vice versa).",
   },
   {
+    num: "06",
     tag: "Recommended actions",
     title: "What to do this week",
     body: "Prioritized action list based on the patterns in your data. 'These 3 pages should be cited but aren't. Here's why.' Shows the specific Content Analyzer fixes that matter most.",
@@ -167,7 +173,7 @@ export default function DomainOverviewPage() {
                         <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-400 opacity-75" />
                         <span className="relative inline-flex h-2 w-2 rounded-full bg-accent-400" />
                       </span>
-                      <span className="font-mono text-[13px] font-semibold text-white">stubgroup.com</span>
+                      <span className="font-mono text-[13px] font-semibold text-white">acme.co</span>
                     </div>
                     <span className="font-mono text-[11px] text-gray-500">updated 4m ago</span>
                   </div>
@@ -224,10 +230,18 @@ export default function DomainOverviewPage() {
             </p>
           </div>
 
-          <div className="mt-14 grid grid-cols-1 gap-x-8 gap-y-10 md:grid-cols-2 lg:grid-cols-3 lg:gap-x-10">
+          <div className="mt-14 grid grid-cols-1 gap-x-8 gap-y-12 md:grid-cols-2 lg:grid-cols-3 lg:gap-x-10">
             {sections.map((s) => (
-              <div key={s.tag}>
-                <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">{s.tag}</p>
+              <div key={s.tag} className="relative pl-12">
+                <span
+                  aria-hidden="true"
+                  className="absolute left-0 top-0 font-mono text-[22px] font-bold tabular-nums leading-none text-gray-300"
+                >
+                  {s.num}
+                </span>
+                <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+                  {s.tag}
+                </p>
                 <h3 className="mt-2 text-lg font-semibold tracking-tight text-gray-900">{s.title}</h3>
                 <p className="mt-2 text-[15px] leading-relaxed text-gray-600">{s.body}</p>
               </div>
@@ -241,19 +255,13 @@ export default function DomainOverviewPage() {
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
             <div className="lg:col-span-5">
-              <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">AI competitors</p>
+              <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">Share-of-voice tracker</p>
               <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.5rem)] font-bold leading-tight tracking-tight text-gray-900">
-                Who wins when you lose.
+                Track share-of-voice over time.
               </h2>
               <p className="mt-5 text-base leading-relaxed text-gray-600">
-                Share-of-voice across every prompt you've scanned. Ranked by how often AI recommends them instead of you, with week-over-week movement.
+                Every competitor that shows up in your AI results, ranked by how often they get recommended instead of you. Week-over-week movement makes it obvious the day a new rival starts winning your prompts.
               </p>
-              <Link href="/app" prefetch={false} className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-accent-700">
-                Run your first overview
-                <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </Link>
             </div>
 
             <div className="lg:col-span-7">
@@ -283,6 +291,19 @@ export default function DomainOverviewPage() {
                     )
                   })}
                 </div>
+                <div className="mt-5 flex items-center justify-between border-t border-gray-100 pt-4">
+                  <span className="text-[13px] text-gray-500">Example data &mdash; your chart updates automatically.</span>
+                  <Link
+                    href="/app"
+                    prefetch={false}
+                    className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-accent-700 hover:text-accent-900"
+                  >
+                    Scan your domain to see yours
+                    <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
@@ -300,10 +321,10 @@ export default function DomainOverviewPage() {
             <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
               Open your overview.
             </h2>
-            <p className="mt-2 text-base text-gray-300">Runs on every scan you do. Free while in beta.</p>
+            <p className="mt-2 text-base text-gray-300">Builds on every scan you run. Free while in beta &middot; no signup required.</p>
           </div>
           <Link href="/app" prefetch={false} className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]">
-            Start free trial
+            Try it for free
             <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
