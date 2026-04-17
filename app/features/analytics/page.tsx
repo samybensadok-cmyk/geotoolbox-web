@@ -211,33 +211,80 @@ export default function AnalyticsPage() {
             </p>
           </div>
 
-          <div className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {subDashboards.map((d) => {
+          {/* Grouped by intent — each group renders its own grid with a col
+              count that matches its card count, so no group has orphan cells.
+              CORE (2) → 2-col. OPPORTUNITY + DIAGNOSTIC (3 each) → 3-col.
+              DEEP DIVE (5) → 5-col wide-only, falling back gracefully on
+              small screens. */}
+          <div className="mt-14 space-y-12">
+            {(["Core", "Opportunity", "Diagnostic", "Deep dive"] as const).map((cat) => {
+              const items = subDashboards.filter((d) => d.cat === cat)
               const tint = {
                 Core: "border-l-accent-500 bg-accent-50/40",
                 Opportunity: "border-l-emerald-500 bg-emerald-50/40",
                 Diagnostic: "border-l-amber-500 bg-amber-50/40",
                 "Deep dive": "border-l-slate-500 bg-slate-50/60",
-              }[d.cat] || "border-l-gray-400"
+              }[cat]
               const catTextTint = {
                 Core: "text-accent-700",
                 Opportunity: "text-emerald-700",
                 Diagnostic: "text-amber-700",
                 "Deep dive": "text-slate-600",
-              }[d.cat] || "text-gray-500"
+              }[cat]
+              const gridCols = {
+                Core: "sm:grid-cols-2",
+                Opportunity: "sm:grid-cols-2 lg:grid-cols-3",
+                Diagnostic: "sm:grid-cols-2 lg:grid-cols-3",
+                "Deep dive": "sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5",
+              }[cat]
+              const subtitle = {
+                Core: "Start here. Headline metrics + period comparison.",
+                Opportunity: "Three places to move the needle fastest.",
+                Diagnostic: "What's broken, what's slipping, what's competing.",
+                "Deep dive": "Per-URL, per-query, per-intent drill-downs.",
+              }[cat]
               return (
-                <div
-                  key={d.tag}
-                  className={`rounded-2xl border border-gray-200 border-l-[3px] ${tint} bg-white p-5 transition-shadow hover:shadow-[0_12px_24px_-12px_rgba(15,23,42,0.12)]`}
-                >
-                  <p className={`font-mono text-[10px] font-semibold uppercase tracking-widest ${catTextTint}`}>
-                    {d.cat}
-                  </p>
-                  <h3 className="mt-2 text-base font-semibold tracking-tight text-gray-900">{d.tag}</h3>
-                  <p className="mt-1 text-[13px] leading-relaxed text-gray-600">{d.desc}</p>
+                <div key={cat}>
+                  <div className="mb-5 flex flex-wrap items-baseline gap-x-4 gap-y-1">
+                    <p className={`font-mono text-[11px] font-semibold uppercase tracking-widest ${catTextTint}`}>
+                      {cat}
+                    </p>
+                    <span className="font-mono text-[11px] text-gray-500">
+                      {items.length} {items.length === 1 ? "view" : "views"}
+                    </span>
+                    <span className="text-[13px] text-gray-500">&middot; {subtitle}</span>
+                  </div>
+                  <div className={`grid grid-cols-1 gap-4 ${gridCols}`}>
+                    {items.map((d) => (
+                      <div
+                        key={d.tag}
+                        className={`rounded-2xl border border-gray-200 border-l-[3px] ${tint} bg-white p-5 transition-shadow hover:shadow-[0_12px_24px_-12px_rgba(15,23,42,0.12)]`}
+                      >
+                        <h3 className="text-base font-semibold tracking-tight text-gray-900">{d.tag}</h3>
+                        <p className="mt-1 text-[13px] leading-relaxed text-gray-600">{d.desc}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )
             })}
+          </div>
+
+          {/* Inline CTA at peak intent — echoes the hero CTA with OAuth context */}
+          <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-gray-200 pt-6">
+            <p className="text-[13px] text-gray-500">
+              Example views &mdash; yours populate once GSC + GA4 are connected.
+            </p>
+            <Link
+              href="/app"
+              prefetch={false}
+              className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-accent-700 hover:text-accent-900"
+            >
+              Connect Search Console to see these for your site
+              <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </Link>
           </div>
         </div>
       </section>
@@ -283,7 +330,7 @@ export default function AnalyticsPage() {
             </p>
           </div>
           <Link href="/app" prefetch={false} className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]">
-            Start free trial
+            Try it for free
             <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
             </svg>

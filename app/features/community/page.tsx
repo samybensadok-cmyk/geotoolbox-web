@@ -192,8 +192,8 @@ export default function CommunityPage() {
         </div>
       </section>
 
-      {/* Outcomes */}
-      <section id="outcomes" className="bg-gray-50 px-6 py-24 sm:py-28">
+      {/* Outcomes — atmosphere continues (peach) */}
+      <section id="outcomes" className="bg-[var(--surface-peach)] px-6 py-24 sm:py-28">
         <div className="mx-auto max-w-7xl">
           <div className="max-w-2xl">
             <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">What you get</p>
@@ -301,6 +301,21 @@ export default function CommunityPage() {
               </div>
             </div>
           </div>
+
+          {/* Inline CTA at peak intent */}
+          <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-gray-100 pt-6">
+            <p className="text-[13px] text-gray-500">Example patterns &mdash; yours are generated from your scans.</p>
+            <Link
+              href="/app"
+              prefetch={false}
+              className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-accent-700 hover:text-accent-900"
+            >
+              Run a scan to see your community map
+              <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -318,7 +333,7 @@ export default function CommunityPage() {
             <p className="mt-2 text-base text-gray-300">Free while in beta. Runs on every scan.</p>
           </div>
           <Link href="/app" prefetch={false} className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]">
-            Start free trial
+            Try it for free
             <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
