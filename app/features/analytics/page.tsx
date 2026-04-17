@@ -394,7 +394,7 @@ export default function AnalyticsPage() {
                     {items.map((d) => (
                       <div
                         key={d.tag}
-                        className="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 transition-all hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-[0_12px_24px_-12px_rgba(15,23,42,0.14)]"
+                        className="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-[0_12px_24px_-12px_rgba(15,23,42,0.14)]"
                       >
                         <div className="flex items-start justify-between gap-3">
                           <div className="min-w-0">
@@ -423,7 +423,7 @@ export default function AnalyticsPage() {
             <Link
               href="/app"
               prefetch={false}
-              className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-accent-700 hover:text-accent-900"
+              className="inline-flex items-center gap-1.5 rounded-sm text-[13px] font-semibold text-accent-700 transition-colors duration-200 hover:text-accent-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
             >
               Connect Search Console to see these for your site
               <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">

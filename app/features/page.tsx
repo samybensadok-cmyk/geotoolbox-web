@@ -163,7 +163,7 @@ export default function FeaturesPage() {
                 <li key={f.slug}>
                   <Link
                     href={`#feature-${f.slug}`}
-                    className={`inline-flex items-center gap-2 rounded-full border ${t.border} ${t.bg} px-3 py-1.5 text-[12px] font-semibold text-gray-800 transition-shadow hover:shadow-[0_4px_12px_-4px_rgba(15,23,42,0.12)]`}
+                    className={`inline-flex items-center gap-2 rounded-full border ${t.border} ${t.bg} px-3 py-1.5 text-[12px] font-semibold text-gray-800 transition-shadow duration-200 hover:shadow-[0_4px_12px_-4px_rgba(15,23,42,0.12)] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2`}
                   >
                     <span className={`h-1.5 w-1.5 rounded-full ${t.dot}`} aria-hidden="true" />
                     {f.name.replace(" (GSC + GA4)", "")}
@@ -187,7 +187,7 @@ export default function FeaturesPage() {
               <li key={g.label}>
                 <a
                   href={`#group-${g.label.toLowerCase()}`}
-                  className="inline-block rounded-full bg-gray-100 px-3 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-700 transition-colors hover:bg-gray-200 hover:text-gray-900"
+                  className="inline-block rounded-full bg-gray-100 px-3 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-700 transition-colors duration-200 hover:bg-gray-200 hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
                 >
                   {g.label}
                 </a>
@@ -232,7 +232,7 @@ export default function FeaturesPage() {
                         key={f.slug}
                         href={`/features/${f.slug}`}
                         id={`feature-${f.slug}`}
-                        className={`group/card scroll-mt-28 block rounded-2xl border ${t.border} ${t.bg} p-6 transition-all hover:-translate-y-0.5 hover:shadow-[0_16px_32px_-16px_rgba(15,23,42,0.18)] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2 sm:p-7`}
+                        className={`group/card scroll-mt-28 block rounded-2xl border ${t.border} ${t.bg} p-6 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_16px_32px_-16px_rgba(15,23,42,0.18)] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2 sm:p-7`}
                       >
                         <div className="flex items-start justify-between gap-4">
                           <h3 className="text-lg font-semibold tracking-tight text-gray-900">
@@ -303,7 +303,7 @@ export default function FeaturesPage() {
             <div className="flex flex-col items-start gap-3 lg:items-end">
               <Link
                 href="/app" prefetch={false}
-                className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]"
+                className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px] focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950"
               >
                 Try it for free
                 <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">

@@ -151,8 +151,8 @@ export default async function BlogPost({
         <div className="mx-auto max-w-5xl">
           {/* Mobile TOC — collapsible */}
           {headings.length >= 4 && (
-            <details className="mb-10 rounded-2xl border border-gray-200 bg-gray-50 p-4 lg:hidden">
-              <summary className="cursor-pointer list-none font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-700 [&::-webkit-details-marker]:hidden">
+            <details className="group mb-10 rounded-2xl border border-gray-200 bg-gray-50 p-4 lg:hidden">
+              <summary className="cursor-pointer list-none rounded-md font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2 [&::-webkit-details-marker]:hidden">
                 <span className="flex items-center justify-between gap-4">
                   <span>
                     In this post
@@ -160,17 +160,17 @@ export default async function BlogPost({
                       {headings.filter((h) => h.level === 2).length} sections
                     </span>
                   </span>
-                  <svg className="h-3 w-3 transition-transform group-open:rotate-90" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2">
+                  <svg className="h-3 w-3 transition-transform duration-200 group-open:rotate-90" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M4 3l4 3-4 3" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </span>
               </summary>
-              <ul className="mt-4 space-y-2">
+              <ul className="mt-4 space-y-0.5">
                 {headings.map((h) => (
                   <li key={h.slug} className={h.level === 3 ? "pl-4" : ""}>
                     <a
                       href={`#${h.slug}`}
-                      className="block text-[13.5px] leading-snug text-gray-700 hover:text-accent-700"
+                      className="-mx-2 block rounded px-2 py-2 text-[13.5px] leading-snug text-gray-700 transition-colors duration-200 hover:bg-white hover:text-accent-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600"
                     >
                       {h.text}
                     </a>
@@ -194,7 +194,7 @@ export default async function BlogPost({
                         <li key={h.slug} className={h.level === 3 ? "pl-4" : ""}>
                           <a
                             href={`#${h.slug}`}
-                            className={`block border-l-2 py-0.5 pl-3 text-[13px] leading-snug transition-colors ${
+                            className={`block rounded-r-md border-l-2 py-1 pl-3 text-[13px] leading-snug transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2 ${
                               h.level === 2
                                 ? "border-gray-200 font-medium text-gray-700 hover:border-accent-500 hover:text-accent-700"
                                 : "border-gray-100 text-gray-500 hover:border-accent-400 hover:text-accent-600"
@@ -246,7 +246,7 @@ export default async function BlogPost({
             <Link
               href="/app"
               prefetch={false}
-              className="inline-flex shrink-0 items-center gap-2 rounded-full bg-accent-900 px-6 py-3 text-[14.5px] font-semibold text-white transition-all hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px]"
+              className="inline-flex shrink-0 items-center gap-2 rounded-full bg-accent-900 px-6 py-3 text-[14.5px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
             >
               Try it for free
               <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
@@ -260,7 +260,7 @@ export default async function BlogPost({
               <Link
                 key={f.slug}
                 href={`/features/${f.slug}`}
-                className={`group/card block rounded-2xl border ${f.border} ${f.bg} p-5 transition-all hover:-translate-y-0.5 hover:shadow-[0_16px_32px_-16px_rgba(15,23,42,0.16)] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2`}
+                className={`group/card block rounded-2xl border ${f.border} ${f.bg} p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_16px_32px_-16px_rgba(15,23,42,0.16)] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2`}
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-2">
@@ -286,7 +286,7 @@ export default async function BlogPost({
           <div className="mt-10 flex items-center justify-center">
             <Link
               href="/blog"
-              className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-gray-600 transition-colors hover:text-accent-700"
+              className="inline-flex items-center gap-1.5 rounded-sm text-[13px] font-semibold text-gray-600 transition-colors duration-200 hover:text-accent-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
             >
               <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M10 7H4m0 0l3-3m-3 3l3 3" strokeLinecap="round" strokeLinejoin="round" />
