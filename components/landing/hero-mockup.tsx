@@ -1,17 +1,29 @@
+/* Only the first engine has `pinging: true` — a single live pulse reads as
+   "currently scanning" without competing with the Scan Signal animation
+   further down the page. Others show static dots. */
 const engines = [
-  { name: "ChatGPT", status: "Cited", variant: "cited", delay: 0 },
-  { name: "Perplexity", status: "Cited", variant: "cited", delay: 120 },
-  { name: "Gemini", status: "Not found", variant: "missing", delay: 0 },
-  { name: "Claude", status: "Mentioned", variant: "cited", delay: 240 },
-  { name: "AI Overviews", status: "Recommended", variant: "cited", delay: 360 },
-  { name: "Bing Copilot", status: "Not found", variant: "missing", delay: 0 },
+  { name: "ChatGPT",      status: "Cited",       variant: "cited",   pinging: true },
+  { name: "Perplexity",   status: "Cited",       variant: "cited",   pinging: false },
+  { name: "Gemini",       status: "Not found",   variant: "missing", pinging: false },
+  { name: "Claude",       status: "Mentioned",   variant: "cited",   pinging: false },
+  { name: "AI Overviews", status: "Recommended", variant: "cited",   pinging: false },
+  { name: "Bing Copilot", status: "Not found",   variant: "missing", pinging: false },
 ]
 
 export function HeroMockup() {
   return (
     <div className="relative rounded-[2rem] border border-gray-200 bg-white p-6 sm:p-8 shadow-[0_20px_60px_-20px_rgba(15,23,42,0.12)]">
+      {/* "Live" pill — tiny identity tell that this is a real product, not a static screenshot */}
+      <span className="absolute top-4 right-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-accent-200 bg-white/90 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest text-accent-700 shadow-sm backdrop-blur">
+        <span className="relative inline-flex h-1.5 w-1.5">
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-500 opacity-60" />
+          <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent-500" />
+        </span>
+        Live
+      </span>
+
       {/* Query row */}
-      <div className="flex items-center gap-3 rounded-xl bg-gray-50 px-4 py-3 font-mono text-[13px] text-gray-700">
+      <div className="flex items-center gap-3 rounded-xl bg-gray-50 px-4 py-3 pr-24 font-mono text-[13px] text-gray-700">
         <svg className="h-4 w-4 shrink-0 text-accent-600" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
           <circle cx="9" cy="9" r="6" />
           <path d="m14 14 3.5 3.5" strokeLinecap="round" />
@@ -27,10 +39,9 @@ export function HeroMockup() {
             <div className="flex items-center gap-2.5">
               {e.variant === "cited" ? (
                 <span className="relative inline-flex h-2 w-2">
-                  <span
-                    className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-400 opacity-60"
-                    style={{ animationDelay: `${e.delay}ms` }}
-                  />
+                  {e.pinging && (
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-400 opacity-60" />
+                  )}
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-accent-500" />
                 </span>
               ) : (
