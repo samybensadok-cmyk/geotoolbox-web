@@ -1,13 +1,15 @@
 /* Only the first engine has `pinging: true` — a single live pulse reads as
    "currently scanning" without competing with the Scan Signal animation
-   further down the page. Others show static dots. */
+   further down the page. Others show static dots.
+   Statuses normalized to the 3-category system used in Problem + ScanSignal
+   (Cited / Mentioned / Not found). "Recommended" dropped for consistency. */
 const engines = [
-  { name: "ChatGPT",      status: "Cited",       variant: "cited",   pinging: true },
-  { name: "Perplexity",   status: "Cited",       variant: "cited",   pinging: false },
-  { name: "Gemini",       status: "Not found",   variant: "missing", pinging: false },
-  { name: "Claude",       status: "Mentioned",   variant: "cited",   pinging: false },
-  { name: "AI Overviews", status: "Recommended", variant: "cited",   pinging: false },
-  { name: "Bing Copilot", status: "Not found",   variant: "missing", pinging: false },
+  { name: "ChatGPT",      status: "Cited",     variant: "cited",   pinging: true },
+  { name: "Perplexity",   status: "Cited",     variant: "cited",   pinging: false },
+  { name: "Gemini",       status: "Not found", variant: "missing", pinging: false },
+  { name: "Claude",       status: "Mentioned", variant: "cited",   pinging: false },
+  { name: "AI Overviews", status: "Cited",     variant: "cited",   pinging: false },
+  { name: "Bing Copilot", status: "Not found", variant: "missing", pinging: false },
 ]
 
 export function HeroMockup() {

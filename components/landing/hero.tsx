@@ -1,6 +1,16 @@
 import Link from "next/link"
 import { siteConfig } from "@/lib/config"
 import { HeroMockup } from "./hero-mockup"
+import { EngineMark, type EngineId } from "./engine-marks"
+
+const HERO_ENGINES: { id: EngineId; label: string }[] = [
+  { id: "chatgpt",    label: "ChatGPT" },
+  { id: "perplexity", label: "Perplexity" },
+  { id: "gemini",     label: "Gemini" },
+  { id: "claude",     label: "Claude" },
+  { id: "aio",        label: "AI Overviews" },
+  { id: "copilot",    label: "Bing Copilot" },
+]
 
 export function Hero() {
   return (
@@ -93,22 +103,24 @@ export function Hero() {
               First scan in under two minutes &middot; no credit card
             </p>
 
-            {/* Engines strip — merged in from deleted Engines section.
-                Visual anchors which engines we scan without consuming a whole
-                section of scroll. */}
-            <div className="stagger-3 mt-8 flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-gray-100 pt-5 text-[11px] font-mono font-semibold uppercase tracking-widest text-gray-500">
-              <span className="text-gray-600">Works with</span>
-              <span className="text-gray-700">ChatGPT</span>
-              <span className="text-gray-300" aria-hidden="true">&middot;</span>
-              <span className="text-gray-700">Perplexity</span>
-              <span className="text-gray-300" aria-hidden="true">&middot;</span>
-              <span className="text-gray-700">Gemini</span>
-              <span className="text-gray-300" aria-hidden="true">&middot;</span>
-              <span className="text-gray-700">Claude</span>
-              <span className="text-gray-300" aria-hidden="true">&middot;</span>
-              <span className="text-gray-700">AI Overviews</span>
-              <span className="text-gray-300" aria-hidden="true">&middot;</span>
-              <span className="text-gray-700">Bing Copilot</span>
+            {/* Engines strip — mark + name pairs. Monochrome inline SVG
+                per engine gives visual variety no competitor has in this
+                category. Marks use currentColor so they tint with text. */}
+            <div className="stagger-3 mt-8 border-t border-gray-100 pt-5">
+              <span className="block text-[10px] font-mono font-semibold uppercase tracking-widest text-gray-500 mb-3">
+                Works with
+              </span>
+              <ul className="flex flex-wrap items-center gap-x-5 gap-y-2.5">
+                {HERO_ENGINES.map((e) => (
+                  <li
+                    key={e.id}
+                    className="inline-flex items-center gap-1.5 text-[12px] font-medium text-gray-700"
+                  >
+                    <EngineMark engine={e.id} className="h-3.5 w-3.5 text-gray-600" />
+                    {e.label}
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
 
