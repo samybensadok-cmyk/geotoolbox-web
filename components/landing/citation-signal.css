@@ -1,0 +1,483 @@
+/* ==========================================================================
+   citation-signal.css
+   Scoped styles for the live Scan Signal animation (components/landing/
+   citation-signal.tsx). All class names are prefixed or specific enough to
+   avoid collisions with the rest of the marketing site.
+   Tokens used: --color-accent-300/400/500, --color-gray-*, --surface-ink,
+   --font-mono, --font-body — all defined in app/globals.css.
+   ========================================================================== */
+
+.signal-stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 620px;
+  max-width: 1060px;
+  margin: 0 auto;
+}
+
+.signal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 0 14px 4px;
+}
+
+.signal-query {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: var(--color-gray-950);
+  border: 1px solid var(--color-gray-800);
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--color-gray-200);
+  flex: 1;
+  min-width: 0;
+  max-width: 440px;
+}
+.query-caret { color: var(--color-accent-300); font-weight: 600; }
+.query-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.query-cursor {
+  display: inline-block;
+  width: 7px;
+  height: 14px;
+  background: var(--color-accent-300);
+  margin-left: 1px;
+  flex-shrink: 0;
+  animation: scan-caret 1.1s step-end infinite;
+}
+@keyframes scan-caret { 50% { opacity: 0; } }
+
+.signal-counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: var(--color-gray-950);
+  border: 1px solid var(--color-gray-800);
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--color-gray-200);
+  font-family: var(--font-mono);
+  white-space: nowrap;
+}
+.counter-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent-300);
+  box-shadow: 0 0 10px var(--color-accent-400);
+  animation: scan-pulse 1.6s ease-in-out infinite;
+}
+@keyframes scan-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(94, 234, 212, 0.25); }
+  50%      { box-shadow: 0 0 0 6px rgba(94, 234, 212, 0.08); }
+}
+.counter-val {
+  font-weight: 600;
+  color: var(--color-gray-50);
+  font-variant-numeric: tabular-nums;
+  display: inline-block;
+}
+/* P6: tick pulse — brief fade + micro-lift so the value feels alive per tick.
+   Uses literal hex values (not CSS vars) because browsers can't interpolate
+   custom-property colors mid-keyframe without @property registration, which
+   would cause a visible color flip at 100%. Also softer opacity swing
+   (0.55 → 1) so it reads as a refresh, not a reset. */
+.counter-val.is-tick { animation: scan-tick 360ms cubic-bezier(.2, .9, .3, 1); }
+@keyframes scan-tick {
+  0%   { opacity: 0.55; transform: translateY(-1.5px); color: #5eead4; }
+  50%  { opacity: 1;    transform: translateY(0);      color: #5eead4; }
+  100% { opacity: 1;    transform: translateY(0);      color: #f9fafb; }
+}
+.counter-lbl { color: var(--color-gray-400); }
+
+/* --- canvas --- */
+.signal-canvas {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(94, 234, 212, 0.06) 0%, transparent 60%),
+    linear-gradient(180deg, var(--color-gray-950) 0%, #050810 100%);
+  border: 1px solid var(--color-gray-800);
+}
+
+/* P5: ambient depth — two drifting radial blobs layered behind the SVG.
+   Pure CSS background-position animation (GPU-composited, no repaint cost).
+   Creates atmospheric layering without using SVG filters. */
+.signal-canvas::before,
+.signal-canvas::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  inset: -20%;
+  z-index: 0;
+}
+.signal-canvas::before {
+  background: radial-gradient(
+    ellipse 420px 320px at 30% 35%,
+    rgba(94, 234, 212, 0.08) 0%,
+    transparent 70%
+  );
+  animation: scan-drift-1 28s ease-in-out infinite alternate;
+}
+.signal-canvas::after {
+  background: radial-gradient(
+    ellipse 360px 280px at 70% 70%,
+    rgba(20, 184, 166, 0.06) 0%,
+    transparent 68%
+  );
+  animation: scan-drift-2 34s ease-in-out infinite alternate;
+}
+@keyframes scan-drift-1 {
+  0%   { transform: translate(-4%, -3%) scale(1);    }
+  100% { transform: translate( 6%,  5%) scale(1.08); }
+}
+@keyframes scan-drift-2 {
+  0%   { transform: translate( 4%,  2%) scale(1);    }
+  100% { transform: translate(-6%, -4%) scale(1.1);  }
+}
+.signal-svg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
+
+/* --- radar --- */
+.radar-ring {
+  fill: none;
+  stroke: var(--color-accent-300);
+  stroke-opacity: 0.06;
+  stroke-width: 1;
+  animation: scan-ring-breath 7s ease-in-out infinite;
+}
+.radar-ring:nth-of-type(2) { animation-delay: 1.1s; }
+.radar-ring:nth-of-type(3) { animation-delay: 2.2s; }
+@keyframes scan-ring-breath {
+  0%, 100% { stroke-opacity: 0.05; }
+  50%      { stroke-opacity: 0.12; }
+}
+.radar-cross { stroke: var(--color-accent-300); stroke-opacity: 0.04; stroke-width: 1; stroke-dasharray: 2 6; }
+
+.radar-sweep { transform-origin: 280px 240px; animation: scan-sweep 8s linear infinite; }
+@keyframes scan-sweep {
+  from { transform: translate(280px, 240px) rotate(-90deg); }
+  to   { transform: translate(280px, 240px) rotate(270deg); }
+}
+
+/* --- brand mark — rounded-square + G, matches nav identity --- */
+.brand-mark-bg {
+  /* fill is set inline via linearGradient; add a subtle specular highlight */
+  filter: drop-shadow(0 0 18px rgba(94, 234, 212, 0.45)) drop-shadow(0 4px 14px rgba(0, 0, 0, 0.4));
+}
+.brand-mark-label {
+  fill: var(--color-gray-950);
+  font-family: var(--font-body);
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  opacity: 0.92;
+}
+.brand-halo {
+  fill: none;
+  stroke: var(--color-accent-300);
+  stroke-width: 1;
+  opacity: 0;
+  transform-origin: center;
+  animation: scan-halo 3.5s ease-out infinite;
+}
+.brand-halo-2 { animation-delay: 1.75s; }
+@keyframes scan-halo {
+  0%   { opacity: 0.55; transform: scale(0.55); stroke-width: 1.4; }
+  100% { opacity: 0;    transform: scale(2.5);  stroke-width: 0.3; }
+}
+
+/* --- engine nodes --- */
+.engine-ring {
+  fill: var(--color-gray-950);
+  stroke: var(--color-gray-700);
+  stroke-width: 1;
+  transition: stroke 280ms, fill 280ms, stroke-width 280ms;
+}
+.engine-node.state-cited .engine-ring {
+  stroke: var(--color-accent-300);
+  stroke-width: 1.5;
+  fill: rgba(94, 234, 212, 0.08);
+  filter: drop-shadow(0 0 8px rgba(94, 234, 212, 0.4));
+}
+.engine-node.state-mention .engine-ring {
+  /* warmer than pure amber — orange-tinted so it reads as a different
+     temperature from the cool teal "cited" state, not just a different hue */
+  stroke: #f59e0b;
+  stroke-width: 1.5;
+  fill: rgba(245, 158, 11, 0.09);
+  filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.28));
+}
+.engine-node.state-missed .engine-ring {
+  stroke: #ef4444;
+  stroke-width: 1;
+  fill: rgba(239, 68, 68, 0.05);
+  stroke-dasharray: 3 3;
+  opacity: 0.7;
+}
+
+.engine-icon { fill: var(--color-gray-400); transition: fill 280ms; }
+.engine-node.state-cited   .engine-icon { fill: var(--color-accent-300); }
+.engine-node.state-mention .engine-icon { fill: #f59e0b; }
+.engine-node.state-missed  .engine-icon { fill: var(--color-gray-600); }
+
+.engine-label {
+  fill: var(--color-gray-600);
+  font-size: 10px;
+  font-family: var(--font-body);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-anchor: middle;
+  transition: fill 280ms;
+}
+.engine-node.state-cited .engine-label,
+.engine-node.state-mention .engine-label {
+  fill: var(--color-gray-200);
+}
+
+/* --- beams --- */
+.beam { fill: none; stroke-width: 1; stroke-linecap: round; }
+.beam-out           { stroke: var(--color-accent-300); stroke-opacity: 0.35; }
+.beam-back-cited    { stroke: var(--color-accent-300); stroke-opacity: 0.7; }
+.beam-back-mention  { stroke: #f59e0b; stroke-opacity: 0.6; }
+.beam-back-missed   { stroke: #ef4444; stroke-opacity: 0.4; stroke-dasharray: 2 4; }
+.beam-particle { filter: drop-shadow(0 0 6px currentColor); }
+.beam-burst    { filter: drop-shadow(0 0 4px currentColor); pointer-events: none; }
+
+.constellation-line {
+  stroke: var(--color-gray-400);
+  stroke-width: 0.5;
+  stroke-opacity: 0.05;
+  fill: none;
+  transition: stroke-opacity 220ms ease, stroke 220ms ease, stroke-width 220ms ease;
+}
+.constellation-line.is-live {
+  stroke: var(--color-accent-300);
+  stroke-opacity: 0.4;
+  stroke-width: 0.9;
+}
+
+/* P1: scene crossfade — during transition, dim existing states so new ones
+   ramp in over rather than hard-cutting. */
+.signal-stage.is-transitioning .engine-node.state-cited .engine-ring,
+.signal-stage.is-transitioning .engine-node.state-mention .engine-ring,
+.signal-stage.is-transitioning .engine-node.state-missed .engine-ring {
+  transition: stroke 400ms ease, fill 400ms ease, opacity 400ms ease, filter 400ms ease;
+  opacity: 0.28;
+}
+.signal-stage.is-transitioning .constellation-line.is-live {
+  stroke-opacity: 0.12;
+}
+
+/* ==========================================================================
+   P4: engine hover tooltip
+   Positioned absolutely inside .signal-canvas. Populated & placed by JS.
+   ========================================================================== */
+
+.engine-tip {
+  position: absolute;
+  z-index: 5;
+  pointer-events: none;
+  /* narrower on mobile so it fits inside the canvas without horizontal clamp
+     pushing it off-center from the node */
+  width: max-content;
+  min-width: 200px;
+  max-width: min(280px, calc(100% - 24px));
+  padding: 10px 12px;
+  background: rgba(3, 7, 18, 0.94);
+  -webkit-backdrop-filter: blur(12px);  /* Safari < 18 */
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--color-gray-800);
+  border-radius: 10px;
+  box-shadow: 0 14px 32px -10px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(94, 234, 212, 0.08);
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--color-gray-200);
+  opacity: 0;
+  /* Positioning split:
+     - horizontal: --tip-x controls the translate-X origin (50% centred,
+       can be pushed left/right to keep caret over the node at edges)
+     - vertical: --tip-side = 'above' | 'below' flips the caret + translate
+     Values set by JS via inline style. */
+  --tip-x: 50%;
+  --tip-y: -100%;
+  --tip-nudge-y: 4px;
+  transform: translate(calc(var(--tip-x) * -1), var(--tip-y)) translateY(var(--tip-nudge-y)) scale(0.96);
+  transition: opacity 180ms ease, transform 220ms cubic-bezier(.2,.9,.3,1);
+}
+.engine-tip.is-visible {
+  opacity: 1;
+  --tip-nudge-y: 0px;
+  transform: translate(calc(var(--tip-x) * -1), var(--tip-y)) translateY(var(--tip-nudge-y)) scale(1);
+}
+/* caret — above variant (tooltip sits above node, caret points down) */
+.engine-tip::after {
+  content: "";
+  position: absolute;
+  left: var(--tip-caret-x, 50%);
+  bottom: -5px;
+  width: 10px;
+  height: 10px;
+  transform: translateX(-50%) rotate(45deg);
+  background: rgba(3, 7, 18, 0.94);
+  border-right: 1px solid var(--color-gray-800);
+  border-bottom: 1px solid var(--color-gray-800);
+}
+/* below variant — flip caret to top */
+.engine-tip.is-below {
+  --tip-y: 0%;
+  --tip-nudge-y: 4px;
+}
+.engine-tip.is-below.is-visible { --tip-nudge-y: 0px; }
+.engine-tip.is-below::after {
+  top: -5px;
+  bottom: auto;
+  border-right: none;
+  border-bottom: none;
+  border-left: 1px solid var(--color-gray-800);
+  border-top: 1px solid var(--color-gray-800);
+}
+
+.tip-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+.tip-engine {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-gray-50);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;  /* matches .readout-label for component-internal consistency */
+}
+.tip-chip {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;   /* small-caps need more tracking for legibility */
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.tip-chip-cited   { background: rgba(94, 234, 212, 0.15); color: var(--color-accent-300); }
+.tip-chip-mention { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+.tip-chip-missed  { background: rgba(239, 68, 68, 0.15);  color: #ef4444; }
+
+.tip-body {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: var(--color-gray-300);
+}
+
+/* --- overlays --- */
+.readout-chip {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  display: flex;
+  align-items: stretch;
+  background: rgba(11, 18, 32, 0.85);
+  -webkit-backdrop-filter: blur(10px);  /* Safari < 18 */
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--color-gray-800);
+  border-radius: 10px;
+  padding: 10px 14px;
+  gap: 12px;
+  font-size: 12px;
+  z-index: 3;
+}
+.readout-item { display: flex; flex-direction: column; gap: 2px; min-width: 48px; }
+.readout-label {
+  color: var(--color-gray-400);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.readout-value {
+  color: var(--color-gray-50);
+  font-size: 15px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+.readout-cited { color: var(--color-accent-300); }
+.readout-mono  { font-family: var(--font-mono); font-size: 13px; font-weight: 500; }
+.readout-sep   { width: 1px; background: var(--color-gray-800); margin: 2px 0; }
+
+.signal-legend {
+  position: absolute;
+  bottom: 18px;
+  left: 20px;
+  display: flex;
+  gap: 16px;
+  font-size: 11px;
+  color: var(--color-gray-400);
+  font-weight: 500;
+  z-index: 3;
+}
+.legend-item { display: inline-flex; align-items: center; gap: 6px; }
+.swatch { width: 7px; height: 7px; border-radius: 50%; }
+.swatch-cited   { background: var(--color-accent-300); box-shadow: 0 0 0 2px rgba(94, 234, 212, 0.18); }
+.swatch-mention { background: #f59e0b; box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.18); }
+.swatch-missed  { background: transparent; border: 1.5px dashed #ef4444; }
+
+.scene-dots {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 6px;
+  z-index: 3;
+}
+.scene-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--color-gray-700);
+  transition: all 260ms ease;
+}
+.scene-dot.is-active {
+  background: var(--color-accent-300);
+  width: 18px;
+  border-radius: 999px;
+  box-shadow: 0 0 0 2px rgba(94, 234, 212, 0.18);
+}
+
+/* --- responsive --- */
+@media (max-width: 768px) {
+  .signal-stage { height: 500px; }
+  .signal-query { max-width: none; }
+  .signal-counter .counter-lbl { display: none; }
+}
+@media (max-width: 560px) {
+  .signal-stage { height: 420px; }
+  .signal-header { flex-direction: column; align-items: stretch; gap: 8px; padding-bottom: 10px; }
+  .signal-counter { align-self: flex-start; }
+  .readout-chip { top: 10px; right: 10px; padding: 7px 10px; gap: 8px; font-size: 11px; }
+  .readout-value { font-size: 13px; }
+  .readout-label { font-size: 9px; }
+  .readout-mono { font-size: 11px; }
+  .signal-legend { bottom: 10px; left: 12px; font-size: 10px; gap: 10px; }
+  .scene-dots { bottom: 12px; right: 12px; gap: 5px; }
+  .scene-dot { width: 4px; height: 4px; }
+  .scene-dot.is-active { width: 14px; }
+}
+
+/* --- accessibility --- */
+@media (prefers-reduced-motion: reduce) {
+  .radar-sweep, .brand-halo, .counter-dot, .query-cursor { animation: none !important; }
+  .beam, .beam-particle { display: none; }
+}
+.signal-stage.is-paused .radar-sweep { animation-play-state: paused; }
+.signal-stage.is-paused .brand-halo  { animation-play-state: paused; }
