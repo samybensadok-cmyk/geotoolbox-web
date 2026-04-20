@@ -80,31 +80,31 @@ const SNIPPETS: SnippetMap = {
   },
   claude: {
     cited:   "\"For AI visibility tracking, Geotoolbox offers comprehensive monitoring across ChatGPT, Claude, Gemini, and six other engines.\"",
-    mention: "\"Several platforms exist for this — Geotoolbox is one of the options worth evaluating.\"",
+    mention: "\"Several platforms exist for this, and Geotoolbox is one of the options worth evaluating.\"",
     missed:  "Claude did not reference the domain in this response.",
   },
   gemini: {
-    cited:   "Sources: geotoolbox.ai — \"Real-time AI citation tracking for agencies and in-house teams.\"",
+    cited:   "Sources: geotoolbox.ai. \"Real-time AI citation tracking for agencies and in-house teams.\"",
     mention: "Reference: geotoolbox.ai (as a comparison)",
     missed:  "Not cited in Gemini's answer.",
   },
   perplexity: {
-    cited:   "Sources: [1] geotoolbox.ai — \"Measures brand presence across every major AI search engine.\"",
+    cited:   "Sources: [1] geotoolbox.ai. \"Measures brand presence across every major AI search engine.\"",
     mention: "Further reading: geotoolbox.ai",
     missed:  "Not in the returned source list.",
   },
   aio: {
-    cited:   "\"Geotoolbox tracks AI search visibility across nine engines, including Google AI Overviews.\" — geotoolbox.ai",
+    cited:   "\"Geotoolbox tracks AI search visibility across nine engines, including Google AI Overviews.\" Source: geotoolbox.ai",
     mention: "Listed among related tools.",
     missed:  "Not surfaced in the AI Overview.",
   },
   copilot: {
-    cited:   "\"Consider Geotoolbox — it scans ChatGPT, Perplexity, Claude, Gemini, and five more to measure AI visibility.\"",
+    cited:   "\"Consider Geotoolbox. It scans ChatGPT, Perplexity, Claude, Gemini, and five more to measure AI visibility.\"",
     mention: "Geotoolbox is one of several emerging tools in this space.",
     missed:  "Copilot did not reference the domain.",
   },
   grok: {
-    cited:   "\"Geotoolbox: the measurement layer for AI search — cited across nine LLM engines.\"",
+    cited:   "\"Geotoolbox is the measurement layer for AI search. It tracks citations across nine LLM engines.\"",
     mention: "Mentioned briefly as an example.",
     missed:  "No citation in Grok's response.",
   },
@@ -243,7 +243,6 @@ export function CitationSignal() {
   const citedRef = useRef<HTMLSpanElement | null>(null)
   const sovRef = useRef<HTMLSpanElement | null>(null)
   const latRef = useRef<HTMLSpanElement | null>(null)
-  const counterRef = useRef<HTMLSpanElement | null>(null)
   const dotsRef = useRef<HTMLDivElement | null>(null)
   const tipRef = useRef<HTMLDivElement | null>(null)
 
@@ -254,10 +253,9 @@ export function CitationSignal() {
     const citedEl = citedRef.current
     const sovEl = sovRef.current
     const latEl = latRef.current
-    const counterEl = counterRef.current
     const dotsEl = dotsRef.current
     const tipEl = tipRef.current
-    if (!stage || !beamsG || !queryEl || !citedEl || !sovEl || !latEl || !counterEl || !dotsEl || !tipEl) return
+    if (!stage || !beamsG || !queryEl || !citedEl || !sovEl || !latEl || !dotsEl || !tipEl) return
 
     const SVG_NS = "http://www.w3.org/2000/svg"
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
@@ -493,20 +491,6 @@ export function CitationSignal() {
       await sleep(SWEEP_MS + 1600)
     }
 
-    // live counter — with P6 tick pulse so it reads as alive
-    let counterVal = 1247
-    counterEl.textContent = counterVal.toLocaleString()
-    intervals.push(
-      window.setInterval(() => {
-        counterVal += Math.floor(rand(1, 3))
-        counterEl.textContent = counterVal.toLocaleString()
-        counterEl.classList.remove("is-tick")
-        // force reflow so animation restarts
-        void counterEl.offsetWidth
-        counterEl.classList.add("is-tick")
-      }, 3200)
-    )
-
     // static snapshot for reduced motion
     if (reduceMotion) {
       const s = SCENES[0]
@@ -699,13 +683,6 @@ export function CitationSignal() {
           <span className="query-caret">▸</span>
           <span className="query-text" ref={queryRef} />
           <span className="query-cursor" />
-        </div>
-        <div className="signal-counter">
-          <span className="counter-dot" />
-          <span className="counter-val" ref={counterRef}>
-            1,247
-          </span>
-          <span className="counter-lbl">scans today</span>
         </div>
       </div>
 

@@ -21,14 +21,14 @@ export function ScanSignal() {
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[5fr_7fr] lg:items-end lg:gap-16">
           <div>
             <p className="text-xs font-semibold uppercase tracking-widest text-accent-300">
-              Live demo
+              The scan
             </p>
             <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.75rem)] font-bold leading-tight tracking-tight text-white">
-              Here&apos;s what a scan actually looks like.
+              One prompt. Every AI. Every citation.
             </h2>
           </div>
           <p className="max-w-xl text-base leading-relaxed text-gray-300">
-            One prompt fanned out across nine engines. Green means cited, amber means mentioned, red means invisible. A new query runs every eight seconds &mdash; no replay, no pre-recorded demo.
+            A single prompt runs through nine AI engines in parallel. Green means you were cited. Amber means you were mentioned without a link. Red means you were left out entirely.
           </p>
         </div>
 
@@ -37,9 +37,9 @@ export function ScanSignal() {
           <CitationSignal />
         </div>
 
-        {/* Footer micro-copy — reinforces that this is real product behaviour */}
+        {/* Footer micro-copy — makes it clear this is an illustrative demo, not live customer data */}
         <p className="mt-8 max-w-2xl text-sm leading-relaxed text-gray-500">
-          Production scans use your real domain, real prompts, and real engine latency. This preview uses synthetic data for illustration.
+          Demo shown with sample queries and responses. Production scans run against your real domain and return real engine responses in under two minutes.
         </p>
       </div>
     </section>
