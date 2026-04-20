@@ -56,7 +56,7 @@ export function CTA() {
               </Link>
             </div>
             <p className="mt-1 text-xs text-gray-400">
-              No signup required &middot; First scan in under two minutes
+              1,000 free credits/month &middot; First scan in under two minutes
             </p>
           </div>
         </div>

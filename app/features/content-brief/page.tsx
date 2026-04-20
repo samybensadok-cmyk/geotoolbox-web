@@ -74,7 +74,7 @@ const faqs = [
   {
     question: "Can I download the brief?",
     answer:
-      "Yes. PDF or XLSX export is free, no account required. Use PDF to share with freelancers and stakeholders; XLSX for spreadsheet-based workflows or ingestion into your own editorial pipeline.",
+      "Yes. PDF or XLSX export is free while in beta. Use PDF to share with freelancers and stakeholders; XLSX for spreadsheet-based workflows or ingestion into your own editorial pipeline.",
   },
   {
     question: "Does it incorporate my Search Console data?",

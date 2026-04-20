@@ -30,7 +30,7 @@ export function Hero() {
                 </span>
                 <span className="font-semibold">Free while in beta</span>
                 <span aria-hidden="true" className="text-accent-400">&middot;</span>
-                <span>no signup required</span>
+                <span>1,000 credits/month</span>
               </span>
             </div>
 
@@ -58,7 +58,7 @@ export function Hero() {
             </div>
 
             <p className="stagger-3 mt-4 text-xs text-gray-600">
-              First scan in under two minutes &middot; runs anonymously
+              First scan in under two minutes &middot; no credit card
             </p>
 
             {/* Engines strip — merged in from deleted Engines section.
