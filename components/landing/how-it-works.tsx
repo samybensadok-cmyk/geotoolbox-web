@@ -11,7 +11,7 @@ export function HowItWorks() {
       num: "02",
       verb: "Scan",
       title: "Six AI engines in parallel",
-      body: "We query ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot with your prompts.",
+      body: "Same scan you saw above, on your domain. One prompt hits ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot at the same time.",
       output: "847 responses analyzed",
     },
     {

@@ -14,21 +14,27 @@ export function ScanSignal() {
     <section
       id="live-scan"
       className="scroll-mt-24 px-6 py-24 sm:py-32"
-      style={{ backgroundColor: "var(--surface-ink)" }}
+      style={{
+        backgroundColor: "var(--surface-ink)",
+        /* Hairline teal divider marks the hand-off from Problem's "What about you?"
+           without breaking the continuous-dark composition. */
+        borderTop: "1px solid rgba(15, 118, 110, 0.35)",
+      }}
     >
       <div className="mx-auto max-w-7xl">
-        {/* Editorial header — mirrors Problem/HowItWorks pattern */}
+        {/* Editorial header — mirrors Problem/HowItWorks pattern.
+            Eyebrow "The answer" directly echoes Problem's closing "What about you?" */}
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[5fr_7fr] lg:items-end lg:gap-16">
           <div>
             <p className="text-xs font-semibold uppercase tracking-widest text-accent-300">
-              The scan
+              The answer
             </p>
             <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.75rem)] font-bold leading-tight tracking-tight text-white">
               One prompt. Every AI. Every citation.
             </h2>
           </div>
           <p className="max-w-xl text-base leading-relaxed text-gray-300">
-            A single prompt runs through nine AI engines in parallel. Green means you were cited. Amber means you were mentioned without a link. Red means you were left out entirely.
+            A single prompt runs through six AI engines in parallel. Green means you were cited. Amber means you were mentioned without a link. Red means you were left out entirely.
           </p>
         </div>
 

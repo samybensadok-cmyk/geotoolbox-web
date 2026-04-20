@@ -22,20 +22,20 @@ const NODE_R = 26
 const ORBIT_R = 178
 const SWEEP_MS = 8000
 
+/* 6 engines at 60° spacing — matches production (Grok/DeepSeek/Meta AI are
+   dark-launched behind feature flags, not public). Matches Hero / Problem /
+   HowItWorks / Features / Playbook engine lists exactly. */
 const ENGINE_BASE: Engine[] = [
-  { id: "grok",       label: "Grok",        ico: "grok",    rOffset:  0 },
-  { id: "claude",     label: "Claude",      ico: "claude",  rOffset: -6 },
-  { id: "gemini",     label: "Gemini",      ico: "gemini",  rOffset:  4 },
-  { id: "aio",        label: "AI Overview", ico: "goog",    rOffset: -2 },
-  { id: "deepseek",   label: "DeepSeek",    ico: "ds",      rOffset:  6 },
-  { id: "copilot",    label: "Copilot",     ico: "bing",    rOffset: -4 },
-  { id: "meta",       label: "Meta AI",     ico: "meta",    rOffset:  2 },
-  { id: "perplexity", label: "Perplexity",  ico: "pplx",    rOffset:  0 },
-  { id: "chatgpt",    label: "ChatGPT",     ico: "gpt",     rOffset: -4 },
+  { id: "chatgpt",    label: "ChatGPT",     ico: "gpt",     rOffset:  0 },
+  { id: "claude",     label: "Claude",      ico: "claude",  rOffset: -4 },
+  { id: "gemini",     label: "Gemini",      ico: "gemini",  rOffset:  2 },
+  { id: "perplexity", label: "Perplexity",  ico: "pplx",    rOffset: -2 },
+  { id: "aio",        label: "AI Overview", ico: "goog",    rOffset:  4 },
+  { id: "copilot",    label: "Copilot",     ico: "bing",    rOffset: -2 },
 ]
 
 const ENGINES: Required<Engine>[] = ENGINE_BASE.map((e, i) => {
-  const angleDeg = i * 40
+  const angleDeg = i * (360 / ENGINE_BASE.length)   // 60° for 6 engines
   const angleRad = ((angleDeg - 90) * Math.PI) / 180
   const r = ORBIT_R + e.rOffset
   return {
@@ -58,14 +58,26 @@ const QUERIES = [
 
 type Scene = { cited: string[]; mention: string[]; sov: number; lat: number }
 
+/* Scene variety across 6 engines:
+   - 2 rough (low cited, sells the pain point)
+   - 3 mid   (mixed outcomes, realistic)
+   - 2 strong (high cited, shows the win)
+   Every state must sum to 6. */
 const SCENES: Scene[] = [
-  { cited: ["chatgpt", "claude", "gemini", "perplexity", "aio"], mention: ["grok", "copilot"], sov: 62, lat: 2.3 },
-  { cited: ["chatgpt", "gemini"], mention: ["claude", "aio"], sov: 28, lat: 2.0 },
-  { cited: ["claude", "perplexity", "aio", "grok", "deepseek"], mention: ["chatgpt", "gemini"], sov: 66, lat: 2.4 },
-  { cited: ["chatgpt", "claude", "gemini", "perplexity", "aio", "copilot", "grok"], mention: ["meta"], sov: 78, lat: 2.6 },
-  { cited: ["claude", "perplexity"], mention: ["aio", "meta", "copilot"], sov: 31, lat: 1.8 },
-  { cited: ["claude", "perplexity", "aio", "meta"], mention: ["chatgpt", "deepseek"], sov: 48, lat: 2.1 },
-  { cited: ["chatgpt", "gemini", "aio", "perplexity"], mention: ["claude", "copilot"], sov: 51, lat: 1.9 },
+  // strong — 5 cited, 1 mention
+  { cited: ["chatgpt", "claude", "gemini", "perplexity", "aio"], mention: ["copilot"],          sov: 74, lat: 2.3 },
+  // rough — 2 cited, 2 mention, 2 missed
+  { cited: ["chatgpt", "gemini"],                                mention: ["claude", "aio"],    sov: 32, lat: 2.0 },
+  // mid — 3 cited, 2 mention, 1 missed
+  { cited: ["claude", "perplexity", "aio"],                      mention: ["chatgpt", "gemini"], sov: 58, lat: 2.4 },
+  // best case — 5 cited, 1 mention
+  { cited: ["chatgpt", "claude", "perplexity", "aio", "copilot"], mention: ["gemini"],          sov: 82, lat: 2.6 },
+  // rough — 2 cited, 2 mention, 2 missed
+  { cited: ["claude", "perplexity"],                             mention: ["aio", "copilot"],   sov: 35, lat: 1.8 },
+  // mid — 3 cited, 1 mention, 2 missed
+  { cited: ["claude", "perplexity", "aio"],                      mention: ["chatgpt"],          sov: 52, lat: 2.1 },
+  // good — 4 cited, 2 mention
+  { cited: ["chatgpt", "gemini", "aio", "perplexity"],           mention: ["claude", "copilot"], sov: 65, lat: 1.9 },
 ]
 
 /** Synthetic citation snippets — one per (engine, state). Shown in the hover
@@ -99,24 +111,9 @@ const SNIPPETS: SnippetMap = {
     missed:  "Not surfaced in the AI Overview.",
   },
   copilot: {
-    cited:   "\"Consider Geotoolbox. It scans ChatGPT, Perplexity, Claude, Gemini, and five more to measure AI visibility.\"",
+    cited:   "\"Consider Geotoolbox. It scans ChatGPT, Perplexity, Claude, Gemini, and two more to measure AI visibility.\"",
     mention: "Geotoolbox is one of several emerging tools in this space.",
     missed:  "Copilot did not reference the domain.",
-  },
-  grok: {
-    cited:   "\"Geotoolbox is the measurement layer for AI search. It tracks citations across nine LLM engines.\"",
-    mention: "Mentioned briefly as an example.",
-    missed:  "No citation in Grok's response.",
-  },
-  deepseek: {
-    cited:   "\"Geotoolbox provides AI visibility analytics across major language-model-based search engines.\"",
-    mention: "Named as one of the comparable tools.",
-    missed:  "DeepSeek did not cite the domain.",
-  },
-  meta: {
-    cited:   "\"Geotoolbox is a tool for tracking how brands appear in AI-generated answers.\"",
-    mention: "Mentioned in a related-tools list.",
-    missed:  "Not in the top response.",
   },
 }
 
@@ -427,7 +424,7 @@ export function CitationSignal() {
         n?.classList.remove("state-cited", "state-mention", "state-missed")
       })
       stage.classList.remove("is-transitioning")
-      citedEl.textContent = "0/9"
+      citedEl.textContent = `0/${ENGINES.length}`
       sovEl.textContent = "0%"
       latEl.textContent = "0.0s"
     }
@@ -475,7 +472,7 @@ export function CitationSignal() {
             })
             if (state === "cited") {
               citedCount++
-              citedEl.textContent = `${citedCount}/9`
+              citedEl.textContent = `${citedCount}/${ENGINES.length}`
             }
           }, hitMs)
         )
@@ -501,7 +498,7 @@ export function CitationSignal() {
         const st = s.cited.includes(e.id) ? "cited" : s.mention.includes(e.id) ? "mention" : "missed"
         n?.classList.add(`state-${st}`)
       })
-      citedEl.textContent = `${s.cited.length}/9`
+      citedEl.textContent = `${s.cited.length}/${ENGINES.length}`
       sovEl.textContent = `${s.sov}%`
       latEl.textContent = `${s.lat.toFixed(1)}s`
       return () => {
@@ -785,7 +782,7 @@ export function CitationSignal() {
           <div className="readout-item">
             <span className="readout-label">Cited</span>
             <span className="readout-value readout-cited" ref={citedRef}>
-              0/9
+              0/{ENGINE_BASE.length}
             </span>
           </div>
           <div className="readout-sep" />
