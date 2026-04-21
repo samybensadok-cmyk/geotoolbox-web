@@ -11,7 +11,7 @@ export default function PrivacyPage() {
   return (
     <div className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
       <h1 className="text-3xl font-bold tracking-tight text-gray-900">Privacy Policy</h1>
-      <p className="mt-2 text-sm text-gray-600">Last updated: April 15, 2026</p>
+      <p className="mt-2 text-sm text-gray-600">Last updated: April 22, 2026</p>
 
       <div className="mt-10 space-y-8 text-[15px] leading-relaxed text-gray-600">
         <section>
@@ -50,10 +50,16 @@ export default function PrivacyPage() {
           <ul className="mt-2 list-disc pl-5 space-y-1">
             <li>Your OAuth tokens (access and refresh), encrypted at rest, retained until you disconnect</li>
             <li>Your connected GSC property and GA4 property identifiers</li>
-            <li>Analysis outputs you explicitly generate (scan reports, domain overviews, content briefs, citability analyses, competitor radar scans), automatically purged 90 days after creation</li>
+            <li>Authentication logs (sign-in attempts, session cookies) — purged automatically within 7 days of inactivity</li>
+            <li>Page-fetch cache (rendered HTML we fetched on your behalf to analyze) — held up to 24 hours, then superseded on the next fetch</li>
+            <li>Analysis outputs you generate (scan reports, domain overviews, agent-readiness checks, content briefs, citability analyses, competitor radar scans, AI-ready export transforms, AI visibility tracking) — <strong>retained indefinitely</strong> so you and your team can compare performance over time. Your plan controls how much of that history is visible in the dashboard: on the <strong>Free</strong> plan the Tracker shows the most recent 12 weeks of scan history; the <strong>Agency</strong> plan shows your complete history. Older data is not displayed on the Free plan, but it is never modified or deleted while your account is active.</li>
+            <li>Internal cost and audit logs for our own infrastructure monitoring, containing no personal data beyond a non-identifying account ID</li>
             <li>Error telemetry (anonymized, no PII) for up to 90 days</li>
-            <li>AI visibility tracking data — the scheduled scans you&apos;ve configured plus their historical results — is retained for 24 months to provide year-over-year trend analysis. Removing a tracked brand from your dashboard soft-deletes the brand and its watchlist; aggregated scan history remains available for trend continuity for 24 months and is then purged.</li>
           </ul>
+          <p className="mt-3">
+            <strong>Right to deletion.</strong> You can delete all of your data at any time by deleting your account or emailing{" "}
+            <a href="mailto:samy@geotoolbox.ai" className="text-accent-700 underline hover:text-accent-800">samy@geotoolbox.ai</a>. We action account-wide deletion within 14 days. Removing a tracked brand from your dashboard immediately soft-deletes it and its watchlist.
+          </p>
         </section>
 
         <section>
