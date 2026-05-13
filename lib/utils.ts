@@ -6,6 +6,18 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatDate(dateString: string): string {
+  const hasTime = /[T:]/.test(dateString)
+  if (hasTime) {
+    const d = new Date(dateString)
+    const date = d.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    })
+    const hh = String(d.getUTCHours()).padStart(2, "0")
+    const mm = String(d.getUTCMinutes()).padStart(2, "0")
+    return `${date} · ${hh}:${mm} UTC`
+  }
   return new Date(dateString).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
