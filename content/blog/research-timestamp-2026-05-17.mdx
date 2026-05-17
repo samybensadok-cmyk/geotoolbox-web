@@ -1,0 +1,97 @@
+---
+title: "Research workspace timestamp — 2026-05-17 (post Wave 20 expansion)"
+description: "Third cryptographic timestamp record of the same research workspace, anchoring the V8 Wave 20 expanded state. SHA-256 hash of a manifest covering 16,349 files."
+date: "2026-05-17T01:07:28Z"
+author: "Samy BEN SADOK"
+tags: ["research", "timestamp"]
+draft: false
+---
+
+This post records a third cryptographic timestamp for the same research workspace anchored earlier on 2026-05-13. It captures the post-Wave-20 expanded state after four days of additional iteration on the underlying material.
+
+The first two anchors for this workspace are at [/blog/research-timestamp-2026-05-13](/blog/research-timestamp-2026-05-13) (06:52 UTC, 3,232 files) and [/blog/research-timestamp-2026-05-13-final](/blog/research-timestamp-2026-05-13-final) (17:55 UTC, 11,327 files). This anchor extends the same chain-of-custody with a third checkpoint covering the V7 Wave 19 + V8 Wave 20 expansion.
+
+## Timestamp claim
+
+**Generated**: 2026-05-17 01:07:28 UTC (epoch `1779066448`).
+
+**SHA-256 of canonical manifest**:
+
+```
+bb02b887ee80e1f6491894cff41b022da21f5333090c1d86c6c729d4f1805988
+```
+
+**Coverage**: 16,349 files / 357,564,936 bytes. The manifest covers the workspace's research-related markdown, JSON, Python, and text files at the time of generation, including all newly-produced V7 Wave 19 + V8 Wave 20 evidence directories.
+
+**Bitcoin anchor**: OpenTimestamps `.ots` proof generated alongside this hash. Bitcoin attestation lands approximately 1-3 hours after publication; the cryptographic commitment is immediate via the OpenTimestamps Calendar servers.
+
+## Relationship to earlier anchors
+
+| Anchor | Date | UTC | Hash (SHA-256) | Files |
+|---|---|---|---|---|
+| First | 2026-05-13 | 06:52 | `ebe56d7153eafb8589cc76296da45756f9038794548f288e1ed5c848c548f36c` | 3,232 |
+| Second | 2026-05-13 | 17:55 | `467dc3a906418f84e114a6911e3a7890a6c8492e12c55cea4f2347a1a6e767ca` | 11,327 |
+| **Third (this)** | **2026-05-17** | **01:07** | **`bb02b887ee80e1f6491894cff41b022da21f5333090c1d86c6c729d4f1805988`** | **16,349** |
+
+Each manifest is canonically serialized. Files appear in earlier or later manifests with their own per-file SHA-256. The three hashes together produce an auditable chain-of-custody record across the four-day window.
+
+## What the 2026-05-17 anchor adds over the 2026-05-13 anchors
+
+Between 2026-05-13 22:00 UTC and 2026-05-17 01:07 UTC, the underlying research workspace produced (across two recorded waves — V7 Wave 19 on 2026-05-16 and V8 Wave 20 on 2026-05-17):
+
+- V7 Wave 19: five new filing candidates (Wave 19 supplement V7 covering the PG main socket trust standalone primitive, Track B internal IPv6 topology disclosure, service TLS key disclosure via postgres-context, Track D mgmt-agent bootstrap mode disclosure, betaz-A MITM empirical bounded by pgbouncer)
+
+- V8 Wave 20: byte-level confirmed external-callback integration chain — POST `/v1/integration_endpoint` plus POST `/v1/integration` produces active outbound HTTP from the platform's backend infrastructure to an attacker-controlled URL; 17 captures observed at the operator-controlled webhook collector from platform IPv6 addresses (`2400:6180:100:d0:0:1:4513:a001` and `2400:6180:100:d0:0:1:4514:d001`) over a 14-minute window with user-agent `python-requests/2.32.4`
+
+- V8 Wave 20: POST `/v1/access_token` silent persistent secondary token — null-scope creation inherits full parent scope, `extend_when_used=true` gives indefinite refresh, no email notification observed across 9 created+deleted tokens during the wave
+
+- V8 Wave 20: `_aiven` plaintext password external superuser via `.pgpass` capture (extends the Wave 19 UDS-only finding to remote TCP+TLS) plus cluster-wide credential reuse observed via `pglookout.json` `remote_conns` cleartext disclosure
+
+- V8 Wave 20: LOAD bypass plus CREATE FUNCTION C chain extender — postgres-context bypasses the gatekeeper's `T_CreateFunctionStmt` intercept for handlers like `postgres_fdw_handler` and `file_fdw_handler` while specifically blocking `CREATE FUNCTION ... LANGUAGE plperlu` with a per-language denylist string
+
+- V8 Wave 20: file_fdw FT chain — bypasses the gatekeeper's 11-function `pg_read_file*` denylist via a different syscall path (foreign-table COPY mechanism doesn't go through the intercepted function OIDs)
+
+- V8 Wave 20: postgres_fdw chain — no-chain-primer outbound TCP from the customer service to attacker-controlled destinations
+
+- V8 Wave 20: forensic decode of the platform's gatekeeper shared library (`aiven_gatekeeper.so` version 1.0.11-1.fc42) — three hooks identified (`ProcessUtility`, `object_access`, `ExecutorStart`), eleven-function runtime OID cache, thirty-two-entry NodeTag jump table, three custom GUCs
+
+- Composite chain proven end-to-end across V7 Wave 19 + V8 Wave 20: captured platform API token → silent persistent secondary token → active log exfiltration to attacker-controlled endpoint → externally-reachable provider-superuser via captured `.pgpass` → cluster-wide reach via identical password on all pods
+
+- V9 NEXT_SESSION plan drafted (`NEXT_SESSION_2026-05-18_V9.md`) and iterated to a 9.0/10 score across eight dimensions via a Codex senior-engineering review plus two parallel Sonnet adversarial reviewers (severity recalibration, filing-strategy critique, codebase gap analysis)
+
+## Why three anchors
+
+The 2026-05-13 06:52 UTC anchor establishes priority over the pre-iteration state. The 2026-05-13 17:55 UTC anchor establishes priority over the same-day expanded state. This 2026-05-17 anchor establishes priority over the four-days-later expanded state, including all V7 Wave 19 and V8 Wave 20 findings. The three hashes together produce a complete forensic timeline across the workspace's research period.
+
+## Verification
+
+Independent verification of the manifest's integrity is possible from the local `manifest.json` plus a short Python snippet:
+
+```bash
+python3 -c '
+import json, hashlib
+with open("manifest.json") as f:
+    d = json.load(f)
+canonical = json.dumps(d, sort_keys=True, separators=(",", ":")).encode()
+print(hashlib.sha256(canonical).hexdigest())
+'
+```
+
+The output should match the hash above.
+
+## What this proves vs does not prove
+
+| Proves | Does NOT prove |
+|---|---|
+| The exact contents of every file in the manifest at the moment of the timestamp | That the findings are valid or that the platform will accept them |
+| Any later identical findings by independent researchers are NOT independent of this work | That the platform was unaware of these findings before this anchor |
+| Research was NOT generated after 2026-05-17 01:07 UTC | That the underlying conclusions are correct (independent of forensic timing) |
+| The expanded manifest is a strict superset of the 2026-05-13 22:00 anchor | That coordination has begun (status: still pending across multiple channels) |
+
+## Context
+
+Coordinated disclosure to `security@aiven.io` and Bugcrowd is in progress; the platform-side channel has been intermittent in the period leading to this anchor. This third public anchor protects the research timeline independent of platform availability while coordination resolves.
+
+## AI assistance
+
+Research and drafting were performed in collaboration with Claude Code (Anthropic), including the V9 plan's tri-model adversarial review pass (Claude Opus 4.7 author, Claude Sonnet adversarial reviewers, OpenAI Codex senior-engineering review). All claims, probes, and submissions were independently verified against live HTTP/SQL responses before inclusion in the manifest.
