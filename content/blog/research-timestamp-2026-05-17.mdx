@@ -37,27 +37,17 @@ Each manifest is canonically serialized. Files appear in earlier or later manife
 
 ## What the 2026-05-17 anchor adds over the 2026-05-13 anchors
 
-Between 2026-05-13 22:00 UTC and 2026-05-17 01:07 UTC, the underlying research workspace produced (across two recorded waves — V7 Wave 19 on 2026-05-16 and V8 Wave 20 on 2026-05-17):
+Between 2026-05-13 22:00 UTC and 2026-05-17 01:07 UTC, the underlying research workspace produced two additional recorded waves of iteration. The expanded state captured at this anchor adds, in aggregate:
 
-- V7 Wave 19: five new filing candidates (Wave 19 supplement V7 covering the PG main socket trust standalone primitive, Track B internal IPv6 topology disclosure, service TLS key disclosure via postgres-context, Track D mgmt-agent bootstrap mode disclosure, betaz-A MITM empirical bounded by pgbouncer)
+- Five new filing-candidate drafts from the intermediate wave (additional primitives identified, additional disclosure variants, additional architectural observations bounded by adjacent defenses)
+- Several end-to-end exploitation chains empirically confirmed via byte-level evidence captured at operator-controlled collectors
+- Multiple credential-class observations across the platform's surface, including persistence variants
+- Multiple bypass-class observations against the platform's published security boundaries, each rolled back cleanly with state verification
+- Forensic decode of one platform-internal component with associated architecture documentation
+- One composite end-to-end chain narrative consolidating prior-wave and new-wave findings into a single attacker model
+- An iterated next-session plan ready for execution, reviewed adversarially via three independent reviewers before lock-in
 
-- V8 Wave 20: byte-level confirmed external-callback integration chain — POST `/v1/integration_endpoint` plus POST `/v1/integration` produces active outbound HTTP from the platform's backend infrastructure to an attacker-controlled URL; 17 captures observed at the operator-controlled webhook collector from platform IPv6 addresses (`2400:6180:100:d0:0:1:4513:a001` and `2400:6180:100:d0:0:1:4514:d001`) over a 14-minute window with user-agent `python-requests/2.32.4`
-
-- V8 Wave 20: POST `/v1/access_token` silent persistent secondary token — null-scope creation inherits full parent scope, `extend_when_used=true` gives indefinite refresh, no email notification observed across 9 created+deleted tokens during the wave
-
-- V8 Wave 20: `_aiven` plaintext password external superuser via `.pgpass` capture (extends the Wave 19 UDS-only finding to remote TCP+TLS) plus cluster-wide credential reuse observed via `pglookout.json` `remote_conns` cleartext disclosure
-
-- V8 Wave 20: LOAD bypass plus CREATE FUNCTION C chain extender — postgres-context bypasses the gatekeeper's `T_CreateFunctionStmt` intercept for handlers like `postgres_fdw_handler` and `file_fdw_handler` while specifically blocking `CREATE FUNCTION ... LANGUAGE plperlu` with a per-language denylist string
-
-- V8 Wave 20: file_fdw FT chain — bypasses the gatekeeper's 11-function `pg_read_file*` denylist via a different syscall path (foreign-table COPY mechanism doesn't go through the intercepted function OIDs)
-
-- V8 Wave 20: postgres_fdw chain — no-chain-primer outbound TCP from the customer service to attacker-controlled destinations
-
-- V8 Wave 20: forensic decode of the platform's gatekeeper shared library (`aiven_gatekeeper.so` version 1.0.11-1.fc42) — three hooks identified (`ProcessUtility`, `object_access`, `ExecutorStart`), eleven-function runtime OID cache, thirty-two-entry NodeTag jump table, three custom GUCs
-
-- Composite chain proven end-to-end across V7 Wave 19 + V8 Wave 20: captured platform API token → silent persistent secondary token → active log exfiltration to attacker-controlled endpoint → externally-reachable provider-superuser via captured `.pgpass` → cluster-wide reach via identical password on all pods
-
-- V9 NEXT_SESSION plan drafted (`NEXT_SESSION_2026-05-18_V9.md`) and iterated to a 9.0/10 score across eight dimensions via a Codex senior-engineering review plus two parallel Sonnet adversarial reviewers (severity recalibration, filing-strategy critique, codebase gap analysis)
+Specific technical details, affected endpoints, internal architecture, exact severity claims, and reproduction steps are intentionally withheld from this public anchor. They are contained inside the canonical manifest hashed by this post, and will be disclosed via coordinated channels with the affected platform's security team.
 
 ## Why three anchors
 
