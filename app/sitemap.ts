@@ -1,9 +1,10 @@
 import type { MetadataRoute } from "next"
-import { getAllPosts } from "@/lib/content"
+import { getAllPosts, getAllGlossaryTerms } from "@/lib/content"
 import { siteConfig } from "@/lib/config"
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const posts = getAllPosts()
+  const glossary = getAllGlossaryTerms()
 
   return [
     {
@@ -29,6 +30,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.5,
+    },
+    {
+      url: `${siteConfig.url}/brighton`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.7,
     },
     {
       url: `${siteConfig.url}/features/geo-scan`,
@@ -72,11 +79,23 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.7,
     },
+    {
+      url: `${siteConfig.url}/glossary`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.7,
+    },
     ...posts.map((post) => ({
       url: `${siteConfig.url}/blog/${post.slug}`,
       lastModified: new Date(post.date),
       changeFrequency: "monthly" as const,
       priority: 0.8,
+    })),
+    ...glossary.map((t) => ({
+      url: `${siteConfig.url}/glossary/${t.slug}`,
+      lastModified: t.updated ? new Date(t.updated) : new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
     })),
   ]
 }

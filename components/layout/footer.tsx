@@ -46,6 +46,7 @@ export function Footer() {
             <h4 className="text-xs font-semibold text-gray-900 uppercase tracking-wider">Resources</h4>
             <ul className="mt-3 space-y-2">
               <li><Link href="/blog" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Blog</Link></li>
+              <li><Link href="/glossary" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Glossary</Link></li>
               <li><Link href="/feed.xml" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">RSS Feed</Link></li>
               <li><Link href="/blog/what-is-geo" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">What is GEO?</Link></li>
             </ul>

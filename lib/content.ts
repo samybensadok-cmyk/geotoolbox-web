@@ -90,3 +90,63 @@ export function getAllTags(): string[] {
   posts.forEach((p) => p.tags.forEach((t) => tags.add(t)))
   return Array.from(tags).sort()
 }
+
+// ---------------------------------------------------------------------------
+// Glossary — short, answer-first definition pages. Mirrors the blog content
+// pipeline but reads content/glossary/*.mdx. Each entry is one term.
+// ---------------------------------------------------------------------------
+
+const GLOSSARY_DIR = path.join(process.cwd(), "content", "glossary")
+
+export type GlossaryTerm = {
+  slug: string
+  term: string
+  aliases: string[]
+  definition: string
+  category: string
+  related: string[]
+  article?: string
+  articleLabel?: string
+  updated: string
+  draft: boolean
+  content: string
+}
+
+function parseGlossaryFile(file: string): GlossaryTerm {
+  const raw = fs.readFileSync(path.join(GLOSSARY_DIR, file), "utf-8")
+  const { data, content } = matter(raw)
+  return {
+    slug: file.replace(".mdx", ""),
+    term: data.term ?? "",
+    aliases: data.aliases ?? [],
+    definition: data.definition ?? "",
+    category: data.category ?? "General",
+    related: data.related ?? [],
+    article: data.article,
+    articleLabel: data.articleLabel,
+    updated: data.updated ?? "",
+    draft: data.draft ?? false,
+    content,
+  }
+}
+
+export function getAllGlossaryTerms(): GlossaryTerm[] {
+  if (!fs.existsSync(GLOSSARY_DIR)) return []
+  return fs
+    .readdirSync(GLOSSARY_DIR)
+    .filter((f) => f.endsWith(".mdx"))
+    .map(parseGlossaryFile)
+    .filter((t) => !t.draft)
+    .sort((a, b) => a.term.localeCompare(b.term))
+}
+
+export function getGlossaryTermBySlug(slug: string): GlossaryTerm | undefined {
+  const filePath = path.join(GLOSSARY_DIR, `${slug}.mdx`)
+  if (!fs.existsSync(filePath)) return undefined
+  return parseGlossaryFile(`${slug}.mdx`)
+}
+
+export function getGlossaryCategories(): string[] {
+  const cats = new Set(getAllGlossaryTerms().map((t) => t.category))
+  return Array.from(cats).sort()
+}

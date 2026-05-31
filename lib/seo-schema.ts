@@ -131,3 +131,43 @@ export function breadcrumbsSchema(trail: Array<{ name: string; url: string }>) {
     })),
   }
 }
+
+/**
+ * DefinedTerm schema — glossary entries. Marks each term up as part of the
+ * site's DefinedTermSet so AI engines and knowledge panels can parse the
+ * definition. Pair with faqPageSchema for AI Overview / PAA pickup.
+ */
+export function definedTermSchema(t: {
+  slug: string
+  term: string
+  definition: string
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "DefinedTerm",
+    name: t.term,
+    description: t.definition,
+    url: `${siteConfig.url}/glossary/${t.slug}`,
+    inDefinedTermSet: {
+      "@type": "DefinedTermSet",
+      name: `${siteConfig.name} Glossary`,
+      url: `${siteConfig.url}/glossary`,
+    },
+  }
+}
+
+/**
+ * FAQPage schema — a single "What is {term}?" question/answer. This is the
+ * format that most reliably earns AI Overview and People-Also-Ask placement.
+ */
+export function faqPageSchema(qa: Array<{ question: string; answer: string }>) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: qa.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
+  }
+}
