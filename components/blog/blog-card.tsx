@@ -23,9 +23,9 @@ export function BlogCard({ post }: { post: Post }) {
         {post.description}
       </p>
 
-      <div className="mt-3 flex items-center gap-2 text-xs text-gray-400">
+      <div className="mt-3 flex items-center gap-2 text-xs text-gray-500">
         <time dateTime={post.date}>{formatDate(post.date)}</time>
-        <span>&middot;</span>
+        <span aria-hidden="true" className="text-gray-300">&middot;</span>
         <span>{post.readingTime} min</span>
       </div>
     </Link>

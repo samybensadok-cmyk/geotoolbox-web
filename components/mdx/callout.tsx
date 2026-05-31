@@ -32,9 +32,9 @@ export function Callout({ type = "info", title, children }: CalloutProps) {
         <span className="text-lg">{icons[type]}</span>
         <div>
           {title && (
-            <p className="mb-1 font-semibold text-text-primary">{title}</p>
+            <p className="mb-1 font-semibold text-gray-900">{title}</p>
           )}
-          <div className="text-sm text-text-secondary leading-relaxed">
+          <div className="text-sm leading-relaxed text-gray-700">
             {children}
           </div>
         </div>
