@@ -55,7 +55,7 @@ export default function OGImage() {
               width: "100%",
             }}
           >
-            <div style={{ fontSize: 13, color: "#6b7280", fontFamily: "monospace" }}>stubgroup.com/ai-seo</div>
+            <div style={{ fontSize: 13, color: "#6b7280", fontFamily: "monospace" }}>acme.co/ai-seo</div>
             <div style={{ display: "flex", fontSize: 11, fontWeight: 700, letterSpacing: "0.14em", color: "#6b7280", textTransform: "uppercase", marginTop: 18 }}>
               Citability grade
             </div>

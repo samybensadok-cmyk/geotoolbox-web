@@ -40,7 +40,7 @@ export default function AboutPage() {
               GEO Toolbox exists to make that layer legible. Every scan runs a prompt across six engines, aggregates every domain and URL cited, and returns an AI visibility score from 0 to 100 alongside the raw citations, yours and your competitors&apos;. Eight connected tools build on top of that primitive: scanning, agent readiness, content grading, briefing, competitive tracking, community monitoring, and AI-driven analytics.
             </p>
             <p>
-              The tool is built and operated by Samy Mahmoudi out of StubGroup, an SEO agency that builds in public. It&apos;s currently free while in beta, supports eight countries, and is used daily by agency teams and in-house SEO professionals tracking how AI sees their brands.
+              The tool is built and operated by Samy Ben Sadok, its founder and an SEO and growth strategist with over a decade of experience. It&apos;s currently free while in beta, supports eight countries, and is used daily by agency teams and in-house SEO professionals tracking how AI sees their brands.
             </p>
             <p className="text-base text-gray-600">
               Questions, partnerships, or feedback?{" "}
