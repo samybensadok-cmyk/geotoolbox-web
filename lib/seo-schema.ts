@@ -1,4 +1,5 @@
 import { siteConfig } from "./config"
+import { getAuthorByName, type Author } from "./authors"
 
 /**
  * Organization schema — homepage identity card for AI / knowledge panels.
@@ -87,6 +88,18 @@ export function articleSchema(post: {
 }) {
   const pageUrl = `${siteConfig.url}/blog/${post.slug}`
   const fallbackImage = `${siteConfig.url}/blog/${post.slug}/opengraph-image`
+  const profile = getAuthorByName(post.author)
+  const author = profile
+    ? {
+        "@type": "Person",
+        name: profile.name,
+        url: `${siteConfig.url}/author/${profile.slug}`,
+        jobTitle: profile.role,
+        ...(profile.avatar ? { image: `${siteConfig.url}${profile.avatar}` } : {}),
+        knowsAbout: profile.expertise,
+        sameAs: profile.links.map((l) => l.href),
+      }
+    : { "@type": "Person", name: post.author || siteConfig.author }
   return {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -94,10 +107,7 @@ export function articleSchema(post: {
     description: post.description,
     datePublished: post.date,
     dateModified: post.date,
-    author: {
-      "@type": "Person",
-      name: post.author || siteConfig.author,
-    },
+    author,
     publisher: {
       "@type": "Organization",
       name: siteConfig.name,
@@ -152,6 +162,41 @@ export function definedTermSchema(t: {
       "@type": "DefinedTermSet",
       name: `${siteConfig.name} Glossary`,
       url: `${siteConfig.url}/glossary`,
+    },
+  }
+}
+
+/**
+ * ProfilePage + Person schema — the /author/[slug] page. Establishes the
+ * author as a real entity (sameAs to LinkedIn/Semrush, jobTitle, knowsAbout)
+ * so search and AI engines can attribute and trust the content they write.
+ */
+export function authorProfileSchema(author: Author) {
+  const url = `${siteConfig.url}/author/${author.slug}`
+  return {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    mainEntity: {
+      "@type": "Person",
+      name: author.name,
+      url,
+      jobTitle: author.role,
+      description: author.longBio,
+      ...(author.avatar ? { image: `${siteConfig.url}${author.avatar}` } : {}),
+      ...(author.company
+        ? {
+            worksFor: {
+              "@type": "Organization",
+              name: author.company,
+              ...(author.companyUrl ? { url: author.companyUrl } : {}),
+            },
+          }
+        : {}),
+      ...(author.location
+        ? { homeLocation: { "@type": "Place", name: author.location } }
+        : {}),
+      knowsAbout: author.expertise,
+      sameAs: author.links.map((l) => l.href),
     },
   }
 }

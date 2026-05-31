@@ -10,6 +10,9 @@ import { siteConfig } from "@/lib/config"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
 import { JsonLd } from "@/components/seo/json-ld"
 import { articleSchema, breadcrumbsSchema } from "@/lib/seo-schema"
+import { getAuthorByName } from "@/lib/authors"
+import { AuthorBio } from "@/components/blog/author-bio"
+import { Avatar } from "@/components/ui/avatar"
 
 export async function generateStaticParams() {
   return getAllPosts().map((p) => ({ slug: p.slug }))
@@ -85,6 +88,7 @@ export default async function BlogPost({
   const post = getPostBySlug(slug)
   if (!post) notFound()
 
+  const author = getAuthorByName(post.author)
   const headings = extractHeadings(post.content)
 
   return (
@@ -136,7 +140,19 @@ export default async function BlogPost({
               {post.description}
             </p>
             <div className="mt-6 flex items-center gap-3 text-sm text-gray-600">
-              <span className="font-semibold text-gray-900">{post.author}</span>
+              {author ? (
+                <Link
+                  href={`/author/${author.slug}`}
+                  className="group/byline flex items-center gap-2.5 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
+                >
+                  <Avatar name={author.name} src={author.avatar} size={28} />
+                  <span className="font-semibold text-gray-900 group-hover/byline:text-accent-700">
+                    {author.name}
+                  </span>
+                </Link>
+              ) : (
+                <span className="font-semibold text-gray-900">{post.author}</span>
+              )}
               <span aria-hidden="true" className="text-gray-400">&middot;</span>
               <time dateTime={post.date}>{formatDate(post.date)}</time>
               <span aria-hidden="true" className="text-gray-400">&middot;</span>
@@ -225,6 +241,8 @@ export default async function BlogPost({
               />
             </article>
           </div>
+
+          {author && <AuthorBio author={author} />}
         </div>
       </section>
 

@@ -5,7 +5,7 @@ export const siteConfig = {
   appUrl: "/app/",
   appLoginUrl: "/app/?page=login",
   appSignupUrl: "/app/?page=signup",
-  author: "Samy Mahmoudi",
+  author: "Samy Ben Sadok",
   links: {
     twitter: "https://twitter.com/geotoolbox",
     github: "https://github.com/samybensadok-cmyk/geotoolbox-web",
