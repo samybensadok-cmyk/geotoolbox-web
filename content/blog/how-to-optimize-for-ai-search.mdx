@@ -1,0 +1,211 @@
+---
+title: "How to Optimize for AI Search: A Step-by-Step Playbook"
+description: "How to optimize for AI search, step by step: confirm AI bots can reach your pages, restructure for extraction, add citable substance, and measure citations."
+date: "2026-05-31"
+author: "Samy BEN SADOK"
+tags: ["geo", "ai-search", "guide"]
+draft: false
+---
+
+You already know AI search matters. What you probably do not have is the order of operations. Most advice on how to optimize for AI search throws twenty tactics at you at once, with no sense of what to do first or why.
+
+This is the playbook we run, in sequence. Each step depends on the one before it. Skip ahead and you waste effort optimizing pages an AI engine cannot even read.
+
+## The Order That Matters
+
+Do these seven steps in order. The sequence is the point.
+
+1. Confirm AI bots can reach your pages
+2. Pick the pages to start with
+3. Restructure them for extraction (answer-first)
+4. Add citable substance
+5. Clarify your entities and schema
+6. Build off-site presence the engines trust
+7. Measure whether it is working
+
+Here is why order matters. There is no point rewriting a page for answer-first extraction if a crawler is blocked from fetching it. There is no point adding schema to a page you have not restructured. Reachability gates everything, structure gates substance, and measurement only means something once the rest is in place. Work top to bottom.
+
+If you only have an afternoon, do Step 1 and Step 3 on your five best pages. That alone moves the needle more than a month of scattered tweaks.
+
+## Step 1: Confirm AI Bots Can Reach Your Pages
+
+Before anything else, make sure the AI crawlers can actually fetch the pages you care about. If a bot is blocked, you cannot be cited, no matter how good the content is. This is the most common silent failure in AI search optimization, and the easiest to fix.
+
+Each major engine uses named crawlers you can allow or block independently of Googlebot.
+
+<table>
+  <thead>
+    <tr><th>Crawler</th><th>Owner / purpose</th><th>To allow in robots.txt</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>GPTBot</td><td>OpenAI, model training</td><td>User-agent: GPTBot / Allow: /</td></tr>
+    <tr><td>OAI-SearchBot</td><td>OpenAI, ChatGPT search results</td><td>User-agent: OAI-SearchBot / Allow: /</td></tr>
+    <tr><td>ClaudeBot</td><td>Anthropic</td><td>User-agent: ClaudeBot / Allow: /</td></tr>
+    <tr><td>PerplexityBot</td><td>Perplexity</td><td>User-agent: PerplexityBot / Allow: /</td></tr>
+    <tr><td>Google-Extended</td><td>Google, Gemini/AI training control</td><td>User-agent: Google-Extended / Allow: /</td></tr>
+  </tbody>
+</table>
+
+The exact user-agent strings and rules are documented by the platforms themselves: [OpenAI's crawler overview](https://developers.openai.com/api/docs/bots) covers GPTBot and OAI-SearchBot, and [Google's common crawlers reference](https://developers.google.com/search/docs/crawling-indexing/google-common-crawlers) covers Google-Extended. Note that Google-Extended controls AI training access without affecting your normal Google Search ranking, so blocking it does not protect rankings, it only removes you from one AI surface.
+
+Two things block these crawlers more often than deliberate robots.txt rules:
+
+- **WAF and bot-management rules.** A Cloudflare or similar rule that challenges non-browser traffic will catch AI crawlers as collateral, even when robots.txt allows them. In our experience scanning sites with Geotoolbox, this is the single most common reachability problem, and the site owner almost never intended it.
+- **JavaScript rendering.** If your main content loads client-side and the crawler does not execute it, the bot receives a nearly empty page.
+
+The check is binary: either the bot reaches the page or it does not. Run a [reachability scan to see which AI bots can fetch your pages](https://geotoolbox.ai/features/content-analyzer) before you spend a minute on content. Fix any block here first.
+
+## Step 2: Pick the Pages to Start With
+
+Do not optimize your whole site. Pick the pages most likely to be pulled into an AI answer and start there. Trying to do everything at once is why most people freeze or spray effort thinly across hundreds of URLs.
+
+Prioritize on two signals. First, **informational pages you already have authority on**, the ones that already rank or earn links. They are the pages an engine is most likely to retrieve in the first place, so improving their extractability compounds. Second, **pages that answer specific questions**, since question-shaped content maps directly to how people prompt AI tools.
+
+Skip, for now, thin pages, pure transactional pages, and anything with no existing search footprint. They can come later. A practical first batch is five to ten pages: your best guides, your most-linked explainers, and the posts that answer the questions your customers actually ask.
+
+A quick way to rank the shortlist: score each candidate page from 1 to 3 on two things, existing authority (does it already rank or earn links) and question-fit (does it answer a clear, specific question someone would ask an AI tool). Add the two scores and start with the 5s and 6s. A page that already ranks for a real question is the fastest path to a citation, because the engine is already likely to retrieve it. Depth on ten pages beats shallow edits on a hundred.
+
+## Step 3: Restructure for Extraction (Answer-First)
+
+This is the core rewrite, and it is mostly about where you put the answer. Generative engines lift self-contained statements. If your answer is buried in the fourth paragraph after setup and throat-clearing, the model has nothing clean to quote.
+
+Answer-first means the first sentence under a heading directly answers the question in the heading, then you elaborate. Compare:
+
+**Before:** "When it comes to email send times, there are many factors to consider. Every audience is different, and what works for one brand may not work for another. That said, after analyzing our data..."
+
+**After:** "The best time to send marketing emails is Tuesday to Thursday, 9 to 11 a.m. in the recipient's time zone. Here is the data behind that, and when it does not hold."
+
+The second version can be quoted as-is. The first cannot.
+
+A few rules make content extractable:
+
+- **Self-contained chunks.** Each section should make sense if a model lifts it alone, without the reader having seen the rest of the page. Avoid dangling references like "as mentioned above."
+- **Short paragraphs and clear headings.** One idea per paragraph. Use a question-shaped heading, then answer it immediately.
+- **Lists and tables for structured facts.** Comparisons, steps, and specs are easier to extract as a list or table than as prose.
+
+{/* IMG-A2-02 diagram - before/after answer-first rewrite of a paragraph. See image brief. */}
+
+You do not need to rewrite the whole page. Often, moving the answer to the top of each section and tightening the opening sentence is 80% of the win.
+
+## Step 4: Add Citable Substance
+
+Once a page is reachable and structured, give the engine something worth quoting. Models reach for specific, attributable facts over vague assertions.
+
+This is the one tactic with hard research behind it. The [Princeton-led study that defined GEO](https://arxiv.org/abs/2311.09735) found that adding cited sources, quotations, and statistics to content raised its visibility in generative-engine responses by up to 40%. Specificity is the lever.
+
+In practice that means:
+
+- Replace "many businesses see strong results" with a real number and where it came from.
+- Add a short quote from a named expert or a primary source where it supports a claim.
+- Cite the origin of every statistic inline, so the claim carries its own credibility.
+
+The shape to aim for, using your own real data:
+
+**Vague:** "Switching to our platform can significantly improve your conversion rates."
+**Citable:** "In our 2025 test across [N] stores, switching the checkout flow cut cart abandonment from [X]% to [Y]%."
+
+Fill the brackets with real numbers, a real sample size, and a real source. That specificity is what an engine lifts into an answer and attributes to you.
+
+One caution. The same research is not permission to manufacture data. Stuffing invented or unsourced numbers into every paragraph degrades the page and the trust you are trying to build. Add facts because they are true and useful, not to game a model. If you do not have a real statistic, do not invent one.
+
+## Step 5: Clarify Your Entities and Schema (Realistically)
+
+Here is where most advice oversells. You do not need a secret schema trick. Google's own guidance on [AI features and your website](https://developers.google.com/search/docs/appearance/ai-features) states there are no additional requirements and no special structured data for appearing in AI Overviews.
+
+So treat schema as housekeeping, not a growth hack. `Article`, `FAQPage`, and `Organization` markup help machines parse your page and disambiguate your brand, which is useful. They are not a switch that turns on citations.
+
+What matters more is entity clarity in the prose: state plainly who you are, what you do, and the facts about your topic. Make sure your brand is described consistently across your site and your off-site profiles, so the model resolves you to one clear entity rather than a fuzzy one.
+
+On llms.txt specifically: it is widely discussed and currently unproven. Google does not use it, and there is no reliable evidence it affects citations today. Add it if you like, but do not prioritize it over reachability and structure. Spend the time where the evidence is.
+
+## Step 6: Build Off-Site Presence the Engines Trust
+
+Generative engines corroborate. A claim echoed across several independent, trusted sources is safer to repeat than one that lives only on your own domain. That makes your off-site footprint part of the optimization, not a separate marketing track.
+
+Three places carry weight because models lean on them:
+
+- **Reference and community sites.** Wikipedia (if you genuinely qualify), and active discussion on Reddit and niche forums, show up disproportionately in AI citations for many topics.
+- **Video.** A YouTube presence on your topic gives engines another corroborating, citable source.
+- **Third-party lists and roundups.** Being included in "best X" articles and industry roundups gets you mentioned in the exact comparative answers buyers prompt for.
+
+The shift in mindset: for AI citation, consistent brand mentions across trusted sources often matter more than the raw backlink count that wins a Google position. Earned, accurate description of your brand in the places models trust is the off-site half of GEO.
+
+## Step 7: Measure Whether It Is Working
+
+You cannot manage what you cannot see, and AI search is partly invisible. There is no Search Console for AI answers, and traffic from an AI tool usually lands in analytics as direct or referral with no keyword attached. Rankings no longer tell the whole story either: [Ahrefs found that AI Overviews are linked to a 34.5% lower click-through rate](https://ahrefs.com/blog/ai-overviews-reduce-clicks/) for the top organic result, so you can hold position one and still lose traffic. So you triangulate and track direction, not a perfect count.
+
+Track four things:
+
+- **Citation share.** Run your core questions through ChatGPT, Perplexity, and Google's AI Overview and record whether you appear, versus competitors.
+- **Branded prompt presence.** Ask the engines about your brand and log how accurately they describe you.
+- **AI referral traffic.** Filter analytics for referrers like chatgpt.com, perplexity.ai, and gemini.google.com.
+- **Reachability status.** Re-confirm crawlers can still fetch key pages after site changes.
+
+Set realistic expectations. Optimizing a page does not guarantee a citation; engines only retrieve and cite a fraction of eligible pages, and which ones shift over time. Judge progress by the trend across weeks, not a single before-and-after. A monitoring view that [tracks your AI visibility over time](https://geotoolbox.ai/features/domain-overview) turns scattered manual checks into a baseline you can compare against. Record your starting point before you optimize.
+
+## The Per-Page GEO Checklist
+
+Run this on every page you optimize. If you cannot tick the first item, stop and fix it before touching the rest.
+
+<table>
+  <thead>
+    <tr><th>#</th><th>Check</th><th>Pass condition</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>1</td><td>Reachable</td><td>GPTBot, ClaudeBot, PerplexityBot, Google-Extended can fetch the page (robots + WAF allow)</td></tr>
+    <tr><td>2</td><td>Rendered without JS</td><td>Main content is in the HTML a crawler receives, not loaded client-side only</td></tr>
+    <tr><td>3</td><td>Answer-first</td><td>Each section's first sentence answers its heading directly</td></tr>
+    <tr><td>4</td><td>Self-contained chunks</td><td>Sections make sense lifted alone; no dangling "as above" references</td></tr>
+    <tr><td>5</td><td>Citable substance</td><td>Specific, sourced statistics and at least one named quote where relevant</td></tr>
+    <tr><td>6</td><td>Entity clarity</td><td>Brand, topic, and key facts stated plainly; consistent with off-site profiles</td></tr>
+    <tr><td>7</td><td>Fresh</td><td>Visible publish/update date; content reflects the current state of the topic</td></tr>
+  </tbody>
+</table>
+
+Seven checks, in order. Most pages fail on 1, 3, or 5.
+
+## Common Mistakes That Waste Effort
+
+Three beliefs send people in the wrong direction.
+
+**"GEO is just SEO, so my rankings carry over."** Partly true, but it misleads. Ranking and citation are different selection systems. High domain authority does not transfer cleanly to AI citations, so chasing more backlinks while ignoring extractability is effort spent on the wrong lever. For the full breakdown of the discipline, see our guide on [what generative engine optimization is](https://geotoolbox.ai/blog/what-is-geo).
+
+**"I need to build an llms.txt file."** This is the most over-prescribed tactic in AI search right now. Google does not use it, and there is no reliable evidence it changes citations today. Treat it as CLAIMED, not TESTED, and do not prioritize it over the seven steps above.
+
+**"If I optimize, I will get cited."** Optimization improves your odds; it does not guarantee a citation. Engines retrieve and cite only a fraction of eligible pages, and the set changes. Expecting a one-to-one payoff leads people to abandon a working approach too early. Track the trend, not a single result.
+
+A useful habit: label the advice you follow as TESTED (you or a credible study verified it) or CLAIMED (it sounds right but nobody has shown it works). Most AI-search advice circulating today is CLAIMED. Spend your time on the TESTED parts first.
+
+## Frequently Asked Questions
+
+**How do I rank in ChatGPT search?**
+Make sure OAI-SearchBot and GPTBot can reach the page, structure it answer-first, and back claims with specific sourced facts. ChatGPT leans on its search index plus corroborating sources, so off-site mentions help. Our guide on [getting cited in ChatGPT search](https://geotoolbox.ai/blog/seo-for-chatgpt) covers the engine-specific details.
+
+**How do I rank in AI answers generally?**
+Follow the seven steps in order: reachability, page selection, answer-first structure, citable substance, entity clarity, off-site presence, and measurement. The fundamentals transfer across engines; the per-engine tuning is secondary. For Perplexity specifically, see [how to get cited in Perplexity](https://geotoolbox.ai/blog/perplexity-seo).
+
+**How long until my content gets cited?**
+Reachability fixes can take effect within days. Content and citation changes are slower and harder to attribute, because AI sourcing shifts gradually and is only partly observable. Judge it over weeks, by trend.
+
+**Why isn't my content cited even though I optimized it?**
+Optimization improves odds, not certainty. Engines retrieve and cite only a fraction of eligible pages, and the set changes over time. Check the basics first: is the page actually reachable, is the answer extractable, and is the claim corroborated elsewhere.
+
+**Is SEO dead in 2026?**
+No. Search is shifting toward synthesized answers, but the underlying work (reachable, clear, trustworthy content) still decides who gets surfaced. AI search optimization is an extension of SEO, not its replacement.
+
+**Do I need an llms.txt file?**
+No. Google does not use it and there is no reliable evidence it affects citations today. Spend the time on reachability and structure first.
+
+## Start With Step 1
+
+You do not need a platform or a budget to begin, just the discipline to go in order. The cheapest, highest-value move is also the first one: confirm AI engines can actually reach your best pages. Most sites have at least one silent block they do not know about.
+
+Geotoolbox's free [Content Analyzer](https://geotoolbox.ai/features/content-analyzer) runs the bot-reachability check across the major AI crawlers and grades how extractable your page is, in under a minute. Start there, fix what it flags, then work down the seven steps.
+
+## Sources
+
+- [Overview of OpenAI Crawlers](https://developers.openai.com/api/docs/bots) - OpenAI
+- [Google's common crawlers](https://developers.google.com/search/docs/crawling-indexing/google-common-crawlers) - Google Search Central
+- [AI features and your website](https://developers.google.com/search/docs/appearance/ai-features) - Google Search Central
+- [GEO: Generative Engine Optimization](https://arxiv.org/abs/2311.09735) - Aggarwal et al., KDD 2024
+- [AI Overviews reduce clicks](https://ahrefs.com/blog/ai-overviews-reduce-clicks/) - Ahrefs, 2025 (data citation)
