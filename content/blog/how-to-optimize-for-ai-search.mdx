@@ -48,6 +48,31 @@ Each major engine uses named crawlers you can allow or block independently of Go
 
 The exact user-agent strings and rules are documented by the platforms themselves: [OpenAI's crawler overview](https://developers.openai.com/api/docs/bots) covers GPTBot and OAI-SearchBot, and [Google's common crawlers reference](https://developers.google.com/search/docs/crawling-indexing/google-common-crawlers) covers Google-Extended. Note that Google-Extended controls AI training access without affecting your normal Google Search ranking, so blocking it does not protect rankings, it only removes you from one AI surface.
 
+### A robots.txt block that allows them all
+
+If you want every major AI crawler to reach your pages, an explicit allow block leaves no ambiguity. Drop this at the top of your robots.txt:
+
+```
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+```
+
+A few things to watch. A blanket `User-agent: * / Disallow: /` block later in the file does not override these named blocks, because robots.txt matches the most specific user-agent group, but a stray `Disallow:` rule inside one of these named groups will. Check that no path you care about sits under a `Disallow:` line in the matching group. And remember robots.txt is a fetch directive, not an access control: it tells well-behaved crawlers what to skip, so the real failures usually live one layer down, in the two causes below.
+
+### The two blocks that catch people
+
 Two things block these crawlers more often than deliberate robots.txt rules:
 
 - **WAF and bot-management rules.** A Cloudflare or similar rule that challenges non-browser traffic will catch AI crawlers as collateral, even when robots.txt allows them. In our experience scanning sites with Geotoolbox, this is the single most common reachability problem, and the site owner almost never intended it.
@@ -69,13 +94,17 @@ A quick way to rank the shortlist: score each candidate page from 1 to 3 on two 
 
 This is the core rewrite, and it is mostly about where you put the answer. Generative engines lift self-contained statements. If your answer is buried in the fourth paragraph after setup and throat-clearing, the model has nothing clean to quote.
 
+### Put the answer in the first sentence
+
 Answer-first means the first sentence under a heading directly answers the question in the heading, then you elaborate. Compare:
 
 **Before:** "When it comes to email send times, there are many factors to consider. Every audience is different, and what works for one brand may not work for another. That said, after analyzing our data..."
 
 **After:** "The best time to send marketing emails is Tuesday to Thursday, 9 to 11 a.m. in the recipient's time zone. Here is the data behind that, and when it does not hold."
 
-The second version can be quoted as-is. The first cannot.
+The second version can be quoted as-is. The first cannot. Notice what changed: the claim, the specifics, and the qualifier all moved into the opening, so a model can lift one sentence and still represent you accurately. The setup that used to come first did not disappear, it moved below the answer where a human reader who wants context can still find it.
+
+### Three rules that make content extractable
 
 A few rules make content extractable:
 
@@ -91,13 +120,19 @@ You do not need to rewrite the whole page. Often, moving the answer to the top o
 
 Once a page is reachable and structured, give the engine something worth quoting. Models reach for specific, attributable facts over vague assertions.
 
-This is the one tactic with hard research behind it. The [Princeton-led study that defined GEO](https://arxiv.org/abs/2311.09735) found that adding cited sources, quotations, and statistics to content raised its visibility in generative-engine responses by up to 40%. Specificity is the lever.
+### Why specificity wins
+
+This is the one tactic with hard research behind it. The [Princeton-led study that defined GEO](https://arxiv.org/abs/2311.09735) found that GEO methods can lift visibility in generative-engine responses by up to 40%, with adding sources, quotations, and statistics among the most effective. Specificity is the lever.
+
+### What to add, and how
 
 In practice that means:
 
 - Replace "many businesses see strong results" with a real number and where it came from.
 - Add a short quote from a named expert or a primary source where it supports a claim.
 - Cite the origin of every statistic inline, so the claim carries its own credibility.
+
+Inline attribution matters more than a footnote or a sources list at the bottom. When the number and its source sit in the same sentence, a model can lift the whole self-contained unit and reproduce the attribution, which is exactly the behavior you want, since a cited claim is far more likely to be repeated than a bare one. A statistic stranded in a reference list at the foot of the page loses that pairing the moment a section is extracted alone.
 
 The shape to aim for, using your own real data:
 
@@ -122,13 +157,17 @@ On llms.txt specifically: it is widely discussed and currently unproven. Google 
 
 Generative engines corroborate. A claim echoed across several independent, trusted sources is safer to repeat than one that lives only on your own domain. That makes your off-site footprint part of the optimization, not a separate marketing track.
 
+### Where models look for corroboration
+
 Three places carry weight because models lean on them:
 
 - **Reference and community sites.** Wikipedia (if you genuinely qualify), and active discussion on Reddit and niche forums, show up disproportionately in AI citations for many topics.
 - **Video.** A YouTube presence on your topic gives engines another corroborating, citable source.
 - **Third-party lists and roundups.** Being included in "best X" articles and industry roundups gets you mentioned in the exact comparative answers buyers prompt for.
 
-The shift in mindset: for AI citation, consistent brand mentions across trusted sources often matter more than the raw backlink count that wins a Google position. Earned, accurate description of your brand in the places models trust is the off-site half of GEO.
+### Mentions beat raw link count
+
+The shift in mindset: for AI citation, consistent brand mentions across trusted sources often matter more than the raw backlink count that wins a Google position. A model deciding whether to repeat a claim about you is weighing how many independent places describe you the same way, not how many links point at your homepage. So an accurate, consistent mention on a relevant forum thread or roundup can carry more citation weight than a high-authority link with no surrounding context. Earned, accurate description of your brand in the places models trust is the off-site half of GEO, and it is the half most teams ignore because it does not show up in a backlink report.
 
 ## Step 7: Measure Whether It Is Working
 
@@ -170,9 +209,9 @@ Three beliefs send people in the wrong direction.
 
 **"GEO is just SEO, so my rankings carry over."** Partly true, but it misleads. Ranking and citation are different selection systems. High domain authority does not transfer cleanly to AI citations, so chasing more backlinks while ignoring extractability is effort spent on the wrong lever. For the full breakdown of the discipline, see our guide on [what generative engine optimization is](https://geotoolbox.ai/blog/what-is-geo).
 
-**"I need to build an llms.txt file."** This is the most over-prescribed tactic in AI search right now. Google does not use it, and there is no reliable evidence it changes citations today. Treat it as CLAIMED, not TESTED, and do not prioritize it over the seven steps above.
+**"I need to build an llms.txt file."** This is the most over-prescribed tactic in AI search right now. As covered in Step 5, treat it as CLAIMED, not TESTED, and do not prioritize it over the seven steps above.
 
-**"If I optimize, I will get cited."** Optimization improves your odds; it does not guarantee a citation. Engines retrieve and cite only a fraction of eligible pages, and the set changes. Expecting a one-to-one payoff leads people to abandon a working approach too early. Track the trend, not a single result.
+**"If I optimize, I will get cited."** Optimization improves your odds; it does not guarantee a citation. As Step 7 explains, engines cite only a fraction of eligible pages, and the set changes. Expecting a one-to-one payoff leads people to abandon a working approach too early. Track the trend, not a single result.
 
 A useful habit: label the advice you follow as TESTED (you or a credible study verified it) or CLAIMED (it sounds right but nobody has shown it works). Most AI-search advice circulating today is CLAIMED. Spend your time on the TESTED parts first.
 
@@ -188,13 +227,13 @@ Follow the seven steps in order: reachability, page selection, answer-first stru
 Reachability fixes can take effect within days. Content and citation changes are slower and harder to attribute, because AI sourcing shifts gradually and is only partly observable. Judge it over weeks, by trend.
 
 **Why isn't my content cited even though I optimized it?**
-Optimization improves odds, not certainty. Engines retrieve and cite only a fraction of eligible pages, and the set changes over time. Check the basics first: is the page actually reachable, is the answer extractable, and is the claim corroborated elsewhere.
+Optimization improves odds, not certainty (see Step 7 on why engines cite only a fraction of eligible pages). Check the basics first: is the page actually reachable, is the answer extractable, and is the claim corroborated elsewhere.
 
 **Is SEO dead in 2026?**
 No. Search is shifting toward synthesized answers, but the underlying work (reachable, clear, trustworthy content) still decides who gets surfaced. AI search optimization is an extension of SEO, not its replacement.
 
 **Do I need an llms.txt file?**
-No. Google does not use it and there is no reliable evidence it affects citations today. Spend the time on reachability and structure first.
+No, for the reasons covered in Step 5. Spend the time on reachability and structure first.
 
 ## Start With Step 1
 
