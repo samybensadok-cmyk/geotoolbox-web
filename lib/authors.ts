@@ -34,7 +34,7 @@ export const authors: Record<string, Author> = {
     bio: "Founder of GEO Toolbox, host of the Collaborator.pro podcast, and an SEO and growth strategist with over a decade of experience across 150+ projects in competitive niches like crypto and CBD.",
     longBio:
       "Samy Ben Sadok is the founder of GEO Toolbox and an SEO and growth strategist with over a decade of experience, having led more than 150 projects across some of the most competitive industries, including crypto and CBD. Based in Barcelona, he hosts the Collaborator.pro podcast and writes GEO Toolbox's research on generative engine optimization and getting brands cited in AI search engines like ChatGPT, Perplexity, and Google AI Overviews.",
-    // avatar: "/authors/samy-ben-sadok.jpg", // drop a headshot here and uncomment
+    avatar: "/authors/samy-ben-sadok.jpg",
     expertise: [
       "Search Engine Optimization",
       "Generative Engine Optimization",
