@@ -3,6 +3,7 @@ import { siteConfig } from "@/lib/config"
 
 type Slug =
   | "geo-scan"
+  | "agent-readiness"
   | "content-analyzer"
   | "content-brief"
   | "domain-overview"

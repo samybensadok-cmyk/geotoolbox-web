@@ -7,7 +7,7 @@ import { breadcrumbsSchema } from "@/lib/seo-schema"
 export const metadata: Metadata = {
   title: "Features",
   description:
-    "Seven connected tools for generative engine optimization (GEO) and AI search visibility. Scan, analyze, brief, and monitor your brand across ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot.",
+    "Eight connected tools for generative engine optimization (GEO) and AI search visibility. Scan, analyze, brief, and monitor your brand across ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot.",
   alternates: { canonical: `${siteConfig.url}/features` },
 }
 
@@ -53,6 +53,13 @@ const groups: Group[] = [
         blurb: "Run a single prompt across 6 AI engines and see who gets cited. Your domain, competitors, and every mention, in minutes.",
         highlights: ["6 AI engines", "8 countries", "Competitor comparison"],
         tint: "mint",
+      },
+      {
+        slug: "agent-readiness",
+        name: "Agent Readiness",
+        blurb: "Scan any root URL for AI agent readiness. 28 checks across standards, 34 AI crawlers, a headless-browser render of what an agent sees, and JS-rendering parity.",
+        highlights: ["34 AI crawlers", "Headless render", "JS parity"],
+        tint: "steel",
       },
     ],
   },
@@ -143,7 +150,7 @@ export default function FeaturesPage() {
                 Features
               </p>
               <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-                Seven tools.
+                Eight tools.
                 <br />
                 <span className="text-accent-600">One AI visibility stack.</span>
               </h1>
@@ -284,7 +291,7 @@ export default function FeaturesPage() {
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-[7fr_5fr] lg:items-end lg:gap-16">
             <div>
               <h2 className="text-[clamp(1.5rem,3.5vw,2.5rem)] font-bold leading-tight tracking-tight text-white">
-                One scan, all seven tools.
+                One scan, all eight tools.
               </h2>
               <p className="mt-3 max-w-xl text-base text-gray-300">
                 Run a GEO Scan once and every other capability activates for that domain: Domain Overview, Competitor Intel, Community, and the rest.
