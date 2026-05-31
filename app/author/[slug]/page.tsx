@@ -82,7 +82,7 @@ export default async function AuthorPage({
                     key={l.href}
                     href={l.href}
                     target="_blank"
-                    rel="me noopener noreferrer"
+                    rel={l.sameAs === false ? "noopener noreferrer" : "me noopener noreferrer"}
                     className="inline-flex items-center gap-1.5 rounded-full border border-[var(--surface-warm-border)] bg-white px-3.5 py-1.5 text-[13px] font-medium text-gray-700 transition-colors hover:border-accent-400 hover:text-accent-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
                   >
                     {l.label}

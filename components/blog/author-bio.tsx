@@ -45,7 +45,7 @@ export function AuthorBio({ author }: { author: Author }) {
                 key={l.href}
                 href={l.href}
                 target="_blank"
-                rel="me noopener noreferrer"
+                rel={l.sameAs === false ? "noopener noreferrer" : "me noopener noreferrer"}
                 className="font-medium text-gray-500 transition-colors hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
               >
                 {l.label}

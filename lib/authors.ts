@@ -17,8 +17,10 @@ export type Author = {
   avatar?: string
   // Topics for Person.knowsAbout (E-E-A-T signal).
   expertise: string[]
-  // External profiles for Person.sameAs and the visible social links.
-  links: { label: string; href: string }[]
+  // External profiles shown as social links. Those with `sameAs !== false`
+  // are also emitted in Person.sameAs (use false for brand/team channels that
+  // are not the person's own identity profile).
+  links: { label: string; href: string; sameAs?: boolean }[]
 }
 
 export const authors: Record<string, Author> = {
@@ -29,9 +31,9 @@ export const authors: Record<string, Author> = {
     company: "GEO Toolbox",
     companyUrl: "https://geotoolbox.ai",
     location: "Barcelona, Spain",
-    bio: "Founder of GEO Toolbox and an SEO and growth strategist with over a decade of experience across 150+ projects, many in competitive niches like crypto and CBD.",
+    bio: "Founder of GEO Toolbox, host of the Collaborator.pro podcast, and an SEO and growth strategist with over a decade of experience across 150+ projects in competitive niches like crypto and CBD.",
     longBio:
-      "Samy Ben Sadok is the founder of GEO Toolbox and an SEO and growth strategist with over a decade of experience, having led more than 150 projects across some of the most competitive industries, including crypto and CBD. Based in Barcelona, he writes GEO Toolbox's research on generative engine optimization and getting brands cited in AI search engines like ChatGPT, Perplexity, and Google AI Overviews.",
+      "Samy Ben Sadok is the founder of GEO Toolbox and an SEO and growth strategist with over a decade of experience, having led more than 150 projects across some of the most competitive industries, including crypto and CBD. Based in Barcelona, he hosts the Collaborator.pro podcast and writes GEO Toolbox's research on generative engine optimization and getting brands cited in AI search engines like ChatGPT, Perplexity, and Google AI Overviews.",
     // avatar: "/authors/samy-ben-sadok.jpg", // drop a headshot here and uncomment
     expertise: [
       "Search Engine Optimization",
@@ -43,6 +45,8 @@ export const authors: Record<string, Author> = {
     links: [
       { label: "LinkedIn", href: "https://www.linkedin.com/in/samy-ben-sadok-senior-seo/" },
       { label: "Semrush", href: "https://www.semrush.com/blog/user/171920913/" },
+      // Brand/team channel he hosts — shown as a link, kept out of Person.sameAs.
+      { label: "YouTube", href: "https://www.youtube.com/@Collaborator-pro", sameAs: false },
     ],
   },
 }

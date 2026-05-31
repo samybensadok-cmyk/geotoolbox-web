@@ -97,7 +97,7 @@ export function articleSchema(post: {
         jobTitle: profile.role,
         ...(profile.avatar ? { image: `${siteConfig.url}${profile.avatar}` } : {}),
         knowsAbout: profile.expertise,
-        sameAs: profile.links.map((l) => l.href),
+        sameAs: profile.links.filter((l) => l.sameAs !== false).map((l) => l.href),
       }
     : { "@type": "Person", name: post.author || siteConfig.author }
   return {
@@ -196,7 +196,7 @@ export function authorProfileSchema(author: Author) {
         ? { homeLocation: { "@type": "Place", name: author.location } }
         : {}),
       knowsAbout: author.expertise,
-      sameAs: author.links.map((l) => l.href),
+      sameAs: author.links.filter((l) => l.sameAs !== false).map((l) => l.href),
     },
   }
 }
