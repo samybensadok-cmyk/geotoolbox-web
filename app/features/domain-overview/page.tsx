@@ -173,7 +173,7 @@ export default function DomainOverviewPage() {
                         <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-400 opacity-75" />
                         <span className="relative inline-flex h-2 w-2 rounded-full bg-accent-400" />
                       </span>
-                      <span className="font-mono text-[13px] font-semibold text-white">acme.co</span>
+                      <span className="font-mono text-[13px] font-semibold text-white">geotoolbox.ai</span>
                     </div>
                     <span className="font-mono text-[11px] text-gray-500">updated 4m ago</span>
                   </div>

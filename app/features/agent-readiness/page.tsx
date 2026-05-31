@@ -68,7 +68,7 @@ const steps = [
     verb: "Give",
     title: "A root URL",
     body: "Agent Readiness runs infrastructure-level checks, so it starts at your root domain, not a single page.",
-    output: "https://acme.co",
+    output: "https://geotoolbox.ai",
   },
   {
     num: "02",
@@ -200,7 +200,7 @@ export default function AgentReadinessPage() {
               <div className="relative rounded-[2rem] border border-gray-200 bg-white p-8 shadow-[0_20px_60px_-20px_rgba(15,23,42,0.12)]">
                 <div className="flex items-start justify-between gap-6">
                   <div className="min-w-0 flex-1">
-                    <p className="truncate font-mono text-[12px] text-gray-500">acme.co</p>
+                    <p className="truncate font-mono text-[12px] text-gray-500">geotoolbox.ai</p>
                     <p className="mt-3 text-[11px] font-semibold uppercase tracking-widest text-gray-600">Checks live</p>
                     <p className="mt-1 font-mono text-[68px] font-bold leading-none tracking-tight text-accent-700">28<span className="text-gray-300">/28</span></p>
                   </div>

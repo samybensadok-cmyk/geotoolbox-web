@@ -56,7 +56,7 @@ export default function OGImage() {
           >
             <div style={{ display: "flex", alignItems: "center", gap: 8, paddingBottom: 16, borderBottom: "1px solid #1f2937" }}>
               <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#2dd4bf" }} />
-              <span style={{ fontFamily: "monospace", fontSize: 14, fontWeight: 600, color: "#ffffff" }}>acme.co</span>
+              <span style={{ fontFamily: "monospace", fontSize: 14, fontWeight: 600, color: "#ffffff" }}>geotoolbox.ai</span>
             </div>
 
             <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 18 }}>

@@ -5,7 +5,7 @@ export function HowItWorks() {
       verb: "Enter",
       title: "Your domain",
       body: "Paste a URL. Add competitors if you want a side-by-side.",
-      output: "acme-corp.com + 2 competitors",
+      output: "geotoolbox.ai + 2 competitors",
     },
     {
       num: "02",
