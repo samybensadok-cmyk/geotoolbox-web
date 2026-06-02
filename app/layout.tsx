@@ -3,6 +3,7 @@ import { DM_Sans, DM_Mono } from "next/font/google"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { ClarityAnalytics } from "@/components/analytics/clarity"
+import { GoogleAnalytics } from "@/components/analytics/google-analytics"
 import { siteConfig } from "@/lib/config"
 import "./globals.css"
 
@@ -59,6 +60,7 @@ export default function RootLayout({
         <main id="main-content" className="flex-1">{children}</main>
         <Footer />
         <ClarityAnalytics />
+        <GoogleAnalytics />
       </body>
     </html>
   )

@@ -71,6 +71,8 @@ export default function PrivacyPage() {
             <li>Google OAuth: authentication</li>
             <li>Google Search Console API: search performance data</li>
             <li>Google Analytics Data API: AI traffic data</li>
+            <li>Google Analytics 4: aggregated usage analytics for our website</li>
+            <li>Microsoft Clarity: aggregated usage analytics for our website (heatmaps and session replay)</li>
             <li>Vercel: application hosting</li>
             <li>Replit: application hosting (PHP backend)</li>
             <li>Neon: PostgreSQL database hosting</li>
@@ -92,7 +94,7 @@ export default function PrivacyPage() {
         <section>
           <h2 className="text-lg font-semibold text-gray-900">6. Cookies</h2>
           <p className="mt-2">
-            We use essential cookies for session management. We do not use advertising or tracking cookies.
+            We use essential cookies for session management. To understand how visitors use our website, we also use first-party analytics cookies set by <strong>Google Analytics 4</strong> (aggregated traffic, pages viewed, device type, and approximate location) and <strong>Microsoft Clarity</strong> (aggregated interaction patterns, including heatmaps and session replays that mask text and form inputs). These analytics cookies are not used for advertising or cross-site tracking. You can block or clear them at any time through your browser settings.
           </p>
         </section>
 
