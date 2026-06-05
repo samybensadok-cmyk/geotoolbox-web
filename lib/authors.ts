@@ -33,9 +33,9 @@ export const authors: Record<string, Author> = {
     company: "GEO Toolbox",
     companyUrl: "https://geotoolbox.ai",
     location: "Barcelona, Spain",
-    bio: "Founder of GEO Toolbox, host of the Collaborator.pro podcast, and an SEO and growth strategist with over a decade of experience across 150+ projects in competitive niches like crypto and CBD.",
+    bio: "I'm the founder of GEO Toolbox, host of the Collaborator.pro podcast, and an SEO and growth strategist with over a decade of experience across 150+ projects in competitive niches like crypto and CBD.",
     longBio:
-      "Samy Ben Sadok is the founder of GEO Toolbox and an SEO and growth strategist with over a decade of experience, having led more than 150 projects across some of the most competitive industries, including crypto and CBD. Based in Barcelona, he hosts the Collaborator.pro podcast and writes GEO Toolbox's research on generative engine optimization and getting brands cited in AI search engines like ChatGPT, Perplexity, and Google AI Overviews.",
+      "I'm Samy Ben Sadok, founder of GEO Toolbox and an SEO and growth strategist with over a decade of experience, having led more than 150 projects across some of the most competitive industries, including crypto and CBD. Based in Barcelona, I host the Collaborator.pro podcast and write GEO Toolbox's research on generative engine optimization and getting brands cited in AI search engines like ChatGPT, Perplexity, and Google AI Overviews.",
     avatar: "/authors/samy-ben-sadok.jpg",
     expertise: [
       "Search Engine Optimization",
@@ -46,7 +46,7 @@ export const authors: Record<string, Author> = {
     ],
     links: [
       { label: "LinkedIn", href: "https://www.linkedin.com/in/samy-ben-sadok-senior-seo/" },
-      { label: "Malt", href: "https://en.malt.fr/profile/samybensadok" },
+      { label: "Hire me", href: "https://en.malt.fr/profile/samybensadok" },
       // Kept in Person.sameAs for E-E-A-T, but not shown as a visible link.
       { label: "Semrush", href: "https://www.semrush.com/blog/user/171920913/", hidden: true },
       // Brand/team channel he hosts — shown as a link, kept out of Person.sameAs.
