@@ -40,7 +40,7 @@ export function AuthorBio({ author }: { author: Author }) {
                 <path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </Link>
-            {author.links.map((l) => (
+            {author.links.filter((l) => !l.hidden).map((l) => (
               <a
                 key={l.href}
                 href={l.href}

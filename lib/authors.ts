@@ -17,10 +17,12 @@ export type Author = {
   avatar?: string
   // Topics for Person.knowsAbout (E-E-A-T signal).
   expertise: string[]
-  // External profiles shown as social links. Those with `sameAs !== false`
-  // are also emitted in Person.sameAs (use false for brand/team channels that
-  // are not the person's own identity profile).
-  links: { label: string; href: string; sameAs?: boolean }[]
+  // External profiles. Rendered as visible links unless `hidden` is set.
+  // Those with `sameAs !== false` are also emitted in Person.sameAs (use false
+  // for brand/team channels that are not the person's own identity profile).
+  // `hidden: true` keeps a profile in Person.sameAs (an E-E-A-T signal for
+  // search/AI engines) without surfacing it as a visible UI link.
+  links: { label: string; href: string; sameAs?: boolean; hidden?: boolean }[]
 }
 
 export const authors: Record<string, Author> = {
@@ -44,7 +46,9 @@ export const authors: Record<string, Author> = {
     ],
     links: [
       { label: "LinkedIn", href: "https://www.linkedin.com/in/samy-ben-sadok-senior-seo/" },
-      { label: "Semrush", href: "https://www.semrush.com/blog/user/171920913/" },
+      { label: "Malt", href: "https://en.malt.fr/profile/samybensadok" },
+      // Kept in Person.sameAs for E-E-A-T, but not shown as a visible link.
+      { label: "Semrush", href: "https://www.semrush.com/blog/user/171920913/", hidden: true },
       // Brand/team channel he hosts — shown as a link, kept out of Person.sameAs.
       { label: "YouTube", href: "https://www.youtube.com/@Collaborator-pro", sameAs: false },
     ],

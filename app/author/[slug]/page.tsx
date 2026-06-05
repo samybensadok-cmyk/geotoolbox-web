@@ -77,7 +77,7 @@ export default async function AuthorPage({
                 {author.longBio}
               </p>
               <div className="mt-5 flex flex-wrap items-center gap-2.5">
-                {author.links.map((l) => (
+                {author.links.filter((l) => !l.hidden).map((l) => (
                   <a
                     key={l.href}
                     href={l.href}
