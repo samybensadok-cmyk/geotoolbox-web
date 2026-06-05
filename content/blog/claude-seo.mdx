@@ -1,0 +1,119 @@
+---
+title: "Claude SEO: How to Get Cited in Claude"
+description: "Claude SEO means getting cited in Claude's answers. How Claude's web search and the three Anthropic crawlers work, what gets cited, and whether it's worth it."
+date: "2026-06-05"
+author: "Samy BEN SADOK"
+tags: ["claude", "claude-seo", "geo", "ai-visibility", "guide"]
+draft: false
+---
+
+Search "Claude SEO" and almost everything you find is about using Claude to do your SEO work. This guide is the other thing: how to get your brand cited when someone asks Claude a question. That is now possible, because Claude browses the web and links its sources.
+
+## Does Claude Browse the Web?
+
+Yes. This trips people up, because Claude spent its early life as a closed, training-only model, and many still assume it cannot see the live web. That changed in 2025. Claude now has [web search](https://www.anthropic.com/news/web-search) in the Claude apps, available across plans including the free tier, and through the API's [web search tool](https://docs.claude.com/en/docs/agents-and-tools/tool-use/web-search-tool).
+
+When Claude searches, it shows its sources. Answers built from a search carry inline, clickable citations to the pages it used, the same shape of citation you see in Perplexity or ChatGPT search. When search is off, Claude answers from its training data alone, with a knowledge cutoff and no per-claim sources. So getting cited in Claude specifically means earning a place in those web-search answers. [How AI search works](https://geotoolbox.ai/blog/how-does-ai-search-work) covers the retrieve-and-cite loop in general.
+
+## The Three Anthropic Crawlers, and Why the Difference Matters
+
+This is where most "Claude SEO" advice goes wrong. Anthropic does not run one crawler, it runs three, and they do different jobs. Getting this right is the difference between being citable and being invisible.
+
+<table>
+  <thead>
+    <tr><th>Crawler</th><th>What it does</th><th>Block it and...</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>ClaudeBot</td><td>Collects data that may train future models</td><td>You opt out of training, with no effect on whether Claude cites you today</td></tr>
+    <tr><td>Claude-User</td><td>Fetches a specific page when a user's question references it</td><td>Claude cannot pull that page into a live answer for the user</td></tr>
+    <tr><td>Claude-SearchBot</td><td>Indexes pages so they can surface in Claude's web search</td><td>You become uncitable in the search that actually drives visibility</td></tr>
+  </tbody>
+</table>
+
+The names and rules are on [Anthropic's crawler page](https://support.anthropic.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler), and each is controlled separately in robots.txt. The trap is treating them as one. Many sites block ClaudeBot to opt out of AI training, a fair choice, and assume they have "blocked Claude." They have not blocked citations; they have only opted out of training. The reverse mistake is worse: blocking Claude-SearchBot or Claude-User, often by accident through a broad firewall rule, quietly removes you from the answers you wanted to win. Our [glossary entry on ClaudeBot](https://geotoolbox.ai/glossary/claudebot) has the per-bot detail.
+
+The rule to remember: training and citation are separate doors. To be cited, keep Claude-SearchBot and Claude-User able to reach you, whatever you decide about ClaudeBot.
+
+## How Claude Decides What to Cite
+
+Anthropic does not publish a ranking formula, so treat everything here as observed behavior, not official rules.
+
+The first thing to know is where Claude's search looks. It does not run a Google-scale index of its own; Claude's web search [appears to be powered by Brave Search](https://techcrunch.com/2025/03/21/anthropic-appears-to-be-using-brave-to-power-web-searches-for-its-claude-chatbot/), which Anthropic lists as a data subprocessor. Practically, the pages Claude can cite track closely to what Brave surfaces, so being findable in Brave, and in conventional search generally, feeds directly into being citable in Claude.
+
+From there a few patterns hold. Claude cites at the passage level, pulling a specific sentence or claim and linking it rather than listing ten results, so a clean, self-contained fact is easier to lift than a buried one. It cross-checks, favoring claims it can corroborate. And it tends to search when a question needs fresh or changing information, leaning on training memory for evergreen facts it already holds. That has a real implication: recency and specificity win citations more reliably than broad keyword coverage does.
+
+One stylistic note. Claude is tuned to be measured and neutral, so overtly promotional copy reads as a weaker source than a plainly stated, verifiable fact. Write for a careful reader, not a sales page.
+
+## First, Can Claude Reach Your Pages?
+
+Every citation tactic assumes Claude can fetch your page, and that assumption fails more often than people think. The reachability rules are the same ones that govern the rest of AI search: a robots.txt that blocks the wrong crawler, a firewall that challenges non-browser traffic, or content that only appears after JavaScript runs.
+
+The JavaScript point matters more for a real-time search fetch than for a patient training crawler. If your key facts are injected client-side, a search-time fetch can see a nearly empty page and move on to a competitor whose content sits in the raw HTML. Confirm that Claude-SearchBot and Claude-User can reach and read your important pages before you spend time on formatting. Our [AI search playbook](https://geotoolbox.ai/blog/how-to-optimize-for-ai-search) covers the checks, and geotoolbox's free [Content Analyzer](https://geotoolbox.ai/features/content-analyzer) tests reachability across the major AI crawlers in under a minute.
+
+## What Gets You Cited in Claude
+
+With the page reachable, citation in Claude comes down to being the clearest, most credible source for a specific claim. The fundamentals match the rest of AI search, with a Claude-shaped emphasis.
+
+1. **Lead with the answer.** State the fact directly, in a self-contained sentence near the top of the relevant section. Claude lifts passages, so a clean claim it can quote in one line beats the same point spread across a paragraph.
+2. **Make it verifiable.** Back claims with specific numbers, named sources, and dates. Claude cross-checks, so a corroborated, sourced statement is safer to cite than an unsupported assertion.
+3. **Be current where it counts.** Because Claude tends to search for fresh or changing information, the pages that win those citations are the ones kept up to date. A visible "last updated" date and current facts help on exactly the queries that trigger a search.
+4. **Establish the author and the entity.** A named author with real credentials, plus clear Person and Organization markup, helps Claude attach trust to a claim. This is where [entity SEO](https://geotoolbox.ai/blog/entity-seo) pays off.
+5. **Keep the tone neutral.** Promotional language reads as a weaker signal. State what is true plainly and let the facts carry the recommendation.
+
+A note on what to skip. You will see "Claude SEO" advice insisting you add an llms.txt file. Anthropic gives no indication its search or models use it, so treat it as unproven rather than a requirement. The same reachable, clear, credible content that earns citations in [ChatGPT](https://geotoolbox.ai/blog/seo-for-chatgpt) and [Perplexity](https://geotoolbox.ai/blog/perplexity-seo) is what earns them in Claude.
+
+## Why Claude Might Not Cite You
+
+If Claude answers your category questions without naming you, the cause is usually one of a short list.
+
+The page is unreachable to the search bot. The most common and most invisible problem: Claude-SearchBot or Claude-User is blocked by robots.txt or a firewall, so your content never enters the pool. Rule this out first.
+
+The content is client-side rendered. If your facts load through JavaScript, a search-time fetch can see an empty shell.
+
+There is nothing fresh to pull. On questions that need current information, a page untouched for a year loses to one that was updated last week.
+
+The claim is buried or unsupported. Claude lifts clean, corroborated passages, so a vague or unsourced assertion is harder to quote and trust.
+
+The copy reads as a sales pitch. Promotional phrasing is treated as a weaker signal than a neutral, verifiable statement.
+
+Work down that list in order, reachability first, because the rest is moot if Claude cannot read the page.
+
+## "Claude SEO" vs "Using Claude for SEO"
+
+It is worth naming the split directly, because the search results for this term are almost entirely the other meaning. "Claude SEO" can mean two unrelated jobs. One is using Claude, often through Claude Code or a plugin, to do your SEO work: draft content, audit a site, generate schema. The other, the subject of this guide, is optimizing your site so Claude cites you when it answers a question. They share a name and nothing else. If you came here to make Claude write your meta descriptions, that is a different and perfectly good use of the tool; this article is about appearing in Claude's answers.
+
+## Is Claude Worth Optimizing For?
+
+On its own, honestly, not much, and that is the right way to think about it. Claude is a smaller slice of AI chat usage than ChatGPT or Google's AI features, its web search is newer, and its retrieval is selective rather than exhaustive. If you were picking one engine to obsess over, it would not be this one.
+
+But that framing is wrong. You do not optimize for Claude as a separate project. The work that earns a Claude citation, reachable pages, clear and current facts, named authors, real authority, is the same work that earns citations everywhere else. So the marginal cost of including Claude is close to zero: keep Claude-SearchBot and Claude-User unblocked, and the content you are already writing does the rest. The audience is worth a note too, because Claude skews toward a technical, professional user, often exactly the high-intent reader a B2B or developer-facing brand wants. Treat Claude as one beneficiary of your wider generative engine optimization work, not a destination in itself.
+
+## Frequently Asked Questions
+
+**Does Claude cite sources?**
+Yes, when it uses web search. Claude's apps and API can search the live web, and answers built from a search include inline, clickable citations to the pages used. With search off, Claude answers from training data with no per-claim sources.
+
+**Should I block ClaudeBot?**
+That is a training decision, not a citation one. Blocking ClaudeBot only opts your content out of training future models. It does not stop Claude from citing you, because citations come through Claude-SearchBot and Claude-User. If you want citations, leave those two unblocked whatever you choose for ClaudeBot.
+
+**Does Claude use Google or Brave?**
+Brave. Claude's web search appears to be powered by Brave Search rather than Google, so being visible in Brave and conventional search feeds into being citable in Claude.
+
+**Is "Claude SEO" about using Claude or appearing in Claude?**
+Both meanings are common, and they are different jobs. Using Claude to produce SEO work is one. Optimizing your site so Claude cites you is the other, and it is what this guide covers.
+
+**How do I check if Claude cites me?**
+Ask it. In a logged-out session with web search on, put the questions your customers would ask and see whether Claude names and links you. Repeat across a few runs, since answers vary.
+
+## Where to Start
+
+Claude is not a special discipline, it is one more engine that now reads the live web and cites what it finds. Get the basics right and it follows the rest of your AI visibility work for free.
+
+Start at the gate the citation guides skip: can Claude actually reach your pages? geotoolbox's free [Content Analyzer](https://geotoolbox.ai/features/content-analyzer) checks whether the major AI crawlers can fetch your page and grades how citable it is from 0 to 100, in under a minute. Confirm Claude-SearchBot and Claude-User are not blocked, then make your best pages clear, current, and plainly sourced.
+
+## Sources
+
+- [Claude can now search the web](https://www.anthropic.com/news/web-search) - Anthropic, 2025
+- [Web search tool](https://docs.claude.com/en/docs/agents-and-tools/tool-use/web-search-tool) - Anthropic API documentation
+- [Does Anthropic crawl data from the web, and how can site owners block the crawler?](https://support.anthropic.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler) - Anthropic (crawler reference)
+- [Anthropic appears to be using Brave to power web search for Claude](https://techcrunch.com/2025/03/21/anthropic-appears-to-be-using-brave-to-power-web-searches-for-its-claude-chatbot/) - TechCrunch, 2025
