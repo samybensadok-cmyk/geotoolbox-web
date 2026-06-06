@@ -10,11 +10,11 @@ import { softwareApplicationSchema, breadcrumbsSchema } from "@/lib/seo-schema"
 export const metadata: Metadata = {
   title: "GEO Scan: AI visibility tool + ChatGPT rank tracker",
   description:
-    "Run generative engine optimization (GEO) scans across ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot. The AI search tracking tool that shows who's cited, who isn't, and how you compare to competitors, in minutes.",
+    "Run generative engine optimization (GEO) scans across ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Bing Copilot, and Grok. The AI search tracking tool that shows who's cited, who isn't, and how you compare to competitors, in minutes.",
   openGraph: {
     title: "GEO Scan: AI visibility tool + ChatGPT rank tracker",
     description:
-      "Run generative engine optimization scans across six AI engines. The AI search tracking tool that shows who's cited, who isn't, and how you compare to competitors, in minutes.",
+      "Run generative engine optimization scans across seven AI engines. The AI search tracking tool that shows who's cited, who isn't, and how you compare to competitors, in minutes.",
   },
   alternates: { canonical: `${siteConfig.url}/features/geo-scan` },
 }
@@ -26,6 +26,7 @@ const engines = [
   { name: "Claude", status: "Mentioned", variant: "cited", delay: 240 },
   { name: "AI Overviews", status: "Recommended", variant: "cited", delay: 360 },
   { name: "Bing Copilot", status: "Not found", variant: "missing", delay: 0 },
+  { name: "Grok", status: "Cited", variant: "cited", delay: 480 },
 ]
 
 const steps = [
@@ -39,9 +40,9 @@ const steps = [
   {
     num: "02",
     verb: "Run",
-    title: "Six engines in parallel",
-    body: "We query ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot with identical prompts in your chosen country.",
-    output: "8 countries · 6 live engines",
+    title: "Seven engines in parallel",
+    body: "We query ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Bing Copilot, and Grok with identical prompts in your chosen country.",
+    output: "8 countries · 7 live engines",
   },
   {
     num: "03",
@@ -56,7 +57,7 @@ const faqs = [
   {
     question: "What AI engines does GEO Scan check?",
     answer:
-      "Six engines today: ChatGPT, Perplexity, Claude, Gemini, Google AI Overviews, and Bing Copilot. Every generative engine optimization (GEO) scan queries all six in parallel, so you get the full picture in one pass.",
+      "Seven engines today: ChatGPT, Perplexity, Claude, Gemini, Google AI Overviews, Bing Copilot, and Grok. Every generative engine optimization (GEO) scan queries all seven in parallel, so you get the full picture in one pass.",
   },
   {
     question: "How does GEO Scan determine if my brand is cited?",
@@ -76,7 +77,7 @@ const faqs = [
   {
     question: "Can I compare my domain against competitors in the same scan?",
     answer:
-      "Yes. Add up to four competitor domains and the scan returns side-by-side citation status for each, across all six engines. You'll see which prompts they win, which they lose, and the citations they earn that you don't.",
+      "Yes. Add up to four competitor domains and the scan returns side-by-side citation status for each, across all seven engines. You'll see which prompts they win, which they lose, and the citations they earn that you don't.",
   },
   {
     question: "How often should I run scans for the same keyword?",
@@ -121,7 +122,7 @@ export default function GeoScanPage() {
       <JsonLd data={[
         softwareApplicationSchema({
           name: "GEO Scan",
-          description: "Run generative engine optimization (GEO) scans across ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot. See who's cited, who isn't, and how you compare to competitors in minutes.",
+          description: "Run generative engine optimization (GEO) scans across ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Bing Copilot, and Grok. See who's cited, who isn't, and how you compare to competitors in minutes.",
           url: `${siteConfig.url}/features/geo-scan`,
         }),
         breadcrumbsSchema([
@@ -143,7 +144,7 @@ export default function GeoScanPage() {
                 See who AI cites for your keywords.
               </h1>
               <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-                One prompt, six engines, every citation. Your domain, competitors, and a visibility score from 0 to 100, in minutes, without training-data guesses.
+                One prompt, seven engines, every citation. Your domain, competitors, and a visibility score from 0 to 100, in minutes, without training-data guesses.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Link
@@ -257,7 +258,7 @@ export default function GeoScanPage() {
                   <div className="flex items-baseline gap-1.5">
                     <span className="font-mono text-xl font-bold tabular-nums text-gray-900">57</span>
                     <span className="font-mono text-xs text-gray-500">/100</span>
-                    <span className="ml-3 font-mono text-[11px] text-gray-500">6 engines &middot; 2.3s</span>
+                    <span className="ml-3 font-mono text-[11px] text-gray-500">7 engines &middot; 2.3s</span>
                   </div>
                 </div>
               </div>

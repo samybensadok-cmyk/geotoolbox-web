@@ -10,6 +10,7 @@ const HERO_ENGINES: { id: EngineId; label: string }[] = [
   { id: "claude",     label: "Claude" },
   { id: "aio",        label: "AI Overviews" },
   { id: "copilot",    label: "Bing Copilot" },
+  { id: "grok",       label: "Grok" },
 ]
 
 export function Hero() {
@@ -81,7 +82,7 @@ export function Hero() {
             </h1>
 
             <p className="stagger-2 mt-6 max-w-xl text-lg leading-relaxed text-gray-600">
-              One scan shows exactly how ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot describe your brand. The measurement layer for generative engine optimization and AI search visibility.
+              One scan shows exactly how ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Bing Copilot, and Grok describe your brand. The measurement layer for generative engine optimization and AI search visibility.
             </p>
 
             <div className="stagger-2 mt-8 flex flex-wrap items-center gap-3">

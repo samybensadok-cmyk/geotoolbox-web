@@ -24,7 +24,7 @@ export default function AboutPage() {
             Built for the AI search era.
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-gray-700">
-            GEO Toolbox is a measurement and intelligence layer for generative engine optimization. One scan, six engines, every citation, so teams can see, track, and shape how ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot describe their brand.
+            GEO Toolbox is a measurement and intelligence layer for generative engine optimization. One scan, seven engines, every citation, so teams can see, track, and shape how ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Bing Copilot, and Grok describe their brand.
           </p>
         </div>
       </section>
@@ -37,7 +37,7 @@ export default function AboutPage() {
               AI engines are becoming the default interface between questions and answers. That shift rewrites the rules of visibility: there&apos;s no SERP to scroll, no ten blue links, just a generated response that either cites you or doesn&apos;t. Generative engine optimization (GEO) is the discipline that forms around that new reality, and measurement is the foundation.
             </p>
             <p>
-              GEO Toolbox exists to make that layer legible. Every scan runs a prompt across six engines, aggregates every domain and URL cited, and returns an AI visibility score from 0 to 100 alongside the raw citations, yours and your competitors&apos;. Eight connected tools build on top of that primitive: scanning, agent readiness, content grading, briefing, competitive tracking, community monitoring, and AI-driven analytics.
+              GEO Toolbox exists to make that layer legible. Every scan runs a prompt across seven engines, aggregates every domain and URL cited, and returns an AI visibility score from 0 to 100 alongside the raw citations, yours and your competitors&apos;. Eight connected tools build on top of that primitive: scanning, agent readiness, content grading, briefing, competitive tracking, community monitoring, and AI-driven analytics.
             </p>
             <p>
               The tool is built and operated by Samy Ben Sadok, its founder and an SEO and growth strategist with over a decade of experience. It offers a free plan plus paid plans from $49/mo, supports eight countries, and is used daily by agency teams and in-house SEO professionals tracking how AI sees their brands.

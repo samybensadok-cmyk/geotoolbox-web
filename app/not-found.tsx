@@ -27,7 +27,7 @@ export default function NotFound() {
                 >
                   <p className="font-mono text-[10px] font-semibold uppercase tracking-widest text-accent-700">Run a scan</p>
                   <p className="mt-2 text-[15px] font-semibold text-gray-900">Enter the tool</p>
-                  <p className="mt-1 text-[13px] leading-relaxed text-gray-600">Visibility across 6 AI engines in minutes.</p>
+                  <p className="mt-1 text-[13px] leading-relaxed text-gray-600">Visibility across 7 AI engines in minutes.</p>
                 </Link>
               </li>
               <li>
@@ -79,7 +79,7 @@ export default function NotFound() {
               <p className="mt-2 text-2xl font-bold tracking-tight text-gray-900">404: page not found</p>
               {/* Mock results */}
               <div className="mt-6 space-y-2.5">
-                {["ChatGPT", "Perplexity", "Gemini", "Claude", "Google AI Overviews", "Bing Copilot"].map((engine) => (
+                {["ChatGPT", "Perplexity", "Gemini", "Claude", "Google AI Overviews", "Bing Copilot", "Grok"].map((engine) => (
                   <div key={engine} className="flex items-center justify-between rounded-xl border border-gray-100 bg-white px-4 py-3">
                     <p className="text-[13px] font-semibold text-gray-900">{engine}</p>
                     <span className="font-mono text-[10px] font-semibold uppercase tracking-widest text-gray-500">No citation</span>
@@ -87,7 +87,7 @@ export default function NotFound() {
                 ))}
               </div>
               <p className="mt-6 font-mono text-[11px] text-gray-600">
-                0 of 6 engines know this URL. Try a scan on something real.
+                0 of 7 engines know this URL. Try a scan on something real.
               </p>
             </div>
           </div>

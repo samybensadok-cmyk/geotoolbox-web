@@ -10,6 +10,7 @@ const engines = [
   { name: "Claude",       status: "Mentioned", variant: "cited",   pinging: false },
   { name: "AI Overviews", status: "Cited",     variant: "cited",   pinging: false },
   { name: "Bing Copilot", status: "Not found", variant: "missing", pinging: false },
+  { name: "Grok",         status: "Cited",     variant: "cited",   pinging: false },
 ]
 
 export function HeroMockup() {
@@ -71,7 +72,7 @@ export function HeroMockup() {
         <div className="flex items-baseline gap-1.5">
           <span className="font-mono text-xl font-bold tabular-nums text-gray-900">57</span>
           <span className="font-mono text-xs text-gray-500">/100</span>
-          <span className="ml-3 font-mono text-[11px] text-gray-500">6 engines &middot; 2.3s</span>
+          <span className="ml-3 font-mono text-[11px] text-gray-500">7 engines &middot; 2.3s</span>
         </div>
       </div>
     </div>

@@ -14,6 +14,7 @@ export function Problem() {
     "Claude mentions",
     "Google AI Overviews",
     "Bing Copilot responses",
+    "Grok answers",
   ]
 
   return (

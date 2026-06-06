@@ -1,6 +1,6 @@
 import Link from "next/link"
 
-/* ——— Card 1: Scan — 6 engines with pulsing citation dots ——— */
+/* ——— Card 1: Scan — 7 engines with pulsing citation dots ——— */
 function ScanVisual() {
   const engines = [
     { name: "ChatGPT", cited: true, delay: 0 },
@@ -9,6 +9,7 @@ function ScanVisual() {
     { name: "Claude", cited: true, delay: 300 },
     { name: "AI Overviews", cited: true, delay: 450 },
     { name: "Bing Copilot", cited: false, delay: 0 },
+    { name: "Grok", cited: true, delay: 600 },
   ]
   return (
     <div className="flex h-full min-h-[260px] items-center justify-center p-8">
@@ -145,7 +146,7 @@ function StatusDot({ cited }: { cited: boolean }) {
 /* ——— Section ——— */
 export function Features() {
   const cards = [
-    { visual: <ScanVisual />, tag: "Scan", title: "Every engine on a single prompt", body: "ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot — scanned in one run, side by side.", span: "md:col-span-2" },
+    { visual: <ScanVisual />, tag: "Scan", title: "Every engine on a single prompt", body: "ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Bing Copilot, and Grok — scanned in one run, side by side.", span: "md:col-span-2" },
     { visual: <ScoreVisual />, tag: "Score", title: "One visibility score, week over week", body: "A single 0-100 number your team can align on. Tracked weekly, alerted on change, benchmarked against competitors.", span: "md:col-span-1" },
     { visual: <AnalyzeVisual />, tag: "Analyze", title: "See what makes AI cite you", body: "19 on-page signals graded per URL: entity clarity, schema, authority, freshness, structure. Fix the lowest-scoring first.", span: "md:col-span-1" },
     { visual: <IntelVisual />, tag: "Intel", title: "See who gets recommended instead", body: "Per-prompt competitor citations, co-cited domains, and real-time alerts the day a competitor overtakes you.", span: "md:col-span-2" },

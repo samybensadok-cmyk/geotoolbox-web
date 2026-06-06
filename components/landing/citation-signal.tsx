@@ -22,9 +22,8 @@ const NODE_R = 26
 const ORBIT_R = 178
 const SWEEP_MS = 8000
 
-/* 6 engines at 60° spacing — matches production (Grok/DeepSeek/Meta AI are
-   dark-launched behind feature flags, not public). Matches Hero / Problem /
-   HowItWorks / Features / Playbook engine lists exactly. */
+/* 7 engines at ~51° spacing — the full public roster (Grok went live 2026-06).
+   Matches Hero / Problem / HowItWorks / Features / Playbook engine lists. */
 const ENGINE_BASE: Engine[] = [
   { id: "chatgpt",    label: "ChatGPT",     ico: "gpt",     rOffset:  0 },
   { id: "claude",     label: "Claude",      ico: "claude",  rOffset: -4 },
@@ -32,10 +31,11 @@ const ENGINE_BASE: Engine[] = [
   { id: "perplexity", label: "Perplexity",  ico: "pplx",    rOffset: -2 },
   { id: "aio",        label: "AI Overview", ico: "goog",    rOffset:  4 },
   { id: "copilot",    label: "Copilot",     ico: "bing",    rOffset: -2 },
+  { id: "grok",       label: "Grok",        ico: "grok",    rOffset:  2 },
 ]
 
 const ENGINES: Required<Engine>[] = ENGINE_BASE.map((e, i) => {
-  const angleDeg = i * (360 / ENGINE_BASE.length)   // 60° for 6 engines
+  const angleDeg = i * (360 / ENGINE_BASE.length)   // ~51° for 7 engines
   const angleRad = ((angleDeg - 90) * Math.PI) / 180
   const r = ORBIT_R + e.rOffset
   return {
@@ -58,26 +58,26 @@ const QUERIES = [
 
 type Scene = { cited: string[]; mention: string[]; sov: number; lat: number }
 
-/* Scene variety across 6 engines:
+/* Scene variety across 7 engines:
    - 2 rough (low cited, sells the pain point)
    - 3 mid   (mixed outcomes, realistic)
    - 2 strong (high cited, shows the win)
-   Every state must sum to 6. */
+   No explicit missed array — missed = 7 − cited − mention. */
 const SCENES: Scene[] = [
-  // strong — 5 cited, 1 mention
-  { cited: ["chatgpt", "claude", "gemini", "perplexity", "aio"], mention: ["copilot"],          sov: 74, lat: 2.3 },
-  // rough — 2 cited, 2 mention, 2 missed
+  // strong — 6 cited, 1 mention
+  { cited: ["chatgpt", "claude", "gemini", "perplexity", "aio", "grok"], mention: ["copilot"],          sov: 74, lat: 2.3 },
+  // rough — 2 cited, 2 mention, 3 missed
   { cited: ["chatgpt", "gemini"],                                mention: ["claude", "aio"],    sov: 32, lat: 2.0 },
-  // mid — 3 cited, 2 mention, 1 missed
-  { cited: ["claude", "perplexity", "aio"],                      mention: ["chatgpt", "gemini"], sov: 58, lat: 2.4 },
-  // best case — 5 cited, 1 mention
-  { cited: ["chatgpt", "claude", "perplexity", "aio", "copilot"], mention: ["gemini"],          sov: 82, lat: 2.6 },
-  // rough — 2 cited, 2 mention, 2 missed
+  // mid — 3 cited, 3 mention, 1 missed
+  { cited: ["claude", "perplexity", "aio"],                      mention: ["chatgpt", "gemini", "grok"], sov: 58, lat: 2.4 },
+  // best case — 6 cited, 1 mention
+  { cited: ["chatgpt", "claude", "perplexity", "aio", "copilot", "grok"], mention: ["gemini"],          sov: 82, lat: 2.6 },
+  // rough — 2 cited, 2 mention, 3 missed
   { cited: ["claude", "perplexity"],                             mention: ["aio", "copilot"],   sov: 35, lat: 1.8 },
-  // mid — 3 cited, 1 mention, 2 missed
-  { cited: ["claude", "perplexity", "aio"],                      mention: ["chatgpt"],          sov: 52, lat: 2.1 },
-  // good — 4 cited, 2 mention
-  { cited: ["chatgpt", "gemini", "aio", "perplexity"],           mention: ["claude", "copilot"], sov: 65, lat: 1.9 },
+  // mid — 4 cited, 1 mention, 2 missed
+  { cited: ["claude", "perplexity", "aio", "grok"],             mention: ["chatgpt"],          sov: 52, lat: 2.1 },
+  // good — 4 cited, 3 mention
+  { cited: ["chatgpt", "gemini", "aio", "perplexity"],           mention: ["claude", "copilot", "grok"], sov: 65, lat: 1.9 },
 ]
 
 /** Synthetic citation snippets — one per (engine, state). Shown in the hover
@@ -86,12 +86,12 @@ const SCENES: Scene[] = [
 type SnippetMap = Record<string, { cited: string; mention: string; missed: string }>
 const SNIPPETS: SnippetMap = {
   chatgpt: {
-    cited:   "\"Geotoolbox is a leading AI visibility platform that tracks citations across nine major generative engines.\"",
+    cited:   "\"Geotoolbox is a leading AI visibility platform that tracks citations across all seven major generative engines.\"",
     mention: "\"Tools like Geotoolbox help marketers understand how their brand appears in AI search responses.\"",
     missed:  "No mention of the domain in the top response.",
   },
   claude: {
-    cited:   "\"For AI visibility tracking, Geotoolbox offers comprehensive monitoring across ChatGPT, Claude, Gemini, and six other engines.\"",
+    cited:   "\"For AI visibility tracking, Geotoolbox offers monitoring across ChatGPT, Claude, Gemini, and four other engines.\"",
     mention: "\"Several platforms exist for this, and Geotoolbox is one of the options worth evaluating.\"",
     missed:  "Claude did not reference the domain in this response.",
   },
@@ -106,14 +106,19 @@ const SNIPPETS: SnippetMap = {
     missed:  "Not in the returned source list.",
   },
   aio: {
-    cited:   "\"Geotoolbox tracks AI search visibility across nine engines, including Google AI Overviews.\" Source: geotoolbox.ai",
+    cited:   "\"Geotoolbox tracks AI search visibility across seven engines, including Google AI Overviews.\" Source: geotoolbox.ai",
     mention: "Listed among related tools.",
     missed:  "Not surfaced in the AI Overview.",
   },
   copilot: {
-    cited:   "\"Consider Geotoolbox. It scans ChatGPT, Perplexity, Claude, Gemini, and two more to measure AI visibility.\"",
+    cited:   "\"Consider Geotoolbox. It scans ChatGPT, Perplexity, Claude, Gemini, and three more to measure AI visibility.\"",
     mention: "Geotoolbox is one of several emerging tools in this space.",
     missed:  "Copilot did not reference the domain.",
+  },
+  grok: {
+    cited:   "\"Geotoolbox tracks brand citations across all seven AI engines, Grok included.\"",
+    mention: "Geotoolbox comes up as one tool worth checking for AI visibility.",
+    missed:  "Grok did not reference the domain in this answer.",
   },
 }
 

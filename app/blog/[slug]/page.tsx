@@ -56,7 +56,7 @@ const relatedFeatures = [
   {
     slug: "geo-scan",
     name: "GEO Scan",
-    blurb: "Measure how 6 AI engines cite your brand for any keyword. Baseline in minutes.",
+    blurb: "Measure how 7 AI engines cite your brand for any keyword. Baseline in minutes.",
     bg: "bg-[var(--surface-mint)]",
     border: "border-[var(--surface-mint-border)]",
     dot: "bg-accent-500",

@@ -10,11 +10,11 @@ import { softwareApplicationSchema, breadcrumbsSchema } from "@/lib/seo-schema"
 export const metadata: Metadata = {
   title: "Competitor Intel: AI visibility tracking for competitors",
   description:
-    "Track how competitors gain or lose AI citations across ChatGPT, Perplexity, Claude, Gemini, Google AI Overviews, and Bing Copilot. AI share-of-voice, content gap matrix, and real-time threat alerts when a rival starts outranking you in AI answer engines.",
+    "Track how competitors gain or lose AI citations across ChatGPT, Perplexity, Claude, Gemini, Google AI Overviews, Bing Copilot, and Grok. AI share-of-voice, content gap matrix, and real-time threat alerts when a rival starts outranking you in AI answer engines.",
   openGraph: {
     title: "Competitor Intel: AI visibility tracking for competitors",
     description:
-      "Track how competitors gain or lose AI citations across six engines. AI share-of-voice, content gap matrix, and real-time threat alerts when a rival starts outranking you.",
+      "Track how competitors gain or lose AI citations across seven engines. AI share-of-voice, content gap matrix, and real-time threat alerts when a rival starts outranking you.",
   },
   alternates: { canonical: `${siteConfig.url}/features/competitor-intel` },
 }
@@ -39,12 +39,12 @@ const faqs = [
   {
     question: "What does Competitor Intel track?",
     answer:
-      "How competitor domains' AI citations change over time, which engines cite them, for which keywords, and how their AI visibility trends compare to yours. It's longitudinal tracking across ChatGPT, Perplexity, Claude, Gemini, Google AI Overviews, and Bing Copilot, not a one-shot snapshot.",
+      "How competitor domains' AI citations change over time, which engines cite them, for which keywords, and how their AI visibility trends compare to yours. It's longitudinal tracking across ChatGPT, Perplexity, Claude, Gemini, Google AI Overviews, Bing Copilot, and Grok, not a one-shot snapshot.",
   },
   {
     question: "How many competitors can I track?",
     answer:
-      "Up to three competitor domains on the current plan, with higher limits planned for upper tiers as they ship. Every tracked competitor gets side-by-side citation tracking across all six AI engines, aggregated for AI visibility trends.",
+      "Up to three competitor domains on the current plan, with higher limits planned for upper tiers as they ship. Every tracked competitor gets side-by-side citation tracking across all seven AI engines, aggregated for AI visibility trends.",
   },
   {
     question: "How is this different from the competitor comparison in GEO Scan?",
@@ -115,7 +115,7 @@ export default function CompetitorIntelPage() {
       <JsonLd data={[
         softwareApplicationSchema({
           name: "Competitor Intel",
-          description: "Track new content published by competitors. Detect new pages, lost rankings, publishing velocity, and AI threat alerts across six engines.",
+          description: "Track new content published by competitors. Detect new pages, lost rankings, publishing velocity, and AI threat alerts across seven engines.",
           url: `${siteConfig.url}/features/competitor-intel`,
         }),
         breadcrumbsSchema([

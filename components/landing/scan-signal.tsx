@@ -34,7 +34,7 @@ export function ScanSignal() {
             </h2>
           </div>
           <p className="max-w-xl text-base leading-relaxed text-gray-300">
-            A single prompt runs through six AI engines in parallel. Green means you were cited. Amber means you were mentioned without a link. Red means you were left out entirely.
+            A single prompt runs through seven AI engines in parallel. Green means you were cited. Amber means you were mentioned without a link. Red means you were left out entirely.
           </p>
         </div>
 

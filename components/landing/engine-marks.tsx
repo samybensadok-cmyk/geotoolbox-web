@@ -7,7 +7,7 @@
  *
  * Adding an engine: extend the discriminated union + add a case.
  * Removing an engine: flip the dark-launch flag in the PHP app and remove
- *   here. Keep in sync with the 6-engine roster documented in
+ *   here. Keep in sync with the 7-engine roster documented in
  *   vault/reference/marketing-design-system.md.
  */
 
@@ -18,6 +18,7 @@ export type EngineId =
   | "claude"
   | "aio"
   | "copilot"
+  | "grok"
 
 export function EngineMark({ engine, className = "h-3.5 w-3.5" }: { engine: EngineId; className?: string }) {
   switch (engine) {
@@ -123,6 +124,15 @@ export function EngineMark({ engine, className = "h-3.5 w-3.5" }: { engine: Engi
             strokeLinecap="round"
           />
           <circle cx="3" cy="12.5" r="1.2" fill="currentColor" />
+        </svg>
+      )
+
+    /* Grok (xAI) — angular twin slash */
+    case "grok":
+      return (
+        <svg viewBox="0 0 16 16" className={className} aria-hidden="true">
+          <path d="M3 13 L13 3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+          <path d="M6.5 13 L11 8.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
         </svg>
       )
   }

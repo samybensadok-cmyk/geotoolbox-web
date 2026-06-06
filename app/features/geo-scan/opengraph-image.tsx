@@ -33,7 +33,7 @@ export default function OGImage() {
             See who AI cites for your keywords.
           </div>
           <div style={{ fontSize: 20, color: "#4b5563", marginTop: 20, lineHeight: 1.4 }}>
-            One prompt, six engines, every citation, in minutes.
+            One prompt, seven engines, every citation, in minutes.
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: "auto", fontSize: 15, color: "#6b7280" }}>
@@ -64,6 +64,7 @@ export default function OGImage() {
               { name: "Claude", cited: true },
               { name: "AI Overviews", cited: true },
               { name: "Bing Copilot", cited: false },
+              { name: "Grok", cited: true },
             ].map((e) => (
               <div key={e.name} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: 17 }}>
                 <span style={{ color: "#1f2937", fontWeight: 500 }}>{e.name}</span>

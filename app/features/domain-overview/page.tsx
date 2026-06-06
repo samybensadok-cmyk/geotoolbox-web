@@ -10,11 +10,11 @@ import { softwareApplicationSchema, breadcrumbsSchema } from "@/lib/seo-schema"
 export const metadata: Metadata = {
   title: "Domain Overview: AI brand monitoring dashboard",
   description:
-    "Every citation, AI competitor, co-cited domain, and topical authority signal for your domain, aggregated across every scan. AI brand monitoring for ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, and Bing Copilot. The dashboard agencies keep open all day.",
+    "Every citation, AI competitor, co-cited domain, and topical authority signal for your domain, aggregated across every scan. AI brand monitoring for ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Bing Copilot, and Grok. The dashboard agencies keep open all day.",
   openGraph: {
     title: "Domain Overview: AI brand monitoring dashboard",
     description:
-      "Every citation, AI competitor, co-cited domain, and topical authority signal for your domain, aggregated across every scan. AI brand monitoring for six engines in one dashboard.",
+      "Every citation, AI competitor, co-cited domain, and topical authority signal for your domain, aggregated across every scan. AI brand monitoring for seven engines in one dashboard.",
   },
   alternates: { canonical: `${siteConfig.url}/features/domain-overview` },
 }
