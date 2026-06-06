@@ -36,7 +36,7 @@ export function CTA() {
           {/* Right: action block */}
           <div className="flex flex-col gap-4 lg:items-start">
             <p className="max-w-md text-base leading-relaxed text-gray-300">
-              Run your first scan in minutes. Visibility score, engine-by-engine citations, and competitor benchmarks. Free while in beta.
+              Run your first scan in minutes. Visibility score, engine-by-engine citations, and competitor benchmarks. Free plan, no credit card.
             </p>
             <div className="mt-2 flex flex-wrap items-center gap-3">
               <Link
@@ -56,7 +56,7 @@ export function CTA() {
               </Link>
             </div>
             <p className="mt-1 text-xs text-gray-400">
-              1,000 free credits/month &middot; First scan in under two minutes
+              1,000 free credits/month &middot; paid plans from $49/mo
             </p>
           </div>
         </div>

@@ -343,7 +343,7 @@ export default function ContentAnalyzerPage() {
             <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
               Grade your first page.
             </h2>
-            <p className="mt-2 text-base text-gray-300">Free while in beta. No credit card. Results in under a minute.</p>
+            <p className="mt-2 text-base text-gray-300">Free plan, no credit card. Results in under a minute.</p>
           </div>
           <Link href="/app" prefetch={false} className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]">
             Analyze a page

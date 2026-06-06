@@ -330,7 +330,7 @@ export default function CommunityPage() {
             <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
               Map your community citations.
             </h2>
-            <p className="mt-2 text-base text-gray-300">Free while in beta. Runs on every scan.</p>
+            <p className="mt-2 text-base text-gray-300">Free plan. Runs on every scan.</p>
           </div>
           <Link href="/app" prefetch={false} className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]">
             Try it for free

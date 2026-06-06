@@ -318,7 +318,7 @@ export default function FeaturesPage() {
                 </svg>
               </Link>
               <p className="font-mono text-[11px] text-gray-500">
-                Free while in beta &middot; No credit card
+                Free plan &middot; no credit card
               </p>
             </div>
           </div>

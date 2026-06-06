@@ -74,7 +74,7 @@ const faqs = [
   {
     question: "Can I download the brief?",
     answer:
-      "Yes. PDF or XLSX export is free while in beta. Use PDF to share with freelancers and stakeholders; XLSX for spreadsheet-based workflows or ingestion into your own editorial pipeline.",
+      "Yes. PDF or XLSX export is included on every plan. Use PDF to share with freelancers and stakeholders; XLSX for spreadsheet-based workflows or ingestion into your own editorial pipeline.",
   },
   {
     question: "Does it incorporate my Search Console data?",
@@ -268,10 +268,10 @@ export default function ContentBriefPage() {
             <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
               Generate your first brief.
             </h2>
-            <p className="mt-2 text-base text-gray-300">Free while in beta. No credit card.</p>
+            <p className="mt-2 text-base text-gray-300">Free plan, no credit card.</p>
           </div>
           <Link href="/app" prefetch={false} className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]">
-            Start free trial
+            Try it for free
             <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
             </svg>

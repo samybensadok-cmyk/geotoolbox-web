@@ -160,7 +160,7 @@ export default function GeoScanPage() {
                 </Link>
               </div>
               <p className="mt-4 text-xs text-gray-600">
-                No credit card &middot; Free while in beta
+                No credit card &middot; Free plan
               </p>
             </div>
 
@@ -347,7 +347,7 @@ export default function GeoScanPage() {
               Run your first GEO Scan.
             </h2>
             <p className="mt-2 text-base text-gray-300">
-              Free while in beta. No credit card. Results in minutes.
+              Free plan, no credit card. Results in minutes.
             </p>
           </div>
           <Link

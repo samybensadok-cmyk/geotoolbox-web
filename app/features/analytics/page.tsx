@@ -467,7 +467,7 @@ export default function AnalyticsPage() {
               Connect your analytics.
             </h2>
             <p className="mt-2 text-base text-gray-300">
-              Free while in beta. Google OAuth verification in progress; email{" "}
+              Free plan, no credit card. Google OAuth verification in progress; email{" "}
               <a href="mailto:samy@geotoolbox.ai" className="font-semibold text-white underline underline-offset-2 hover:text-accent-400">
                 samy@geotoolbox.ai
               </a>{" "}

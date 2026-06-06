@@ -59,7 +59,7 @@ export function Hero() {
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-500 opacity-75" />
                   <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent-600" />
                 </span>
-                <span className="font-semibold">Free while in beta</span>
+                <span className="font-semibold">Free plan</span>
                 <span aria-hidden="true" className="text-accent-400">&middot;</span>
                 <span>1,000 credits/month</span>
               </span>
