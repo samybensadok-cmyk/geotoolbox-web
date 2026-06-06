@@ -73,7 +73,7 @@ export function ComparisonTable() {
                   {g.rows.map((row) => (
                     <tr key={row.label} className="border-b border-gray-100">
                       <th scope="row" className="py-3 pr-4 text-left text-[13px] font-normal text-gray-700">{row.label}</th>
-                      {row.values.map((v, i) => (
+                      {row.values.slice(1).map((v, i) => (
                         <td
                           key={i}
                           className={cn(

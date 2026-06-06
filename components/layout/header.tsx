@@ -140,13 +140,6 @@ export function Header() {
             Blog
           </Link>
 
-          <Link
-            href="/glossary"
-            className="flex min-h-[40px] items-center rounded-md px-3 text-[13px] font-medium text-gray-700 transition-colors hover:text-gray-900 hover:bg-gray-50"
-          >
-            Glossary
-          </Link>
-
           <div className="ml-3 flex items-center gap-2">
             <Link
               href={siteConfig.appLoginUrl}
@@ -246,14 +239,6 @@ export function Header() {
               className="rounded-lg px-2 py-3 text-sm font-medium text-gray-900 hover:bg-gray-50"
             >
               Blog
-            </Link>
-
-            <Link
-              href="/glossary"
-              onClick={() => setMobileOpen(false)}
-              className="rounded-lg px-2 py-3 text-sm font-medium text-gray-900 hover:bg-gray-50"
-            >
-              Glossary
             </Link>
 
             <div className="mt-4 flex flex-col gap-2">

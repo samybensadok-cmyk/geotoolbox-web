@@ -102,6 +102,21 @@ export default function PricingPage() {
         <div className="mx-auto mt-12 max-w-7xl">
           <PricingCards />
         </div>
+
+        <div className="mx-auto mt-6 max-w-7xl">
+          <div className="flex flex-col items-center justify-between gap-3 rounded-2xl border border-gray-200 bg-gray-50 px-6 py-4 sm:flex-row">
+            <p className="text-[14px] text-gray-700">
+              <span className="font-semibold text-gray-900">Just exploring?</span> The Free plan gives you 1,000 credits a month across 3 engines, no credit card.
+            </p>
+            <Link
+              href={siteConfig.appSignupUrl}
+              prefetch={false}
+              className="shrink-0 rounded-full border border-gray-300 px-5 py-2 text-[14px] font-semibold text-gray-900 transition-colors hover:border-gray-400 hover:bg-white"
+            >
+              Start free
+            </Link>
+          </div>
+        </div>
       </section>
 
       {/* How credits work — the make-or-break explainer */}

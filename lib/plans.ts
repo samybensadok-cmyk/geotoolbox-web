@@ -177,8 +177,11 @@ export const PLANS: Plan[] = [
 // Columns are the 5 self-serve tiers; Enterprise is handled as a strip, not a
 // column (per pricing-page best practice). Values map by PlanId order:
 // [free, starter, consultant, agency, scale].
+// Comparison columns = paid self-serve tiers only (Free is a standalone strip,
+// Ahrefs-style). NOTE: each COMPARE_GROUPS row.values still has 5 entries in
+// PlanId order [free, starter, consultant, agency, scale]; the table slices off
+// the free value (index 0) at render so these stay in sync.
 export const COMPARE_COLUMNS: { id: PlanId; name: string }[] = [
-  { id: "free", name: "Free" },
   { id: "starter", name: "Starter" },
   { id: "consultant", name: "Consultant" },
   { id: "agency", name: "Agency" },

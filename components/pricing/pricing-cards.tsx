@@ -5,7 +5,9 @@ import { useState } from "react"
 import { cn } from "@/lib/utils"
 import { PLANS, type Plan } from "@/lib/plans"
 
-const SELF_SERVE = PLANS.filter((p) => p.id !== "enterprise")
+// Free + Enterprise are handled as standalone strips (Ahrefs-style); the cards
+// and the comparison table show the paid self-serve tiers only.
+const SELF_SERVE = PLANS.filter((p) => p.id !== "enterprise" && p.id !== "free")
 
 function priceDisplay(plan: Plan, annual: boolean) {
   if (plan.priceMonthly === null) return { big: "Custom", sub: null, save: null }
@@ -63,7 +65,7 @@ export function PricingCards() {
       </div>
 
       {/* Cards */}
-      <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+      <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {SELF_SERVE.map((plan) => {
           const p = priceDisplay(plan, annual)
           return (
