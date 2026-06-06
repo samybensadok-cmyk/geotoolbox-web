@@ -127,6 +127,13 @@ export function Header() {
           </div>
 
           <Link
+            href="/pricing"
+            className="flex min-h-[40px] items-center rounded-md px-3 text-[13px] font-medium text-gray-700 transition-colors hover:text-gray-900 hover:bg-gray-50"
+          >
+            Pricing
+          </Link>
+
+          <Link
             href="/blog"
             className="flex min-h-[40px] items-center rounded-md px-3 text-[13px] font-medium text-gray-700 transition-colors hover:text-gray-900 hover:bg-gray-50"
           >
@@ -224,6 +231,14 @@ export function Header() {
                 </Link>
               </div>
             )}
+
+            <Link
+              href="/pricing"
+              onClick={() => setMobileOpen(false)}
+              className="rounded-lg px-2 py-3 text-sm font-medium text-gray-900 hover:bg-gray-50"
+            >
+              Pricing
+            </Link>
 
             <Link
               href="/blog"
