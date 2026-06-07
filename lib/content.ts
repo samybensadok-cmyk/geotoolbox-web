@@ -37,6 +37,7 @@ export type Post = {
   tags: string[]
   image?: string
   draft: boolean
+  noindex: boolean
   readingTime: number
   content: string
 }
@@ -57,11 +58,13 @@ export function getAllPosts(): Post[] {
         tags: data.tags ?? [],
         image: data.image,
         draft: data.draft ?? false,
+        noindex: data.noindex ?? false,
         readingTime: calculateReadingTime(content),
         content,
       } as Post
     })
     .filter((p) => !p.draft)
+    .filter((p) => !p.noindex)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 }
 
@@ -79,6 +82,7 @@ export function getPostBySlug(slug: string): Post | undefined {
     tags: data.tags ?? [],
     image: data.image,
     draft: data.draft ?? false,
+    noindex: data.noindex ?? false,
     readingTime: calculateReadingTime(content),
     content,
   }

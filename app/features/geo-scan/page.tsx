@@ -8,11 +8,11 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema, breadcrumbsSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
-  title: "GEO Scan: AI visibility tool + ChatGPT rank tracker",
+  title: "AI Visibility Tool for AI Search",
   description:
     "Run generative engine optimization (GEO) scans across ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Bing Copilot, and Grok. The AI search tracking tool that shows who's cited, who isn't, and how you compare to competitors, in minutes.",
   openGraph: {
-    title: "GEO Scan: AI visibility tool + ChatGPT rank tracker",
+    title: "AI Visibility Tool for AI Search",
     description:
       "Run generative engine optimization scans across seven AI engines. The AI search tracking tool that shows who's cited, who isn't, and how you compare to competitors, in minutes.",
   },

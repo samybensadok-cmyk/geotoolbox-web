@@ -8,11 +8,11 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema, breadcrumbsSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
-  title: "Domain Overview: AI brand monitoring dashboard",
+  title: "AI Brand Monitoring Dashboard",
   description:
     "Every citation, AI competitor, co-cited domain, and topical authority signal for your domain, aggregated across every scan. AI brand monitoring for ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Bing Copilot, and Grok. The dashboard agencies keep open all day.",
   openGraph: {
-    title: "Domain Overview: AI brand monitoring dashboard",
+    title: "AI Brand Monitoring Dashboard",
     description:
       "Every citation, AI competitor, co-cited domain, and topical authority signal for your domain, aggregated across every scan. AI brand monitoring for seven engines in one dashboard.",
   },

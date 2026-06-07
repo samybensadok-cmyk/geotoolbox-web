@@ -8,11 +8,11 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema, breadcrumbsSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
-  title: "Content Brief & Draft: AI content optimization for GEO",
+  title: "AI Content Optimization Tool",
   description:
     "Brief, draft, and grade content built for generative engine optimization. Outline, entities, facts coverage, SERP gap analysis, and dual Structure + AI Readiness scoring. The AI content optimization workflow that earns citations in ChatGPT and AI Overviews.",
   openGraph: {
-    title: "Content Brief & Draft: AI content optimization for GEO",
+    title: "AI Content Optimization Tool",
     description:
       "Brief, draft, and grade content built for generative engine optimization. Outline, entities, facts coverage, SERP gap analysis, and dual Structure + AI Readiness scoring.",
   },

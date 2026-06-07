@@ -8,11 +8,11 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema, breadcrumbsSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
-  title: "Content Analyzer: AI SEO audit + LLMs.txt and citability check",
+  title: "AI SEO Tool for AI Citability",
   description:
     "Grade any URL from A to F for AI citability. 19 signals across schema markup, llms.txt, 9 AI bot access checks, X-Robots-Tag, freshness, and entity clarity. The AI SEO audit that tells you exactly why ChatGPT, Perplexity, and Google AI Overviews aren't citing your pages.",
   openGraph: {
-    title: "Content Analyzer: AI SEO audit + LLMs.txt and citability check",
+    title: "AI SEO Tool for AI Citability",
     description:
       "Grade any URL from A to F on 19 signals: schema markup, llms.txt, 9 AI bot access checks, X-Robots-Tag, freshness, and entity clarity. The AI SEO audit that tells you why ChatGPT, Perplexity, and Google AI Overviews aren't citing your pages.",
   },

@@ -8,11 +8,11 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema, breadcrumbsSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
-  title: "Competitor Intel: AI visibility tracking for competitors",
+  title: "AI Competitor Tracking Tool",
   description:
     "Track how competitors gain or lose AI citations across ChatGPT, Perplexity, Claude, Gemini, Google AI Overviews, Bing Copilot, and Grok. AI share-of-voice, content gap matrix, and real-time threat alerts when a rival starts outranking you in AI answer engines.",
   openGraph: {
-    title: "Competitor Intel: AI visibility tracking for competitors",
+    title: "AI Competitor Tracking Tool",
     description:
       "Track how competitors gain or lose AI citations across seven engines. AI share-of-voice, content gap matrix, and real-time threat alerts when a rival starts outranking you.",
   },

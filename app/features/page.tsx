@@ -5,7 +5,7 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { breadcrumbsSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
-  title: "Features",
+  title: "AI SEO & GEO Tools",
   description:
     "Eight connected tools for generative engine optimization (GEO) and AI search visibility. Scan, analyze, brief, and monitor your brand across ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Bing Copilot, and Grok.",
   alternates: { canonical: `${siteConfig.url}/features` },

@@ -12,6 +12,11 @@ import { organizationSchema, websiteSchema } from "@/lib/seo-schema"
 import { siteConfig } from "@/lib/config"
 
 export const metadata: Metadata = {
+  title: {
+    absolute: "AI Visibility Tool — See What AI Search Says About Your Brand | GEO Toolbox",
+  },
+  description:
+    "Track your brand's AI search visibility across ChatGPT, Perplexity, Gemini, Claude, and Google AI Overviews. Run a free GEO scan — see who AI cites.",
   alternates: { canonical: siteConfig.url },
 }
 
