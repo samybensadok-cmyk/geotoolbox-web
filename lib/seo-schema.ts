@@ -271,3 +271,29 @@ export function itemListSchema(
     })),
   }
 }
+
+/**
+ * HowTo schema — the "How it works" 3-step sections on feature pages (the one
+ * remaining structured-data gap; FAQPage + SoftwareApplication are already
+ * emitted elsewhere). Single source of truth: the page passes the SAME steps
+ * array to both the HowItWorks3Step component (visible) and this helper (JSON-LD).
+ */
+export function howToSchema({
+  name,
+  steps,
+}: {
+  name: string
+  steps: Array<{ name: string; text: string }>
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name,
+    step: steps.map((s, i) => ({
+      "@type": "HowToStep",
+      position: i + 1,
+      name: s.name,
+      text: s.text,
+    })),
+  }
+}
