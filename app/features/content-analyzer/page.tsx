@@ -384,7 +384,7 @@ export default function ContentAnalyzerPage() {
         emphasis="Content Analyzer runs the fix."
         body="A domain-level dashboard tells you your share of voice is down. It can't tell you which line on which page to change. Content Analyzer ends every run with a prioritized, per-signal action list — the exact change, header, or section to add — and a one-click brief built from those gaps."
         example="See &lsquo;Structured lists: 3 vs a cited-page average of 11&rsquo;? That becomes a HIGH action with the target count, then a content brief you can write straight against — and a Rerun to confirm the grade moved."
-        link={{ label: "Turn the fixes into a citation-ready draft with Content Brief", href: "/features/content-brief" }}
+        link={{ label: "Turn the fixes into a citation-ready draft in Content Studio", href: "/features/content-studio" }}
       />
 
       {/* Outcomes */}
@@ -457,7 +457,7 @@ export default function ContentAnalyzerPage() {
 
       <FeatureFaq items={faqs} />
 
-      <RelatedFeatures current="content-analyzer" related={["geo-scan", "content-brief", "agent-readiness"]} />
+      <RelatedFeatures current="content-analyzer" related={["geo-scan", "content-studio", "agent-readiness"]} />
 
       {/* CTA */}
       <section className="bg-gray-950 px-6 py-20 sm:py-24">

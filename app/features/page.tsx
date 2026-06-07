@@ -76,10 +76,10 @@ const groups: Group[] = [
         tint: "lilac",
       },
       {
-        slug: "content-brief",
-        name: "Content Brief & Draft",
-        blurb: "Brief any keyword, draft the article, grade the result. Dual scoring (structure + AI readiness), entity checklist, facts coverage, and SERP gap analysis.",
-        highlights: ["Brief + inline draft", "Dual scoring", "PDF / XLSX export"],
+        slug: "content-studio",
+        name: "Content Studio",
+        blurb: "Brief any keyword, write the article inline, grade the result. Dual scoring (structure + AI readiness), entity checklist, facts coverage, and SERP gap analysis.",
+        highlights: ["Brief + write the article", "Dual scoring", "PDF / XLSX export"],
         tint: "warm",
       },
     ],
@@ -315,7 +315,7 @@ export default function FeaturesPage() {
                 Run a GEO Scan once and every other capability activates for that domain: Domain Overview, Competitor Intel, Community, and the rest.
               </p>
               <div className="mt-5 flex flex-wrap items-center gap-1.5">
-                {["GEO Scan", "Domain Overview", "Content Analyzer", "Content Brief", "Competitor Intel", "Analytics", "Community"].map((f) => (
+                {["GEO Scan", "Domain Overview", "Content Analyzer", "Content Studio", "Competitor Intel", "Analytics", "Community"].map((f) => (
                   <span
                     key={f}
                     className="rounded-full border border-gray-800 bg-gray-900/50 px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-widest text-gray-400"

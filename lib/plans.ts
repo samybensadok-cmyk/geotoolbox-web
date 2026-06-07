@@ -94,7 +94,7 @@ export const PLANS: Plan[] = [
     inheritsFrom: "Starter",
     highlights: [
       "All 7 AI engines",
-      "Content Brief & Draft",
+      "Content Studio",
       "Domain Overview + Opportunities",
       "AI advisor",
       "3 team seats",
@@ -232,7 +232,7 @@ export const COMPARE_GROUPS: CompareGroup[] = [
   {
     group: "Content & reporting",
     rows: [
-      { label: "Content Brief & Draft", values: [N, N, Y, Y, Y] },
+      { label: "Content Studio", values: [N, N, Y, Y, Y] },
       { label: "Article writing + 5-stage copywriter", values: [N, N, N, Y, Y] },
       { label: "White-label reports", values: [N, N, N, Y, Y] },
       { label: "Alerts", values: [N, N, N, Y, Y] },

@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
     return [
       { source: "/login",  destination: "/app?page=login",  permanent: true },
       { source: "/signup", destination: "/app?page=signup", permanent: true },
+      { source: "/features/content-brief", destination: "/features/content-studio", permanent: true },
     ]
   },
   async rewrites() {

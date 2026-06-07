@@ -26,7 +26,7 @@ export const siteConfig = {
       group: "Analysis",
       features: [
         { slug: "content-analyzer", name: "Content Analyzer", desc: "Grade any page A–F" },
-        { slug: "content-brief", name: "Content Brief & Draft", desc: "Brief, draft, and score" },
+        { slug: "content-studio", name: "Content Studio", desc: "Brief, write, and score an article" },
       ],
     },
     {

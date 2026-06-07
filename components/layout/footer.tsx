@@ -25,7 +25,7 @@ export function Footer() {
             <ul className="mt-3 space-y-2">
               <li><Link href="/features/geo-scan" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">GEO Scan</Link></li>
               <li><Link href="/features/content-analyzer" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Content Analyzer</Link></li>
-              <li><Link href="/features/content-brief" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Content Brief &amp; Draft</Link></li>
+              <li><Link href="/features/content-studio" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Content Studio</Link></li>
             </ul>
           </div>
 

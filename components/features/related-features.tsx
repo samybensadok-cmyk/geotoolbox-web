@@ -5,7 +5,7 @@ type Slug =
   | "geo-scan"
   | "agent-readiness"
   | "content-analyzer"
-  | "content-brief"
+  | "content-studio"
   | "domain-overview"
   | "competitor-intel"
   | "analytics"

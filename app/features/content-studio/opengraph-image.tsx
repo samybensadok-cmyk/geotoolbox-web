@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og"
 
-export const alt = "Content Brief & Draft: answer-first outlines AI engines cite"
+export const alt = "Content Studio: AI content briefs and an article writer built to earn AI citations"
 export const size = { width: 1200, height: 630 }
 export const contentType = "image/png"
 
@@ -27,17 +27,17 @@ export default function OGImage() {
           </div>
 
           <div style={{ display: "flex", fontSize: 13, fontWeight: 700, letterSpacing: "0.12em", color: "#0f766e", textTransform: "uppercase", marginBottom: 14 }}>
-            Content Brief &amp; Draft
+            Content Studio
           </div>
           <div style={{ fontSize: 58, fontWeight: 700, lineHeight: 1.05, color: "#111827", letterSpacing: "-0.02em" }}>
-            Briefs AI engines actually quote.
+            From keyword to a cited article.
           </div>
           <div style={{ fontSize: 20, color: "#4b5563", marginTop: 20, lineHeight: 1.4 }}>
-            Framework-aware outline. Entity checklist. Structure + AI Readiness scores.
+            A brief built on what AI extracts. The draft, written for you.
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: "auto", fontSize: 15, color: "#6b7280" }}>
-            geotoolbox.ai/features/content-brief
+            geotoolbox.ai/features/content-studio
           </div>
         </div>
 
