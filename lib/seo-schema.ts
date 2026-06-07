@@ -1,18 +1,29 @@
 import { siteConfig } from "./config"
-import { getAuthorByName, type Author } from "./authors"
+import { getAuthorByName, PRIMARY_AUTHOR, type Author } from "./authors"
 
 /**
  * Organization schema — homepage identity card for AI / knowledge panels.
  */
 export function organizationSchema() {
+  const founder = PRIMARY_AUTHOR
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
+    "@id": `${siteConfig.url}/#organization`,
     name: siteConfig.name,
     url: siteConfig.url,
     logo: `${siteConfig.url}/opengraph-image`,
     description: siteConfig.description,
+    foundingDate: "2026-04",
     sameAs: Object.values(siteConfig.links),
+    founder: {
+      "@type": "Person",
+      "@id": `${siteConfig.url}/author/${founder.slug}#person`,
+      name: founder.name,
+      url: `${siteConfig.url}/author/${founder.slug}`,
+      jobTitle: founder.role,
+      sameAs: founder.links.filter((l) => l.sameAs !== false).map((l) => l.href),
+    },
   }
 }
 
@@ -24,13 +35,18 @@ export function websiteSchema() {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
+    "@id": `${siteConfig.url}/#website`,
     name: siteConfig.name,
     url: siteConfig.url,
     description: siteConfig.description,
-    publisher: {
-      "@type": "Organization",
-      name: siteConfig.name,
-      url: siteConfig.url,
+    publisher: { "@id": `${siteConfig.url}/#organization` },
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${siteConfig.url}/search?q={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
     },
   }
 }
@@ -92,6 +108,7 @@ export function articleSchema(post: {
   const author = profile
     ? {
         "@type": "Person",
+        "@id": `${siteConfig.url}/author/${profile.slug}#person`,
         name: profile.name,
         url: `${siteConfig.url}/author/${profile.slug}`,
         jobTitle: profile.role,
@@ -178,6 +195,7 @@ export function authorProfileSchema(author: Author) {
     "@type": "ProfilePage",
     mainEntity: {
       "@type": "Person",
+      "@id": `${siteConfig.url}/author/${author.slug}#person`,
       name: author.name,
       url,
       jobTitle: author.role,
@@ -213,6 +231,43 @@ export function faqPageSchema(qa: Array<{ question: string; answer: string }>) {
       "@type": "Question",
       name: item.question,
       acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
+  }
+}
+
+/**
+ * AboutPage schema — /about. Anchors the canonical Organization entity (same
+ * @id as the homepage Organization) so AI engines and knowledge panels resolve
+ * GEO Toolbox to one entity. Emit alongside organizationSchema() on /about.
+ */
+export function aboutPageSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    name: `About ${siteConfig.name}`,
+    url: `${siteConfig.url}/about`,
+    description: siteConfig.description,
+    mainEntity: { "@id": `${siteConfig.url}/#organization` },
+  }
+}
+
+/**
+ * ItemList schema — ordered collections (the /features hub, "best tools"
+ * listicles). Pass items in display order; position is 1-based.
+ */
+export function itemListSchema(
+  items: Array<{ name: string; url: string }>,
+  opts: { name?: string } = {},
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    ...(opts.name ? { name: opts.name } : {}),
+    itemListElement: items.map((it, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: it.name,
+      url: it.url.startsWith("http") ? it.url : `${siteConfig.url}${it.url}`,
     })),
   }
 }

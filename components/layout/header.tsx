@@ -140,6 +140,17 @@ export function Header() {
             Blog
           </Link>
 
+          <Link
+            href="/search"
+            aria-label="Search"
+            className="flex min-h-[40px] items-center rounded-md px-3 text-gray-600 transition-colors hover:text-gray-900 hover:bg-gray-50"
+          >
+            <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="9" cy="9" r="6" />
+              <path d="m14 14 3 3" strokeLinecap="round" />
+            </svg>
+          </Link>
+
           <div className="ml-3 flex items-center gap-2">
             <Link
               href={siteConfig.appLoginUrl}
@@ -239,6 +250,14 @@ export function Header() {
               className="rounded-lg px-2 py-3 text-sm font-medium text-gray-900 hover:bg-gray-50"
             >
               Blog
+            </Link>
+
+            <Link
+              href="/search"
+              onClick={() => setMobileOpen(false)}
+              className="rounded-lg px-2 py-3 text-sm font-medium text-gray-900 hover:bg-gray-50"
+            >
+              Search
             </Link>
 
             <div className="mt-4 flex flex-col gap-2">

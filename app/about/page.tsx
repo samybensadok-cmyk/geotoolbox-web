@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
+import { JsonLd } from "@/components/seo/json-ld"
+import { aboutPageSchema, organizationSchema } from "@/lib/seo-schema"
 import { siteConfig } from "@/lib/config"
 
 export const metadata: Metadata = {
@@ -13,6 +15,7 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <>
+      <JsonLd data={[aboutPageSchema(), organizationSchema()]} />
       {/* Hero */}
       <section className="relative overflow-hidden bg-[var(--surface-warm,theme(colors.amber.50))] px-6 pt-14 pb-16 sm:pt-20 sm:pb-20">
         <div className="mx-auto max-w-4xl">

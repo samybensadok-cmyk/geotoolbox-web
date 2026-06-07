@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { siteConfig } from "@/lib/config"
 import { JsonLd } from "@/components/seo/json-ld"
-import { breadcrumbsSchema } from "@/lib/seo-schema"
+import { breadcrumbsSchema, itemListSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
   title: "AI SEO & GEO Tools",
@@ -141,7 +141,18 @@ export default function FeaturesPage() {
     <>
       {/* Hero — plain white with a 7-tint teaser ornament */}
       <section className="bg-white px-6 pt-20 pb-12 sm:pt-28 sm:pb-16">
-      <JsonLd data={breadcrumbsSchema([{ name: "Home", url: "/" }, { name: "Features", url: "/features" }])} />
+      <JsonLd
+        data={[
+          breadcrumbsSchema([{ name: "Home", url: "/" }, { name: "Features", url: "/features" }]),
+          itemListSchema(
+            siteConfig.featureGroups.flatMap((g) => g.features).map((f) => ({
+              name: f.name,
+              url: `/features/${f.slug}`,
+            })),
+            { name: "GEO Toolbox features" },
+          ),
+        ]}
+      />
 
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-[6fr_6fr] lg:items-end lg:gap-16">

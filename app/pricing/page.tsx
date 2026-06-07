@@ -5,6 +5,7 @@ import { ComparisonTable } from "@/components/pricing/comparison-table"
 import { FeatureFaq } from "@/components/features/feature-faq"
 import { JsonLd } from "@/components/seo/json-ld"
 import { siteConfig } from "@/lib/config"
+import { PLANS } from "@/lib/plans"
 
 export const metadata: Metadata = {
   title: "Pricing — GEO Toolbox",
@@ -83,9 +84,28 @@ export default function PricingPage() {
     ],
   }
 
+  const priced = PLANS.filter((p) => p.priceMonthly !== null).map((p) => p.priceMonthly as number)
+  const productSchema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: siteConfig.name,
+    description: siteConfig.description,
+    url: `${siteConfig.url}/pricing`,
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web",
+    publisher: { "@id": `${siteConfig.url}/#organization` },
+    offers: {
+      "@type": "AggregateOffer",
+      priceCurrency: "USD",
+      lowPrice: String(Math.min(...priced)),
+      highPrice: String(Math.max(...priced)),
+      offerCount: PLANS.length,
+    },
+  }
+
   return (
     <>
-      <JsonLd data={breadcrumb} />
+      <JsonLd data={[breadcrumb, productSchema]} />
 
       {/* Hero + cards */}
       <section className="bg-white px-6 pt-16 pb-12 sm:pt-20">
