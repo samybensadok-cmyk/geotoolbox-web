@@ -225,7 +225,7 @@ export const COMPARE_GROUPS: CompareGroup[] = [
       { label: "Visibility tracker & share of voice", values: [Y, Y, Y, Y, Y] },
       { label: "Agent readiness scan", values: [Y, Y, Y, Y, Y] },
       { label: "Content Analyzer", values: [N, Y, Y, Y, Y] },
-      { label: "GEO Scan", values: [N, Y, Y, Y, Y] },
+      { label: "GEO Scan", values: [Y, Y, Y, Y, Y] },
       { label: "Domain Overview + Opportunities", values: [N, N, Y, Y, Y] },
       { label: "Competitor intel", values: [N, N, Y, Y, Y] },
     ],
