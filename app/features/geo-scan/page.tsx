@@ -3,53 +3,77 @@ import Link from "next/link"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
 import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
+import { ScreenshotFrame } from "@/components/features/screenshot-frame"
+import { PainScenarioSection } from "@/components/features/pain-scenario"
+import { ScoreLegend } from "@/components/features/score-legend"
+import { HowItWorks3Step, type Step } from "@/components/features/how-it-works"
+import { ActVsMonitorWedge } from "@/components/features/act-vs-monitor"
+import { SocialProofBlock } from "@/components/features/social-proof"
+import { FeatureComparisonTable } from "@/components/features/feature-comparison-table"
+import { DualCTA } from "@/components/features/dual-cta"
 import { siteConfig } from "@/lib/config"
 import { JsonLd } from "@/components/seo/json-ld"
-import { softwareApplicationSchema, breadcrumbsSchema } from "@/lib/seo-schema"
+import { softwareApplicationSchema, howToSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
   title: "AI Visibility Tool for AI Search",
   description:
-    "Run generative engine optimization (GEO) scans across ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Bing Copilot, and Grok. The AI search tracking tool that shows who's cited, who isn't, and how you compare to competitors, in minutes.",
+    "See whether ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Bing Copilot, and Grok cite you — or your competitors. One prompt, seven engines, a 0–100 visibility score, in minutes.",
   openGraph: {
     title: "AI Visibility Tool for AI Search",
     description:
-      "Run generative engine optimization scans across seven AI engines. The AI search tracking tool that shows who's cited, who isn't, and how you compare to competitors, in minutes.",
+      "See whether the seven major AI engines cite you or your competitors. One prompt, seven engines, a 0–100 visibility score, in minutes.",
   },
   alternates: { canonical: `${siteConfig.url}/features/geo-scan` },
 }
 
-const engines = [
-  { name: "ChatGPT", status: "Cited", variant: "cited", delay: 0 },
-  { name: "Perplexity", status: "Cited", variant: "cited", delay: 120 },
-  { name: "Gemini", status: "Not found", variant: "missing", delay: 0 },
-  { name: "Claude", status: "Mentioned", variant: "cited", delay: 240 },
-  { name: "AI Overviews", status: "Recommended", variant: "cited", delay: 360 },
-  { name: "Bing Copilot", status: "Not found", variant: "missing", delay: 0 },
-  { name: "Grok", status: "Cited", variant: "cited", delay: 480 },
+const steps: Step[] = [
+  {
+    verb: "Ask",
+    title: "Enter a real query",
+    body: "Type the keyword or question your customers would ask an AI — a short keyword or a natural question, both work.",
+  },
+  {
+    verb: "Run",
+    title: "Seven engines, in parallel",
+    body: "GEO Scan queries ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Bing Copilot, and Grok with the same prompt, in your chosen market.",
+  },
+  {
+    verb: "See",
+    title: "Your full citation map",
+    body: "Each engine's verbatim answer, whether your domain was cited, which competitors showed up instead, and a 0–100 visibility score you can defend to your CMO.",
+  },
 ]
 
-const steps = [
+const comparisonRows = [
+  { label: "AI engines per run", cells: ["1 at a time", "Varies", "7 in parallel"] },
+  { label: "Cited vs. mentioned vs. recommended", cells: [false, "Partial", true] },
+  { label: "Competitor citations in the same scan", cells: [false, true, "Up to 4 domains"] },
+  { label: "Live search, not training data", cells: ["Sometimes", "Varies", true] },
+  { label: "Routes the gap to a page-level fix", cells: [false, false, true] },
+  { label: "Free export (CSV / PDF / XLSX)", cells: [false, "Varies", true] },
+]
+
+const outcomes = [
   {
-    num: "01",
-    verb: "Ask",
-    title: "A real query",
-    body: "Enter the keyword or question your customers would ask an AI. Short keywords or natural questions both work.",
-    output: "best CRM software for small business",
+    tag: "Live search",
+    title: "You see what your customers see today",
+    body: "Every engine is queried in real time with live web search — never a six-month-old answer the model memorized.",
   },
   {
-    num: "02",
-    verb: "Run",
-    title: "Seven engines in parallel",
-    body: "We query ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Bing Copilot, and Grok with identical prompts in your chosen country.",
-    output: "8 countries · 7 live engines",
+    tag: "Competitor deltas",
+    title: "Know the prompts a rival owns",
+    body: "Add up to four competitor domains and see exactly which prompts they win — before it shows up in your traffic report.",
   },
   {
-    num: "03",
-    verb: "See",
-    title: "The full citation map",
-    body: "Each engine's verbatim response, whether your domain was cited, which competitors appeared, and a 0–100 visibility score.",
-    output: "72/100 visibility · 4 competitors",
+    tag: "8 markets, localized",
+    title: "Catch a gap that's country-specific",
+    body: "US, GB, AU, CA, IE, FR, ES, DE. Spot a citation gap in the UK that doesn't exist in the US.",
+  },
+  {
+    tag: "History + trends",
+    title: "See drift before it costs you",
+    body: "Every scan is stored. Weekly score trend and per-engine trajectory feed Domain Overview, so you catch decline before it compounds into lost pipeline.",
   },
 ]
 
@@ -57,274 +81,210 @@ const faqs = [
   {
     question: "What AI engines does GEO Scan check?",
     answer:
-      "Seven engines today: ChatGPT, Perplexity, Claude, Gemini, Google AI Overviews, Bing Copilot, and Grok. Every generative engine optimization (GEO) scan queries all seven in parallel, so you get the full picture in one pass.",
+      "Seven engines today: ChatGPT, Perplexity, Claude, Gemini, Google AI Overviews, Bing Copilot, and Grok. Every scan queries all seven in parallel, so you get the full picture in one pass.",
+  },
+  {
+    question: "What's the difference between cited, mentioned, and recommended?",
+    answer:
+      "Cited means your domain is the linked source in the answer — the strongest signal. Recommended means you're named as a top pick. Mentioned means your brand appears without a link — your highest-leverage upgrade. Not found is the gap to close first. GEO Scan labels each engine so you know exactly where you stand.",
   },
   {
     question: "How does GEO Scan determine if my brand is cited?",
     answer:
-      "We submit your keyword as a real user query, then parse each AI response for explicit domain mentions and direct citations. You get a per-engine status (cited, mentioned, or missing) plus the verbatim snippet where your brand appears.",
+      "We submit your keyword as a real user query, then parse each AI response for explicit domain mentions and direct citations. You get a per-engine status plus the verbatim snippet where your brand appears.",
   },
   {
     question: "Can I scan keywords for markets outside the US?",
     answer:
-      "Yes. GEO Scan supports eight markets: United States, United Kingdom, Australia, Canada, Ireland, France, Spain, and Germany. Engines with native locale support (Google AI Overviews, Gemini) query in-country; the others receive localized prompt augmentation so the response reflects the chosen market.",
+      "Yes. GEO Scan supports eight markets: United States, United Kingdom, Australia, Canada, Ireland, France, Spain, and Germany. Engines with native locale support query in-country; the others receive localized prompt augmentation.",
   },
   {
     question: "How is this different from traditional rank tracking?",
     answer:
-      "Traditional rank trackers measure blue-link positions on a SERP. GEO Scan measures a different signal: whether AI-generated answers cite your brand at all. It's answer engine optimization (AEO), not ranking. There's no top 10 to climb, just whether your domain is in the response or isn't.",
+      "Rank trackers measure blue-link positions on a SERP. GEO Scan measures whether AI-generated answers cite your brand at all. There's no top 10 to climb — just whether your domain is in the response or isn't.",
   },
   {
     question: "Can I compare my domain against competitors in the same scan?",
     answer:
-      "Yes. Add up to four competitor domains and the scan returns side-by-side citation status for each, across all seven engines. You'll see which prompts they win, which they lose, and the citations they earn that you don't.",
-  },
-  {
-    question: "How often should I run scans for the same keyword?",
-    answer:
-      "AI responses are non-deterministic, so weekly is the sweet spot for tracking AI visibility trends. Every scan is stored; the trajectory feeds Domain Overview automatically so you can spot citation drift before it compounds.",
+      "Yes. Add up to four competitor domains and the scan returns side-by-side citation status for each, across all seven engines — which prompts they win, which they lose, and the citations they earn that you don't.",
   },
   {
     question: "Can I export my scan results?",
     answer:
-      "Yes. CSV, PDF, and XLSX exports are free and available without an account. Use them to brief writers, update leadership, or feed citation data into your own LLM SEO dashboards.",
-  },
-]
-
-const outcomes = [
-  {
-    tag: "Live search",
-    title: "Not training data",
-    body: "Every engine is queried in real time with live web search. You see what your customers see today, not what the model memorized six months ago.",
-  },
-  {
-    tag: "Competitor deltas",
-    title: "Know who beats you",
-    body: "Add up to four competitor domains. We show which prompts they win, which they lose, and the citations they earn that you don't.",
-  },
-  {
-    tag: "Country-aware",
-    title: "8 markets, localized",
-    body: "US, GB, AU, CA, IE, FR, ES, DE. Engines that support locale (AI Overviews, Gemini) run natively; the others get prompt augmentation.",
-  },
-  {
-    tag: "History + trends",
-    title: "Track over time",
-    body: "Every scan is stored. Weekly score trend, per-engine trajectory, and competitor movement all appear on Domain Overview.",
+      "Yes. CSV, PDF, and XLSX exports are free. Use them to brief writers, update leadership, or feed citation data into your own dashboards.",
   },
 ]
 
 export default function GeoScanPage() {
   return (
     <>
-      {/* Hero — mint atmosphere (scanning / live / fresh) */}
-      <section className="relative overflow-hidden bg-[var(--surface-mint)] px-6 pt-20 pb-16 sm:pt-24 sm:pb-20">
-      <JsonLd data={[
-        softwareApplicationSchema({
-          name: "GEO Scan",
-          description: "Run generative engine optimization (GEO) scans across ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Bing Copilot, and Grok. See who's cited, who isn't, and how you compare to competitors in minutes.",
-          url: `${siteConfig.url}/features/geo-scan`,
-        }),
-        breadcrumbsSchema([
-          { name: "Home", url: "/" },
-          { name: "Features", url: "/features" },
-          { name: "GEO Scan", url: "/features/geo-scan" },
-        ]),
-      ]} />
+      {/* Hero — pain-led, with the real scan result as the proof */}
+      <section className="relative overflow-hidden bg-[var(--surface-mint)] px-6 pt-16 pb-16 sm:pt-20 sm:pb-20">
+        <JsonLd
+          data={[
+            softwareApplicationSchema({
+              name: "GEO Scan",
+              description:
+                "An AI visibility tool that scans ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Bing Copilot, and Grok to show whether they cite your brand or your competitors.",
+              url: `${siteConfig.url}/features/geo-scan`,
+            }),
+            howToSchema({
+              name: "How to run a GEO Scan",
+              steps: steps.map((s) => ({ name: s.title, text: s.body })),
+            }),
+          ]}
+        />
 
-        <div className="mx-auto max-w-7xl">
+        <div className="mx-auto max-w-5xl">
           <Breadcrumbs featureName="GEO Scan" />
-
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center lg:gap-16">
-            <div className="lg:col-span-6">
-              <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">
-                GEO Scan
-              </p>
-              <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-                See who AI cites for your keywords.
-              </h1>
-              <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-                One prompt, seven engines, every citation. Your domain, competitors, and a visibility score from 0 to 100, in minutes, without training-data guesses.
-              </p>
-              <div className="mt-8 flex flex-wrap items-center gap-3">
-                <Link
-                  href="/app" prefetch={false}
-                  className="rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px]"
-                >
-                  Run a scan
-                </Link>
-                <Link
-                  href="#how"
-                  className="rounded-full border border-gray-200 px-6 py-3.5 text-[15px] font-medium text-gray-700 hover:border-gray-400 hover:text-gray-900"
-                >
-                  How it works
-                </Link>
-              </div>
-              <p className="mt-4 text-xs text-gray-600">
-                No credit card &middot; Free plan
-              </p>
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+              AI Visibility Tool
+            </p>
+            <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
+              See if AI is recommending you — or your competitors.
+            </h1>
+            <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
+              ChatGPT, Perplexity, Gemini, and Google AI Overviews already answer your customers&apos;
+              buying questions. Most brands have no idea whether they&apos;re in the answer or invisible.
+              GEO Scan queries seven engines with one prompt and shows you exactly who gets cited, who
+              gets recommended instead, and a 0–100 visibility score — in minutes, from live search.
+            </p>
+            <div className="mt-8">
+              <DualCTA
+                primaryLabel="Run a free scan"
+                secondaryLabel="See how it works"
+                secondaryHref="#how"
+                microcopy="Free plan · no credit card · results in minutes"
+              />
             </div>
+          </div>
 
-            {/* Scan result visual — verbatim quote + live scanning state */}
-            <div className="lg:col-span-6" aria-hidden="true">
-              <div className="relative rounded-[2rem] border border-[var(--surface-mint-border)] bg-white p-6 sm:p-8 shadow-[0_20px_60px_-20px_rgba(15,23,42,0.12)]">
-                {/* Query bar with live indicator */}
-                <div className="flex items-center gap-3 rounded-xl border border-gray-100 bg-gray-50 px-4 py-3 font-mono text-[13px] text-gray-700">
-                  <svg className="h-4 w-4 shrink-0 text-accent-600" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="9" cy="9" r="6" />
-                    <path d="m14 14 3.5 3.5" strokeLinecap="round" />
-                  </svg>
-                  <span className="flex-1 truncate">best CRM software for small business</span>
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-accent-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-accent-700">
-                    <span className="relative inline-flex h-1.5 w-1.5">
-                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-400 opacity-60" />
-                      <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent-500" />
-                    </span>
-                    Live
-                  </span>
-                </div>
-
-                {/* ChatGPT — expanded with verbatim quote + brand highlight */}
-                <div className="mt-5 rounded-xl border border-accent-200 bg-accent-50/40 p-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-semibold text-gray-900">ChatGPT</span>
-                    <div className="flex items-center gap-2.5">
-                      <span className="relative inline-flex h-2 w-2">
-                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-400 opacity-60" />
-                        <span className="relative inline-flex h-2 w-2 rounded-full bg-accent-500" />
-                      </span>
-                      <span className="font-mono text-[11px] font-semibold text-accent-700">CITED</span>
-                    </div>
-                  </div>
-                  <blockquote className="mt-2.5 text-[13px] leading-relaxed text-gray-700">
-                    &ldquo;For small businesses, popular options include{" "}
-                    <mark className="rounded bg-accent-200/70 px-1 py-0.5 font-semibold text-accent-900">
-                      acme.co
-                    </mark>
-                    , Pipedrive, and HubSpot &mdash; each with strong free tiers and simple onboarding.&rdquo;
-                  </blockquote>
-                </div>
-
-                {/* Remaining engines — compact rows, one in live "scanning" state */}
-                <div className="mt-3 divide-y divide-gray-100 rounded-xl border border-gray-100">
-                  {engines.slice(1).map((e, idx) => {
-                    // Mark Bing Copilot (last) as "scanning" to show live state
-                    const isScanning = idx === engines.slice(1).length - 1
-                    const isMentioned = e.status === "Mentioned"
-                    const dotClass = isScanning
-                      ? "bg-amber-400"
-                      : e.variant === "cited"
-                        ? (isMentioned ? "bg-amber-500" : "bg-accent-500")
-                        : "border border-gray-300"
-                    const pingClass = isScanning
-                      ? "bg-amber-400"
-                      : e.variant === "cited"
-                        ? (isMentioned ? "bg-amber-400" : "bg-accent-400")
-                        : ""
-                    const textClass = isScanning
-                      ? "text-amber-700"
-                      : e.variant === "cited"
-                        ? (isMentioned ? "text-amber-700" : "text-accent-700")
-                        : "text-gray-500"
-                    const label = isScanning ? "Scanning…" : e.status
-                    const showPulse = isScanning || e.variant === "cited"
-                    return (
-                      <div key={e.name} className="flex items-center justify-between px-4 py-2.5">
-                        <span className="text-sm font-medium text-gray-800">{e.name}</span>
-                        <div className="flex items-center gap-2.5">
-                          {showPulse ? (
-                            <span className="relative inline-flex h-2 w-2">
-                              <span
-                                className={`absolute inline-flex h-full w-full animate-ping rounded-full ${pingClass} opacity-60`}
-                                style={{ animationDelay: `${e.delay}ms` }}
-                              />
-                              <span className={`relative inline-flex h-2 w-2 rounded-full ${dotClass}`} />
-                            </span>
-                          ) : (
-                            <span className={`h-2 w-2 rounded-full ${dotClass}`} />
-                          )}
-                          <span className={`text-xs font-semibold tabular-nums ${textClass}`}>
-                            {label}
-                          </span>
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
-
-                {/* Bottom bar — runtime metrics (trend belongs on Domain Overview) */}
-                <div className="mt-5 flex items-center justify-between rounded-xl border border-gray-100 bg-gray-50 px-4 py-3">
-                  <span className="text-[11px] font-semibold uppercase tracking-widest text-gray-600">Visibility</span>
-                  <div className="flex items-baseline gap-1.5">
-                    <span className="font-mono text-xl font-bold tabular-nums text-gray-900">57</span>
-                    <span className="font-mono text-xs text-gray-500">/100</span>
-                    <span className="ml-3 font-mono text-[11px] text-gray-500">7 engines &middot; 2.3s</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+          {/* Real scan result, anonymized — domain-free metrics strip (brand kept unnamed) */}
+          <div className="mx-auto mt-12 max-w-4xl">
+            <ScreenshotFrame
+              src="/screenshots/geo-scan/ai-citation-7of7-header.png"
+              alt="GEO Scan result summary: all 7 AI engines cited the brand, with 63 total citations across the engines."
+              width={2012}
+              height={240}
+              priority
+              chrome={false}
+              caption="Real GEO Scan — for “how to run google ads for lawyers,” all 7 AI engines cited the brand, 63 citations across the engines."
+            />
           </div>
         </div>
       </section>
 
-      {/* How it works — atmosphere continues */}
-      <section id="how" className="bg-[var(--surface-mint)] px-6 py-24 sm:py-28">
-        <div className="mx-auto max-w-7xl">
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-[5fr_7fr] lg:items-end lg:gap-16">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">How it works</p>
-              <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.5rem)] font-bold leading-tight tracking-tight text-gray-900">
-                From prompt to citation map in three steps.
-              </h2>
-            </div>
-            <p className="max-w-xl text-base leading-relaxed text-gray-600">
-              No integrations. No tagging. No waiting. The scan runs in parallel across every supported engine and returns a visibility score you can defend to your CMO.
-            </p>
-          </div>
+      {/* The cost of being invisible */}
+      <PainScenarioSection
+        eyebrow="The blind spot"
+        scenario="A buyer asks ChatGPT &ldquo;best agency for [your service].&rdquo; It names three companies. None of them are you. You never see the query, never see the lost deal — you just watch a competitor grow and can&apos;t explain why."
+        bridge="GEO Scan turns that blind spot into a number you can act on: run the prompts your customers actually ask, and see exactly where you&apos;re in the answer and where you&apos;re missing."
+      />
 
-          <ol className="mt-14 divide-y divide-gray-200">
-            {steps.map((s) => (
-              <li key={s.num} className="grid grid-cols-1 gap-6 py-8 md:grid-cols-[auto_1fr_auto] md:items-center md:gap-10 md:py-10">
-                <div className="flex items-center gap-4 md:block">
-                  <span className="font-mono text-4xl font-bold tabular-nums text-accent-700 md:text-5xl">
-                    {s.num}
-                  </span>
-                  <span className="text-xs font-semibold uppercase tracking-widest text-gray-500 md:hidden">
-                    {s.verb}
-                  </span>
-                </div>
-                <div>
-                  <p className="hidden text-xs font-semibold uppercase tracking-widest text-gray-500 md:block">
-                    {s.verb}
-                  </p>
-                  <h3 className="mt-1 text-xl font-semibold tracking-tight text-gray-900">{s.title}</h3>
-                  <p className="mt-2 max-w-xl text-[15px] leading-relaxed text-gray-600">{s.body}</p>
-                </div>
-                <div className="md:text-right">
-                  <p className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-3 py-1.5 font-mono text-[12px] text-gray-700">
-                    <svg className="h-3 w-3 text-accent-600" viewBox="0 0 12 12" fill="none">
-                      <path d="M3 6h6m0 0L6 3m3 3L6 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                    <span className="truncate">{s.output}</span>
-                  </p>
-                </div>
-              </li>
+      {/* What a scan gives you back — anchor the score + cited vs mentioned */}
+      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
+        <div className="mx-auto max-w-3xl">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+            What you get back
+          </p>
+          <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
+            A visibility score that actually means something.
+          </h2>
+          <p className="mt-4 text-[15px] leading-relaxed text-gray-600">
+            Every scan returns a 0–100 AI visibility score, the verbatim answer from each engine, and a
+            clear status for your domain on every one. The score isn&apos;t arbitrary — here&apos;s how to read it:
+          </p>
+          <div className="mt-6">
+            <ScoreLegend variant="0-100" />
+          </div>
+          <dl className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {[
+              ["Cited", "Your domain is the linked source — defend it."],
+              ["Recommended", "Named as a top pick — protect the position."],
+              ["Mentioned", "Named without a link — your highest-leverage upgrade."],
+              ["Not found", "The gap to close first."],
+            ].map(([term, def]) => (
+              <div key={term} className="rounded-xl border border-gray-200 bg-white p-4">
+                <dt className="text-[14px] font-bold text-gray-900">{term}</dt>
+                <dd className="mt-1 text-[13px] leading-relaxed text-gray-600">{def}</dd>
+              </div>
             ))}
-          </ol>
+          </dl>
+          <p className="mt-6 text-[13px] leading-relaxed text-gray-500">
+            In a recent scan, a legal-marketing agency we run GEO for scored 7/7 — cited by every engine —
+            with 63 total citations and the #1 influence rank in the result, ahead of google.com.
+          </p>
+        </div>
+      </section>
+
+      {/* How it works (HowTo schema source) */}
+      <div id="how">
+        <HowItWorks3Step
+          heading="From prompt to citation map in three steps"
+          steps={steps}
+        />
+      </div>
+
+      {/* Act, don't just monitor */}
+      <ActVsMonitorWedge
+        body="GEO Scan finds the prompts where you're missing. From there, every Not-found and Mentioned status feeds straight into a fix — so the next scan flips them to Cited."
+        example="See you're absent from ChatGPT for a key prompt? The flagged page routes into Content Analyzer, which tells you the exact signals to fix — blocked crawler, missing schema, thin entity coverage — so the gap closes instead of just being logged."
+        link={{ label: "See how Content Analyzer closes the gap", href: "/features/content-analyzer" }}
+      />
+
+      {/* Proof — anonymized real-world case (a brand we run GEO for, kept unnamed) */}
+      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+            A real-world result
+          </p>
+          <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
+            Page one on Google. Near-zero clicks. #1 in the AI answer.
+          </h2>
+        </div>
+        <div className="mt-10">
+          <SocialProofBlock
+            miniCase={{
+              result:
+                "A legal-marketing agency we run GEO for ranks its “Google Ads for lawyers” guide page 1 on Google at ~0.3% CTR — yet it's the #1 cited source across all 7 AI engines for that query, ahead of google.com.",
+              attribution: "Measured with GEO Scan",
+            }}
+            provenanceLine="Every GEO Scan is a live query to each engine — real responses, parsed verbatim, not API-memorized summaries."
+          />
+        </div>
+      </section>
+
+      {/* Comparison */}
+      <section className="border-t border-gray-100 bg-gray-50 px-6 py-16 sm:py-20">
+        <div className="mx-auto max-w-3xl">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+            How it compares
+          </p>
+          <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
+            GEO Scan vs. the alternatives
+          </h2>
+          <div className="mt-8">
+            <FeatureComparisonTable
+              columns={["Manual ChatGPT checks", "Monitoring-only tools", "GEO Scan"]}
+              rows={comparisonRows}
+            />
+          </div>
         </div>
       </section>
 
       {/* Outcomes */}
-      <section className="bg-gray-50 px-6 py-24 sm:py-28">
-        <div className="mx-auto max-w-7xl">
+      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
+        <div className="mx-auto max-w-5xl">
           <div className="max-w-2xl">
-            <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">What makes it different</p>
-            <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.5rem)] font-bold leading-tight tracking-tight text-gray-900">
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+              What makes it different
+            </p>
+            <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
               Built for the AI search reality.
             </h2>
           </div>
-
-          <div className="mt-14 grid grid-cols-1 gap-8 md:grid-cols-2 lg:gap-12">
+          <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:gap-12">
             {outcomes.map((o) => (
               <div key={o.tag}>
                 <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">{o.tag}</p>
@@ -340,19 +300,18 @@ export default function GeoScanPage() {
 
       <RelatedFeatures current="geo-scan" related={["domain-overview", "content-analyzer", "competitor-intel"]} />
 
-      {/* CTA */}
+      {/* Final CTA */}
       <section className="bg-gray-950 px-6 py-20 sm:py-24">
-        <div className="mx-auto max-w-7xl flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between md:gap-12">
+        <div className="mx-auto flex max-w-5xl flex-col items-start gap-6 md:flex-row md:items-center md:justify-between md:gap-12">
           <div>
             <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
               Run your first GEO Scan.
             </h2>
-            <p className="mt-2 text-base text-gray-300">
-              Free plan, no credit card. Results in minutes.
-            </p>
+            <p className="mt-2 text-base text-gray-300">Free plan, no credit card. Results in minutes.</p>
           </div>
           <Link
-            href="/app" prefetch={false}
+            href={siteConfig.appSignupUrl}
+            prefetch={false}
             className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]"
           >
             Try it for free
