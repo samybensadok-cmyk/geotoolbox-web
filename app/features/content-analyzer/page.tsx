@@ -19,7 +19,7 @@ import { softwareApplicationSchema, howToSchema, breadcrumbsSchema } from "@/lib
 export const metadata: Metadata = {
   title: "AI Citability Checker — Grade Any URL A–F | GEO Toolbox Content Analyzer",
   description:
-    "Why isn't AI citing your content? Paste any URL and get two grades — Citability and AI Readability — a live check of which AI engines cite the page, every on-page signal benchmarked against the pages AI does cite, and the exact fixes.",
+    "Why isn't AI citing your content? Paste any URL and get two grades — Citability and AI Readability — a live check of which AI engines cite the page, an AI crawler / bot-access check (robots.txt for AI bots + JS-render parity), every on-page signal benchmarked against the pages AI does cite, and the exact fixes.",
   openGraph: {
     title: "AI Citability Checker — Grade Any URL A–F | GEO Toolbox",
     description:
@@ -133,7 +133,7 @@ const faqs = [
   {
     question: "Does it check whether AI bots can actually crawl my page?",
     answer:
-      "Yes — and that's a separate check from the per-engine citation result. The AI Readability module probes your page against the major AI bot user agents — GPTBot, ClaudeBot, PerplexityBot, Google-Extended and CCBot — and reports which are blocked and where the block lives: robots.txt, an X-Robots-Tag header, an llms.txt directive, or a CDN firewall rule. It also diffs the JS and no-JS render, because most AI crawlers don't execute JavaScript.",
+      "Yes — and that's a separate check from the per-engine citation result. The AI Readability module is an AI crawler checker and a robots-txt-for-AI audit built into every page grade: it probes your page against the major AI bot user agents — GPTBot, ClaudeBot, PerplexityBot, Google-Extended and CCBot — and reports which are blocked and where the block lives: robots.txt, an X-Robots-Tag header, an llms.txt directive, or a CDN firewall rule. It also diffs the JS and no-JS render, because most AI crawlers don't execute JavaScript.",
   },
   {
     question: "Does it need access to my analytics or account data?",
