@@ -3,324 +3,360 @@ import Link from "next/link"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
 import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
+import { ScreenshotFrame } from "@/components/features/screenshot-frame"
+import { PainScenarioSection } from "@/components/features/pain-scenario"
+import { HowItWorks3Step, type Step } from "@/components/features/how-it-works"
+import { ActVsMonitorWedge } from "@/components/features/act-vs-monitor"
+import { SocialProofBlock } from "@/components/features/social-proof"
+import { DualCTA } from "@/components/features/dual-cta"
+import { ScoreLegend } from "@/components/features/score-legend"
+import { FeatureComparisonTable } from "@/components/features/feature-comparison-table"
+import { AiEngineLogoGrid } from "@/components/features/ai-engine-logo-grid"
 import { siteConfig } from "@/lib/config"
 import { JsonLd } from "@/components/seo/json-ld"
-import { softwareApplicationSchema, breadcrumbsSchema } from "@/lib/seo-schema"
+import { softwareApplicationSchema, howToSchema, breadcrumbsSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
-  title: "AI SEO Tool for AI Citability",
+  title: "AI Citability Checker — Grade Any URL A–F",
   description:
-    "Grade any URL from A to F for AI citability. 19 signals across schema markup, llms.txt, 9 AI bot access checks, X-Robots-Tag, freshness, and entity clarity. The AI SEO audit that tells you exactly why ChatGPT, Perplexity, and Google AI Overviews aren't citing your pages.",
+    "Why isn't AI citing your content? Paste any URL and get two grades — Citability and AI Readability — a live check of which AI engines cite the page, every on-page signal benchmarked against the pages AI does cite, and the exact fixes. Free, no credit card.",
   openGraph: {
-    title: "AI SEO Tool for AI Citability",
+    title: "AI Citability Checker — Grade Any URL A–F | GEO Toolbox",
     description:
-      "Grade any URL from A to F on 19 signals: schema markup, llms.txt, 9 AI bot access checks, X-Robots-Tag, freshness, and entity clarity. The AI SEO audit that tells you why ChatGPT, Perplexity, and Google AI Overviews aren't citing your pages.",
+      "Paste a URL. Get a Citability and an AI Readability grade, a live per-engine cited / not-cited check, every signal benchmarked against the pages AI actually cites, and the exact fixes.",
   },
   alternates: { canonical: `${siteConfig.url}/features/content-analyzer` },
 }
 
-const signals = [
-  { name: "Entity clarity", strength: 5, group: "Clarity" },
-  { name: "Schema markup", strength: 3, group: "Clarity" },
-  { name: "Structure", strength: 5, group: "Clarity" },
-  { name: "Heading hierarchy", strength: 4, group: "Clarity" },
-  { name: "Freshness", strength: 2, group: "Authority" },
-  { name: "Author byline", strength: 3, group: "Authority" },
-  { name: "External citations", strength: 4, group: "Authority" },
-  { name: "Bot access (all)", strength: 5, group: "Access" },
-  { name: "JS vs no-JS parity", strength: 3, group: "Access" },
-  { name: "X-Robots-Tag", strength: 5, group: "Access" },
-]
-
-const botTable = [
-  { bot: "GPTBot (OpenAI)", access: "Allowed", ok: true },
-  { bot: "ClaudeBot (Anthropic)", access: "Allowed", ok: true },
-  { bot: "PerplexityBot", access: "Allowed", ok: true },
-  { bot: "Google-Extended", access: "Blocked", ok: false },
-  { bot: "CCBot (CommonCrawl)", access: "Allowed", ok: true },
-  { bot: "Amazonbot", access: "Allowed", ok: true },
-]
-
-const steps = [
+const steps: Step[] = [
   {
-    num: "01",
     verb: "Paste",
-    title: "Any URL",
-    body: "Your page, a competitor's page, a PDP, a blog post. We handle static HTML, SSR, and client-rendered React.",
-    output: "https://geotoolbox.ai",
+    title: "Any URL + your keyword",
+    body: "Drop in your page, a competitor's, a PDP or a blog post, plus the keyword you want to be cited for. It handles static HTML, server-rendered, and client-rendered React.",
   },
   {
-    num: "02",
     verb: "Analyze",
-    title: "19 signals across 3 categories",
-    body: "Clarity, Authority, Access. We fetch the page as each major AI bot, diff JS vs no-JS output, parse schema, and check X-Robots-Tag headers.",
-    output: "Clarity 4.2 · Authority 3.1 · Access 4.8",
+    title: "Two scores, checked live",
+    body: "It fetches the page as each AI bot, diffs the JS vs no-JS render, and checks live which of six AI engines cite it. Then it pulls the pages those engines do cite and benchmarks yours against them, signal by signal.",
   },
   {
-    num: "03",
     verb: "Fix",
-    title: "A concrete punch list",
-    body: "Per-signal grade with the exact code change or meta tag needed. Rerun the analyzer to confirm the fix shipped.",
-    output: "B+ · 7 fixes prioritized",
+    title: "A prioritized punch list",
+    body: "You get a Citability and an AI Readability grade, the HIGH-impact actions with the gap quantified, and a one-click content brief to rewrite against. Hit Rerun to watch the grade move.",
+  },
+]
+
+// The real two-module model the analyzer outputs — shown in full to replace the
+// old 10-of-19 mock. Citability = content signals benchmarked vs the pages AI
+// cites; AI Readability = whether a crawler can reach and render the page.
+const citabilitySignals = [
+  { name: "Answer capsules", gloss: "Short, link-free answers right under a question heading — the snippet AI lifts verbatim." },
+  { name: "Question headings", gloss: "H2/H3s phrased as the questions buyers actually ask an AI engine." },
+  { name: "Structured lists", gloss: "Numbered and bulleted lists AI can extract as steps or options." },
+  { name: "Statistics with sources", gloss: "Quantified claims with a named source AI can trust and repeat." },
+  { name: "Named source attributions", gloss: "“According to [org]…” attributions AI treats as authority." },
+  { name: "Inline citations", gloss: "Outbound links to primary sources that signal a researched page." },
+  { name: "Data tables", gloss: "Comparison and spec tables AI parses into structured answers." },
+  { name: "Expert quotes", gloss: "First-hand expert voice and blockquotes AI weighs as experience." },
+  { name: "H2 coverage & word count", gloss: "Topic breadth and depth, measured against the cited pages — not a vanity number, a gap." },
+  { name: "Stats front-loaded", gloss: "How much of your evidence lands in the first 30% — the zone AI reads first." },
+  { name: "Reading grade & clarity", gloss: "Plain-language scoring; dense prose is harder for AI to quote cleanly." },
+  { name: "Freshness & author", gloss: "Visible date, days since update, and a named author — all E-E-A-T signals." },
+]
+
+const readabilitySignals = [
+  { name: "AI bot access", gloss: "robots.txt checked against the major AI crawlers — and the source line of any block." },
+  { name: "JS vs no-JS parity", gloss: "We render with and without JavaScript and diff the word counts; 69% of AI crawlers don't run JS." },
+  { name: "JSON-LD structured data", gloss: "Whether schema is present, well-formed, and type-correct." },
+  { name: "H1 & heading structure", gloss: "An AI engine uses your H1 and headings to understand the page's topic." },
+  { name: "Title & meta description", gloss: "Present, sensible length, and descriptive of the actual content." },
+  { name: "Image alt + real src", gloss: "Alt-text coverage, plus images that load from a real src — not lazy-JS an agent never sees." },
+  { name: "Render-blocking & Core Web Vitals", gloss: "Blocking scripts, LCP, CLS and TTI on the rendered page." },
+  { name: "Open Graph & internal links", gloss: "OG tags, and how many internal links survive without JavaScript." },
+  { name: "Framework & host detection", gloss: "WordPress, the CDN, and the plugins in play — so the fix targets the right layer." },
+]
+
+const outcomes = [
+  {
+    tag: "Benchmarked",
+    title: "Graded against what's already winning",
+    body: "We don't grade you against a generic ideal. Content Analyzer pulls the pages AI actually cites for your keyword and shows you, signal by signal, where you lead and where you trail — so the fix list is grounded in what's already getting picked up, not a checklist.",
+  },
+  {
+    tag: "Per-engine, live",
+    title: "Which engines cite it — checked, not guessed",
+    body: "ChatGPT, Perplexity, Claude, Gemini, Google AI Overviews and Grok, queried live. You see exactly which cite the page today and which don't, so you know whether you have a content problem or an access problem before you touch a thing.",
+  },
+  {
+    tag: "Access + content",
+    title: "The block and the writing, in one pass",
+    body: "A blocked GPTBot or a JS-only page keeps you out no matter how good the prose is. Content Analyzer checks robots.txt, the AI bots, JS-render parity, schema and H1 in the same run as the content signals — and names the source of any block so you loop in the right developer.",
+  },
+  {
+    tag: "Gap → draft",
+    title: "Ends in a brief, not a to-do",
+    body: "Every analysis closes with a prioritized action list and a one-click content brief built from the exact gaps it found, so the next thing you do is write against the fixes, not stare at a score.",
+  },
+  {
+    tag: "Re-runnable",
+    title: "Prove the fix shipped",
+    body: "Every analysis is stored. Ship a change, hit Rerun, and the grade moves — an audit trail you can hand a developer, a client, or your CMO.",
+  },
+  {
+    tag: "Exportable",
+    title: "A report you can attach to a proposal",
+    body: "Download the full grade, the per-engine cited-by, the signal benchmark and the readability matrix as a PDF. Clean enough to send to a client, detailed enough to hand to a developer.",
   },
 ]
 
 const faqs = [
   {
-    question: "What does the Citability Score measure?",
+    question: "What does the Citability Score actually measure?",
     answer:
-      "A grade from A to F that reflects how easily AI engines can access, read, and cite your page. It rolls up 19 signals across three categories: technical access (bot permissions, JS rendering), content structure (schema markup, heading hierarchy, entity clarity), and authority (freshness, author byline, external citations). Every Content Analyzer fix list maps back to this grade.",
+      "It's a grade from A to F (backed by a 0–100 score) for how likely an AI engine is to cite the page. It rolls up the on-page signals AI engines reward — answer capsules, question headings, structured lists, sourced statistics, data tables, freshness — and benchmarks each one against the pages those engines actually cite for your keyword. Alongside it, a separate AI Readability grade covers whether a crawler can even reach and render the page. Two scores, because being citable and being readable are two different problems.",
+  },
+  {
+    question: "Will fixing these signals actually get me cited by ChatGPT and Perplexity?",
+    answer:
+      "There's no guarantee — AI citation is probabilistic. But the benchmark isn't a generic ideal: it's measured against the pages those engines are already citing for your exact keyword, so closing the gaps moves you toward what's demonstrably winning. And because Content Analyzer checks each engine live, you can ship a fix, hit Rerun, and watch whether a 'not cited' flips to 'cited' — instead of guessing.",
+  },
+  {
+    question: "How is this different from a Lighthouse or SEO audit?",
+    answer:
+      "Lighthouse grades performance and technical SEO for Google and human visitors. Content Analyzer grades AI citability: it fetches your page as the AI bots, diffs the JS vs no-JS render the way a non-JS crawler sees it, and benchmarks your content signals against the pages AI cites. Different question, different output — a green Lighthouse score tells you nothing about whether ChatGPT can read or will cite you.",
   },
   {
     question: "What's the difference between Content Analyzer and GEO Scan?",
     answer:
-      "GEO Scan asks whether AI engines currently cite you for a given keyword; it's a live AI visibility check. Content Analyzer audits a specific URL to identify why that page is or isn't citable in the first place. Use Scan to measure, Analyzer to fix.",
+      "GEO Scan asks whether AI engines currently cite your brand for a keyword — a live visibility check across a prompt set. Content Analyzer zooms into a single URL to explain why that page is or isn't citable and hand you the fix. Use Scan to measure where you stand, Analyzer to fix the page that's falling short.",
   },
   {
-    question: "Does it check if AI bots can actually crawl my page?",
+    question: "Does it check whether AI bots can actually crawl my page?",
     answer:
-      "Yes. Content Analyzer probes your page with nine different AI bot user agents, including GPTBot, ClaudeBot, PerplexityBot, Google-Extended, CCBot, and Amazonbot, and reports which ones are blocked. If a bot is refused, we identify the source: robots.txt, X-Robots-Tag header, or CDN firewall rule.",
+      "Yes. It probes your page against the major AI bot user agents — GPTBot, ClaudeBot, PerplexityBot, Google-Extended and more — and reports which are blocked and where the block lives: robots.txt, an X-Robots-Tag header, or a CDN firewall rule. It also diffs the JS and no-JS render, because most AI crawlers don't execute JavaScript.",
   },
   {
-    question: "What schema markup does it check?",
+    question: "Does it need access to my analytics or account data?",
     answer:
-      "It validates JSON-LD structured data for FAQ, HowTo, Article, Product, and Organization schemas. Missing required fields, type mismatches, and invalid syntax get flagged with the exact repair needed. Well-formed schema is one of the clearest signals AI engines read.",
-  },
-  {
-    question: "How does it evaluate content freshness?",
-    answer:
-      "We detect year mentions in your content and measure staleness, the gap between the most recent year referenced and today. Pages that still cite 2023 data rank lower for AI citations than pages with current data, so staleness gets its own signal in the grade.",
+      "No. Content Analyzer only fetches publicly accessible URLs — the same way an AI crawler would. It never needs your analytics, your CMS, or your account data to grade a page.",
   },
   {
     question: "Can I export the analysis as a report?",
     answer:
-      "Yes. Every analysis downloads as a PDF with the full grade, the nine-bot access matrix, per-signal evidence, and prioritized recommendations. Clean enough to hand to a developer, detailed enough to debug.",
+      "Yes. Every analysis downloads as a PDF with the full grade, the per-engine cited / not-cited result, the signal benchmark, the AI-readability matrix and the prioritized fixes. Clean enough to attach to a proposal, detailed enough to debug.",
   },
 ]
 
-const outcomes = [
-  {
-    tag: "Multi-bot",
-    title: "Every AI crawler checked",
-    body: "Nine bot user agents including GPTBot, ClaudeBot, PerplexityBot, Google-Extended, CCBot, and Amazonbot. If one is blocked, we tell you where (robots.txt, X-Robots-Tag, or CDN firewall).",
-  },
-  {
-    tag: "llms.txt",
-    title: "The new signal AI engines read",
-    body: "We check for a valid llms.txt file at your root, validate its structure, and flag the sections that would help AI engines prioritize your best content. If it's missing, the analyzer generates a starter spec you can ship to your team.",
-  },
-  {
-    tag: "JS parity",
-    title: "What AI actually sees",
-    body: "Some AI engines render JS, most don't. We fetch with and without JS execution and flag any content that's only visible to renderers.",
-  },
-  {
-    tag: "A–F grade",
-    title: "Shareable output",
-    body: "Every analysis produces an A–F score plus per-signal breakdown. Clean enough to send to a developer, detailed enough to debug.",
-  },
-  {
-    tag: "Schema validation",
-    title: "Structured data that helps",
-    body: "Not just 'has schema yes/no'. We check the schema type matches the content, required fields are present, and the markup is AI-legible for FAQ, HowTo, Article, Product, and Organization types.",
-  },
-  {
-    tag: "Rerun anytime",
-    title: "Prove the fix shipped",
-    body: "Every analysis is stored. Fix the issue, hit Rerun, and watch the grade move. Audit trail you can show a developer, a client, or your leadership.",
-  },
-]
+const citedEngines = ["chatgpt", "perplexity", "gemini", "claude", "aio", "grok"] as const
 
 export default function ContentAnalyzerPage() {
   return (
     <>
-      {/* Hero — lilac atmosphere (audit / report-card feel) */}
-      <section className="relative overflow-hidden bg-[var(--surface-lilac)] px-6 pt-20 pb-16 sm:pt-24 sm:pb-20">
-      <JsonLd data={[
-        softwareApplicationSchema({
-          name: "Content Analyzer",
-          description: "Grade any URL from A to F for AI citability across 19 signals: schema markup, AI bot access, entity clarity, freshness, and answer-first formatting.",
-          url: `${siteConfig.url}/features/content-analyzer`,
-        }),
-        breadcrumbsSchema([
-          { name: "Home", url: "/" },
-          { name: "Features", url: "/features" },
-          { name: "Content Analyzer", url: "/features/content-analyzer" },
-        ]),
-      ]} />
+      {/* Hero — pain-led, with the real two-score analyzer result as proof */}
+      <section className="relative overflow-hidden bg-[var(--surface-lilac)] px-6 pt-16 pb-16 sm:pt-20 sm:pb-20">
+        <JsonLd
+          data={[
+            softwareApplicationSchema({
+              name: "Content Analyzer",
+              description:
+                "An AI citability checker: grade any URL with a Citability and an AI Readability score, a live per-engine cited / not-cited check, and every on-page signal benchmarked against the pages AI actually cites.",
+              url: `${siteConfig.url}/features/content-analyzer`,
+              applicationSubCategory: "AI citability checker",
+            }),
+            howToSchema({
+              name: "How to check whether AI will cite your page",
+              steps: steps.map((s) => ({ name: s.title, text: s.body })),
+            }),
+            breadcrumbsSchema([
+              { name: "Home", url: "/" },
+              { name: "Features", url: "/features" },
+              { name: "Content Analyzer", url: "/features/content-analyzer" },
+            ]),
+          ]}
+        />
 
-        <div className="mx-auto max-w-7xl">
+        <div className="mx-auto max-w-5xl">
           <Breadcrumbs featureName="Content Analyzer" />
-
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center lg:gap-16">
-            <div className="lg:col-span-6">
-              <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">
-                Content Analyzer
-              </p>
-              <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-                Why isn&apos;t AI citing your content?
-              </h1>
-              <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-                Grade any page A–F. 19 signals across clarity, authority, and access. Know exactly what to fix so AI starts citing your pages instead of your competitors&apos;.
-              </p>
-              <div className="mt-8 flex flex-wrap items-center gap-3">
-                <Link href="/app" prefetch={false} className="rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px]">
-                  Analyze a page
-                </Link>
-                <Link href="#signals" className="rounded-full border border-gray-200 px-6 py-3.5 text-[15px] font-medium text-gray-700 hover:border-gray-400 hover:text-gray-900">
-                  See the 19 signals
-                </Link>
-              </div>
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+              Content Analyzer
+            </p>
+            <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
+              Why isn&apos;t AI citing your content?
+            </h1>
+            <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
+              Your competitor&apos;s page passes the access, structure and authority checks AI engines run
+              before they cite anyone. Yours is failing some of them &mdash; and you can&apos;t see which. Paste any
+              URL and get an A&ndash;F citability grade, a live check of which AI engines cite the page, and
+              the exact fixes &mdash; in under 60 seconds.
+            </p>
+            <div className="mt-8">
+              <DualCTA
+                primaryLabel="Analyze a page — free"
+                primaryHref="/app"
+                secondaryLabel="See the signals it checks"
+                secondaryHref="#signals"
+                microcopy="Free plan · no credit card · results in under a minute"
+              />
             </div>
-
-            {/* Grade card visual */}
-            <div className="lg:col-span-6" aria-hidden="true">
-              <div className="relative rounded-[2rem] border border-gray-200 bg-white p-8 shadow-[0_20px_60px_-20px_rgba(15,23,42,0.12)]">
-                <div className="flex items-start justify-between gap-6">
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate font-mono text-[12px] text-gray-500">geotoolbox.ai</p>
-                    <p className="mt-3 text-[11px] font-semibold uppercase tracking-widest text-gray-600">Citability grade</p>
-                    <p className="mt-1 font-mono text-[80px] font-bold leading-none tracking-tight text-accent-700">B+</p>
-                  </div>
-                  <div className="shrink-0">
-                    <div className="flex flex-col gap-2">
-                      <div className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-[11px] font-semibold text-gray-700">
-                        Clarity <span className="text-accent-700">4.2</span>
-                      </div>
-                      <div className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-[11px] font-semibold text-gray-700">
-                        Authority <span className="text-accent-700">3.1</span>
-                      </div>
-                      <div className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-[11px] font-semibold text-gray-700">
-                        Access <span className="text-accent-700">4.8</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-6 border-t border-gray-100 pt-5">
-                  <div className="flex items-center justify-between mb-3">
-                    <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-500">Bot access</p>
-                    <span className="font-mono text-[10px] text-gray-500">sample</span>
-                  </div>
-                  <div className="space-y-1.5">
-                    {botTable.map((b) => (
-                      <div key={b.bot} className="flex items-center justify-between py-1.5">
-                        <span className="text-[13px] text-gray-700">{b.bot}</span>
-                        <span className={`font-mono text-[11px] font-semibold ${b.ok ? "text-accent-700" : "text-red-600"}`}>
-                          {b.access}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+            <div className="mt-7 flex justify-center">
+              <ScoreLegend variant="A-F" />
             </div>
+          </div>
+
+          <div className="mx-auto mt-12 max-w-4xl">
+            <ScreenshotFrame
+              src="/screenshots/content-analyzer/citability-result.png"
+              alt="A real Content Analyzer result: a Citability Score of A (95/100) and an AI Readability Score of A (90/100), a live per-engine line showing the page cited by Google AI Overview, Perplexity, Claude and Gemini and not cited by Grok and ChatGPT, and three prioritized HIGH-impact actions."
+              width={2108}
+              height={1134}
+              priority
+              caption="A real analysis of a StubGroup guide ranking for ‘google ads for lawyers’: two grades, a live per-engine cited / not-cited check across six AI engines, and the prioritized fixes — no fabricated mockup."
+            />
           </div>
         </div>
       </section>
 
-      {/* How it works — atmosphere continues */}
-      <section className="bg-[var(--surface-lilac)] px-6 py-24 sm:py-28">
-        <div className="mx-auto max-w-7xl">
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-[5fr_7fr] lg:items-end lg:gap-16">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">How it works</p>
-              <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.5rem)] font-bold leading-tight tracking-tight text-gray-900">
-                From URL to punch list in under 60 seconds.
-              </h2>
-            </div>
-            <p className="max-w-xl text-base leading-relaxed text-gray-600">
-              No wait, no crawl scheduling. Paste a URL, get a grade and the exact fixes. Rerun anytime to verify the change shipped.
+      {/* The cost of being uncited */}
+      <PainScenarioSection
+        eyebrow="The blind spot"
+        scenario="You published a thorough guide. It ranks page one, it reads well, your team is proud of it. Then a buyer asks ChatGPT for the best option and it cites a thinner competitor instead &mdash; because that page front-loads its stats and yours buries them, or because Google-Extended is blocked in a robots.txt line nobody remembers adding. There&apos;s no error to catch. You just aren&apos;t in the answer."
+        bridge="As AI Overviews and chat assistants answer a growing share of searches with no click, the page AI cites is the page that gets the customer. Content Analyzer fetches your URL the way each engine does, checks live which ones already cite it, and benchmarks every signal against the pages they cite instead &mdash; so you can see and close the exact gap."
+      />
+
+      {/* How it works (HowTo schema source) */}
+      <HowItWorks3Step heading="From URL to punch list in under 60 seconds" steps={steps} />
+
+      {/* What it checks — the real two-module model, shown in full */}
+      <section id="signals" className="border-t border-gray-100 bg-gray-50 px-6 py-16 sm:py-20">
+        <div className="mx-auto max-w-5xl">
+          <div className="max-w-2xl">
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+              Two scores, every signal shown
+            </p>
+            <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
+              Citability is the writing. Readability is the access.
+            </h2>
+            <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-gray-600">
+              A page can be perfectly written and still invisible to AI because a crawler can&apos;t reach it &mdash;
+              or perfectly reachable and never cited because the content gives an engine nothing to lift.
+              Content Analyzer grades both, and every signal below is in the report.
             </p>
           </div>
 
-          <ol className="mt-14 divide-y divide-gray-200">
-            {steps.map((s) => (
-              <li key={s.num} className="grid grid-cols-1 gap-6 py-8 md:grid-cols-[auto_1fr_auto] md:items-center md:gap-10 md:py-10">
-                <div className="flex items-center gap-4 md:block">
-                  <span className="font-mono text-4xl font-bold tabular-nums text-accent-700 md:text-5xl">{s.num}</span>
-                  <span className="text-xs font-semibold uppercase tracking-widest text-gray-500 md:hidden">{s.verb}</span>
-                </div>
-                <div>
-                  <p className="hidden text-xs font-semibold uppercase tracking-widest text-gray-500 md:block">{s.verb}</p>
-                  <h3 className="mt-1 text-xl font-semibold tracking-tight text-gray-900">{s.title}</h3>
-                  <p className="mt-2 max-w-xl text-[15px] leading-relaxed text-gray-600">{s.body}</p>
-                </div>
-                <div className="md:text-right">
-                  <p className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-3 py-1.5 font-mono text-[12px] text-gray-700">
-                    <svg className="h-3 w-3 text-accent-600" viewBox="0 0 12 12" fill="none">
-                      <path d="M3 6h6m0 0L6 3m3 3L6 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-2">
+            {/* Citability */}
+            <div className="rounded-2xl border border-gray-200 bg-white p-7">
+              <div className="flex items-baseline justify-between">
+                <h3 className="text-lg font-semibold tracking-tight text-gray-900">Citability signals</h3>
+                <span className="font-mono text-[10px] uppercase tracking-widest text-gray-500">
+                  vs the pages AI cites
+                </span>
+              </div>
+              <p className="mt-1 text-[13px] leading-relaxed text-gray-500">
+                Benchmarked against the AI-cited pages for your keyword &mdash; each shown as ahead, on par, or behind.
+              </p>
+              <ul className="mt-5 space-y-3">
+                {citabilitySignals.map((s) => (
+                  <li key={s.name} className="flex items-start gap-2.5">
+                    <svg className="mt-1 h-3.5 w-3.5 shrink-0 text-accent-600" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                      <path d="M3 7.5l2.5 2.5L11 4.5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
-                    <span className="truncate">{s.output}</span>
-                  </p>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-
-      {/* Signals breakdown */}
-      <section id="signals" className="bg-gray-50 px-6 py-24 sm:py-28">
-        <div className="mx-auto max-w-7xl">
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-[5fr_7fr] lg:items-end lg:gap-16">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">The 19 signals</p>
-              <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.5rem)] font-bold leading-tight tracking-tight text-gray-900">
-                Three categories. Everything AI cares about.
-              </h2>
-            </div>
-            <p className="max-w-xl text-base leading-relaxed text-gray-600">
-              Every signal maps to a concrete technical or editorial change. No fluff metrics, no AI-era buzzwords, just checks that correlate with getting cited.
-            </p>
-          </div>
-
-          <div className="mt-14 overflow-hidden rounded-[2rem] border border-gray-200 bg-white">
-            <ul className="divide-y divide-gray-100">
-              {signals.map((s) => {
-                const dotColor =
-                  s.strength >= 4 ? "bg-accent-600"
-                  : s.strength >= 3 ? "bg-amber-500"
-                  : "bg-red-400"
-                const gradeLabel =
-                  s.strength >= 4 ? { text: "Strong", color: "text-accent-700" }
-                  : s.strength >= 3 ? { text: "Mixed", color: "text-amber-700" }
-                  : { text: "Weak", color: "text-red-600" }
-                return (
-                  <li key={s.name} className="grid grid-cols-[auto_1fr_auto_auto] items-center gap-4 px-6 py-4 md:px-8">
-                    <span className="font-mono text-[10px] font-semibold uppercase tracking-widest text-gray-500 w-20">
-                      {s.group}
+                    <span className="text-[14px] leading-snug text-gray-700">
+                      <span className="font-semibold text-gray-900">{s.name}</span>
+                      <span className="text-gray-500"> &mdash; {s.gloss}</span>
                     </span>
-                    <span className="text-[15px] font-medium text-gray-900">{s.name}</span>
-                    <span className={`font-mono text-[11px] font-semibold ${gradeLabel.color}`}>
-                      {gradeLabel.text}
-                    </span>
-                    <div className="flex gap-1">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <span key={i} className={`h-2 w-2 rounded-full ${i < s.strength ? dotColor : "bg-gray-200"}`} />
-                      ))}
-                    </div>
                   </li>
-                )
-              })}
-            </ul>
+                ))}
+              </ul>
+            </div>
+
+            {/* AI Readability */}
+            <div className="rounded-2xl border border-gray-200 bg-white p-7">
+              <div className="flex items-baseline justify-between">
+                <h3 className="text-lg font-semibold tracking-tight text-gray-900">AI Readability checks</h3>
+                <span className="font-mono text-[10px] uppercase tracking-widest text-gray-500">
+                  can a crawler read it
+                </span>
+              </div>
+              <p className="mt-1 text-[13px] leading-relaxed text-gray-500">
+                What an AI agent receives when it fetches the page &mdash; access, render parity, and structure.
+              </p>
+              <ul className="mt-5 space-y-3">
+                {readabilitySignals.map((s) => (
+                  <li key={s.name} className="flex items-start gap-2.5">
+                    <svg className="mt-1 h-3.5 w-3.5 shrink-0 text-accent-600" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                      <path d="M3 7.5l2.5 2.5L11 4.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    <span className="text-[14px] leading-snug text-gray-700">
+                      <span className="font-semibold text-gray-900">{s.name}</span>
+                      <span className="text-gray-500"> &mdash; {s.gloss}</span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
-          <p className="mt-4 text-xs text-gray-600">
-            Sample scoring shown. Real results show per-signal evidence, source line, and the exact fix.
-          </p>
+
+          {/* The benchmark table screenshot */}
+          <div className="mx-auto mt-12 max-w-4xl">
+            <ScreenshotFrame
+              src="/screenshots/content-analyzer/signal-breakdown.png"
+              alt="The signal breakdown table: each content signal shown for your page versus the average of the AI-cited pages, with the gap labeled — e.g. structured lists 3 vs a cited-page average of 11.3 (8.3 behind), statistics with sources 60 vs 39 (21 ahead), word count 3,528 vs 2,414.5."
+              width={1219}
+              height={1440}
+              caption="The benchmark, not an abstraction: every signal scored against the AI-cited pages for the keyword, with the gap quantified so you know exactly what to change."
+            />
+          </div>
         </div>
       </section>
+
+      {/* Per-engine, live — the differentiator */}
+      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+            It doesn&apos;t infer. It checks.
+          </p>
+          <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
+            Which AI engines cite the page &mdash; live, per engine.
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-[15px] leading-relaxed text-gray-600">
+            Most tools estimate AI visibility from training-data patterns. Content Analyzer queries each engine
+            live and tells you, for this URL, exactly who cites it and who doesn&apos;t &mdash; so you know whether to
+            fix the content, clear an access block, or both. Pair it with{" "}
+            <Link href="/features/geo-scan" className="font-semibold text-accent-700 hover:text-accent-800">
+              GEO Scan
+            </Link>{" "}
+            to see whether AI engines cite you for a whole keyword set.
+          </p>
+          <div className="mt-10">
+            <AiEngineLogoGrid
+              engines={[...citedEngines]}
+              label="Checked live for every analysis — cited or not cited, per engine"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Act, don't just monitor */}
+      <ActVsMonitorWedge
+        headline="Most AI-visibility tools show you the gap and stop."
+        emphasis="Content Analyzer runs the fix."
+        body="A domain-level dashboard tells you your share of voice is down. It can't tell you which line on which page to change. Content Analyzer ends every run with a prioritized, per-signal action list — the exact change, header, or section to add — and a one-click brief built from those gaps."
+        example="See &lsquo;Structured lists: 3 vs a cited-page average of 11&rsquo;? That becomes a HIGH action with the target count, then a content brief you can write straight against — and a Rerun to confirm the grade moved."
+        link={{ label: "Turn the fixes into a citation-ready draft with Content Brief", href: "/features/content-brief" }}
+      />
 
       {/* Outcomes */}
-      <section className="bg-white px-6 py-24 sm:py-28">
-        <div className="mx-auto max-w-7xl">
+      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
+        <div className="mx-auto max-w-5xl">
           <div className="max-w-2xl">
-            <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">What makes it different</p>
-            <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.5rem)] font-bold leading-tight tracking-tight text-gray-900">
-              Not another &ldquo;SEO score&rdquo;.
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">What makes it different</p>
+            <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
+              Not another &ldquo;SEO score.&rdquo;
             </h2>
           </div>
-          <div className="mt-14 grid grid-cols-1 gap-8 md:grid-cols-2 lg:gap-12">
+          <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:gap-12">
             {outcomes.map((o) => (
               <div key={o.tag}>
                 <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">{o.tag}</p>
@@ -332,13 +368,52 @@ export default function ContentAnalyzerPage() {
         </div>
       </section>
 
+      {/* Comparison */}
+      <section className="border-t border-gray-100 bg-gray-50 px-6 py-16 sm:py-20">
+        <div className="mx-auto max-w-4xl">
+          <div className="max-w-2xl">
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">Where it fits</p>
+            <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
+              A performance score and a visibility dashboard answer different questions.
+            </h2>
+          </div>
+          <div className="mt-10">
+            <FeatureComparisonTable
+              columns={["Lighthouse / PageSpeed", "AI-visibility monitors", "Content Analyzer"]}
+              rows={[
+                { label: "Audits one URL's on-page signals", cells: ["SEO/perf only", false, true] },
+                { label: "Checks AI-bot access + JS-render parity", cells: [false, false, true] },
+                { label: "Live per-engine cited / not cited for the page", cells: [false, "Domain-level", true] },
+                { label: "Benchmarks signals vs the pages AI cites", cells: [false, false, true] },
+                { label: "Exact per-signal fix list", cells: [false, false, true] },
+                { label: "Generates a content brief to close the gap", cells: [false, false, true] },
+              ]}
+              caption="Lighthouse grades performance for Google and humans; AI-visibility monitors track your domain's share of voice over time. Only Content Analyzer audits a single URL the way AI reads it, benchmarks it against the pages AI cites, and hands you the fix."
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Light proof — real run, real provenance, no fabricated counters */}
+      <section className="border-t border-gray-100 bg-white px-6 py-12">
+        <SocialProofBlock
+          miniCase={{
+            result:
+              "Already cited by Google AI Overview, Perplexity, Claude and Gemini — Content Analyzer flagged the one gap (3 structured lists vs an 11.3 cited-page average) keeping the page out of ChatGPT and Grok.",
+            attribution: "A real run · a StubGroup guide ranking for ‘google ads for lawyers’",
+          }}
+          engines={[...citedEngines]}
+          provenanceLine="Every grade comes from a live fetch of your real URL — the page rendered in a headless browser and probed as the AI crawlers, then benchmarked against the pages those engines actually cite. No cached guesses, no training-data inference."
+        />
+      </section>
+
       <FeatureFaq items={faqs} />
 
-      <RelatedFeatures current="content-analyzer" related={["content-brief", "geo-scan", "domain-overview"]} />
+      <RelatedFeatures current="content-analyzer" related={["geo-scan", "content-brief", "agent-readiness"]} />
 
       {/* CTA */}
       <section className="bg-gray-950 px-6 py-20 sm:py-24">
-        <div className="mx-auto max-w-7xl flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between md:gap-12">
+        <div className="mx-auto flex max-w-5xl flex-col items-start gap-6 md:flex-row md:items-center md:justify-between md:gap-12">
           <div>
             <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
               Grade your first page.
