@@ -17,7 +17,7 @@ import { softwareApplicationSchema, howToSchema, breadcrumbsSchema } from "@/lib
 export const metadata: Metadata = {
   title: "AI Content Brief & Article Writer | GEO Toolbox Content Studio",
   description:
-    "Your article is well-written — AI still won't cite it. Content Studio reverse-engineers what ChatGPT, Perplexity and AI Overviews actually extract from the pages they cite, builds a citation-ready brief (strategy, outline, entity targets, AI-extractability checklist), then writes the full draft. Free, no credit card.",
+    "Your article is well-written — AI still won't cite it. Content Studio reverse-engineers what ChatGPT, Perplexity and AI Overviews actually extract from the pages they cite, builds a citation-ready brief (strategy, outline, entity targets, AI-extractability checklist), then writes the full draft.",
   openGraph: {
     title: "AI Content Brief & Article Writer | GEO Toolbox Content Studio",
     description:
@@ -44,15 +44,16 @@ const steps: Step[] = [
   },
 ]
 
-// The real modules a Content Studio brief produces — shown in full.
+// The real modules a Content Studio brief produces — shown in full, lead with the
+// two that differentiate it from keyword/structure brief tools.
 const briefModules = [
+  { name: "AI extractability checklist", gloss: "The REQUIRED and RECOMMENDED moves AI engines reward: answer-first opening, PAA-matching H2s, inline-cited stats, self-contained FAQ, schema." },
+  { name: "AI vs SERP gap analysis", gloss: "Where the AI answer and the organic SERP diverge — the sub-topics no one covers that you can own." },
   { name: "Strategy", gloss: "A read of the SERP and the pages AI cites — what's dominating, the content gap, and the angle that earns citations." },
   { name: "Content framework", gloss: "Word target benchmarked against competitors, format, reading grade, and tone — the spec the draft is written to." },
-  { name: "AI extractability checklist", gloss: "The REQUIRED and RECOMMENDED moves AI engines reward: answer-first opening, PAA-matching H2s, inline-cited stats, self-contained FAQ, schema." },
   { name: "Recommended outline", gloss: "A framework-aware H2/H3 outline (pillar, cluster, comparison, or FAQ) the writer fills in." },
   { name: "Entities & frequency targets", gloss: "The named entities the cited pages cover — and how often — so AI sees the topic fully addressed." },
   { name: "Statistics & evidence", gloss: "The specific, sourced facts competitors cite that you'd lose a citation without." },
-  { name: "AI vs SERP gap analysis", gloss: "Where the AI answer and the organic SERP diverge — the sub-topics no one covers that you can own." },
   { name: "Community insights", gloss: "The Reddit and forum threads AI pulls from for this topic, so the brief reflects how people actually ask." },
 ]
 
@@ -63,14 +64,14 @@ const outcomes = [
     body: "Most brief tools grade you against keyword and heading coverage for the ten blue links. Content Studio reads what ChatGPT, Perplexity and AI Overviews actually lift from the pages they cite — answer capsules, entities, sourced stats — and briefs to that.",
   },
   {
-    tag: "Facts you'd have missed",
-    title: "The stat the cited pages all include",
-    body: "It surfaces the exact entities and statistics competitors cite that your draft omits — the pricing table 7 of 9 top pages include, the data point AI expects — so you never lose a citation to a missing fact.",
-  },
-  {
     tag: "Write, don't just brief",
     title: "The draft, written for you",
     body: "Brief tools hand you an outline and stop. Content Studio writes the full first draft against the brief with a 5-stage copywriter — answer-first, correctly structured, the entities already in — so you start editing, not from a blank page.",
+  },
+  {
+    tag: "Facts you'd have missed",
+    title: "The stat the cited pages all include",
+    body: "It surfaces the exact entities and statistics competitors cite that your draft omits — the pricing table 7 of 9 top pages include, the data point AI expects — so you never lose a citation to a missing fact.",
   },
   {
     tag: "Own the gap",
@@ -85,7 +86,7 @@ const outcomes = [
   {
     tag: "One loop",
     title: "Brief → write → grade → repeat",
-    body: "When the draft is done, grade it for citability in Content Analyzer, apply the fixes, and re-brief. The whole loop — research, write, score, ship — lives in one place.",
+    body: "When the draft is done, hand it to Content Analyzer to grade for citability — a one-click hand-off from the brief — apply the fixes, and re-brief. The whole loop, research to ship, lives in one place.",
   },
 ]
 
@@ -119,6 +120,11 @@ const faqs = [
     question: "Do I need to connect Google Search Console?",
     answer:
       "No — it's optional. Content Studio builds the brief from the live SERP and real AI responses without it. If you do connect GSC, it uses your existing impressions to prioritize which briefs are worth writing first; it never needs GSC to generate a brief.",
+  },
+  {
+    question: "What does Content Studio cost?",
+    answer:
+      "Content Studio briefs are included from the Consultant plan up; full article writing with the 5-stage copywriter is on the Agency and Scale plans. A free account covers the AI visibility tracker and Agent Readiness so you can start without a card — see the pricing page for current tiers.",
   },
 ]
 
@@ -160,17 +166,18 @@ export default function ContentStudioPage() {
               Your article is well-written. AI still won&apos;t cite it.
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
-              A clean, readable post can be invisible to ChatGPT, Perplexity and Google AI Overviews &mdash; because
-              it&apos;s missing the entities, facts and structure the engines actually extract. Content Studio
-              reverse-engineers what gets cited, builds the brief, and writes the draft against it.
+              Content Studio is an AI content brief and article writer. A clean, readable post can be invisible to
+              ChatGPT, Perplexity and Google AI Overviews &mdash; because it&apos;s missing the entities, facts and
+              structure the engines actually extract. It reverse-engineers what gets cited, builds the brief, and
+              writes the draft against it.
             </p>
             <div className="mt-8">
               <DualCTA
-                primaryLabel="Generate a brief — free"
+                primaryLabel="Generate a brief"
                 primaryHref="/app"
                 secondaryLabel="See what's in a brief"
                 secondaryHref="#brief"
-                microcopy="Free plan · no credit card · built on live SERPs + real AI responses"
+                microcopy="Built on live SERPs + real AI engine responses · see plans"
               />
             </div>
           </div>
@@ -248,8 +255,8 @@ export default function ContentStudioPage() {
         headline="Most brief tools score structure and stop."
         emphasis="Content Studio tells you the fix — then writes it."
         body="A keyword tool flags that you're light on a term. Content Studio names the exact entities and sourced facts AI expects, hands you the extractability checklist, and drafts the article against it — so the gap closes instead of just getting measured."
-        example="See &lsquo;answer-first opening — REQUIRED&rsquo; and &lsquo;statistics with inline citations — REQUIRED&rsquo;? The draft is written with both already in place, then you grade it for citability and re-check."
-        link={{ label: "Grade the finished draft in Content Analyzer", href: "/features/content-analyzer" }}
+        example="See &lsquo;answer-first opening — REQUIRED&rsquo; and &lsquo;statistics with inline citations — REQUIRED&rsquo;? The draft is written with both already in place, then you hand it to Content Analyzer to grade for citability and re-check."
+        link={{ label: "Hand off to Content Analyzer to grade citability", href: "/features/content-analyzer" }}
       />
 
       {/* Outcomes */}
@@ -277,9 +284,9 @@ export default function ContentStudioPage() {
       <section className="border-t border-gray-100 bg-white px-6 py-10">
         <div className="mx-auto max-w-3xl">
           <DualCTA
-            primaryLabel="Generate a brief — free"
+            primaryLabel="Generate a brief"
             primaryHref="/app"
-            microcopy="Free plan · no credit card · built on live SERPs + real AI responses"
+            microcopy="Built on live SERPs + real AI engine responses · see plans"
           />
         </div>
       </section>
@@ -302,14 +309,14 @@ export default function ContentStudioPage() {
             <FeatureComparisonTable
               columns={["Surfer / Clearscope", "MarketMuse", "Content Studio"]}
               rows={[
-                { label: "Optimizes for AI citation, not just keyword coverage", cells: [false, false, true] },
-                { label: "Built on real AI engine responses", cells: [false, false, true] },
+                { label: "Primary optimization target", cells: ["Keyword / SERP", "Topic model", "AI citation"] },
+                { label: "Briefs from live AI-engine answers", cells: [false, false, true] },
                 { label: "AI-extractability checklist (answer-first, PAA H2s, schema)", cells: [false, false, true] },
                 { label: "Entity + competitor-facts targets from the cited pages", cells: ["Keyword terms", "Topic model", true] },
                 { label: "AI-vs-SERP gap analysis", cells: [false, false, true] },
-                { label: "Writes the full draft + exports PDF / DOCX / Markdown", cells: ["Partial", "Partial", true] },
+                { label: "Writes the draft from the brief + exports PDF / DOCX / Markdown", cells: ["AI writer add-on", "Drafts", true] },
               ]}
-              caption="These are established ranking-era tools that mostly score traditional structure. Content Studio adds the AI-citability layer — and writes the draft against it."
+              caption="These are established ranking-era tools, built for keyword and topic coverage. Content Studio adds the AI-citability layer — the extractability checklist and the AI-vs-SERP gap — and writes the draft against it."
             />
           </div>
         </div>
@@ -320,7 +327,7 @@ export default function ContentStudioPage() {
         <SocialProofBlock
           miniCase={{
             result:
-              "A real brief for ‘LLM SEO’ mapped the SERP (a Reddit thread, a Vercel engineering blog, two thin guides), set a 3,200-word practitioner-guide framework, and flagged eight AI-extractability requirements — before a word was written.",
+              "A real brief for ‘LLM SEO’ read the SERP (a Reddit thread, a Vercel engineering blog, two thin guides), set a 3,200-word target — against the 2,339-word competitor average — and flagged eight AI-extractability requirements before a word was written.",
             attribution: "A real Content Studio brief · keyword ‘LLM SEO’",
           }}
           engines={[...citedEngines]}
@@ -339,7 +346,7 @@ export default function ContentStudioPage() {
             <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
               Brief your next article.
             </h2>
-            <p className="mt-2 text-base text-gray-300">Free plan, no credit card. From keyword to draft in one place.</p>
+            <p className="mt-2 text-base text-gray-300">From keyword to draft in one place.</p>
           </div>
           <Link href="/app" prefetch={false} className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]">
             Generate a brief

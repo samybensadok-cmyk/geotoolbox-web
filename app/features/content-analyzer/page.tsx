@@ -19,7 +19,7 @@ import { softwareApplicationSchema, howToSchema, breadcrumbsSchema } from "@/lib
 export const metadata: Metadata = {
   title: "AI Citability Checker — Grade Any URL A–F | GEO Toolbox Content Analyzer",
   description:
-    "Why isn't AI citing your content? Paste any URL and get two grades — Citability and AI Readability — a live check of which AI engines cite the page, every on-page signal benchmarked against the pages AI does cite, and the exact fixes. Free, no credit card.",
+    "Why isn't AI citing your content? Paste any URL and get two grades — Citability and AI Readability — a live check of which AI engines cite the page, every on-page signal benchmarked against the pages AI does cite, and the exact fixes.",
   openGraph: {
     title: "AI Citability Checker — Grade Any URL A–F | GEO Toolbox",
     description:
@@ -145,6 +145,11 @@ const faqs = [
     answer:
       "Yes. Every analysis downloads as a PDF with the full grade, the per-engine cited / not-cited result, the signal benchmark, the AI-readability matrix and the prioritized fixes. Clean enough to attach to a proposal, detailed enough to debug.",
   },
+  {
+    question: "What does Content Analyzer cost?",
+    answer:
+      "Content Analyzer is included from the Starter plan ($49/mo) up. A free account covers the AI visibility tracker and Agent Readiness so you can start without a card — see the pricing page for current tiers.",
+  },
 ]
 
 const citedEngines = ["chatgpt", "perplexity", "gemini", "claude", "aio", "grok"] as const
@@ -192,11 +197,11 @@ export default function ContentAnalyzerPage() {
             </p>
             <div className="mt-8">
               <DualCTA
-                primaryLabel="Get my free citability report"
+                primaryLabel="Get my citability report"
                 primaryHref="/app"
                 secondaryLabel="See the signals it checks"
                 secondaryHref="#signals"
-                microcopy="Free plan · no credit card · results in minutes"
+                microcopy="Live AI-bot fetches + real engine checks · see plans"
               />
             </div>
             <div className="mt-7 flex justify-center">
@@ -344,9 +349,9 @@ export default function ContentAnalyzerPage() {
       <section className="border-t border-gray-100 bg-white px-6 py-10">
         <div className="mx-auto max-w-3xl">
           <DualCTA
-            primaryLabel="Get my free citability report"
+            primaryLabel="Get my citability report"
             primaryHref="/app"
-            microcopy="Free plan · no credit card · results in minutes"
+            microcopy="Live AI-bot fetches + real engine checks · see plans"
           />
         </div>
       </section>
@@ -466,7 +471,7 @@ export default function ContentAnalyzerPage() {
             <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
               Grade your first page.
             </h2>
-            <p className="mt-2 text-base text-gray-300">Free plan, no credit card. Results in minutes.</p>
+            <p className="mt-2 text-base text-gray-300">Results in minutes.</p>
           </div>
           <Link href="/app" prefetch={false} className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]">
             Analyze a page
