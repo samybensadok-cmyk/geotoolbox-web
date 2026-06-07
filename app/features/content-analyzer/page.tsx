@@ -17,7 +17,7 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema, howToSchema, breadcrumbsSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
-  title: "AI Citability Checker — Grade Any URL A–F",
+  title: "AI Citability Checker — Grade Any URL A–F | GEO Toolbox Content Analyzer",
   description:
     "Why isn't AI citing your content? Paste any URL and get two grades — Citability and AI Readability — a live check of which AI engines cite the page, every on-page signal benchmarked against the pages AI does cite, and the exact fixes. Free, no credit card.",
   openGraph: {
@@ -123,7 +123,7 @@ const faqs = [
   {
     question: "How is this different from a Lighthouse or SEO audit?",
     answer:
-      "Lighthouse grades performance and technical SEO for Google and human visitors. Content Analyzer grades AI citability: it fetches your page as the AI bots, diffs the JS vs no-JS render the way a non-JS crawler sees it, and benchmarks your content signals against the pages AI cites. Different question, different output — a green Lighthouse score tells you nothing about whether ChatGPT can read or will cite you.",
+      "Lighthouse grades performance and technical SEO for Google and human visitors. Content Analyzer grades AI citability — answer engine optimization (AEO): it fetches your page as the AI bots, diffs the JS vs no-JS render the way a non-JS crawler sees it, and benchmarks your content signals against the pages AI cites. Different question, different output — a green Lighthouse score tells you nothing about whether ChatGPT can read or will cite you.",
   },
   {
     question: "What's the difference between Content Analyzer and GEO Scan?",
@@ -133,7 +133,7 @@ const faqs = [
   {
     question: "Does it check whether AI bots can actually crawl my page?",
     answer:
-      "Yes. It probes your page against the major AI bot user agents — GPTBot, ClaudeBot, PerplexityBot, Google-Extended and more — and reports which are blocked and where the block lives: robots.txt, an X-Robots-Tag header, or a CDN firewall rule. It also diffs the JS and no-JS render, because most AI crawlers don't execute JavaScript.",
+      "Yes — and that's a separate check from the per-engine citation result. The AI Readability module probes your page against the major AI bot user agents — GPTBot, ClaudeBot, PerplexityBot, Google-Extended and CCBot — and reports which are blocked and where the block lives: robots.txt, an X-Robots-Tag header, an llms.txt directive, or a CDN firewall rule. It also diffs the JS and no-JS render, because most AI crawlers don't execute JavaScript.",
   },
   {
     question: "Does it need access to my analytics or account data?",
@@ -188,20 +188,24 @@ export default function ContentAnalyzerPage() {
               Your competitor&apos;s page passes the access, structure and authority checks AI engines run
               before they cite anyone. Yours is failing some of them &mdash; and you can&apos;t see which. Paste any
               URL and get an A&ndash;F citability grade, a live check of which AI engines cite the page, and
-              the exact fixes &mdash; in under 60 seconds.
+              the exact fixes.
             </p>
             <div className="mt-8">
               <DualCTA
-                primaryLabel="Analyze a page — free"
+                primaryLabel="Get my free citability report"
                 primaryHref="/app"
                 secondaryLabel="See the signals it checks"
                 secondaryHref="#signals"
-                microcopy="Free plan · no credit card · results in under a minute"
+                microcopy="Free plan · no credit card · results in minutes"
               />
             </div>
             <div className="mt-7 flex justify-center">
               <ScoreLegend variant="A-F" />
             </div>
+            <p className="mx-auto mt-4 max-w-xl text-[13px] leading-relaxed text-gray-500">
+              Each score is a letter grade backed by a 0&ndash;100 number, benchmarked against the pages AI
+              actually cite for your keyword &mdash; the guide below scores 95 (Citability) and 90 (AI Readability).
+            </p>
           </div>
 
           <div className="mx-auto mt-12 max-w-4xl">
@@ -211,7 +215,7 @@ export default function ContentAnalyzerPage() {
               width={2108}
               height={1134}
               priority
-              caption="A real analysis of a StubGroup guide ranking for ‘google ads for lawyers’: two grades, a live per-engine cited / not-cited check across six AI engines, and the prioritized fixes — no fabricated mockup."
+              caption="A real analysis of a StubGroup guide targeting ‘google ads for lawyers’: two grades, a live per-engine cited / not-cited check across six AI engines, and the prioritized fixes — no fabricated mockup."
             />
           </div>
         </div>
@@ -221,11 +225,27 @@ export default function ContentAnalyzerPage() {
       <PainScenarioSection
         eyebrow="The blind spot"
         scenario="You published a thorough guide. It ranks page one, it reads well, your team is proud of it. Then a buyer asks ChatGPT for the best option and it cites a thinner competitor instead &mdash; because that page front-loads its stats and yours buries them, or because Google-Extended is blocked in a robots.txt line nobody remembers adding. There&apos;s no error to catch. You just aren&apos;t in the answer."
-        bridge="As AI Overviews and chat assistants answer a growing share of searches with no click, the page AI cites is the page that gets the customer. Content Analyzer fetches your URL the way each engine does, checks live which ones already cite it, and benchmarks every signal against the pages they cite instead &mdash; so you can see and close the exact gap."
+        bridge="Two things decide it: whether a crawler can read the page &mdash; 69% of AI crawlers never run your JavaScript, so a client-side-only page can be blank before a word is read &mdash; and whether your content gives an engine more to cite than the pages it already trusts. Content Analyzer checks both: it fetches your URL the way each engine does, checks live which ones already cite it, and benchmarks every signal against the pages they cite instead."
       />
 
       {/* How it works (HowTo schema source) */}
-      <HowItWorks3Step heading="From URL to punch list in under 60 seconds" steps={steps} />
+      <HowItWorks3Step heading="From URL to punch list in minutes" steps={steps} />
+
+      {/* Who it's for — persona self-select */}
+      <section className="border-t border-gray-100 bg-white px-6 pb-12 pt-2">
+        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-3">
+          {[
+            { who: "In-house SEO", job: "Find the exact signal keeping a page that ranks out of the AI answer." },
+            { who: "Agency", job: "Grade a client's page, export the PDF, and attach the proof to the proposal." },
+            { who: "Content lead", job: "Turn the gap into a brief your writer can execute the same day." },
+          ].map((p) => (
+            <div key={p.who} className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">{p.who}</p>
+              <p className="mt-2 text-[14px] leading-relaxed text-gray-600">{p.job}</p>
+            </div>
+          ))}
+        </div>
+      </section>
 
       {/* What it checks — the real two-module model, shown in full */}
       <section id="signals" className="border-t border-gray-100 bg-gray-50 px-6 py-16 sm:py-20">
@@ -269,6 +289,10 @@ export default function ContentAnalyzerPage() {
                   </li>
                 ))}
               </ul>
+              <p className="mt-4 border-t border-gray-100 pt-4 text-[13px] leading-relaxed text-gray-500">
+                Plus the editorial chips AI weighs: reading grade, clear-language %, stats front-loaded %,
+                original data, visible date, named author, FAQ content, and days since the last update.
+              </p>
             </div>
 
             {/* AI Readability */}
@@ -280,7 +304,12 @@ export default function ContentAnalyzerPage() {
                 </span>
               </div>
               <p className="mt-1 text-[13px] leading-relaxed text-gray-500">
-                What an AI agent receives when it fetches the page &mdash; access, render parity, and structure.
+                What an AI agent receives when it fetches the page &mdash; access, render parity, and structure. To
+                clear access blocks across your whole site first, run{" "}
+                <Link href="/features/agent-readiness" className="font-semibold text-accent-700 hover:text-accent-800">
+                  Agent Readiness
+                </Link>
+                .
               </p>
               <ul className="mt-5 space-y-3">
                 {readabilitySignals.map((s) => (
@@ -308,6 +337,17 @@ export default function ContentAnalyzerPage() {
               caption="The benchmark, not an abstraction: every signal scored against the AI-cited pages for the keyword, with the gap quantified so you know exactly what to change."
             />
           </div>
+        </div>
+      </section>
+
+      {/* CTA repeat at the section break */}
+      <section className="border-t border-gray-100 bg-white px-6 py-10">
+        <div className="mx-auto max-w-3xl">
+          <DualCTA
+            primaryLabel="Get my free citability report"
+            primaryHref="/app"
+            microcopy="Free plan · no credit card · results in minutes"
+          />
         </div>
       </section>
 
@@ -376,10 +416,18 @@ export default function ContentAnalyzerPage() {
             <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
               A performance score and a visibility dashboard answer different questions.
             </h2>
+            <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-gray-600">
+              Content Analyzer works at the page level. To see every cited and uncited page across your whole
+              domain, pair it with{" "}
+              <Link href="/features/domain-overview" className="font-semibold text-accent-700 hover:text-accent-800">
+                Domain Overview
+              </Link>
+              .
+            </p>
           </div>
           <div className="mt-10">
             <FeatureComparisonTable
-              columns={["Lighthouse / PageSpeed", "AI-visibility monitors", "Content Analyzer"]}
+              columns={["Lighthouse / PageSpeed", "Profound / Otterly / Peec", "Content Analyzer"]}
               rows={[
                 { label: "Audits one URL's on-page signals", cells: ["SEO/perf only", false, true] },
                 { label: "Checks AI-bot access + JS-render parity", cells: [false, false, true] },
@@ -388,7 +436,7 @@ export default function ContentAnalyzerPage() {
                 { label: "Exact per-signal fix list", cells: [false, false, true] },
                 { label: "Generates a content brief to close the gap", cells: [false, false, true] },
               ]}
-              caption="Lighthouse grades performance for Google and humans; AI-visibility monitors track your domain's share of voice over time. Only Content Analyzer audits a single URL the way AI reads it, benchmarks it against the pages AI cites, and hands you the fix."
+              caption="Lighthouse grades performance for Google and humans; domain-level monitors like Profound and Otterly track your whole site's share of voice over time. Only Content Analyzer audits a single URL the way AI reads it, benchmarks it against the pages AI cites, and hands you the fix."
             />
           </div>
         </div>
@@ -400,7 +448,7 @@ export default function ContentAnalyzerPage() {
           miniCase={{
             result:
               "Already cited by Google AI Overview, Perplexity, Claude and Gemini — Content Analyzer flagged the one gap (3 structured lists vs an 11.3 cited-page average) keeping the page out of ChatGPT and Grok.",
-            attribution: "A real run · a StubGroup guide ranking for ‘google ads for lawyers’",
+            attribution: "A real run · a StubGroup guide targeting ‘google ads for lawyers’",
           }}
           engines={[...citedEngines]}
           provenanceLine="Every grade comes from a live fetch of your real URL — the page rendered in a headless browser and probed as the AI crawlers, then benchmarked against the pages those engines actually cite. No cached guesses, no training-data inference."
@@ -418,7 +466,7 @@ export default function ContentAnalyzerPage() {
             <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
               Grade your first page.
             </h2>
-            <p className="mt-2 text-base text-gray-300">Free plan, no credit card. Results in under a minute.</p>
+            <p className="mt-2 text-base text-gray-300">Free plan, no credit card. Results in minutes.</p>
           </div>
           <Link href="/app" prefetch={false} className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]">
             Analyze a page
