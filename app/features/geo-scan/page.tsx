@@ -163,13 +163,12 @@ export default function GeoScanPage() {
           {/* Real scan result, anonymized — domain-free metrics strip (brand kept unnamed) */}
           <div className="mx-auto mt-12 max-w-4xl">
             <ScreenshotFrame
-              src="/screenshots/geo-scan/ai-citation-7of7-header.png"
-              alt="GEO Scan result summary: all 7 AI engines cited the brand, with 63 total citations across the engines."
-              width={2012}
-              height={240}
+              src="/screenshots/geo-scan/ai-citation-lawyers-result.png"
+              alt="GEO Scan result for 'how to run google ads for lawyers': all 7 AI engines cite the brand, ranked the #1 cited source above google.com, with 63 total citations."
+              width={1999}
+              height={1602}
               priority
-              chrome={false}
-              caption="Real GEO Scan — for “how to run google ads for lawyers,” all 7 AI engines cited the brand, 63 citations across the engines."
+              caption="Real GEO Scan — for “how to run google ads for lawyers,” all 7 AI engines cite the brand, which ranks the #1 cited source — above google.com, Reddit, and Clio."
             />
           </div>
         </div>
