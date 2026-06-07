@@ -1,7 +1,7 @@
 // Single source of truth for pricing. Mirrors the backend plan config in
 // inc/plan_limits.php (SG_PLAN_DEFAULTS) + SG_PLAN_PRICES_USD on the Replit app.
 // If the backend plan limits change, update this file too.
-// Annual price = 10x monthly (~17% off). Free was lowered to 1,000 credits +
+// Annual = clean per-month rate billed yearly (~17-20% off monthly). Free was lowered to 1,000 credits +
 // 5 prompts on 2026-06-06 for public-launch abuse control.
 
 export type PlanId = "free" | "starter" | "consultant" | "agency" | "scale" | "enterprise"
@@ -61,7 +61,7 @@ export const PLANS: Plan[] = [
     id: "starter",
     name: "Starter",
     priceMonthly: 49,
-    priceYearly: 490,
+    priceYearly: 468,
     tagline: "Solo SEOs tracking a brand or two.",
     quotas: {
       credits: "3,000 credits/mo",
@@ -82,7 +82,7 @@ export const PLANS: Plan[] = [
     id: "consultant",
     name: "Consultant",
     priceMonthly: 179,
-    priceYearly: 1790,
+    priceYearly: 1788,
     tagline: "Consultants and small teams running client work.",
     quotas: {
       credits: "25,000 credits/mo",
@@ -107,7 +107,7 @@ export const PLANS: Plan[] = [
     id: "agency",
     name: "Agency",
     priceMonthly: 349,
-    priceYearly: 3490,
+    priceYearly: 3468,
     tagline: "Agencies managing many brands.",
     quotas: {
       credits: "75,000 credits/mo",
@@ -130,7 +130,7 @@ export const PLANS: Plan[] = [
     id: "scale",
     name: "Scale",
     priceMonthly: 679,
-    priceYearly: 6790,
+    priceYearly: 6588,
     tagline: "High-volume teams and large portfolios.",
     quotas: {
       credits: "200,000 credits/mo",
