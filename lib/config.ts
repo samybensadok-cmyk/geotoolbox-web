@@ -35,6 +35,7 @@ export const siteConfig = {
         { slug: "domain-overview", name: "Domain Overview", desc: "Your AI visibility command center" },
         { slug: "competitor-intel", name: "Competitor Intel", desc: "Track rivals over time" },
         { slug: "community", name: "Community", desc: "Reddit + forum citations" },
+        { slug: "citation-interceptor", name: "Citation Interceptor", desc: "Where AI cites others, not you" },
       ],
     },
     {

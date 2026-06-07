@@ -10,6 +10,7 @@ type Slug =
   | "competitor-intel"
   | "analytics"
   | "community"
+  | "citation-interceptor"
 
 const ALL_FEATURES = siteConfig.featureGroups.flatMap((g) => g.features)
 

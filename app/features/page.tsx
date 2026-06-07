@@ -7,7 +7,7 @@ import { breadcrumbsSchema, itemListSchema } from "@/lib/seo-schema"
 export const metadata: Metadata = {
   title: "AI SEO & GEO Tools",
   description:
-    "Eight connected tools for generative engine optimization (GEO) and AI search visibility. Scan, analyze, brief, and monitor your brand across ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Bing Copilot, and Grok.",
+    "Nine connected tools for generative engine optimization (GEO) and AI search visibility. Scan, analyze, brief, and monitor your brand across ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Bing Copilot, and Grok.",
   alternates: { canonical: `${siteConfig.url}/features` },
 }
 
@@ -110,6 +110,13 @@ const groups: Group[] = [
         highlights: ["Reddit + forums", "Misinformation risks", "Action plan"],
         tint: "peach",
       },
+      {
+        slug: "citation-interceptor",
+        name: "Citation Interceptor",
+        blurb: "Find the offsite sources AI cites where your brand is absent — Reddit, forums, editorial, competitors. An evidence-graded opportunity worklist, with no astroturf.",
+        highlights: ["Offsite citation gap", "Evidence grading", "Action worklist"],
+        tint: "lilac",
+      },
     ],
   },
   {
@@ -132,7 +139,7 @@ const groups: Group[] = [
 const gridColsByGroup: Record<string, string> = {
   Scanning: "grid-cols-1",                      // 1 card, full-bleed feature
   Analysis: "grid-cols-1 md:grid-cols-2",       // 2 cards
-  Intelligence: "grid-cols-1 md:grid-cols-2 lg:grid-cols-3", // 3 cards
+  Intelligence: "grid-cols-1 md:grid-cols-2", // 4 cards (2×2)
   Reporting: "grid-cols-1",                     // 1 card, full-bleed
 }
 
@@ -161,7 +168,7 @@ export default function FeaturesPage() {
                 Features
               </p>
               <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-                Eight tools.
+                Nine tools.
                 <br />
                 <span className="text-accent-600">One AI visibility stack.</span>
               </h1>
@@ -302,7 +309,7 @@ export default function FeaturesPage() {
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-[7fr_5fr] lg:items-end lg:gap-16">
             <div>
               <h2 className="text-[clamp(1.5rem,3.5vw,2.5rem)] font-bold leading-tight tracking-tight text-white">
-                One scan, all eight tools.
+                One scan, all nine tools.
               </h2>
               <p className="mt-3 max-w-xl text-base text-gray-300">
                 Run a GEO Scan once and every other capability activates for that domain: Domain Overview, Competitor Intel, Community, and the rest.
