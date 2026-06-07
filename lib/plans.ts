@@ -51,6 +51,7 @@ export const PLANS: Plan[] = [
     },
     inheritsFrom: null,
     highlights: [
+      "GEO Scan (3 engines)",
       "AI visibility tracker",
       "Agent readiness scan",
       "AI-ready export",
@@ -73,7 +74,7 @@ export const PLANS: Plan[] = [
     inheritsFrom: "Free",
     highlights: [
       "Content Analyzer (grade any page)",
-      "GEO Scan",
+      "GEO Scan: 5 engines",
       "Weekly automated scans",
     ],
     cta: { label: "Get started", href: SIGNUP },
