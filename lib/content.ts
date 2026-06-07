@@ -111,6 +111,7 @@ export type GlossaryTerm = {
   related: string[]
   article?: string
   articleLabel?: string
+  relatedArticles: { href: string; label: string }[]
   updated: string
   draft: boolean
   content: string
@@ -128,6 +129,7 @@ function parseGlossaryFile(file: string): GlossaryTerm {
     related: data.related ?? [],
     article: data.article,
     articleLabel: data.articleLabel,
+    relatedArticles: data.relatedArticles ?? [],
     updated: data.updated ?? "",
     draft: data.draft ?? false,
     content,

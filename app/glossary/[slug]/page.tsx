@@ -133,6 +133,24 @@ export default async function GlossaryEntry({
                   <path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </Link>
+
+              {term.relatedArticles.length > 0 && (
+                <ul className="mt-4 space-y-2 border-t border-[var(--surface-warm-border)] pt-4">
+                  {term.relatedArticles.map((a) => (
+                    <li key={a.href}>
+                      <Link
+                        href={a.href}
+                        className="group inline-flex items-center gap-1.5 text-[14px] font-medium text-gray-700 hover:text-accent-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
+                      >
+                        {a.label}
+                        <svg className="h-3 w-3 text-gray-400 transition-transform group-hover:translate-x-0.5 group-hover:text-accent-700" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           )}
 
