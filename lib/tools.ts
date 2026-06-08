@@ -17,6 +17,12 @@ export interface ToolEntry {
 
 export const tools: ToolEntry[] = [
   {
+    slug: "ai-readiness",
+    name: "AI-Readiness Score",
+    desc: "Score any domain on the foundations AI agents need — robots, crawler access, content signals, sitemap, markdown — across 5 of our 28 readiness checks. Free.",
+    navDesc: "Score your site on 5 of 28 AI-readiness checks",
+  },
+  {
     slug: "ai-crawler-checker",
     name: "AI Crawler Checker",
     desc: "See which of 34 AI crawlers — GPTBot, ClaudeBot, PerplexityBot and more — your robots.txt allows or blocks, with the exact line to fix. Free.",
