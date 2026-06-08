@@ -49,6 +49,7 @@ export function Footer() {
               <li><Link href="/glossary" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Glossary</Link></li>
               <li><Link href="/feed.xml" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">RSS Feed</Link></li>
               <li><Link href="/blog/what-is-geo" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">What is GEO?</Link></li>
+              <li><Link href="/tools/ai-crawler-checker" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">AI Crawler Checker</Link></li>
               <li><Link href="/tools/llms-txt-checker" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">llms.txt Checker</Link></li>
             </ul>
           </div>
