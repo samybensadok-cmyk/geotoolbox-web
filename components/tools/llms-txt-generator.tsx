@@ -20,6 +20,17 @@ const STARTER: { name: string; summary: string; sections: Section[] } = {
   ],
 }
 
+// The spec wants absolute https:// URLs. Auto-prepend https:// to a bare host or
+// path (e.g. "acme.com/docs") so the generated file doesn't trip our own
+// validator's "relative URL" warning. Leave real schemes, anchors, root-relative
+// paths, and mailto/tel untouched.
+function normUrl(raw: string): string {
+  const u = raw.trim()
+  if (!u) return "https://example.com"
+  if (/^[a-z][a-z0-9+.-]*:\/\//i.test(u) || /^(mailto:|tel:|#|\/)/i.test(u)) return u
+  return `https://${u}`
+}
+
 function buildFile(name: string, summary: string, sections: Section[]): string {
   const lines: string[] = []
   lines.push(`# ${name.trim() || "Your Site Name"}`)
@@ -32,7 +43,7 @@ function buildFile(name: string, summary: string, sections: Section[]): string {
     lines.push("")
     for (const l of rows) {
       const nm = l.name.trim() || "Link"
-      const url = l.url.trim() || "https://example.com"
+      const url = normUrl(l.url)
       lines.push(l.note.trim() ? `- [${nm}](${url}): ${l.note.trim()}` : `- [${nm}](${url})`)
     }
     lines.push("")

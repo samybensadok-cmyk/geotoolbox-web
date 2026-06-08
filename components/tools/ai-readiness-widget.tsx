@@ -17,6 +17,7 @@ interface Check {
   id: string
   label: string
   category: string
+  tier?: "core" | "emerging"
   status: Status
   points: number
   max_points: number
@@ -29,8 +30,9 @@ interface ReadinessResult {
   error?: string
   detail?: string
   input?: { url: string; origin: string; host: string }
-  composite?: { points_awarded: number; points_possible: number; pct: number; grade: string }
-  coverage?: { free_checks: number; total_checks: number; free_points: number; total_points: number }
+  composite?: { points_awarded: number; points_possible: number; pct: number; grade: string; basis?: string }
+  emerging?: { points_awarded: number; points_possible: number; checks: number }
+  coverage?: { free_checks: number; total_checks: number; free_points: number; total_points: number; core_checks?: number; emerging_checks?: number }
   checks?: Check[]
   robots?: { present: boolean; fetch_status: number }
   ai_impact?: string
@@ -68,6 +70,25 @@ function gradeColor(grade?: string): string {
     case "D": return "text-orange-700"
     default: return "text-red-700"
   }
+}
+
+function CheckLi({ ck }: { ck: Check }) {
+  const meta = STATUS_META[ck.status]
+  return (
+    <li className="rounded-xl border border-gray-100 bg-gray-50/60 p-4">
+      <div className="flex items-start gap-3">
+        <span className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${meta.dot}`} aria-hidden="true" />
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${meta.chip}`}>{meta.label}</span>
+            <span className="text-[15px] font-semibold text-gray-900">{ck.label}</span>
+            <span className="font-mono text-[11px] tabular-nums text-gray-400">{ck.points}/{ck.max_points}</span>
+          </div>
+          <p className="mt-1 text-[13px] leading-relaxed text-gray-600">{ck.evidence}</p>
+        </div>
+      </div>
+    </li>
+  )
 }
 
 export function AiReadinessWidget() {
@@ -171,6 +192,9 @@ function ResultCard({ result, copied, setCopied }: { result: ReadinessResult; co
   const cov = result.coverage
   const checks = result.checks ?? []
   if (!c || !cov) return null
+  const coreChecks = checks.filter((ck) => (ck.tier ?? "core") !== "emerging")
+  const emergingChecks = checks.filter((ck) => (ck.tier ?? "core") === "emerging")
+  const em = result.emerging
 
   const badgeUrl = `${siteConfig.url}/tools/ai-readiness/badge?host=${encodeURIComponent(host)}`
   const badgeHref = `${siteConfig.url}/tools/ai-readiness?utm_source=badge&host=${encodeURIComponent(host)}`
@@ -191,7 +215,7 @@ function ResultCard({ result, copied, setCopied }: { result: ReadinessResult; co
               <p className={`text-5xl font-bold tracking-tight tabular-nums ${gradeColor(c.grade)}`}>
                 {c.pct}<span className="text-2xl text-gray-400">%</span>
               </p>
-              <p className="mt-1 text-[13px] text-gray-500">{c.points_awarded} of {c.points_possible} points · grade {c.grade}</p>
+              <p className="mt-1 text-[13px] text-gray-500">{c.points_awarded} of {c.points_possible} core points · grade {c.grade}</p>
             </div>
           </div>
           {/* Honest partial framing */}
@@ -213,30 +237,35 @@ function ResultCard({ result, copied, setCopied }: { result: ReadinessResult; co
         </div>
       </div>
 
-      {/* Per-check breakdown */}
+      {/* Core checks — these make up the score */}
       <div className="rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
-        <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-400">The 5 checks</p>
+        <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-400">
+          Core checks <span className="text-gray-300">· your score</span>
+        </p>
         <ul className="mt-4 space-y-3">
-          {checks.map((ck) => {
-            const meta = STATUS_META[ck.status]
-            return (
-              <li key={ck.id} className="rounded-xl border border-gray-100 bg-gray-50/60 p-4">
-                <div className="flex items-start gap-3">
-                  <span className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${meta.dot}`} aria-hidden="true" />
-                  <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${meta.chip}`}>{meta.label}</span>
-                      <span className="text-[15px] font-semibold text-gray-900">{ck.label}</span>
-                      <span className="font-mono text-[11px] tabular-nums text-gray-400">{ck.points}/{ck.max_points}</span>
-                    </div>
-                    <p className="mt-1 text-[13px] leading-relaxed text-gray-600">{ck.evidence}</p>
-                  </div>
-                </div>
-              </li>
-            )
-          })}
+          {coreChecks.map((ck) => <CheckLi key={ck.id} ck={ck} />)}
         </ul>
       </div>
+
+      {/* Emerging signals — bonus / upside, NOT counted in the score */}
+      {emergingChecks.length > 0 && (
+        <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50/60 p-5 sm:p-6">
+          <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-slate-500">
+              Emerging signals <span className="text-slate-400">· bonus, not in your score</span>
+            </p>
+            {em && (
+              <span className="font-mono text-[11px] tabular-nums text-slate-500">{em.points_awarded} of {em.points_possible || 20} bonus earned</span>
+            )}
+          </div>
+          <p className="mt-2 text-[12.5px] leading-relaxed text-slate-600">
+            Almost no site implements these yet, so they don&apos;t count against your score — but adopting them is cheap future-proofing as more AI clients start to use them.
+          </p>
+          <ul className="mt-4 space-y-3">
+            {emergingChecks.map((ck) => <CheckLi key={ck.id} ck={ck} />)}
+          </ul>
+        </div>
+      )}
 
       {/* Honest evidence panel */}
       <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 text-[13px] leading-relaxed text-slate-700">

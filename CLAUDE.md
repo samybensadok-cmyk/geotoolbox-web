@@ -28,3 +28,9 @@ Marketing site + blog for geotoolbox.ai. Next.js 15 (App Router) + Tailwind v4 +
 - No @tailwindcss/typography (incompatible with v4) — prose styles are manual in globals.css
 - Tailwind v4 arbitrary values in brackets (e.g. grid-cols-[1fr,2fr]) may not work — use standard utilities
 - Logo: teal rounded-lg icon mark (white "G") + bold sans "GEO Toolbox" wordmark — no serif fonts
+
+## Dev-server / RAM safety (post 2026-06-08 crash — TWO back-to-back OOM crashes, ~80GB on a 16GB Mac)
+- **NEVER run `next dev` (or any long-lived watcher: `npm run dev`, `vercel dev`, `tsc --watch`) as a foreground Bash call.** A dev server never returns; its stdout is unbounded; the agent buffers every recompile/error line in memory. While a file is being edited through broken intermediate states, Turbopack loops recompile→error→fast-refresh and the buffer balloons to tens of GB → swap death → hard crash. Origin: blog `page.tsx` redesign — crashed twice, redesign sat uncommitted until recovered.
+- **To preview locally** (only if truly needed): run backgrounded with output redirected to a file, then kill it — `npm run dev > /tmp/next-dev.log 2>&1 &` (use `run_in_background`), tail the log file for the port, and `kill` the PID when done. Never leave it running across turns.
+- **Preferred verification = the Vercel deploy, not a local server.** This repo auto-deploys on push to `main`; a failed build simply doesn't deploy (current site stays live), so committing + pushing + checking the live URL is zero-risk and avoids the dev-server trap entirely.
+- `next build` is acceptable when you must validate locally (it terminates — not a loop), but it's memory-heavy on 16GB; cap it with `NODE_OPTIONS=--max-old-space-size=4096` and prefer it over `next dev`.

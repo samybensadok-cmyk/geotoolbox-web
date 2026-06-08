@@ -57,7 +57,7 @@ const faqs = [
   {
     question: "Why does my robots.txt allow a bot that still can't reach my site?",
     answer:
-      "robots.txt only states a policy. A WAF, Cloudflare bot-fight mode, rate limiting, or a 403 can still block a crawler that robots.txt permits — and some bots ignore robots.txt altogether. That gap between \"permitted\" and \"actually served\" is exactly what our paid Agent Readiness scan measures by live-fetching your site as each crawler. This free checker covers the robots.txt layer only.",
+      "robots.txt only states a policy. A WAF, Cloudflare bot-fight mode, rate limiting, or a 403 can still block a crawler that robots.txt permits — and some bots ignore robots.txt altogether. That gap between \"permitted\" and \"actually served\" is exactly what our Agent Readiness scan measures by live-fetching your site as each crawler. This free checker covers the robots.txt layer only.",
   },
   {
     question: "Should I block AI crawlers?",
@@ -142,7 +142,7 @@ export default function AiCrawlerCheckerPage() {
             <p>
               <strong className="text-gray-900">And robots.txt isn&apos;t the whole story.</strong> A bot that robots.txt allows
               can still be blocked by a WAF or Cloudflare, and some bots ignore robots.txt entirely. We flag those caveats
-              honestly — and the paid Agent Readiness scan verifies what crawlers actually receive.
+              honestly — and our Agent Readiness scan verifies what crawlers actually receive.
             </p>
           </div>
         </div>
@@ -194,7 +194,7 @@ export default function AiCrawlerCheckerPage() {
             prefetch={false}
             className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]"
           >
-            Run an Agent Readiness scan
+            Run a free Agent Readiness scan
             <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
             </svg>

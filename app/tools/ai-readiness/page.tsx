@@ -57,7 +57,7 @@ const faqs = [
   {
     question: "How is the score calculated?",
     answer:
-      "Each of the 5 checks is worth up to 10 points (50 total). Your percentage is points earned ÷ 50. It's the same scoring the full scan uses for these checks, so your free result is consistent with what you'd see in the paid scan — it's a genuine partial, not a different number. We show the points and evidence for every check so nothing is a black box.",
+      "Your headline score is the three core foundations — robots.txt validity, AI-crawler access, and a valid sitemap (30 points). Each is scored exactly the way the full Agent Readiness scan scores it, so your free result is a genuine partial, not a different number. Two further checks — the Content-Signal directive and markdown content negotiation — are shown separately as emerging signals: almost no site implements them yet, so we don't let them drag your score down, but adopting them is cheap future-proofing. We show the points and evidence for every check, core and emerging, so nothing is a black box.",
   },
   {
     question: "Is it free?",
