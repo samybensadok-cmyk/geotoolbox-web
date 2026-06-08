@@ -9,6 +9,10 @@ draft: false
 
 llms.txt has gone from an obscure proposal to a checkbox in half the SEO plugins, usually sold as "the robots.txt for AI." So do you actually need one? Here is the honest, evidence-backed answer: what llms.txt is, what Google really says about it, and whether your site is in the small group it genuinely helps. The short version is that most marketing sites can skip it, while documentation and developer sites should not.
 
+<Callout type="tip" title="robots.txt is the file that actually gates crawlers">
+Unlike llms.txt, robots.txt decides whether AI crawlers can fetch you at all. The free [AI Crawler Checker](/tools/ai-crawler-checker) shows which of 34 AI crawlers yours allows or blocks.
+</Callout>
+
 ## What llms.txt Actually Is
 
 [llms.txt](https://geotoolbox.ai/glossary/llms-txt) is a plain markdown file you place at the root of your site, at `/llms.txt`. The developer Jeremy Howard proposed it on September 3, 2024, to solve a specific problem: an AI model has a limited context window, and a full website, with its navigation, ads, and JavaScript, is too big and too messy to feed in cleanly. The file is meant to be a curated map, a short list of your most important pages in a format a model can read without parsing your whole layout.
@@ -67,7 +71,7 @@ The honest rule underneath the table: if it is free or automatic, having an llms
 
 ## How to Create an llms.txt File (the Right Way)
 
-If you fall on the "create it" side, the spec is short and the file takes minutes — or use our free [llms.txt generator](https://geotoolbox.ai/tools/llms-txt-checker#generator) to build a spec-correct one in the browser.
+If you fall on the "create it" side, the spec is short and the file takes minutes, or use our free [llms.txt generator](https://geotoolbox.ai/tools/llms-txt-checker#generator) to build a spec-correct one in the browser.
 
 1. **Start with an H1** that is your site or product name. This is the only element the spec actually requires.
 2. **Add a one-line summary** in a blockquote directly under it, describing what the site is.
@@ -83,7 +87,7 @@ One correction worth making, because half the guides get it wrong: **llms-full.t
 
 Beyond the llms-full.txt mix-up, a few gaps run through most llms.txt advice that are worth knowing before you publish one.
 
-Validation is thin. The Lighthouse audit only checks whether the file loads without a server error — it never looks at the structure. We built a free [llms.txt checker](https://geotoolbox.ai/tools/llms-txt-checker) to fill that gap: it validates the H1 and H2 structure against the spec and confirms every linked URL actually resolves. What no tool can do is tell you a model will parse the file the way you intend — there is no equivalent of Search Console's robots.txt tester for that, so you are still partly publishing on faith.
+Validation is thin. The Lighthouse audit only checks whether the file loads without a server error, and it never looks at the structure. We built a free [llms.txt checker](https://geotoolbox.ai/tools/llms-txt-checker) to fill that gap: it validates the H1 and H2 structure against the spec and confirms every linked URL actually resolves. What no tool can do is tell you a model will parse the file the way you intend, and there is no equivalent of Search Console's robots.txt tester for that, so you are still partly publishing on faith.
 
 The directives can collide. If you list a page in llms.txt that is also set to noindex or disallowed in [robots.txt](https://geotoolbox.ai/glossary/robots-txt), nothing in the spec says which one wins, and you should not assume an agent resolves it the way you would. There is also a quieter trade-off: an llms.txt is a public file, so listing your highest-value pages in one hands a tidy map of them to scrapers and competitors as well as to friendly agents.
 

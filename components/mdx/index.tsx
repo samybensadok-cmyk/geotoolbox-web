@@ -4,6 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Callout } from "./callout"
 import { YouTube } from "./youtube"
+import { AiCrawlerCheckerWidget } from "@/components/tools/ai-crawler-checker-widget"
 import { slugify } from "@/lib/utils"
 
 /**
@@ -25,6 +26,7 @@ function childrenToText(children: ReactNode): string {
 export const mdxComponents: MDXComponents = {
   Callout,
   YouTube,
+  AiCrawlerCheckerWidget,
   Image,
   h2: ({ children, ...props }) => (
     <h2 id={slugify(childrenToText(children))} className="scroll-mt-24" {...props}>
