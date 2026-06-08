@@ -37,6 +37,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.5,
     },
+    {
+      url: `${siteConfig.url}/contact`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
     ...siteConfig.featureGroups.flatMap((g) => g.features).map((f) => ({
       url: `${siteConfig.url}/features/${f.slug}`,
       lastModified: new Date(),

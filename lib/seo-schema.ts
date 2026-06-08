@@ -252,6 +252,35 @@ export function aboutPageSchema() {
 }
 
 /**
+ * ContactPage schema — the /contact page. Points at the Organization node and
+ * exposes a ContactPoint so AI engines / knowledge panels can surface how to
+ * reach us.
+ */
+export function contactPageSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    name: `Contact ${siteConfig.name}`,
+    url: `${siteConfig.url}/contact`,
+    description: `Get in touch with the ${siteConfig.name} team about sales, support, partnerships, or general questions.`,
+    mainEntity: {
+      "@type": "Organization",
+      "@id": `${siteConfig.url}/#organization`,
+      name: siteConfig.name,
+      url: siteConfig.url,
+      email: "samy@geotoolbox.ai",
+      contactPoint: {
+        "@type": "ContactPoint",
+        contactType: "customer support",
+        email: "samy@geotoolbox.ai",
+        url: `${siteConfig.url}/contact`,
+        availableLanguage: ["English"],
+      },
+    },
+  }
+}
+
+/**
  * ItemList schema — ordered collections (the /features hub, "best tools"
  * listicles). Pass items in display order; position is 1-based.
  */

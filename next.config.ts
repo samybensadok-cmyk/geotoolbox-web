@@ -1,6 +1,12 @@
 import type { NextConfig } from "next"
+import path from "path"
 
 const nextConfig: NextConfig = {
+  // Pin the workspace root — a stray ~/package-lock.json otherwise makes Turbopack
+  // infer /Users/samou as root, scanning the whole home dir (extra memory + warning).
+  turbopack: {
+    root: path.join(__dirname),
+  },
   async redirects() {
     return [
       { source: "/login",  destination: "/app?page=login",  permanent: true },
