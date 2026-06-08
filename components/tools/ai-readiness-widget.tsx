@@ -36,6 +36,7 @@ interface ReadinessResult {
   checks?: Check[]
   robots?: { present: boolean; fetch_status: number }
   ai_impact?: string
+  percentile?: { better_than_pct: number; sample_size: number }
 }
 
 const EXAMPLES = [
@@ -216,6 +217,11 @@ function ResultCard({ result, copied, setCopied }: { result: ReadinessResult; co
                 {c.pct}<span className="text-2xl text-gray-400">%</span>
               </p>
               <p className="mt-1 text-[13px] text-gray-500">{c.points_awarded} of {c.points_possible} core points · grade {c.grade}</p>
+              {result.percentile && (
+                <p className="mt-1 text-[12px] text-gray-500">
+                  Better than <span className="font-semibold text-gray-700">{result.percentile.better_than_pct}%</span> of {result.percentile.sample_size.toLocaleString()} sites scanned
+                </p>
+              )}
             </div>
           </div>
           {/* Honest partial framing */}
@@ -277,6 +283,9 @@ function ResultCard({ result, copied, setCopied }: { result: ReadinessResult; co
         </ul>
       </div>
 
+      {/* Shareable report */}
+      <ShareCard origin={result.input?.origin ?? ""} />
+
       {/* Embeddable badge */}
       <div className="rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
         <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-400">Embed your score</p>
@@ -310,6 +319,90 @@ function ResultCard({ result, copied, setCopied }: { result: ReadinessResult; co
           </Link>
         </div>
       </div>
+    </div>
+  )
+}
+
+/**
+ * "Share this result" — POSTs the scanned origin to api/ai_readiness_share.php, which
+ * RE-RUNS the scan server-side (authentic, non-spoofable) and persists it under a
+ * non-guessable id, then surfaces a public geotoolbox.ai/r/<id> link + copy.
+ */
+function ShareCard({ origin }: { origin: string }) {
+  const [state, setState] = useState<"idle" | "loading" | "done" | "error">("idle")
+  const [id, setId] = useState<string | null>(null)
+  const [copied, setCopied] = useState(false)
+  const shareUrl = id ? `${siteConfig.url}/r/${id}` : ""
+
+  async function createShare() {
+    if (!origin) return
+    setState("loading")
+    const controller = new AbortController()
+    const timer = setTimeout(() => controller.abort(), 45000)
+    try {
+      const res = await fetch("/api/ai_readiness_share.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: origin }),
+        signal: controller.signal,
+      })
+      const data = await res.json()
+      if (data?.success && data?.id) { setId(data.id); setState("done") }
+      else setState("error")
+    } catch {
+      setState("error")
+    } finally {
+      clearTimeout(timer)
+    }
+  }
+
+  function copy() {
+    if (!shareUrl) return
+    navigator.clipboard?.writeText(shareUrl).then(() => { setCopied(true); setTimeout(() => setCopied(false), 1600) })
+  }
+
+  return (
+    <div className="rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
+      <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-400">Share this result</p>
+      <p className="mt-2 text-[13px] leading-relaxed text-gray-600">
+        Creates a public report page anyone can open. It re-checks live on save, so the score it shows is always real — not a number you can edit.
+      </p>
+
+      {state !== "done" && (
+        <div className="mt-3">
+          <button
+            type="button"
+            onClick={createShare}
+            disabled={state === "loading" || !origin}
+            className="inline-flex items-center gap-2 rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-[14px] font-semibold text-gray-800 transition-colors hover:border-accent-300 hover:text-accent-700 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {state === "loading" ? (
+              <>
+                <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 0 1 8-8v4a4 4 0 0 0-4 4H4z" />
+                </svg>
+                Creating link…
+              </>
+            ) : "Create a share link"}
+          </button>
+          {state === "error" && (
+            <p className="mt-2 text-[13px] text-red-600">Couldn&apos;t create the link. Try again in a moment.</p>
+          )}
+        </div>
+      )}
+
+      {state === "done" && id && (
+        <div className="mt-3 flex items-start gap-2">
+          <code className="min-w-0 flex-1 overflow-x-auto whitespace-pre rounded-lg bg-gray-50 px-3 py-2 font-mono text-[12px] leading-relaxed text-gray-700 ring-1 ring-gray-200">{shareUrl}</code>
+          <button type="button" onClick={copy} className="shrink-0 rounded-lg border border-gray-200 px-2.5 py-2 text-[11px] font-medium text-gray-600 transition-colors hover:border-accent-300 hover:text-accent-700">
+            {copied ? "Copied" : "Copy"}
+          </button>
+          <a href={shareUrl} target="_blank" rel="noreferrer" className="shrink-0 rounded-lg border border-gray-200 px-2.5 py-2 text-[11px] font-medium text-gray-600 transition-colors hover:border-accent-300 hover:text-accent-700">
+            Open
+          </a>
+        </div>
+      )}
     </div>
   )
 }
