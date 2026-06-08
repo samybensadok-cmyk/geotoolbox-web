@@ -56,6 +56,7 @@ const ERROR_COPY: Record<string, string> = {
   url_required: "Enter a URL to check.",
   url_too_long: "That URL is too long.",
   fetch_failed: "We couldn't reach that site. Check the domain and try again.",
+  robots_unreachable: "We reached that site but its robots.txt returned a server error, so crawler access can't be determined right now. Try again shortly.",
   rate_limited: "You've run a lot of checks — give it a minute and try again.",
   target_throttled: "That domain has been checked a lot recently — try again shortly.",
   registry_unavailable: "Our crawler registry is briefly unavailable. Try again in a moment.",

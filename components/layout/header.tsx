@@ -3,35 +3,43 @@
 import Link from "next/link"
 import { useEffect, useRef, useState } from "react"
 import { siteConfig } from "@/lib/config"
+import { tools } from "@/lib/tools"
 import { cn } from "@/lib/utils"
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [featuresOpen, setFeaturesOpen] = useState(false)
   const [mobileFeaturesOpen, setMobileFeaturesOpen] = useState(false)
+  const [toolsOpen, setToolsOpen] = useState(false)
+  const [mobileToolsOpen, setMobileToolsOpen] = useState(false)
   const featuresRef = useRef<HTMLDivElement>(null)
+  const toolsRef = useRef<HTMLDivElement>(null)
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const closeTimerTools = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  // Close desktop dropdown on Escape
+  // Close desktop dropdowns on Escape
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setFeaturesOpen(false)
+      if (e.key === "Escape") { setFeaturesOpen(false); setToolsOpen(false) }
     }
     window.addEventListener("keydown", onKey)
     return () => window.removeEventListener("keydown", onKey)
   }, [])
 
-  // Close dropdown when clicking outside
+  // Close dropdowns when clicking outside
   useEffect(() => {
-    if (!featuresOpen) return
+    if (!featuresOpen && !toolsOpen) return
     const onClick = (e: MouseEvent) => {
-      if (featuresRef.current && !featuresRef.current.contains(e.target as Node)) {
+      if (featuresOpen && featuresRef.current && !featuresRef.current.contains(e.target as Node)) {
         setFeaturesOpen(false)
+      }
+      if (toolsOpen && toolsRef.current && !toolsRef.current.contains(e.target as Node)) {
+        setToolsOpen(false)
       }
     }
     document.addEventListener("mousedown", onClick)
     return () => document.removeEventListener("mousedown", onClick)
-  }, [featuresOpen])
+  }, [featuresOpen, toolsOpen])
 
   const openFeatures = () => {
     if (closeTimer.current) clearTimeout(closeTimer.current)
@@ -40,6 +48,14 @@ export function Header() {
   const scheduleCloseFeatures = () => {
     if (closeTimer.current) clearTimeout(closeTimer.current)
     closeTimer.current = setTimeout(() => setFeaturesOpen(false), 150)
+  }
+  const openTools = () => {
+    if (closeTimerTools.current) clearTimeout(closeTimerTools.current)
+    setToolsOpen(true)
+  }
+  const scheduleCloseTools = () => {
+    if (closeTimerTools.current) clearTimeout(closeTimerTools.current)
+    closeTimerTools.current = setTimeout(() => setToolsOpen(false), 150)
   }
 
   return (
@@ -126,12 +142,66 @@ export function Header() {
             )}
           </div>
 
-          <Link
-            href="/tools"
-            className="flex min-h-[40px] items-center rounded-md px-3 text-[13px] font-medium text-gray-700 transition-colors hover:text-gray-900 hover:bg-gray-50"
+          {/* Tools menu */}
+          <div
+            ref={toolsRef}
+            className="relative"
+            onMouseEnter={openTools}
+            onMouseLeave={scheduleCloseTools}
           >
-            Tools
-          </Link>
+            <button
+              type="button"
+              onClick={() => setToolsOpen(!toolsOpen)}
+              aria-expanded={toolsOpen}
+              aria-haspopup="true"
+              className="flex min-h-[40px] items-center gap-1 rounded-md px-3 text-[13px] font-medium text-gray-700 transition-colors hover:text-gray-900 hover:bg-gray-50"
+            >
+              Tools
+              <svg
+                className={cn("h-3 w-3 transition-transform duration-200", toolsOpen && "rotate-180")}
+                viewBox="0 0 12 12"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="m3 5 3 3 3-3" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+
+            {toolsOpen && (
+              <div className="absolute left-1/2 top-full z-50 mt-2 -translate-x-1/2 animate-fade-up" style={{ animationDuration: "0.18s" }}>
+                <div className="w-[340px] rounded-2xl border border-gray-200 bg-white p-4 shadow-[0_20px_60px_-20px_rgba(15,23,42,0.18)]">
+                  <p className="px-2 font-mono text-[10px] font-semibold uppercase tracking-widest text-gray-500">Free tools</p>
+                  <ul className="mt-2 space-y-0.5">
+                    {tools.map((t) => (
+                      <li key={t.slug}>
+                        <Link
+                          href={`/tools/${t.slug}`}
+                          onClick={() => setToolsOpen(false)}
+                          className="group -mx-1 flex flex-col rounded-lg px-3 py-2 hover:bg-gray-50"
+                        >
+                          <span className="text-sm font-semibold text-gray-900 group-hover:text-accent-700">{t.name}</span>
+                          <span className="text-[12px] text-gray-600">{t.navDesc}</span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="mt-3 border-t border-gray-100 pt-3">
+                    <Link
+                      href="/tools"
+                      onClick={() => setToolsOpen(false)}
+                      className="inline-flex items-center gap-1.5 px-2 text-[13px] font-semibold text-accent-700 hover:text-accent-800"
+                    >
+                      See all tools
+                      <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
 
           <Link
             href="/pricing"
@@ -243,13 +313,45 @@ export function Header() {
               </div>
             )}
 
-            <Link
-              href="/tools"
-              onClick={() => setMobileOpen(false)}
-              className="rounded-lg px-2 py-3 text-sm font-medium text-gray-900 hover:bg-gray-50"
+            {/* Tools group */}
+            <button
+              type="button"
+              onClick={() => setMobileToolsOpen(!mobileToolsOpen)}
+              className="flex items-center justify-between rounded-lg px-2 py-3 text-left text-sm font-medium text-gray-900 hover:bg-gray-50"
+              aria-expanded={mobileToolsOpen}
             >
               Tools
-            </Link>
+              <svg
+                className={cn("h-4 w-4 transition-transform duration-200", mobileToolsOpen && "rotate-180")}
+                viewBox="0 0 16 16"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="m4 6 4 4 4-4" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+            {mobileToolsOpen && (
+              <div className="mb-2 space-y-1 rounded-xl border border-gray-100 bg-gray-50 p-4">
+                {tools.map((t) => (
+                  <Link
+                    key={t.slug}
+                    href={`/tools/${t.slug}`}
+                    onClick={() => setMobileOpen(false)}
+                    className="block rounded-md py-1.5 text-sm font-medium text-gray-800 hover:text-accent-700"
+                  >
+                    {t.name}
+                  </Link>
+                ))}
+                <Link
+                  href="/tools"
+                  onClick={() => setMobileOpen(false)}
+                  className="inline-flex items-center gap-1.5 pt-1 text-[13px] font-semibold text-accent-700"
+                >
+                  See all tools →
+                </Link>
+              </div>
+            )}
 
             <Link
               href="/pricing"

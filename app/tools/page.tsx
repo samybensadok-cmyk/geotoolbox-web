@@ -4,6 +4,7 @@ import { Breadcrumbs } from "@/components/features/breadcrumbs"
 import { siteConfig } from "@/lib/config"
 import { JsonLd } from "@/components/seo/json-ld"
 import { itemListSchema } from "@/lib/seo-schema"
+import { tools } from "@/lib/tools"
 
 export const metadata: Metadata = {
   title: "Free GEO & AI SEO Tools",
@@ -11,19 +12,6 @@ export const metadata: Metadata = {
     "Free, no-sign-up tools for the agentic web — an AI crawler access checker and a server-side llms.txt checker, validator, and generator.",
   alternates: { canonical: `${siteConfig.url}/tools` },
 }
-
-const tools = [
-  {
-    slug: "ai-crawler-checker",
-    name: "AI Crawler Checker",
-    desc: "See which of 34 AI crawlers — GPTBot, ClaudeBot, PerplexityBot and more — your robots.txt allows or blocks, with the exact line to fix. Free.",
-  },
-  {
-    slug: "llms-txt-checker",
-    name: "llms.txt Checker, Validator & Generator",
-    desc: "Validate any site's llms.txt against the spec, resolve every link, score it 0-100, and generate a clean one. Free.",
-  },
-]
 
 export default function ToolsIndexPage() {
   return (

@@ -1,10 +1,11 @@
 import Link from "next/link"
+import { tools } from "@/lib/tools"
 
 export function Footer() {
   return (
     <footer className="border-t border-gray-100 bg-gray-50 px-6 py-12">
       <div className="mx-auto max-w-6xl">
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-6">
           {/* Brand */}
           <div>
             <Link href="/" className="flex items-center gap-2">
@@ -41,6 +42,19 @@ export function Footer() {
             </ul>
           </div>
 
+          {/* Tools */}
+          <div>
+            <h4 className="text-xs font-semibold text-gray-900 uppercase tracking-wider">Tools</h4>
+            <ul className="mt-3 space-y-2">
+              {tools.map((t) => (
+                <li key={t.slug}>
+                  <Link href={`/tools/${t.slug}`} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">{t.name}</Link>
+                </li>
+              ))}
+              <li><Link href="/tools" className="pt-2 inline-block text-sm font-semibold text-gray-900 hover:text-accent-700 transition-colors">All tools →</Link></li>
+            </ul>
+          </div>
+
           {/* Resources */}
           <div>
             <h4 className="text-xs font-semibold text-gray-900 uppercase tracking-wider">Resources</h4>
@@ -49,8 +63,6 @@ export function Footer() {
               <li><Link href="/glossary" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Glossary</Link></li>
               <li><Link href="/feed.xml" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">RSS Feed</Link></li>
               <li><Link href="/blog/what-is-geo" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">What is GEO?</Link></li>
-              <li><Link href="/tools/ai-crawler-checker" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">AI Crawler Checker</Link></li>
-              <li><Link href="/tools/llms-txt-checker" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">llms.txt Checker</Link></li>
             </ul>
           </div>
 
