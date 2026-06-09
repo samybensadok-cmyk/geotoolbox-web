@@ -26,14 +26,14 @@ Do these seven steps in order. The sequence is the point.
 Here is why order matters. There is no point rewriting a page for answer-first extraction if a crawler is blocked from fetching it. There is no point adding schema to a page you have not restructured. Reachability gates everything, structure gates substance, and measurement only means something once the rest is in place. Work top to bottom.
 
 <Callout type="tip" title="Confirm reachability first">
-Since reachability gates everything below it, start there. The free [AI Crawler Checker](/tools/ai-crawler-checker) shows which of 34 AI crawlers your robots.txt allows or blocks, with the exact line to fix.
+The free [AI Crawler Checker](https://geotoolbox.ai/tools/ai-crawler-checker) shows which of 34 AI crawlers your robots.txt allows or blocks, with the exact line to fix.
 </Callout>
 
 If you only have an afternoon, do Step 1 and Step 3 on your five best pages. That alone moves the needle more than a month of scattered tweaks.
 
 ## Step 1: Confirm AI Bots Can Reach Your Pages
 
-Before anything else, make sure the [AI crawlers](https://geotoolbox.ai/glossary/ai-crawler) can actually fetch the pages you care about. If a bot is blocked, you cannot be cited, no matter how good the content is. This is the most common silent failure in AI search optimization, and the easiest to fix.
+Before anything else, make sure the [AI crawlers](https://geotoolbox.ai/glossary/ai-crawler) can actually fetch the pages you care about. If a bot is blocked, you cannot be cited, no matter how good the content is. It is the classic silent failure in AI search optimization, and the easiest to fix.
 
 Each major engine uses [named AI crawlers](https://geotoolbox.ai/blog/ai-crawlers) you can allow or block independently of Googlebot.
 
@@ -42,31 +42,43 @@ Each major engine uses [named AI crawlers](https://geotoolbox.ai/blog/ai-crawler
     <tr><th>Crawler</th><th>Owner / purpose</th><th>To allow in robots.txt</th></tr>
   </thead>
   <tbody>
-    <tr><td>GPTBot</td><td>OpenAI, model training</td><td>User-agent: GPTBot / Allow: /</td></tr>
-    <tr><td>OAI-SearchBot</td><td>OpenAI, ChatGPT search results</td><td>User-agent: OAI-SearchBot / Allow: /</td></tr>
-    <tr><td>ClaudeBot</td><td>Anthropic</td><td>User-agent: ClaudeBot / Allow: /</td></tr>
-    <tr><td>PerplexityBot</td><td>Perplexity</td><td>User-agent: PerplexityBot / Allow: /</td></tr>
-    <tr><td>Google-Extended</td><td>Google, Gemini/AI training control</td><td>User-agent: Google-Extended / Allow: /</td></tr>
+    <tr><td>OAI-SearchBot</td><td>OpenAI, ChatGPT search index (gates citations)</td><td>User-agent: OAI-SearchBot / Allow: /</td></tr>
+    <tr><td>ChatGPT-User</td><td>OpenAI, real-time fetch when a user asks</td><td>User-agent: ChatGPT-User / Allow: /</td></tr>
+    <tr><td>Claude-SearchBot</td><td>Anthropic, Claude search index (gates citations)</td><td>User-agent: Claude-SearchBot / Allow: /</td></tr>
+    <tr><td>Claude-User</td><td>Anthropic, real-time fetch when a user asks</td><td>User-agent: Claude-User / Allow: /</td></tr>
+    <tr><td>PerplexityBot</td><td>Perplexity, search index (gates citations)</td><td>User-agent: PerplexityBot / Allow: /</td></tr>
+    <tr><td>GPTBot</td><td>OpenAI, model training only</td><td>User-agent: GPTBot / Allow: /</td></tr>
+    <tr><td>ClaudeBot</td><td>Anthropic, model training only</td><td>User-agent: ClaudeBot / Allow: /</td></tr>
+    <tr><td>Google-Extended</td><td>Google, Gemini training control (a robots.txt token, not a crawler)</td><td>User-agent: Google-Extended / Allow: /</td></tr>
   </tbody>
 </table>
 
-The exact user-agent strings and rules are documented by the platforms themselves: [OpenAI's crawler overview](https://developers.openai.com/api/docs/bots) covers GPTBot and OAI-SearchBot, and [Google's common crawlers reference](https://developers.google.com/search/docs/crawling-indexing/google-common-crawlers) covers Google-Extended. Note that Google-Extended controls AI training access without affecting your normal Google Search ranking, so blocking it does not protect rankings, it only removes you from one AI surface.
+Note the split: the search and fetch bots in the first five rows are what gate citations; the training bots in the last three rows only control whether your content trains future models. The exact user-agent strings and rules are documented by the platforms themselves: [OpenAI's crawler overview](https://developers.openai.com/api/docs/bots) covers GPTBot, OAI-SearchBot, and ChatGPT-User, and [Google's common crawlers reference](https://developers.google.com/search/docs/crawling-indexing/google-common-crawlers) covers Google-Extended. Note that Google-Extended controls Gemini training and grounding without affecting your normal Google Search ranking; AI Overviews are fed by ordinary Googlebot, so blocking Google-Extended neither protects rankings nor removes you from AI Overviews.
 
-### A robots.txt block that allows them all
+### A Robots.txt Block That Allows Them All
 
 If you want every major AI crawler to reach your pages, an explicit allow block leaves no ambiguity. Drop this at the top of your robots.txt:
 
 ```
-User-agent: GPTBot
-Allow: /
-
 User-agent: OAI-SearchBot
 Allow: /
 
-User-agent: ClaudeBot
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Claude-User
 Allow: /
 
 User-agent: PerplexityBot
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
 Allow: /
 
 User-agent: Google-Extended
@@ -75,14 +87,14 @@ Allow: /
 
 A few things to watch. A blanket `User-agent: * / Disallow: /` block later in the file does not override these named blocks, because robots.txt matches the most specific user-agent group, but a stray `Disallow:` rule inside one of these named groups will. Check that no path you care about sits under a `Disallow:` line in the matching group. And remember robots.txt is a fetch directive, not an access control: it tells well-behaved crawlers what to skip, so the real failures usually live one layer down, in the two causes below.
 
-### The two blocks that catch people
+### The Two Blocks That Catch People
 
 Two things block these crawlers more often than deliberate robots.txt rules:
 
-- **WAF and bot-management rules.** A Cloudflare or similar rule that challenges non-browser traffic will catch AI crawlers as collateral, even when robots.txt allows them. In our experience scanning sites with Geotoolbox, this is the single most common reachability problem, and the site owner almost never intended it.
+- **WAF (web application firewall) and bot-management rules.** A Cloudflare or similar rule that challenges non-browser traffic will catch AI crawlers as collateral, even when robots.txt allows them. In our experience scanning sites with Geotoolbox, this is the single most common reachability problem, and the site owner almost never intended it.
 - **JavaScript rendering.** If your main content loads client-side and the crawler does not execute it, the bot receives a nearly empty page.
 
-The check is binary: either the bot reaches the page or it does not. Run a [reachability scan to see which AI bots can fetch your pages](https://geotoolbox.ai/features/content-analyzer) before you spend a minute on content. Fix any block here first.
+The check is binary: either the bot reaches the page or it does not. The free [AI Crawler Checker](https://geotoolbox.ai/tools/ai-crawler-checker) shows what your robots.txt permits; verifying what crawlers actually receive past WAF rules and JavaScript is what the paid [Content Analyzer](https://geotoolbox.ai/features/content-analyzer) scan does. Run one before you spend a minute on content, and fix any block here first.
 
 ## Step 2: Pick the Pages to Start With
 
@@ -98,7 +110,7 @@ A quick way to rank the shortlist: score each candidate page from 1 to 3 on two 
 
 This is the core rewrite, and it is mostly about where you put the answer. Generative engines lift self-contained statements. If your answer is buried in the fourth paragraph after setup and throat-clearing, the model has nothing clean to quote.
 
-### Put the answer in the first sentence
+### Put the Answer in the First Sentence
 
 Answer-first means the first sentence under a heading directly answers the question in the heading, then you elaborate. Compare:
 
@@ -108,7 +120,7 @@ Answer-first means the first sentence under a heading directly answers the quest
 
 The second version can be quoted as-is. The first cannot. Notice what changed: the claim, the specifics, and the qualifier all moved into the opening, so a model can lift one sentence and still represent you accurately. The setup that used to come first did not disappear, it moved below the answer where a human reader who wants context can still find it.
 
-### Three rules that make content extractable
+### Three Rules That Make Content Extractable
 
 A few rules make content extractable:
 
@@ -116,19 +128,17 @@ A few rules make content extractable:
 - **Short paragraphs and clear headings.** One idea per paragraph. Use a question-shaped heading, then answer it immediately.
 - **Lists and tables for structured facts.** Comparisons, steps, and specs are easier to extract as a list or table than as prose.
 
-{/* IMG-A2-02 diagram - before/after answer-first rewrite of a paragraph. See image brief. */}
-
-You do not need to rewrite the whole page. Often, moving the answer to the top of each section and tightening the opening sentence is 80% of the win. For the sentence-level craft of [writing passages that LLMs cite](https://geotoolbox.ai/blog/ai-content-optimization), self-contained, originality and all, we go deeper in a dedicated guide.
+You do not need to rewrite the whole page. Often, moving the answer to the top of each section and tightening the opening sentence is 80% of the win. The sentence-level craft (self-containment, originality, quotability) is covered in our guide to [writing passages that LLMs cite](https://geotoolbox.ai/blog/ai-content-optimization).
 
 ## Step 4: Add Citable Substance
 
 Once a page is reachable and structured, give the engine something worth quoting. Models reach for specific, attributable facts over vague assertions.
 
-### Why specificity wins
+### Why Specificity Wins
 
-This is the one tactic with hard research behind it. The [Princeton-led study that defined GEO](https://arxiv.org/abs/2311.09735) found that GEO methods can lift visibility in generative-engine responses by up to 40%, with adding sources, quotations, and statistics among the most effective. Specificity is the lever.
+This is the one tactic with hard research behind it. The [Princeton-led study that defined GEO](https://arxiv.org/abs/2311.09735) (generative engine optimization) found that GEO methods can lift visibility in generative-engine responses by up to 40%, with adding sources, quotations, and statistics among the most effective. Specificity is the lever.
 
-### What to add, and how
+### What to Add, and How
 
 In practice that means:
 
@@ -155,13 +165,13 @@ So treat [schema](https://geotoolbox.ai/glossary/schema-markup) as housekeeping,
 
 What matters more is [entity clarity](https://geotoolbox.ai/blog/entity-seo) in the prose: state plainly who you are, what you do, and the facts about your topic. Make sure your brand is described consistently across your site and your off-site profiles, so the model resolves you to one clear entity rather than a fuzzy one.
 
-On llms.txt specifically: Google does not use it as a Search or AI Overviews ranking signal, so it will not lift your rankings or citations. But in May 2026 Google added an llms.txt audit to Chrome Lighthouse as an agentic-browsing best practice, so it is now low-cost infrastructure worth adding to help AI agents navigate your site. Add it for that reason, not for rankings, and do it after reachability and structure.
+On llms.txt specifically: Google does not use it as a Search or AI Overviews ranking signal, so it will not lift your rankings or citations. But in May 2026 Google added an [llms.txt audit to Chrome Lighthouse](https://developer.chrome.com/docs/lighthouse/agentic-browsing/llms-txt) as an agentic-browsing best practice, so it is now low-cost infrastructure worth adding to help AI agents navigate your site. Add it for that reason, not for rankings, and do it after reachability and structure.
 
 ## Step 6: Build Off-Site Presence the Engines Trust
 
 Generative engines corroborate. A claim echoed across several independent, trusted sources is safer to repeat than one that lives only on your own domain. That makes your off-site footprint part of the optimization, not a separate marketing track.
 
-### Where models look for corroboration
+### Where Models Look for Corroboration
 
 Three places carry weight because models lean on them:
 
@@ -169,13 +179,15 @@ Three places carry weight because models lean on them:
 - **Video.** A YouTube presence on your topic gives engines another corroborating, citable source.
 - **Third-party lists and roundups.** Being included in "best X" articles and industry roundups gets you mentioned in the exact comparative answers buyers prompt for.
 
-### Mentions beat raw link count
+### Mentions Beat Raw Link Count
 
-The shift in mindset: for AI citation, consistent [brand mentions](https://geotoolbox.ai/glossary/brand-mention) across trusted sources often matter more than the raw backlink count that wins a Google position. A model deciding whether to repeat a claim about you is weighing how many independent places describe you the same way, not how many links point at your homepage. So an accurate, consistent mention on a relevant forum thread or roundup can carry more citation weight than a high-authority link with no surrounding context. Earned, accurate description of your brand in the places models trust is the off-site half of GEO, and it is the half most teams ignore because it does not show up in a backlink report.
+The shift in mindset: for AI citation, consistent [brand mentions](https://geotoolbox.ai/glossary/brand-mention) across trusted sources often matter more than the raw backlink count that wins a Google position. A model deciding whether to repeat a claim about you is weighing how many independent places describe you the same way, not how many links point at your homepage.
+
+So an accurate, consistent mention on a relevant forum thread or roundup can carry more citation weight than a high-authority link with no surrounding context. Earned, accurate description of your brand in the places models trust is the off-site half of GEO, and it is the half most teams ignore because it does not show up in a backlink report.
 
 ## Step 7: Measure Whether It Is Working
 
-You cannot manage what you cannot see, and AI search is partly invisible. There is no Search Console for AI answers, and traffic from an AI tool usually lands in analytics as direct or referral with no keyword attached. Rankings no longer tell the whole story either: [Ahrefs found that AI Overviews are linked to a 34.5% lower click-through rate](https://ahrefs.com/blog/ai-overviews-reduce-clicks/) for the top organic result, so you can hold position one and still lose traffic. So you triangulate and track direction, not a perfect count.
+You cannot manage what you cannot see, and AI search is partly invisible. There is no Search Console for AI answers, and traffic from an AI tool usually lands in analytics as direct or referral with no keyword attached. Rankings no longer tell the whole story either: Ahrefs found that AI Overviews are linked to a [34.5% lower click-through rate](https://ahrefs.com/blog/ai-overviews-reduce-clicks/) for the top organic result, so you can hold position one and still lose traffic. So you triangulate and track direction, not a perfect count.
 
 Track four things:
 
@@ -186,7 +198,7 @@ Track four things:
 
 Set realistic expectations. Optimizing a page does not guarantee a citation; engines only retrieve and cite a fraction of eligible pages, and which ones shift over time. Judge progress by the trend across weeks, not a single before-and-after. A monitoring view that [tracks your AI visibility over time](https://geotoolbox.ai/features/domain-overview) turns scattered manual checks into a baseline you can compare against. Record your starting point before you optimize.
 
-## The Per-Page GEO Checklist
+## The Per-Page AI Search Optimization Checklist
 
 Run this on every page you optimize. If you cannot tick the first item, stop and fix it before touching the rest.
 
@@ -195,7 +207,7 @@ Run this on every page you optimize. If you cannot tick the first item, stop and
     <tr><th>#</th><th>Check</th><th>Pass condition</th></tr>
   </thead>
   <tbody>
-    <tr><td>1</td><td>Reachable</td><td>GPTBot, ClaudeBot, PerplexityBot, Google-Extended can fetch the page (robots + WAF allow)</td></tr>
+    <tr><td>1</td><td>Reachable</td><td>OAI-SearchBot, ChatGPT-User, Claude-SearchBot, PerplexityBot can fetch the page (robots + WAF allow); GPTBot and ClaudeBot too if you also want training inclusion</td></tr>
     <tr><td>2</td><td>Rendered without JS</td><td>Main content is in the HTML a crawler receives, not loaded client-side only</td></tr>
     <tr><td>3</td><td>Answer-first</td><td>Each section's first sentence answers its heading directly</td></tr>
     <tr><td>4</td><td>Self-contained chunks</td><td>Sections make sense lifted alone; no dangling "as above" references</td></tr>
@@ -205,7 +217,7 @@ Run this on every page you optimize. If you cannot tick the first item, stop and
   </tbody>
 </table>
 
-Seven checks, in order. Most pages fail on 1, 3, or 5. For the full set of best practices behind these checks, grouped by category and rated by evidence, see our [answer engine optimization best practices](https://geotoolbox.ai/blog/aeo-best-practices).
+Seven checks, in order. Pages most often fail on 1, 3, or 5. For the full set of best practices behind these checks, grouped by category and rated by evidence, see our [answer engine optimization best practices](https://geotoolbox.ai/blog/aeo-best-practices).
 
 ## Common Mistakes That Waste Effort
 
@@ -213,25 +225,25 @@ Three beliefs send people in the wrong direction.
 
 **"GEO is just SEO, so my rankings carry over."** Partly true, but it misleads. Ranking and citation are different selection systems. High domain authority does not transfer cleanly to AI citations, so chasing more backlinks while ignoring extractability is effort spent on the wrong lever. For the full breakdown of the discipline, see our guide on [what generative engine optimization is](https://geotoolbox.ai/blog/what-is-geo).
 
-**"I need to build an llms.txt file."** It was over-prescribed as a ranking hack, which it is not. As covered in Step 5, it is now a sanctioned agentic-browsing convention worth adding for AI agents, just not a substitute for the seven steps above.
+**"I need to build an llms.txt file."** It was over-prescribed as a ranking hack, which it is not; see Step 5 for what it is actually good for, and note it is no substitute for the seven steps above.
 
-**"If I optimize, I will get cited."** Optimization improves your odds; it does not guarantee a citation. As Step 7 explains, engines cite only a fraction of eligible pages, and the set changes. Expecting a one-to-one payoff leads people to abandon a working approach too early. Track the trend, not a single result.
+**"If I optimize, I will get cited."** Optimization improves your odds; it does not guarantee a citation. As Step 7 explains, the citation pool is selective and shifts over time. Expecting a one-to-one payoff leads people to abandon a working approach too early. Track the trend, not a single result.
 
 A useful habit: label the advice you follow as TESTED (you or a credible study verified it) or CLAIMED (it sounds right but nobody has shown it works). Most AI-search advice circulating today is CLAIMED. Spend your time on the TESTED parts first.
 
 ## Frequently Asked Questions
 
 **How do I rank in ChatGPT search?**
-Make sure OAI-SearchBot and GPTBot can reach the page, structure it answer-first, and back claims with specific sourced facts. ChatGPT leans on its search index plus corroborating sources, so off-site mentions help. Our guide on [getting cited in ChatGPT search](https://geotoolbox.ai/blog/seo-for-chatgpt) covers the engine-specific details.
+Make sure OAI-SearchBot and ChatGPT-User can reach the page (GPTBot only controls training, not search visibility), structure it answer-first, and back claims with specific sourced facts. ChatGPT leans on its search index plus corroborating sources, so off-site mentions help. Our guide on [getting cited in ChatGPT search](https://geotoolbox.ai/blog/seo-for-chatgpt) covers the engine-specific details.
 
 **How do I rank in AI answers generally?**
-Follow the seven steps in order: reachability, page selection, answer-first structure, citable substance, entity clarity, off-site presence, and measurement. The fundamentals transfer across engines; the per-engine tuning is secondary. For Perplexity specifically, see [how to get cited in Perplexity](https://geotoolbox.ai/blog/perplexity-seo).
+The same fundamentals transfer across engines: reachable pages, answer-first structure, citable substance, and corroboration. The per-engine tuning is secondary. For Perplexity specifically, see [how to get cited in Perplexity](https://geotoolbox.ai/blog/perplexity-seo).
 
 **How long until my content gets cited?**
 Reachability fixes can take effect within days. Content and citation changes are slower and harder to attribute, because AI sourcing shifts gradually and is only partly observable. Judge it over weeks, by trend.
 
 **Why isn't my content cited even though I optimized it?**
-Optimization improves odds, not certainty (see Step 7 on why engines cite only a fraction of eligible pages). Check the basics first: is the page actually reachable, is the answer extractable, and is the claim corroborated elsewhere.
+Optimization improves odds, not certainty (see Step 7). Check the basics first: is the page actually reachable, is the answer extractable, and is the claim corroborated elsewhere.
 
 **Is SEO dead in 2026?**
 No. Search is shifting toward synthesized answers, but the underlying work (reachable, clear, trustworthy content) still decides who gets surfaced. AI search optimization is an extension of SEO, not its replacement.
@@ -241,9 +253,9 @@ No, not for AI search, for the reasons covered in Step 5. Our full breakdown of 
 
 ## Start With Step 1
 
-You do not need a platform or a budget to begin, just the discipline to go in order. The cheapest, highest-value move is also the first one: confirm AI engines can actually reach your best pages. Most sites have at least one silent block they do not know about.
+You do not need a platform or a budget to begin, just the discipline to go in order. The cheapest, highest-value move is also the first one: confirm AI engines can actually reach your best pages. In our experience, it is common to find at least one silent block the owner never intended.
 
-Geotoolbox's free [Content Analyzer](https://geotoolbox.ai/features/content-analyzer) runs the bot-reachability check across the major AI crawlers and grades how extractable your page is, in under a minute. Start there, fix what it flags, then work down the seven steps.
+Geotoolbox's free [AI Crawler Checker](https://geotoolbox.ai/tools/ai-crawler-checker) shows which of 34 AI crawlers your robots.txt allows or blocks in seconds; the paid [Content Analyzer](https://geotoolbox.ai/features/content-analyzer) goes further by fetching the page as each bot and grading how extractable it is. Start there, fix what it flags, then work down the seven steps.
 
 ## Sources
 
@@ -252,3 +264,4 @@ Geotoolbox's free [Content Analyzer](https://geotoolbox.ai/features/content-anal
 - [AI features and your website](https://developers.google.com/search/docs/appearance/ai-features) - Google Search Central
 - [GEO: Generative Engine Optimization](https://arxiv.org/abs/2311.09735) - Aggarwal et al., KDD 2024
 - [AI Overviews reduce clicks](https://ahrefs.com/blog/ai-overviews-reduce-clicks/) - Ahrefs, 2025 (data citation)
+- [llms.txt in Lighthouse agentic browsing](https://developer.chrome.com/docs/lighthouse/agentic-browsing/llms-txt) - Chrome Developers, May 2026
