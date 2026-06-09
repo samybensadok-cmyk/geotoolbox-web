@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 /**
  * Contact form. POSTs to the hardened Replit endpoint (api/contact.php,
@@ -11,6 +11,7 @@ import { useRef, useState } from "react"
 
 const TOPICS = [
   { value: "sales", label: "Sales" },
+  { value: "enterprise", label: "Enterprise" },
   { value: "support", label: "Support" },
   { value: "partnership", label: "Partnership" },
   { value: "general", label: "General" },
@@ -49,6 +50,13 @@ export function ContactForm() {
   // Anti-spam: honeypot (bots fill hidden fields) + min fill time.
   const honeypotRef = useRef<HTMLInputElement>(null)
   const mountedAt = useRef<number>(Date.now())
+
+  // Deep-link preselect: /contact?topic=enterprise (etc.) preselects the matching
+  // topic so CTAs like the pricing "Talk to sales" land on the right category.
+  useEffect(() => {
+    const t = new URLSearchParams(window.location.search).get("topic")
+    if (t && TOPICS.some((x) => x.value === t)) setTopic(t as Topic)
+  }, [])
 
   async function submit() {
     setErrorMsg(null)

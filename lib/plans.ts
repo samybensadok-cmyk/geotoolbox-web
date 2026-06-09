@@ -42,7 +42,7 @@ export type Plan = {
 }
 
 const SIGNUP = "/app/?page=signup"
-const SALES = "mailto:samy@geotoolbox.ai?subject=Enterprise%20inquiry"
+const SALES = "/contact?topic=enterprise"
 
 export const PLANS: Plan[] = [
   {

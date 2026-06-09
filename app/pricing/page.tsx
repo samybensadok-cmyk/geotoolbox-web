@@ -204,7 +204,7 @@ export default function PricingPage() {
             </p>
           </div>
           <Link
-            href="mailto:samy@geotoolbox.ai?subject=Enterprise%20inquiry"
+            href="/contact?topic=enterprise"
             className="inline-flex shrink-0 items-center justify-center rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-colors hover:bg-gray-100"
           >
             Talk to sales
