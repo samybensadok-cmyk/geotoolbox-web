@@ -1,6 +1,6 @@
 ---
 title: "How Does AI Search Work? A Plain-English Breakdown"
-description: "AI search engines like ChatGPT, Perplexity, Gemini, and Google AI Overviews don't return a list of links. They read your question, search the web, pick a few good sources, and write a grounded answer. Here's how each step actually works."
+description: "ChatGPT, Perplexity, Gemini, and Google AI Overviews all run the same four-step loop: read the question, search, pick sources, write a cited answer."
 date: "2026-05-16"
 author: "Samy BEN SADOK"
 tags: ["geo", "ai-search", "guide"]
@@ -9,43 +9,41 @@ draft: false
 
 AI search isn't one thing. ChatGPT, Perplexity, Gemini, Claude, and Google AI Overviews each handle your query differently. But the core process they share is the same: read the question, search the web, pick the good sources, write a grounded answer with citations.
 
-Here's what happens at each step, why the engines diverge, and what it means if you want your brand to get cited.
-
 ## AI Search vs. Traditional Search: The Real Difference
 
 Traditional Google ranks ten links and you click. AI search reads your question, pulls from many sources at once, and writes one answer with a few cited URLs underneath.
 
-The behavior shift on the user side is just as big. AI search queries are dramatically longer than traditional Google queries. People type to AI the way they'd ask a colleague. Full sentences, context, follow-ups. That single change reshapes what the engine has to do under the hood.
+The behavior shift on the user side is just as big. AI search queries run several times longer than the three-or-four-word phrases people type into classic Google. People type to AI the way they'd ask a colleague. Full sentences, context, follow-ups. That single change reshapes what the engine has to do under the hood.
 
-One quick disambiguation. If you searched "how does AI search work" and landed on Microsoft or Cloudflare documentation, you saw something different. Those pages describe Azure AI Search or Cloudflare AI Search, which are vector database products that companies use to add semantic search inside their own apps. Important tech, totally different topic. This article is about the consumer-facing AI search engines that answer questions for end users: ChatGPT search, Perplexity, Google AI Overviews, Gemini, Claude, and Bing Copilot.
+One quick disambiguation. If you searched "how does AI search work" and landed on Microsoft or Cloudflare documentation, you saw something different. Those pages describe Azure AI Search or Cloudflare AI Search, which are vector database products that companies use to add semantic search inside their own apps. Important tech, totally different topic. Here we mean the consumer-facing AI search engines that answer questions for end users: ChatGPT search, Perplexity, Google AI Overviews, Gemini, Claude, and Microsoft Copilot.
 
 ## The 4 Steps Every AI Search Engine Runs
 
 Almost every engine in this space runs the same four-step loop. The implementations vary. The shape doesn't.
 
-**Step 1: Query understanding.** The model reads your question and figures out intent, then expands it. Synonyms, related concepts, and what Ahrefs calls **[query fan-out](https://geotoolbox.ai/glossary/query-fan-out)**: breaking a complex question into smaller parallel sub-queries. Ask for "a 5-day trip to Japan" and the engine simultaneously searches for hotels in Tokyo, weather in Kyoto, train passes, and a dozen other angles you didn't type.
+1. **Query understanding.** The model reads your question and figures out intent, then expands it. Synonyms, related concepts, and what Google calls **[query fan-out](https://geotoolbox.ai/glossary/query-fan-out)**: breaking a complex question into smaller parallel sub-queries. Ask for "a 5-day trip to Japan" and the engine simultaneously searches for hotels in Tokyo, weather in Kyoto, train passes, and a dozen other angles you didn't type.
 
-**Step 2: Retrieval.** The engine fires those sub-queries against a search index. Sometimes that's a partner index like Bing (in ChatGPT's case). Sometimes it's a SERP API. Sometimes it's a proprietary cached crawl. The output is a candidate pool of 10 to 50 documents per sub-query.
+2. **Retrieval.** The engine fires those sub-queries against a search index. Sometimes that's a partner index like Bing (in ChatGPT's case). Sometimes it's a SERP API. Sometimes it's a proprietary cached crawl. The output is a candidate pool of documents per sub-query, typically a few dozen.
 
-**Step 3: Source evaluation.** This is where most explainers gloss over. The system ranks candidates by authority, recency, relevance, and cross-source agreement. A claim that shows up in three independent sources beats one that appears in one. A page from a domain it has cited successfully before beats a brand-new domain on the same topic.
+3. **Source evaluation.** This is the step most explainers gloss over. The system ranks candidates by authority, recency, relevance, and cross-source agreement. A claim that shows up in three independent sources beats one that appears in one. The engines don't publish how they score this, but observed citation behavior suggests a domain they have cited before beats a brand-new domain on the same topic.
 
-**Step 4: Generation with citation.** The model takes the surviving sources, fills its context window with their text, and generates an answer grounded in that text. The links it shows below the answer are the receipts. This whole pattern has a name: **[Retrieval-Augmented Generation](https://geotoolbox.ai/glossary/retrieval-augmented-generation)**, or **RAG**.
+4. **Generation with citation.** The model takes the surviving sources, fills its context window with their text, and generates an answer grounded in that text. The links it shows below the answer are the receipts. This whole pattern has a name: **[Retrieval-Augmented Generation](https://geotoolbox.ai/glossary/retrieval-augmented-generation)**, or **RAG**.
 
-## How ChatGPT Search Works (Bing-Backed)
+## How ChatGPT Search Works (Bing-Rooted)
 
-ChatGPT's web search runs on Bing's index. When you trigger a search inside ChatGPT, the model issues queries against Bing, pulls back results, evaluates them, and writes an answer (for what it then cites, and why it cites only some of it, see [how ChatGPT cites sources](https://geotoolbox.ai/blog/chatgpt-citations)).
+ChatGPT's web search was built on Bing's index and still leans on it, with OpenAI increasingly blending its own crawl and ranking on top. When you trigger a search inside ChatGPT, the model issues queries against that blended index, pulls back results, evaluates them, and writes an answer (for what it then cites, and why it cites only some of it, see [how ChatGPT cites sources](https://geotoolbox.ai/blog/chatgpt-citations)).
 
-OpenAI also runs its own crawlers. **OAI-SearchBot** is the one that fetches pages live to answer queries in real time. **GPTBot** crawls pages for training data, which is a separate use case (newer ChatGPT models will know what was on your site at training time, but live answers are powered by OAI-SearchBot). [The bot user agents](https://geotoolbox.ai/blog/ai-crawlers) matter because if your site blocks either of these in robots.txt or via a WAF rule, you're invisible to that engine.
+OpenAI runs three crawlers with separate jobs. **OAI-SearchBot** builds the index behind ChatGPT search. **ChatGPT-User** fetches a specific page in real time when a user's question points to it. **GPTBot** collects training data, a separate use case (newer ChatGPT models will know what was on your site at training time, but live answers run through the search and fetch bots). [The bot user agents](https://geotoolbox.ai/blog/ai-crawlers) matter because if your site blocks the search or fetch bots in robots.txt or via a WAF (web application firewall) rule, you're invisible to that engine.
 
-The practical implication: ChatGPT visibility is heavily downstream of Bing. Submit your sitemap to [Bing Webmaster Tools](https://www.bing.com/webmasters), resolve coverage issues there, and you've covered the largest input ChatGPT uses to find your content.
+The practical implication: ChatGPT visibility is still heavily downstream of Bing. Submit your sitemap to [Bing Webmaster Tools](https://www.bing.com/webmasters), resolve coverage issues there, and you've covered a major input ChatGPT uses to find your content.
 
 ## How Perplexity Works (Sonar and Context-Window Saturation)
 
-Perplexity calls itself an answer engine, not a search engine, and the architecture reflects that distinction. Its core retrieval engine is named **Sonar** and is built on Meta's Llama 3.3 model, per [Perplexity's Wikipedia entry](https://en.wikipedia.org/wiki/Perplexity_AI). Perplexity Pro lets users swap in backend models from OpenAI, Anthropic, and Google.
+Perplexity calls itself an answer engine, not a search engine, and the architecture reflects that distinction. Its in-house answer model is named **Sonar**, built on Meta's Llama 3.3, per [Perplexity's own announcement](https://www.perplexity.ai/hub/blog/meet-new-sonar). Retrieval runs on Perplexity's own index, crawled by PerplexityBot. Perplexity Pro lets users swap in backend models from OpenAI, Anthropic, and Google.
 
 What sets Perplexity apart is how aggressively it grounds answers in retrieved text. The system pulls a wide candidate pool, ranks sources by authority and freshness, then loads as much source material as the model's context window allows before generation. The logic is straightforward: when the model is reading real source text, it has less room to invent things. Less creativity, more accuracy. That is the opposite of ChatGPT's model-first default, a contrast [ChatGPT vs Perplexity](https://geotoolbox.ai/blog/chatgpt-vs-perplexity) breaks down for visibility.
 
-Perplexity also leans hard on Reddit. [Profound's citation tracking](https://www.tryprofound.com/blog/the-data-on-reddit-and-ai-search) shows Reddit is the #1 most-cited domain in Perplexity answers, ahead of every other source. If your category has active Reddit discussions and your brand isn't in them, you're handing competitors a free lane.
+Perplexity also leans hard on Reddit. Citation tracking from Profound, an AI-visibility vendor, shows Reddit as the #1 most-cited domain in Perplexity answers, ahead of every other source. If your category has active Reddit discussions and your brand isn't in them, you're handing competitors a free lane.
 
 ## How Google AI Overviews Work
 
@@ -53,23 +51,39 @@ AI Overviews are the boxed answers that appear at the top of Google search resul
 
 That last detail is what makes them different from every other engine in this list. AI Overviews source most of their citations from pages Google already considers high-quality enough to rank organically. Independent studies of cited URLs have generally found heavy overlap with the organic top 10 to 12, which means classic SEO fundamentals (helpful content, sound technical setup, real authority signals) still pull most of the weight.
 
-Google's separate **AI Mode** (the standalone conversational interface) behaves more like ChatGPT and Perplexity. Onely's [analysis of AI Mode citations](https://www.onely.com/blog/how-ai-search-works/) found only about 14% of cited URLs ranked in the visible Google top 10, so the citation pool is wider than what classic SERPs reveal.
+Google's separate **AI Mode** (the standalone conversational interface) behaves more like ChatGPT and Perplexity. One SEO agency's analysis of AI Mode citations (Onely, late 2025) found only about 14% of cited URLs ranked in the visible Google top 10, so the citation pool is wider than what classic SERPs reveal.
 
-The key bot to know here is **Google-Extended**. It's the user agent token Google uses to govern whether your content is eligible for Gemini and AI Overview training. Block it in robots.txt and you opt out.
+The token to know here is **Google-Extended**. It's not a crawler; it's a robots.txt control that governs whether your content can be used to train and ground Google's Gemini models. AI Overviews are a Search feature fed by regular Googlebot, so blocking Google-Extended does not opt you out of them. The only exit from AI Overviews is the standard Search controls, with the Search-visibility cost those carry.
 
-## How Claude and Gemini Handle Search
+## How Claude, Gemini, and Copilot Handle Search
 
-Claude added live web search roughly six months after ChatGPT, and the implementation is closer to ChatGPT's pattern: pull from a search backend, evaluate, generate with citations. The crawler to know is **ClaudeBot** (live search) and **anthropic-ai** (training data). Same two-bot split as OpenAI.
+Claude added live web search a few months after ChatGPT, and the implementation is closer to ChatGPT's pattern: pull from a search backend, evaluate, generate with citations. The crawlers to know are **Claude-SearchBot**, which indexes pages for Claude's web search, and **Claude-User**, which fetches a page when a user's question points to it. **ClaudeBot** is the training crawler. (Older guides mention anthropic-ai or Claude-Web; those are legacy names Anthropic no longer uses.) Same three-bot split as OpenAI.
 
 Gemini grounds answers through Google Search when the model decides external data is needed. Inside the Gemini chat app, that grounding is what powers the "Show sources" feature. If you're optimizing for Gemini, you're effectively optimizing for the Google index it grounds against.
 
-Bing Copilot is the simplest of the bunch. It's a thin layer on top of Bing's regular search results, with answer generation by GPT-4. If you're indexed and ranking in Bing, you're a candidate for citation in Copilot.
+Microsoft Copilot is the simplest of the bunch. It's a thin layer on top of Bing's regular search results, with answer generation by OpenAI's current models. If you're indexed and ranking in Bing, you're a candidate for citation in Copilot.
 
-## What This Means If You Want To Get Cited
+Here's the whole field in one view:
+
+<table>
+  <thead>
+    <tr><th>Engine</th><th>Draws from</th><th>Search / fetch bots</th><th>Training opt-out</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>ChatGPT search</td><td>Bing index + OpenAI's own crawl</td><td>OAI-SearchBot, ChatGPT-User</td><td>GPTBot</td></tr>
+    <tr><td>Perplexity</td><td>Perplexity's own index</td><td>PerplexityBot, Perplexity-User</td><td>Not used for model training</td></tr>
+    <tr><td>Google AI Overviews / AI Mode</td><td>Google's main index</td><td>Googlebot</td><td>Google-Extended (Gemini training only)</td></tr>
+    <tr><td>Gemini</td><td>Google Search grounding</td><td>Googlebot</td><td>Google-Extended</td></tr>
+    <tr><td>Claude</td><td>Anthropic's search index</td><td>Claude-SearchBot, Claude-User</td><td>ClaudeBot</td></tr>
+    <tr><td>Microsoft Copilot</td><td>Bing index</td><td>Bingbot</td><td>n/a</td></tr>
+  </tbody>
+</table>
+
+## What This Means If You Want to Get Cited
 
 Three things matter, and they're all downstream of the four-step loop above.
 
-**Be reachable.** Most "we're not showing up in AI" problems are simpler than people think. The bot can't reach the page. A robots.txt rule blocks GPTBot. A Cloudflare or DataDome rule rate-limits OAI-SearchBot. A JS-only render delivers a blank shell to a crawler that doesn't execute JavaScript. If you don't verify reachability, every other tactic is wasted effort. This is the gap [GeoToolbox](https://geotoolbox.ai/) was built to surface, with a free 11-bot reachability probe.
+**Be reachable.** Most "we're not showing up in AI" problems are simpler than people think. The bot can't reach the page. A robots.txt rule blocks GPTBot. A Cloudflare or DataDome rule rate-limits OAI-SearchBot. A JS-only render delivers a blank shell to a crawler that doesn't execute JavaScript. If the bots can't fetch your pages, every other tactic is wasted effort. This is the gap GEO Toolbox's free [AI Crawler Checker](https://geotoolbox.ai/tools/ai-crawler-checker) was built to surface: it reads your robots.txt and shows which of 34 documented AI crawlers you allow or block, down to the exact line doing the blocking. One honest caveat: reachability is a floor, not a ranking lever. An unblocked bot still has to choose to cite you. A blocked one never will.
 
 **Be a clear answer to a clear question.** AI search rewards content that opens with a direct answer in the first paragraph, supports it with structured data, and presents claims in a format the model can lift (short paragraphs, tables, bulleted definitions). This is the craft of [writing pages that LLMs cite](https://geotoolbox.ai/blog/ai-content-optimization). If your top-of-page is brand storytelling and the answer is buried in section four, you'll lose to a competitor who put the answer up top.
 
@@ -83,18 +97,18 @@ No. Azure AI Search and similar products (Cloudflare AI Search, Elasticsearch wi
 
 ### Does traditional SEO still matter for AI search?
 
-Yes. Google AI Overviews source most citations from pages that already rank well in the underlying Google search results. ChatGPT runs on Bing's index, so being well-indexed in Bing is a direct lever. Even Perplexity (which uses its own retrieval) factors in authority signals that overlap with classic SEO: backlinks, domain credibility, content quality. SEO isn't sufficient on its own anymore, but it's still necessary.
+Yes. Google AI Overviews source most citations from pages that already rank well in the underlying Google search results. ChatGPT search leans on Bing's index, so being well-indexed in Bing is a direct lever. Even Perplexity (which uses its own retrieval) factors in authority signals that overlap with classic SEO: backlinks, domain credibility, content quality. SEO isn't sufficient on its own anymore, but it's still necessary.
 
 ### Do AI search engines crawl pages live or rely on a cached index?
 
-It depends on the engine and the action. Live search queries (ChatGPT search, Perplexity, Claude with web search) hit a search index or SERP API in real time when you ask a question. Training data crawls (GPTBot, anthropic-ai, Google-Extended) happen on a separate schedule and feed the model weights. If you want to control either, robots.txt and your WAF are the levers. A page can be reachable to one and blocked to the other.
+It depends on the engine and the action. Live search queries (ChatGPT search, Perplexity, Claude with web search) hit a search index or SERP API in real time when you ask a question. Training-data crawls (GPTBot, ClaudeBot, CCBot) happen on a separate schedule and feed the model weights; Google-Extended is a robots.txt control rather than a crawler, with Google's existing bots doing the fetching. If you want to manage either, robots.txt and your WAF are the levers. A page can be reachable to one and blocked to the other.
 
 ### Why do AI engines cite Reddit so much?
 
-Because Reddit is dense with people explaining things to each other in plain language, with cross-validation from other commenters. That format is almost ideal for RAG: short, declarative, cross-referenced, often with concrete examples. Reddit is the #1 most-cited domain in Perplexity and ranks in the top three across ChatGPT, Grok, and Google AI Overviews per [Profound's tracking](https://www.tryprofound.com/blog/the-data-on-reddit-and-ai-search). For brands, the implication is that being present in active Reddit threads (helpfully, not promotionally) is a high-leverage citation play.
+Because Reddit is dense with people explaining things to each other in plain language, with cross-validation from other commenters. That format is almost ideal for RAG: short, declarative, cross-referenced, often with concrete examples. The same vendor citation data that puts Reddit first in Perplexity ranks it in the top three across ChatGPT, Grok, and Google AI Overviews. For brands, the implication is that being present in active Reddit threads (helpfully, not promotionally) is a high-value citation play.
 
 ## Where to Go from Here
 
-The four-step loop is the model. The engine-specific differences are the details. The reason any of this matters to you is that step 2 (retrieval) can fail silently. If GPTBot or OAI-SearchBot or ClaudeBot can't reach your page, none of the rest of the loop runs.
+The reason the four-step loop matters to you is that step 2 (retrieval) can fail silently. If OAI-SearchBot or Claude-SearchBot can't reach your page, none of the rest of the loop runs.
 
-If you're not sure your site is reachable to the bots that matter, [run a free bot reachability audit with GeoToolbox](https://geotoolbox.ai/) and see which of the eleven major AI crawlers can actually fetch your pages today. It's the cheapest part of the AI visibility stack to verify, and it's the one most brands skip.
+If you're not sure your site is reachable to the bots that matter, run a [free AI crawler check](https://geotoolbox.ai/tools/ai-crawler-checker) with GEO Toolbox and see which of 34 documented AI crawlers your robots.txt allows or blocks today. It's the cheapest part of the AI visibility stack to verify, and the easiest to get wrong without noticing.
