@@ -1,8 +1,17 @@
 // Single source of truth for pricing. Mirrors the backend plan config in
 // inc/plan_limits.php (SG_PLAN_DEFAULTS) + SG_PLAN_PRICES_USD on the Replit app.
 // If the backend plan limits change, update this file too.
-// Annual = clean per-month rate billed yearly (~17-20% off monthly). Free was lowered to 1,000 credits +
-// 5 prompts on 2026-06-06 for public-launch abuse control.
+//
+// 2026-06-09 rewrite — aligned to the real backend after the per-tier engine
+// model + competitive repricing:
+//  - Per-tier engine model: free=ChatGPT only; starter=3 fixed; consultant=pick
+//    3 of 5; agency=pick 5 of 7; scale/enterprise=all 7.
+//  - Credits right-sized: 1k / 12k / 50k / 150k / 300k / 500k+.
+//  - Starter is single-brand (depth, not breadth). Brands unlimited at Agency+.
+//  - Team seats: 1 on Free/Starter/Consultant, unlimited on Agency+ (live 2026-06-09).
+//  - Annual rates: Agency $299/mo, Scale $499/mo (monthly unchanged).
+//  - Vaporware removed (white-label reports, KB, alerts, API, GBP audit, SSO,
+//    CSM are NOT shipped yet) — see the roadmap; they return here as they ship.
 
 export type PlanId = "free" | "starter" | "consultant" | "agency" | "scale" | "enterprise"
 
@@ -46,13 +55,13 @@ export const PLANS: Plan[] = [
       credits: "1,000 credits/mo",
       domains: "1 brand",
       prompts: "5 prompts/brand",
-      engines: "3 engines",
+      engines: "ChatGPT",
       scans: "Monthly scans",
     },
     inheritsFrom: null,
     highlights: [
-      "GEO Scan (3 engines)",
-      "AI visibility tracker",
+      "Track ChatGPT visibility",
+      "AI visibility tracker + share of voice",
       "Agent readiness scan",
       "AI-ready export",
     ],
@@ -63,19 +72,20 @@ export const PLANS: Plan[] = [
     name: "Starter",
     priceMonthly: 49,
     priceYearly: 468,
-    tagline: "Solo SEOs tracking a brand or two.",
+    tagline: "Solo SEOs going deep on one brand.",
     quotas: {
-      credits: "3,000 credits/mo",
-      domains: "2 brands",
+      credits: "12,000 credits/mo",
+      domains: "1 brand",
       prompts: "10 prompts/brand",
-      engines: "5 engines",
+      engines: "3 engines",
       scans: "Weekly scans",
     },
     inheritsFrom: "Free",
     highlights: [
+      "3 engines: ChatGPT, Perplexity, Google AI Overviews",
       "Content Analyzer (grade any page)",
-      "GEO Scan: 5 engines",
       "Weekly automated scans",
+      "180-day history",
     ],
     cta: { label: "Get started", href: SIGNUP },
   },
@@ -84,21 +94,21 @@ export const PLANS: Plan[] = [
     name: "Consultant",
     priceMonthly: 179,
     priceYearly: 1788,
-    tagline: "Consultants and small teams running client work.",
+    tagline: "Solo consultants running multiple clients.",
     quotas: {
-      credits: "25,000 credits/mo",
+      credits: "50,000 credits/mo",
       domains: "5 brands",
       prompts: "15 prompts/brand",
-      engines: "All 7 engines",
+      engines: "Pick 3 of 5 engines",
       scans: "Weekly scans",
     },
     inheritsFrom: "Starter",
     highlights: [
-      "All 7 AI engines",
+      "Choose your 3 engines (+ Bing, Grok)",
       "Content Studio",
       "Domain Overview + Opportunities",
-      "AI advisor",
-      "3 team seats",
+      "Citation Intelligence",
+      "Track 5 brands / clients",
     ],
     cta: { label: "Get started", href: SIGNUP },
     featured: true,
@@ -108,22 +118,22 @@ export const PLANS: Plan[] = [
     id: "agency",
     name: "Agency",
     priceMonthly: 349,
-    priceYearly: 3468,
+    priceYearly: 3588,
     tagline: "Agencies managing many brands.",
     quotas: {
-      credits: "75,000 credits/mo",
-      domains: "15 brands",
+      credits: "150,000 credits/mo",
+      domains: "50 brands",
       prompts: "25 prompts/brand",
-      engines: "All 7 engines",
+      engines: "Pick 5 of 7 engines",
       scans: "Weekly scans",
     },
     inheritsFrom: "Consultant",
     highlights: [
+      "50 brands",
+      "Choose 5 of all 7 engines (+ Gemini, Claude)",
       "Article writing + 5-stage copywriter",
-      "White-label reports",
-      "Knowledge base",
-      "Alerts",
-      "5 team seats",
+      "Citation Intelligence",
+      "Unlimited team seats",
     ],
     cta: { label: "Get started", href: SIGNUP },
   },
@@ -131,22 +141,22 @@ export const PLANS: Plan[] = [
     id: "scale",
     name: "Scale",
     priceMonthly: 679,
-    priceYearly: 6588,
+    priceYearly: 5988,
     tagline: "High-volume teams and large portfolios.",
     quotas: {
-      credits: "200,000 credits/mo",
-      domains: "50 brands",
+      credits: "300,000 credits/mo",
+      domains: "Unlimited brands",
       prompts: "50 prompts/brand",
       engines: "All 7 engines",
       scans: "Daily scans",
     },
     inheritsFrom: "Agency",
     highlights: [
+      "All 7 AI engines",
       "Daily automated scans",
-      "API access",
-      "Google Business Profile audit",
+      "One-off GEO audit & strategy session",
       "Priority support",
-      "15 team seats",
+      "Unlimited brands & seats",
     ],
     cta: { label: "Get started", href: SIGNUP },
   },
@@ -155,7 +165,7 @@ export const PLANS: Plan[] = [
     name: "Enterprise",
     priceMonthly: null,
     priceYearly: null,
-    tagline: "Custom contract, SLA, and security for large orgs.",
+    tagline: "From $999/mo — custom contract, SLA, and security for large orgs.",
     quotas: {
       credits: "Custom credits",
       domains: "Unlimited brands",
@@ -165,23 +175,21 @@ export const PLANS: Plan[] = [
     },
     inheritsFrom: "Scale",
     highlights: [
-      "Premium models",
-      "SSO",
-      "Dedicated CSM + 4h SLA",
-      "Custom contract",
+      "Quarterly GEO audit & strategy + QBR",
+      "Dedicated customer success manager",
+      "SSO, security review & SLA",
+      "Custom contract & invoicing",
     ],
     cta: { label: "Talk to sales", href: SALES },
   },
 ]
 
 // ---- Comparison table -------------------------------------------------------
-// Columns are the 5 self-serve tiers; Enterprise is handled as a strip, not a
-// column (per pricing-page best practice). Values map by PlanId order:
-// [free, starter, consultant, agency, scale].
-// Comparison columns = paid self-serve tiers only (Free is a standalone strip,
-// Ahrefs-style). NOTE: each COMPARE_GROUPS row.values still has 5 entries in
-// PlanId order [free, starter, consultant, agency, scale]; the table slices off
-// the free value (index 0) at render so these stay in sync.
+// Columns are the 4 paid self-serve tiers; Free is a standalone strip and
+// Enterprise a separate strip (per pricing-page best practice). NOTE: each
+// COMPARE_GROUPS row.values has 5 entries in PlanId order
+// [free, starter, consultant, agency, scale]; the table slices off the free
+// value (index 0) at render, so these stay in sync.
 export const COMPARE_COLUMNS: { id: PlanId; name: string }[] = [
   { id: "starter", name: "Starter" },
   { id: "consultant", name: "Consultant" },
@@ -199,24 +207,25 @@ export const COMPARE_GROUPS: CompareGroup[] = [
   {
     group: "Usage & limits",
     rows: [
-      { label: "Monthly credits", values: ["1,000", "3,000", "25,000", "75,000", "200,000"] },
-      { label: "Brands / domains", values: ["1", "2", "5", "15", "50"] },
+      { label: "Monthly credits", values: ["1,000", "12,000", "50,000", "150,000", "300,000"] },
+      { label: "Brands / domains", values: ["1", "1", "5", "50", "Unlimited"] },
       { label: "Prompts per brand", values: ["5", "10", "15", "25", "50"] },
       { label: "Scan frequency", values: ["Monthly", "Weekly", "Weekly", "Weekly", "Daily"] },
       { label: "History retention", values: ["90 days", "180 days", "1 year", "Unlimited", "Unlimited"] },
-      { label: "Team seats", values: ["1", "1", "3", "5", "15"] },
+      { label: "Team seats", values: ["1", "1", "1", "Unlimited", "Unlimited"] },
     ],
   },
   {
     group: "AI engines",
     rows: [
+      { label: "Engines you can run", values: ["ChatGPT only", "3", "Pick 3 of 5", "Pick 5 of 7", "All 7"] },
       { label: "ChatGPT", values: [Y, Y, Y, Y, Y] },
-      { label: "Perplexity", values: [Y, Y, Y, Y, Y] },
-      { label: "Google AI Overviews", values: [Y, Y, Y, Y, Y] },
-      { label: "Gemini", values: [N, Y, Y, Y, Y] },
-      { label: "Bing Copilot", values: [N, Y, Y, Y, Y] },
-      { label: "Claude", values: [N, N, Y, Y, Y] },
+      { label: "Perplexity", values: [N, Y, Y, Y, Y] },
+      { label: "Google AI Overviews", values: [N, Y, Y, Y, Y] },
+      { label: "Bing Copilot", values: [N, N, Y, Y, Y] },
       { label: "Grok", values: [N, N, Y, Y, Y] },
+      { label: "Gemini", values: [N, N, N, Y, Y] },
+      { label: "Claude", values: [N, N, N, Y, Y] },
     ],
   },
   {
@@ -224,27 +233,24 @@ export const COMPARE_GROUPS: CompareGroup[] = [
     rows: [
       { label: "Visibility tracker & share of voice", values: [Y, Y, Y, Y, Y] },
       { label: "Agent readiness scan", values: [Y, Y, Y, Y, Y] },
-      { label: "Content Analyzer", values: [N, Y, Y, Y, Y] },
       { label: "GEO Scan", values: [Y, Y, Y, Y, Y] },
+      { label: "Content Analyzer", values: [N, Y, Y, Y, Y] },
       { label: "Domain Overview + Opportunities", values: [N, N, Y, Y, Y] },
-      { label: "Competitor intel", values: [N, N, Y, Y, Y] },
+      { label: "Citation Intelligence", values: [N, N, Y, Y, Y] },
     ],
   },
   {
-    group: "Content & reporting",
+    group: "Content & strategy",
     rows: [
       { label: "Content Studio", values: [N, N, Y, Y, Y] },
       { label: "Article writing + 5-stage copywriter", values: [N, N, N, Y, Y] },
-      { label: "White-label reports", values: [N, N, N, Y, Y] },
-      { label: "Alerts", values: [N, N, N, Y, Y] },
+      { label: "One-off GEO audit & strategy", values: [N, N, N, N, Y] },
     ],
   },
   {
-    group: "Integrations & support",
+    group: "Support",
     rows: [
-      { label: "API access", values: [N, N, N, N, Y] },
-      { label: "Google Business Profile audit", values: [N, N, N, N, Y] },
-      { label: "Support", values: ["Email", "Email", "Email", "Email", "Priority"] },
+      { label: "Support", values: ["Community", "Email", "Email", "Email", "Priority"] },
     ],
   },
 ]
