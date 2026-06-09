@@ -1,0 +1,176 @@
+---
+title: "How ChatGPT Cites Sources (and Why It Gets Them Wrong)"
+description: "How ChatGPT cites sources: what a citation is, how it decides what to cite, why so many citations are wrong, and how to track which sources it shows you."
+date: "2026-06-09"
+author: "Samy BEN SADOK"
+tags: ["chatgpt", "ai-citation", "geo", "ai-visibility", "chatgpt-search"]
+draft: false
+---
+
+Those little numbered links in a ChatGPT answer are its citations, the web pages the model pulled to build the response. This is a look at how that actually works: what a ChatGPT citation is, how the model decides what to cite, why it cites only about half of what it reads, why so many citations turn out wrong, and how to find which sources it shows for your own topics.
+
+One quick disambiguation first. If you came here to learn how to cite ChatGPT itself in an APA or MLA paper, that is a different question with a short answer in the FAQ. This article is about how ChatGPT cites its sources, which is what matters if you care whether your content is the thing it points to.
+
+## What a ChatGPT Citation Actually Is
+
+A ChatGPT citation is a link to a web page the model retrieved to build its answer. When ChatGPT runs a web search, it surfaces those sources two ways: as inline numbered links in the text, and in a **Sources** panel you can expand. On desktop, hovering an inline link shows a preview card of the page. On mobile, the sources collapse into a tap-to-open list, so that hover preview is a desktop convenience, not the citation itself.
+
+The most useful thing to know is the tell. Per [OpenAI's documentation](https://help.openai.com/en/articles/9237897-chatgpt-search), a ChatGPT Search answer carries inline citations plus a Sources button. If there is no Sources button, ChatGPT did not search the web for that answer. It answered from **parametric memory**, the patterns baked into the model during training, and cited nothing, even when it sounds just as sure of itself.
+
+That distinction is the foundation for everything below. A citation only exists when ChatGPT actually searched, and what it shows you is a filtered slice of what it read, not the whole list. The glossary entry on an [AI citation](https://geotoolbox.ai/glossary/ai-citation) defines the term; this piece is about the machinery behind it, which starts with [how AI search works](https://geotoolbox.ai/blog/how-does-ai-search-work).
+
+## How ChatGPT Decides What to Cite
+
+ChatGPT cites only about half of what it reads. When it searches, it fires several queries, pulls back a candidate pool of pages, and then cites roughly one in two. Ahrefs analyzed [1.4 million ChatGPT prompts and found 49.98% of the 23.4 million retrieved URLs were cited](https://ahrefs.com/blog/why-chatgpt-cites-pages/) and the other half were read for context and dropped. So the Sources panel is the visible tip of a much larger set of pages the model looked at.
+
+What survives the cut depends heavily on the type of source. The same study scored citation rates by source type, and the spread is enormous.
+
+<table>
+  <thead>
+    <tr><th>Source type</th><th>Citation rate</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Search-index pages</strong></td><td>88.46%</td></tr>
+    <tr><td><strong>News</strong></td><td>12.01%</td></tr>
+    <tr><td><strong>Reddit</strong></td><td>1.93%</td></tr>
+    <tr><td><strong>YouTube</strong></td><td>0.51%</td></tr>
+    <tr><td><strong>Academia</strong></td><td>0.40%</td></tr>
+  </tbody>
+</table>
+
+Two more findings cut against common assumptions. The median cited page was [around 500 days old](https://ahrefs.com/blog/why-chatgpt-cites-pages/), about 1.3 years, so relevance can outweigh raw freshness for ChatGPT (the opposite of Perplexity's live-first bias, which we cover in [ChatGPT vs Perplexity](https://geotoolbox.ai/blog/chatgpt-vs-perplexity)). And pages with natural-language URL slugs were cited at 89.78% versus 81.11% for those without, a small but real edge for clean URLs.
+
+### Why Search-Index Pages Dominate
+
+The 88% figure for search-index pages is doing a lot of work. ChatGPT Search runs on a web index, and the pages it already finds through that index are the ones it trusts enough to cite. News, Reddit, and YouTube get read for context and color, but the citation usually lands on a page that was retrievable and rankable in the first place. Classic discoverability still gates everything: if your page is not in the index ChatGPT searches, it cannot be the one-in-two that gets cited.
+
+### Fan-Out: One Question, Many Searches
+
+When you ask one question, ChatGPT does not run one search. It expands your prompt into several related sub-queries, a process called fan-out, and pulls a candidate pool from all of them. It then scores those candidates against the answer it is drafting and keeps the closest matches, which is why roughly half the pool is dropped. A page can be solid and still lose its slot because another source matched the specific sentence better. Being retrievable gets you into the pool; being the clearest match for a passage is what earns the citation.
+
+## The Reddit Paradox: Read but Not Credited
+
+ChatGPT reads Reddit constantly and almost never credits it. In the same analysis, [67.8% of all non-cited URLs came from Reddit](https://ahrefs.com/blog/why-chatgpt-cites-pages/), even though Reddit's own citation rate was just 1.93%. The model mines Reddit threads for context, opinions, and phrasing, then writes the answer and cites a cleaner-looking source instead.
+
+This is the gap most people miss: retrieval is not citation. Your page can be pulled into the candidate pool, shape the wording of the answer, and never appear in the Sources panel. Being read is not the same as being cited, and the panel quietly undercounts what actually influenced the response.
+
+Why does it swap in a different source? The model leans toward a citation that looks authoritative and self-contained, a clean article over a sprawling forum thread, even when the thread is where the substance came from. So a Reddit discussion can shape the answer while a tidy blog post takes the visible credit, which is exactly why being present in the answer and being named in the citations are two separate problems to solve.
+
+For a brand, that has a blunt consequence. If your category lives on Reddit, ChatGPT is probably reading those threads, but the visible credit is going somewhere else. Showing up in the answer and showing up in the citations are two different wins, and only one of them is measurable from the Sources list.
+
+## How Citations Differ by Mode
+
+There is no single "ChatGPT citation" behavior, because ChatGPT is several products wearing one name. How (and whether) it cites depends on the mode you are in.
+
+<table>
+  <thead>
+    <tr><th>Mode</th><th>Does it cite?</th><th>How sources show</th><th>What to expect</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Plain chat (no search)</strong></td><td>No</td><td>Nothing</td><td>Answer from parametric memory; no Sources button</td></tr>
+    <tr><td><strong>Search</strong></td><td>Yes</td><td>Inline links + Sources panel</td><td>A handful of cited pages behind a one-shot web search</td></tr>
+    <tr><td><strong>Deep Research</strong></td><td>Yes, heavily</td><td>Many inline citations + a long source list</td><td>Dozens of sources across many searches; the most source-dense mode</td></tr>
+    <tr><td><strong>Shopping</strong></td><td>Yes</td><td>Product cards with merchant links</td><td>Sources are retailers and product pages, not articles</td></tr>
+    <tr><td><strong>Agentic browser (Atlas)</strong></td><td>Yes</td><td>Links to pages it visited</td><td>Cites what the agent actually opened while completing a task</td></tr>
+  </tbody>
+</table>
+
+The practical takeaway is that the same question can produce zero citations in plain chat and twenty in Deep Research. If you are checking whether ChatGPT cites you, the mode you test in changes the answer, so test the one your audience actually uses. And because each mode searches differently, a page cited in Deep Research is not guaranteed to surface in a quick Search answer.
+
+## Why ChatGPT Gets Citations Wrong
+
+A citation is not a fact-check, and the error rate is not small. Columbia Journalism Review's Tow Center [tested eight AI search engines on 1,600 queries and found they returned incorrect citations more than 60% of the time](https://www.cjr.org/tow_center/we-compared-eight-ai-search-engines-theyre-all-bad-at-citing-news.php). ChatGPT Search incorrectly identified 134 of 200 source articles, and it hedged with uncertainty language only 15 times and declined to answer zero times. It was confidently wrong far more often than it was cautiously right.
+
+<table>
+  <thead>
+    <tr><th>Engine</th><th>Incorrect citations</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Perplexity</strong> (best)</td><td>37%</td></tr>
+    <tr><td><strong>ChatGPT Search</strong></td><td>67% (134 of 200)</td></tr>
+    <tr><td><strong>Grok-3</strong> (worst)</td><td>94% incorrect; 154 of 200 cited links broken</td></tr>
+  </tbody>
+</table>
+
+Part of this is history. The University of Arizona Libraries notes that [early ChatGPT routinely fabricated citations](https://ask.library.arizona.edu/faq/387173) because it could not search the web and was built to produce plausible text, not retrieve real references. Web search reduced that, but did not erase it. The model still invents headlines, attributes work to the wrong outlet, and links to scraped copies instead of originals.
+
+### Licensing Doesn't Save You
+
+Licensing does not save you either. The Tow Center found that ChatGPT cited partner publishers like the New York Post and The Atlantic inaccurately, and cited a Yahoo-republished USA Today article even though USA Today had blocked its crawler. For a brand, that means an engine can pin a claim you never made to your name, or send credit to a scraper, then repeat it to everyone who asks. It is the same machinery behind [why AI gets your brand wrong](https://geotoolbox.ai/blog/ai-hallucinations), and a visible citation does nothing to prevent it.
+
+## How to Read and Trust the Sources ChatGPT Shows You
+
+Treat the Sources panel as a starting point, not a verdict. Two facts from above should change how you read it: the panel shows only about half of what the model actually used, and a meaningful share of cited links are wrong or broken. A source appearing next to a claim is not proof the source supports that claim.
+
+### A 30-Second Citation Check
+
+A quick way to check any ChatGPT citation:
+
+1. **Click through.** A cited link can 404 or land on an unrelated page. If it does not open, the citation is worthless.
+2. **Confirm the page actually says it.** Read the cited page for the specific claim. ChatGPT regularly attaches a real source to a sentence that source never made.
+3. **Watch for syndication.** If the link is a republished or scraped copy, find the original and cite that instead.
+4. **Check the date.** A confidently current-sounding answer can rest on a year-old page, given the ~500-day median.
+5. **Re-ask.** Run the same prompt again. If the sources change, you are seeing how unstable a single snapshot is.
+
+The thirty seconds this takes is the difference between quoting ChatGPT and quoting whatever ChatGPT half-read. For anything you publish or send a client, the citation is a lead to verify, not a citation to trust.
+
+## Do ChatGPT's Citations Stick Around?
+
+### Cited Links Rot
+
+A ChatGPT citation is a snapshot, not a permanent record. The link points to the live web, so if the page changes, moves, or comes down, the citation rots the way any bookmark does. Open an old chat months later and a source that once backed the claim may now 404, redirect, or show different content than the model summarized.
+
+### The Source Set Moves
+
+There is a second kind of impermanence that matters more for visibility. Because ChatGPT re-runs the search every time, the source set itself is not fixed. The page it cited for a query last month may not be cited this month, even when nothing about your page changed, because the candidate pool and the model both shifted underneath it. A citation you earned is not a citation you keep, which means a screenshot of the Sources panel is evidence of one moment, not a standing fact.
+
+## How to Measure Which Sources ChatGPT Cites for You
+
+There is no ChatGPT Search Console. Google hands you a dashboard of the queries you rank for; ChatGPT hands you nothing, so the sources it shows for your category are invisible unless you go looking on purpose.
+
+The manual method works for a quick read. Write down the prompts a real customer would ask about your category, such as "best [your product] for [use case]" or "is [your brand] worth it," run each one in the mode your audience uses, and log which sources appear in the panel. Repeat it on a schedule, because the results move. In our experience running AI visibility scans, the same prompt can return a different source set day to day, so a single check tells you almost nothing, and the only useful signal is the trend across many runs.
+
+That is also where the manual method runs out. Tracking dozens of prompts across modes, week after week, by hand is not realistic, which is the gap geotoolbox is built to close: it runs your prompts across engines on a schedule and tracks which sources surface over time. The broader metric this rolls up into is your [AI share of voice](https://geotoolbox.ai/blog/ai-share-of-voice), and the tooling view is an [AI rank tracker](https://geotoolbox.ai/blog/ai-rank-tracker). Both exist because a citation you cannot see is a citation you cannot improve.
+
+## What This Means If You Want to Be Cited
+
+If the goal is to be the page ChatGPT cites, the mechanics above point to three things, and none of them is a new trick. Be in the index it searches, which means letting the [OpenAI crawlers](https://geotoolbox.ai/blog/ai-crawlers) reach you and not blocking them in robots.txt or at the firewall. Be the clearest, most quotable source on the question, because the model favors pages it can lift a clean answer from. And give it the signals it rewards.
+
+<Callout type="tip" title="Check the gate first">
+Before ChatGPT can cite you, a crawler has to reach you. The free [AI Crawler Checker](https://geotoolbox.ai/tools/ai-crawler-checker) shows which AI crawlers your robots.txt allows or blocks, with the exact line to fix.
+</Callout>
+
+That last point has data behind it. The Princeton [Generative Engine Optimization study](https://arxiv.org/abs/2311.09735) found that adding relevant statistics lifted a source's visibility in generated answers by up to about 41%, with citing sources, direct quotations, and an authoritative voice close behind. Concrete, well-sourced, quotable writing is what gets pulled into the citation set.
+
+This is the getting-cited playbook, and re-running it here would just duplicate work we have already done. The full version, including the OpenAI crawlers and what ChatGPT actually rewards, is in [SEO for ChatGPT](https://geotoolbox.ai/blog/seo-for-chatgpt), and the engine-agnostic workflow is in [how to optimize for AI search](https://geotoolbox.ai/blog/how-to-optimize-for-ai-search). Start there once you understand the machinery on this page.
+
+## Citations You Can See Are Citations You Can Fix
+
+ChatGPT's citations are a filtered, often-wrong, mode-dependent slice of what it read, not a clean bibliography. It cites about half of what it retrieves, leans hard on search-index pages over Reddit and video, gets the attribution wrong more than half the time on news, and shows you none of it unless it searched. Understanding that is what separates quoting ChatGPT from being quoted by it.
+
+The one move that pays off no matter what is to stop guessing. If you have never looked at which sources ChatGPT shows for your category, the [citation tracking in geotoolbox](https://geotoolbox.ai/features/citation-interceptor) gives you that view across engines, so the sources behind your AI answers stop being invisible. You cannot fix a citation you cannot see.
+
+## Frequently Asked Questions
+
+**Does ChatGPT cite sources?**
+Yes, but only when it searches the web. A ChatGPT Search answer shows inline numbered links and a Sources panel. In plain chat, with no Sources button, it answered from training data and cited nothing.
+
+**Why does ChatGPT show sources on some answers but not others?**
+Because it only cites when it runs a live search. If the question triggers a web search, you get citations; if the model answers from parametric memory, you get none, even though the answer can look just as confident.
+
+**Why does ChatGPT make up citations?**
+It was built to generate plausible text, not to retrieve real references, so before web search it routinely invented sources. Search reduced this, but the model still attaches wrong, broken, or fabricated links, so every citation needs verifying.
+
+**Why are the links ChatGPT cites sometimes broken?**
+It often cites pages it has not re-fetched, links to scraped or syndicated copies, or returns URLs that 404. A [Tow Center study](https://www.cjr.org/tow_center/we-compared-eight-ai-search-engines-theyre-all-bad-at-citing-news.php) found one engine's citations led to broken pages 77% of the time, so a dead cited link is common, not rare.
+
+**How do I cite ChatGPT in an APA or MLA paper?**
+That is the other meaning of "ChatGPT citations" and a separate question from this article. Both APA and MLA treat ChatGPT output as a non-recoverable source and publish their own current formats, so follow the official APA Style and MLA Style guidance for the exact template.
+
+## Sources
+
+- [Ahrefs - Why ChatGPT Cites One Page Over Another (1.4M-prompt study)](https://ahrefs.com/blog/why-chatgpt-cites-pages/)
+- [Columbia Journalism Review, Tow Center - AI Search Has a Citation Problem](https://www.cjr.org/tow_center/we-compared-eight-ai-search-engines-theyre-all-bad-at-citing-news.php)
+- [Princeton - GEO: Generative Engine Optimization (Aggarwal et al., KDD 2024)](https://arxiv.org/abs/2311.09735)
+- [OpenAI Help Center - ChatGPT Search](https://help.openai.com/en/articles/9237897-chatgpt-search)
+- [University of Arizona Libraries - ChatGPT and citations](https://ask.library.arizona.edu/faq/387173)
