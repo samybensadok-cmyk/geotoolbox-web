@@ -92,7 +92,7 @@ export function ComparisonTable() {
           </table>
         </div>
         <p className="mt-6 text-center text-[13px] text-gray-500">
-          Need more than Scale? <Link href="mailto:samy@geotoolbox.ai?subject=Enterprise%20inquiry" className="font-semibold text-accent-700 hover:text-accent-800">Talk to sales</Link> about Enterprise — unlimited brands, SSO, and a dedicated CSM.
+          Need more than Scale? <Link href="/contact?topic=enterprise" className="font-semibold text-accent-700 hover:text-accent-800">Talk to sales</Link> about Enterprise — unlimited brands, SSO, and a dedicated CSM.
         </p>
       </div>
     </section>
