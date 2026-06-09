@@ -3,13 +3,13 @@ import { notFound } from "next/navigation"
 import Link from "next/link"
 import { MDXRemote } from "next-mdx-remote/rsc"
 import rehypeShiki from "@shikijs/rehype"
-import { getPostBySlug, getAllPosts, extractHeadings } from "@/lib/content"
+import { getPostBySlug, getAllPosts, extractHeadings, extractFaq } from "@/lib/content"
 import { mdxComponents } from "@/components/mdx"
 import { formatDate } from "@/lib/utils"
 import { siteConfig } from "@/lib/config"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
 import { JsonLd } from "@/components/seo/json-ld"
-import { articleSchema, breadcrumbsSchema } from "@/lib/seo-schema"
+import { articleSchema, breadcrumbsSchema, faqPageSchema } from "@/lib/seo-schema"
 import { getAuthorByName } from "@/lib/authors"
 import { AuthorBio } from "@/components/blog/author-bio"
 import { Avatar } from "@/components/ui/avatar"
@@ -36,6 +36,7 @@ export async function generateMetadata({
       description: post.description,
       type: "article",
       publishedTime: post.date,
+      modifiedTime: post.updated ?? post.date,
       authors: [post.author],
       images: post.image ? [post.image] : undefined,
     },
@@ -91,6 +92,7 @@ export default async function BlogPost({
 
   const author = getAuthorByName(post.author)
   const headings = extractHeadings(post.content)
+  const faqs = extractFaq(post.content)
 
   return (
     <>
@@ -103,6 +105,7 @@ export default async function BlogPost({
               title: post.title,
               description: post.description,
               date: post.date,
+              updated: post.updated,
               author: post.author,
               image: post.image,
             }),
@@ -111,6 +114,7 @@ export default async function BlogPost({
               { name: "Blog", url: "/blog" },
               { name: post.title, url: `/blog/${post.slug}` },
             ]),
+            ...(faqs.length > 0 ? [faqPageSchema(faqs)] : []),
           ]}
         />
         <div className="mx-auto max-w-5xl">
@@ -155,7 +159,9 @@ export default async function BlogPost({
                 <span className="font-semibold text-gray-900">{post.author}</span>
               )}
               <span aria-hidden="true" className="text-gray-400">&middot;</span>
-              <time dateTime={post.date}>{formatDate(post.date)}</time>
+              <time dateTime={post.updated ?? post.date}>
+                {post.updated ? `Updated ${formatDate(post.updated)}` : formatDate(post.date)}
+              </time>
               <span aria-hidden="true" className="text-gray-400">&middot;</span>
               <span>{post.readingTime} min read</span>
             </div>

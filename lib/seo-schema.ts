@@ -99,6 +99,7 @@ export function articleSchema(post: {
   title: string
   description: string
   date: string
+  updated?: string
   author?: string
   image?: string
 }) {
@@ -123,7 +124,7 @@ export function articleSchema(post: {
     headline: post.title,
     description: post.description,
     datePublished: post.date,
-    dateModified: post.date,
+    dateModified: post.updated ?? post.date,
     author,
     publisher: {
       "@type": "Organization",

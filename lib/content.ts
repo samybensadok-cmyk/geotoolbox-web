@@ -26,6 +26,49 @@ export function extractHeadings(content: string): Heading[] {
   return headings
 }
 
+/**
+ * Parse the "## Frequently Asked Questions" section of a post into Q/A pairs
+ * for FAQPage JSON-LD. Supports both house formats: `### Question` headings
+ * and bold-line questions (`**Question?**`) each followed by answer paragraphs.
+ * Returns [] when no FAQ section exists or it has fewer than 2 questions.
+ */
+export function extractFaq(content: string): Array<{ question: string; answer: string }> {
+  const lines = content.split("\n")
+  const start = lines.findIndex((l) => /^##\s+(frequently asked questions|faqs?)\s*$/i.test(l.trim()))
+  if (start === -1) return []
+
+  const clean = (s: string) =>
+    s
+      .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1") // links -> anchor text
+      .replace(/<[^>]+>/g, "")
+      .replace(/[*_`]/g, "")
+      .replace(/\s+/g, " ")
+      .trim()
+
+  const faqs: Array<{ question: string; answer: string }> = []
+  let question = ""
+  let answer: string[] = []
+  const flush = () => {
+    if (question && answer.length) faqs.push({ question: clean(question), answer: clean(answer.join(" ")) })
+    answer = []
+  }
+
+  for (let i = start + 1; i < lines.length; i++) {
+    const line = lines[i].trim()
+    if (/^##\s/.test(line)) break // next H2 ends the section
+    const h3 = /^###\s+(.+)$/.exec(line)
+    const bold = /^\*\*(.+?)\*\*$/.exec(line)
+    if (h3 || bold) {
+      flush()
+      question = (h3?.[1] ?? bold?.[1] ?? "").trim()
+    } else if (line && question) {
+      answer.push(line)
+    }
+  }
+  flush()
+  return faqs.length >= 2 ? faqs : []
+}
+
 const CONTENT_DIR = path.join(process.cwd(), "content", "blog")
 
 export type Post = {
@@ -33,6 +76,7 @@ export type Post = {
   title: string
   description: string
   date: string
+  updated?: string
   author: string
   tags: string[]
   image?: string
@@ -54,6 +98,7 @@ export function getAllPosts(): Post[] {
         title: data.title ?? "",
         description: data.description ?? "",
         date: data.date ?? "",
+        updated: data.updated,
         author: data.author ?? "Samy Ben Sadok",
         tags: data.tags ?? [],
         image: data.image,
@@ -78,6 +123,7 @@ export function getPostBySlug(slug: string): Post | undefined {
     title: data.title ?? "",
     description: data.description ?? "",
     date: data.date ?? "",
+    updated: data.updated,
     author: data.author ?? "Samy Ben Sadok",
     tags: data.tags ?? [],
     image: data.image,
