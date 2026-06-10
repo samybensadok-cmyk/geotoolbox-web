@@ -131,7 +131,7 @@ export const PLANS: Plan[] = [
     tagline: "Agencies managing many brands.",
     quotas: {
       credits: "150,000 credits/mo",
-      domains: "50 brands",
+      domains: "20 brands",
       prompts: "25 prompts/brand",
       engines: "Pick 5 of 7 engines",
       scans: "Weekly scans",
@@ -163,7 +163,7 @@ export const PLANS: Plan[] = [
     highlights: [
       "All 7 AI engines",
       "API & MCP access (coming soon)",
-      "One-off GEO audit & strategy session",
+      "One-off GEO audit & strategy session (annual plans only)",
       "Priority support",
       "Unlimited brands & seats",
     ],
@@ -217,7 +217,7 @@ export const COMPARE_GROUPS: CompareGroup[] = [
     group: "Usage & limits",
     rows: [
       { label: "Monthly credits", values: ["1,000", "12,000", "50,000", "150,000", "300,000"] },
-      { label: "Brands / domains", values: ["1", "1", "5", "50", "Unlimited"] },
+      { label: "Brands / domains", values: ["1", "1", "5", "20", "Unlimited"] },
       { label: "Prompts per brand", values: ["5", "10", "15", "25", "50"] },
       { label: "Scan frequency", values: ["Monthly", "Weekly", "Weekly", "Weekly", "Weekly + daily add-on"] },
       { label: "History retention", values: ["90 days", "180 days", "1 year", "Unlimited", "Unlimited"] },
