@@ -2,12 +2,13 @@
 title: "llms.txt: What It Is and Whether It's Actually Worth It"
 description: "llms.txt is suddenly everywhere. The honest, evidence-backed answer to what it is, what Google actually says about it, and whether your site needs one."
 date: "2026-06-08"
+updated: "2026-06-10"
 author: "Samy BEN SADOK"
 tags: ["llms-txt", "geo", "ai-visibility", "ai-crawlers", "guide"]
 draft: false
 ---
 
-llms.txt has gone from an obscure proposal to a checkbox in half the SEO plugins, usually sold as "the robots.txt for AI." So do you actually need one? Here is the honest, evidence-backed answer: what llms.txt is, what Google really says about it, and whether your site is in the small group it genuinely helps. The short version is that most marketing sites can skip it, while documentation and developer sites should not.
+llms.txt has gone from an obscure proposal to a checkbox in half the SEO plugins, usually sold as "the robots.txt for AI." So do you actually need one? The short version: most marketing sites can skip it, while documentation and developer sites should not.
 
 <Callout type="tip" title="robots.txt is the file that actually gates crawlers">
 Unlike llms.txt, robots.txt decides whether AI crawlers can fetch you at all. The free [AI Crawler Checker](/tools/ai-crawler-checker) shows which of 34 AI crawlers yours allows or blocks.
@@ -19,13 +20,11 @@ Unlike llms.txt, robots.txt decides whether AI crawlers can fetch you at all. Th
 
 The format is simple. An H1 with your site name, an optional one-line summary in a blockquote, then H2 sections listing links to your key pages with short descriptions. There is also an "Optional" section for links a model can skip when it is short on space. That is the whole spec.
 
-One thing worth getting straight up front, because most guides blur it: the spec says llms.txt is meant to help a model "use a website at inference time," which means when a person hands your site to ChatGPT or Claude and asks about it. The proposal makes no claim that search engines rank you higher for having one, and no claim that any AI engine actually reads it. It is a suggestion for how sites could expose content to models, not a standard anyone has agreed to follow.
+One thing worth getting straight up front, because most guides blur it: the [spec](https://llmstxt.org/) says llms.txt is meant to help a model "use a website at inference time," which means when a person hands your site to ChatGPT or Claude and asks about it. The proposal makes no claim that search engines rank you higher for having one, and no claim that any AI engine actually reads it. It is a suggestion for how sites could expose content to models, not a standard anyone has agreed to follow.
 
 ## What Google Actually Says (Both Things)
 
-A lot of the confusion around llms.txt comes from Google appearing to say two opposite things. It is worth pulling those apart, because once you do, the answer gets clear.
-
-Google Search is blunt about it. Its [AI features documentation](https://developers.google.com/search/docs/appearance/ai-features) states that "you don't need to create new machine readable files, AI text files, or markup to appear in these features," and that there are no special optimizations required for AI Overviews or AI Mode beyond being indexed and eligible for a snippet. In other words, llms.txt does nothing for your visibility in Google's AI search. John Mueller of Google put it more plainly, comparing the file to the old keywords meta tag: a claim a site makes about itself that a crawler can simply ignore and verify by reading the actual page.
+A lot of the confusion around llms.txt comes from Google appearing to say two opposite things. Google Search is blunt about it. Its [AI features documentation](https://developers.google.com/search/docs/appearance/ai-features) states that "you don't need to create new machine readable files, AI text files, or markup to appear in these features," and that there are no special optimizations required for AI Overviews or AI Mode beyond being indexed and eligible for a snippet. In other words, llms.txt does nothing for your visibility in Google's AI search. John Mueller of Google put it more plainly, comparing the file to the old keywords meta tag: a claim a site makes about itself that a crawler can simply ignore and verify by reading the actual page.
 
 Then there is the other Google. Chrome's [Lighthouse now includes an llms.txt audit](https://developer.chrome.com/docs/lighthouse/agentic-browsing/llms-txt), which looks like an endorsement until you read the category it sits in. It is filed under "Agentic browsing," not SEO, and it only flags a problem if your llms.txt returns a server error. A missing file is marked "not applicable," because, in Google's own words, the file is "optional at the moment." The framing is about agent efficiency, helping an AI agent understand your structure faster, not about ranking.
 
@@ -40,36 +39,36 @@ Set the theory aside and look at what people have measured. The picture is one-s
     <tr><th>The claim</th><th>What the measured evidence shows</th><th>Source</th></tr>
   </thead>
   <tbody>
-    <tr><td>AI search bots read your llms.txt</td><td>A file on Search Engine Land logged zero visits from GPTBot, ClaudeBot, PerplexityBot, or Google-Extended across two months of server logs</td><td>Semrush</td></tr>
+    <tr><td>AI search bots read your llms.txt</td><td>A file on Search Engine Land logged zero visits from GPTBot, ClaudeBot, PerplexityBot, or Google-Extended across roughly ten weeks of server logs (August to October 2025)</td><td>Semrush</td></tr>
     <tr><td>It boosts AI citations or traffic</td><td>"No evidence that llms.txt improves AI retrieval, boosts traffic, or enhances model accuracy"</td><td>Ahrefs</td></tr>
-    <tr><td>Major AI providers support it</td><td>None have committed to parsing it; Google's John Mueller: no AI system currently uses it</td><td>Google / Ahrefs</td></tr>
+    <tr><td>Major AI providers support it</td><td>None have committed to parsing it; Google's John Mueller: none of the AI services have said they use it</td><td>Google / Ahrefs</td></tr>
     <tr><td>Adoption is already mainstream</td><td>Only 951 domains had published an llms.txt as of July 2025</td><td>NerdyData, via Semrush</td></tr>
   </tbody>
 </table>
 
-Ahrefs' content director [Ryan Law called it](https://ahrefs.com/blog/what-is-llms-txt/) "a solution in search of a problem," and Semrush's verdict after [running a live test](https://www.semrush.com/blog/llms-txt/) was that it is "probably not worth your time right now, unless you're just curious and want to experiment." For AI search visibility, that is the honest state of the evidence: it does not appear to do anything yet.
+Ahrefs' content director [Ryan Law called it](https://ahrefs.com/blog/what-is-llms-txt/) "a solution in search of a problem," and Semrush's verdict after [running a live test](https://www.semrush.com/blog/llms-txt/) was that it is "probably not worth your time right now, unless you're just curious and want to experiment." For AI search visibility, that is the state of the evidence: it does not appear to do anything yet.
 
-There is one real exception, and it is the reason the file is not pure hype. Developer tools, the AI coding assistants that pull documentation into their context, genuinely fetch and use llms.txt. That is why the well-known early adopters, companies like Anthropic, Stripe, and Mintlify, are almost all developer-documentation sites. The mistake is generalizing from them. Their adoption gets quoted as proof that llms.txt works for everyone, when what it actually shows is that it works for technical docs that machines consume directly.
+There is one real exception, and it is the reason the file is not pure hype. AI coding assistants that pull documentation into their context fetch and use llms.txt; docs platforms like Mintlify generate it automatically for the sites they host, which is the one adoption path with vendor documentation behind it rather than measured logs. That is why the well-known early adopters (Anthropic, Stripe, Mintlify) are almost all developer-documentation sites. The mistake is generalizing from them. Their adoption gets quoted as proof that llms.txt works for everyone, when what it actually shows is that it works for technical docs that machines consume directly.
 
-## So Should You Bother? The Honest Decision Rule
+## So Should You Bother? The Decision Rule
 
-You do not need a strategy meeting for this. Three questions settle it.
+You do not need a strategy meeting for this. Four situations settle it.
 
 <table>
   <thead>
     <tr><th>Your situation</th><th>Verdict</th><th>Why</th></tr>
   </thead>
   <tbody>
-    <tr><td>You publish API docs, SDKs, or technical guides people paste into ChatGPT or Claude</td><td><strong>Create it</strong></td><td>Coding agents and dev tools actually fetch it, and it improves the context they load about your product</td></tr>
-    <tr><td>Your platform or plugin generates it automatically (GitBook, Webflow, an SEO plugin)</td><td><strong>Keep it</strong></td><td>Zero effort, no downside, and you are covered if adoption grows</td></tr>
+    <tr><td>You publish API docs, SDKs, or technical guides people paste into ChatGPT or Claude</td><td><strong>Create it</strong></td><td>Coding agents and dev tools fetch it, per the platforms that generate it, and it gives them cleaner context about your product</td></tr>
+    <tr><td>Your platform or plugin generates it automatically (GitBook, an SEO plugin, or a docs platform like Mintlify)</td><td><strong>Keep it</strong></td><td>Zero effort and low risk while it stays current, and you are covered if adoption grows</td></tr>
     <tr><td>You run a marketing, ecommerce, or brochure site and want AI citations</td><td><strong>Skip it</strong></td><td>No AI search engine reads it today; the hour is better spent on reachability and content</td></tr>
     <tr><td>You run a small blog or local business site</td><td><strong>Skip it</strong></td><td>Your sitemap and robots.txt already handle discovery for the bots that matter</td></tr>
   </tbody>
 </table>
 
-The honest rule underneath the table: if it is free or automatic, having an llms.txt costs you nothing, so leave it. If you would have to build and maintain one by hand purely to chase AI search visibility, the evidence says do not. The only group for whom it is worth deliberate effort right now is documentation-heavy and developer-facing sites, where machines really do read the file.
+The rule underneath the table: if it is free or automatic, having an llms.txt costs you nothing, so leave it. If you would have to build and maintain one by hand purely to chase AI search visibility, the evidence says do not. The only group for whom it is worth deliberate effort right now is documentation-heavy and developer-facing sites, where machines really do read the file.
 
-## How to Create an llms.txt File (the Right Way)
+## How to Create an llms.txt File (The Right Way)
 
 If you fall on the "create it" side, the spec is short and the file takes minutes, or use our free [llms.txt generator](https://geotoolbox.ai/tools/llms-txt-checker#generator) to build a spec-correct one in the browser.
 
@@ -81,7 +80,7 @@ If you fall on the "create it" side, the spec is short and the file takes minute
 
 Keep it curated. The point is to hand a model your best, most current pages, so leave out thin, duplicate, or archived URLs. A bloated file works against you.
 
-One correction worth making, because half the guides get it wrong: **llms-full.txt is not part of the official spec.** It is a separate convention, popularized by the FastHTML project, that dumps your entire documentation into one large file. It can help dedicated dev-doc tools, but it is optional, it is not "the rest of the standard," and on a large site it gets too big to be useful.
+One correction worth making, because half the guides get it wrong: **llms-full.txt is not part of the official spec.** It is a separate convention, popularized by docs platforms like Mintlify that generate it for hosted documentation, and it dumps your entire documentation into one large file. It can help dedicated dev-doc tools, but it is optional, it is not "the rest of the standard," and on a large site it gets too big to be useful.
 
 ## What the Guides Get Wrong
 
@@ -97,43 +96,40 @@ And it goes stale. A file that drifts out of sync with your real content feeds m
 
 The "robots.txt for AI" label gets repeated everywhere, and it is the wrong mental model. The three files do genuinely different jobs.
 
-[robots.txt](https://geotoolbox.ai/glossary/robots-txt) is access control. It tells crawlers, including the [AI crawlers](https://geotoolbox.ai/blog/ai-crawlers), which paths they may fetch, and well-behaved bots obey it. Ignore a robots.txt rule and you are misbehaving. A sitemap is a complete inventory of your URLs so search engines can discover every page. llms.txt is neither. It does not control access and it is not exhaustive, it is a curated summary of your best content offered to a model on the chance it asks.
+[robots.txt](https://geotoolbox.ai/glossary/robots-txt) is access control. It tells crawlers, including the [AI crawlers](https://geotoolbox.ai/blog/ai-crawlers), which paths they may fetch, and well-behaved bots obey it. Ignore a robots.txt rule and you are misbehaving. A sitemap is a complete inventory of your URLs so search engines can discover every page. llms.txt is neither. It does not control access and it is not exhaustive; it is a curated summary of your best content offered to a model on the chance it asks.
 
 The practical difference that matters: robots.txt has teeth, llms.txt has none. A crawler that ignores your robots.txt is breaking a rule. A model that ignores your llms.txt is doing nothing wrong, because the file was only ever a suggestion. That is why it complements those older files rather than replacing either one.
 
 ## Is llms.txt a Distraction from Real AI Visibility?
 
-For most sites, honestly, a little. Not because the file is harmful, but because it absorbs attention that belongs elsewhere. The things that decide whether AI engines cite you are not exotic, and llms.txt is not among them.
+For most sites, a little. Not because the file is harmful, but because it absorbs attention that belongs elsewhere. The things that decide whether AI engines cite you are not exotic, and llms.txt is not among them.
 
 Start with whether the AI crawlers can even reach and render your pages. A robots.txt rule or a firewall that blocks GPTBot, or content that only appears after JavaScript a crawler does not run, will keep you out of AI answers no matter how polished your llms.txt is. In our experience auditing sites for AI visibility, that reachability gap explains far more "we are not getting cited" cases than any missing file. After that comes the content itself: clear, answer-first pages that a model can quote. Our guide to [optimizing for AI search](https://geotoolbox.ai/blog/how-to-optimize-for-ai-search) walks through both, and the broader question of whether agents can actually use your site is covered in [making your site agent-ready](https://geotoolbox.ai/blog/agent-ready-website).
 
-If you want to know where your hour actually goes furthest, check the access path first. geotoolbox's free [AI-Readiness Score](https://geotoolbox.ai/tools/ai-readiness) checks the crawler-access foundations, and the paid [Content Analyzer](https://geotoolbox.ai/features/content-analyzer) fetches your page as each major AI crawler and grades how citable it is, the parts of AI visibility that have evidence behind them.
+If you want to know where your hour actually goes furthest, check the access path first. Those are the parts of AI visibility that have evidence behind them.
 
-## The Honest Bottom Line
+## The Bottom Line
 
-llms.txt is a real proposal solving a real problem for a narrow audience. If you publish developer documentation, or your platform makes the file for free, having one is sensible and costs you nothing. For everyone else chasing AI search visibility, the measured evidence says it is the lowest-priority item on the list, and the major engines do not read it yet.
+llms.txt is a real proposal solving a real problem for a narrow audience. If you publish developer documentation, or your platform makes the file for free, having one is sensible and costs you nothing. For everyone else chasing AI search visibility, the measured evidence says it is the lowest-priority item on the list.
 
-So treat it as what it is: a ten-minute footnote, not a strategy. The work that actually moves your standing in AI answers is making sure agents can reach, render, and quote your pages. If you only do one thing this week, run your domain through the free [AI-Readiness Score](https://geotoolbox.ai/tools/ai-readiness) and fix what it flags; the paid [Content Analyzer](https://geotoolbox.ai/features/content-analyzer) adds the per-page citability grade. That is where the evidence points, and llms.txt can wait until the standard catches up to the hype.
+So treat it as what it is: a ten-minute footnote, not a strategy. The work that actually moves your standing in AI answers is making sure agents can reach, render, and quote your pages. If you only do one thing this week, run your domain through geotoolbox's free [AI-Readiness Score](https://geotoolbox.ai/tools/ai-readiness) and fix what it flags; the paid [Content Analyzer](https://geotoolbox.ai/features/content-analyzer) adds the per-page citability grade. That is where the evidence points, and llms.txt can wait until the standard catches up to the hype.
 
 ## Frequently Asked Questions
 
 **Does ChatGPT, Claude, or Perplexity actually read llms.txt?**
-For their AI search and answers, the evidence says no. Server-log tests have shown the major AI crawlers do not even request the file, and Google's John Mueller has said no AI system currently uses it. The exception is AI coding assistants, which do fetch llms.txt to load developer documentation into their context.
+You can answer this for your own site in five minutes: publish the file, wait a few weeks, and grep your server logs for requests to /llms.txt by bot user agent. Every published test so far has come back empty for the search crawlers, which is stronger evidence than any vendor statement.
 
-**Why is Google saying two different things about llms.txt?**
-It is two teams, not one position. Google Search says you do not need llms.txt to appear in AI Overviews or AI Mode. Chrome's Lighthouse added an llms.txt audit, but under an "agentic browsing" category about agent efficiency, not search ranking. Both call the file optional, and neither treats it as a ranking signal.
-
-**Is llms.txt the same as robots.txt or a sitemap?**
-No. robots.txt controls which pages crawlers may access and is enforced by well-behaved bots. A sitemap is a full inventory of your URLs for discovery. llms.txt is a curated summary of your best content offered to models as a suggestion, with no enforcement and no obligation for anyone to read it.
+**Where exactly does the llms.txt file go?**
+At the root of your domain, like robots.txt: yoursite.com/llms.txt, served as plain text or markdown with a 200 status. On WordPress, several SEO plugins write it for you; on hosted docs platforms it is usually generated automatically; on anything else it is a static file in your web root.
 
 **What's the difference between llms.txt and llms-full.txt?**
-llms.txt is the short, curated index defined by the spec. llms-full.txt is a separate, optional convention that dumps a site's entire documentation into one large file for dev tools. The full version is not part of the official standard and gets unwieldy on large sites.
+llms.txt is the short, curated index defined by the spec; llms-full.txt dumps the entire documentation into one file. The practical selection rule: a coding assistant with a small context window wants the index, while a tool building a local knowledge base wants the full dump. If you only ship one, ship the index.
 
 **Should I add llms.txt to a marketing site or just documentation?**
-Documentation and developer sites are where it earns its keep, because coding agents actually read it. On a marketing or ecommerce site aiming for AI citations, there is no measured benefit today, so it is optional at best.
+A middle case worth knowing: SaaS sites with a /docs section can serve llms.txt scoped to the docs while skipping it for the marketing pages. That gets the coding-assistant benefit where it exists without pretending the homepage needs it.
 
-**Is working on llms.txt a distraction from real AI visibility work?**
-For most sites, yes. The factors that decide whether AI engines cite you are whether crawlers can reach and render your pages and whether your content is clearly citable. llms.txt sits well below those, so handle the access path and content first and treat the file as a footnote.
+**Does llms.txt affect Google indexing or my robots.txt rules?**
+No interaction in either direction. Googlebot indexes your pages whether or not the file exists, and llms.txt cannot override a robots.txt block: a crawler disallowed in robots.txt should not fetch your llms.txt either. Treat them as fully independent files.
 
 ## Sources
 
