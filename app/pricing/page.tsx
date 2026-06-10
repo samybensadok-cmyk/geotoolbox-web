@@ -123,6 +123,33 @@ export default function PricingPage() {
           <PricingCards />
         </div>
 
+        {/* Core features included on every plan (incl. Free) — cards only show
+            per-tier deltas, so the shared baseline needs its own strip */}
+        <div className="mx-auto mt-8 max-w-7xl text-center">
+          <p className="font-mono text-[10px] font-semibold uppercase tracking-widest text-gray-500">
+            Every plan includes
+          </p>
+          <ul className="mt-3 flex flex-wrap items-center justify-center gap-x-2 gap-y-2">
+            {[
+              "AI visibility tracker",
+              "Share of voice",
+              "GEO Scan",
+              "Agent Readiness scan",
+              "Content Analyzer",
+              "Competitor Intel",
+              "AI-ready export",
+              "Search Console analytics",
+            ].map((f) => (
+              <li
+                key={f}
+                className="rounded-full border border-gray-200 bg-gray-50 px-3.5 py-1.5 text-[13px] font-medium text-gray-700"
+              >
+                {f}
+              </li>
+            ))}
+          </ul>
+        </div>
+
         <div className="mx-auto mt-6 max-w-7xl">
           <div className="flex flex-col items-center justify-between gap-3 rounded-2xl border border-gray-200 bg-gray-50 px-6 py-4 sm:flex-row">
             <p className="text-[14px] text-gray-700">
