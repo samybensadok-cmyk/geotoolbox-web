@@ -25,9 +25,7 @@ In other words: embeddings are the mechanism behind the advice you have already 
 
 Nobody writes embeddings by hand. They come out of **embedding models**, machine learning algorithms (modern ones are neural networks) trained on enormous amounts of text until they learn which words and phrases occur in similar contexts.
 
-The classic example is Stanford's [GloVe project](https://nlp.stanford.edu/projects/glove/), which trains on global word co-occurrence statistics. "Ice" shows up near "solid" far more often than "steam" does, while "steam" co-occurs with "gas." Pile up billions of those ratios and the model ends up placing words in positions that mirror their semantic relationships.
-
-Those positions support arithmetic that feels almost too clean. In [Jay Alammar's illustrated walkthrough](https://jalammar.github.io/illustrated-word2vec/) of word2vec-era word embeddings, taking the vector for "king," subtracting "man," and adding "woman" produces a vector whose nearest named neighbor is "queen" (the classic demo excludes the input words themselves, a caveat worth knowing before you repeat it on stage). The directions inside the space correspond to real concepts, like royalty or gender, even though no one programmed them in.
+How does a model learn meaning? From context. Train on enough text and the words that keep appearing in similar surroundings end up placed near each other, positions that mirror their semantic relationships. The resulting geometry supports arithmetic that feels almost too clean: in [Jay Alammar's illustrated walkthrough](https://jalammar.github.io/illustrated-word2vec/) of word2vec-era word embeddings, taking the vector for "king," subtracting "man," and adding "woman" produces a vector whose nearest named neighbor is "queen" (the classic demo excludes the input words themselves, a caveat worth knowing before you repeat it on stage). The directions inside the space correspond to real concepts, like royalty or gender, even though no one programmed them in.
 
 Here's the thing about dimensions. Each vector has a fixed length, and that length is the model's **dimension count**. [BERT](https://arxiv.org/abs/1810.04805) uses 768 dimensions in its base version and 1,024 in its large one (768 is an architecture choice, attention-head size times head count, not a magic number). [OpenAI's embedding models](https://developers.openai.com/api/docs/guides/embeddings) output 1,536 dimensions for text-embedding-3-small and 3,072 for text-embedding-3-large. More dimensions can capture finer distinctions, at the cost of storage and speed, which is why OpenAI lets developers shorten vectors through a dimensions parameter rather than always running at full size. (And no, the embedding size GPT-4 uses internally is not published, whatever a tool vendor told you.)
 
@@ -102,6 +100,8 @@ That mechanism produces three practical rules.
 
 **Keep terminology consistent.** Embeddings handle synonyms far better than keyword matching ever did, but every passage still competes on how concentrated its meaning is. Calling the same feature three different names across a page spreads your semantic signal thinner than it needs to be.
 
+These rules have at least one small-scale public test behind them. [Chris Green's content-structure experiment](https://www.chris-green.net/post/content-structure-for-ai-search) embedded the same information in three formats and found Q&A format "consistently delivered the highest semantic relevance to queries in every scenario," with dense prose worst, alongside his own caveat that it is a small simulation and vector similarity is not ranking. Tested, narrow, honestly labeled: exactly the kind of evidence this space needs more of.
+
 What about long-form content overall? You will hear that long pages get "averaged out" and underperform in vector search. The mechanism is plausible given how chunk boundaries fall, but we have not seen controlled public evidence that page length itself hurts retrieval once chunks are well-formed. Treat it as a claim, not a fact. The defensible version is smaller: structure your long page so every section could be lifted out and still make sense.
 
 ## Can You Optimize for Embeddings? An Honest Answer
@@ -136,6 +136,8 @@ You do not need to take any of this on faith. Two cheap experiments make the who
 4. Run crawl analysis
 
 You get a similarity score from 0 to 1 for every page against its nearest neighbor, plus filters that surface semantic duplicates and pages drifting off-topic. Note that this embeds whole pages, useful for spotting duplicates and drift, even though production retrieval mostly works on smaller chunks. Watching two pages you thought were different score 0.95 against each other is the fastest way to internalize what these vectors actually measure.
+
+This is working practice, not a novelty. [Mike King's iPullRank guide](https://ipullrank.com/vector-embeddings-is-all-you-need) catalogs production SEO uses for crawl-generated embeddings, keyword mapping, internal linking, redirect mapping, content clustering, and SEOs have been running these workflows since before AI search made embeddings fashionable.
 
 **Embed two sentences yourself.** OpenAI's embeddings endpoint costs fractions of a cent per call; [its own docs](https://developers.openai.com/api/docs/guides/embeddings) work the small model out to roughly 62,500 pages of text per dollar. Send it a question your customers ask and the paragraph on your site that should answer it, compute cosine similarity between the two vectors, then try the same question against a competitor's paragraph. Ask any coding assistant for the ten-line script; you will have watched retrieval's core operation run on your own content inside half an hour.
 
@@ -205,9 +207,10 @@ What you can verify is the outcome. geotoolbox exists for that half of the probl
 - [Vector embeddings guide](https://developers.openai.com/api/docs/guides/embeddings) - OpenAI API documentation
 - [File search tool](https://developers.openai.com/api/docs/guides/tools-file-search) - OpenAI API documentation
 - [The Illustrated Word2vec](https://jalammar.github.io/illustrated-word2vec/) - Jay Alammar, 2019
-- [GloVe: Global Vectors for Word Representation](https://nlp.stanford.edu/projects/glove/) - Pennington, Socher, Manning; Stanford NLP, 2014
 - [BERT: Pre-training of Deep Bidirectional Transformers](https://arxiv.org/abs/1810.04805) - Devlin et al., 2018
 - [Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings](https://arxiv.org/abs/1607.06520) - Bolukbasi et al., 2016
 - [Hybrid search overview, Azure AI Search](https://learn.microsoft.com/en-us/azure/search/hybrid-search-overview) - Microsoft Learn
 - [AI features and your website](https://developers.google.com/search/docs/fundamentals/ai-optimization-guide) - Google Search Central
 - [How to Identify Semantically Similar Pages & Outliers](https://www.screamingfrog.co.uk/seo-spider/tutorials/how-to-identify-semantically-similar-pages-outliers/) - Screaming Frog
+- [Content Structure for AI Search](https://www.chris-green.net/post/content-structure-for-ai-search) - Chris Green, 2025
+- [SEO Use Cases for Vectorizing the Web](https://ipullrank.com/vector-embeddings-is-all-you-need) - Mike King, iPullRank, 2024
