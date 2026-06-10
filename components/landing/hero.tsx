@@ -101,7 +101,7 @@ export function Hero() {
             </div>
 
             <p className="stagger-3 mt-4 text-xs text-gray-600">
-              First scan in under two minutes &middot; no credit card
+              First scan in under two minutes &middot; no credit card &middot; free plan covers ChatGPT, paid tiers up to all seven engines
             </p>
 
             {/* Engines strip — mark + name pairs. Monochrome inline SVG

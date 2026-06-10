@@ -76,7 +76,7 @@ function ScoreVisual() {
   )
 }
 
-/* ——— Card 3: Analyze — 19 signals, per-signal strength bars ——— */
+/* ——— Card 3: Analyze — per-signal strength bars ——— */
 function AnalyzeVisual() {
   const signals = [
     { label: "Entity clarity", strength: 5 },
@@ -148,7 +148,7 @@ export function Features() {
   const cards = [
     { visual: <ScanVisual />, tag: "Scan", title: "Every engine on a single prompt", body: "ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Bing Copilot, and Grok — scanned in one run, side by side.", span: "md:col-span-2" },
     { visual: <ScoreVisual />, tag: "Score", title: "One visibility score, week over week", body: "A single 0-100 number your team can align on. Tracked weekly, alerted on change, benchmarked against competitors.", span: "md:col-span-1" },
-    { visual: <AnalyzeVisual />, tag: "Analyze", title: "See what makes AI cite you", body: "19 on-page signals graded per URL: entity clarity, schema, authority, freshness, structure. Fix the lowest-scoring first.", span: "md:col-span-1" },
+    { visual: <AnalyzeVisual />, tag: "Analyze", title: "See what makes AI cite you", body: "21 signals graded per URL across two scores, Citability and AI Readability: schema, bot access, freshness, structure, entity clarity. Fix the lowest-scoring first.", span: "md:col-span-1" },
     { visual: <IntelVisual />, tag: "Intel", title: "See who gets recommended instead", body: "Per-prompt competitor citations, co-cited domains, and real-time alerts the day a competitor overtakes you.", span: "md:col-span-2" },
   ]
 

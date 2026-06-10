@@ -71,8 +71,8 @@ const groups: Group[] = [
       {
         slug: "content-analyzer",
         name: "Content Analyzer",
-        blurb: "Grade any page from A to F for AI citability. Checks 19 signals across schema, bot access, freshness, structure, and entity clarity, and tells you what to fix.",
-        highlights: ["19 signals", "Multi-bot access check", "A–F score"],
+        blurb: "Grade any page from A to F for AI citability. Two scores, Citability and AI Readability, across 21 signals: schema, bot access, freshness, structure, and entity clarity, with the exact fixes.",
+        highlights: ["21 signals", "Multi-bot access check", "A–F score"],
         tint: "lilac",
       },
       {

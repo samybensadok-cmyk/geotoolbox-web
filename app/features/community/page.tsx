@@ -5,7 +5,7 @@ import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
 import { siteConfig } from "@/lib/config"
 import { JsonLd } from "@/components/seo/json-ld"
-import { softwareApplicationSchema, breadcrumbsSchema } from "@/lib/seo-schema"
+import { softwareApplicationSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
   title: "Community: Reddit and forum citations AI engines quote",
@@ -112,11 +112,6 @@ export default function CommunityPage() {
           description: "See which Reddit, Quora, and forum threads are already cited by AI engines in your topic area. Build presence where AI is already looking.",
           url: `${siteConfig.url}/features/community`,
         }),
-        breadcrumbsSchema([
-          { name: "Home", url: "/" },
-          { name: "Features", url: "/features" },
-          { name: "Community Insights", url: "/features/community" },
-        ]),
       ]} />
 
         <div className="mx-auto max-w-7xl">

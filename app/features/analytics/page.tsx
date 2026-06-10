@@ -5,7 +5,7 @@ import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
 import { siteConfig } from "@/lib/config"
 import { JsonLd } from "@/components/seo/json-ld"
-import { softwareApplicationSchema, breadcrumbsSchema } from "@/lib/seo-schema"
+import { softwareApplicationSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
   title: "Analytics: GSC + GA4 for AI search tracking",
@@ -244,11 +244,6 @@ export default function AnalyticsPage() {
           description: "GSC and GA4 rebuilt around AI citations. Quick wins, content decay, click share, and cannibalization detection across 12 sub-tabs.",
           url: `${siteConfig.url}/features/analytics`,
         }),
-        breadcrumbsSchema([
-          { name: "Home", url: "/" },
-          { name: "Features", url: "/features" },
-          { name: "Analytics", url: "/features/analytics" },
-        ]),
       ]} />
 
         <div className="mx-auto max-w-7xl">

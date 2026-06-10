@@ -15,7 +15,6 @@ import { JsonLd } from "@/components/seo/json-ld"
 import {
   definedTermSchema,
   faqPageSchema,
-  breadcrumbsSchema,
 } from "@/lib/seo-schema"
 
 export async function generateStaticParams() {
@@ -61,11 +60,6 @@ export default async function GlossaryEntry({
           data={[
             definedTermSchema({ slug: term.slug, term: term.term, definition: term.definition }),
             faqPageSchema([{ question: `What is ${term.term}?`, answer: term.definition }]),
-            breadcrumbsSchema([
-              { name: "Home", url: "/" },
-              { name: "Glossary", url: "/glossary" },
-              { name: term.term, url: `/glossary/${term.slug}` },
-            ]),
           ]}
         />
         <div className="mx-auto max-w-3xl">

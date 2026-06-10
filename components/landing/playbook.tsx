@@ -7,7 +7,7 @@ const faqs = [
   },
   {
     q: "Why isn't AI citing my pages?",
-    a: "Grade any URL from A to F on 19 signals: schema markup, AI bot access, entity clarity, freshness, and answer-first formatting. AI crawlers can't cite what they can't read. The audit maps every signal to a specific fix.",
+    a: "Grade any URL on two scores, Citability and AI Readability: 21 signals covering schema markup, AI bot access, JavaScript rendering, freshness, and answer-first formatting, each benchmarked against the pages AI actually cites. AI crawlers can't cite what they can't read. The audit maps every signal to a specific fix.",
   },
   {
     q: "What do I change to get cited?",

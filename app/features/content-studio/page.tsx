@@ -12,7 +12,7 @@ import { DualCTA } from "@/components/features/dual-cta"
 import { FeatureComparisonTable } from "@/components/features/feature-comparison-table"
 import { siteConfig } from "@/lib/config"
 import { JsonLd } from "@/components/seo/json-ld"
-import { softwareApplicationSchema, howToSchema, breadcrumbsSchema } from "@/lib/seo-schema"
+import { softwareApplicationSchema, howToSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
   title: "AI Content Brief & Article Writer | GEO Toolbox Content Studio",
@@ -148,11 +148,6 @@ export default function ContentStudioPage() {
               name: "How to write an article AI will cite",
               steps: steps.map((s) => ({ name: s.title, text: s.body })),
             }),
-            breadcrumbsSchema([
-              { name: "Home", url: "/" },
-              { name: "Features", url: "/features" },
-              { name: "Content Studio", url: "/features/content-studio" },
-            ]),
           ]}
         />
 

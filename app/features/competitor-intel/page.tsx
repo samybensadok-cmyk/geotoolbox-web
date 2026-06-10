@@ -5,7 +5,7 @@ import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
 import { siteConfig } from "@/lib/config"
 import { JsonLd } from "@/components/seo/json-ld"
-import { softwareApplicationSchema, breadcrumbsSchema } from "@/lib/seo-schema"
+import { softwareApplicationSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
   title: "AI Competitor Tracking Tool",
@@ -118,11 +118,6 @@ export default function CompetitorIntelPage() {
           description: "Track new content published by competitors. Detect new pages, lost rankings, publishing velocity, and AI threat alerts across seven engines.",
           url: `${siteConfig.url}/features/competitor-intel`,
         }),
-        breadcrumbsSchema([
-          { name: "Home", url: "/" },
-          { name: "Features", url: "/features" },
-          { name: "Competitor Intel", url: "/features/competitor-intel" },
-        ]),
       ]} />
 
         <div className="mx-auto max-w-7xl">

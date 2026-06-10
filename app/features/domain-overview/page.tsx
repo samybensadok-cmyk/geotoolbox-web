@@ -5,7 +5,7 @@ import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
 import { siteConfig } from "@/lib/config"
 import { JsonLd } from "@/components/seo/json-ld"
-import { softwareApplicationSchema, breadcrumbsSchema } from "@/lib/seo-schema"
+import { softwareApplicationSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
   title: "AI Brand Monitoring Dashboard",
@@ -123,11 +123,6 @@ export default function DomainOverviewPage() {
           description: "Your AI visibility command center. Track citation share, co-cited domains, cited pages, and AI competitors for any domain over time.",
           url: `${siteConfig.url}/features/domain-overview`,
         }),
-        breadcrumbsSchema([
-          { name: "Home", url: "/" },
-          { name: "Features", url: "/features" },
-          { name: "Domain Overview", url: "/features/domain-overview" },
-        ]),
       ]} />
 
         <div className="mx-auto max-w-7xl">

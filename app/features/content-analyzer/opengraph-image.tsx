@@ -33,7 +33,7 @@ export default function OGImage() {
             Grade any page A&ndash;F for AI citability.
           </div>
           <div style={{ fontSize: 20, color: "#4b5563", marginTop: 20, lineHeight: 1.4 }}>
-            19 signals. Clarity, Authority, Access. In under 60 seconds.
+            21 signals. Citability, Readability, Access. In under 60 seconds.
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: "auto", fontSize: 15, color: "#6b7280" }}>

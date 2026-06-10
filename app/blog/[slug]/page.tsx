@@ -9,7 +9,7 @@ import { formatDate } from "@/lib/utils"
 import { siteConfig } from "@/lib/config"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
 import { JsonLd } from "@/components/seo/json-ld"
-import { articleSchema, breadcrumbsSchema, faqPageSchema } from "@/lib/seo-schema"
+import { articleSchema, faqPageSchema } from "@/lib/seo-schema"
 import { getAuthorByName } from "@/lib/authors"
 import { AuthorBio } from "@/components/blog/author-bio"
 import { Avatar } from "@/components/ui/avatar"
@@ -66,7 +66,7 @@ const relatedFeatures = [
   {
     slug: "content-analyzer",
     name: "Content Analyzer",
-    blurb: "Grade any URL A–F for AI citability. 19 signals with exact fixes.",
+    blurb: "Grade any URL A–F for AI citability. 21 signals with exact fixes.",
     bg: "bg-[var(--surface-lilac)]",
     border: "border-[var(--surface-lilac-border)]",
     dot: "bg-indigo-500",
@@ -109,11 +109,6 @@ export default async function BlogPost({
               author: post.author,
               image: post.image,
             }),
-            breadcrumbsSchema([
-              { name: "Home", url: "/" },
-              { name: "Blog", url: "/blog" },
-              { name: post.title, url: `/blog/${post.slug}` },
-            ]),
             ...(faqs.length > 0 ? [faqPageSchema(faqs)] : []),
           ]}
         />

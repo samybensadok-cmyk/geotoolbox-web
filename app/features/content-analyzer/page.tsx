@@ -14,7 +14,7 @@ import { FeatureComparisonTable } from "@/components/features/feature-comparison
 import { AiEngineLogoGrid } from "@/components/features/ai-engine-logo-grid"
 import { siteConfig } from "@/lib/config"
 import { JsonLd } from "@/components/seo/json-ld"
-import { softwareApplicationSchema, howToSchema, breadcrumbsSchema } from "@/lib/seo-schema"
+import { softwareApplicationSchema, howToSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
   title: "AI Citability Checker — Grade Any URL A–F | GEO Toolbox Content Analyzer",
@@ -172,11 +172,6 @@ export default function ContentAnalyzerPage() {
               name: "How to check whether AI will cite your page",
               steps: steps.map((s) => ({ name: s.title, text: s.body })),
             }),
-            breadcrumbsSchema([
-              { name: "Home", url: "/" },
-              { name: "Features", url: "/features" },
-              { name: "Content Analyzer", url: "/features/content-analyzer" },
-            ]),
           ]}
         />
 
