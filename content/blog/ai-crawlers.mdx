@@ -2,6 +2,7 @@
 title: "AI Crawlers: The List of AI Bots & How to Control Them"
 description: "AI crawlers fetch your pages for ChatGPT, Claude, Perplexity, and Google. The list of every major AI bot, what each does, and how to control it in robots.txt."
 date: "2026-06-07"
+updated: "2026-06-10"
 author: "Samy BEN SADOK"
 tags: ["ai-crawlers", "robots-txt", "geo", "ai-visibility", "guide"]
 draft: false
@@ -23,7 +24,7 @@ Keep those three jobs straight and every block decision gets simpler. Most of th
 
 ## The AI Crawler List: Every Major Bot in 2026
 
-Here is the current roster of AI crawlers worth knowing, with the job each one does and the robots.txt token that controls it. The **Type** column maps to the three jobs above, and the recommendation follows one rule: block the training crawlers if you want to, but keep the search and user crawlers reachable so AI engines can still cite you.
+Here is the current roster of AI crawlers worth knowing, with the job each one does and the robots.txt token that controls it. The **Type** column maps to the three jobs above, and the Default call column shows the recommendation per bot.
 
 <table>
   <thead>
@@ -51,13 +52,13 @@ Here is the current roster of AI crawlers worth knowing, with the job each one d
   </tbody>
 </table>
 
-That is the set that matters for most sites, but it is not the whole field. Newer entrants like MistralAI-User, DeepSeek, xAI's Grok, and cohere-ai are crawling too, and the names change often: bots launch, rename, and split into separate training and search agents on a roughly quarterly cadence. The community-maintained [ai.robots.txt list on GitHub](https://github.com/ai-robots-txt/ai.robots.txt) tracks hundreds of verified AI user agents and generates ready-to-use robots.txt and server configs, and [Dark Visitors](https://darkvisitors.com/agents) keeps a similar live directory. Treat any static list, including this one, as a snapshot.
+That is the set that matters for most sites, but it is not the whole field. Newer entrants like MistralAI-User, DeepSeek, xAI's Grok, and cohere-ai are crawling too, and the names change often: bots launch, rename, and split into separate training and search agents. The community-maintained [ai.robots.txt list on GitHub](https://github.com/ai-robots-txt/ai.robots.txt) tracks 150+ AI user agents and generates ready-to-use robots.txt and server configs, and [Known Agents](https://knownagents.com/agents) (formerly Dark Visitors) keeps a similar live directory. Treat any static list, including this one, as a snapshot.
 
-One number puts the traffic in perspective. In [Cloudflare's 2025 crawler data](https://blog.cloudflare.com/from-googlebot-to-gptbot-whos-crawling-your-site-in-2025/), GPTBot grew to roughly 30 percent of AI-crawler requests (up from 5 percent a year earlier), ClaudeBot held about 21 percent, and Meta-ExternalAgent appeared from nowhere at 19 percent. These bots are now a real share of who visits your site.
+One number puts the traffic in perspective. In [Cloudflare's 2025 crawler data](https://blog.cloudflare.com/from-googlebot-to-gptbot-whos-crawling-your-site-in-2025/), GPTBot grew to roughly 30 percent of AI-crawler requests (up from 5 percent a year earlier), ClaudeBot fell to about 21 percent, and Meta-ExternalAgent appeared from nowhere at 19 percent. These bots are now a real share of who visits your site.
 
 ## OpenAI: GPTBot, OAI-SearchBot, and ChatGPT-User
 
-OpenAI runs three crawlers, and the [OpenAI bots documentation](https://developers.openai.com/api/docs/bots) names each one. [GPTBot](https://geotoolbox.ai/blog/gptbot) is the training crawler: disallow it and your content should not be used to train future models. [OAI-SearchBot](https://geotoolbox.ai/glossary/oai-searchbot) is the one that matters for visibility. It builds the index behind ChatGPT search, and OpenAI is explicit that sites opted out of OAI-SearchBot will not appear in ChatGPT search answers. ChatGPT-User is the real-time fetcher that runs when a person asks ChatGPT to read a page.
+OpenAI runs three crawlers, and the [OpenAI bots documentation](https://developers.openai.com/api/docs/bots) names each one. [GPTBot](https://geotoolbox.ai/blog/gptbot) is the training crawler: disallow it and your content should not be used to train future models. [OAI-SearchBot](https://geotoolbox.ai/glossary/oai-searchbot) is the one that matters for visibility. It builds the index behind ChatGPT search, and OpenAI is explicit that sites opted out of OAI-SearchBot will not appear in ChatGPT search answers (though they can still show up as navigational links). ChatGPT-User is the real-time fetcher that runs when a person asks ChatGPT to read a page.
 
 The practical takeaway is the one most "block ChatGPT" guides get wrong: blocking GPTBot does nothing to your presence in ChatGPT search. Training and citation run through different bots. If you want to keep your content out of training but stay citable, block GPTBot and leave OAI-SearchBot and ChatGPT-User alone. Our guide to [getting cited in ChatGPT](https://geotoolbox.ai/blog/seo-for-chatgpt) covers the citation side. OpenAI also runs OAI-AdsBot, which only validates ad landing pages and does not train models.
 
@@ -69,27 +70,29 @@ The trap is treating them as one. Many sites block ClaudeBot to opt out of train
 
 ## Google: Googlebot vs Google-Extended
 
-Google is where the most expensive mistake happens. [Google-Extended](https://geotoolbox.ai/glossary/google-extended) is not a crawler at all; it is a robots.txt token that controls whether your content can be used to train and ground Google's Gemini models. Google introduced it [as a dedicated robots.txt control](https://blog.google/technology/ai/an-update-on-web-publisher-controls/) so publishers could opt out of that use, and because it is separate from Googlebot, disallowing it does not affect your Search rankings or indexing.
+Google is where the most expensive mistake happens. [Google-Extended](https://geotoolbox.ai/glossary/google-extended) is not a crawler at all; it is a robots.txt token that controls whether your content can be used to train and ground Google's Gemini models. Google introduced it [as a dedicated robots.txt control](https://blog.google/innovation-and-ai/products/an-update-on-web-publisher-controls/) so publishers could opt out of that use, and because it is separate from Googlebot, disallowing it does not affect your Search rankings or indexing.
 
 Googlebot is the crawler that actually fetches your pages, and it now feeds two things at once: classic Google Search and the AI Overviews that sit above it. That dual role is the footgun. Owners who want to keep Google's AI out sometimes block Googlebot and remove themselves from Google Search entirely, AI Overviews included. The right lever is Google-Extended for training, and nothing else. Leave Googlebot alone. Our guide to [getting cited in Google AI Overviews](https://geotoolbox.ai/blog/google-ai-overviews-seo) covers the visibility side.
 
 ## Perplexity and the Rest of the Pack
 
-[PerplexityBot](https://geotoolbox.ai/glossary/perplexitybot) indexes pages for Perplexity's answers and, per [Perplexity's documentation](https://docs.perplexity.ai/guides/bots), is not used to crawl content for AI foundation models, so blocking it only costs you Perplexity citations. Perplexity-User is the user-triggered fetcher, which Perplexity says generally ignores robots.txt because a person requested the page. Perplexity has also drawn scrutiny: Cloudflare reported it using undeclared crawlers to reach sites that had blocked it, a reminder that a published policy and real behavior are not always the same thing. Our [Perplexity SEO guide](https://geotoolbox.ai/blog/perplexity-seo) covers the citation mechanics.
+[PerplexityBot](https://geotoolbox.ai/glossary/perplexitybot) indexes pages for Perplexity's answers and, per [Perplexity's documentation](https://docs.perplexity.ai/docs/resources/perplexity-crawlers), is not used to crawl content for AI foundation models, so blocking it only costs you Perplexity citations. Perplexity-User is the user-triggered fetcher, which Perplexity says generally ignores robots.txt because a person requested the page. Perplexity has also drawn scrutiny: [Cloudflare reported](https://blog.cloudflare.com/perplexity-is-using-stealth-undeclared-crawlers-to-evade-website-no-crawl-directives/) it using undeclared crawlers to reach sites that had blocked it, a reminder that a published policy and real behavior are not always the same thing. Our [Perplexity SEO guide](https://geotoolbox.ai/blog/perplexity-seo) covers the citation mechanics.
 
-The rest of the field divides along the same lines. [CCBot](https://geotoolbox.ai/glossary/ccbot) is Common Crawl, an open dataset that feeds many models, which is why blocking GPTBot alone does not keep your text out of training. [Amazonbot](https://geotoolbox.ai/glossary/amazonbot) gathers content for Amazon's AI and Alexa. [Applebot](https://geotoolbox.ai/glossary/applebot) powers Siri and Spotlight and should stay allowed; the separate Applebot-Extended token is what opts you out of Apple's model training. [meta-externalagent](https://geotoolbox.ai/glossary/meta-externalagent) is Meta's training crawler, now one of the most active on the web. [Bingbot](https://geotoolbox.ai/glossary/bingbot) feeds both Bing and Microsoft Copilot, so blocking it costs you both. And [Bytespider](https://geotoolbox.ai/glossary/bytespider), ByteDance's crawler, is the one site owners complain about most: it has been documented ignoring robots.txt and hammering sites with traffic, which is why a robots.txt rule alone rarely stops it.
+The rest of the field divides along the same lines. [CCBot](https://geotoolbox.ai/glossary/ccbot) is Common Crawl, an open dataset that feeds many models, which is why blocking GPTBot alone does not keep your text out of training. [Amazonbot](https://geotoolbox.ai/glossary/amazonbot) gathers content for Amazon's AI and Alexa. [Applebot](https://geotoolbox.ai/glossary/applebot) powers Siri and Spotlight and should stay allowed; the separate Applebot-Extended token is what opts you out of Apple's model training. [Meta-ExternalAgent](https://geotoolbox.ai/glossary/meta-externalagent) is Meta's training crawler, now one of the most active on the web. [Bingbot](https://geotoolbox.ai/glossary/bingbot) feeds both Bing and Microsoft Copilot, so blocking it costs you both. And [Bytespider](https://geotoolbox.ai/glossary/bytespider), ByteDance's crawler, is the one site owners complain about most: it has been documented ignoring robots.txt and hammering sites with traffic, which is why a robots.txt rule alone rarely stops it.
 
 ## Should You Block AI Crawlers? The Honest Answer
 
 Start with what you are actually trading. Blocking training crawlers protects your content from model training and cuts bandwidth, and some sites have reported real savings from it. Blocking search and citation crawlers does something very different: it makes you invisible in the AI answers that increasingly stand in for a search click.
 
-The economics help clarify the call. Training crawlers take far more than they return: the big training bots crawl far more pages than the visitors they ever send back, while it is the search and citation bots that actually route a reader to you. If a bot takes your content to train a model and never sends anyone, blocking it is an easy call. Blocking the bot that puts you in the answer is much harder, because that traffic is the point.
+The economics help clarify the call. Training crawlers take more than they return: the big training bots crawl thousands of pages for every visitor they send back, while it is the search and citation bots that actually route a reader to you. If a bot takes your content to train a model and never sends anyone, blocking it is an easy call. Blocking the bot that puts you in the answer is much harder, because that traffic is the point.
 
 That leaves three workable strategies:
 
 1. **Allow everything.** The simplest choice, and the right one if your goal is maximum AI visibility and bandwidth is not a concern. The trade is that your content can be used for training.
 2. **Block training, allow search.** The selective default for most sites: disallow GPTBot, ClaudeBot, Google-Extended, CCBot, and the other training tokens, but keep OAI-SearchBot, Claude-SearchBot, PerplexityBot, Googlebot, and Bingbot reachable. You opt out of training while staying citable.
 3. **Block everything.** Right only when protecting content or controlling server load matters more than any AI visibility, which is common for paywalled archives and large media libraries.
+
+One second-order cost worth naming: content a model never trained on is less likely to surface as an unprompted brand mention in answers that do not run a live search. For most sites that effect is small next to citations, but it is not zero.
 
 Most site owners want option 2. The expensive mistake is landing on option 3 by accident, through one broad rule that takes the citation bots down with the training ones. If your aim is to be found in AI answers, the rest of your [AI search optimization](https://geotoolbox.ai/blog/how-to-optimize-for-ai-search) work is wasted the moment the wrong bot is blocked.
 
@@ -124,7 +127,7 @@ Disallow: /
 
 To block every AI crawler instead, add a Disallow block for each search and user token as well. To allow everything, add nothing.
 
-Two cautions before you trust that file. First, robots.txt is a [voluntary standard](https://www.rfc-editor.org/rfc/rfc9309.html): well-behaved bots obey it, but it is a request, not a wall. Bytespider has been documented ignoring it, and user-triggered fetchers like ChatGPT-User and Perplexity-User are built to. Second, changes take time to register; a robots.txt edit is not instant, and a crawler may keep running on its old rules for up to a day.
+Two cautions before you trust that file. First, robots.txt is a [voluntary standard](https://www.rfc-editor.org/rfc/rfc9309.html): well-behaved bots obey it, but it is a request, not a wall. some bots ignore it outright, and user-triggered fetchers like ChatGPT-User and Perplexity-User are built to. Second, changes take time to register; a robots.txt edit is not instant, and a crawler may keep running on its old rules for up to a day.
 
 So treat robots.txt as necessary but not sufficient. When you need an actual block rather than a polite request, escalate:
 
@@ -140,45 +143,45 @@ So treat robots.txt as necessary but not sufficient. When you need an actual blo
   </tbody>
 </table>
 
-## How to Tell a Real AI Crawler From a Fake One
+## How to Tell a Real AI Crawler from a Fake One
 
 A user agent is just a line of text, and anyone can send it. Plenty of scrapers crawl the web announcing themselves as GPTBot to borrow its reputation, and blocking the name does nothing to them. So before you trust an entry in your server logs, confirm the request actually came from the company it claims.
 
 The real crawlers publish their IP ranges for exactly this purpose. OpenAI lists the address ranges for GPTBot, OAI-SearchBot, and ChatGPT-User as JSON files, and Perplexity, Amazon, and others do the same. The check is a reverse-DNS and IP match: take the source address of a request claiming to be an AI bot, confirm it falls inside the operator's published range, and treat anything outside that range as a spoof to challenge or rate-limit at the firewall.
 
-In practice you pull the published list, for example OpenAI's at openai.com/gptbot.json, and compare it against the addresses hitting your logs under that user agent. A request waving the GPTBot flag from an address OpenAI does not own is not GPTBot, and a name-based robots.txt rule was never going to stop it. This is the step most crawler lists skip, and it is the difference between knowing who is really crawling your site and trusting a label.
+In practice you pull the published list, for example OpenAI's at [openai.com/gptbot.json](https://openai.com/gptbot.json), and compare it against the addresses hitting your logs under that user agent. A request waving the GPTBot flag from an address OpenAI does not own is not GPTBot, and a name-based robots.txt rule was never going to stop it. This is the step most crawler lists skip, and it is the difference between knowing who is really crawling your site and trusting a label.
 
 ## Keeping Your AI Crawler List Current
 
-A list like this is accurate the day it ships and a little wrong a quarter later. New crawlers launch, old ones get renamed, and companies split a single bot into separate training and search agents, the way OpenAI and Anthropic already have. The community trackers exist because the roster keeps moving; syncing your robots.txt against [ai.robots.txt](https://github.com/ai-robots-txt/ai.robots.txt) or [Dark Visitors](https://darkvisitors.com/agents) every few months beats maintaining it by hand.
+A list like this is accurate the day it ships and a little wrong a quarter later. The community trackers exist because the roster keeps moving; syncing your robots.txt against [ai.robots.txt](https://github.com/ai-robots-txt/ai.robots.txt) or [Known Agents](https://knownagents.com/agents) every few months beats maintaining it by hand.
 
-The list is the easy part, though. The harder question is whether the bots you want can actually reach your pages, and that fails more often than people expect. A stray Disallow line, a firewall that challenges non-browser traffic, or content that only renders after JavaScript can all leave a citation bot looking at an empty page. In our experience auditing sites for AI visibility, the most common cause of "we are not cited anywhere" is not weak content; it is a search or user bot blocked by accident. geotoolbox's [Content Analyzer](https://geotoolbox.ai/features/content-analyzer) fetches a page as each major AI crawler and reports whether they can reach and render it (its AI Readability score), alongside a grade for how citable the page is once they do. For a whole-site read, the free [Agent Readiness](https://geotoolbox.ai/features/agent-readiness) scan tests that same crawler access across your domain from the root URL.
+The list is the easy part, though. The harder question is whether the bots you want can actually reach your pages, and that fails more often than people expect. A stray Disallow line, a firewall that challenges non-browser traffic, or content that only renders after JavaScript can all leave a citation bot looking at an empty page. In our experience auditing sites for AI visibility, the most common cause of "we are not cited anywhere" is not weak content; it is a search or user bot blocked by accident. geotoolbox's [Content Analyzer](https://geotoolbox.ai/features/content-analyzer) fetches a page as each major AI crawler and reports whether they can reach and render it (its AI Readability score), alongside a grade for how citable the page is once they do. For a site-level read, the [Agent Readiness](https://geotoolbox.ai/features/agent-readiness) scan (free with an account) tests that same crawler access from your root URL.
 
 ## Frequently Asked Questions
 
-**Should I block AI crawlers? Will it hurt my AI visibility?**
-It depends which ones. Blocking training crawlers like GPTBot, ClaudeBot, Google-Extended, and CCBot protects your content from model training with no effect on citations. Blocking search and citation crawlers like OAI-SearchBot, Claude-SearchBot, and PerplexityBot removes you from those engines' answers. For most sites the right setup is to block training and allow search.
+**Do I need a separate robots.txt rule for every AI bot?**
+Yes, robots.txt has no wildcard for "all AI bots": each user-agent token needs its own block, which is why generated configs from the community trackers are worth using. A single Disallow under User-agent: * also hits Googlebot and Bingbot, the classic accidental-option-3 mistake.
 
-**Does blocking Google-Extended hurt my Google Search rankings?**
-No. Google-Extended only controls whether your content is used to train Google's Gemini models. It is separate from Googlebot, and disallowing it has no effect on your Search ranking or indexing.
+**Does blocking Google-Extended affect AI Overviews citations?**
+No on both counts: it does not touch your Search ranking, and it does not remove you from AI Overviews either, because those are built from the regular Googlebot crawl. Google-Extended only governs Gemini training and grounding, so it is the one token you can block with no visibility cost in Google surfaces today.
 
 **If I block GPTBot, am I out of ChatGPT?**
 No. GPTBot is the training crawler. ChatGPT's search answers come through OAI-SearchBot and ChatGPT-User, so blocking GPTBot leaves your ChatGPT visibility intact. One caveat: your content may already sit in training sets through CCBot, which blocking GPTBot today does not undo.
 
 **Does blocking AI crawlers in robots.txt actually work?**
-For well-behaved bots, yes. For others, no. robots.txt is a voluntary standard, and Bytespider and user-triggered fetchers routinely ignore it. To stop a bot that does not comply, block it by user agent or IP at your firewall or CDN.
+For the major operators, yes, and you can verify it: their published IP ranges let you confirm in your server logs whether requests stopped after the change. If a blocked bot keeps appearing, check the IP before blaming the operator; it is usually a spoofer borrowing the name.
 
 **How do I stop Bytespider from draining my bandwidth?**
 Because Bytespider often ignores robots.txt, the reliable fix is a firewall or WAF rule that blocks its user agent or IP ranges, not a Disallow line. Verify the IP rather than trusting the user-agent string, since the name is easy to fake.
 
 **Which exact user agent does each AI engine use?**
-ChatGPT search uses OAI-SearchBot and ChatGPT-User, while GPTBot is training only. Claude uses Claude-SearchBot and Claude-User. Perplexity uses PerplexityBot and Perplexity-User. Google's AI training token is Google-Extended, while Googlebot still handles Search and AI Overviews.
+The full strings carry version and contact info beyond the token, for example "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatible; GPTBot/1.2; +https://openai.com/gptbot". For robots.txt you only need the token (GPTBot, OAI-SearchBot, Claude-SearchBot, and so on per the table above); for log analysis, match on the token plus the operator's published IP ranges.
 
 ## Where to Start
 
-The list will keep changing, but the logic under it will not: training, search, and user crawlers do different jobs, and the only real mistake is blocking the ones that put you in the answer. Decide what you want to opt out of, write the robots.txt to match, and then check that the bots you kept can actually reach you. Reachability is only the first half, though; once a bot is in, whether an agent can actually [use your site](https://geotoolbox.ai/blog/agent-ready-website) is the next question.
+The list will keep changing, but the logic under it will not: training, search, and user crawlers do different jobs, and the only real mistake is blocking the ones that put you in the answer. Decide what you want to opt out of and write the robots.txt to match. Reachability is only the first half, though; once a bot is in, whether an agent can actually [use your site](https://geotoolbox.ai/blog/agent-ready-website) is the next question.
 
-That last step is the one most checklists skip. Before you spend time on content, confirm the AI crawlers you care about can actually reach your pages. Start with the free [AI Crawler Checker](https://geotoolbox.ai/tools/ai-crawler-checker), which reads your robots.txt against all 34 AI crawlers in seconds. Then, because robots.txt can say yes while a firewall says no, the [Agent Readiness scan](https://geotoolbox.ai/features/agent-readiness) tests live crawler access across your whole site, and [Content Analyzer](https://geotoolbox.ai/features/content-analyzer) grades a single page crawler by crawler.
+That last step is the one most checklists skip. Before you spend time on content, confirm the AI crawlers you care about can actually reach your pages. Start with geotoolbox's free [AI Crawler Checker](https://geotoolbox.ai/tools/ai-crawler-checker), which reads your robots.txt against all 34 AI crawlers in seconds (it checks the homepage path, so spot-check key subpaths too). Then, because robots.txt can say yes while a firewall says no, the free [Agent Readiness scan](https://geotoolbox.ai/features/agent-readiness) tests live crawler access at the site level from your root URL.
 
 ## Sources
 
@@ -189,4 +192,4 @@ That last step is the one most checklists skip. Before you spend time on content
 - [From Googlebot to GPTBot: who's crawling your site in 2025](https://blog.cloudflare.com/from-googlebot-to-gptbot-whos-crawling-your-site-in-2025/) - Cloudflare, 2025
 - [Robots Exclusion Protocol (RFC 9309)](https://www.rfc-editor.org/rfc/rfc9309.html) - IETF
 - [ai.robots.txt](https://github.com/ai-robots-txt/ai.robots.txt) - community-maintained AI crawler list
-- [Dark Visitors](https://darkvisitors.com/agents) - live AI agent and crawler directory
+- [Known Agents (formerly Dark Visitors)](https://knownagents.com/agents) - live AI agent and crawler directory
