@@ -2,6 +2,7 @@
 title: "GPTBot: What It Crawls and How to Allow or Block It"
 description: "GPTBot is OpenAI's training crawler. What it crawls, how to allow or block it in robots.txt, and why blocking GPTBot does not remove you from ChatGPT search."
 date: "2026-06-08"
+updated: "2026-06-10"
 author: "Samy BEN SADOK"
 tags: ["ai-crawlers", "gptbot", "openai", "robots-txt", "guide"]
 draft: false
@@ -9,27 +10,27 @@ draft: false
 
 GPTBot is OpenAI's web crawler that collects public pages to train its models. If you have seen it in your logs and wondered whether to let it in, the honest answer takes one distinction most guides skip.
 
-Blocking GPTBot does not remove you from ChatGPT. Training and search run on different crawlers, so the choice is narrower than "block AI or not." This guide covers what GPTBot actually does, how to allow or block it in one line, and how to make that call without accidentally opting out of the thing you wanted to keep.
+Blocking GPTBot does not remove you from ChatGPT. Training and search run on different crawlers, so the choice is narrower than "block AI or not."
 
 ## What Is GPTBot?
 
 GPTBot is the crawler OpenAI uses to gather publicly available web content for training its generative models. It reads text to learn language and facts, and per [OpenAI's crawler documentation](https://developers.openai.com/api/docs/bots) it identifies itself with a user agent ending in `+https://openai.com/gptbot`.
 
-Two things it is not. It is not a search indexer: unlike Googlebot, GPTBot does not build a ranking index, it feeds model training. And it is not a backdoor: OpenAI states GPTBot does not access pages behind a paywall or login, and does not collect personally identifiable information.
+Two things it is not. It is not a search indexer: unlike Googlebot, GPTBot does not build a ranking index; it feeds model training. And it is not a backdoor: OpenAI says crawled pages are filtered to remove paywalled sources and sources known to gather personally identifiable information.
 
-It also respects robots.txt. That single fact is what makes the rest of this article simple: controlling GPTBot is a one-line decision you make at the root of your domain, not a firewall project. The harder part is knowing what that decision actually changes, which is the next section.
+It also respects robots.txt, so controlling GPTBot is a one-line decision you make at the root of your domain, not a firewall project.
 
 ## What GPTBot Crawls, and What It Skips
 
 GPTBot crawls publicly reachable pages, the same ones any visitor or search bot can open, and pulls the text into OpenAI's training data.
 
-What it leaves alone matters as much as what it takes. It does not crawl pages disallowed in robots.txt, content behind authentication or a paywall, or anything that needs a form submission. OpenAI also says it screens out personally identifiable information.
+What it leaves alone matters as much as what it takes. It does not crawl pages disallowed in robots.txt or content behind authentication, and OpenAI filters crawled sources to drop paywalled pages and known gatherers of personal data.
 
-The practical read: if a page is public and not disallowed, assume GPTBot can use it for training. If it sits behind a login, it is already out of reach. Everything in between, the public marketing site, the blog, the docs, is what your robots.txt decision governs.
+The practical read: if a page is public and not disallowed, assume GPTBot can use it for training. If it sits behind a login, it is already out of reach. Everything in between is what your robots.txt decision governs: the public marketing site, the blog, the docs.
 
 ## GPTBot Is Not the Only OpenAI Bot, and That Changes Your Decision
 
-This is the part that trips up almost every "should you block GPTBot" guide. OpenAI runs four crawlers, and they do different jobs.
+This is the part that trips up almost every "should you block GPTBot" guide. OpenAI runs four crawlers, and they do different jobs; our [AI crawler list](https://geotoolbox.ai/blog/ai-crawlers) covers how the other operators split theirs the same way.
 
 <table>
   <thead>
@@ -37,15 +38,13 @@ This is the part that trips up almost every "should you block GPTBot" guide. Ope
   </thead>
   <tbody>
     <tr><td><strong>GPTBot</strong></td><td>Collects content to train OpenAI's models</td><td>opt out of model training</td></tr>
-    <tr><td><strong>OAI-SearchBot</strong></td><td>Builds the index behind ChatGPT search</td><td>disappear from ChatGPT search answers</td></tr>
+    <tr><td><strong>OAI-SearchBot</strong></td><td>Builds the index behind ChatGPT search</td><td>disappear from ChatGPT search answers (navigational links can still show)</td></tr>
     <tr><td><strong>ChatGPT-User</strong></td><td>Fetches a page live when a user asks ChatGPT to read it</td><td>block the on-demand reads users asked for</td></tr>
     <tr><td><strong>OAI-AdsBot</strong></td><td>Validates ad landing pages</td><td>affect ad checks only</td></tr>
   </tbody>
 </table>
 
-The line that matters: **blocking GPTBot opts you out of training, not out of ChatGPT search.** Visibility in ChatGPT's answers runs through OAI-SearchBot and ChatGPT-User, which are separate tokens. OpenAI is explicit that sites opted out of OAI-SearchBot will not appear in ChatGPT search, and that this is independent from GPTBot.
-
-So the common fear, "if I block GPTBot I vanish from ChatGPT," is backwards. You can block training and stay fully citable in search, or allow training and still be invisible if OAI-SearchBot is blocked. Different decisions, different bots.
+The line that matters: **blocking GPTBot opts you out of training, not out of ChatGPT search.** Visibility in ChatGPT's answers runs through OAI-SearchBot and ChatGPT-User, which are separate tokens. [OpenAI is explicit](https://developers.openai.com/api/docs/bots) that sites opted out of OAI-SearchBot will not be shown in ChatGPT search answers (though they can still appear as navigational links), and that this is independent from GPTBot.
 
 ## Should You Allow or Block GPTBot?
 
@@ -63,9 +62,7 @@ Start from what blocking GPTBot actually costs and protects, not from a general 
   </tbody>
 </table>
 
-The myth to drop is that allowing GPTBot "gets you into ChatGPT." Live citations come from OAI-SearchBot and ChatGPT-User. Allowing GPTBot only feeds the training corpus, a slower and fuzzier channel than search, and not the lever for showing up in answers today.
-
-That said, do not overcorrect into "blocking GPTBot does nothing." It has one real effect: your content stops being absorbed into the model's trained knowledge, so it cannot surface from what the model simply knows, only from live search. That channel is harder to measure than a citation, but it is not zero.
+Live citations come from OAI-SearchBot and ChatGPT-User (our [ChatGPT citation guide](https://geotoolbox.ai/blog/seo-for-chatgpt) covers earning them); allowing GPTBot only feeds the training corpus, a slower and fuzzier channel. That said, do not overcorrect into "blocking GPTBot does nothing." It has one real effect: your content stops being absorbed into the model's trained knowledge, so it cannot surface from what the model simply knows, only from live search. That channel is harder to measure than a citation, but it is not zero.
 
 So the trade is narrow. Allow GPTBot if you want your content in the training corpus and have the server capacity. Block it if you are protecting content from training, or if the crawl itself is costing you, since aggressive AI crawling that drives up bandwidth and server load has become a common complaint among site owners. Most teams end up selective rather than all-or-nothing: block the bots whose job you object to, keep the ones that put you in answers.
 
@@ -78,7 +75,7 @@ User-agent: GPTBot
 Disallow: /
 ```
 
-To opt out of training but stay in ChatGPT search, block only GPTBot and leave OAI-SearchBot and ChatGPT-User alone. That selective setup is what most publishers actually want. To remove yourself from everything OpenAI, block all three:
+To opt out of training but stay in ChatGPT search, block only GPTBot and leave OAI-SearchBot and ChatGPT-User alone. That selective setup is what most publishers actually want. To opt out of everything OpenAI controls via robots.txt, block all three:
 
 ```
 User-agent: GPTBot
@@ -93,6 +90,8 @@ Disallow: /
 
 Put the file at the root of your domain, at `yourdomain.com/robots.txt`, and remember each crawler reads only its own block. Before and after you edit, confirm what your live robots.txt actually says to every AI crawler, because a stray rule or an inherited template often blocks more than you meant:
 
+One caveat on the third block: ChatGPT-User fetches are initiated by a person, and OpenAI says robots.txt rules may not apply to them, so treat that line as a request rather than a guarantee.
+
 <AiCrawlerCheckerWidget />
 
 ## Does Blocking GPTBot Actually Work?
@@ -101,39 +100,39 @@ Mostly yes, with two caveats.
 
 GPTBot honors robots.txt, so a correct Disallow stops the real crawler, and that behavior is reliable in practice. But robots.txt is [a published policy, not a wall](https://www.eff.org/deeplinks/2023/12/no-robotstxt-how-ask-chatgpt-and-google-bard-not-use-your-website-training), and two things sit outside it.
 
-First, your CDN may already be deciding for you. Cloudflare now [blocks AI crawlers by default for new domains](https://www.cloudflare.com/press/press-releases/2025/cloudflare-just-changed-how-ai-crawlers-scrape-the-internet-at-large/), so GPTBot can be stopped at the edge even when your robots.txt says nothing, which surprises owners who never set it. If you want GPTBot in and it is missing, check your CDN's bot rules, not just your robots.txt. In our testing, this is the most common GPTBot surprise: a site that meant to allow the crawler, quietly blocked at the edge by a default it never set.
+First, your content delivery network (CDN) may already be deciding for you. Cloudflare now [blocks AI crawlers by default](https://www.cloudflare.com/press/press-releases/2025/cloudflare-just-changed-how-ai-crawlers-scrape-the-internet-at-large/) for new domains, so GPTBot can be stopped at the edge even when your robots.txt says nothing, which surprises owners who never set it. If you want GPTBot in and it is missing, check your CDN's bot rules, not just your robots.txt. Across scans run through our crawler checker, this is the most common GPTBot surprise at geotoolbox: a site that meant to allow the crawler but is quietly blocked at the edge by a default it never set.
 
-Second, robots.txt does nothing against impostors. The GPTBot user agent is trivially copied, and [a meaningful share of traffic claiming to be an AI crawler is faked](https://www.humansecurity.com/learn/blog/ai-crawler-spoofing-chatgpt-mistral-perplexity/). A Disallow stops the real, well-behaved GPTBot; it does not stop a scraper wearing its name. For that you need the next step.
+Second, robots.txt does nothing against impostors. The GPTBot user agent is trivially copied, and HUMAN Security found [roughly one in five requests](https://www.humansecurity.com/learn/blog/ai-crawler-spoofing-chatgpt-mistral-perplexity/) claiming to be ChatGPT-User is a fake, about two million spoofed requests a day. A Disallow stops the real, well-behaved GPTBot; it does not stop a scraper wearing its name. For that you need the next step.
 
 ## How to Confirm a Request Is Really GPTBot
 
 Because the user agent can be spoofed, do not trust the name alone. OpenAI publishes the IP ranges its crawlers use, so you can verify any request claiming to be GPTBot against the official list at [openai.com/gptbot.json](https://openai.com/gptbot.json). If the requesting IP is not in that range, it is not GPTBot, whatever the user agent says.
 
-The check that holds up is the standard one for any crawler: confirm the IP appears in the published range, and where supported, that a reverse DNS lookup resolves to the operator and forward-resolves back. Genuine GPTBot traffic passes; a scraper borrowing the name does not. This matters most when you are deciding whether to rate-limit at the server: you want to throttle the impostors, not the real crawler you chose to allow.
+In your access log, genuine traffic looks like `Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatible; GPTBot/1.3; +https://openai.com/gptbot` arriving from an address inside the published range. The check that holds up is the standard one for any crawler: confirm the IP appears in the published range, and where supported, that a reverse DNS lookup resolves to the operator and forward-resolves back. Genuine GPTBot traffic passes; a scraper borrowing the name does not. This matters most when you are deciding whether to rate-limit at the server: you want to throttle the impostors, not the real crawler you chose to allow.
 
 ## Frequently Asked Questions
 
-**Does blocking GPTBot remove me from ChatGPT?**
-No. GPTBot only feeds model training. Your presence in ChatGPT's live search answers runs through a separate crawler, OAI-SearchBot, plus ChatGPT-User for on-demand reads. Block GPTBot and you opt out of training while staying fully eligible for ChatGPT search, as long as you have not also blocked those two.
+**Can I block GPTBot for only part of my site?**
+Yes; robots.txt rules are path-based, so you can disallow GPTBot from /research/ or /pricing/ while leaving the blog open. Partial blocks are the practical middle ground for sites that want general visibility but have sections they consider proprietary.
 
-**How do I block GPTBot from training but stay in ChatGPT search?**
-Disallow only GPTBot in robots.txt and leave OAI-SearchBot and ChatGPT-User allowed. That combination opts your content out of OpenAI's training data while keeping you reachable for ChatGPT's search and user-initiated fetches.
+**Does blocking GPTBot remove content already used in training?**
+No. A robots.txt block only affects future crawls; anything absorbed in past training runs stays in those models. Your content may also have entered training sets through CCBot (Common Crawl), which needs its own Disallow if that matters to you.
 
 **What is the GPTBot user agent?**
 GPTBot identifies itself with a user agent ending in `+https://openai.com/gptbot` (currently a `GPTBot/1.x` token on a Mozilla/AppleWebKit string). The version changes, so match on the `GPTBot` token and the openai.com URL rather than the full string, and verify by IP for anything you act on.
 
-**Does GPTBot respect robots.txt?**
-Yes. OpenAI states GPTBot follows robots.txt, and a correct Disallow stops it. Two things it cannot fix: a CDN that blocks GPTBot before robots.txt is read, and scrapers that fake the GPTBot name and ignore your rules entirely.
+**Does GPTBot execute JavaScript?**
+No; like most AI training crawlers it reads raw HTML. Content that only appears after scripts run is invisible to it, which matters more for the citation bots, but it means a JavaScript-heavy site contributes less to training than its rendered pages suggest.
 
 **Will blocking GPTBot hurt my Google SEO?**
 No. GPTBot is OpenAI's crawler and has nothing to do with Googlebot or Google rankings. Blocking GPTBot only affects whether OpenAI can use your content for training; your Google Search visibility is governed by Google's own crawlers.
 
-**How do I know a request is really GPTBot and not a fake?**
-Check the source IP against OpenAI's published ranges at openai.com/gptbot.json. The user agent alone proves nothing, since it can be copied, but a request from an IP in OpenAI's official range is genuine. Anything claiming to be GPTBot from outside that range is an impostor you can rate-limit or block.
+**How often does GPTBot crawl a site?**
+There is no published schedule; frequency tracks how often your content changes and how OpenAI prioritizes domains. If crawl load is the concern, rate-limiting verified GPTBot IPs at the server is safer than a robots block, since it caps the cost without opting you out of training entirely.
 
 ## Where to Start
 
-The fastest first step is to see what your site tells GPTBot right now. Run your domain through the free [AI Crawler Checker](https://geotoolbox.ai/tools/ai-crawler-checker) above: it reads your robots.txt against GPTBot and 33 other AI crawlers and shows the exact line allowing or blocking each. Decide what you want to opt out of, set robots.txt to match, and if visibility is the goal, make sure OAI-SearchBot and ChatGPT-User are the ones you keep open. For the full roster of bots and how they differ, see our [AI crawler list](https://geotoolbox.ai/blog/ai-crawlers); for getting cited once they can reach you, the [ChatGPT citation guide](https://geotoolbox.ai/blog/seo-for-chatgpt); and to watch whether the engines actually name you, [ongoing AI visibility tracking](https://geotoolbox.ai/blog/how-to-track-ai-visibility).
+The fastest first step is to see what your site tells GPTBot right now. Run your domain through geotoolbox's free [AI Crawler Checker](https://geotoolbox.ai/tools/ai-crawler-checker) above: it reads your robots.txt against GPTBot and 33 other AI crawlers and shows the exact blocking line for every crawler it blocks. Decide what you want to opt out of, set robots.txt to match, and if visibility is the goal, make sure OAI-SearchBot and ChatGPT-User are the ones you keep open. For the full roster of bots and how they differ, see our [AI crawler list](https://geotoolbox.ai/blog/ai-crawlers); for getting cited once they can reach you, the [ChatGPT citation guide](https://geotoolbox.ai/blog/seo-for-chatgpt); and to watch whether the engines actually name you, [ongoing AI visibility tracking](https://geotoolbox.ai/blog/how-to-track-ai-visibility).
 
 ## Sources
 
