@@ -55,9 +55,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.7,
     },
+    {
+      url: `${siteConfig.url}/tools`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    ...["ai-readiness", "ai-crawler-checker", "llms-txt-checker"].map((slug) => ({
+      url: `${siteConfig.url}/tools/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+    })),
     ...posts.map((post) => ({
       url: `${siteConfig.url}/blog/${post.slug}`,
-      lastModified: new Date(post.date),
+      lastModified: new Date(post.updated ?? post.date),
       changeFrequency: "monthly" as const,
       priority: 0.8,
     })),
