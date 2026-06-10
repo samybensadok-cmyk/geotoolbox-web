@@ -1,0 +1,167 @@
+---
+title: "Content Chunking: What It Means and What Google Says to Skip"
+description: "Content chunking is a real RAG-pipeline concept and a shaky SEO tactic. What Google's AI guide says to skip, and what page structure still earns citations."
+date: "2026-06-10"
+author: "Samy BEN SADOK"
+tags: ["content-chunking", "geo", "ai-search", "rag", "content-strategy"]
+draft: false
+---
+
+Content chunking is having a strange year. A wave of SEO advice sells it as the key to AI visibility. Google's official guidance now lists it among the tactics to ignore. Both camps use the same word for different things, which is how a real engineering concept became a shaky content tactic.
+
+This page sorts it out: what chunking actually is inside AI retrieval, what Google said and meant, which claims survive an evidence check, and what to do with your pages instead.
+
+## What Content Chunking Actually Means (Three Different Things)
+
+**Content chunking** means three different things depending on who is talking, and most of the bad advice comes from mixing them up.
+
+In AI retrieval engineering, chunking is a pipeline step: a [retrieval-augmented generation (RAG)](https://geotoolbox.ai/glossary/retrieval-augmented-generation) system splits documents into segments, converts each segment into an embedding, and pulls back the most relevant segments when a query comes in. The system does the splitting. The document's author is not in the room.
+
+In UX and psychology, chunking is about human working memory. [Nielsen Norman Group defines it](https://www.nngroup.com/articles/chunking/) as breaking content into small, distinct units of information so people can process it, building on George Miller's 1956 finding that most people hold roughly seven chunks in short-term memory. This sense owns most of the Google results for the term, and it has nothing to do with AI search.
+
+Then there is the third sense: content chunking for AEO and GEO purposes, the tactic version. "Chunk your content into AI-sized pieces and engines will pick you." This version borrows the vocabulary of the first sense and the credibility of the second, and it is the one Google now explicitly tells publishers to ignore.
+
+<table>
+<thead>
+<tr><th>Sense</th><th>Who uses it</th><th>What it means</th><th>Who controls it</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>RAG pipeline step</strong></td><td>AI engineers</td><td>Splitting documents into segments for embedding and retrieval</td><td>The engine, not you</td></tr>
+<tr><td><strong>UX writing principle</strong></td><td>Designers, instructional writers</td><td>Breaking information into digestible units for human memory</td><td>You</td></tr>
+<tr><td><strong>AEO/GEO hack</strong></td><td>Parts of the SEO industry</td><td>Pre-fragmenting pages so AI systems "extract" you</td><td>Nobody, which is the problem</td></tr>
+</tbody>
+</table>
+
+This article is about the first and third senses: what chunking really does inside AI search, and why the hack version does not survive contact with the evidence.
+
+## How Chunking Really Works Inside AI Retrieval
+
+When an AI search engine processes your page, the chunking happens on its side of the fence. This engine-side splitting is what chunking in AI originally means: the pipeline fetches your content, splits it into chunks, converts each chunk into [vector embeddings](https://geotoolbox.ai/glossary/vector-embeddings), and stores them in an index. At query time, the system retrieves the chunks that best match the question, often after [fanning the query out](https://geotoolbox.ai/glossary/query-fan-out) into several sub-queries. We cover the full retrieval flow in our breakdown of [how AI search retrieval works](https://geotoolbox.ai/blog/how-does-ai-search-work).
+
+### The Engineer's Dials, Not Yours
+
+The part that matters for this debate: chunking strategy is an engineering setting, not a property of your page. [Amazon Bedrock's documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/kb-chunking.html) shows what this looks like in practice. A developer building a knowledge base picks fixed-size chunking, semantic chunking, hierarchical chunking, or no chunking at all, and tunes token counts and overlap percentages. Bedrock's default splits text into chunks of roughly 300 tokens while honoring sentence boundaries. Those are the engineer's dials. You never touch them.
+
+Research on RAG chunking treats it the same way: as a system trade-off for the pipeline owner. A [systematic analysis of chunking strategies](https://arxiv.org/abs/2601.14123) (Bennani and Moslonka, preprint, January 2026) varied chunking method, chunk size, and overlap across a standard RAG setup and found that chunk overlap provided no measurable benefit while increasing indexing cost. The interesting part is the framing. The paper's audience is engineers deploying retrieval systems. Nothing in it suggests document authors should write differently.
+
+### There Is No Universal Chunk
+
+Here's the nuance worth keeping. Engineers choose among many splitting strategies, including fixed-size, sliding-window, recursive, semantic, and late chunking, and some of them do read document structure: structure-aware and HTML-aware chunking split at headings and sections, and semantic chunking looks for topic shifts. So a well-organized page can interact better with some pipelines. But which strategy any given engine uses, at what size, with what overlap, is invisible to you and different across engines. There is no universal chunk, so there is nothing stable to optimize against.
+
+## The Chunking Hack Google Just Told You to Ignore
+
+Google has now said it directly. Its [guide to optimizing for generative AI features](https://developers.google.com/search/docs/fundamentals/ai-optimization-guide), updated June 5, 2026, lists "'Chunking' content" among the tactics publishers can skip: "There's no requirement to break your content into tiny pieces for AI to better understand it. Google systems are able to understand the nuance of multiple topics on a page and show the relevant piece to users." If your pages run long and cover several topics, that is not a defect to fix.
+
+Chunking sits in that ignore list next to [llms.txt files](https://geotoolbox.ai/blog/llms-txt), AI-specific rewriting, and overfocusing on structured data. The same guide we examined when testing [schema markup for AI search](https://geotoolbox.ai/blog/schema-markup-for-ai) applies here: Google's position across the whole list is that generative AI search runs on the same foundations as regular search, and the AI-specific add-ons do not move it.
+
+This was not a one-off documentation edit. On the Search Off the Record podcast in January 2026, Google's Danny Sullivan addressed the bite-sized-chunks advice [in unusually plain terms](https://searchengineland.com/google-doesnt-want-you-to-create-bite-sized-chunks-of-your-content-467269): "So we don't want you to do that. I was talking to some engineers about that. We don't want you to do that. We really don't." Per Search Engine Land's report, he added that Google does not want publishers producing one version of their content for the LLM and another for the web, and that ranking systems keep improving toward rewarding content written for humans.
+
+So where did the tactic come from? The likeliest origin story runs through RAG tutorials. As chunking became a visible concept in AI engineering, its vocabulary leaked into SEO advice, where "the pipeline splits documents into chunks" mutated into "you should split your page into chunks." Productized restructuring retainers did the rest, and a pipeline internal became a billable deliverable.
+
+To be clear about where we stand, since geotoolbox sells AI-visibility measurement: auditing how AI systems actually treat your pages is real work. Restructuring pages to hit chunk specs no engine publishes is the part we would call a tax on confusion.
+
+## The Chunk-Size Numbers Nobody Can Tie to AI
+
+Chunking advice comes wrapped in oddly specific numbers. From [one widely shared SEO guide](https://searchengineland.com/guide/content-chunking-seo) and its peers:
+
+- Keep passages to 100-300 words
+- Aim for 500-token chunks
+- Build macro chunks of 300-800 words and micro chunks of 100-200
+- Place a heading every 200-300 words
+- Engines extract 40-60 word excerpts
+
+Try to trace any of these to a study of AI retrieval and you come up short. No published research connects a single one of them to AI citations. What you find instead is recycling: real numbers from the wrong context. The token counts are defaults from RAG configuration docs, settings for a system the publisher does not run. The 40-60 word figure descends from featured-snippet research that measured what Google displays in a snippet box, not what AI systems prefer to retrieve. The heading-frequency rule matches the readability threshold a popular SEO plugin has flagged for years.
+
+Each number is real somewhere. None is a measured property of AI retrieval, and quoting them as AI-citation targets is like telling drivers to inflate their tires to the PSI spec of someone else's truck.
+
+Even the one well-documented benchmark in this space points the other way. [NVIDIA tested chunking strategies](https://developer.nvidia.com/blog/finding-the-best-chunking-strategy-for-accurate-ai-responses/) across five test datasets and found page-level chunking, treating the whole page as the retrieval unit, delivered the highest average answer accuracy (0.648) of everything tested. That is a benchmark for engineers building internal RAG systems; web publishers are not its audience, and NVIDIA's own refinements vary by corpus and query type. But notice what it implies: in the best-documented test available, bigger chunks won. The micro-fragmentation advice points in the opposite direction from its own favorite evidence genre.
+
+And beneath all of it sits tokenization. [Mark Williams-Cook's invalid-schema experiment](https://markwilliamscook.substack.com/p/schema-llms-and-the-low-bar-for-evidence) showed AI assistants happily reading deliberately broken JSON-LD because, once a page is tokenized into text, the structural markup dissolves; the machine never "parses" the scaffolding the way the optimization advice assumes. His broader point is the one this whole debate needs: "Be ruthless about the bar of evidence."
+
+In our experience tracking which pages get cited across AI engines at geotoolbox (an observation from our tracking data, not a controlled study), the winners are not the pages hitting word-count targets. They are the ones where a retrieved passage happens to contain a complete, specific, sourced answer. The numbers game optimizes the wrong layer.
+
+## What the Evidence Actually Supports
+
+The honest reading is not "chunking is fake." Passage retrieval is real, and AI answers are assembled from retrieved passages. The question is which claims about that hold up, so here is the chunking debate sorted by evidence tier.
+
+<table>
+<thead>
+<tr><th>Claim</th><th>Verdict</th><th>Evidence</th></tr>
+</thead>
+<tbody>
+<tr><td>AI engines retrieve passages, not whole pages</td><td><strong>Confirmed mechanism</strong></td><td>Documented across RAG systems; Google's own guide describes reviewing "specific information from those retrieved pages"</td></tr>
+<tr><td>Q&amp;A and structured formats match queries better than dense prose</td><td><strong>Tested, small scale</strong></td><td><a href="https://www.chris-green.net/post/content-structure-for-ai-search">Chris Green's embedding test</a>: Q&amp;A format had the highest semantic match in every scenario, dense prose the worst. His own caveat: small controlled test, and vector similarity is not ranking</td></tr>
+<tr><td>Self-contained sections survive extraction better</td><td><strong>Confirmed mechanism</strong></td><td>A retrieved passage is read without its surroundings; a passage that depends on "as mentioned above" arrives broken. This is retrieval logic, not a study result</td></tr>
+<tr><td>Specific chunk-size and heading-frequency targets</td><td><strong>Claimed, unsourced</strong></td><td>No study connects any circulating number to AI citations; each traces to a non-AI context (RAG config defaults, featured-snippet display stats, readability-tool thresholds)</td></tr>
+<tr><td>You can pre-chunk your page to control engine cut points</td><td><strong>Rejected</strong></td><td><a href="https://ahrefs.com/blog/seo-chunk-optimization/">Ahrefs' analysis</a>: chunking happens inside model pipelines, every engine slices differently, and you cannot know which strategy any engine runs; in a fixed-size pipeline your section can land mid-chunk or split across two no matter how it is formatted</td></tr>
+<tr><td>Good chunking trains AI or prevents hallucinations about your brand</td><td><strong>Rejected</strong></td><td>Conflates retrieval-time splitting with model training; no mechanism connects your fragment sizes to what a model learns in training</td></tr>
+</tbody>
+</table>
+
+Notice that the two "confirmed" rows describe the engine's behavior and the writing's properties, while everything rejected describes attempts to control the engine. That is the line through this whole topic.
+
+It also resolves the apparent contradiction that confuses people: Google saying "don't chunk" and AI systems demonstrably retrieving passages are both true. The engine chunks. You cannot chunk for it. What you can do is write passages that hold up no matter where the knife falls.
+
+One more disambiguation, because it trips up even careful readers: enterprise teams really do tune chunking for their own internal knowledge bases, and vendors publish guidance for that. That advice is for people who own the pipeline. The public web is somebody else's pipeline, every engine's settings differ, and none of them publish the dials.
+
+## What Survives: Structure That Helps Without the Hack
+
+Strip away the chunk-size folklore and a short list of structural habits remains standing:
+
+- Answer-first openings, where the first sentence under a heading answers the heading
+- Self-contained sections that make sense lifted out of the page
+- Headings that describe what the section actually says
+- One idea per passage
+- Tables and numbered lists where the facts are genuinely list-shaped, because comparisons and sequences survive extraction better as structure than as prose
+
+Here is the difference in one before-and-after. Before: "As we covered earlier, the same problem applies to longer documents." After: "Fixed-size chunking also fails for long contracts, because clause boundaries rarely align with token windows." The first sentence dies when a pipeline lifts it away from the page; the second survives anywhere it lands.
+
+These habits survive for a reason worth being precise about: they are properties of the writing, not settings aimed at any engine's chunker. A self-contained passage works whether the pipeline slices at 300 tokens or takes the whole page, because there is no cut point that leaves the reader, human or model, holding a fragment that depends on text it cannot see.
+
+Which is also why they were good advice before AI search existed. Editors have pushed answer-first structure for decades because readers scan.
+
+The result? You do not need a chunking workflow. You need the writing craft, and we have already covered it in depth: our guide to [writing passages LLMs cite](https://geotoolbox.ai/blog/ai-content-optimization) handles the sentence-level work, and the [answer-first restructuring playbook](https://geotoolbox.ai/blog/how-to-optimize-for-ai-search) walks through retrofitting existing pages section by section.
+
+The honest caveat: nobody has published before-and-after data on restructuring projects, so anyone who claims a guaranteed citation lift from reformatting is ahead of the evidence.
+
+## Measure Instead of Guessing
+
+The chunking debate is really a proxy for a habit: adopting tactics whose effect you cannot observe. You will never see where an engine cut your page. You can see whether engines cite it.
+
+Track citations on a set of pages before and after a rewrite, against pages you left alone. Keep the caveat in view: this is observational data and engines change underneath you, so treat movement as signal rather than proof. It still beats optimizing a layer you cannot observe at all. And being cited without earning clicks is its own measurement problem, one we cover in our guide to [tracking AI visibility](https://geotoolbox.ai/blog/how-to-track-ai-visibility).
+
+That is the check worth running before any restructuring project. geotoolbox's [Content Analyzer](https://geotoolbox.ai/features/content-analyzer) gives your pages a Citability and an AI Readability grade, built on the signals that survive this article's evidence table: answer-first capsules, self-contained sections, sourced data, real tables. Fix the pages with a measurable defect instead of reformatting everything to folklore specs. If the chunking argument lands in your team's Slack again, an audit of your own cited and uncited pages ends it faster than another opinion.
+
+## FAQ
+
+**Does Google's advice apply to ChatGPT and Perplexity too?**
+
+Google's guide speaks for Google, including AI Overviews and AI Mode; no other engine has published equivalent guidance. The mechanism argument still generalizes: ChatGPT and Perplexity run their own retrieval pipelines with their own unpublished chunking settings, so there is still no spec to write toward. What differs between engines is which pages they retrieve and cite, not your ability to control their cut points.
+
+**Does Google penalize chunked content?**
+
+No. Google's guide calls chunking unnecessary, not harmful, and short sections are not a ranking problem. The damage shows up elsewhere: pages diced into fragments to satisfy an imagined extractor read worse for humans, and Danny Sullivan's warning was aimed exactly at publishing machine-bait instead of writing for people.
+
+**Should I rewrite my existing pages to fix their chunking?**
+
+Not as a chunking project. No before-and-after data exists on re-slicing pages; the closest published evidence, [the GEO benchmark study](https://arxiv.org/abs/2311.09735), tested adding material like statistics, quotations, and citations rather than reformatting what was already there. Start from measurement: protect pages that already earn AI citations, then fix pages where the answer to the title question is genuinely buried. A buried answer is a real defect; a 400-word section is not.
+
+**What is semantic chunking?**
+
+A pipeline technique that splits documents at topic boundaries detected with embeddings, instead of at fixed token counts. Amazon Bedrock offers it as a configurable option, with buffer sizes and breakpoint thresholds set by whoever builds the knowledge base. Like every chunking strategy, it runs engine-side; you cannot opt your pages into it.
+
+**What is context chunking?**
+
+A family of retrieval-pipeline techniques that keep chunks from arriving orphaned: semantic chunkers can embed each sentence with a buffer of its neighbors, and hierarchical setups retrieve a small child chunk but hand the model its larger parent section. Amazon Bedrock documents both. Either way, it is configured by pipeline builders; a writer never touches it.
+
+## Sources
+
+- [Google: Optimizing your website for generative AI features on Google Search](https://developers.google.com/search/docs/fundamentals/ai-optimization-guide)
+- [Search Engine Land: Google doesn't want you to create bite-sized chunks of your content](https://searchengineland.com/google-doesnt-want-you-to-create-bite-sized-chunks-of-your-content-467269)
+- [Ahrefs: SEO "Chunk Optimization" is Overrated](https://ahrefs.com/blog/seo-chunk-optimization/)
+- [Chris Green: How Content Structure Matters for AI Search](https://www.chris-green.net/post/content-structure-for-ai-search)
+- [NVIDIA: Finding the Best Chunking Strategy for Accurate AI Responses](https://developer.nvidia.com/blog/finding-the-best-chunking-strategy-for-accurate-ai-responses/)
+- [AWS Bedrock documentation: How content chunking works for knowledge bases](https://docs.aws.amazon.com/bedrock/latest/userguide/kb-chunking.html)
+- [Mark Williams-Cook: Schema, LLMs and the Low Bar for Evidence in GEO](https://markwilliamscook.substack.com/p/schema-llms-and-the-low-bar-for-evidence)
+- [Bennani & Moslonka: A Systematic Analysis of Chunking Strategies for Reliable Question Answering (arXiv preprint)](https://arxiv.org/abs/2601.14123)
+- [Nielsen Norman Group: How Chunking Helps Content Processing](https://www.nngroup.com/articles/chunking/)
