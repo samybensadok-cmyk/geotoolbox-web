@@ -3,7 +3,7 @@ import { notFound } from "next/navigation"
 import Link from "next/link"
 import { MDXRemote } from "next-mdx-remote/rsc"
 import rehypeShiki from "@shikijs/rehype"
-import { getPostBySlug, getAllPosts, extractHeadings, extractFaq } from "@/lib/content"
+import { getPostBySlug, getAllPosts, getRelatedPosts, extractHeadings, extractFaq } from "@/lib/content"
 import { mdxComponents } from "@/components/mdx"
 import { formatDate } from "@/lib/utils"
 import { siteConfig } from "@/lib/config"
@@ -12,6 +12,7 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { articleSchema, faqPageSchema } from "@/lib/seo-schema"
 import { getAuthorByName } from "@/lib/authors"
 import { AuthorBio } from "@/components/blog/author-bio"
+import { RelatedPosts } from "@/components/blog/related-posts"
 import { Avatar } from "@/components/ui/avatar"
 
 export async function generateStaticParams() {
@@ -93,6 +94,7 @@ export default async function BlogPost({
   const author = getAuthorByName(post.author)
   const headings = extractHeadings(post.content)
   const faqs = extractFaq(post.content)
+  const relatedPosts = getRelatedPosts(slug)
 
   return (
     <>
@@ -245,6 +247,8 @@ export default async function BlogPost({
           </div>
 
           {author && <AuthorBio author={author} />}
+
+          <RelatedPosts posts={relatedPosts} />
         </div>
       </section>
 
