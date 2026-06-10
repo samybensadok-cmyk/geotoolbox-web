@@ -2,6 +2,7 @@
 title: "AI Visibility Audit: How to Run One (Step-by-Step Checklist)"
 description: "An AI visibility audit checks whether AI engines can reach, read, and cite your site. A step-by-step process, a free checker, and how to avoid vanity scores."
 date: "2026-06-06"
+updated: "2026-06-10"
 author: "Samy BEN SADOK"
 tags: ["ai-visibility", "audit", "geo", "measurement", "guide"]
 draft: false
@@ -22,13 +23,15 @@ A complete audit covers four layers, in order of how often they are the actual p
 
 Most guides start at layer two and never check layer one. That is the mistake this audit is built to avoid, because a page AI cannot reach scores zero for a reason no prompt test will reveal. Work the layers in order and you find the cheapest, highest-impact fixes first.
 
-## Why Audit AI Visibility Separately From Your Rankings
+## Why Audit AI Visibility Separately from Your Rankings
 
-You cannot read your AI visibility off your Google rankings. They are governed by different conditions. Google's own documentation states that to appear in AI features a [page must be indexed and eligible to be shown with a snippet](https://developers.google.com/search/docs/appearance/ai-features), which is its own bar, separate from where you sit in the organic results. Ranking first earns you nothing automatically in the AI answer, and pages buried on page two sometimes get cited. So rank is not a proxy, and an audit has to test AI presence directly.
+You cannot read your AI visibility off your Google rankings. They are governed by different conditions. Google's own documentation states that to appear in AI features a [page must be indexed and eligible to be shown with a snippet](https://developers.google.com/search/docs/appearance/ai-features), which is its own bar, separate from where you sit in the organic results.
 
-The stakes are why this is worth a dedicated audit now rather than a rankings glance. When an AI summary appears, the click often does not follow: [Pew Research found people clicked a traditional result on just 8% of searches with an AI summary, versus 15% without](https://searchengineland.com/google-ai-overviews-hurting-clicks-study-459434). If half your would-be visitors are reading an answer instead of clicking, whether that answer names you is no longer a side metric.
+Ranking first earns you nothing automatically in the AI answer, and pages buried on page two sometimes get cited. So rank is not a proxy, and an audit has to test AI presence directly.
 
-There is also no industry benchmark for a "good" [AI visibility score](https://geotoolbox.ai/blog/ai-visibility-score), despite what the ads claim. The number that means something is your own audit, repeated, against the competitors and prompts you chose. Treat any vendor's universal percentage with suspicion, a point that becomes important once you start scoring.
+The stakes are why this is worth a dedicated audit now rather than a rankings glance. When an AI summary appears, the click often does not follow: Pew Research found (via Search Engine Land) people clicked a traditional result on just [8% of searches with an AI summary](https://searchengineland.com/google-ai-overviews-hurting-clicks-study-459434), versus 15% without. If half your would-be visitors are reading an answer instead of clicking, whether that answer names you is no longer a side metric.
+
+There is also no industry benchmark for a "good" [AI visibility score](https://geotoolbox.ai/blog/ai-visibility-score), despite what the ads claim. The number that means something is your own audit, repeated, against the competitors and prompts you chose. Treat any vendor's universal percentage with suspicion.
 
 ## Step 1: Can AI Crawlers Even Reach Your Page?
 
@@ -42,17 +45,17 @@ The first is robots.txt. [Each AI crawler](https://geotoolbox.ai/blog/ai-crawler
 The free [AI Crawler Checker](/tools/ai-crawler-checker) tests your robots.txt against all 34 AI crawlers at once and flags the exact blocking line, so you can clear the reachability layer before auditing anything else.
 </Callout>
 
-The second is the firewall, and this one is easy to miss because it is invisible in robots.txt. Bot-management and CDN rules can silently return a 403 or a challenge to non-browser traffic while every human sees a normal page. This is no longer an edge case: [Cloudflare announced it now blocks AI crawlers by default for new domains](https://www.cloudflare.com/press/press-releases/2025/cloudflare-just-changed-how-ai-crawlers-scrape-the-internet-at-large/), so a brand can be invisible to AI engines because of an infrastructure default it never set.
+The second is the firewall, and this one is easy to miss because it is invisible in robots.txt. Bot-management and CDN rules can silently return a 403 or a challenge to non-browser traffic while every human sees a normal page. This is no longer an edge case: [Cloudflare announced](https://www.cloudflare.com/press/press-releases/2025/cloudflare-just-changed-how-ai-crawlers-scrape-the-internet-at-large/) it now blocks AI crawlers by default for new domains, so a brand can be invisible to AI engines because of an infrastructure default it never set.
 
-The third is rendering. If your content only appears after JavaScript the crawler does not execute, the bot indexes an empty shell. In our testing, this trio explains more zero-visibility cases than weak content does. A fast way to check all three is to fetch your page as each AI crawler and compare what comes back to what a browser sees; geotoolbox's free [AI-Readiness Score](https://geotoolbox.ai/tools/ai-readiness) covers the crawler-access basics, and the paid [AI search checker](https://geotoolbox.ai/features/content-analyzer) runs the full reachability and render test across the major AI crawlers for you.
+The third is rendering. If your content only appears after JavaScript the crawler does not execute, the bot indexes an empty shell. In the audits we run, this trio is the most common cause of zero visibility, well ahead of weak content. A fast way to check all three is to fetch your page as each AI crawler and compare what comes back to what a browser sees: geotoolbox's free [AI-Readiness Score](https://geotoolbox.ai/tools/ai-readiness) covers the crawler-access basics and its full Agent Readiness scan (also free) fetches and renders pages the way the crawlers do, while the paid [Content Analyzer](https://geotoolbox.ai/features/content-analyzer) adds the per-page render diff and citability grade.
 
-## Step 2: Check Whether AI Engines Actually Cite You
+## Step 2: Check Whether AI Engines Cite You
 
 With reachability confirmed, test presence directly: ask the engines the questions your buyers ask and record what comes back. This is the spot-check at the heart of the audit.
 
-Build a fixed set of 10 to 20 prompts grounded in real demand, not the ones that flatter you, because the prompt set you choose decides the score you get. Run each prompt across ChatGPT, Perplexity, Gemini, and Google's AI Overviews, in a logged-out or incognito session so the model's memory of your past chats does not bias the answer toward your own brand. For each response, log three things: whether you were mentioned, whether you were cited with a link, and which competitors appeared.
+Build a fixed set of 10 to 20 prompts grounded in real demand, not the ones that flatter you, because the prompt set you choose decides the score you get. Run each prompt across ChatGPT, Perplexity, Gemini, and Google's AI Overviews in a logged-out or incognito session, since signed-in chat history skews answers toward brands you already engage with. For each response, log three things: whether you were mentioned, whether you were cited with a link, and which competitors appeared.
 
-The part most people skip is repetition, and it is the difference between a real reading and a number. AI answers are non-deterministic: a study across five models found [accuracy varying by up to 15% between runs, and as much as a 70% gap between best and worst output](https://arxiv.org/abs/2408.04667), with no model reproducing identical text. A single check is a coin flip. Run each prompt three to five times and record how often you appear, as a rate, not a yes or no.
+The part most people skip is repetition, and it is the difference between a real reading and a number. AI answers are non-deterministic: a study across five models found [accuracy varying by up to 15% between runs](https://arxiv.org/abs/2408.04667), with as much as a 70% gap between best and worst output and no model reproducing identical text. A single check is a coin flip. Run each prompt three to five times and record how often you appear, as a rate, not a yes or no.
 
 That rate, across your prompt set, is your real presence number, and the competitor column is your share of voice. For turning this baseline into an automated, repeated reading over time, an [AI rank tracker](https://geotoolbox.ai/blog/ai-rank-tracker) does the same thing on a schedule, but for the audit, a careful manual pass is enough to see where you stand.
 
@@ -64,81 +67,85 @@ Read your most important pages the way a model does. Does the answer to the page
 
 Then check entity clarity: whether engines can resolve your brand to one unambiguous thing. Inconsistent names, a thin or missing knowledge-graph presence, and conflicting descriptions across the web all make a model less confident naming you. Our guide to [entity SEO](https://geotoolbox.ai/blog/entity-seo) covers the fixes; the audit step is confirming the signals are consistent.
 
-One thing not to over-weight: special files and markup. Google states plainly that there are [no special schema or AI text files required to appear in AI features](https://developers.google.com/search/docs/appearance/ai-features). Schema helps machines parse a page, but skip any audit checklist that treats a missing AI-specific file as a top-line failure. It is not the reason you are invisible.
+One thing not to over-weight: special files and markup. Google states plainly that there are [no special schema or AI text files required](https://developers.google.com/search/docs/appearance/ai-features) to appear in AI features. Schema helps machines parse a page, but skip any audit checklist that treats a missing AI-specific file as a top-line failure. It is not the reason you are invisible.
 
 ## The Credible-Score Test: Avoiding a Vanity Number
 
-Most AI visibility scores you can buy are vanity metrics, and the audit is worthless if it produces one. A number is only as trustworthy as the method behind it, so before you act on any score, your own or a tool's, run it through three questions.
+Most AI visibility scores you can buy are vanity metrics, and the audit is worthless if it produces one. A number is only as trustworthy as the method behind it, so before you act on any score (your own, a tool's, or ours), run it through three questions.
 
-First, how many runs is it based on? A score from a single pass is noise, because the underlying answers change run to run. A credible score samples each prompt several times and reports a rate. If a tool gives you one number from one check, you cannot tell signal from variance.
+First, how many runs is it based on? A score from a single pass is noise, for the Step 2 reason. A credible score samples each prompt several times and reports a rate. That applies to geotoolbox's own scores too: a single scan is one sample, which is why we tell users to read the trend.
 
-Second, did it check reachability? A score that tests prompts but never confirms the page is crawlable will report a confident zero for a page that is simply blocked. That is the most misleading failure mode there is, a real-looking number with a mechanical cause hidden underneath.
+Second, did it check reachability? A score that tests prompts but never confirms the page is crawlable will report a confident zero for a page that is simply blocked. That is the most misleading failure mode there is: a real-looking number with a mechanical cause hidden underneath.
 
 Third, do you know the prompt set and the competitors? A visibility percentage with no visible prompt list is unfalsifiable. You need to know what was asked to know what the number means.
 
-This is also the answer to the most common complaint about these tools, the one where a score drops from 34 to zero overnight with no changes made. That is not a collapse in your visibility, it is the non-determinism showing through a too-thin sample. A good audit does not just hand you a number. It tells you which layer is failing and what to fix, which is the whole point of running one.
+This is also the answer to a common complaint about these tools, the one where a score drops from 34 to zero overnight with no changes made. That is not a collapse in your visibility; it is the non-determinism showing through a too-thin sample. A good audit does not just hand you a number. It tells you which layer is failing and what to fix.
 
 ## The AI Visibility Audit Checklist
 
 Here is the whole process as a checklist you can copy and work through. It follows the layer order, so a failure early on stops you wasting time further down.
 
 **Reachability (do this first)**
-1. Pull your robots.txt and confirm [GPTBot](https://geotoolbox.ai/blog/gptbot), OAI-SearchBot, Google-Extended, ClaudeBot, and PerplexityBot are allowed where you want them
+
+1. Pull your robots.txt and confirm [GPTBot](https://geotoolbox.ai/blog/gptbot), OAI-SearchBot, Claude-SearchBot, ClaudeBot, and PerplexityBot are allowed where you want them
 2. Test-fetch key pages as an AI crawler and confirm a 200, not a 403 or a challenge from your firewall or CDN
 3. Compare the rendered page to the raw HTML and confirm your main content is present without JavaScript
 
 **Presence**
+
 4. Write 10 to 20 buyer-intent prompts grounded in real demand
 5. Run each across ChatGPT, Perplexity, Gemini, and Google's AI Overviews, in a clean session, three to five times
 6. Log mention, citation, and competitors for every response, then compute your appearance rate and share of voice
 
 **Citability**
+
 7. Confirm each key page answers its core question near the top, in plain language
 8. Confirm claims are specific and backed by named sources, numbers, and dates
 9. Confirm your brand resolves to one consistent entity across the web
 
 **Score and prioritize**
-10. Rate each layer, then rank fixes by impact: reachability before citability, citability before authority
+
+10. Rate each layer pass, partial, or fail, then rank fixes by impact: reachability before citability, citability before entity work
 
 Run it once to set a baseline, then re-run quarterly or after any major site change. The first pass usually surfaces one or two reachability problems that explain most of the gap.
 
 ## After the Audit: Fix, Then Track
 
-The audit's output is a ranked fix list, and the order is the same one the layers gave you. Clear reachability first, for the reasons Step 1 laid out. Then improve citability on your highest-value pages. Authority and entity work come last, because they are slower and matter less if the page was never reachable to begin with. Our [AI search playbook](https://geotoolbox.ai/blog/how-to-optimize-for-ai-search) covers each of those fixes in depth.
+The audit's output is a ranked fix list, and the order is the same one the layers gave you. Clear reachability first, for the reasons Step 1 laid out. Then improve citability on your highest-value pages. Entity work comes last, because it is slower and matters less if the page was never reachable to begin with. Our [AI search playbook](https://geotoolbox.ai/blog/how-to-optimize-for-ai-search) covers each of those fixes in depth.
 
 A one-time audit sets the baseline, but AI answers drift, so the work does not end there. Once the obvious problems are fixed, switch to [ongoing tracking](https://geotoolbox.ai/blog/how-to-track-ai-visibility) to catch when a citation disappears or a competitor pulls ahead. Audit to diagnose, track to maintain.
 
-Whether you do this yourself or hire it out is a budget question. The audit above is fully DIY for a focused site. Agencies sell the same thing as a packaged engagement, which is worth it when the site is large or the work is continuous, though the deliverable should still be a prioritized fix list, not a vanity score. If you are choosing software to help, our [rundown of GEO tools](https://geotoolbox.ai/blog/best-generative-engine-optimization-tools) compares the options by what they actually check.
+Whether you do this yourself or hire it out is a budget question. The audit above is fully DIY for a focused site; agencies sell the same thing as a packaged engagement, which is worth it when the site is large or the work is continuous. If you are choosing software to help, our rundown of [generative engine optimization (GEO) tools](https://geotoolbox.ai/blog/best-generative-engine-optimization-tools) compares the options by what they check.
 
 ## Frequently Asked Questions
 
 **What is an AI visibility audit?**
-An AI visibility audit is a structured check of whether AI engines like ChatGPT, Perplexity, Gemini, and Google's AI Overviews can reach, read, and cite your site, and why they do or do not. It works through four layers, reachability, citation presence, competitor share of voice, and citability, and ends in a prioritized fix list rather than a single score.
+A diagnostic you run once or quarterly to find why AI engines do or do not cite you. Budget about half a day for a focused site: an hour on crawler access, an afternoon on prompt runs. The output is a fix list tied to specific pages plus a baseline you re-test against next quarter.
 
 **Is there a free AI visibility checker?**
-Yes. Free tools can fetch your page as the major AI crawlers, confirm it renders, and grade how citable it is, and you can spot-check presence by running prompts manually in a clean session. Paid tools add scale and automated tracking, not access to data you fundamentally cannot get yourself.
+Yes, and the free route covers most layers: robots.txt testing (the AI Crawler Checker covers 34 crawlers at no cost), fetch-and-render checks via the free Agent Readiness scan, and manual prompt runs for presence. Citability grading and automated tracking are where paid tools come in.
 
 **How do I check if my site shows up in AI search?**
-First confirm AI crawlers can actually fetch and render the page, since a blocked page never appears. Then run your target prompts across the major engines in a logged-out session, several times each, and log whether you are mentioned or cited and which competitors appear.
+The five-minute sanity check: ask one engine the exact question your best page answers and see whether you appear at all. For a reading you can act on, run the full prompt set across the major engines, several times each, since one run proves nothing in either direction.
 
 **What is a good AI visibility score?**
-There is no universal benchmark, so ignore any tool quoting one. Judge a score by your own trend over time, your share against named competitors, and the method behind it: how many runs it sampled, whether it checked reachability, and whether you know the prompt set.
+Scores from different tools are not comparable, so a "40" in one tool can equal a "12" in another with neither being wrong; they test different prompts at different depths. The only scores worth acting on are your own number trending over time and the gap between you and named competitors on the same prompt set.
 
 **Do I need an llms.txt file to be visible in AI search?**
 Not for AI search visibility. Google confirms no special files or schema are required to appear in its AI features, and it does not treat [llms.txt](https://geotoolbox.ai/blog/llms-txt) as a ranking or citation signal. It is a separate, optional convention for AI agents and browsers (Google added an [llms.txt check to Lighthouse's agentic-browsing audits](https://developer.chrome.com/docs/lighthouse/agentic-browsing/llms-txt) in 2026), so it is fine to add as low-cost infrastructure, just don't expect it to lift your AI citations. Reachability and citability are what move the needle.
 
 **Should I run the audit myself or hire an agency?**
-A focused site can run this audit in-house with the checklist above. An agency engagement makes sense for large sites or ongoing programs, but insist the deliverable is a prioritized fix list tied to specific pages, not a one-number score. For the full tradeoff, see [GEO services vs software](https://geotoolbox.ai/blog/geo-services-vs-software).
+A focused site can run this in-house with the checklist above in about half a day. Hire it out when the site is large or multilingual, when you need the findings to carry weight with stakeholders, or when the program is continuous. For the full tradeoff, see [GEO services vs software](https://geotoolbox.ai/blog/geo-services-vs-software).
 
 ## Where to Start
 
 Work the layers in order and the first one usually pays for the whole audit. Pull your robots.txt, fetch a few key pages as an AI crawler, and confirm they come back fully rendered. Then run ten real buyer prompts across the engines, several times each, and log who gets cited. That is a complete first pass.
 
-The fastest way to clear the layer that traps most sites is to check reachability before anything else. geotoolbox's free [AI-Readiness Score](https://geotoolbox.ai/tools/ai-readiness) flags a crawler block in seconds, and the paid [AI search checker](https://geotoolbox.ai/features/content-analyzer) fetches your page as the major AI crawlers, flags a render gap, and grades how citable the page is. Start there, then work down the checklist on pages you know the AI can actually see.
+The fastest way to clear the layer that traps most sites is to check reachability before anything else. geotoolbox's free [AI-Readiness Score](https://geotoolbox.ai/tools/ai-readiness) flags a crawler block in seconds, and the paid [Content Analyzer](https://geotoolbox.ai/features/content-analyzer) fetches your page as the major AI crawlers, flags a render gap, and grades how citable the page is. Start there, then work down the checklist on pages you know the AI can actually see.
 
 ## Sources
 
-- [Non-Determinism of "Deterministic" LLM Settings](https://arxiv.org/abs/2408.04667) - Atil, Aykent, Baldwin et al., arXiv, 2024
+- [Non-Determinism of "Deterministic" LLM Settings](https://arxiv.org/abs/2408.04667) - Atil et al., arXiv, 2024
 - [AI features and your website](https://developers.google.com/search/docs/appearance/ai-features) - Google Search Central
 - [Cloudflare Just Changed How AI Crawlers Scrape the Internet-at-Large](https://www.cloudflare.com/press/press-releases/2025/cloudflare-just-changed-how-ai-crawlers-scrape-the-internet-at-large/) - Cloudflare, 2025
 - [Overview of OpenAI Crawlers](https://developers.openai.com/api/docs/bots) - OpenAI developer documentation
