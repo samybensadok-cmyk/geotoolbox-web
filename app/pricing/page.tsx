@@ -50,7 +50,7 @@ const FAQ = [
   {
     question: "Which AI engines do you track, and which plans unlock all of them?",
     answer:
-      "We track seven: ChatGPT, Perplexity, Google AI Overviews, Gemini, Bing Copilot, Claude and Grok. Free covers the first three, Starter adds Gemini and Bing Copilot (five total), and Consultant and above unlock all seven.",
+      "We track seven: ChatGPT, Perplexity, Google AI Overviews, Gemini, Bing Copilot, Claude and Grok. Free covers ChatGPT, Starter adds Perplexity and Google AI Overviews, Consultant lets you pick 3 of 5, Agency picks 5 of all 7, and Scale and Enterprise run all seven.",
   },
   {
     question: "What is the difference between a brand and a prompt?",
@@ -60,7 +60,7 @@ const FAQ = [
   {
     question: "How often are my prompts scanned, and can I run a scan on demand?",
     answer:
-      "Free scans monthly, Starter through Agency scan weekly, and Scale scans daily. You can also trigger a manual scan any time on any plan; on-demand scans draw from your credit balance like any other check.",
+      "Free scans monthly, and all paid plans scan weekly. Daily automated scanning is available as a paid add-on on Scale and Enterprise. You can also trigger a manual scan any time on any plan; on-demand scans draw from your credit balance like any other check.",
   },
   {
     question: "Can I add more domains, prompts, or seats without changing plans?",
@@ -126,7 +126,7 @@ export default function PricingPage() {
         <div className="mx-auto mt-6 max-w-7xl">
           <div className="flex flex-col items-center justify-between gap-3 rounded-2xl border border-gray-200 bg-gray-50 px-6 py-4 sm:flex-row">
             <p className="text-[14px] text-gray-700">
-              <span className="font-semibold text-gray-900">Just exploring?</span> The Free plan gives you 1,000 credits a month across 3 engines, no credit card.
+              <span className="font-semibold text-gray-900">Just exploring?</span> The Free plan gives you 1,000 credits a month of ChatGPT tracking, no credit card.
             </p>
             <Link
               href={siteConfig.appSignupUrl}
@@ -200,7 +200,7 @@ export default function PricingPage() {
             <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-400">Enterprise</p>
             <h2 className="mt-2 text-2xl font-bold tracking-tight text-white">For large teams and portfolios</h2>
             <p className="mt-3 text-[15px] leading-relaxed text-gray-300">
-              Custom credit volumes, unlimited brands and prompts, premium models, SSO, a dedicated CSM, and a 4-hour support SLA — on a contract that fits your security and procurement needs.
+              Custom credit volumes, unlimited brands and prompts, premium models, API &amp; MCP access (coming soon), SSO, a dedicated CSM, and a 4-hour support SLA — on a contract that fits your security and procurement needs.
             </p>
           </div>
           <Link
@@ -221,7 +221,7 @@ export default function PricingPage() {
             Start free in under two minutes
           </h2>
           <p className="mx-auto mt-4 max-w-lg text-[15px] leading-relaxed text-gray-600">
-            1,000 credits, three engines, no credit card. Upgrade only when you are ready to track more brands across all seven.
+            1,000 credits, no credit card. Upgrade only when you are ready to track more brands across all seven engines.
           </p>
           <Link
             href={siteConfig.appSignupUrl}

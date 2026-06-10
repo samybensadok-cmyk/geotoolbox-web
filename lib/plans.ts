@@ -10,8 +10,15 @@
 //  - Starter is single-brand (depth, not breadth). Brands unlimited at Agency+.
 //  - Team seats: 1 on Free/Starter/Consultant, unlimited on Agency+ (live 2026-06-09).
 //  - Annual rates: Agency $299/mo, Scale $499/mo (monthly unchanged).
-//  - Vaporware removed (white-label reports, KB, alerts, API, GBP audit, SSO,
+//  - Vaporware removed (white-label reports, KB, alerts, GBP audit, SSO,
 //    CSM are NOT shipped yet) — see the roadmap; they return here as they ship.
+//
+// 2026-06-10 additions:
+//  - API & MCP access shown on Scale/Enterprise as "coming soon" (explicit
+//    operator call — sells the roadmap on the top tiers).
+//  - Daily automated scans are NO LONGER included free on Scale/Enterprise —
+//    they're a paid add-on available on those two tiers only. Backend
+//    scan_frequency for scale/enterprise must follow when the add-on ships.
 
 export type PlanId = "free" | "starter" | "consultant" | "agency" | "scale" | "enterprise"
 
@@ -148,12 +155,12 @@ export const PLANS: Plan[] = [
       domains: "Unlimited brands",
       prompts: "50 prompts/brand",
       engines: "All 7 engines",
-      scans: "Daily scans",
+      scans: "Weekly scans · daily add-on",
     },
     inheritsFrom: "Agency",
     highlights: [
       "All 7 AI engines",
-      "Daily automated scans",
+      "API & MCP access (coming soon)",
       "One-off GEO audit & strategy session",
       "Priority support",
       "Unlimited brands & seats",
@@ -171,7 +178,7 @@ export const PLANS: Plan[] = [
       domains: "Unlimited brands",
       prompts: "Unlimited prompts",
       engines: "All 7 engines",
-      scans: "Daily scans",
+      scans: "Weekly scans · daily add-on",
     },
     inheritsFrom: "Scale",
     highlights: [
@@ -210,7 +217,7 @@ export const COMPARE_GROUPS: CompareGroup[] = [
       { label: "Monthly credits", values: ["1,000", "12,000", "50,000", "150,000", "300,000"] },
       { label: "Brands / domains", values: ["1", "1", "5", "50", "Unlimited"] },
       { label: "Prompts per brand", values: ["5", "10", "15", "25", "50"] },
-      { label: "Scan frequency", values: ["Monthly", "Weekly", "Weekly", "Weekly", "Daily"] },
+      { label: "Scan frequency", values: ["Monthly", "Weekly", "Weekly", "Weekly", "Weekly + daily add-on"] },
       { label: "History retention", values: ["90 days", "180 days", "1 year", "Unlimited", "Unlimited"] },
       { label: "Team seats", values: ["1", "1", "1", "Unlimited", "Unlimited"] },
     ],
@@ -245,6 +252,13 @@ export const COMPARE_GROUPS: CompareGroup[] = [
       { label: "Content Studio", values: [N, N, Y, Y, Y] },
       { label: "Article writing + 5-stage copywriter", values: [N, N, N, Y, Y] },
       { label: "One-off GEO audit & strategy", values: [N, N, N, N, Y] },
+    ],
+  },
+  {
+    group: "API & add-ons",
+    rows: [
+      { label: "API & MCP access", values: [N, N, N, N, "Coming soon"] },
+      { label: "Daily automated scans", values: [N, N, N, N, "Add-on"] },
     ],
   },
   {
