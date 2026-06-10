@@ -1,18 +1,18 @@
 ---
 term: "ClaudeBot"
-aliases: ["Anthropic ClaudeBot"]
-definition: "ClaudeBot is Anthropic's web crawler, used to gather publicly available content for Claude. It identifies with the user agent ClaudeBot and respects robots.txt, so you allow or block it the same way you would any other crawler."
+aliases: ["Anthropic ClaudeBot", "Claude-SearchBot", "Claude-User"]
+definition: "ClaudeBot is Anthropic's training crawler, which gathers publicly available content that may train future Claude models. It is one of three Anthropic bots: Claude-SearchBot indexes pages for Claude's web search, and Claude-User fetches pages live during a user's session. Each respects robots.txt and is controlled separately."
 category: "AI Crawlers"
 related: ["gptbot", "perplexitybot", "google-extended"]
 article: "/blog/claude-seo"
 articleLabel: "Claude SEO: How to Get Cited in Claude"
-updated: "2026-05-31"
+updated: "2026-06-10"
 draft: false
 relatedArticles:
   - href: "/blog/ai-crawlers"
     label: "AI Crawlers: The List of AI Bots & How to Control Them"
 ---
 
-If you want Claude to be able to reach and reference your content, allow ClaudeBot in robots.txt and make sure no WAF rule blocks it. Blocking it keeps your pages out of Anthropic's crawl.
+Training and citation are separate doors. Blocking ClaudeBot only opts your content out of training future models; per Anthropic's crawler documentation, it has no effect on whether Claude cites you. Citations ride the other two bots: if you want to appear in Claude's web-search answers, keep Claude-SearchBot (search index) and Claude-User (live fetches) able to reach you, whatever you decide about ClaudeBot.
 
-As with other AI crawlers, the most common reason ClaudeBot cannot reach a site is an unintended bot-management rule, not a deliberate robots.txt block.
+As with other AI crawlers, the most common reason an Anthropic bot cannot reach a site is an unintended bot-management or firewall rule, not a deliberate robots.txt block.
