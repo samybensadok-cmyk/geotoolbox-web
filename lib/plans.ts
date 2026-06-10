@@ -138,8 +138,8 @@ export const PLANS: Plan[] = [
     },
     inheritsFrom: "Consultant",
     highlights: [
-      "50 brands",
       "Choose 5 of all 7 engines (+ Gemini, Claude)",
+      "White-label client reports",
       "Article writing + 5-stage copywriter",
       "Unlimited history retention",
       "Unlimited team seats",
@@ -258,6 +258,7 @@ export const COMPARE_GROUPS: CompareGroup[] = [
       { label: "Actions: weekly prioritized to-do list", values: [N, N, Y, Y, Y] },
       { label: "AI prompt suggestions", values: [N, N, Y, Y, Y] },
       { label: "Article writing + 5-stage copywriter", values: [N, N, N, Y, Y] },
+      { label: "White-label client reports", values: [N, N, N, Y, Y] },
       { label: "One-off GEO audit & strategy", values: [N, N, N, N, Y] },
     ],
   },
