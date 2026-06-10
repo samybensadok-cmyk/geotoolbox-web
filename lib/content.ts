@@ -82,6 +82,8 @@ export type Post = {
   image?: string
   draft: boolean
   noindex: boolean
+  /** set `inlineCta: false` in frontmatter to opt a post out of the mid-body CTA */
+  inlineCta?: boolean
   readingTime: number
   content: string
 }
@@ -104,6 +106,7 @@ export function getAllPosts(): Post[] {
         image: data.image,
         draft: data.draft ?? false,
         noindex: data.noindex ?? false,
+        inlineCta: data.inlineCta,
         readingTime: calculateReadingTime(content),
         content,
       } as Post
@@ -129,6 +132,7 @@ export function getPostBySlug(slug: string): Post | undefined {
     image: data.image,
     draft: data.draft ?? false,
     noindex: data.noindex ?? false,
+    inlineCta: data.inlineCta,
     readingTime: calculateReadingTime(content),
     content,
   }

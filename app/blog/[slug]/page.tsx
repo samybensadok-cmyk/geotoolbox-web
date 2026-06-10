@@ -13,6 +13,8 @@ import { articleSchema, faqPageSchema } from "@/lib/seo-schema"
 import { getAuthorByName } from "@/lib/authors"
 import { AuthorBio } from "@/components/blog/author-bio"
 import { RelatedPosts } from "@/components/blog/related-posts"
+import { InlineCta } from "@/components/blog/inline-cta"
+import { injectInlineCta } from "@/lib/inline-cta"
 import { Avatar } from "@/components/ui/avatar"
 
 export async function generateStaticParams() {
@@ -95,6 +97,7 @@ export default async function BlogPost({
   const headings = extractHeadings(post.content)
   const faqs = extractFaq(post.content)
   const relatedPosts = getRelatedPosts(slug)
+  const { source: mdxSource } = injectInlineCta(post)
 
   return (
     <>
@@ -233,8 +236,8 @@ export default async function BlogPost({
             {/* Article content */}
             <article className="prose prose-gray max-w-none prose-headings:tracking-tight prose-a:text-accent-700 prose-a:underline-offset-4 prose-strong:text-gray-900 prose-code:text-accent-700">
               <MDXRemote
-                source={post.content}
-                components={mdxComponents}
+                source={mdxSource}
+                components={{ ...mdxComponents, InlineCta }}
                 options={{
                   mdxOptions: {
                     rehypePlugins: [
