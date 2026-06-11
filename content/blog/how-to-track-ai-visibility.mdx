@@ -2,7 +2,7 @@
 title: "How to Measure Your AI Visibility"
 description: "How to measure your AI visibility: the metrics that matter, a free way to track brand mentions in ChatGPT and Perplexity, and when a paid tool is worth it."
 date: "2026-06-05"
-updated: "2026-06-10"
+updated: "2026-06-11"
 author: "Samy BEN SADOK"
 tags: ["ai-visibility", "geo", "measurement", "guide"]
 draft: false
@@ -30,7 +30,7 @@ Five metrics cover the job. You do not need all five to start, but you should kn
     <tr><td><a href="https://geotoolbox.ai/glossary/share-of-voice">Share of voice</a></td><td>How often you appear versus competitors across a set of prompts</td><td>Run prompts, divide your mentions by the total, or use an <a href="https://geotoolbox.ai/blog/ai-rank-tracker">AI rank tracker</a></td><td>The prompts you choose decide the number</td></tr>
     <tr><td>Mentions vs citations</td><td>Awareness versus whether your page is the cited source</td><td>Log both for each answer</td><td>A mention with no citation sends no traffic</td></tr>
     <tr><td>Sentiment</td><td>Whether you are described positively, neutrally, or wrong</td><td>Read the answer, not just the name</td><td>A wrong mention is worse than none</td></tr>
-    <tr><td>AI referral traffic</td><td>Visits that actually arrive from AI tools</td><td>GA4 channel plus referrer rules</td><td>Heavily undercounted (see below)</td></tr>
+    <tr><td>AI referral traffic</td><td>Visits that actually arrive from AI tools</td><td>GA4's AI Assistant channel plus referrer rules</td><td>Heavily undercounted (see below)</td></tr>
     <tr><td>Branded search lift</td><td>People searching your name after seeing you in AI</td><td>Branded queries in Search Console</td><td>Indirect, but the most defensible</td></tr>
   </tbody>
 </table>
@@ -45,7 +45,7 @@ First, the answers are non-deterministic. Ask the same model the same question t
 
 The consequence is blunt: a one-off check tells you almost nothing, and any tool selling you an "AI ranking position" is selling a number that does not really exist. Measure a distribution across many runs, not a single snapshot.
 
-Second, the traffic is hard to attribute. Influence rarely shows up as a tracked visit: Bain estimates [around 60% of searches](https://www.bain.com/insights/goodbye-clicks-hello-ai-zero-click-search-redefines-marketing/) now end without a click to any website, and even when someone does visit after seeing you in an answer, the analytics trail is patchy (more on that below).
+Second, the traffic is hard to attribute. Influence rarely shows up as a tracked visit: SparkToro's June 2026 read of Similarweb clickstream data found [68% of US Google searches](https://sparktoro.com/blog/in-2026-less-than-one-third-of-google-searches-still-send-a-click/) ended without a single click in the first four months of 2026, up from the roughly 60% SparkToro reported for 2024 using a different panel, and even when someone does visit after seeing you in an answer, the analytics trail is patchy (more on that below).
 
 Neither problem makes measurement pointless. It means you measure the right way: track direction over weeks and report ranges instead of false-precision decimals.
 
@@ -71,9 +71,11 @@ That is the entire method. It will not scale to thousands of prompts, but for mo
 
 Prompts tell you about mentions. Two more signals tell you about impact.
 
-The first is **AI referral traffic**. In GA4, visits from assistants show up as referrals from domains like chatgpt.com, perplexity.ai, and gemini.google.com, so you can build a segment that isolates them. Expect it to undercount badly: when a model strips the referrer, the visit lands silently in "Direct," so treat the number as a floor, not a full count.
+The first is **AI referral traffic**, and GA4 now does the base work for you. Since May 13, 2026, when the referrer matches a recognized assistant, GA4 automatically tags the visit with an "ai-assistant" medium and groups it under a new [AI Assistant channel](https://support.google.com/analytics/answer/9164320) in the Default Channel Group. Google names ChatGPT, Gemini, and Claude as examples but has not published the full list, so keep a referrer segment for domains the native channel may miss, such as perplexity.ai. Expect the number to be small as well as undercounted: [Conductor's benchmark](https://www.conductor.com/academy/aeo-geo-benchmarks-report/) of 1,215 enterprise domains puts AI referrals at 1.08% of all website traffic, 87.4% of it from ChatGPT, growing about 1% month over month. And when a model strips the referrer, the visit still lands silently in "Direct," so treat whatever you see as a floor, not a full count.
 
 The second is **branded search lift**, and it is the most defensible signal you have. When an AI names your brand, a share of those people go search for you directly afterward. A rise in branded queries in Search Console, especially while your non-branded clicks stay flat or fall, is the fingerprint of AI-driven demand, and it is the number a finance team will accept. Watch it alongside your prompt tracking.
+
+Search Console itself has started reporting AI visibility directly. On June 3, 2026, Google launched [Search Generative AI performance reports](https://developers.google.com/search/blog/2026/06/gen-ai-performance-reports): dedicated views of how often your URLs appear in AI Overviews and AI Mode, broken down by page, country, device, and date. Two caveats: it shows impressions only, with no clicks or query data yet, and it is rolling out to a subset of sites first, so your property may not have it. Once it lands, it answers the visibility half of the question your prompt sheet estimates by hand, at least for Google's engines.
 
 One thing to monitor throughout: accuracy. Models routinely state confident, wrong facts about brands, and a mention that misrepresents you is worse than none. Our guide to [AI hallucinations about your brand](https://geotoolbox.ai/blog/ai-hallucinations) covers spotting and correcting them.
 
@@ -111,5 +113,8 @@ Before any of that, rule out the silent failure: a page AI crawlers cannot reach
 ## Sources
 
 - [AIs are highly inconsistent when recommending brands or products](https://sparktoro.com/blog/new-research-ais-are-highly-inconsistent-when-recommending-brands-or-products-marketers-should-take-care-when-tracking-ai-visibility/) - SparkToro, 2026 (12 prompts run 2,961 times)
-- [Goodbye Clicks, Hello AI: Zero-Click Search Redefines Marketing](https://www.bain.com/insights/goodbye-clicks-hello-ai-zero-click-search-redefines-marketing/) - Bain & Company, 2025
+- [In 2026, Less than One Third of Google Searches Still Send a Click](https://sparktoro.com/blog/in-2026-less-than-one-third-of-google-searches-still-send-a-click/) - SparkToro, June 2026 (Similarweb US clickstream, Jan-Apr 2026)
+- [New AI Assistant traffic measurement](https://support.google.com/analytics/answer/9164320) - Google Analytics What's New, May 13, 2026
+- [Introducing Search Generative AI performance reports in Search Console](https://developers.google.com/search/blog/2026/06/gen-ai-performance-reports) - Google Search Central, June 3, 2026
+- [The 2026 AEO / GEO Benchmarks Report](https://www.conductor.com/academy/aeo-geo-benchmarks-report/) - Conductor, April 2026 update (1,215 enterprise domains)
 - [AI features and your website](https://developers.google.com/search/docs/appearance/ai-features) - Google Search Central
