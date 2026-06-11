@@ -161,6 +161,7 @@ export const PLANS: Plan[] = [
     },
     inheritsFrom: "Agency",
     highlights: [
+      "PR Coverage Tracker — see which earned placements AI engines cite",
       "All 7 AI engines",
       "API & MCP access (coming soon)",
       "One-off GEO audit & strategy session (annual plans only)",
@@ -248,6 +249,7 @@ export const COMPARE_GROUPS: CompareGroup[] = [
       { label: "Google Search Console analytics", values: [Y, Y, Y, Y, Y] },
       { label: "Domain Overview + Opportunities", values: [N, N, Y, Y, Y] },
       { label: "Citation Intelligence", values: [N, N, Y, Y, Y] },
+      { label: "PR Coverage Tracker", values: [N, N, N, N, Y] },
     ],
   },
   {
