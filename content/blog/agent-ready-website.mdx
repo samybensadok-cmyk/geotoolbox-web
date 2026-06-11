@@ -2,7 +2,7 @@
 title: "Agentic Browsers Are Here: Is Your Site Agent-Ready?"
 description: "Comet, ChatGPT Atlas, and Gemini now navigate and buy on your site for users. Here's what breaks, how to make your website agent-ready, and how to check."
 date: "2026-06-08"
-updated: "2026-06-10"
+updated: "2026-06-11"
 author: "Samy BEN SADOK"
 tags: ["agent-ready-website", "agentic-browsing", "ai-agents", "geo", "ai-visibility"]
 draft: false
@@ -125,6 +125,8 @@ A page-level check answers the same questions for a specific URL and adds whethe
 
 Between the two you get the thing the checklist alone cannot give you: proof. Not "we added llms.txt," but "an agent can now reach, render, and read this page," with a before and after you can hand a developer.
 
+Google now ships a first-party check as well. Lighthouse 13.3 (May 7, 2026) added an experimental [Agentic Browsing category](https://developer.chrome.com/docs/lighthouse/agentic-browsing/scoring) to its default audits, expected in Chrome 150's DevTools and in PageSpeed Insights. It runs deterministic checks on four signals: the accessibility tree, layout stability, an optional llms.txt fetch, and WebMCP, an early browser API that lets a page register actions an agent can call directly. The result is a pass ratio rather than a 0 to 100 score, and it is a floor rather than an agent simulation, but Google grading agent-readiness in its default tooling tells you where this is heading.
+
 ## Agent-Ready Is the New Table Stakes
 
 The work that makes your site usable by an agent is the same work that makes it readable by a citation bot. The page that renders cleanly for Comet is the page ChatGPT can quote. The robots rules that let an agent through are the rules that keep you in Perplexity's answers. Reach, render, understand: one access path feeds both [how AI search cites you](https://geotoolbox.ai/blog/how-to-optimize-for-ai-search) and whether an agent can act on your behalf.
@@ -148,16 +150,21 @@ The decision is per bot class, and the one genuinely new call is agentic traffic
 The workarounds that exist today: server-log analysis by user-agent string, a custom dimension keyed to known agent UAs, and watching for sessions with impossible interaction speed. None are complete, because in-browser agents inherit the user's fingerprint, which is why log-level checks beat analytics dashboards here.
 
 **Is llms.txt worth doing if Google says it does not affect ranking?**
-Yes, but for the right reason. llms.txt is not a ranking or AI-citation signal, and you should not sell it as one. Our breakdown of [whether llms.txt is worth it](https://geotoolbox.ai/blog/llms-txt) covers the narrow group it genuinely helps and the decision rule for everyone else.
+Yes, but for the right reason. llms.txt is not a ranking or AI-citation signal, and you should not sell it as one. It did just land in Google's own tooling, though: Lighthouse 13.3's Agentic Browsing audits include an optional llms.txt check (May 2026) that flags only a server error, which is a fair picture of its current weight. Our breakdown of [whether llms.txt is worth it](https://geotoolbox.ai/blog/llms-txt) covers the narrow group it genuinely helps and the decision rule for everyone else.
 
 **Is agentic checkout real today, or just hype?**
-Real but early: the dedicated commerce protocols (agent payment standards, delegated checkout APIs) are still being drafted, so today's agents complete purchases through your normal human checkout. That is exactly why the boring fixes matter; an agent cannot fall back to a protocol that does not exist yet.
+Real, and the protocol layer has now arrived: the [Agentic Commerce Protocol](https://www.agenticcommerce.dev/), an open standard from OpenAI and Stripe, already serves as the connective layer between merchants and ChatGPT users, and the [Universal Commerce Protocol](https://ucp.dev/), co-developed by Google, Shopify, Amazon, Walmart, and Stripe among others, covers catalog search, cart building, identity linking, checkout, and order management. But those rails only work where a merchant has integrated them; everywhere else, an agent buys through your normal human checkout. That is exactly why the boring fixes still matter.
 
 ## Sources
 
 - [Introducing the Agent Readiness score](https://blog.cloudflare.com/agent-readiness/) - Cloudflare (robots.txt and AI-preference adoption, markdown token and speed benchmarks)
 - [Build agent-friendly websites](https://web.dev/articles/ai-agent-site-ux) - Google web.dev (accessibility tree, semantic HTML, interactive element sizing)
+- [Lighthouse agentic browsing scoring](https://developer.chrome.com/docs/lighthouse/agentic-browsing/scoring) - Chrome for Developers (four deterministic agent-readiness checks, pass-ratio scoring)
+- [Lighthouse v13.3.0 release notes](https://github.com/GoogleChrome/lighthouse/releases/tag/v13.3.0) - GoogleChrome on GitHub (Agentic Browsing added to default config, May 7, 2026)
+- [Lighthouse llms.txt audit](https://developer.chrome.com/docs/lighthouse/agentic-browsing/llms-txt) - Chrome for Developers (optional llms.txt check, flags server errors only, May 5, 2026)
 - [What Is an Agentic Browser?](https://snowplow.io/blog/what-is-an-agentic-browser) - Snowplow (agent traffic growth, product-page intent, reporting HUMAN Security data)
 - [Agentic Browsing Is Here](https://snowplow.io/blog/agentic-browsing-is-here) - Snowplow (analytics blind spot, GA4 cannot distinguish agents)
 - [What Are Agentic Browsers?](https://www.paloaltonetworks.com/cyberpedia/what-are-agentic-browsers) - Palo Alto Networks (prompt injection, over-privileged automation)
 - [Researchers Trick Perplexity's Comet AI Browser Into a Phishing Scam](https://thehackernews.com/2026/03/researchers-trick-perplexitys-comet-ai.html) - The Hacker News (real-world prompt injection example)
+- [Agentic Commerce Protocol](https://www.agenticcommerce.dev/) - OpenAI and Stripe (open standard for agent-to-merchant checkout)
+- [Universal Commerce Protocol](https://ucp.dev/) - UCP co-developers incl. Google, Shopify, Amazon, Walmart, Stripe (catalog, cart, identity, checkout standard)
