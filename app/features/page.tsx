@@ -131,6 +131,13 @@ const groups: Group[] = [
         highlights: ["GSC + GA4 connect", "13 sub-dashboards", "AI traffic attribution"],
         tint: "cool",
       },
+      {
+        slug: "pr-coverage-tracker",
+        name: "PR Coverage Tracker",
+        blurb: "Upload the media coverage you earned and see which placements are still live, indexed in Google, and cited by AI engines for your client's prompts. PR ROI for the AI era.",
+        highlights: ["Live + indexed checks", "AI-citation attribution", "Scale & Enterprise"],
+        tint: "warm",
+      },
     ],
   },
 ]
@@ -140,7 +147,7 @@ const gridColsByGroup: Record<string, string> = {
   Scanning: "grid-cols-1",                      // 1 card, full-bleed feature
   Analysis: "grid-cols-1 md:grid-cols-2",       // 2 cards
   Intelligence: "grid-cols-1 md:grid-cols-2", // 4 cards (2×2)
-  Reporting: "grid-cols-1",                     // 1 card, full-bleed
+  Reporting: "grid-cols-1 md:grid-cols-2",       // 2 cards
 }
 
 export default function FeaturesPage() {

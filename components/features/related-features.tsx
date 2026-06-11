@@ -11,6 +11,7 @@ type Slug =
   | "analytics"
   | "community"
   | "citation-interceptor"
+  | "pr-coverage-tracker"
 
 const ALL_FEATURES = siteConfig.featureGroups.flatMap((g) => g.features)
 

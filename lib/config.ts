@@ -42,6 +42,7 @@ export const siteConfig = {
       group: "Reporting",
       features: [
         { slug: "analytics", name: "Analytics", desc: "GSC + GA4 for AI attribution" },
+        { slug: "pr-coverage-tracker", name: "PR Coverage Tracker", desc: "Prove earned media shows up in AI" },
       ],
     },
   ],
