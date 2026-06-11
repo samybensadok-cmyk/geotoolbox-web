@@ -16,7 +16,7 @@ Blocking GPTBot does not remove you from ChatGPT. Training and search run on dif
 
 GPTBot is the crawler OpenAI uses to gather publicly available web content for training its generative models. It reads text to learn language and facts, and per [OpenAI's crawler documentation](https://developers.openai.com/api/docs/bots) it identifies itself with a user agent ending in `+https://openai.com/gptbot`.
 
-Two things it is not. It is not a search indexer: unlike Googlebot, GPTBot does not build a ranking index; it feeds model training. And it is not a backdoor: OpenAI says crawled pages are filtered to remove paywalled sources and sources known to gather personally identifiable information.
+Two things it is not. It is not a search indexer: unlike Googlebot, GPTBot does not build a ranking index; it feeds model training. And it is not a backdoor: when OpenAI launched GPTBot in 2023, it said crawled pages were filtered to remove paywalled sources and sources known to gather personally identifiable information, though that filtering language no longer appears in the current crawler doc.
 
 It also respects robots.txt, so controlling GPTBot is a one-line decision you make at the root of your domain, not a firewall project.
 
@@ -24,7 +24,7 @@ It also respects robots.txt, so controlling GPTBot is a one-line decision you ma
 
 GPTBot crawls publicly reachable pages, the same ones any visitor or search bot can open, and pulls the text into OpenAI's training data.
 
-What it leaves alone matters as much as what it takes. It does not crawl pages disallowed in robots.txt or content behind authentication, and OpenAI filters crawled sources to drop paywalled pages and known gatherers of personal data.
+What it leaves alone matters as much as what it takes. It does not crawl pages disallowed in robots.txt or content behind authentication, and OpenAI's 2023 launch documentation said crawled sources were filtered to drop paywalled pages and known gatherers of personal data.
 
 The practical read: if a page is public and not disallowed, assume GPTBot can use it for training. If it sits behind a login, it is already out of reach. Everything in between is what your robots.txt decision governs: the public marketing site, the blog, the docs.
 
@@ -44,7 +44,7 @@ This is the part that trips up almost every "should you block GPTBot" guide. Ope
   </tbody>
 </table>
 
-The line that matters: **blocking GPTBot opts you out of training, not out of ChatGPT search.** Visibility in ChatGPT's answers runs through OAI-SearchBot and ChatGPT-User, which are separate tokens. [OpenAI is explicit](https://developers.openai.com/api/docs/bots) that sites opted out of OAI-SearchBot will not be shown in ChatGPT search answers (though they can still appear as navigational links), and that this is independent from GPTBot.
+The line that matters: **blocking GPTBot opts you out of training, not out of ChatGPT search.** Visibility in ChatGPT's answers runs through OAI-SearchBot and ChatGPT-User, which are separate tokens. [OpenAI is explicit](https://developers.openai.com/api/docs/bots) that sites opted out of OAI-SearchBot will not be shown in ChatGPT search answers (though they can still appear as navigational links), and that this is independent from GPTBot. One nuance from the same doc: if you allow both bots, OpenAI may use the results of a single crawl for both jobs "to avoid duplicative crawling," so the separation lives in the opt-outs, not necessarily in the fetches you see in your logs.
 
 ## Should You Allow or Block GPTBot?
 
@@ -62,9 +62,9 @@ Start from what blocking GPTBot actually costs and protects, not from a general 
   </tbody>
 </table>
 
-Live citations come from OAI-SearchBot and ChatGPT-User (our [ChatGPT citation guide](https://geotoolbox.ai/blog/seo-for-chatgpt) covers earning them); allowing GPTBot only feeds the training corpus, a slower and fuzzier channel. That said, do not overcorrect into "blocking GPTBot does nothing." It has one real effect: your content stops being absorbed into the model's trained knowledge, so it cannot surface from what the model simply knows, only from live search. That channel is harder to measure than a citation, but it is not zero.
+Live citations come from OAI-SearchBot and ChatGPT-User (our [ChatGPT citation guide](https://geotoolbox.ai/blog/seo-for-chatgpt) covers earning them); allowing GPTBot only feeds the training corpus, a slower and fuzzier channel. Cloudflare put a number on the no-click-back side of that trade: as of July 2025, OpenAI's crawlers fetched about [1,091 pages for every visitor they referred](https://blog.cloudflare.com/crawlers-click-ai-bots-training/) back to a site. That said, do not overcorrect into "blocking GPTBot does nothing." It has one real effect: your content stops being absorbed into the model's trained knowledge, so it cannot surface from what the model simply knows, only from live search. That channel is harder to measure than a citation, but it is not zero.
 
-So the trade is narrow. Allow GPTBot if you want your content in the training corpus and have the server capacity. Block it if you are protecting content from training, or if the crawl itself is costing you, since aggressive AI crawling that drives up bandwidth and server load has become a common complaint among site owners. Most teams end up selective rather than all-or-nothing: block the bots whose job you object to, keep the ones that put you in answers.
+So the trade is narrow. Allow GPTBot if you want your content in the training corpus and have the server capacity. Block it if you are protecting content from training, or if the crawl itself is costing you, since aggressive AI crawling that drives up bandwidth and server load has become a common complaint among site owners. The load is not hypothetical: Botify's April 2026 [analysis of about 7 billion log files](https://www.botify.com/blog/openai-tripled-web-crawl) found OpenAI's total crawling roughly tripled after GPT-5 launched in August 2025, with GPTBot alone up 2.9x. Most teams end up selective rather than all-or-nothing: block the bots whose job you object to, keep the ones that put you in answers.
 
 ## How to Allow or Block GPTBot in robots.txt
 
@@ -88,7 +88,7 @@ User-agent: ChatGPT-User
 Disallow: /
 ```
 
-Put the file at the root of your domain, at `yourdomain.com/robots.txt`, and remember each crawler reads only its own block. Before and after you edit, confirm what your live robots.txt actually says to every AI crawler, because a stray rule or an inherited template often blocks more than you meant:
+Put the file at the root of your domain, at `yourdomain.com/robots.txt`, and remember each crawler reads only its own block. Give the change a day to land: OpenAI notes it can take roughly 24 hours from a robots.txt update for its search systems to adjust. Before and after you edit, confirm what your live robots.txt actually says to every AI crawler, because a stray rule or an inherited template often blocks more than you meant:
 
 One caveat on the third block: ChatGPT-User fetches are initiated by a person, and OpenAI says robots.txt rules may not apply to them, so treat that line as a request rather than a guarantee.
 
@@ -139,5 +139,7 @@ The fastest first step is to see what your site tells GPTBot right now. Run your
 - [Overview of OpenAI Crawlers](https://developers.openai.com/api/docs/bots) - OpenAI developer documentation
 - [GPTBot IP ranges (gptbot.json)](https://openai.com/gptbot.json) - OpenAI
 - [Cloudflare Just Changed How AI Crawlers Scrape the Internet](https://www.cloudflare.com/press/press-releases/2025/cloudflare-just-changed-how-ai-crawlers-scrape-the-internet-at-large/) - Cloudflare, 2025
+- [The crawl-to-click gap: Cloudflare data on AI bots, training, and referrals](https://blog.cloudflare.com/crawlers-click-ai-bots-training/) - Cloudflare, August 2025
+- [OpenAI Has Tripled Their Crawl of the Web: An Analysis of 7B+ Log Files](https://www.botify.com/blog/openai-tripled-web-crawl) - Botify, April 2026
 - [AI Crawler Spoofing: ChatGPT, Mistral, Perplexity](https://www.humansecurity.com/learn/blog/ai-crawler-spoofing-chatgpt-mistral-perplexity/) - HUMAN Security
 - [No Robots.txt: How to Ask ChatGPT and Google Bard Not to Use Your Website for Training](https://www.eff.org/deeplinks/2023/12/no-robotstxt-how-ask-chatgpt-and-google-bard-not-use-your-website-training) - Electronic Frontier Foundation, 2023
