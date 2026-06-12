@@ -79,7 +79,7 @@ Two implications get missed constantly.
 
 **Pure vector search is not how production systems actually run.** Production search stacks pair classic keyword scoring (BM25) with vector similarity and merge the results. [Microsoft's Azure AI Search documentation](https://learn.microsoft.com/en-us/azure/search/hybrid-search-overview) is explicit that exact-match queries like product codes, specialized jargon, and names perform better with keyword search, and reports that "hybrid retrieval with semantic ranker offers significant benefits in search relevance." Anyone telling you keywords are dead is ignoring how production retrieval is built.
 
-So does ChatGPT use embeddings? Yes, in two unrelated ways, and conflating them causes most of the confusion we see. Internally, every [LLM](https://geotoolbox.ai/glossary/large-language-model) represents tokens as vectors during processing; that is just how transformers compute.
+So does ChatGPT use embeddings? Yes, in two unrelated ways, and conflating them causes most of the confusion we see. Internally, every [LLM](https://geotoolbox.ai/glossary/large-language-model) represents tokens as vectors during processing; that is just [how transformers compute](https://geotoolbox.ai/blog/how-does-chatgpt-work).
 
 Separately, retrieval decides what reaches the model: OpenAI documents that its [file search runs on vector stores](https://developers.openai.com/api/docs/guides/tools-file-search) using "semantic and keyword search." Engines do not publish their live web-search internals, but this retrieval pattern is the standard mechanism for narrowing candidates there too. The internal token vectors have nothing to do with your visibility. The retrieval layer is where your content competes.
 

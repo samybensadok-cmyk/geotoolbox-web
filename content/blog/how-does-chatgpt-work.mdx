@@ -1,0 +1,171 @@
+---
+title: "How Does ChatGPT Actually Work? The Transformer, in Plain English"
+description: "How does ChatGPT work? The honest mechanism: tokens, embeddings, attention, and next-token prediction, and what each step means for your AI visibility."
+date: "2026-06-12"
+author: "Samy BEN SADOK"
+tags: ["how-does-chatgpt-work", "transformer", "llm", "ai-search", "geo", "guide"]
+draft: false
+---
+
+How does ChatGPT work? Strip away the marketing and the answer is stranger, and simpler, than most explanations admit. It is not thinking. It has no database it looks your site up in. Often it is not searching the web at all. It is running one operation, a few hundred times per answer: predicting the next token. This is that operation in plain English, written for people who publish content rather than build models, with the part the engineering explainers skip: what each step does, and does not, mean for whether you show up in AI answers.
+
+## How ChatGPT Works in 30 Seconds: It Predicts the Next Token
+
+**ChatGPT works by answering one small question, over and over: given the text so far, what token is likely to come next?** It scores every possible token, picks one (not always the single highest, as we will see), adds it to the end, and asks again. Every answer it writes is that loop running a few hundred times. There is no separate step where it decides what is true, looks you up, or thinks about your question the way a person would.
+
+People reach for the word "autocomplete," and it is the right starting point as long as you do not stop there. Stephen Wolfram, in his much-cited [plain-language explainer](https://writings.stephenwolfram.com/2023/02/what-is-chatgpt-doing-and-why-does-it-work/), describes it as producing a "reasonable continuation" of whatever text it has so far.
+
+The honest catch is that the "just" in "just autocomplete" is doing a lot of quiet work. To predict the next word in "the capital of France is" you need a fact. To finish "if I knock the table over, the grape on it will" you need a rough model of how the physical world behaves. Good next-word prediction, at a large enough scale, starts to look like understanding, which is why the debate over whether these models "understand" has no clean answer.
+
+For someone publishing content, the practical takeaway lands before any of the math. You are not persuading a mind and you are not editing a database entry. You are nudging the statistics of how text about your topic tends to continue. Hold onto that, because it explains almost everything the machine gets right and wrong.
+
+<table>
+<thead>
+<tr><th>What people assume ChatGPT does</th><th>What actually happens</th></tr>
+</thead>
+<tbody>
+<tr><td>Thinks about your question and understands it</td><td>Predicts the next token from patterns, one token at a time</td></tr>
+<tr><td>Looks your brand up in a live database</td><td>Generates from frozen numerical weights set during training</td></tr>
+<tr><td>Searches the web every time it answers</td><td>Only when it runs a web search; the rest of the time nothing is fetched</td></tr>
+<tr><td>Remembers you between chats</td><td>Starts each chat blank unless a separate memory layer stores facts</td></tr>
+<tr><td>Reads your page like a human reader</td><td>Reads tokens and numbers; the letters are gone before it starts</td></tr>
+</tbody>
+</table>
+
+## From Your Prompt to Tokens: Tokenization
+
+Before the model does anything, a separate program called a tokenizer chops your text into **tokens** and swaps each one for a number. A token is a chunk of text, usually about four characters or three-quarters of a word. Common words are a single token; rarer words and less common brand names get split into pieces. The model never sees your letters. It sees a list of integer IDs, and by the time it starts working, the words are gone. Images and audio get the same treatment in multimodal models, sliced into their own tokens, so the same logic carries over to everything ChatGPT handles.
+
+This is the root of ChatGPT's famous trouble counting the R's in "strawberry." The word arrives as a few subword tokens, none of which is a letter, so counting letters is a memory task rather than something it can read off the page. The same mechanics explain garbled brand names and fumbled long numbers. The full story, including which words still trip current models, has [its own article on tokens](https://geotoolbox.ai/blog/what-are-tokens-in-ai); here it is enough to know that tokens are the raw unit everything downstream is built on.
+
+<Callout type="note" title="Keyword density does not transfer here">
+The old habit of repeating a phrase to signal relevance does not carry over. The model is not counting how many times "best CRM for dentists" appears on your page at the moment it answers; at this step it is not scoring your document at all. It learned patterns from text long before your question arrived, and density on a single page is not one of the levers that shaped them. Live retrieval, later in this article, is a separate story, where an ordinary search index still has to find your page first.
+</Callout>
+
+## Tokens Become Vectors: Embeddings and Meaning
+
+A token ID is still just a number standing in for a chunk of text. The next step is where meaning enters. Each token is mapped to an **embedding**, a long list of numbers that you can picture as a point in space, except the space has thousands of dimensions instead of three. Tokens that mean similar things sit close together. "Cat" and "dog" land near each other because they show up in similar sentences. "Cat" and "spreadsheet" sit far apart. Meaning, to a model, is geometry.
+
+Those positions are not assigned by hand. They start random and shift as the neural network reads billions of examples during training. Words that keep appearing in the same company drift together until the layout of the space captures something real about how language is used. The model never gets a definition of "cat." It gets the company "cat" keeps, which turns out to be enough to place it. You can read a fuller treatment of how [vector embeddings](https://geotoolbox.ai/blog/vector-embeddings) carry meaning, but the shape of it is what matters here.
+
+This is the first place the mechanism touches your visibility, and it is worth being precise rather than mystical about it. Your brand is not a single dot in this space. Its name often splits across several tokens, and what the model builds is an association between those tokens, your category, and the words that tend to surround them. If your name consistently appears alongside your category in the text the model trained on, that association strengthens. It is not a tag you add or a setting you flip. It is the slow result of being described, accurately and consistently, in the kind of writing models learn from. Be honest about the limit, though: nobody can open the model and show you that association or prove it moved. It is an inference from how training works, and the only thing you can actually observe is the answers the model gives, sampled over time.
+
+## How the Model Reads Context: The Attention Mechanism
+
+A point in space is a decent guess at what a word means on its own, but words change meaning with company. "Bank" near "river" is not "bank" near "account." The breakthrough that made modern models work, the 2017 paper [Attention Is All You Need](https://arxiv.org/abs/1706.03762), built the whole architecture around a step called **self-attention**, which updates each token's meaning based on the other tokens around it before any prediction happens.
+
+The plainest way to picture attention is as a quick relevance check that every token runs against every earlier token. Each token forms three things:
+
+- a **query**: what am I looking for?
+- a **key**: what do I offer?
+- a **value**: what do I carry?
+
+The model compares queries against keys to score how relevant each earlier token is, then blends the values by those scores. The token comes out the other side as the same word, now carrying the context around it.
+
+Take "This movie was not great." On its own, "great" leans positive. Attention lets "great" pull heavily on "not," and that single connection flips the phrase negative. The model is not following a grammar rule it was handed. It learned, from oceans of text, that "not" tends to invert what follows, and that pattern lives in the weights.
+
+Here is the part to file away for later, because a whole genre of advice depends on people not knowing it. Nowhere in this step is there a rule that says "favor the brand geotoolbox" or "weight content formatted a certain way." The weights that produce these attention scores were learned from all the text the model saw; the scores themselves are computed fresh from your prompt every time. Whichever way you look at it, there are no switches in a control panel, and no field where your page gets to declare itself important.
+
+## Stacking It Up: The Transformer, Training, and One Token at a Time
+
+One attention step is not enough. A **transformer** stacks dozens of these blocks, each pairing an attention layer with a small neural network, so the text passes through the same kind of processing again and again. Early layers catch simple patterns like parts of speech; later layers build up to abstract relationships. GPT-3 used [96 of these blocks](https://en.wikipedia.org/wiki/GPT-3), stacked into one large neural network. Today's biggest commercial AI models do not publish that number at all.
+
+What the blocks contain is **weights**, also called parameters, the numbers that encode everything the model learned. GPT-3 had [175 billion of them](https://en.wikipedia.org/wiki/GPT-3). The current models do not disclose their counts, and the figure of 100 trillion that still gets repeated is a rumor the company itself has dismissed, not a confirmed number.
+
+Those weights are set during **pre-training**, when the model reads an enormous amount of text and adjusts itself to predict the next token better. That is the P in GPT: Generative Pre-trained Transformer. A later step, reinforcement learning from human feedback, described in OpenAI's [InstructGPT paper](https://arxiv.org/abs/2203.02155), uses human ratings to make the raw model behave like a helpful assistant instead of a blunt text predictor.
+
+That step does more than add manners: it reshapes what the model will say, so the finished assistant is not a pure mirror of its training text.
+
+<Callout type="tip" title="Why leading prompts make useless tests">
+Reinforcement learning rewarded agreeable answers, so the model learned to agree. Ask it "isn't my brand the best tool for this?" and you will usually get a yes. That makes a leading prompt a worthless visibility test: phrase your checks neutrally, and trust how often an answer repeats over how flattering any single run looks.
+</Callout>
+
+None of this is unique to ChatGPT. Today's models, whether from OpenAI's GPT-5 line, Anthropic's Claude, or Google's Gemini, all run on the same transformer idea. The newer "reasoning" or "thinking" modes do not change it; they run the same loop longer, drafting hidden intermediate tokens to work through a problem before the visible answer. That is more next-token prediction, not a different machine. When people ask [how large language models work](https://geotoolbox.ai/glossary/large-language-model) in general, this is the answer for nearly all of them.
+
+After the text clears the stack, the model produces a probability for every possible next token and picks one. Then it appends that token to the input and runs again for the next one. One token at a time, the model working through its full depth for each new word. That is why a long answer takes real computation, and why it streams onto your screen word by word.
+
+## Why ChatGPT Makes Things Up: Hallucination
+
+Once you accept that the model is always just reaching for a likely next token, hallucination stops being a glitch and becomes a feature of the design. Ask it what sport Lionel Messi plays and it answers "soccer," because "Messi" and "soccer" sat together in countless training examples. Ask it the name of Messi's childhood pet, something it never reliably saw, and it does not stop. It still reaches for a plausible next word, and out comes a pet that may be pure invention. Its internal odds are far flatter on the pet question than on the sport, but nothing in the loop forces it to pause and say so.
+
+OpenAI says as much in its own [guidance on whether ChatGPT tells the truth](https://help.openai.com/en/articles/8313428-does-chatgpt-tell-the-truth): the system is built to produce plausible continuations, not verified facts, and it can be confidently wrong. That confidence is the dangerous part. A person who does not know something usually hedges. The model delivers a fabricated statistic or a fake citation in the same steady tone it uses for things it has right. This is the same machinery behind [AI hallucinations](https://geotoolbox.ai/blog/ai-hallucinations) across every model, not a bug specific to one of them.
+
+For a brand, this is the source of the worst experiences. ChatGPT will sometimes state something wrong about you, your pricing, or your product with total assurance, and there is no inbox to send a correction to. The only lever you have follows straight from the mechanism. The model reaches for a likely continuation given the text it absorbed, so the work is to make the accurate version the likely one: clear, consistent, current information about you, repeated wherever these systems read. On the retrieval side, a corrected page can change the answer within a crawl or two. On the training side it is slow and carries no guarantee, since you cannot make the model retrain. It is the only lever, not a switch.
+
+## Where ChatGPT Gets Its Information: Training vs Live Retrieval
+
+This is the distinction that clears up more publisher confusion than any other. ChatGPT draws on two completely separate sources of information, and they behave nothing alike.
+
+The first is **parametric knowledge**, the patterns frozen into the weights during training. It is what answers when no tools are on: vast, but stale by design, fixed at a training cutoff, and holding no copy of your page, only a statistical echo of text that resembled it.
+
+The second is **live retrieval**, which only happens when the model runs a web search, something newer versions now do on their own for many questions rather than only when you flip a switch. There it fetches current web pages, reads them, and summarizes them, a process known as [retrieval-augmented generation](https://geotoolbox.ai/blog/what-is-rag). This is why citations behave so differently between modes: with retrieval on, it can point at real pages it just fetched; with retrieval off, any citation is generated like every other token and can be entirely invented. Everything in [how AI search actually works](https://geotoolbox.ai/blog/how-does-ai-search-work) happens on this second track.
+
+<table>
+<thead>
+<tr><th>Question</th><th>Training corpus (parametric)</th><th>Live retrieval (browsing/search)</th></tr>
+</thead>
+<tbody>
+<tr><td>What is it</td><td>Patterns frozen in the weights during training</td><td>Current web pages fetched at answer time</td></tr>
+<tr><td>When it is used</td><td>Always, and the only source when no search runs</td><td>Only when the model runs a web search</td></tr>
+<tr><td>How current</td><td>Stale, fixed at the training cutoff</td><td>As current as the page it just fetched</td></tr>
+<tr><td>How you influence it</td><td>Be accurately and widely described before the cutoff</td><td>Be reachable and clear for the crawler right now</td></tr>
+<tr><td>Which crawler gates it</td><td>GPTBot (training)</td><td>OAI-SearchBot (index) and ChatGPT-User (live fetch)</td></tr>
+</tbody>
+</table>
+
+Two doors, then, and they open with different keys. Getting into the training corpus is slow and largely out of your hands. The retrieval door you can actually check, because it depends on whether the crawlers behind ChatGPT can reach your pages at all, starting with [GPTBot](https://geotoolbox.ai/blog/gptbot). Both doors are gated by what the crawler actually receives, which is raw HTML with no JavaScript run, so anything that only appears after a script executes may not exist as far as ChatGPT is concerned. One caution worth stating plainly: ChatGPT's search is not a simple wrapper around any single search engine, so do not assume your Google ranking carries straight over to it.
+
+## What This Actually Means for Your AI Visibility
+
+Now the payoff, and it starts with a subtraction. Because there is no rule about your brand anywhere in the weights, any advice that promises to "optimize for the attention mechanism" or to format your content so the model "attends to it" is selling you access to a control panel that does not exist. It is unfalsifiable: there is nothing on the other side to push.
+
+The same goes for the hope that you can pay your way in. OpenAI [began showing labeled ads in ChatGPT in early 2026](https://techcrunch.com/2026/02/09/chatgpt-rolls-out-ads/), but those sit apart from the answer and are marked as ads; as of mid-2026 there is still no auction that drops your brand inside the generated text itself. The answer comes out of the weights and, sometimes, a live fetch, and there is no checkout for either.
+
+What is left is less exciting and a great deal more real, and it splits cleanly into what you can check and what you can only work toward. Two levers are verifiable today: whether the retrieval crawlers can reach your pages, and what the models actually say about you when you [track it](https://geotoolbox.ai/blog/how-to-track-ai-visibility) across many runs rather than trusting one lucky screenshot, since sampling makes any single answer an anecdote. The other two are directional, grounded in how training works but impossible to measure for your brand directly: being described accurately and consistently across the sources these models read, and keeping your facts current so the likeliest continuation about you is true. Anyone who tells you those last two are measurable is selling a certainty the mechanism does not offer.
+
+In our experience building tools for this, the brands that show up reliably in AI answers are not the ones chasing an imaginary attention dial. They are the ones that are easy to reach, described consistently, and accurate enough that the model's best guess about them is the right one. Formatting still matters, just not the way the black-box advice claims: structuring a page so a retrieval system can lift a clean answer out of it is a real, testable thing, and it is most of what [how to optimize for AI search](https://geotoolbox.ai/blog/how-to-optimize-for-ai-search) is actually about.
+
+<Callout type="note" title="Does it learn my brand between chats?">
+No. Talking to ChatGPT teaches it nothing about your brand: the weights are frozen, and the [context window](https://geotoolbox.ai/glossary/context-window) it reads from is wiped when the chat ends. The "memory" feature is per-user bookkeeping, not training. So there is no point trying to "tell" the model who you are inside a chat. The only ways in are the training corpus and live retrieval, both covered above.
+</Callout>
+
+## What the Mechanism Leaves You With
+
+Everything ChatGPT does well and everything it gets wrong, the fluent paragraphs and the confident inventions alike, comes out of that one repeated guess. The value of knowing that is what it rules out: there is no hidden dial to tune, no brand entry to edit, no slot to buy.
+
+What it leaves you is more concrete than any of those. You cannot reach into the weights, but you can decide whether the crawlers behind ChatGPT are even allowed near your pages. Our free [AI Readiness check](https://geotoolbox.ai/tools/ai-readiness) reads your robots.txt and site setup and flags what is keeping those crawlers out. Knowing how the machine reads is one half. Whether it is allowed to read you is the half you can check in two minutes.
+
+## Frequently Asked Questions
+
+### How does ChatGPT get its information?
+
+From two separate places. Most of the time it draws on parametric knowledge, the patterns frozen into its weights during training, which is broad but fixed at a cutoff date. When it runs a web search, it also retrieves and summarizes current web pages. It does not keep a live database of any specific site; without retrieval, everything comes from what it absorbed during training.
+
+### Does ChatGPT know everything, including my website?
+
+No. It only "knows" patterns from text that was in its training data, plus anything it fetches live when retrieval is on. If your site was described accurately and often in the sources it learned from, it can answer about you well. If not, it will still answer, by guessing the likeliest words, which is how confident but wrong claims about a brand appear.
+
+### Why does ChatGPT give a different answer each time?
+
+Because it samples from a probability distribution over possible next tokens rather than always taking the single most likely one. An internal dial called temperature controls how much randomness is allowed (you cannot set it in the ChatGPT app, though the API exposes it). The practical consequence for anyone testing AI visibility is that one run is an anecdote, not a measurement; you need to sample repeatedly over time.
+
+### Does ChatGPT remember me between chats?
+
+Not by default. The underlying model is stateless, and its weights do not change because you talked to it. Within a single conversation it works from the context window, which it reads fresh each time and forgets when the chat ends. ChatGPT's separate "memory" feature stores explicit facts and re-injects them into future chats, but that is an add-on record, not the model updating itself.
+
+### Is ChatGPT just autocomplete?
+
+Literally, yes: it predicts the next token from the text so far, the same shape of task as your phone's predictive text. The difference is scale. Doing that well across the entire internet forces the model to pick up facts, grammar, and rough models of the world, so the result is far more capable than the word "autocomplete" suggests, even though the mechanism really is that simple.
+
+### Does ChatGPT search the internet when it answers?
+
+Only when it runs a web search, which modern versions now do automatically for many questions rather than only when you toggle it. Without that, the model answers from frozen training knowledge and does not go online. When the search runs, it fetches live pages and can cite them, and the two modes behave differently enough that it is worth knowing which one produced the citation you are looking at.
+
+## Sources
+
+- [Vaswani et al. (2017): Attention Is All You Need (the transformer paper)](https://arxiv.org/abs/1706.03762)
+- [Ouyang et al. (2022): Training language models to follow instructions with human feedback (RLHF / InstructGPT)](https://arxiv.org/abs/2203.02155)
+- [Stephen Wolfram: What Is ChatGPT Doing and Why Does It Work?](https://writings.stephenwolfram.com/2023/02/what-is-chatgpt-doing-and-why-does-it-work/)
+- [OpenAI Help: Does ChatGPT tell the truth?](https://help.openai.com/en/articles/8313428-does-chatgpt-tell-the-truth)
+- [Wikipedia: GPT-3 (175 billion parameters, 96 layers)](https://en.wikipedia.org/wiki/GPT-3)
+- [TechCrunch: ChatGPT rolls out ads (February 2026)](https://techcrunch.com/2026/02/09/chatgpt-rolls-out-ads/)
