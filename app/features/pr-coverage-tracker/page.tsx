@@ -143,11 +143,11 @@ export default function PrCoverageTrackerPage() {
           <div className="mx-auto mt-12 max-w-4xl">
             <ScreenshotFrame
               src="/screenshots/pr-coverage-tracker/coverage-table.png"
-              alt="PR Coverage Tracker results: earned media placements with per-row status — Live, Blocked, or Dead — a Google-indexed badge, whether the page still mentions the brand, and which AI engines cite it, plus summary counts for tracked placements, live, still-mentioning, and cited by AI."
-              width={1696}
-              height={1004}
+              alt="PR Coverage Tracker results: earned media placements with a per-row status — Dead 404, Blocked, Live 200, or Check failed — and a Google index badge (In Google / Not found in Google). A WAF-blocked publisher (ft.com) is confirmed still indexed in Google instead of being marked dead, while a genuine 404 is flagged Dead."
+              width={2010}
+              height={980}
               priority
-              caption="Each placement checked: still live, indexed in Google, still on-message — and which AI engines cite it. WAF-blocked publishers are verified via Google, never marked dead."
+              caption="Every placement checked for liveness and Google indexing. A publisher that blocks our crawler (ft.com — “Blocked”) is verified via Google rather than falsely marked dead; a real 404 (top row) is. AI-citation attribution sits alongside, per brand."
             />
           </div>
         </div>
