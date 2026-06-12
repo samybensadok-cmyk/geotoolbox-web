@@ -7,11 +7,11 @@ tags: ["how-does-chatgpt-work", "transformer", "llm", "ai-search", "geo", "guide
 draft: false
 ---
 
-How does ChatGPT work? Strip away the marketing and the answer is stranger, and simpler, than most explanations admit. It is not thinking. It has no database it looks your site up in. Often it is not searching the web at all. It is running one operation, a few hundred times per answer: predicting the next token. This is that operation in plain English, written for people who publish content rather than build models, with the part the engineering explainers skip: what each step does, and does not, mean for whether you show up in AI answers.
+How does ChatGPT work? Strip away the marketing and the answer is stranger, and simpler, than most explanations admit. It is not thinking. The model underneath has no database it looks your site up in, and much of the time it is not searching the web at all. It is running one operation, a few hundred times per answer: predicting the next token. This is that operation in plain English, written for people who publish content rather than build models, with the part the engineering explainers skip: what each step does, and does not, mean for whether you show up in AI answers.
 
 ## How ChatGPT Works in 30 Seconds: It Predicts the Next Token
 
-**ChatGPT works by answering one small question, over and over: given the text so far, what token is likely to come next?** It scores every possible token, picks one (not always the single highest, as we will see), adds it to the end, and asks again. Every answer it writes is that loop running a few hundred times. There is no separate step where it decides what is true, looks you up, or thinks about your question the way a person would.
+**ChatGPT works by answering one small question, over and over: given the text so far, what token is likely to come next?** It scores every possible token, picks one (not always the single highest, as we will see), adds it to the end, and asks again. Every answer it writes is that loop running a few hundred times. Inside the base model there is no separate step where it checks what is true or thinks about your question the way a person would. (When ChatGPT runs a web search or a tool, the product wraps those extra steps around the model, more on that later.)
 
 People reach for the word "autocomplete," and it is the right starting point as long as you do not stop there. Stephen Wolfram, in his much-cited [plain-language explainer](https://writings.stephenwolfram.com/2023/02/what-is-chatgpt-doing-and-why-does-it-work/), describes it as producing a "reasonable continuation" of whatever text it has so far.
 
@@ -28,13 +28,13 @@ For someone publishing content, the practical takeaway lands before any of the m
 <tr><td>Looks your brand up in a live database</td><td>Generates from frozen numerical weights set during training</td></tr>
 <tr><td>Searches the web every time it answers</td><td>Only when it runs a web search; the rest of the time nothing is fetched</td></tr>
 <tr><td>Remembers you between chats</td><td>Starts each chat blank unless a separate memory layer stores facts</td></tr>
-<tr><td>Reads your page like a human reader</td><td>Reads tokens and numbers; the letters are gone before it starts</td></tr>
+<tr><td>Reads your page like a human reader</td><td>Reads token IDs and vectors, not your text letter by letter</td></tr>
 </tbody>
 </table>
 
 ## From Your Prompt to Tokens: Tokenization
 
-Before the model does anything, a separate program called a tokenizer chops your text into **tokens** and swaps each one for a number. A token is a chunk of text, usually about four characters or three-quarters of a word. Common words are a single token; rarer words and less common brand names get split into pieces. The model never sees your letters. It sees a list of integer IDs, and by the time it starts working, the words are gone. Images and audio get the same treatment in multimodal models, sliced into their own tokens, so the same logic carries over to everything ChatGPT handles.
+Before the model does anything, a separate program called a tokenizer chops your text into **tokens** and swaps each one for a number. A token is a chunk of text, usually about four characters or three-quarters of a word in English (other languages often cost more tokens per word). Common words are a single token; rarer words and less common brand names get split into pieces. The model mostly works from these integer IDs rather than a letter-by-letter view of your text, which is exactly why letter-level tasks are awkward for it. Multimodal models convert images and audio into their own numerical representations too, though the exact pipeline differs from text tokenization.
 
 This is the root of ChatGPT's famous trouble counting the R's in "strawberry." The word arrives as a few subword tokens, none of which is a letter, so counting letters is a memory task rather than something it can read off the page. The same mechanics explain garbled brand names and fumbled long numbers. The full story, including which words still trip current models, has [its own article on tokens](https://geotoolbox.ai/blog/what-are-tokens-in-ai); here it is enough to know that tokens are the raw unit everything downstream is built on.
 
@@ -68,21 +68,21 @@ Here is the part to file away for later, because a whole genre of advice depends
 
 ## Stacking It Up: The Transformer, Training, and One Token at a Time
 
-One attention step is not enough. A **transformer** stacks dozens of these blocks, each pairing an attention layer with a small neural network, so the text passes through the same kind of processing again and again. Early layers catch simple patterns like parts of speech; later layers build up to abstract relationships. GPT-3 used [96 of these blocks](https://en.wikipedia.org/wiki/GPT-3), stacked into one large neural network. Today's biggest commercial AI models do not publish that number at all.
+One attention step is not enough. A **transformer** stacks dozens of these blocks along what is called the residual stream, the running state each token carries upward. Each block pairs an attention layer, which routes information between tokens, with an MLP, a feedforward network that transforms each token's state and is a major place where the learned facts and features get applied. Early layers catch simple patterns like parts of speech; later layers build up to abstract relationships. GPT-3 used [96 of these blocks](https://en.wikipedia.org/wiki/GPT-3), stacked into one large neural network. Today's biggest commercial AI models do not publish that number at all.
 
-What the blocks contain is **weights**, also called parameters, the numbers that encode everything the model learned. GPT-3 had [175 billion of them](https://en.wikipedia.org/wiki/GPT-3). The current models do not disclose their counts, and the figure of 100 trillion that still gets repeated is a rumor the company itself has dismissed, not a confirmed number.
+What the blocks contain is **weights**, also called parameters, the numbers that encode everything the model learned. GPT-3 had [175 billion of them](https://en.wikipedia.org/wiki/GPT-3). The current models do not disclose their counts, and the figure of 100 trillion that still gets repeated is a rumor OpenAI's CEO has publicly dismissed, not a confirmed number.
 
 Those weights are set during **pre-training**, when the model reads an enormous amount of text and adjusts itself to predict the next token better. That is the P in GPT: Generative Pre-trained Transformer. A later step, reinforcement learning from human feedback, described in OpenAI's [InstructGPT paper](https://arxiv.org/abs/2203.02155), uses human ratings to make the raw model behave like a helpful assistant instead of a blunt text predictor.
 
 That step does more than add manners: it reshapes what the model will say, so the finished assistant is not a pure mirror of its training text.
 
 <Callout type="tip" title="Why leading prompts make useless tests">
-Reinforcement learning rewarded agreeable answers, so the model learned to agree. Ask it "isn't my brand the best tool for this?" and you will usually get a yes. That makes a leading prompt a worthless visibility test: phrase your checks neutrally, and trust how often an answer repeats over how flattering any single run looks.
+Reinforcement learning from human feedback can nudge assistants toward agreeable answers, which surfaces as sycophancy on leading prompts. Ask it "isn't my brand the best tool for this?" and you may well get a yes. That makes a leading prompt a worthless visibility test: phrase your checks neutrally, and trust how often an answer repeats over how flattering any single run looks.
 </Callout>
 
-None of this is unique to ChatGPT. Today's models, whether from OpenAI's GPT-5 line, Anthropic's Claude, or Google's Gemini, all run on the same transformer idea. The newer "reasoning" or "thinking" modes do not change it; they run the same loop longer, drafting hidden intermediate tokens to work through a problem before the visible answer. That is more next-token prediction, not a different machine. When people ask [how large language models work](https://geotoolbox.ai/glossary/large-language-model) in general, this is the answer for nearly all of them.
+None of this is unique to ChatGPT. Today's models, whether from OpenAI's GPT-5 line, Anthropic's Claude, or Google's Gemini, all run on the same transformer idea. The newer "reasoning" or "thinking" modes do not change the core loop; they spend more computation before the visible answer, often through hidden intermediate reasoning, and sometimes extra tool calls or retrieval rounds. At bottom it is still next-token prediction, not a different machine. When people ask [how large language models work](https://geotoolbox.ai/glossary/large-language-model) in general, this is the answer for nearly all of them.
 
-After the text clears the stack, the model produces a probability for every possible next token and picks one. Then it appends that token to the input and runs again for the next one. One token at a time, the model working through its full depth for each new word. That is why a long answer takes real computation, and why it streams onto your screen word by word.
+After the text clears the stack, the model produces a score (a logit) for every possible next token, turns those scores into probabilities, and a decoding rule, temperature or top-p among them, selects one. Then it appends that token to the input and runs again for the next one. One token at a time, the model working through its full depth for each new word. That is why a long answer takes real computation, and why it streams onto your screen word by word.
 
 ## Why ChatGPT Makes Things Up: Hallucination
 
@@ -90,11 +90,11 @@ Once you accept that the model is always just reaching for a likely next token, 
 
 OpenAI says as much in its own [guidance on whether ChatGPT tells the truth](https://help.openai.com/en/articles/8313428-does-chatgpt-tell-the-truth): the system is built to produce plausible continuations, not verified facts, and it can be confidently wrong. That confidence is the dangerous part. A person who does not know something usually hedges. The model delivers a fabricated statistic or a fake citation in the same steady tone it uses for things it has right. This is the same machinery behind [AI hallucinations](https://geotoolbox.ai/blog/ai-hallucinations) across every model, not a bug specific to one of them.
 
-For a brand, this is the source of the worst experiences. ChatGPT will sometimes state something wrong about you, your pricing, or your product with total assurance, and there is no inbox to send a correction to. The only lever you have follows straight from the mechanism. The model reaches for a likely continuation given the text it absorbed, so the work is to make the accurate version the likely one: clear, consistent, current information about you, repeated wherever these systems read. On the retrieval side, a corrected page can change the answer within a crawl or two. On the training side it is slow and carries no guarantee, since you cannot make the model retrain. It is the only lever, not a switch.
+For a brand, this is the source of the worst experiences. ChatGPT will sometimes state something wrong about you, your pricing, or your product with total assurance, and there is no inbox to send a correction to. The only lever you have follows straight from the mechanism. The model reaches for a likely continuation given the text it absorbed, so the work is to make the accurate version the likely one: clear, consistent, current information about you, repeated wherever these systems read. On the retrieval side, a corrected page can change the answer once the crawler and index pick it up, though the timing varies by engine and query. On the training side it is slow and carries no guarantee, since you cannot make the model retrain. It is the only lever, not a switch.
 
 ## Where ChatGPT Gets Its Information: Training vs Live Retrieval
 
-This is the distinction that clears up more publisher confusion than any other. ChatGPT draws on two completely separate sources of information, and they behave nothing alike.
+This is the distinction that clears up more publisher confusion than any other. ChatGPT draws on two completely separate sources of information, and they behave nothing alike. It helps to hold three things apart: training sets the weights, slow and then frozen; the live conversation steers an answer through whatever sits in the context window, without changing a single weight; and retrieval decides which outside pages get dropped into that context in the first place.
 
 The first is **parametric knowledge**, the patterns frozen into the weights during training. It is what answers when no tools are on: vast, but stale by design, fixed at a training cutoff, and holding no copy of your page, only a statistical echo of text that resembled it.
 
@@ -113,7 +113,7 @@ The second is **live retrieval**, which only happens when the model runs a web s
 </tbody>
 </table>
 
-Two doors, then, and they open with different keys. Getting into the training corpus is slow and largely out of your hands. The retrieval door you can actually check, because it depends on whether the crawlers behind ChatGPT can reach your pages at all, starting with [GPTBot](https://geotoolbox.ai/blog/gptbot). Both doors are gated by what the crawler actually receives, which is raw HTML with no JavaScript run, so anything that only appears after a script executes may not exist as far as ChatGPT is concerned. One caution worth stating plainly: ChatGPT's search is not a simple wrapper around any single search engine, so do not assume your Google ranking carries straight over to it.
+Two doors, then, and they open with different keys. Getting into the training corpus is slow and largely out of your hands. The retrieval door you can actually check, because it depends on whether ChatGPT's search crawlers can reach your pages at all, chiefly OAI-SearchBot, which indexes pages for ChatGPT search, and ChatGPT-User, which fetches a page live when a user's question triggers it. ([GPTBot](https://geotoolbox.ai/blog/gptbot) is the separate training crawler, not the search gate, a distinction worth getting right before you block the wrong one.) What the crawler receives matters too: in crawler-log studies, several AI bots have behaved like initial-HTML parsers rather than full browsers, so anything that only appears after JavaScript runs is at higher risk of being missed, though this varies by bot and is worth verifying. One caution worth stating plainly: ChatGPT's search is not a simple wrapper around any single search engine, so do not assume your Google ranking carries straight over to it.
 
 ## What This Actually Means for Your AI Visibility
 
@@ -126,7 +126,7 @@ What is left is less exciting and a great deal more real, and it splits cleanly 
 In our experience building tools for this, the brands that show up reliably in AI answers are not the ones chasing an imaginary attention dial. They are the ones that are easy to reach, described consistently, and accurate enough that the model's best guess about them is the right one. Formatting still matters, just not the way the black-box advice claims: structuring a page so a retrieval system can lift a clean answer out of it is a real, testable thing, and it is most of what [how to optimize for AI search](https://geotoolbox.ai/blog/how-to-optimize-for-ai-search) is actually about.
 
 <Callout type="note" title="Does it learn my brand between chats?">
-No. Talking to ChatGPT teaches it nothing about your brand: the weights are frozen, and the [context window](https://geotoolbox.ai/glossary/context-window) it reads from is wiped when the chat ends. The "memory" feature is per-user bookkeeping, not training. So there is no point trying to "tell" the model who you are inside a chat. The only ways in are the training corpus and live retrieval, both covered above.
+No. Talking to ChatGPT teaches the current model nothing about your brand: its weights are frozen, and the [context window](https://geotoolbox.ai/glossary/context-window) it reads from is wiped when the chat ends. The "memory" feature is per-user bookkeeping, not training. So there is no point trying to "tell" the model who you are inside a chat. The only ways in are the training corpus and live retrieval, both covered above.
 </Callout>
 
 ## What the Mechanism Leaves You With
@@ -147,7 +147,7 @@ No. It only "knows" patterns from text that was in its training data, plus anyth
 
 ### Why does ChatGPT give a different answer each time?
 
-Because it samples from a probability distribution over possible next tokens rather than always taking the single most likely one. An internal dial called temperature controls how much randomness is allowed (you cannot set it in the ChatGPT app, though the API exposes it). The practical consequence for anyone testing AI visibility is that one run is an anecdote, not a measurement; you need to sample repeatedly over time.
+Because it samples from a probability distribution over possible next tokens rather than always taking the single most likely one. Decoding settings such as temperature and top-p control how much randomness is allowed; APIs expose them, while the ChatGPT app does not disclose its own. Some of the variation you see also comes from retrieval changes, model routing, and quiet product updates, not sampling alone. The practical consequence for anyone testing AI visibility is that one run is an anecdote, not a measurement; you need to sample repeatedly over time.
 
 ### Does ChatGPT remember me between chats?
 

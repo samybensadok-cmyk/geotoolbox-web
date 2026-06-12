@@ -13,7 +13,7 @@ Most explainers cover RAG for the people building it. This one is for the people
 
 ## What Is Retrieval-Augmented Generation (RAG)?
 
-**Retrieval-augmented generation (RAG)** is a technique that lets a large language model look information up at answer time instead of relying only on what it memorized during training. The model retrieves relevant documents, reads them, and writes an answer grounded in what it just found.
+**Retrieval-augmented generation (RAG)** is a technique that lets a large language model look information up at answer time instead of relying only on what it memorized during training. The RAG system retrieves relevant documents; the model then reads the supplied context and writes an answer grounded in it.
 
 The cleanest way to picture it is an open-book exam. A plain language model takes a closed-book exam: it answers from memory, and when memory fails it guesses confidently. RAG hands the same model the textbook and lets it check the relevant page before answering. The knowledge it uses no longer has to be baked into its weights. It can be pulled from a source the moment the question is asked.
 
@@ -37,7 +37,7 @@ The vocabulary trips people up here. A vector database is the common way to stor
 
 ## Where RAG Came From
 
-The term comes from a 2020 paper, [Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks](https://arxiv.org/abs/2005.11401), led by Patrick Lewis with a team of machine learning researchers from Facebook AI Research (now Meta AI), University College London, and NYU. It has since been [cited more than 20,000 times](https://scholar.google.com/scholar?q=Retrieval-Augmented+Generation+for+Knowledge-Intensive+NLP+Tasks) and is the reference point everyone else builds on.
+The term comes from a 2020 paper, [Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks](https://arxiv.org/abs/2005.11401), led by Patrick Lewis with a team of machine learning researchers from Facebook AI Research (now Meta AI), University College London, and NYU. As of June 2026, Google Scholar shows [more than 20,000 citations](https://scholar.google.com/scholar?q=Retrieval-Augmented+Generation+for+Knowledge-Intensive+NLP+Tasks), and it is the reference point everyone else builds on.
 
 The paper's framing is still the most useful one. It describes combining **parametric memory**, the knowledge stored in a model's trained weights, with **non-parametric memory**, a searchable index the model can consult at inference time. In the original work that index was a dense vector representation of Wikipedia, reached through a neural retriever. Swap Wikipedia for "the live web" and you have a fair sketch of how AI search engines work today.
 
@@ -95,7 +95,7 @@ When a stakeholder says "let's train ChatGPT on our website," they almost always
     <tr>
       <td>Can it cite sources?</td>
       <td>Yes</td>
-      <td>No</td>
+      <td>Not by itself / not reliably grounded</td>
     </tr>
   </tbody>
 </table>
@@ -108,7 +108,7 @@ For publishers, the distinction matters for one reason in particular: the AI eng
 
 The RAG systems most people actually interact with are the AI search engines you are already trying to show up in, and that is the connection the vendor explainers leave out. They describe RAG as enterprise plumbing: a support chatbot answering over a company's internal data, internal knowledge search, a research assistant reading proprietary files. Those use cases are real, but they are the smaller story.
 
-When ChatGPT browses the web to answer a question, it retrieves pages from a search index (built on third-party search providers), reads them, and writes a grounded reply with links. [Perplexity](https://geotoolbox.ai/blog/perplexity-seo) retrieves and cites on essentially every query. Google's AI Overviews pull candidate passages from pages that already rank, then synthesize them. Different engines, same three steps: retrieve, augment, generate. This is just [how AI search works](https://geotoolbox.ai/blog/how-does-ai-search-work) under the hood.
+When ChatGPT browses the web to answer a question, it retrieves web information through ChatGPT search, which OpenAI says uses third-party search providers, partner-provided content, and its search crawling systems. [Perplexity](https://geotoolbox.ai/blog/perplexity-seo) typically retrieves and cites sources. Google's AI Overviews draw on Google's Search index and ranking/quality systems, then synthesize selected sources. Different engines, same three steps: retrieve, augment, generate. This is just [how AI search works](https://geotoolbox.ai/blog/how-does-ai-search-work) under the hood.
 
 ChatGPT itself shows how the pieces fit. The base model is a language model, but its search and browsing mode wraps that model in a RAG loop, retrieving live pages before it answers. The model is the generator; the product around it is the RAG system.
 

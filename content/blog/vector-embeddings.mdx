@@ -32,7 +32,7 @@ Here's the thing about dimensions. Each vector has a fixed length, and that leng
 
 Early models like word2vec and GloVe were static: one word, one vector, forever. That breaks on ambiguous words, because "set" has hundreds of senses and a single vector has to average them all. Transformer-based models like BERT fixed this. They read the whole input first, so each word's vector shifts based on the words around it. "Bank" near "river" and "bank" near "loan" produce different embeddings.
 
-Modern embedding models apply the same idea beyond single words. They produce one vector per sentence, passage, or document, which is the form that matters for search: when an AI engine indexes your page, what it stores are embeddings of your passages.
+Modern embedding models apply the same idea beyond single words. They produce one vector per sentence, passage, or document, which is the form that matters for search: In many AI retrieval systems, content is chunked and stored as embeddings of passages.
 
 <Callout type="note" title="Dimension count is not a quality lever">
 You will see vendors compare models by dimension count. More dimensions is not better content representation by default, and you do not get to choose what production engines use anyway. File this number under "how it works," not "what to optimize."
@@ -66,10 +66,10 @@ When an AI engine answers a question with citations, embeddings have usually don
 
 1. **Your question gets embedded.** The engine converts the query into a vector using the same embedding model it used to index content (often after [fanning one prompt out](https://geotoolbox.ai/glossary/query-fan-out) into several sub-queries). In practice the query must use the index's model: raw vectors from different models live in different spaces and are not directly comparable.
 2. **Candidates get retrieved.** The engine runs a similarity search against its index and pulls the passages whose embeddings sit closest to the query vector.
-3. **Candidates get reranked.** A second model rescores the shortlist with more expensive checks for relevance, and systems layer in signals like freshness and authority.
+3. **Candidates often get reranked.** A second model OR ranking system may rescore the shortlist with more expensive checks for relevance, and systems layer in signals like freshness and authority.
 4. **The model writes, citing a subset.** The generator reads the surviving passages and composes an answer, attributing some of them as sources.
 
-One documented exception to note: [Google states](https://developers.google.com/search/docs/fundamentals/ai-optimization-guide) that AI Overviews grounding pulls candidates through its core Search ranking systems (with AI Mode adding query fan-out), so embeddings work inside classic ranking there rather than as a standalone vector index. ChatGPT and Perplexity run closer to the pipeline above.
+One documented exception to note: [Google states](https://developers.google.com/search/docs/fundamentals/ai-optimization-guide) that AI Overviews grounding pulls candidates through its core Search ranking systems (with AI Mode adding query fan-out), so embeddings work inside classic ranking there rather than as a standalone vector index. ChatGPT Search and Perplexity APPEAR closer to the pipeline above, based on observed behavior; live web-search internals are not fully published.
 
 This is the retrieval-augmented generation pattern, and it is worth reading our breakdown of [how AI search works](https://geotoolbox.ai/blog/how-does-ai-search-work) for the full pipeline. The short version: [retrieval-augmented generation](https://geotoolbox.ai/glossary/retrieval-augmented-generation) grounds the model in retrieved passages instead of letting it answer purely from training memory. For the full explainer, see [what RAG is](https://geotoolbox.ai/blog/what-is-rag).
 
@@ -89,7 +89,7 @@ Training data and retrieval are different doors. A page published yesterday can 
 
 ## What Embeddings Mean for How You Write and Structure Content
 
-The single most useful thing to internalize: **retrieval systems embed passages, not whole pages**. Your 3,000-word guide is not one vector in the index. It gets split into chunks, and each chunk gets its own embedding that competes for retrieval independently.
+The single most useful thing to internalize: **modern AI retrieval systems OFTEN chunk and embed passages, not just whole pages**. Your 3,000-word guide may be split into smaller units that compete independently for retrieval.
 
 Part of this is a hard constraint. Embedding models cap their input ([OpenAI's models](https://developers.openai.com/api/docs/guides/embeddings) take at most 8,192 [tokens](https://geotoolbox.ai/blog/what-are-tokens-in-ai)), and meaning gets compressed long before that limit anyway. A vector embedding forced to summarize five different subtopics ends up an average of all of them, distinctly representing none. Retrieval systems chunk content because focused chunks produce sharper vectors.
 
@@ -181,7 +181,7 @@ Dense embeddings are the kind discussed throughout this article: compact vectors
 
 ### Does Perplexity work the same way as ChatGPT search?
 
-Directionally yes: both retrieve candidate passages before answering, which is where embeddings matter. They differ in what they retrieve from. Published overlap studies show Perplexity's citations track Google's results far more closely than ChatGPT's do (our [ChatGPT vs Perplexity](https://geotoolbox.ai/blog/chatgpt-vs-perplexity) comparison breaks this down), so the same page can be cited by one engine and invisible to the other.
+Directionally yes: both retrieve candidate passages before answering, which is where embeddings matter. They differ in what they retrieve from. Some published overlap studies have found Perplexity's citations track Google's results far more closely than ChatGPT's do (our [ChatGPT vs Perplexity](https://geotoolbox.ai/blog/chatgpt-vs-perplexity) comparison breaks this down), so the same page can be cited by one engine and invisible to the other.
 
 ### Are vector embeddings the same as keywords?
 

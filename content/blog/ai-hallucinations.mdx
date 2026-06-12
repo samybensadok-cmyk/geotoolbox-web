@@ -18,11 +18,11 @@ So a hallucination is not a bug that a patch will remove. It is a side effect of
 
 ## Why AI Gets Your Brand Wrong Specifically
 
-Hallucinations cluster exactly where the training data is thin, and for most companies that is their own brand. The model has read the whole internet about "project management software" but very little about your specific product, so when asked, it fills the gap with plausible-sounding guesses drawn from competitors and category norms.
+Hallucinations cluster exactly where the training data is thin, and for most companies that is their own brand. The model has seen a huge amount of web text about "project management software" but very little about your specific product, so when asked, it fills the gap with plausible-sounding guesses drawn from competitors and category norms.
 
 That tendency is well documented in citation studies, where models invent specifics confidently. A [2023 Cureus study](https://www.cureus.com/articles/158289) found 47% of the references ChatGPT-3.5 produced were entirely fabricated and another 46% had wrong details, leaving only 7% fully correct. A [2024 JMIR study](https://www.jmir.org/2024/1/e53164) found GPT-4 hallucinated 28.6% of references and GPT-3.5 39.6%. Search-connected tools fare little better: when the Tow Center for Digital Journalism [tested eight AI search engines](https://www.cjr.org/tow_center/we-compared-eight-ai-search-engines-theyre-all-bad-at-citing-news.php) in March 2025, giving each an excerpt from a real article and asking for the headline, publisher, date, and URL, the engines answered wrong in more than 60% of 1,600 queries, and Perplexity, the most accurate of the eight, still missed 37% of the time. Newer models hallucinate less, and OpenAI says so itself, but the failure mode persists: on the harder, longer-document version of [Vectara's hallucination leaderboard](https://www.vectara.com/blog/introducing-the-next-generation-of-vectaras-hallucination-leaderboard) introduced in November 2025, frontier models including GPT-5 and Claude Sonnet 4.5 still produced unsupported claims in more than 10% of the summaries they wrote from documents they were handed. References are just an easy thing to check; the same mechanism plausibly applies to facts about your business, since OpenAI's own explanation is that rare facts get guessed, and [how ChatGPT cites sources](https://geotoolbox.ai/blog/chatgpt-citations) breaks down exactly where its citations break.
 
-The uncomfortable implication: the more niche your brand or the less that has been written about your executives, the more likely AI is to invent details, because rarity is precisely what it cannot retrieve and must guess.
+The uncomfortable implication: the more niche your brand or the less that has been written about your executives, the more likely AI is to invent details, because rarity is where retrieval often fails and the system is more likely to guess.
 
 ## The Most Common Brand Hallucinations
 
@@ -78,13 +78,13 @@ This aligns with what Google states in its [AI features guidance](https://develo
 
 ## How to Correct a Hallucination That's Already Live
 
-There is no takedown button, so correction is indirect: fix the sources the model reads, then wait for it to re-learn. Telling the chatbot "that's wrong" in a conversation does nothing lasting; the correction is session-only and gone on the next chat.
+There is no takedown button, so correction is indirect: fix the sources the system can retrieve, then wait for recrawl/reindexing or, for facts baked into weights, a future model refresh. Telling the chatbot "that's wrong" may affect that conversation, but it is not a reliable public correction mechanism.
 
 The durable fix has three parts, in order:
 
 1. **Update the canonical source.** State the correct fact plainly on your own page.
 2. **Address the cited third-party sources.** The pages the engine actually cited often carry more weight than your own site, so the old fact has to be corrected there too.
-3. **Wait for the recrawl.** The lag depends on where the wrong fact lives: engines that retrieve live pages (AI Overviews, Perplexity, ChatGPT search) can reflect a corrected, recrawled page within days to weeks, while a fact baked into training data waits months for the next refresh. If the wrong fact persists, it usually means a cited third-party source still carries the old version, or your [grounding](https://geotoolbox.ai/glossary/grounding) signals are weaker than the source the model trusts.
+3. **Wait for the recrawl.** The lag depends on where the wrong fact lives: engines that retrieve live pages (AI Overviews, Perplexity, ChatGPT search) can reflect corrected, recrawled pages sooner than training-data changes, but timing varies from days to months by engine and page, while a fact baked into training data waits months for the next refresh. If the wrong fact persists, it usually means a cited third-party source still carries the old version, or your [grounding](https://geotoolbox.ai/glossary/grounding) signals are weaker than the source the model trusts.
 
 ## Frequently Asked Questions
 
@@ -95,7 +95,7 @@ A useful self-test: the harder it is to find a written, third-party answer to a 
 Start with a 30-day pass: week one, publish canonical pages for the facts AI gets wrong (pricing, leadership, product names); week two, align your [Wikidata](https://geotoolbox.ai/glossary/wikidata), Crunchbase, and LinkedIn entries to match; weeks three and four, request corrections on the specific third-party pages the engines cite. Then re-run your prompts and compare.
 
 **I updated my site. Why is the AI still wrong, and how long until it's fixed?**
-Check which kind of lag you are in. If the engine cites a third-party page, your site update cannot fix it; the cited page has to change. If it cites your own outdated page, request a recrawl (Search Console for Google, Bing Webmaster Tools for ChatGPT's index) and the fix can land in days rather than months.
+Check which kind of lag you are in. If the engine cites a third-party page, your site update cannot fix it; the cited page has to change. If it cites your own outdated page, request a recrawl where available: Search Console for Google, Bing Webmaster Tools/IndexNow for Bing-powered surfaces, and make sure OAI-SearchBot can crawl pages you want eligible for ChatGPT Search. The fix can land sooner rather than waiting months for a training refresh.
 
 **Can I report or remove a hallucination?**
 For statements about a person, yes in part: OpenAI accepts correction and removal requests for inaccurate personal data through its privacy portal, which covers a hallucinated founder or executive. For statements about the company itself there is no correction channel, so the practical path is fixing the underlying sources.

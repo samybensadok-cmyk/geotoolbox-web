@@ -40,7 +40,7 @@ If you searched "AI tokens" and landed on coin prices, that is a different meani
 
 ## How Tokenization Works: From Text to Token IDs
 
-Before your text ever reaches the model, a separate program called a **tokenizer** chops it into tokens and replaces each one with a number. "Hello, world!" does not enter the model as words. It enters as a short list of integer IDs, something like [9906, 11, 1917, 0] (those are GPT-4's tokenizer; a newer model assigns different numbers). The model works with the numbers. The letters are gone by the time it starts thinking.
+Before your text ever reaches the model, a separate program called a **tokenizer** chops it into tokens and replaces each one with a number. "Hello, world!" does not enter the model as words. It enters as a short list of integer IDs, something like [9906, 11, 1917, 0] (those are GPT-4's tokenizer; a newer model assigns different numbers). The model works with the numbers. The model usually receives tokenizer IDs rather than a native character stream; the useful character-level structure is not directly exposed as separate letters.
 
 The splitting follows a method called **subword tokenization**. Frequent words get their own single token. Rare words, brand names, and long compounds get broken into pieces. "Tokenization" might split into "token" and "ization." A made-up product name might shatter into four or five fragments, which is why models sometimes garble an unusual brand name: they are rebuilding it from parts, not recalling it whole. The tokenizer is not reading for meaning, just matching against a fixed vocabulary of known chunks built once, in advance. Images and audio get the same treatment in multimodal models, sliced into patch and audio tokens, so the logic here carries over.
 
@@ -50,7 +50,7 @@ Here is the part that matters for everything downstream. Tokenizing is only step
 
 ## Why ChatGPT Can't Count the R's in "Strawberry"
 
-The famous failure where a model insists "strawberry" has two R's comes straight from tokens. The word arrives as a handful of subword tokens, and not one of them is a letter. The model never sees s-t-r-a-w-b-e-r-r-y. It sees two or three opaque IDs and is asked to count something it cannot look at directly.
+The famous failure where a model insists "strawberry" has two R's comes straight from tokens. The word arrives as a handful of subword tokens, and not one of them is a letter. The model usually receives tokenizer IDs rather than a native character stream; for a word like "strawberry," the useful character-level structure is not directly exposed as separate letters. It sees two or three opaque IDs and is asked to count something it cannot look at directly.
 
 So spelling questions are really memory tasks for a model, not perception. To count the R's, it has to recall how the word is spelled from its training data, then count over the recalled letters, and both steps can go wrong. It is like being asked how many times the letter E appears in a word you have only ever heard out loud.
 
@@ -58,7 +58,7 @@ Tokens are not the whole story, to be fair. Ask a model to spell "strawberry" an
 
 Arithmetic breaks for a related reason. Long numbers get chopped into tokens at arbitrary points, so "1234567" might split into pieces that do not line up for digit-by-digit math. That is part of why models have fumbled questions like whether 9.11 is bigger than 9.9. And there is only a fixed amount of computation per token, nothing like the open-ended loop you would use to carry digits through a long sum.
 
-Newer models look better at this, but be precise about why. They mostly learned to spell the word out, one letter at a time, which turns each letter into its own token the model can finally "see." It is a workaround, not a fix at the tokenizer level. As of late 2025, [reports were still catching GPT-5.2 miscounting](https://dataconomy.com/2025/12/15/gpt-5-2-still-counts-two-rs-in-strawberry/) some variants. This is the same family of gap behind other [AI hallucinations](https://geotoolbox.ai/blog/ai-hallucinations): the model confidently reports something its architecture did not actually let it check.
+Newer models look better at this, but be precise about why. A common workaround is to spell the word out or separate the letters, making the character-level task easier for the model. It is a workaround, not a fix at the tokenizer level. As of late 2025, [reports were still catching GPT-5.2 miscounting](https://dataconomy.com/2025/12/15/gpt-5-2-still-counts-two-rs-in-strawberry/) some variants. This is the same family of gap behind other [AI hallucinations](https://geotoolbox.ai/blog/ai-hallucinations): the model confidently reports something its architecture did not actually let it check.
 
 The same blind spot explains a pain every writer has hit: ask for 1,000 words and you often get 700, with the model insisting it delivered 1,000. It generates token by token with no running word counter, so it cannot track its own length any better than it can count R's. Treat anything character-level or count-based the same way, from reversing a string to solving Wordle, and lean on models for meaning rather than spelling.
 
@@ -84,7 +84,7 @@ These windows have grown fast, and they keep moving, so treat any single number 
 
 By mid-2026 a [dozen-plus frontier models ship windows of a million tokens or more](https://artificialanalysis.ai/models), and the largest open-weight model advertises 10 million. One honest caveat the marketing skips: usable context runs smaller than the advertised number, so a million-token window does not buy a million tokens of reliable attention.
 
-When you blow past the window, the system does not warn you politely. An API call throws a "context length exceeded" error. Most chat interfaces quietly drop the oldest tokens, which is why a long session can seem to forget how it started or lose the top of a document you pasted. Some products now layer memory features or summarize older turns on top, but you cannot count on that. The only guarantee is that the full original text no longer fits.
+When you blow past the window, the system does not warn you politely. An API may throw a context-limit error, while chat products may truncate, summarize, compact, or otherwise manage older context, which is why a long session can seem to forget how it started or lose the top of a document you pasted. You cannot count on any one behavior. The only guarantee is that the full original text no longer fits.
 
 This is also where tokens meet AI search. When ChatGPT or a Google AI Overview answers a question, [retrieval-augmented generation](https://geotoolbox.ai/blog/what-is-rag) fetches passages from the web and stuffs them into that same token budget before the model writes a word. The [context window](https://geotoolbox.ai/glossary/context-window) is finite, so the system keeps only the passages it ranks highest. Your content is competing for room measured in tokens.
 
@@ -128,7 +128,7 @@ About 750 words of English. The rule of thumb is one token to roughly three-quar
 
 ### Why can't ChatGPT count the letters in "strawberry"?
 
-Because the word reaches it as a few subword tokens, never as individual letters, so counting R's is recall-and-tally from memory rather than something it can read off the page. Models that answer correctly usually write the word out letter by letter first, which is a workaround, not a cure.
+Because the word reaches it as a few subword tokens, with the useful character-level structure not directly exposed as separate letters, so counting R's is recall-and-tally from memory rather than something it can read off the page. Models that answer correctly usually write the word out letter by letter first, which is a workaround, not a cure.
 
 ### How do I check how many tokens my text uses?
 
@@ -150,7 +150,7 @@ No. These are two unrelated meanings. In AI, a token is a unit of text a model p
 
 Tokens are a diagnosis, not a dashboard. They explain why the machine miscounts, truncates, and bills the way it does. The controls all sit somewhere else.
 
-The earliest one is access. If an AI crawler cannot reach your page, none of this token machinery ever runs on it, because the page never enters the budget. That gate you can actually test: our free [AI Readiness check](https://geotoolbox.ai/tools/ai-readiness) shows whether the crawlers behind ChatGPT, Perplexity, and Google's AI features can reach a page, and what is blocking them when they cannot. Tokens tell you how the machine reads. Reachability tells you whether it reads you at all.
+The earliest one is access. If an AI crawler cannot reach your page, none of this token machinery ever runs on it, because the page never enters the budget. That gate you can actually test: our free [AI Readiness check](https://geotoolbox.ai/tools/ai-readiness) shows whether the relevant search crawlers and user agents for ChatGPT Search, Perplexity, and Google Search AI features can reach a page, and what is blocking them when they cannot. Tokens tell you how the machine reads. Reachability tells you whether it reads you at all.
 
 ## Sources
 
