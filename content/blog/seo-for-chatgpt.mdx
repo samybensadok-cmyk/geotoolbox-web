@@ -39,7 +39,7 @@ Here is where most articles overstate something. The common claim is that ChatGP
 
 What OpenAI does state plainly is more useful: any website or publisher can choose to appear in ChatGPT search, and ChatGPT shows a Sources panel listing the references behind an answer (for the anatomy of those citations and why they are often wrong, see [how ChatGPT cites sources](https://geotoolbox.ai/blog/chatgpt-citations)). There are also direct publisher partnerships. OpenAI's announcement named publisher partners including the Associated Press, Reuters, Axel Springer, Le Monde, Condé Nast, and the Financial Times. But you do not need a partnership to be eligible. Eligibility comes down to being crawlable and useful.
 
-So the practical model is the same retrieve-and-cite loop every AI search engine runs: ChatGPT pulls candidate pages from its search providers, evaluates them, and cites a few. Your job is to be in that candidate pool and to be the cleanest answer in it.
+A practical way to think about ChatGPT Search is a retrieve-and-cite loop: it gathers candidate sources from search partners, OpenAI crawling/indexing, and partner content, then applies proprietary ranking and citation systems. Your job is to be in that candidate pool and to be the cleanest answer in it.
 
 ### Is the Publisher-Partner Path a Signal Worth Chasing?
 
@@ -81,17 +81,17 @@ In our experience scanning sites with Geotoolbox, this crawler confusion is one 
 Once OAI-SearchBot can reach you, citation comes down to the same signals that define [generative engine optimization](https://geotoolbox.ai/blog/what-is-geo) generally, applied to ChatGPT:
 
 - **Answer-first, extractable content.** Lead each section with the direct answer. ChatGPT lifts the clean statement, not the buried one. Our guide to [writing content LLMs cite](https://geotoolbox.ai/blog/ai-content-optimization) covers the passage-level craft.
-- **Citable substance.** The [Princeton study that defined GEO](https://arxiv.org/abs/2311.09735) found that adding sources, quotations, and statistics lifts generative-engine visibility by up to 40%. Specific, sourced facts get quoted.
-- **Freshness.** Search answers favor current pages. A visible, recent update date helps.
+- **Citable substance.** Aggarwal et al.'s GEO study (KDD 2024) found that optimization tactics including adding sources, quotations, and statistics improved visibility in their benchmark by up to 40% — a study-scoped result on their test engines, not a guaranteed ChatGPT lift. Specific, sourced facts get quoted. See the [GEO paper](https://arxiv.org/abs/2311.09735).
+- **Freshness.** For time-sensitive queries, freshness likely helps, and visible substantive update dates are good hygiene; OpenAI has not published a ChatGPT freshness weighting formula.
 - **Off-site corroboration.** ChatGPT leans on sources that agree. Being mentioned consistently across reviews, listicles, and reputable sites makes you safer to cite than a claim that lives only on your own domain.
 
-One more reason for optimism if you are not a household name: the citation pool has a long tail. When [Profound analyzed roughly 730,000 US ChatGPT conversations](https://www.tryprofound.com/blog/chatgpt-citation-sources) with web citations from late 2025 (study published February 2026), the ten most-cited domains captured only about 12% of all citations, with Wikipedia first at just 5%. Most of what ChatGPT cites is an ordinary site that happened to be the cleanest, best-corroborated answer to that query.
+One more reason for optimism if you are not a household name: the citation pool has a long tail. When [Profound analyzed roughly 730,000 US ChatGPT conversations](https://www.tryprofound.com/blog/chatgpt-citation-sources) with web citations from late 2025 (study published February 2026), the ten most-cited domains captured only about 12% of all citations, with Wikipedia first at just 5%. The Profound sample suggests citations are distributed across a long tail rather than captured entirely by the biggest domains; it does not prove why each cited page was selected.
 
 The step-by-step version, with the per-page checklist, lives in this [how to optimize for AI search](https://geotoolbox.ai/blog/how-to-optimize-for-ai-search) playbook. The ChatGPT-specific point is that extractable, corroborated content is what wins a citation once you are eligible. One honest caveat: none of it guarantees a citation. OpenAI has not published how the search layer picks among eligible sources, so these signals raise your odds; they do not buy a slot.
 
 ## How Fast Can You Appear in ChatGPT?
 
-Faster than a training cycle, because you are not waiting on a model retrain. Since ChatGPT search fetches live results, the constraint on a newly reachable, well-structured page is recrawl speed. OpenAI publishes no surfacing timeline; the only documented number is roughly 24 hours for its systems to register a robots.txt change, and in practice appearances follow on recrawl timescales of days to weeks, not months.
+Faster than a training cycle, because you are not waiting on a model retrain. Since ChatGPT search fetches live results, the constraint on a newly reachable, well-structured page is recrawl speed. OpenAI documents roughly 24 hours for robots.txt changes to register; actual surfacing after that depends on crawl, indexing, ranking, and query demand, and OpenAI publishes no timeline.
 
 That reframes the whole effort. If you are blocked from OAI-SearchBot today and fix it, you are not waiting for the next GPT version. You are waiting for a recrawl. Confirm the crawler can reach your key pages, make those pages the clearest answer to the questions you want to win, and the search layer can pick you up quickly.
 
@@ -123,7 +123,7 @@ Work that list top to bottom. The first two are technical and binary; the last t
 
 The order matters because the failures are not independent. A blocked crawler makes every other improvement invisible, which is why reachability sits at the top: it is the precondition for the rest paying off.
 
-The JavaScript problem is the quiet runner-up, because it passes a casual eyeball test. The page looks complete in your browser, where JavaScript runs, so the gap only shows up when a crawler that does not execute scripts requests the raw HTML and finds an empty shell. Server-side rendering or static generation closes it.
+The JavaScript problem is the quiet runner-up, because it passes a casual eyeball test. The page looks complete in your browser, where JavaScript runs, so the gap may only show up when a crawler or retrieval system receives raw HTML without the client-rendered content; verify what OAI-SearchBot receives with logs or fetch tests. Server-side rendering or static generation closes it.
 
 Once those two technical gates are open, the remaining three are the ones you iterate on over weeks. None of this is exotic. It is the same hygiene that helps in ordinary search, applied with the knowledge that the retrieval step is now the whole game.
 
@@ -133,7 +133,7 @@ Once those two technical gates are open, the remaining three are the ones you it
 Allow OAI-SearchBot to crawl your site, structure pages answer-first, keep them current, and earn consistent mentions on reputable third-party sites. ChatGPT retrieves and cites the clearest, best-corroborated sources for a query.
 
 **How fast can I appear in ChatGPT?**
-There is no published timeline. Search answers use live web fetches rather than training data, so the constraint is recrawl speed; expect days to weeks after a fix, not a wait for the next model version.
+There is no published timeline. Search answers use live web fetches rather than training data, so the constraint is recrawl speed. OpenAI documents roughly 24 hours for robots.txt changes to register; actual surfacing after that depends on crawl, indexing, ranking, and query demand.
 
 **Is ChatGPT search powered by Bing?**
 Partly. OpenAI's help docs confirm queries may be shared with Bing as one of its "third-party search providers," but OpenAI has never said search runs entirely on Bing, and it blends in its own crawl. Cover Bing (via Bing Webmaster Tools) without building a strategy around one named index.

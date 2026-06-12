@@ -27,7 +27,7 @@ This is where most "Claude SEO" advice goes wrong. Anthropic does not run one cr
   <tbody>
     <tr><td>ClaudeBot</td><td>Collects data that may train future models</td><td>You opt out of training, with no effect on whether Claude cites you today</td></tr>
     <tr><td>Claude-User</td><td>Fetches pages live during a user's session</td><td>Claude cannot pull that page into a live answer for the user</td></tr>
-    <tr><td>Claude-SearchBot</td><td>Indexes pages so they can surface in Claude's web search</td><td>You drop out of the index Claude's search draws on, the surest way to vanish from those answers</td></tr>
+    <tr><td>Claude-SearchBot</td><td>Indexes pages so they can surface in Claude's web search</td><td>Anthropic says disabling Claude-SearchBot prevents search indexing and may reduce your visibility in Claude search results.</td></tr>
   </tbody>
 </table>
 
@@ -41,7 +41,7 @@ The rule to remember: training and citation are separate doors. To be cited, kee
 
 Anthropic does not publish a ranking formula, so treat everything here as behavior we and other practitioners have observed in testing, not official rules.
 
-The first thing to know is where Claude's search looks. It does not run a Google-scale index of its own; Claude's web search [appears to be powered by Brave Search](https://techcrunch.com/2025/03/21/anthropic-appears-to-be-using-brave-to-power-web-searches-for-its-claude-chatbot/), which Anthropic lists as a data subprocessor. [Profound's March 2025 spot check](https://www.tryprofound.com/blog/what-is-claude-web-search-explained) put an early number on it: 13 of the 15 results Claude cited across its test queries, 86.7 percent, matched Brave's top organic results. Practically, the pages Claude can cite track closely to what Brave surfaces, so being findable in Brave, and in conventional search generally, feeds directly into being citable in Claude.
+The first thing to know is where Claude's search looks. It does not run a Google-scale index of its own; Claude's web search [appears to be powered by Brave Search](https://techcrunch.com/2025/03/21/anthropic-appears-to-be-using-brave-to-power-web-searches-for-its-claude-chatbot/), which Anthropic lists as a data subprocessor. [Profound's March 2025 spot check](https://www.tryprofound.com/blog/what-is-claude-web-search-explained) put an early number on it: 13 of the 15 results Claude cited across its test queries, 86.7 percent, matched Brave's top organic results. Practically, Brave visibility is a useful proxy to check, but treat it as an observed correlation, not the whole citation system; Anthropic also documents Claude-SearchBot and Claude-User as separate access paths.
 
 From there a few patterns hold. Claude cites at the passage level, pulling a specific sentence or claim and linking it rather than listing ten results, so a clean, self-contained fact is easier to lift than a buried one. It cross-checks, favoring claims it can corroborate. And it tends to search when a question needs fresh or changing information, leaning on training memory for evergreen facts it already holds. That has a real implication: recency and specificity win citations more reliably than broad keyword coverage does.
 
@@ -60,7 +60,7 @@ With the page reachable, citation in Claude comes down to being the clearest, mo
 1. **Lead with the answer.** State the fact directly, in a self-contained sentence near the top of the relevant section. Claude lifts passages, so a clean claim it can quote in one line beats the same point spread across a paragraph. This is the heart of [writing content that AI cites](https://geotoolbox.ai/blog/ai-content-optimization).
 2. **Make it verifiable.** Back claims with specific numbers, named sources, and dates. Claude cross-checks, so a corroborated, sourced statement is safer to cite than an unsupported assertion.
 3. **Be current where it counts.** Because Claude tends to search for fresh or changing information, the pages that win those citations are the ones kept up to date. A visible "last updated" date and current facts help on exactly the queries that trigger a search.
-4. **Establish the author and the entity.** A named author with real credentials, plus clear Person and Organization markup, helps Claude attach trust to a claim. This is where [entity SEO](https://geotoolbox.ai/blog/entity-seo) pays off.
+4. **Establish the author and the entity.** A named author and clear entity signals help humans and search systems evaluate and disambiguate the source; schema is useful plumbing, but there is no public proof it directly boosts Claude citations. This is where [entity SEO](https://geotoolbox.ai/blog/entity-seo) pays off.
 5. **Keep the tone neutral.** Promotional language reads as a weaker signal. State what is true plainly and let the facts carry the recommendation.
 
 A note on what to skip. You will see "Claude SEO" advice insisting you add an llms.txt file. Anthropic gives no indication its search or models use it, so treat it as unproven rather than a requirement. The same reachable, clear, credible content that earns citations in [ChatGPT](https://geotoolbox.ai/blog/seo-for-chatgpt) and [Perplexity](https://geotoolbox.ai/blog/perplexity-seo) is what earns them in Claude.
@@ -71,7 +71,7 @@ If Claude answers your category questions without naming you, work down this dia
 
 1. **The search bot is blocked.** The most common and most invisible cause: Claude-SearchBot or Claude-User is shut out by robots.txt or a firewall, so your content never enters the pool. Rule this out first; the rest is moot if Claude cannot read the page.
 2. **The content is client-side rendered.** Facts that load through JavaScript leave a search-time fetch looking at an empty shell.
-3. **Nothing is fresh.** On queries that trigger a search, an untouched page loses to a recently updated one.
+3. **Nothing is fresh.** On queries that trigger search, a genuinely current page is often a stronger candidate than stale content.
 4. **The claim is not liftable.** Per the checklist above, a vague or unsourced assertion is harder to quote and trust than a clean, corroborated one.
 5. **The copy sells.** Neutral, verifiable statements beat promotional phrasing.
 
@@ -90,7 +90,7 @@ The audience is worth a note too: by most usage research, Claude skews toward a 
 ## Frequently Asked Questions
 
 **Does Claude cite sources?**
-Yes, when it uses web search, and the citations are passage-level: Claude links the specific sentence it drew on, quoting up to about 150 characters of the source text per its API documentation. The same citation behavior applies in the apps and through the API's web search tool.
+Yes, when it uses web search, and the citations are passage-level: Claude links the specific sentence it drew on, quoting up to about 150 characters of the source text per its API documentation. The API documents cited text up to 150 characters; Claude apps also show source links, but Anthropic does not document identical citation fields or limits for the app UI.
 
 **Should I block ClaudeBot?**
 That depends only on your training stance. Publishers who license their content often block it; brands chasing AI visibility usually leave it open. Either way the choice does not touch citations, which ride Claude-SearchBot and Claude-User.
