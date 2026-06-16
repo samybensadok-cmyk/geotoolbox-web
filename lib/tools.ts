@@ -17,6 +17,12 @@ export interface ToolEntry {
 
 export const tools: ToolEntry[] = [
   {
+    slug: "keyword-to-prompts",
+    name: "Keyword → AI Prompts",
+    desc: "Turn any keyword into the conversational prompts people ask ChatGPT, Claude and Perplexity — ~15 across 6 intents, with the brand-surfacing ones flagged so you know what to track. Free.",
+    navDesc: "Turn keywords into trackable AI prompts",
+  },
+  {
     slug: "ai-readiness",
     name: "AI-Readiness Score",
     desc: "Score any domain on the foundations AI agents need — robots, crawler access, content signals, sitemap, markdown — across 5 of our 28 readiness checks. Free.",
