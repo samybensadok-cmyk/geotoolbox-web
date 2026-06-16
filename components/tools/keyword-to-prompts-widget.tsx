@@ -61,6 +61,33 @@ const INTENT_META: Record<Intent, { label: string; chip: string; bar: string }> 
 
 const INTENT_ORDER: Intent[] = ["recommendation", "comparison", "transactional", "validation", "research", "howto"]
 
+/**
+ * Funnel deep-link: carry the starred (brand-surfacing) prompts into the AI
+ * Visibility Tracker. The app's js/ktp_import.js decodes `p`, stashes it to
+ * localStorage (surviving the logged-out login bounce), and tracker.js offers a
+ * one-click "add to a brand". UTF-8-safe base64url so non-ASCII prompts (other
+ * locales) round-trip and the value is URL-clean (no +, /, =).
+ */
+function b64urlEncodeJson(obj: unknown): string {
+  const bytes = new TextEncoder().encode(JSON.stringify(obj))
+  let bin = ""
+  for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i])
+  return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "")
+}
+
+function trackerImportHref(prompts: PromptRow[], keyword: string): string {
+  const base = "/app?page=tracker&utm_source=keyword-to-prompts"
+  try {
+    const payload = prompts.slice(0, 25).map((p) => ({ t: p.prompt_text, i: p.intent, b: !!p.mentions_seed_brand }))
+    if (!payload.length) return base
+    const p = b64urlEncodeJson({ v: 1, kw: keyword.slice(0, 200), prompts: payload })
+    if (p.length > 3500) return base // URL-length safety; app falls back to a generic landing
+    return `/app?page=tracker&import=ktp&p=${p}&utm_source=keyword-to-prompts`
+  } catch {
+    return base
+  }
+}
+
 export function KeywordToPromptsWidget() {
   const [keyword, setKeyword] = useState("")
   const [brand, setBrand] = useState("")
@@ -398,7 +425,7 @@ function ResultDeck({ result }: { result: GenResult }) {
         </p>
         <div className="mt-5">
           <Link
-            href="/app?utm_source=keyword-to-prompts"
+            href={trackerImportHref(track.length > 0 ? track : context, result.keyword)}
             prefetch={false}
             className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-[15px] font-semibold text-gray-950 transition-colors hover:bg-gray-100"
           >
