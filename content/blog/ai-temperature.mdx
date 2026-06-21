@@ -1,0 +1,184 @@
+---
+title: "What Is Temperature in AI? Why You Get Different Answers"
+description: "What is temperature in AI? The real mechanism behind why ChatGPT and other LLMs give a different answer every time, and what that variance means for your brand."
+date: "2026-06-21"
+author: "Samy BEN SADOK"
+tags: ["ai-temperature", "llm-temperature", "temperature", "sampling", "geo", "ai-visibility", "guide"]
+draft: false
+---
+
+The same question, asked twice, can get you two different answers. Ask an AI assistant to name the best tools in your category on Monday, ask again on Friday, and the list can shift even though nothing about your brand changed. The setting most people blame is **temperature**, the randomness dial inside every large language model (LLM). It is a real mechanism and worth understanding. But for anyone tracking how AI talks about their brand, temperature is only half the story, and often the smaller half. Here is what temperature actually does, why it makes answers vary, and what that variance really means once the subject is your brand.
+
+## What Temperature Actually Is
+
+**Temperature is a number that controls how random a model's word choices are.** Set it low and the model plays it safe; set it high and it takes more chances. That is the whole idea. According to [IBM's definition](https://www.ibm.com/think/topics/llm-temperature), temperature controls the randomness of the text an LLM generates. What it does not do is make the model more accurate or more knowledgeable. It only changes how much of a gamble each word is.
+
+The mechanism is worth seeing once, because the rest of this article rests on it. A language model does not look up a stored answer. At every step it predicts the [next token](https://geotoolbox.ai/blog/what-are-tokens-in-ai), and what it actually produces is a long list of raw scores, one for each possible next token. Those scores are called logits, and a function called softmax turns them into a clean probability distribution that adds up to 100%.
+
+Temperature is applied right before the model picks. A low temperature sharpens the distribution, so the top choice towers over the rest and the model almost always takes it. A high temperature flattens the distribution, so less likely words get a real chance. Then the model rolls the dice and samples one token from whatever distribution it was left with.
+
+Different providers put that dial on different scales, so a "high" temperature in one tool is a "medium" in another.
+
+<table>
+<thead>
+<tr><th>Setting</th><th>Typical range</th><th>What it does</th><th>Best for</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Low</strong></td><td>0.0 - 0.3</td><td>Sharpens the odds; the model almost always picks its single most likely token</td><td>Code, data extraction, factual Q&amp;A, anything where you want to minimize variation</td></tr>
+<tr><td><strong>Medium</strong></td><td>0.4 - 0.7</td><td>A working balance of consistency and variety</td><td>Summaries, general writing, email drafts</td></tr>
+<tr><td><strong>High</strong></td><td>0.8 - 1.2+</td><td>Flattens the odds; unlikely words get picked far more often</td><td>Brainstorming, fiction, deliberately varied phrasing</td></tr>
+</tbody>
+</table>
+
+<Callout type="note" title="The scales are not the same">
+Most developer APIs accept the temperature parameter from 0 to 2 (OpenAI, Google Gemini) or 0 to 1 (Anthropic), usually defaulting to around 1.0. Consumer chat apps like ChatGPT do not expose this dial at all, which matters later.
+</Callout>
+
+One honest caveat before you treat temperature as a creativity slider: it is constantly described as exactly that, but the research is not so tidy. A [2024 arXiv study](https://arxiv.org/abs/2405.00492) testing whether temperature really is the creativity parameter found only a weak link between temperature and genuine novelty, and a stronger link between high temperature and output simply becoming less coherent. Temperature widens the range of what a model might say. It does not deepen the quality of the ideas.
+
+## Why the Same Question Gives a Different Answer
+
+**Because the model samples from a probability distribution, the same prompt can produce different answers, and that is by design, not a bug.** Each token is a draw, not a lookup. When the top few candidates are close in probability, a different one can win on the next run, and since every later word is conditioned on the words before it, one early swap cascades into a noticeably different answer.
+
+There is data on how often this happens. In a study reported by [SciTechDaily](https://scitechdaily.com/chatgpt-was-asked-the-same-question-10-times-the-answers-kept-changing/), when ChatGPT was given the exact same prompt 10 times, it produced consistent results for only about 73% of the cases tested. The rest of the time, the same question drew answers that disagreed with one another.
+
+This also kills a stubborn misconception: that a lower temperature makes the answer more correct. It does not. A lower temperature makes the answer more predictable, because the model leans harder on its single most likely continuation. If that continuation happens to be wrong, a low temperature just makes the model wrong more consistently. Predictability and accuracy are not the same thing.
+
+For a chatbot, this variance is a quirk you learn to live with. For a brand watching whether AI recommends it, the same quirk turns a single check into a coin flip. The question worth asking stops being "did we show up?" and becomes "how often do we show up, and is that trending up or down?"
+
+## Top-p, Top-k, and the Other Sampling Knobs
+
+**Temperature is the famous dial, but it is not the only one,** and the others get confused with it constantly. The most common mix-up is temperature versus top-p.
+
+Top-p, also called nucleus sampling, chases the same goal from a different direction. Instead of reshaping the whole probability curve, it draws a cutoff: keep only the smallest set of top tokens whose probabilities add up to a threshold, say 0.9, and ignore the long tail completely. The model then samples from that nucleus. Top-k is the blunt cousin: keep the k most likely tokens, drop the rest. Frequency and presence penalties do something different again, nudging the model away from repeating words it has already used.
+
+Here is the distinction people miss. Temperature changes how steep the odds are; top-p changes how many options stay on the table at all. They stack, which is why providers generally tell you to adjust one or the other, not both at once. Change both and the combined effect gets hard to predict.
+
+For brand monitoring, none of these are knobs you control. Consumer products set them behind the scenes and do not disclose the values. The reason to know they exist is narrower: "the answer changed" has several mechanical causes inside the model before you even reach the bigger cause, which is where the answer came from in the first place.
+
+## The "Temperature 0" Myth: Why Even Zero Is Not Deterministic
+
+**Set the temperature to 0 and the output should be identical every time. On a hosted model, it usually is not.** This is the surprise that fills developer forums, and it is the cleanest proof that the dial is not the whole story.
+
+The logic seems airtight. At temperature 0 the model uses greedy decoding: instead of sampling from the softmax distribution, it simply takes the single highest-scoring token, with no dice involved. Same input, same output, forever. Run an open-weights model yourself, in a single batch with fixed settings, and that mostly holds.
+
+On a hosted API like the ones behind ChatGPT and Claude, it breaks, and the reason is how your request is served, not the dial. Your prompt gets batched with other people's, and the batch size shifts from run to run as traffic rises and falls. Because the order of the underlying floating-point math depends on that batch size, and floating-point addition is not perfectly associative (add the same numbers in a different order and you get a microscopically different result), two tokens with nearly identical logits can resolve differently from one run to the next. On mixture-of-experts models, which prompts share your batch can also change which expert paths fire. The randomness is real, but it comes from the serving infrastructure, not from the temperature setting.
+
+<Callout type="note" title="When you can get repeatable output">
+Run an open-weights model on your own hardware with a fixed seed, temperature 0, a single batch, and deterministic settings, and you can get the same output every time. The randomness that survives temperature 0 is mostly a property of shared, hosted infrastructure, not of language models in principle.
+</Callout>
+
+Developers find this out the hard way. On the [OpenAI Developer Community forum](https://community.openai.com/t/why-the-api-output-is-inconsistent-even-after-the-temperature-is-set-to-0/329541), one engineer testing GPT-4 with the temperature set to 0 reported that "different runs will give different results," and that the meaning of the answer, not just its wording, could shift between runs. The `seed` parameter meant to lock output does not reliably rescue it either: on hosted models it reproduces results only some of the time, then breaks after a quiet model or backend update. There is no single switch that turns randomness all the way off.
+
+That sets up the part that actually matters for brands. If you cannot get a hosted model to repeat itself even at temperature 0, then any tool promising a fixed, rankable position for your brand inside an AI answer is already standing on sand.
+
+## Why You Cannot Know ChatGPT's Temperature
+
+**Any confident claim about "ChatGPT's temperature" is a guess.** Consumer chat products do not publish their decoding settings, and they change them without announcement. From the outside the exact number is unknowable, so treat precise statements about it with suspicion.
+
+More to the point, inside a real product the temperature dial is rarely the main reason answers move. A modern assistant is [not just a model with a setting](https://geotoolbox.ai/blog/how-does-chatgpt-work); it is a stack. The same visible prompt can be routed to a different model version, wrapped in a system prompt that was quietly updated overnight, shaped by memory of your earlier chats, or grounded in a different set of freshly retrieved web pages. Any one of those moves the answer more than the sampling dial does.
+
+<table>
+<thead>
+<tr><th>Source of variation</th><th>What it is</th><th>Who controls it</th><th>Can you influence it?</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Sampling</strong> (temperature, top-p)</td><td>The built-in randomness in how each token is chosen</td><td>The provider</td><td>No</td></tr>
+<tr><td><strong>Model and version routing</strong></td><td>Which model or tier actually handles your request</td><td>The provider</td><td>No</td></tr>
+<tr><td><strong>System prompt updates</strong></td><td>Hidden instructions wrapped around your prompt</td><td>The provider</td><td>No</td></tr>
+<tr><td><strong>Memory and personalization</strong></td><td>Your past chats and account context</td><td>You and the provider</td><td>Partly</td></tr>
+<tr><td><strong>Retrieval</strong></td><td>Which live web pages get pulled in to ground the answer</td><td>The open web and the provider's index</td><td><strong>Yes, indirectly</strong></td></tr>
+<tr><td><strong>Silent model updates</strong></td><td>The model itself changing under the same product name</td><td>The provider</td><td>No</td></tr>
+</tbody>
+</table>
+
+Notice the one row where the answer is yes. You cannot touch the sampling dial or the routing, but you can influence what the system finds when it goes looking for sources. That is the half of the variance problem brands can actually work on, and it is where the rest of this article lives.
+
+## The Bigger Variable for Brands: Retrieval Noise
+
+**When an AI answers a question about your brand by searching the web, sampling is only half the randomness, and usually the smaller half. The other half is retrieval,** and no temperature explainer mentions it because it happens outside the model entirely.
+
+Here is what a tool like ChatGPT search, Perplexity, or Google's AI Mode does when it answers a live question. It does not just generate from memory. It first [runs a search](https://geotoolbox.ai/blog/how-does-ai-search-work): it expands your question into several sub-queries (Google calls this query fan-out), pulls candidate pages from its index by keyword and by meaning, reranks them for relevance, pastes the winners into the model's context to [ground the answer](https://geotoolbox.ai/blog/what-is-rag), and then writes, usually [citing](https://geotoolbox.ai/glossary/ai-citation) the pages it leaned on.
+
+Every one of those steps is a little non-deterministic. The fan-out can expand differently from one run to the next. The web index updates continuously, so the candidate pool is never frozen. And the [relevance scores](https://geotoolbox.ai/blog/vector-embeddings) at the cutoff often sit very close together, so a near-tie can slot a different page, and a different brand, into the answer this time than last time. None of that touches the temperature dial.
+
+So the variation you see about your brand is really two sources stacked together: **sampling noise inside the model, and retrieval noise outside it.** In our experience, for answers built from a live web search, the retrieval half tends to dominate, because the retrieved sources shift with query fan-out, ranking cutoffs, and a web index that updates daily, while the sampling noise stays bounded. It also differs by engine. ChatGPT, Perplexity, and Google each run their own crawler, their own index, and their own preferred sources, so the same brand can look steady in one and jumpy in another. Measuring "AI" as a single thing hides this; you have to measure per engine.
+
+There is good news buried in here. Retrieval is the one source of variance from the table above that you can actually influence. You cannot remove the randomness, but you can change what the search step finds when it goes looking.
+
+## Why AI Mentions Your Brand One Day and Not the Next
+
+**Put the two halves together and a brand can appear in an AI answer one run and vanish the next, and from a single check you cannot tell a real loss of relevance from ordinary noise.**
+
+The numbers are sobering. In a [January 2026 study by Rand Fishkin and Gumshoe.ai](https://sparktoro.com/blog/new-research-ais-are-highly-inconsistent-when-recommending-brands-or-products-marketers-should-take-care-when-tracking-ai-visibility/), researchers collected 2,961 responses across ChatGPT, Claude, and Google's AI Overview and found the brand recommendations wildly inconsistent. Their estimate: ask one of these tools the same question 100 times, and there is roughly a 1-in-100 chance that any two answers return the same list of brands, with closer to 1-in-1,000 odds of seeing the same brands in the same order. So think in terms of a consideration set, not a ranking. Being the single top mention once is a fluke; being present in most runs is a real trend. What you have is a probability of being included, and it is noisy.
+
+This is where brands hurt themselves. They screenshot one answer where they are missing, conclude they have a visibility problem, and either panic or rip up their content. Or they screenshot one answer where they appear and declare victory. Both readings are mistakes, because a single sample of a noisy system tells you almost nothing.
+
+One nuance keeps this honest: not every prompt is equally random. Broad, open-ended questions ("best project management tools") swing the most. Narrow, specific, or branded prompts ("is Acme good for agencies") are far more stable, because the retrieval step has less room to wander. The variance is real, but it is not uniform, and that distinction matters when you decide what to measure.
+
+<Callout type="note" title="Noise or signal?">
+A working rule of thumb: a single missing mention is almost always noise. A drop that holds across many runs and several days, in the same engine, is signal worth investigating. The only way to tell them apart is to look at the rate over time, not any one answer.
+</Callout>
+
+In our experience running AI-visibility scans, this is the norm, not the exception: a brand's presence swings from scan to scan even when nothing about it has changed. That is exactly why the rate over time, not any single screenshot, is the thing to watch.
+
+## How to Measure It Honestly: Sample the Distribution
+
+**You cannot change the dice, but you can do two things that turn AI visibility from a guessing game into a measurement.**
+
+First, stop reading single answers and start measuring the distribution. The right unit is a presence rate across many samples, per engine, tracked over time. "Present in 7 of the last 10 scans, up from 4 of 10 a month ago" is a real signal. "I asked once and we showed up" is not. The same logic extends to your competitors and to which source the AI cites for you: one run is an anecdote, the rate is the data.
+
+<table>
+<thead>
+<tr><th></th><th>One-shot check</th><th>Distribution over many runs</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>What it is</strong></td><td>A single query, run once</td><td>The same prompts run repeatedly, per engine, over time</td></tr>
+<tr><td><strong>What you learn</strong></td><td>Whether you appeared in that one answer</td><td>Your presence rate, and whether it is rising or falling</td></tr>
+<tr><td><strong>The risk</strong></td><td>A fluke reads as a trend, and a trend reads as a fluke</td><td>Low; this is the honest unit of measurement</td></tr>
+<tr><td><strong>Good for</strong></td><td>A quick gut check</td><td>Actually deciding whether to act</td></tr>
+</tbody>
+</table>
+
+Second, improve the half you can influence. Because retrieval is the half you can actually move, the work is making your page the strongest, most consistent thing the search step can find: a clear, direct answer to the question, facts that are current, and consistent naming of your brand across the web so the model is not guessing which entity you are. You are not trying to win a fixed position, because there isn't one. You are trying to be the answer that wins more of the random draws.
+
+Two honest limits keep this from being magic. A tracker runs neutral, signed-out prompts, so the rate it reports is a useful proxy for the market, not a mirror of what any one logged-in user sees in their own memory-shaped session. And you can only measure the prompts you choose, never the effectively infinite set real buyers actually type. That is also why checking your own brand in your personal ChatGPT is the least reliable method of all: it is a personalized sample of one. The fix is the same either way: track a consistent set of prompts, per engine, over time, and read the trend.
+
+This is the honest case for tracking AI visibility over time instead of checking it once. At geotoolbox we built the [AI visibility tracking](https://geotoolbox.ai/features/domain-overview) and the [per-engine scans](https://geotoolbox.ai/features/geo-scan) around exactly this: each scan runs your prompt across the major engines and scores where you stand, and because every scan is stored, the presence and share-of-voice trend over time is what separates a real change from a one-off dip. The number that matters is not where you ranked today. It is how your presence is trending, and in which engines.
+
+## Read the Distribution, Not the Dice Roll
+
+The variance is not a glitch waiting for a fix. It is what a system does when it samples from a probability distribution and grounds its answer on a shifting set of retrieved pages. Temperature is one part of it, retrieval is the bigger part, and neither one is a dial you get to turn from the outside.
+
+What you can change is how you read the output. Stop treating a single AI answer as a verdict and start reading the distribution: how often your brand appears, in which engines, and which way the trend is moving. If you would rather watch that than guess at it, geotoolbox can [track your AI presence over time](https://geotoolbox.ai/features/domain-overview), per engine, so you can tell a real change from ordinary noise.
+
+## Frequently Asked Questions
+
+### Why does ChatGPT give a different answer every time I ask the same question?
+Because the model builds each answer by sampling from a probability distribution over possible next words, not by looking up a stored response. When the top candidates are close in probability, a different one can win on the next run, and that early difference cascades through the rest of the answer. In one study, ChatGPT gave consistent results to an identical prompt only about 73% of the time.
+
+### I set the temperature to 0, so why is the output still different?
+On a hosted model like ChatGPT or Claude, temperature 0 is still not perfectly deterministic. The main reason is that your request shares a batch with other people's, and the batch size changes with server load, which shifts the order of the underlying floating-point math just enough to flip near-tied tokens. Setting 0 is still the right move when you want the most repeatable output you can get, like extraction or fixed-format tasks; just do not expect bit-for-bit identical results from a hosted API. Reliable determinism is realistic mainly when you run an open-weights model yourself with fixed settings and a single batch.
+
+### What temperature should I use?
+For anything that needs to be accurate and repeatable, like code, data extraction, or factual answers, stay low, around 0 to 0.3. For everyday writing and summaries, a middle setting of 0.4 to 0.7 balances consistency and variety. For brainstorming or creative drafts, go higher, 0.8 and up. Most APIs default to about 1.0. This only applies when you call the API directly; consumer chat apps pick the setting for you.
+
+### What is the difference between temperature and top-p?
+Temperature reshapes how steep the probability curve is, making the top choice more or less dominant. Top-p, or nucleus sampling, instead keeps only the smallest set of top tokens whose probabilities add up to a threshold and samples from that set. Both control randomness, which is why providers usually recommend adjusting one or the other rather than both at once.
+
+### Does a lower temperature make the answer more accurate?
+No. A lower temperature makes the answer more predictable, not more correct. The model leans harder on its single most likely continuation, so if that continuation is wrong, a low temperature just makes it wrong more consistently. Accuracy comes from the model and its sources, not from the randomness dial.
+
+### Why does my brand show up in an AI answer one day and disappear the next?
+Several things vary between runs. The two biggest for a live web answer are the model's own sampling and which web pages it retrieves to ground the answer, though model routing, memory, and silent updates can move it too. For answers built from a web search, the retrieval side is usually the bigger source of swing, because the index updates and near-tied pages trade places. A single appearance or absence is often just noise rather than a real change in how the AI sees you.
+
+### How many times should I check before trusting an AI-visibility result?
+Enough times to see a rate rather than a single outcome, ideally per engine and tracked over time. One check tells you almost nothing because the system is noisy by design. This is also why two AI-visibility tools can report different numbers for the same brand: they sample different prompts, run counts, engines, and moments, so their one-shot figures diverge. A presence rate watched for a trend is what makes any of them trustworthy. Branded or very specific prompts stabilize faster than broad, open-ended ones.
+
+## Sources
+
+- [Is Temperature the Creativity Parameter of Large Language Models?](https://arxiv.org/abs/2405.00492) - Peeperkorn, Kouwenhoven, Brown, and Jordanous, 2024
+- [What Is LLM Temperature?](https://www.ibm.com/think/topics/llm-temperature) - IBM
+- [Why is the API output inconsistent even after the temperature is set to 0?](https://community.openai.com/t/why-the-api-output-is-inconsistent-even-after-the-temperature-is-set-to-0/329541) - OpenAI Developer Community
+- [ChatGPT Was Asked the Same Question 10 Times. The Answers Kept Changing.](https://scitechdaily.com/chatgpt-was-asked-the-same-question-10-times-the-answers-kept-changing/) - SciTechDaily, reporting a study by Cicek et al., Rutgers Business Review, 2025
+- [New Research: AIs Are Highly Inconsistent When Recommending Brands or Products](https://sparktoro.com/blog/new-research-ais-are-highly-inconsistent-when-recommending-brands-or-products-marketers-should-take-care-when-tracking-ai-visibility/) - Rand Fishkin, SparkToro and Gumshoe.ai, 2026
