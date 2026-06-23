@@ -58,6 +58,16 @@ body{
 .gak-btn:hover{background:var(--gak-blue-600)}
 .gak-btn:active{transform:translateY(1px)}
 .gak-btn[disabled]{opacity:.55;cursor:not-allowed}
+.gak-btn-cta{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:14px 24px;font:700 16px/1 var(--gak-font);color:#fff;text-decoration:none;border-radius:12px;background:var(--gak-blue);box-shadow:0 8px 22px rgba(0,153,255,.32);transition:transform .08s,background .15s;white-space:nowrap}
+.gak-btn-cta:hover{background:var(--gak-blue-600)}
+.gak-btn-cta:active{transform:translateY(1px)}
+.gak-ghost{background:transparent;color:var(--gak-muted);border:1px solid var(--gak-line)}
+.gak-ghost:hover{background:#f4f6f8;color:var(--gak-navy)}
+.gak-booking{margin:18px 0 6px;border-radius:16px;padding:22px 24px;background:linear-gradient(135deg,var(--gak-navy),#11294a)}
+.gak-booking-in{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.gak-booking-txt{flex:1 1 240px;min-width:0}
+.gak-booking-h{font-size:19px;font-weight:800;letter-spacing:-.01em;margin:0 0 4px;color:#fff}
+.gak-booking-sub{font-size:14px;line-height:1.5;color:#c3d2e6;margin:0}
 .gak-note{font-size:13px;color:var(--gak-muted);text-align:center;margin-top:6px}
 .gak-err{color:var(--gak-red);font-size:14px;text-align:center;margin-top:10px;min-height:18px}
 
@@ -271,6 +281,18 @@ body{
       <!-- Lost-Deal Quote (FREE hero — the bait) -->
       <div class="gak-lostdeal gak-hide" id="gak-lostdeal"></div>
 
+      <!-- Reach / Read / Result matrix (FREE; Result column locked) -->
+      <div class="gak-card gak-hide" id="gak-matrix-card">
+        <div class="gak-card-h"><span class="dot"></span> Can AI reach, read &amp; recommend you?</div>
+        <table class="gak-matrix"><thead><tr>
+          <th>AI engine</th><th>Reach</th><th>Read</th><th>Recommends you</th>
+        </tr></thead><tbody id="gak-matrix-body"></tbody></table>
+        <div class="gak-matrix-note" id="gak-matrix-note">Reach = can its crawler access your site · Read = is your site machine-readable · Recommends = does it name you in buying answers</div>
+      </div>
+
+      <!-- Teaser counts (FREE) -->
+      <div class="gak-teasers gak-hide" id="gak-teasers"></div>
+
       <!-- Readiness score (FREE) -->
       <div class="gak-card">
         <div class="gak-card-h"><span class="dot"></span> AI Readiness Score</div>
@@ -296,18 +318,6 @@ body{
         <div class="gak-grid" id="gak-crawl-grid"></div>
       </div>
 
-      <!-- Reach / Read / Result matrix (FREE; Result column locked) -->
-      <div class="gak-card gak-hide" id="gak-matrix-card">
-        <div class="gak-card-h"><span class="dot"></span> Can AI reach, read &amp; recommend you?</div>
-        <table class="gak-matrix"><thead><tr>
-          <th>AI engine</th><th>Reach</th><th>Read</th><th>Recommends you</th>
-        </tr></thead><tbody id="gak-matrix-body"></tbody></table>
-        <div class="gak-matrix-note" id="gak-matrix-note">Reach = can its crawler access your site · Read = is your site machine-readable · Recommends = does it name you in buying answers</div>
-      </div>
-
-      <!-- Teaser counts (FREE) -->
-      <div class="gak-teasers gak-hide" id="gak-teasers"></div>
-
       <!-- EMAIL GATE -->
       <div class="gak-gate" id="gak-gate">
         <h3>Unlock the live “Recommends you” result for ChatGPT, Perplexity &amp; Google AI</h3>
@@ -318,12 +328,6 @@ body{
         </form>
         <div class="gak-note" id="gak-gate-consent">We'll email your report. No spam — unsubscribe anytime.</div>
         <div class="gak-err" id="gak-gate-err" role="alert"></div>
-      </div>
-
-      <!-- GATED: full readiness breakdown -->
-      <div class="gak-card gak-hide" id="gak-full-checks">
-        <div class="gak-card-h"><span class="dot"></span> Full Readiness Breakdown</div>
-        <ul class="gak-checks" id="gak-checks"></ul>
       </div>
 
       <!-- GATED: the Lost-Deal Map (prompts x engines) -->
@@ -357,8 +361,25 @@ body{
         <ol id="gak-fix-body" class="gak-fixes"></ol>
       </div>
 
+      <!-- GATED: full readiness breakdown -->
+      <div class="gak-card gak-hide" id="gak-full-checks">
+        <div class="gak-card-h"><span class="dot"></span> Full Readiness Breakdown</div>
+        <ul class="gak-checks" id="gak-checks"></ul>
+      </div>
+
+      <!-- Book-a-call CTA (warm-lead conversion, revealed after the full report) -->
+      <div class="gak-booking gak-hide" id="gak-booking">
+        <div class="gak-booking-in">
+          <div class="gak-booking-txt">
+            <div class="gak-booking-h" id="gak-booking-h">Want GrowthAck to fix this?</div>
+            <p class="gak-booking-sub" id="gak-booking-sub">Book a 20-minute call — we'll show you how to get named by ChatGPT, Perplexity &amp; Google AI in your category.</p>
+          </div>
+          <a class="gak-btn-cta" id="gak-book-cta" href="https://growthack.io/contact" target="_blank" rel="noopener">Book a call →</a>
+        </div>
+      </div>
+
       <div class="gak-cta-final gak-hide" id="gak-final">
-        <button class="gak-btn" id="gak-restart" type="button" style="background:var(--gak-navy)">Check another site</button>
+        <button class="gak-btn gak-ghost" id="gak-restart" type="button">Check another site</button>
       </div>
 
     </div>
@@ -372,13 +393,14 @@ body{
    GAK_CONFIG — everything Kevin provides plugs in here.
    ============================================================ */
 const GAK_CONFIG = {
-  DEMO_MODE: true,                       // true = mock/baked (no backend). FLIP to false once gak_ai_check is live on Replit.
+  DEMO_MODE: false,                      // true = ALL domains mock/baked (no backend). false = live backend, gated by HYBRID below.
+  HYBRID: true,                          // true = REAL_VIS domains load baked/instant; every OTHER domain runs a LIVE backend scan. (Ignored when DEMO_MODE=true.)
   PREVIEW: true,                         // preview mode: shows "Preview" badge + uses REAL_VIS baked examples for Kevin's clients. false for production embed.
   API_BASE: "https://sg-geo-tool.replit.app",  // our backend (Vercel rewrites /api/* -> Replit). CORS-allowed for the embed origin.
   API_ACTION: "gak_ai_check",            // ?action= handler (see API_CONTRACT.md)
   MAKE_WEBHOOK_URL: "",                  // <-- Kevin's Make.com webhook (lead -> HubSpot + MailChimp). Empty = skip POST.
   ENGINES: ["chatgpt","perplexity","google_aio"],  // ChatGPT+Perplexity (DataForSEO) + Google AI Overviews (SerpAPI)
-  BRAND: { name: "GrowthAck", url: "https://growthack.io" },
+  BRAND: { name: "GrowthAck", url: "https://growthack.io", cta_url: "https://growthack.io/contact", cta_label: "Book a call →", cta_sub: "Book a 20-minute call — we'll show you how to get named by ChatGPT, Perplexity & Google AI in your category." },
   GATE: { freeChecksVisible: true }      // score + crawler shown free; full breakdown + visibility behind email
 };
 
@@ -463,6 +485,9 @@ const show = (id) => $(id).classList.remove('gak-hide');
 const hide = (id) => $(id).classList.add('gak-hide');
 /* HTML-escape ALL dynamic/third-party values before innerHTML (LLM/SerpAPI text is untrusted). */
 const esc = (s) => String(s==null?'':s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+/* hybrid routing: baked (instant, no backend) for showcase domains in REAL_VIS; live backend scan for every other domain.
+   DEMO_MODE=true forces baked for ALL domains (offline demo). */
+const isBaked = (domain) => GAK_CONFIG.DEMO_MODE || (GAK_CONFIG.HYBRID && !!REAL_VIS[domain]);
 function normUrl(raw){
   // strip protocol, path, AND leading www. — so www/https variants resolve to the same canonical
   // key (REAL_VIS is keyed on bare domains; without this, www.growthack.io would render as synthetic sample data).
@@ -480,7 +505,9 @@ const ro = new ResizeObserver(frameHeight); ro.observe(document.body);
   $('gak-eyebrow').textContent = GAK_CONFIG.BRAND.name + " · AI Visibility";
   if (GAK_CONFIG.PREVIEW) {
     var b = document.createElement('div');
-    b.textContent = 'PREVIEW for GrowthAck · real AI-visibility data baked in for growthack.io (your own site) + your client manageathome.co.uk';
+    b.textContent = GAK_CONFIG.HYBRID
+      ? 'PREVIEW for GrowthAck · growthack.io + manageathome.co.uk load instantly with real baked data — type any other domain for a live AI-visibility scan'
+      : 'PREVIEW for GrowthAck · real AI-visibility data baked in for growthack.io (your own site) + your client manageathome.co.uk';
     b.style.cssText = 'background:#0c1a2e;color:#fff;font:600 12px/1.4 var(--gak-mono);text-align:center;padding:8px 12px;border-radius:8px;margin:0 0 18px;letter-spacing:.02em';
     var app = $('gak-app'); app.insertBefore(b, app.firstChild);
     // lead with his OWN site so the first thing he sees is his own absence
@@ -488,6 +515,10 @@ const ro = new ResizeObserver(frameHeight); ro.observe(document.body);
   }
   $('gak-foot-link').textContent = GAK_CONFIG.BRAND.name;
   $('gak-foot-link').href = GAK_CONFIG.BRAND.url || '#';
+  // book-a-call CTA (config-driven; white-label safe)
+  var _cta=$('gak-book-cta'); if(_cta){ _cta.href = GAK_CONFIG.BRAND.cta_url || GAK_CONFIG.BRAND.url || '#'; if(GAK_CONFIG.BRAND.cta_label) _cta.textContent = GAK_CONFIG.BRAND.cta_label; }
+  var _ch=$('gak-booking-h'); if(_ch) _ch.textContent = 'Want ' + GAK_CONFIG.BRAND.name + ' to fix this?';
+  var _cs=$('gak-booking-sub'); if(_cs && GAK_CONFIG.BRAND.cta_sub) _cs.textContent = GAK_CONFIG.BRAND.cta_sub;
 })();
 
 /* ---------- stage control ---------- */
@@ -735,7 +766,7 @@ function renderFixList(){
 
 /* ---------- email gate unlock (live: fetch the visibility scan as the 2nd call) ---------- */
 async function unlock(){
-  hide('gak-gate'); show('gak-full-checks'); show('gak-final');
+  hide('gak-gate'); show('gak-full-checks'); show('gak-booking'); show('gak-final');
   if(LAST && LAST.visibility){ show('gak-visibility'); renderGated(LAST.visibility); frameHeight(); return; }
   if(GAK_CONFIG.DEMO_MODE){ frameHeight(); return; }
   // live: run the (expensive) full Lost-Deal Map now, only after the email is captured
@@ -749,7 +780,7 @@ async function unlock(){
     if(CTX.domain !== myDomain || !LAST) return;   // moved on -> don't write a stale scan into the new report
     if(v && v.visibility){ LAST.visibility=v.visibility; renderGated(v.visibility); }
     else { hide('gak-visibility'); }
-  }catch(e){ if(CTX.domain===myDomain) $('gak-vis-summary').textContent = "The Lost-Deal Map timed out — please try again."; }
+  }catch(e){ if(CTX.domain===myDomain) $('gak-vis-summary').textContent = "The Lost-Deal Map couldn't load — please try again."; }
   if(CTX.domain===myDomain) frameHeight();
 }
 
@@ -811,7 +842,7 @@ function demoData(domain, brandIn, industry){
   const tot = vprompts.flatMap(p=>p.engines).length;
 
   // ---- free layer: Lost-Deal Quote + matrix + teasers (mirrors the backend shape) ----
-  const rv = (GAK_CONFIG.PREVIEW && REAL_VIS[domain]) ? REAL_VIS[domain] : null;
+  const rv = ((GAK_CONFIG.PREVIEW || GAK_CONFIG.HYBRID) && REAL_VIS[domain]) ? REAL_VIS[domain] : null;
   const synthetic = !rv;                                       // anything outside the real pilots = sample data
   const fullReal = !!(rv && rv.readiness && rv.crawlers);      // entry ships its OWN real readiness+crawler (e.g. growthack.io) -> NOT illustrative
   const pplCited = rv ? !!(rv.lost_deal && rv.lost_deal.mentioned) : (rnd(13) > .5);
@@ -871,7 +902,7 @@ $('gak-form').addEventListener('submit', async (e)=>{
   stage('loading'); runSteps();
   const started=Date.now();
   try{
-    if(GAK_CONFIG.DEMO_MODE){
+    if(isBaked(domain)){
       const data = demoData(domain, brand, industry);
       LAST=data;
       if(!data.visibility) $('gak-visibility').dataset.empty='1';
@@ -881,6 +912,8 @@ $('gak-form').addEventListener('submit', async (e)=>{
       // LIVE: render the report FAST (only=fast — no paid call), then lazy-fill the Lost-Deal hero
       // (only=lostdeal) so a slow/failed Perplexity never blocks or discards the readiness+crawler report.
       const report = await fetchReal(domain, {brand, industry, only:'fast'});
+      // guard: a malformed / error-at-200 body (no readiness) must hit the catch, never render a fake 0/100 "At risk" scorecard
+      if(!report || !report.readiness || typeof report.readiness.score!=='number') throw new Error('api_empty');
       LAST=report;
       if(!report.visibility) $('gak-visibility').dataset.empty='1';
       clearInterval(stepTimer); render(report); $('gak-go').disabled=false;
@@ -934,7 +967,7 @@ $('gak-gate-form').addEventListener('submit', async (e)=>{
   await unlock();
 });
 
-$('gak-restart').addEventListener('click', ()=>{ ['gak-url','gak-brand','gak-industry','gak-email'].forEach(id=>{const e=$(id); if(e) e.value='';}); const ge=$('gak-gate-err'); if(ge) ge.textContent=''; LAST=null; CTX={domain:'',brand:'',industry:''}; show('gak-gate'); ['gak-full-checks','gak-visibility','gak-competitors','gak-sources','gak-offering','gak-fixlist','gak-final','gak-sample-note'].forEach(hide); stage('input'); });
+$('gak-restart').addEventListener('click', ()=>{ ['gak-url','gak-brand','gak-industry','gak-email'].forEach(id=>{const e=$(id); if(e) e.value='';}); const ge=$('gak-gate-err'); if(ge) ge.textContent=''; LAST=null; CTX={domain:'',brand:'',industry:''}; const go=$('gak-go'); if(go) go.disabled=false; show('gak-gate'); ['gak-full-checks','gak-visibility','gak-competitors','gak-sources','gak-offering','gak-fixlist','gak-final','gak-sample-note','gak-matrix-card','gak-teasers','gak-lostdeal','gak-booking'].forEach(hide); ['gak-matrix-body','gak-teasers','gak-lostdeal','gak-prompts','gak-vis-summary'].forEach(id=>{const e=$(id); if(e) e.innerHTML='';}); stage('input'); });
 
 frameHeight();
 </script>
