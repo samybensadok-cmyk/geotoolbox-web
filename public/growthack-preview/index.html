@@ -156,10 +156,14 @@ body{
       <p class="gak-sub">Get an instant AI-readiness score, see which AI crawlers can reach your site, and check whether ChatGPT &amp; Google AI mention you — free.</p>
     </div>
     <form class="gak-form" id="gak-form" autocomplete="off">
-      <div class="gak-field"><input class="gak-input" id="gak-url" type="text" inputmode="url" placeholder="yourwebsite.com" aria-label="Your website" required></div>
+      <div class="gak-field"><input class="gak-input" id="gak-url" type="text" inputmode="url" placeholder="yourwebsite.com" aria-label="Your website" maxlength="255" required></div>
       <button class="gak-btn" id="gak-go" type="submit">Run free AI check</button>
     </form>
-    <div class="gak-note">No signup to see your score · takes ~20 seconds</div>
+    <form class="gak-form" id="gak-form2" autocomplete="off" style="margin-top:0">
+      <div class="gak-field"><input class="gak-input" id="gak-brand" type="text" placeholder="Brand name (optional)" aria-label="Brand name" maxlength="80"></div>
+      <div class="gak-field"><input class="gak-input" id="gak-industry" type="text" placeholder="Industry, e.g. mobility aids (optional)" aria-label="Industry" maxlength="80"></div>
+    </form>
+    <div class="gak-note">No signup to see your score · adding your brand &amp; industry sharpens the AI-visibility check</div>
     <div class="gak-err" id="gak-err" role="alert"></div>
   </section>
 
@@ -281,6 +285,8 @@ const REAL_VIS = {
 const $ = (id) => document.getElementById(id);
 const show = (id) => $(id).classList.remove('gak-hide');
 const hide = (id) => $(id).classList.add('gak-hide');
+/* HTML-escape ALL dynamic/third-party values before innerHTML (LLM/SerpAPI text is untrusted). */
+const esc = (s) => String(s==null?'':s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 function normUrl(raw){
   let s = (raw||'').trim().replace(/^https?:\/\//i,'').replace(/\/.*$/,'').toLowerCase();
   if(!s || !/^[a-z0-9.-]+\.[a-z]{2,}$/.test(s)) return null;
@@ -342,46 +348,70 @@ function paintScore(score){
 
 /* ---------- render ---------- */
 function render(data){
+  const ok = (x) => x==='pass'||x==='warn'||x==='fail'||x==='na' ? x : 'na';   // whitelist status for class
   // 1. score (free)
-  paintScore(data.readiness.score);
-  $('gak-verdict').textContent = data.readiness.verdict;
+  paintScore(Number(data.readiness && data.readiness.score) || 0);
+  $('gak-verdict').textContent = (data.readiness && data.readiness.verdict) || '';
 
-  // 2. crawler summary + grid (free)
-  const s=data.crawlers.summary;
+  // 2. crawler summary + grid (free) — counts are numbers; bot names escaped
+  const s=(data.crawlers && data.crawlers.summary) || {allowed:0,blocked:0,total:0};
   $('gak-crawl-sum').innerHTML = `
-    <div class="gak-stat"><div class="n" style="color:var(--gak-mint)">${s.allowed}</div><div class="l">crawlers allowed</div></div>
-    <div class="gak-stat"><div class="n" style="color:${s.blocked? 'var(--gak-red)':'var(--gak-navy)'}">${s.blocked}</div><div class="l">crawlers blocked</div></div>
-    <div class="gak-stat"><div class="n">${s.total}</div><div class="l">AI bots checked</div></div>`;
-  $('gak-crawl-grid').innerHTML = data.crawlers.bots.map(b=>
-    `<div class="gak-bot ${b.allowed?'ok':'no'}"><span class="b-dot"></span><span class="b-name">${b.name}</span></div>`).join('');
+    <div class="gak-stat"><div class="n" style="color:var(--gak-mint)">${Number(s.allowed)||0}</div><div class="l">crawlers allowed</div></div>
+    <div class="gak-stat"><div class="n" style="color:${(Number(s.blocked)||0)? 'var(--gak-red)':'var(--gak-navy)'}">${Number(s.blocked)||0}</div><div class="l">crawlers blocked</div></div>
+    <div class="gak-stat"><div class="n">${Number(s.total)||0}</div><div class="l">AI bots checked</div></div>`;
+  $('gak-crawl-grid').innerHTML = ((data.crawlers && data.crawlers.bots) || []).map(b=>
+    `<div class="gak-bot ${b.allowed?'ok':'no'}"><span class="b-dot"></span><span class="b-name">${esc(b.name)}</span></div>`).join('');
 
-  // 3. gated content (built now, revealed after email)
-  $('gak-checks').innerHTML = data.readiness.checks.map(c=>{
+  // 3. gated readiness breakdown (built now, revealed after email)
+  $('gak-checks').innerHTML = ((data.readiness && data.readiness.checks) || []).map(c=>{
     const sym = c.status==='pass'?'✓':c.status==='warn'?'!':c.status==='na'?'–':'✕';
-    return `<li><span class="gak-pill ${c.status}">${sym}</span><div class="gak-check-b"><div class="gak-check-t">${c.label}</div><div class="gak-check-e">${c.evidence}</div></div></li>`;
+    return `<li><span class="gak-pill ${ok(c.status)}">${sym}</span><div class="gak-check-b"><div class="gak-check-t">${esc(c.label)}</div><div class="gak-check-e">${esc(c.evidence)}</div></div></li>`;
   }).join('');
 
-  if(data.visibility){
-    $('gak-vis-summary').textContent = data.visibility.summary;
-    $('gak-prompts').innerHTML = data.visibility.prompts.map(p=>{
-      const engs = p.engines.map(e=>`<span class="gak-eng ${e.cited?'cited':'absent'}"><span class="e-dot"></span><b>${e.label}</b> ${e.cited?'mentions you':'no mention'}</span>`).join('');
-      const comp = p.competitors_cited&&p.competitors_cited.length ? `<div class="gak-comp">Cited instead: <b>${p.competitors_cited.join(', ')}</b></div>`:'';
-      return `<div class="gak-prompt"><div class="gak-prompt-q">“${p.query}”</div><div class="gak-engines">${engs}</div>${comp}</div>`;
-    }).join('');
-  }
+  renderVisibility(data.visibility);
   stage('results');
 }
+function renderVisibility(vis){
+  if(!vis){ $('gak-visibility').dataset.empty='1'; return; }
+  delete $('gak-visibility').dataset.empty;
+  $('gak-vis-summary').textContent = vis.summary || '';
+  $('gak-prompts').innerHTML = (vis.prompts||[]).map(p=>{
+    const engs = (p.engines||[]).map(e=>`<span class="gak-eng ${e.cited?'cited':'absent'}"><span class="e-dot"></span><b>${esc(e.label)}</b> ${e.cited?'mentions you':'no mention'}</span>`).join('');
+    const comp = (p.competitors_cited&&p.competitors_cited.length) ? `<div class="gak-comp">Cited instead: <b>${p.competitors_cited.map(esc).join(', ')}</b></div>`:'';
+    return `<div class="gak-prompt"><div class="gak-prompt-q">“${esc(p.query)}”</div><div class="gak-engines">${engs}</div>${comp}</div>`;
+  }).join('');
+}
 
-/* ---------- email gate unlock ---------- */
-function unlock(){
-  hide('gak-gate'); show('gak-full-checks'); if(!$('gak-visibility').dataset.empty) show('gak-visibility'); show('gak-final');
+/* ---------- email gate unlock (live: fetch the visibility scan as the 2nd call) ---------- */
+async function unlock(){
+  hide('gak-gate'); show('gak-full-checks'); show('gak-final');
+  if(LAST && LAST.visibility){ show('gak-visibility'); frameHeight(); return; }
+  if(GAK_CONFIG.DEMO_MODE){ frameHeight(); return; }
+  // live: run the (expensive) visibility scan now, only after the email is captured
+  show('gak-visibility'); delete $('gak-visibility').dataset.empty;
+  $('gak-vis-summary').textContent = 'Checking ChatGPT, Perplexity & Google AI…';
+  $('gak-prompts').innerHTML = '<div class="gak-prompt"><div class="gak-prompt-q">Running your live AI-visibility scan across ChatGPT, Perplexity &amp; Google… (~30s)</div></div>';
+  frameHeight();
+  try{
+    const v = await fetchReal(CTX.domain, {brand:CTX.brand, industry:CTX.industry, vis:1, only:'visibility'});
+    if(v && v.visibility){ LAST.visibility=v.visibility; renderVisibility(v.visibility); }
+    else { hide('gak-visibility'); }
+  }catch(e){ $('gak-vis-summary').textContent = "The AI-visibility scan timed out — please try again."; }
   frameHeight();
 }
 
 /* ---------- backend ---------- */
-async function fetchReal(domain){
-  const u = `${GAK_CONFIG.API_BASE}/?action=${GAK_CONFIG.API_ACTION}&url=${encodeURIComponent(domain)}&engines=${GAK_CONFIG.ENGINES.join(',')}`;
-  const r = await fetch(u, {headers:{'Accept':'application/json'}});
+function gakApiUrl(domain, opts){
+  opts = opts || {};
+  let u = `${GAK_CONFIG.API_BASE}/?action=${GAK_CONFIG.API_ACTION}&url=${encodeURIComponent(domain)}&engines=${GAK_CONFIG.ENGINES.join(',')}`;
+  if(opts.brand)    u += `&brand=${encodeURIComponent(opts.brand)}`;
+  if(opts.industry) u += `&industry=${encodeURIComponent(opts.industry)}`;
+  if(opts.vis)      u += `&vis=1`;
+  if(opts.only)     u += `&only=${encodeURIComponent(opts.only)}`;
+  return u;
+}
+async function fetchReal(domain, opts){
+  const r = await fetch(gakApiUrl(domain, opts), {headers:{'Accept':'application/json'}});
   if(!r.ok) throw new Error('api_'+r.status);
   return await r.json();
 }
@@ -391,7 +421,7 @@ async function postLead(payload){
 }
 
 /* ---------- DEMO data (realistic, deterministic from domain) ---------- */
-function demoData(domain){
+function demoData(domain, brandIn, industry){
   let h=0; for(const c of domain) h=(h*31+c.charCodeAt(0))>>>0;
   const rnd=(seed)=>{ const x=Math.sin(h+seed)*10000; return x-Math.floor(x); };
   const score = 42 + Math.floor(rnd(1)*46);                 // 42..88
@@ -407,7 +437,7 @@ function demoData(domain){
     mk(rnd(4)>.6?'pass':'fail','Content-Signal directive', rnd(4)>.6?'Content-Signal directive present.':'No Content-Signal directive (optional; reserves AI-use rights explicitly).'),
     mk(rnd(5)>.7?'pass':'fail','Markdown content negotiation', rnd(5)>.7?'Server negotiates Accept: text/markdown.':'No markdown negotiation (Perplexity & some Claude flows prefer it).')
   ];
-  const brand = domain.split('.')[0];
+  const brand = (brandIn && brandIn.trim()) ? brandIn.trim() : domain.split('.')[0];
   const comps=['Competitor A','Competitor B','an industry directory'];
   const vprompts=[
     {query:`best ${brand} alternatives`, engines:[{label:'ChatGPT',cited:rnd(6)>.5},{label:'Google AI',cited:rnd(7)>.6},{label:'Perplexity',cited:rnd(8)>.5}]},
@@ -425,17 +455,21 @@ function demoData(domain){
 }
 
 /* ---------- flow ---------- */
-let LAST=null;
+let LAST=null, CTX={domain:'',brand:'',industry:''};
 $('gak-form').addEventListener('submit', async (e)=>{
   e.preventDefault();
   $('gak-err').textContent='';
   const domain = normUrl($('gak-url').value);
   if(!domain){ $('gak-err').textContent='Please enter a valid website, e.g. yourcompany.com'; return; }
+  const brand = ($('gak-brand').value||'').trim().slice(0,80);
+  const industry = ($('gak-industry').value||'').trim().slice(0,80);
+  CTX = {domain, brand, industry};
   $('gak-go').disabled=true;
   stage('loading'); runSteps();
   const started=Date.now();
   try{
-    const data = GAK_CONFIG.DEMO_MODE ? demoData(domain) : await fetchReal(domain);
+    // call 1: free checks (readiness + crawler). Visibility runs later, only after the email.
+    const data = GAK_CONFIG.DEMO_MODE ? demoData(domain, brand, industry) : await fetchReal(domain, {brand, industry});
     LAST=data;
     if(!data.visibility) $('gak-visibility').dataset.empty='1';
     const wait = Math.max(0, 3600-(Date.now()-started));   // let the step animation breathe
@@ -446,19 +480,19 @@ $('gak-form').addEventListener('submit', async (e)=>{
   }
 });
 
-$('gak-gate-form').addEventListener('submit', (e)=>{
+$('gak-gate-form').addEventListener('submit', async (e)=>{
   e.preventDefault();
   $('gak-gate-err').textContent='';
   const email = $('gak-email').value.trim();
   if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ $('gak-gate-err').textContent='Please enter a valid email address.'; return; }
-  postLead({ email, domain: LAST&&LAST.domain, brand: GAK_CONFIG.BRAND.name,
-             readiness_score: LAST&&LAST.readiness.score,
-             crawlers_blocked: LAST&&LAST.crawlers.summary.blocked,
+  postLead({ email, domain: CTX.domain, brand: (CTX.brand || GAK_CONFIG.BRAND.name), industry: CTX.industry,
+             readiness_score: LAST&&LAST.readiness&&LAST.readiness.score,
+             crawlers_blocked: LAST&&LAST.crawlers&&LAST.crawlers.summary&&LAST.crawlers.summary.blocked,
              source:'growthack-ai-visibility-tool', ts: new Date().toISOString() });
-  unlock();
+  await unlock();
 });
 
-$('gak-restart').addEventListener('click', ()=>{ $('gak-url').value=''; show('gak-gate'); hide('gak-full-checks'); hide('gak-visibility'); hide('gak-final'); stage('input'); });
+$('gak-restart').addEventListener('click', ()=>{ $('gak-url').value=''; $('gak-brand').value=''; $('gak-industry').value=''; show('gak-gate'); hide('gak-full-checks'); hide('gak-visibility'); hide('gak-final'); stage('input'); });
 
 frameHeight();
 </script>
