@@ -417,8 +417,27 @@ const REAL_VIS = {
       {query:"best SEO agencies in Nottingham", engines:[{label:"Perplexity",cited:false},{label:"ChatGPT",cited:false}], competitors_cited:["Adtrak","DesignRush"]}
     ]
   },
-  "manageathome.co.uk": {
+  "manageathome.co.uk": {   // Kevin's client — fully real (readiness/crawler from only=fast, visibility from the live scan)
     summary: "Live result (Jun 2026): mentioned in 1 of 3 AI engines tested. Perplexity cites you; ChatGPT and Google name competitors instead — a clear opportunity.",
+    readiness: { score: 80, verdict: "Your site is well-prepared for AI search engines.",
+      blockers: [
+        {label:"AI Bot Discoverability", status:"warn", evidence:"2 crawlers (CCBot, PetalBot) are blocked in robots.txt."},
+        {label:"Content Signals in robots.txt", status:"fail", evidence:"No Content-Signal directive (optional)."}
+      ],
+      checks: [
+        {label:"robots.txt valid format", status:"pass", evidence:"robots.txt is present and well-formed."},
+        {label:"AI Bot Discoverability", status:"warn", evidence:"2 crawlers (CCBot, PetalBot) are blocked in robots.txt."},
+        {label:"Sitemap present + valid XML", status:"pass", evidence:"Sitemap found with valid entries."},
+        {label:"Content Signals in robots.txt", status:"fail", evidence:"No Content-Signal directive (optional)."},
+        {label:"Markdown content negotiation", status:"pass", evidence:"Server negotiates Accept: text/markdown."}
+      ] },
+    crawlers: { summary:{allowed:32, blocked:2, total:34}, bots:[
+      {name:"GPTBot",allowed:true},{name:"OAI-SearchBot",allowed:true},{name:"ChatGPT-User",allowed:true},
+      {name:"PerplexityBot",allowed:true},{name:"Perplexity-User",allowed:true},{name:"Googlebot",allowed:true},
+      {name:"Google-Extended",allowed:true},{name:"ClaudeBot",allowed:true},{name:"Claude-SearchBot",allowed:true},
+      {name:"Claude-User",allowed:true},{name:"Bingbot",allowed:true},{name:"Amazonbot",allowed:true},
+      {name:"Applebot-Extended",allowed:true},{name:"meta-externalagent",allowed:true},{name:"CCBot",allowed:false},{name:"PetalBot",allowed:false}
+    ] },
     lost_deal: {  // captured live from Perplexity sonar (Jun 2026) via gak_ai_check
       query: "best mobility aids companies UK", engine: "Perplexity", mentioned: true, mentioned_in_quote: true, _asof: "Jun 2026",
       quote: "The top mobility aids companies in the UK include Eden Mobility (the UK's largest independent mobility retailer), CareCo (a leading discount mobility shop), Essential Aids, Manage At Home, and Complete Care Shop.",
@@ -433,24 +452,9 @@ const REAL_VIS = {
       engines: [{label:"Perplexity",cited:true},{label:"ChatGPT",cited:false},{label:"Google AI Overviews",cited:false}],
       competitors_cited: ["Eden Mobility","CareCo","Essential Aids"]
     }]
-  },
-  "thebricktilecompany.com": {
-    summary: "Live result (Jun 2026): mentioned in 2 of 3 AI engines tested. Perplexity ranks you the UK's #1 supplier and ChatGPT names you — strong AI presence.",
-    lost_deal: {  // captured live from Perplexity sonar (Jun 2026) via gak_ai_check
-      query: "best brick slips companies UK", engine: "Perplexity", mentioned: true, mentioned_in_quote: true, _asof: "Jun 2026",
-      quote: "The best brick slips companies in the UK include The Brick Tile Company, which is the UK's leading supplier with the largest range and fast delivery, and The Brick Slip Company, which specializes in high-quality brick slips and complete systems.",
-      top_competitor: "The Brick Slip Company", competitors: ["The Brick Slip Company","Brick Slips Direct"], result: "present"
-    },
-    losing: 1, total_cells: 3,
-    competitors: ["brickslip.co","brickslipsdirect.co.uk","reclaimedbrickcompany.co.uk"],
-    sources: { owned:["thebricktilecompany.com"], earned:["eurobrick.co.uk","brickslipsdirect.co.uk","houzz.co.uk","trustpilot.com"] },
-    offering_gap: null,
-    prompts: [{
-      query: "best brick slip & cladding suppliers UK",
-      engines: [{label:"Perplexity",cited:true},{label:"ChatGPT",cited:true},{label:"Google AI Overviews",cited:false}],
-      competitors_cited: ["Eurobrick","Brick Slips Direct","Ibstock"]
-    }]
   }
+  // thebricktilecompany.com removed from the showcase: its site blocks our crawler (only=fast returns 0/0/0),
+  // so we can't show an honest readiness/crawler layer for it. Re-add with a real "couldn't fetch" state if needed.
 };
 
 /* ---------- tiny helpers ---------- */
@@ -460,7 +464,9 @@ const hide = (id) => $(id).classList.add('gak-hide');
 /* HTML-escape ALL dynamic/third-party values before innerHTML (LLM/SerpAPI text is untrusted). */
 const esc = (s) => String(s==null?'':s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 function normUrl(raw){
-  let s = (raw||'').trim().replace(/^https?:\/\//i,'').replace(/\/.*$/,'').toLowerCase();
+  // strip protocol, path, AND leading www. — so www/https variants resolve to the same canonical
+  // key (REAL_VIS is keyed on bare domains; without this, www.growthack.io would render as synthetic sample data).
+  let s = (raw||'').trim().replace(/^https?:\/\//i,'').replace(/\/.*$/,'').replace(/^www\./i,'').toLowerCase();
   if(!s || !/^[a-z0-9.-]+\.[a-z]{2,}$/.test(s)) return null;
   return s;
 }
@@ -474,7 +480,7 @@ const ro = new ResizeObserver(frameHeight); ro.observe(document.body);
   $('gak-eyebrow').textContent = GAK_CONFIG.BRAND.name + " · AI Visibility";
   if (GAK_CONFIG.PREVIEW) {
     var b = document.createElement('div');
-    b.textContent = 'PREVIEW for GrowthAck · live data baked in for growthack.io (your own site) + your clients manageathome.co.uk & thebricktilecompany.com';
+    b.textContent = 'PREVIEW for GrowthAck · real AI-visibility data baked in for growthack.io (your own site) + your client manageathome.co.uk';
     b.style.cssText = 'background:#0c1a2e;color:#fff;font:600 12px/1.4 var(--gak-mono);text-align:center;padding:8px 12px;border-radius:8px;margin:0 0 18px;letter-spacing:.02em';
     var app = $('gak-app'); app.insertBefore(b, app.firstChild);
     // lead with his OWN site so the first thing he sees is his own absence
@@ -663,7 +669,7 @@ function engineReach(label){
   return row?row.reach:null;
 }
 function causalNote(p){
-  if(LAST && LAST._illustrative) return '';   // never assert a technical cause from illustrative (preview) reach
+  if(LAST && (LAST._illustrative || LAST._synthetic)) return '';   // never assert a technical cause from non-real (preview/sample) reach
   const blocked=(p.engines||[]).filter(e=>!e.cited && engineReach(e.label)===false)
     .map(e=>matrixEngineKey(e.label)).filter((v,i,a)=>v&&a.indexOf(v)===i);
   if(!blocked.length) return '';
@@ -715,7 +721,9 @@ function computeFixes(){
   const fixes=[];
   const blockedBots=((LAST.crawlers&&LAST.crawlers.bots)||[]).filter(b=>!b.allowed).map(b=>b.name);
   if(blockedBots.length) fixes.push({tag:'reach',html:`<b>Unblock AI crawlers.</b> Remove the <code>Disallow</code> rules for ${esc(blockedBots.slice(0,5).join(', '))} in your <code>robots.txt</code> — blocked bots can't cite you.`});
-  ((LAST.readiness.checks)||[]).filter(c=>c.status==='fail'||c.status==='warn').forEach(c=>{ const f=FIX_FOR(c.label); if(f) fixes.push({tag:'read',html:f}); });
+  // OPTIONAL checks (e.g. Content-Signal) are recommendations, not things "stopping AI trusting you" —
+  // don't count them as fixable issues (a 100/100 site shouldn't show "1 fixable issue").
+  ((LAST.readiness.checks)||[]).filter(c=>(c.status==='fail'||c.status==='warn') && !/optional/i.test(c.evidence||'')).forEach(c=>{ const f=FIX_FOR(c.label); if(f) fixes.push({tag:'read',html:f}); });
   const seen={}; return fixes.filter(f=>seen[f.html]?false:(seen[f.html]=true)).slice(0,6);
 }
 function renderFixList(){
@@ -735,12 +743,14 @@ async function unlock(){
   $('gak-vis-summary').textContent = 'Mapping your buying questions across ChatGPT, Perplexity & Google AI…';
   $('gak-prompts').innerHTML = '<div class="gak-prompt"><div class="gak-prompt-q">Running your live Lost-Deal Map across ChatGPT, Perplexity &amp; Google… (~20–30s)</div></div>';
   frameHeight();
+  const myDomain = CTX.domain;   // bail if the user restarts / re-checks while this scan is in flight
   try{
     const v = await fetchReal(CTX.domain, {brand:CTX.brand, industry:CTX.industry, email:CTX.email, only:'visibility'});
+    if(CTX.domain !== myDomain || !LAST) return;   // moved on -> don't write a stale scan into the new report
     if(v && v.visibility){ LAST.visibility=v.visibility; renderGated(v.visibility); }
     else { hide('gak-visibility'); }
-  }catch(e){ $('gak-vis-summary').textContent = "The Lost-Deal Map timed out — please try again."; }
-  frameHeight();
+  }catch(e){ if(CTX.domain===myDomain) $('gak-vis-summary').textContent = "The Lost-Deal Map timed out — please try again."; }
+  if(CTX.domain===myDomain) frameHeight();
 }
 
 /* ---------- backend ---------- */
@@ -924,7 +934,7 @@ $('gak-gate-form').addEventListener('submit', async (e)=>{
   await unlock();
 });
 
-$('gak-restart').addEventListener('click', ()=>{ $('gak-url').value=''; $('gak-brand').value=''; $('gak-industry').value=''; LAST=null; CTX={domain:'',brand:'',industry:''}; show('gak-gate'); ['gak-full-checks','gak-visibility','gak-competitors','gak-sources','gak-offering','gak-fixlist','gak-final','gak-sample-note'].forEach(hide); stage('input'); });
+$('gak-restart').addEventListener('click', ()=>{ ['gak-url','gak-brand','gak-industry','gak-email'].forEach(id=>{const e=$(id); if(e) e.value='';}); const ge=$('gak-gate-err'); if(ge) ge.textContent=''; LAST=null; CTX={domain:'',brand:'',industry:''}; show('gak-gate'); ['gak-full-checks','gak-visibility','gak-competitors','gak-sources','gak-offering','gak-fixlist','gak-final','gak-sample-note'].forEach(hide); stage('input'); });
 
 frameHeight();
 </script>
