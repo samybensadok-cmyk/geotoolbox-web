@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Visibility Check</title>
+<!--
+  GrowthAck — AI Visibility Checker (embeddable widget)
+  Self-contained: host this single file on Cloudflare, embed in Framer via <iframe>.
+  Theme   -> edit the :root CSS variables below (brand colours/font/logo).
+  Wire up  -> edit the GAK_CONFIG block in <script> (API_BASE, MAKE_WEBHOOK_URL, ENGINES, GATE).
+  Demo now -> GAK_CONFIG.DEMO_MODE = true renders realistic results with NO backend (for showing Kevin).
+-->
+<style>
+:root{
+  /* ---- GrowthAck brand (swap these when the brand kit lands) ---- */
+  --gak-navy:#0c1a2e;        /* primary dark / headings */
+  --gak-blue:#0099ff;        /* primary accent / CTA */
+  --gak-blue-600:#0a74c4;
+  --gak-mint:#5dc39b;        /* secondary accent / pass */
+  --gak-amber:#f0a23a;       /* warn */
+  --gak-red:#e5484d;         /* fail */
+  --gak-bg:#fafaf7;          /* page bg */
+  --gak-card:#ffffff;
+  --gak-ink:#242424;         /* body text */
+  --gak-muted:#647576;       /* secondary text */
+  --gak-line:#e7e9ec;        /* borders */
+  --gak-font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --gak-mono:'Fragment Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --gak-radius:16px;
+  --gak-shadow:0 1px 2px rgba(12,26,46,.04),0 8px 30px rgba(12,26,46,.07);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  font-family:var(--gak-font);color:var(--gak-ink);background:var(--gak-bg);
+  -webkit-font-smoothing:antialiased;line-height:1.5;
+}
+.gak-wrap{max-width:760px;margin:0 auto;padding:28px 20px 40px}
+.gak-hide{display:none!important}
+
+/* ---------- hero / input ---------- */
+.gak-hero{text-align:center;margin-bottom:22px}
+.gak-eyebrow{font:600 12px/1 var(--gak-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--gak-blue);margin-bottom:12px}
+.gak-h1{font-size:clamp(24px,4.4vw,34px);line-height:1.12;font-weight:800;color:var(--gak-navy);margin:0 0 10px;letter-spacing:-.02em}
+.gak-sub{color:var(--gak-muted);font-size:16px;margin:0 auto;max-width:48ch}
+.gak-form{display:flex;gap:10px;margin:22px auto 8px;max-width:560px;flex-wrap:wrap}
+.gak-field{flex:1 1 240px;position:relative}
+.gak-input{
+  width:100%;height:52px;padding:0 16px;font-size:16px;font-family:inherit;color:var(--gak-ink);
+  background:var(--gak-card);border:1.5px solid var(--gak-line);border-radius:12px;outline:none;transition:border-color .15s,box-shadow .15s;
+}
+.gak-input:focus{border-color:var(--gak-blue);box-shadow:0 0 0 4px rgba(0,153,255,.13)}
+.gak-btn{
+  height:52px;padding:0 26px;font-size:16px;font-weight:700;font-family:inherit;color:#fff;cursor:pointer;
+  background:var(--gak-blue);border:none;border-radius:12px;transition:transform .08s,background .15s,opacity .15s;white-space:nowrap;
+}
+.gak-btn:hover{background:var(--gak-blue-600)}
+.gak-btn:active{transform:translateY(1px)}
+.gak-btn[disabled]{opacity:.55;cursor:not-allowed}
+.gak-note{font-size:13px;color:var(--gak-muted);text-align:center;margin-top:6px}
+.gak-err{color:var(--gak-red);font-size:14px;text-align:center;margin-top:10px;min-height:18px}
+
+/* ---------- loading ---------- */
+.gak-loading{text-align:center;padding:38px 0}
+.gak-spin{width:38px;height:38px;border:3px solid var(--gak-line);border-top-color:var(--gak-blue);border-radius:50%;margin:0 auto 18px;animation:gak-rot .8s linear infinite}
+@keyframes gak-rot{to{transform:rotate(360deg)}}
+.gak-steps{list-style:none;padding:0;margin:0;display:inline-block;text-align:left;color:var(--gak-muted);font-size:15px}
+.gak-steps li{padding:5px 0 5px 26px;position:relative;opacity:.4;transition:opacity .3s,color .3s}
+.gak-steps li.on{opacity:1;color:var(--gak-ink)}
+.gak-steps li.done{opacity:1;color:var(--gak-navy)}
+.gak-steps li::before{content:'';position:absolute;left:0;top:9px;width:10px;height:10px;border-radius:50%;border:2px solid var(--gak-line)}
+.gak-steps li.on::before{border-color:var(--gak-blue);animation:gak-pulse 1s ease-in-out infinite}
+.gak-steps li.done::before{border-color:var(--gak-mint);background:var(--gak-mint)}
+@keyframes gak-pulse{0%,100%{box-shadow:0 0 0 0 rgba(0,153,255,.4)}50%{box-shadow:0 0 0 5px rgba(0,153,255,0)}}
+
+/* ---------- result cards ---------- */
+.gak-results{display:flex;flex-direction:column;gap:18px}
+.gak-card{background:var(--gak-card);border:1px solid var(--gak-line);border-radius:var(--gak-radius);box-shadow:var(--gak-shadow);padding:22px}
+.gak-card-h{display:flex;align-items:center;gap:10px;margin:0 0 4px;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gak-muted)}
+.gak-card-h .dot{width:8px;height:8px;border-radius:50%;background:var(--gak-blue)}
+
+/* score gauge */
+.gak-score{display:flex;align-items:center;gap:26px;flex-wrap:wrap}
+.gak-gauge{position:relative;width:148px;height:148px;flex:0 0 auto}
+.gak-gauge svg{transform:rotate(-90deg)}
+.gak-gauge .val{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.gak-gauge .num{font-size:40px;font-weight:800;color:var(--gak-navy);line-height:1}
+.gak-gauge .den{font-size:13px;color:var(--gak-muted);margin-top:2px}
+.gak-score-txt{flex:1 1 220px;min-width:200px}
+.gak-grade{display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:700;padding:5px 12px;border-radius:999px;margin-bottom:8px}
+.gak-grade.g-a{background:rgba(93,195,155,.15);color:#1f7a57}
+.gak-grade.g-b{background:rgba(93,195,155,.13);color:#2a7d5c}
+.gak-grade.g-c{background:rgba(240,162,58,.16);color:#9a6412}
+.gak-grade.g-d{background:rgba(229,72,77,.13);color:#b23438}
+.gak-verdict{font-size:16px;color:var(--gak-ink);margin:0}
+
+/* check rows */
+.gak-checks{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:2px}
+.gak-checks li{display:flex;gap:12px;padding:11px 0;border-top:1px solid var(--gak-line)}
+.gak-checks li:first-child{border-top:none}
+.gak-pill{flex:0 0 auto;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;margin-top:1px}
+.gak-pill.pass{background:var(--gak-mint)}
+.gak-pill.warn{background:var(--gak-amber)}
+.gak-pill.fail{background:var(--gak-red)}
+.gak-pill.na{background:#b9c0c7}
+.gak-check-b{flex:1}
+.gak-check-t{font-weight:600;color:var(--gak-navy)}
+.gak-check-e{font-size:14px;color:var(--gak-muted);margin-top:2px}
+
+/* crawler grid */
+.gak-crawl-sum{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:14px}
+.gak-stat{flex:1 1 120px;background:var(--gak-bg);border:1px solid var(--gak-line);border-radius:12px;padding:12px 14px}
+.gak-stat .n{font-size:26px;font-weight:800;color:var(--gak-navy);line-height:1}
+.gak-stat .l{font-size:12px;color:var(--gak-muted);margin-top:3px}
+.gak-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.gak-bot{display:flex;align-items:center;gap:8px;padding:9px 11px;border-radius:10px;background:var(--gak-bg);border:1px solid var(--gak-line);font-size:14px}
+.gak-bot .b-dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
+.gak-bot.ok .b-dot{background:var(--gak-mint)}
+.gak-bot.no .b-dot{background:var(--gak-red)}
+.gak-bot .b-name{font-weight:600;color:var(--gak-navy)}
+
+/* email gate */
+.gak-gate{background:linear-gradient(180deg,#fff, #f5f9ff);border:1px solid var(--gak-line);border-radius:var(--gak-radius);box-shadow:var(--gak-shadow);padding:26px;text-align:center}
+.gak-gate h3{font-size:20px;color:var(--gak-navy);margin:0 0 6px;font-weight:800}
+.gak-gate p{color:var(--gak-muted);margin:0 auto 16px;max-width:42ch}
+.gak-locked{position:relative}
+.gak-locked .gak-blur{filter:blur(6px);opacity:.55;pointer-events:none;user-select:none}
+
+/* visibility scan */
+.gak-prompt{border:1px solid var(--gak-line);border-radius:12px;padding:14px 16px;margin-top:10px;background:var(--gak-bg)}
+.gak-prompt-q{font-weight:600;color:var(--gak-navy);font-size:15px}
+.gak-engines{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.gak-eng{display:flex;align-items:center;gap:7px;font-size:13px;padding:5px 10px;border-radius:999px;background:#fff;border:1px solid var(--gak-line)}
+.gak-eng .e-dot{width:8px;height:8px;border-radius:50%}
+.gak-eng.cited .e-dot{background:var(--gak-mint)}
+.gak-eng.absent .e-dot{background:var(--gak-red)}
+.gak-eng b{color:var(--gak-navy)}
+.gak-comp{font-size:14px;color:var(--gak-muted);margin-top:8px}
+.gak-comp b{color:var(--gak-ink)}
+
+.gak-cta-final{text-align:center;padding:8px 0 0}
+.gak-foot{text-align:center;font-size:12px;color:var(--gak-muted);margin-top:24px}
+.gak-foot a{color:var(--gak-blue);text-decoration:none}
+@media(max-width:560px){.gak-form{flex-direction:column}.gak-btn{width:100%}}
+</style>
+</head>
+<body>
+<div class="gak-wrap" id="gak-app">
+
+  <!-- ===== INPUT ===== -->
+  <section id="gak-stage-input">
+    <div class="gak-hero">
+      <div class="gak-eyebrow" id="gak-eyebrow">GrowthAck · AI Visibility</div>
+      <h1 class="gak-h1">Can AI find &amp; recommend your brand?</h1>
+      <p class="gak-sub">Get an instant AI-readiness score, see which AI crawlers can reach your site, and check whether ChatGPT &amp; Google AI mention you — free.</p>
+    </div>
+    <form class="gak-form" id="gak-form" autocomplete="off">
+      <div class="gak-field"><input class="gak-input" id="gak-url" type="text" inputmode="url" placeholder="yourwebsite.com" aria-label="Your website" required></div>
+      <button class="gak-btn" id="gak-go" type="submit">Run free AI check</button>
+    </form>
+    <div class="gak-note">No signup to see your score · takes ~20 seconds</div>
+    <div class="gak-err" id="gak-err" role="alert"></div>
+  </section>
+
+  <!-- ===== LOADING ===== -->
+  <section id="gak-stage-loading" class="gak-hide">
+    <div class="gak-loading">
+      <div class="gak-spin"></div>
+      <ul class="gak-steps" id="gak-steps">
+        <li data-step="0">Fetching robots.txt &amp; sitemap</li>
+        <li data-step="1">Testing 34 AI crawlers for access</li>
+        <li data-step="2">Asking ChatGPT &amp; Google AI about your brand</li>
+        <li data-step="3">Scoring &amp; building your report</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== RESULTS ===== -->
+  <section id="gak-stage-results" class="gak-hide">
+    <div class="gak-results">
+
+      <!-- Readiness score (FREE) -->
+      <div class="gak-card">
+        <div class="gak-card-h"><span class="dot"></span> AI Readiness Score</div>
+        <div class="gak-score">
+          <div class="gak-gauge">
+            <svg width="148" height="148" viewBox="0 0 148 148">
+              <circle cx="74" cy="74" r="64" fill="none" stroke="#eef0f2" stroke-width="14"></circle>
+              <circle id="gak-arc" cx="74" cy="74" r="64" fill="none" stroke="var(--gak-blue)" stroke-width="14" stroke-linecap="round" stroke-dasharray="402" stroke-dashoffset="402"></circle>
+            </svg>
+            <div class="val"><span class="num" id="gak-score-num">0</span><span class="den">/ 100</span></div>
+          </div>
+          <div class="gak-score-txt">
+            <span class="gak-grade" id="gak-grade">—</span>
+            <p class="gak-verdict" id="gak-verdict"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Crawler access (FREE summary) -->
+      <div class="gak-card">
+        <div class="gak-card-h"><span class="dot"></span> AI Crawler Access</div>
+        <div class="gak-crawl-sum" id="gak-crawl-sum"></div>
+        <div class="gak-grid" id="gak-crawl-grid"></div>
+      </div>
+
+      <!-- EMAIL GATE -->
+      <div class="gak-gate" id="gak-gate">
+        <h3>See your full report + are you in ChatGPT &amp; Google AI?</h3>
+        <p>Unlock the full readiness breakdown and your live AI-visibility scan — where AI mentions you, and who it recommends instead.</p>
+        <form class="gak-form" id="gak-gate-form" style="margin-top:4px" autocomplete="on">
+          <div class="gak-field"><input class="gak-input" id="gak-email" type="email" placeholder="you@company.com" aria-label="Your email" required></div>
+          <button class="gak-btn" id="gak-unlock" type="submit">Get my full report</button>
+        </form>
+        <div class="gak-note" id="gak-gate-consent">We'll email your report. No spam — unsubscribe anytime.</div>
+        <div class="gak-err" id="gak-gate-err" role="alert"></div>
+      </div>
+
+      <!-- GATED: full readiness breakdown -->
+      <div class="gak-card gak-hide" id="gak-full-checks">
+        <div class="gak-card-h"><span class="dot"></span> Full Readiness Breakdown</div>
+        <ul class="gak-checks" id="gak-checks"></ul>
+      </div>
+
+      <!-- GATED: visibility scan -->
+      <div class="gak-card gak-hide" id="gak-visibility">
+        <div class="gak-card-h"><span class="dot"></span> AI Visibility Scan</div>
+        <p class="gak-verdict" id="gak-vis-summary" style="font-size:15px"></p>
+        <div id="gak-prompts"></div>
+      </div>
+
+      <div class="gak-cta-final gak-hide" id="gak-final">
+        <button class="gak-btn" id="gak-restart" type="button" style="background:var(--gak-navy)">Check another site</button>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="gak-foot">Powered by <a href="#" id="gak-foot-link">GrowthAck</a> · AI search visibility</div>
+</div>
+
+<script>
+/* ============================================================
+   GAK_CONFIG — everything Kevin provides plugs in here.
+   ============================================================ */
+const GAK_CONFIG = {
+  DEMO_MODE: true,                       // true = mock/baked (no backend). FLIP to false once gak_ai_check is live on Replit.
+  PREVIEW: true,                         // preview mode: shows "Preview" badge + uses REAL_VIS baked examples for Kevin's clients. false for production embed.
+  API_BASE: "https://sg-geo-tool.replit.app",  // our backend (Vercel rewrites /api/* -> Replit). CORS-allowed for the embed origin.
+  API_ACTION: "gak_ai_check",            // ?action= handler (see API_CONTRACT.md)
+  MAKE_WEBHOOK_URL: "",                  // <-- Kevin's Make.com webhook (lead -> HubSpot + MailChimp). Empty = skip POST.
+  ENGINES: ["chatgpt","perplexity","google_aio"],  // ChatGPT+Perplexity (DataForSEO) + Google AI Overviews (SerpAPI)
+  BRAND: { name: "GrowthAck", url: "https://growthack.io" },
+  GATE: { freeChecksVisible: true }      // score + crawler shown free; full breakdown + visibility behind email
+};
+
+/* REAL visibility data — genuinely pulled 2026-06-23 (Perplexity sonar + ChatGPT via DataForSEO) for Kevin's
+   pilot clients, so the preview shows REAL AI-visibility for his own brands. Demo synth handles any other domain.
+   (Readiness + crawler in preview are representative until the live backend computes them.) */
+const REAL_VIS = {
+  "manageathome.co.uk": {
+    summary: "Live result (Jun 2026): mentioned in 1 of 3 AI engines tested. Perplexity cites you; ChatGPT and Google name competitors instead — a clear opportunity.",
+    prompts: [{
+      query: "best UK retailers for mobility aids & daily living equipment",
+      engines: [{label:"Perplexity",cited:true},{label:"ChatGPT",cited:false},{label:"Google AI Overviews",cited:false}],
+      competitors_cited: ["Eden Mobility","CareCo","Essential Aids"]
+    }]
+  },
+  "thebricktilecompany.com": {
+    summary: "Live result (Jun 2026): mentioned in 2 of 3 AI engines tested. Perplexity ranks you the UK's #1 supplier and ChatGPT names you — strong AI presence.",
+    prompts: [{
+      query: "best brick slip & cladding suppliers UK",
+      engines: [{label:"Perplexity",cited:true},{label:"ChatGPT",cited:true},{label:"Google AI Overviews",cited:false}],
+      competitors_cited: ["Eurobrick","Brick Slips Direct","Ibstock"]
+    }]
+  }
+};
+
+/* ---------- tiny helpers ---------- */
+const $ = (id) => document.getElementById(id);
+const show = (id) => $(id).classList.remove('gak-hide');
+const hide = (id) => $(id).classList.add('gak-hide');
+function normUrl(raw){
+  let s = (raw||'').trim().replace(/^https?:\/\//i,'').replace(/\/.*$/,'').toLowerCase();
+  if(!s || !/^[a-z0-9.-]+\.[a-z]{2,}$/.test(s)) return null;
+  return s;
+}
+function frameHeight(){ // tell Framer the iframe height
+  try{ parent.postMessage({type:'gak-resize', height: document.body.scrollHeight}, '*'); }catch(e){}
+}
+const ro = new ResizeObserver(frameHeight); ro.observe(document.body);
+
+/* ---------- apply branding from config ---------- */
+(function brand(){
+  $('gak-eyebrow').textContent = GAK_CONFIG.BRAND.name + " · AI Visibility";
+  if (GAK_CONFIG.PREVIEW) {
+    var b = document.createElement('div');
+    b.textContent = 'PREVIEW — for GrowthAck review · try manageathome.co.uk or thebricktilecompany.com for live data';
+    b.style.cssText = 'background:#0c1a2e;color:#fff;font:600 12px/1.4 var(--gak-mono);text-align:center;padding:8px 12px;border-radius:8px;margin:0 0 18px;letter-spacing:.02em';
+    var app = $('gak-app'); app.insertBefore(b, app.firstChild);
+  }
+  $('gak-foot-link').textContent = GAK_CONFIG.BRAND.name;
+  $('gak-foot-link').href = GAK_CONFIG.BRAND.url || '#';
+})();
+
+/* ---------- stage control ---------- */
+function stage(s){
+  ['input','loading','results'].forEach(x=>hide('gak-stage-'+x));
+  show('gak-stage-'+s); frameHeight();
+}
+
+/* ---------- loading animation ---------- */
+let stepTimer;
+function runSteps(){
+  const lis = [...$('gak-steps').querySelectorAll('li')];
+  lis.forEach(li=>li.className='');
+  let i=0; lis[0].classList.add('on');
+  stepTimer = setInterval(()=>{
+    if(i<lis.length){ lis[i].classList.remove('on'); lis[i].classList.add('done'); i++; if(lis[i]) lis[i].classList.add('on'); }
+    else clearInterval(stepTimer);
+  }, 1100);
+}
+
+/* ---------- score gauge ---------- */
+function paintScore(score){
+  const C=402, off = C - (C*Math.max(0,Math.min(100,score))/100);
+  const arc=$('gak-arc');
+  arc.style.transition='stroke-dashoffset 1.1s cubic-bezier(.2,.7,.2,1)';
+  requestAnimationFrame(()=>{ arc.style.strokeDashoffset=off; });
+  // animate number
+  let n=0; const t=setInterval(()=>{ n+=Math.ceil(score/28)||1; if(n>=score){n=score;clearInterval(t);} $('gak-score-num').textContent=n; },35);
+  // grade + colour
+  let g,cls,col;
+  if(score>=85){g='Excellent';cls='g-a';col='var(--gak-mint)';}
+  else if(score>=70){g='Good';cls='g-b';col='var(--gak-mint)';}
+  else if(score>=50){g='Needs work';cls='g-c';col='var(--gak-amber)';}
+  else {g='At risk';cls='g-d';col='var(--gak-red)';}
+  const gr=$('gak-grade'); gr.textContent=g; gr.className='gak-grade '+cls;
+  arc.style.stroke=col;
+}
+
+/* ---------- render ---------- */
+function render(data){
+  // 1. score (free)
+  paintScore(data.readiness.score);
+  $('gak-verdict').textContent = data.readiness.verdict;
+
+  // 2. crawler summary + grid (free)
+  const s=data.crawlers.summary;
+  $('gak-crawl-sum').innerHTML = `
+    <div class="gak-stat"><div class="n" style="color:var(--gak-mint)">${s.allowed}</div><div class="l">crawlers allowed</div></div>
+    <div class="gak-stat"><div class="n" style="color:${s.blocked? 'var(--gak-red)':'var(--gak-navy)'}">${s.blocked}</div><div class="l">crawlers blocked</div></div>
+    <div class="gak-stat"><div class="n">${s.total}</div><div class="l">AI bots checked</div></div>`;
+  $('gak-crawl-grid').innerHTML = data.crawlers.bots.map(b=>
+    `<div class="gak-bot ${b.allowed?'ok':'no'}"><span class="b-dot"></span><span class="b-name">${b.name}</span></div>`).join('');
+
+  // 3. gated content (built now, revealed after email)
+  $('gak-checks').innerHTML = data.readiness.checks.map(c=>{
+    const sym = c.status==='pass'?'✓':c.status==='warn'?'!':c.status==='na'?'–':'✕';
+    return `<li><span class="gak-pill ${c.status}">${sym}</span><div class="gak-check-b"><div class="gak-check-t">${c.label}</div><div class="gak-check-e">${c.evidence}</div></div></li>`;
+  }).join('');
+
+  if(data.visibility){
+    $('gak-vis-summary').textContent = data.visibility.summary;
+    $('gak-prompts').innerHTML = data.visibility.prompts.map(p=>{
+      const engs = p.engines.map(e=>`<span class="gak-eng ${e.cited?'cited':'absent'}"><span class="e-dot"></span><b>${e.label}</b> ${e.cited?'mentions you':'no mention'}</span>`).join('');
+      const comp = p.competitors_cited&&p.competitors_cited.length ? `<div class="gak-comp">Cited instead: <b>${p.competitors_cited.join(', ')}</b></div>`:'';
+      return `<div class="gak-prompt"><div class="gak-prompt-q">“${p.query}”</div><div class="gak-engines">${engs}</div>${comp}</div>`;
+    }).join('');
+  }
+  stage('results');
+}
+
+/* ---------- email gate unlock ---------- */
+function unlock(){
+  hide('gak-gate'); show('gak-full-checks'); if(!$('gak-visibility').dataset.empty) show('gak-visibility'); show('gak-final');
+  frameHeight();
+}
+
+/* ---------- backend ---------- */
+async function fetchReal(domain){
+  const u = `${GAK_CONFIG.API_BASE}/?action=${GAK_CONFIG.API_ACTION}&url=${encodeURIComponent(domain)}&engines=${GAK_CONFIG.ENGINES.join(',')}`;
+  const r = await fetch(u, {headers:{'Accept':'application/json'}});
+  if(!r.ok) throw new Error('api_'+r.status);
+  return await r.json();
+}
+async function postLead(payload){
+  if(!GAK_CONFIG.MAKE_WEBHOOK_URL) return;
+  try{ await fetch(GAK_CONFIG.MAKE_WEBHOOK_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}); }catch(e){}
+}
+
+/* ---------- DEMO data (realistic, deterministic from domain) ---------- */
+function demoData(domain){
+  let h=0; for(const c of domain) h=(h*31+c.charCodeAt(0))>>>0;
+  const rnd=(seed)=>{ const x=Math.sin(h+seed)*10000; return x-Math.floor(x); };
+  const score = 42 + Math.floor(rnd(1)*46);                 // 42..88
+  const blocked = Math.floor(rnd(2)*5);                     // 0..4 blocked
+  const allowed = 34 - blocked;
+  const keyBots=['GPTBot','OAI-SearchBot','ClaudeBot','PerplexityBot','Google-Extended','Googlebot','Bingbot','Amazonbot','Applebot-Extended','meta-externalagent','CCBot','Bytespider'];
+  const bots = keyBots.map((n,i)=>({name:n, allowed: !(i<blocked)}));
+  const mk=(st,label,ev)=>({status:st,label,evidence:ev});
+  const checks=[
+    mk(score>55?'pass':'fail','robots.txt valid format', score>55?'robots.txt is present and well-formed.':'No robots.txt found — crawlers assume full access, but a file lets you state AI preferences.'),
+    mk(blocked?'warn':'pass','AI Bot Discoverability', blocked?`${blocked} AI crawler(s) are blocked in robots.txt.`:'All AI crawlers have access in robots.txt.'),
+    mk(rnd(3)>.3?'pass':'fail','Sitemap present + valid XML', rnd(3)>.3?'Sitemap found with valid entries.':'No valid sitemap found at /sitemap.xml.'),
+    mk(rnd(4)>.6?'pass':'fail','Content-Signal directive', rnd(4)>.6?'Content-Signal directive present.':'No Content-Signal directive (optional; reserves AI-use rights explicitly).'),
+    mk(rnd(5)>.7?'pass':'fail','Markdown content negotiation', rnd(5)>.7?'Server negotiates Accept: text/markdown.':'No markdown negotiation (Perplexity & some Claude flows prefer it).')
+  ];
+  const brand = domain.split('.')[0];
+  const comps=['Competitor A','Competitor B','an industry directory'];
+  const vprompts=[
+    {query:`best ${brand} alternatives`, engines:[{label:'ChatGPT',cited:rnd(6)>.5},{label:'Google AI',cited:rnd(7)>.6},{label:'Perplexity',cited:rnd(8)>.5}]},
+    {query:`is ${brand} any good?`, engines:[{label:'ChatGPT',cited:rnd(9)>.4},{label:'Google AI',cited:rnd(10)>.7},{label:'Perplexity',cited:rnd(11)>.5}]}
+  ].map(p=>({...p, competitors_cited: p.engines.some(e=>!e.cited)?comps.slice(0,1+Math.floor(rnd(12)*2)):[]}));
+  const mentions = vprompts.flatMap(p=>p.engines).filter(e=>e.cited).length;
+  const tot = vprompts.flatMap(p=>p.engines).length;
+  return {
+    domain,
+    readiness:{ score, verdict: score>=70?'Your site is well-prepared for AI search engines.':score>=50?'Partly ready — a few fixes would meaningfully improve how AI sees you.':'AI engines may struggle to read and trust your site. Several quick wins below.', checks },
+    crawlers:{ summary:{allowed,blocked,total:34}, bots },
+    visibility: (GAK_CONFIG.PREVIEW && REAL_VIS[domain]) ? REAL_VIS[domain]
+      : { summary:`Your brand was mentioned in ${mentions} of ${tot} AI answers tested. ${mentions<tot?'Competitors are being recommended where you are absent.':'Strong AI presence.'}`, prompts:vprompts }
+  };
+}
+
+/* ---------- flow ---------- */
+let LAST=null;
+$('gak-form').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  $('gak-err').textContent='';
+  const domain = normUrl($('gak-url').value);
+  if(!domain){ $('gak-err').textContent='Please enter a valid website, e.g. yourcompany.com'; return; }
+  $('gak-go').disabled=true;
+  stage('loading'); runSteps();
+  const started=Date.now();
+  try{
+    const data = GAK_CONFIG.DEMO_MODE ? demoData(domain) : await fetchReal(domain);
+    LAST=data;
+    if(!data.visibility) $('gak-visibility').dataset.empty='1';
+    const wait = Math.max(0, 3600-(Date.now()-started));   // let the step animation breathe
+    setTimeout(()=>{ clearInterval(stepTimer); render(data); $('gak-go').disabled=false; }, GAK_CONFIG.DEMO_MODE?wait:0);
+  }catch(err){
+    clearInterval(stepTimer); $('gak-go').disabled=false; stage('input');
+    $('gak-err').textContent='Could not run the check right now. Please try again in a moment.';
+  }
+});
+
+$('gak-gate-form').addEventListener('submit', (e)=>{
+  e.preventDefault();
+  $('gak-gate-err').textContent='';
+  const email = $('gak-email').value.trim();
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ $('gak-gate-err').textContent='Please enter a valid email address.'; return; }
+  postLead({ email, domain: LAST&&LAST.domain, brand: GAK_CONFIG.BRAND.name,
+             readiness_score: LAST&&LAST.readiness.score,
+             crawlers_blocked: LAST&&LAST.crawlers.summary.blocked,
+             source:'growthack-ai-visibility-tool', ts: new Date().toISOString() });
+  unlock();
+});
+
+$('gak-restart').addEventListener('click', ()=>{ $('gak-url').value=''; show('gak-gate'); hide('gak-full-checks'); hide('gak-visibility'); hide('gak-final'); stage('input'); });
+
+frameHeight();
+</script>
+</body>
+</html>
