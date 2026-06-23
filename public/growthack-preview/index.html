@@ -139,6 +139,52 @@ body{
 .gak-comp{font-size:14px;color:var(--gak-muted);margin-top:8px}
 .gak-comp b{color:var(--gak-ink)}
 
+/* ---------- Lost-Deal Quote (free hero) ---------- */
+.gak-lostdeal{background:linear-gradient(180deg,#fff,#fff7f6);border:1px solid var(--gak-line);border-left:4px solid var(--gak-red);border-radius:var(--gak-radius);box-shadow:var(--gak-shadow);padding:22px}
+.gak-lostdeal.win{background:linear-gradient(180deg,#fff,#f3fbf7);border-left-color:var(--gak-mint)}
+.gak-ld-badge{display:inline-flex;align-items:center;gap:7px;font:700 12px/1 var(--gak-mono);letter-spacing:.04em;text-transform:uppercase;padding:6px 11px;border-radius:999px;margin-bottom:12px}
+.gak-ld-badge.lose{background:rgba(229,72,77,.12);color:#b23438}
+.gak-ld-badge.win{background:rgba(93,195,155,.16);color:#1f7a57}
+.gak-ld-q{font-size:13px;color:var(--gak-muted);margin:0 0 8px}
+.gak-ld-quote{font-size:17px;line-height:1.5;color:var(--gak-navy);font-weight:500;border-radius:10px;background:var(--gak-bg);border:1px solid var(--gak-line);padding:13px 15px;margin:0}
+.gak-ld-quote .src{display:block;font-size:12px;color:var(--gak-muted);font-weight:600;margin-top:8px}
+.gak-ld-rival{margin-top:12px;font-size:15px;color:var(--gak-ink)}
+.gak-ld-rival b{color:var(--gak-red)}
+.gak-lostdeal.win .gak-ld-rival b{color:var(--gak-navy)}
+
+/* ---------- Reach / Read / Result matrix (free; Result locked) ---------- */
+.gak-matrix{width:100%;border-collapse:collapse;margin-top:6px;font-size:14px}
+.gak-matrix th,.gak-matrix td{padding:11px 8px;text-align:center;border-top:1px solid var(--gak-line)}
+.gak-matrix th{font:700 11px/1.2 var(--gak-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--gak-muted);border-top:none}
+.gak-matrix th:first-child,.gak-matrix td:first-child{text-align:left}
+.gak-matrix td.eng{font-weight:700;color:var(--gak-navy);white-space:nowrap}
+.gak-cell{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;font-size:13px;font-weight:800;color:#fff}
+.gak-cell.yes{background:var(--gak-mint)}
+.gak-cell.no{background:var(--gak-red)}
+.gak-cell.unk{background:#c4ccd3;color:#fff}
+.gak-res{font-weight:700;font-size:13px}
+.gak-res.present{color:#1f7a57}
+.gak-res.absent{color:var(--gak-red)}
+.gak-res.competitor{color:#9a6412}
+.gak-res-lock{display:inline-flex;align-items:center;gap:5px;color:var(--gak-muted);font-size:13px;font-weight:600;filter:blur(.3px)}
+.gak-res-lock::before{content:'🔒';filter:none}
+.gak-res-prem{font:700 10px/1 var(--gak-mono);letter-spacing:.04em;text-transform:uppercase;color:var(--gak-blue);background:rgba(0,153,255,.1);padding:4px 7px;border-radius:6px}
+.gak-matrix-note{font-size:12.5px;color:var(--gak-muted);margin-top:12px;text-align:center}
+
+/* ---------- teaser chips (free counts) ---------- */
+.gak-teasers{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
+.gak-teaser{flex:1 1 160px;display:flex;gap:11px;align-items:center;background:var(--gak-card);border:1px solid var(--gak-line);border-radius:12px;padding:13px 15px}
+.gak-teaser .tn{font-size:24px;font-weight:800;line-height:1;color:var(--gak-navy)}
+.gak-teaser.alert .tn{color:var(--gak-red)}
+.gak-teaser .tl{font-size:13px;color:var(--gak-muted);line-height:1.3}
+.gak-teaser.locked{position:relative}
+.gak-teaser.locked .tn{filter:blur(7px);user-select:none}
+.gak-teaser.locked::after{content:'🔒';position:absolute;left:15px;top:13px;font-size:15px}
+
+/* sample-data notice (synthetic demo domains) */
+.gak-sample-note{background:#fff7ed;border:1px solid #f0c98a;color:#9a6412;font-size:13px;border-radius:10px;padding:10px 14px;text-align:center}
+.gak-sample-note b{color:#7c4a0a}
+
 .gak-cta-final{text-align:center;padding:8px 0 0}
 .gak-foot{text-align:center;font-size:12px;color:var(--gak-muted);margin-top:24px}
 .gak-foot a{color:var(--gak-blue);text-decoration:none}
@@ -175,7 +221,8 @@ body{
         <li data-step="0">Fetching robots.txt &amp; sitemap</li>
         <li data-step="1">Testing AI crawler access</li>
         <li data-step="2">Scoring your AI readiness</li>
-        <li data-step="3">Preparing your report</li>
+        <li data-step="3">Asking Perplexity what AI recommends in your category</li>
+        <li data-step="4">Preparing your report</li>
       </ul>
     </div>
   </section>
@@ -183,6 +230,12 @@ body{
   <!-- ===== RESULTS ===== -->
   <section id="gak-stage-results" class="gak-hide">
     <div class="gak-results">
+
+      <!-- Sample-data notice (DEMO synthetic domains only) -->
+      <div class="gak-sample-note gak-hide" id="gak-sample-note">These figures are <b>sample data</b> for preview — run the live tool, or try a pilot domain, for real results.</div>
+
+      <!-- Lost-Deal Quote (FREE hero — the bait) -->
+      <div class="gak-lostdeal gak-hide" id="gak-lostdeal"></div>
 
       <!-- Readiness score (FREE) -->
       <div class="gak-card">
@@ -209,10 +262,22 @@ body{
         <div class="gak-grid" id="gak-crawl-grid"></div>
       </div>
 
+      <!-- Reach / Read / Result matrix (FREE; Result column locked) -->
+      <div class="gak-card gak-hide" id="gak-matrix-card">
+        <div class="gak-card-h"><span class="dot"></span> Can AI reach, read &amp; recommend you?</div>
+        <table class="gak-matrix"><thead><tr>
+          <th>AI engine</th><th>Reach</th><th>Read</th><th>Recommends you</th>
+        </tr></thead><tbody id="gak-matrix-body"></tbody></table>
+        <div class="gak-matrix-note" id="gak-matrix-note">Reach = can its crawler access your site · Read = is your site machine-readable · Recommends = does it name you in buying answers</div>
+      </div>
+
+      <!-- Teaser counts (FREE) -->
+      <div class="gak-teasers gak-hide" id="gak-teasers"></div>
+
       <!-- EMAIL GATE -->
       <div class="gak-gate" id="gak-gate">
-        <h3>See your full report + are you in ChatGPT &amp; Google AI?</h3>
-        <p>Unlock the full readiness breakdown and your live AI-visibility scan — where AI mentions you, and who it recommends instead.</p>
+        <h3>Unlock the live “Recommends you” result for ChatGPT, Perplexity &amp; Google AI</h3>
+        <p>See the live result for ChatGPT &amp; Google AI (not just Perplexity), your full readiness breakdown, and exactly who AI names instead of you across your category's buying questions.</p>
         <form class="gak-form" id="gak-gate-form" style="margin-top:4px" autocomplete="on">
           <div class="gak-field"><input class="gak-input" id="gak-email" type="email" placeholder="you@company.com" aria-label="Your email" required></div>
           <button class="gak-btn" id="gak-unlock" type="submit">Get my full report</button>
@@ -265,6 +330,11 @@ const GAK_CONFIG = {
 const REAL_VIS = {
   "manageathome.co.uk": {
     summary: "Live result (Jun 2026): mentioned in 1 of 3 AI engines tested. Perplexity cites you; ChatGPT and Google name competitors instead — a clear opportunity.",
+    lost_deal: {  // captured live from Perplexity sonar (Jun 2026) via gak_ai_check
+      query: "best mobility aids companies UK", engine: "Perplexity", mentioned: true, mentioned_in_quote: true, _asof: "Jun 2026",
+      quote: "The top mobility aids companies in the UK include Eden Mobility (the UK's largest independent mobility retailer), CareCo (a leading discount mobility shop), Essential Aids, Manage At Home, and Complete Care Shop.",
+      top_competitor: "Eden Mobility", competitors: ["Eden Mobility","CareCo"], result: "present"
+    },
     prompts: [{
       query: "best UK retailers for mobility aids & daily living equipment",
       engines: [{label:"Perplexity",cited:true},{label:"ChatGPT",cited:false},{label:"Google AI Overviews",cited:false}],
@@ -273,6 +343,11 @@ const REAL_VIS = {
   },
   "thebricktilecompany.com": {
     summary: "Live result (Jun 2026): mentioned in 2 of 3 AI engines tested. Perplexity ranks you the UK's #1 supplier and ChatGPT names you — strong AI presence.",
+    lost_deal: {  // captured live from Perplexity sonar (Jun 2026) via gak_ai_check
+      query: "best brick slips companies UK", engine: "Perplexity", mentioned: true, mentioned_in_quote: true, _asof: "Jun 2026",
+      quote: "The best brick slips companies in the UK include The Brick Tile Company, which is the UK's leading supplier with the largest range and fast delivery, and The Brick Slip Company, which specializes in high-quality brick slips and complete systems.",
+      top_competitor: "The Brick Slip Company", competitors: ["The Brick Slip Company","Brick Slips Direct"], result: "present"
+    },
     prompts: [{
       query: "best brick slip & cladding suppliers UK",
       engines: [{label:"Perplexity",cited:true},{label:"ChatGPT",cited:true},{label:"Google AI Overviews",cited:false}],
@@ -349,6 +424,11 @@ function paintScore(score){
 /* ---------- render ---------- */
 function render(data){
   const ok = (x) => x==='pass'||x==='warn'||x==='fail'||x==='na' ? x : 'na';   // whitelist status for class
+  // honesty labels for the demo preview: full sample (synthetic domains) vs scoped (real pilot domains)
+  const note=$('gak-sample-note');
+  if(data._synthetic){ note.innerHTML='These figures are <b>sample data</b> for preview — run the live tool, or try a pilot domain, for real results.'; show('gak-sample-note'); }
+  else if(data._illustrative){ note.innerHTML='Your <b>AI-visibility result below is live</b> for this brand; the readiness score &amp; crawler grid shown here are illustrative.'; show('gak-sample-note'); }
+  else hide('gak-sample-note');
   // 1. score (free)
   paintScore(Number(data.readiness && data.readiness.score) || 0);
   $('gak-verdict').textContent = (data.readiness && data.readiness.verdict) || '';
@@ -368,8 +448,99 @@ function render(data){
     return `<li><span class="gak-pill ${ok(c.status)}">${sym}</span><div class="gak-check-b"><div class="gak-check-t">${esc(c.label)}</div><div class="gak-check-e">${esc(c.evidence)}</div></div></li>`;
   }).join('');
 
+  renderLostDeal(data.lost_deal);
+  renderMatrix(data.matrix);
+  renderTeasers(data.teasers);
   renderVisibility(data.visibility);
   stage('results');
+}
+/* ---------- Lost-Deal Quote (free hero) ---------- */
+function renderLostDeal(ld){
+  const el = $('gak-lostdeal');
+  if(!ld || !ld.quote){ el.className='gak-lostdeal gak-hide'; el.innerHTML=''; return; }
+  // Sample/demo quote: never assert a live ✓/✕ verdict about a real brand — label it clearly.
+  if(ld._synthetic){
+    el.className='gak-lostdeal';
+    el.innerHTML =
+      `<span class="gak-ld-badge lose" style="background:rgba(100,117,118,.14);color:var(--gak-muted)">Sample preview</span>`+
+      `<p class="gak-ld-q">Example of what you'll see — for a category prompt like “<b>${esc(ld.query)}</b>”:</p>`+
+      `<p class="gak-ld-quote">“${esc(ld.quote)}”<span class="src">— Sample data, not a live result · run the live tool for your real Perplexity answer</span></p>`;
+    el.classList.remove('gak-hide'); return;
+  }
+  const inQuote = !!ld.mentioned_in_quote;   // named in the visible sentence(s) vs only cited as a source
+  const win = !!ld.mentioned;
+  el.className = 'gak-lostdeal'+(win?' win':'');
+  const badge = inQuote ? '✓ AI recommends you' : (win ? '✓ AI cites your site' : '✕ AI skipped you');
+  const more = (ld.competitors && ld.competitors.length>1) ? ` (and ${ld.competitors.length-1} more)` : '';
+  const rival = ld.top_competitor
+    ? `<div class="gak-ld-rival">${win?'Also named:':'Recommended in your place:'} <b>${esc(ld.top_competitor)}</b>${esc(more)}</div>` : '';
+  const src = ld._asof ? `${esc(ld.engine||'Perplexity')}, captured ${esc(ld._asof)}`
+                       : `${esc(ld.engine||'Perplexity')}, live web answer`;
+  el.innerHTML =
+    `<span class="gak-ld-badge ${win?'win':'lose'}">${badge}</span>`+
+    `<p class="gak-ld-q">When buyers ask AI “<b>${esc(ld.query)}</b>”, here's what it answers today:</p>`+
+    `<p class="gak-ld-quote">“${esc(ld.quote)}”<span class="src">— ${src}</span></p>`+
+    rival;
+  el.classList.remove('gak-hide');
+}
+/* ---------- Reach / Read / Result matrix ---------- */
+function renderMatrix(mx){
+  const card = $('gak-matrix-card');
+  if(!mx || !mx.rows || !mx.rows.length){ card.classList.add('gak-hide'); return; }
+  const cell = (v)=> v===true?'<span class="gak-cell yes">✓</span>': v===false?'<span class="gak-cell no">✕</span>':'<span class="gak-cell unk" title="not detected">–</span>';
+  const result = (r)=>{
+    if(r.result==='premium') return '<span class="gak-res-prem" title="Claude tracking — coming soon">Soon</span>';
+    if(r.result_locked || r.result==null) return '<span class="gak-res-lock">Locked</span>';
+    const rc = ['present','absent','competitor'].indexOf(r.result)>=0 ? r.result : 'absent';
+    const lbl = rc==='present'?'Yes':rc==='competitor'?'Rival':'No';
+    return `<span class="gak-res ${rc}">${lbl}</span>`;
+  };
+  $('gak-matrix-body').innerHTML = mx.rows.map(r=>
+    `<tr><td class="eng">${esc(r.engine)}</td><td>${cell(r.reach)}</td><td>${cell(r.read)}</td><td>${result(r)}</td></tr>`).join('');
+  card.classList.remove('gak-hide');
+}
+/* roll up the email-gated scan into the matrix Result column (unlock) */
+function matrixEngineKey(label){
+  const l = String(label||'').toLowerCase();
+  if(l.indexOf('perplex')>=0) return 'Perplexity';
+  if(l.indexOf('chatgpt')>=0 || l.indexOf('gpt')>=0) return 'ChatGPT';
+  if(l.indexOf('google')>=0) return 'Google AI Overviews';
+  if(l.indexOf('claude')>=0) return 'Claude';
+  return null;
+}
+function updateMatrixFromVisibility(vis){
+  if(!LAST || !LAST.matrix || !LAST.matrix.rows || !vis || !vis.prompts) return;
+  const agg = {};
+  vis.prompts.forEach(p=>{
+    const hasComp = !!(p.competitors_cited && p.competitors_cited.length);
+    (p.engines||[]).forEach(e=>{
+      const k = matrixEngineKey(e.label); if(!k) return;
+      agg[k] = agg[k] || {cited:false, comp:false};
+      if(e.cited) agg[k].cited = true; else if(hasComp) agg[k].comp = true;
+    });
+  });
+  LAST.matrix.rows.forEach(r=>{
+    if(r.result==='premium') return;          // Claude stays "Soon"
+    if(!r.result_locked) return;              // already revealed (Perplexity from the free hero) -> keep it consistent with the hero, don't flip it
+    const a = agg[r.engine];
+    if(a){ delete r.result_locked; r.result = a.cited?'present':(a.comp?'competitor':'absent'); }
+  });
+  renderMatrix(LAST.matrix);
+}
+/* ---------- teaser counts (free) ---------- */
+function renderTeasers(t){
+  const el = $('gak-teasers');
+  if(!t){ el.classList.add('gak-hide'); el.innerHTML=''; return; }
+  const chips = [];
+  if(typeof t.reasons_cant_find==='number' && t.reasons_cant_find>0)
+    chips.push(`<div class="gak-teaser alert"><div class="tn">${Number(t.reasons_cant_find)||0}</div><div class="tl">reasons AI can't fully find or trust you</div></div>`);
+  if(t.competitor_recommended)
+    chips.push(`<div class="gak-teaser alert"><div class="tn">1+</div><div class="tl">competitor named where you're absent</div></div>`);
+  if(t.offering_gap_locked)
+    chips.push(`<div class="gak-teaser locked"><div class="tn" aria-hidden="true">00</div><div class="tl">offerings AI gets wrong — unlock to reveal</div></div>`);
+  if(!chips.length){ el.classList.add('gak-hide'); el.innerHTML=''; return; }
+  el.innerHTML = chips.join('');
+  el.classList.remove('gak-hide');
 }
 function renderVisibility(vis){
   if(!vis){ $('gak-visibility').dataset.empty='1'; return; }
@@ -385,7 +556,7 @@ function renderVisibility(vis){
 /* ---------- email gate unlock (live: fetch the visibility scan as the 2nd call) ---------- */
 async function unlock(){
   hide('gak-gate'); show('gak-full-checks'); show('gak-final');
-  if(LAST && LAST.visibility){ show('gak-visibility'); frameHeight(); return; }
+  if(LAST && LAST.visibility){ show('gak-visibility'); updateMatrixFromVisibility(LAST.visibility); frameHeight(); return; }
   if(GAK_CONFIG.DEMO_MODE){ frameHeight(); return; }
   // live: run the (expensive) visibility scan now, only after the email is captured
   show('gak-visibility'); delete $('gak-visibility').dataset.empty;
@@ -394,7 +565,7 @@ async function unlock(){
   frameHeight();
   try{
     const v = await fetchReal(CTX.domain, {brand:CTX.brand, industry:CTX.industry, email:CTX.email, only:'visibility'});
-    if(v && v.visibility){ LAST.visibility=v.visibility; renderVisibility(v.visibility); }
+    if(v && v.visibility){ LAST.visibility=v.visibility; renderVisibility(v.visibility); updateMatrixFromVisibility(v.visibility); }
     else { hide('gak-visibility'); }
   }catch(e){ $('gak-vis-summary').textContent = "The AI-visibility scan timed out — please try again."; }
   frameHeight();
@@ -412,7 +583,8 @@ function gakApiUrl(domain, opts){
 }
 async function fetchReal(domain, opts){
   const ctrl = new AbortController();
-  const t = setTimeout(()=>ctrl.abort(), (opts&&opts.only==='visibility')?48000:20000);  // fail fast on cold-start/gateway hang
+  const longCall = opts && (opts.only==='visibility' || opts.only==='lostdeal');   // these run a paid LLM call (~8-15s)
+  const t = setTimeout(()=>ctrl.abort(), longCall ? (opts.only==='visibility'?48000:30000) : 20000);  // fail fast on cold-start/gateway hang
   try{
     const r = await fetch(gakApiUrl(domain, opts), {headers:{'Accept':'application/json'}, signal:ctrl.signal});
     if(!r.ok) throw new Error('api_'+r.status);
@@ -437,7 +609,7 @@ function demoData(domain, brandIn, industry){
   const score = 42 + Math.floor(rnd(1)*46);                 // 42..88
   const blocked = Math.floor(rnd(2)*5);                     // 0..4 blocked
   const allowed = 34 - blocked;
-  const keyBots=['GPTBot','OAI-SearchBot','ClaudeBot','PerplexityBot','Google-Extended','Googlebot','Bingbot','Amazonbot','Applebot-Extended','meta-externalagent','CCBot','Bytespider'];
+  const keyBots=['GPTBot','OAI-SearchBot','ChatGPT-User','ClaudeBot','Claude-SearchBot','PerplexityBot','Google-Extended','Googlebot','Bingbot','Amazonbot','Applebot-Extended','meta-externalagent'];
   const bots = keyBots.map((n,i)=>({name:n, allowed: !(i<blocked)}));
   const mk=(st,label,ev)=>({status:st,label,evidence:ev});
   const checks=[
@@ -448,18 +620,47 @@ function demoData(domain, brandIn, industry){
     mk(rnd(5)>.7?'pass':'fail','Markdown content negotiation', rnd(5)>.7?'Server negotiates Accept: text/markdown.':'No markdown negotiation (Perplexity & some Claude flows prefer it).')
   ];
   const brand = (brandIn && brandIn.trim()) ? brandIn.trim() : domain.split('.')[0];
-  const comps=['Competitor A','Competitor B','an industry directory'];
+  const comps=['Example Rival A','Example Rival B','an industry directory'];   // obvious sample names (synthetic demo only)
   const vprompts=[
     {query:`best ${brand} alternatives`, engines:[{label:'ChatGPT',cited:rnd(6)>.5},{label:'Google AI',cited:rnd(7)>.6},{label:'Perplexity',cited:rnd(8)>.5}]},
     {query:`is ${brand} any good?`, engines:[{label:'ChatGPT',cited:rnd(9)>.4},{label:'Google AI',cited:rnd(10)>.7},{label:'Perplexity',cited:rnd(11)>.5}]}
   ].map(p=>({...p, competitors_cited: p.engines.some(e=>!e.cited)?comps.slice(0,1+Math.floor(rnd(12)*2)):[]}));
   const mentions = vprompts.flatMap(p=>p.engines).filter(e=>e.cited).length;
   const tot = vprompts.flatMap(p=>p.engines).length;
+
+  // ---- free layer: Lost-Deal Quote + matrix + teasers (mirrors the backend shape) ----
+  const rv = (GAK_CONFIG.PREVIEW && REAL_VIS[domain]) ? REAL_VIS[domain] : null;
+  const synthetic = !rv;   // anything outside the two real pilot clients is synthetic sample data
+  const pplCited = rv ? !!(rv.lost_deal && rv.lost_deal.mentioned) : (rnd(13) > .5);
+  const lost_deal = (rv && rv.lost_deal) ? rv.lost_deal : {
+    _synthetic: true,
+    query: industry ? `best ${industry} companies UK` : `best ${brand} alternatives`,
+    engine: 'Perplexity', mentioned: pplCited, mentioned_in_quote: pplCited,
+    quote: pplCited
+      ? `${brand} is a well-regarded option here — it comes up alongside ${comps[0]} for choice and service.`
+      : `For the best ${industry||'options'} in the UK, the top picks include ${comps[0]} and ${comps[1]}, recommended for their range, pricing and reviews.`,
+    top_competitor: pplCited ? '' : comps[0],
+    competitors: pplCited ? [] : comps.slice(0,2),
+    result: pplCited ? 'present' : 'competitor'
+  };
+  // reach mirrors the backend: decide from the citation-relevant (search) crawler, not the training bot
+  const reachOf = (names)=>{ let seen=false; for(const b of bots){ const n=b.name.toLowerCase(); for(const w of names){ if(n.indexOf(w)>=0){ seen=true; if(!b.allowed) return false; } } } return seen?true:null; };
+  const read = score>=50;
+  const matrix = { rows:[
+    {engine:'ChatGPT', reach:reachOf(['oai-searchbot']), read, result_locked:true},
+    {engine:'Perplexity', reach:reachOf(['perplexitybot']), read, result:lost_deal.result},
+    {engine:'Google AI Overviews', reach:reachOf(['googlebot']), read, result_locked:true},
+    {engine:'Claude', reach:reachOf(['claude-searchbot','claude-user','claudebot']), read, result:'premium'}
+  ]};
+  const blockers = checks.filter(c=>c.status==='fail'||c.status==='warn').slice(0,3);
+  const teasers = { reasons_cant_find: blockers.length + blocked, competitor_recommended: (!lost_deal.mentioned && !!lost_deal.top_competitor), offering_gap_locked:true };
+
   return {
-    domain,
-    readiness:{ score, verdict: score>=70?'Your site is well-prepared for AI search engines.':score>=50?'Partly ready — a few fixes would meaningfully improve how AI sees you.':'AI engines may struggle to read and trust your site. Several quick wins below.', checks },
+    domain, _synthetic: synthetic, _illustrative: !synthetic,   // REAL_VIS: lost_deal+visibility are real, readiness/crawler are illustrative
+    readiness:{ score, verdict: score>=70?'Your site is well-prepared for AI search engines.':score>=50?'Partly ready — a few fixes would meaningfully improve how AI sees you.':'AI engines may struggle to read and trust your site. Several quick wins below.', blockers, checks },
     crawlers:{ summary:{allowed,blocked,total:34}, bots },
-    visibility: (GAK_CONFIG.PREVIEW && REAL_VIS[domain]) ? REAL_VIS[domain]
+    lost_deal, matrix, teasers,
+    visibility: rv ? rv
       : { summary:`Your brand was mentioned in ${mentions} of ${tot} AI answers tested. ${mentions<tot?'Competitors are being recommended where you are absent.':'Strong AI presence.'}`, prompts:vprompts }
   };
 }
@@ -478,17 +679,55 @@ $('gak-form').addEventListener('submit', async (e)=>{
   stage('loading'); runSteps();
   const started=Date.now();
   try{
-    // call 1: free checks (readiness + crawler). Visibility runs later, only after the email.
-    const data = GAK_CONFIG.DEMO_MODE ? demoData(domain, brand, industry) : await fetchReal(domain, {brand, industry});
-    LAST=data;
-    if(!data.visibility) $('gak-visibility').dataset.empty='1';
-    const wait = Math.max(0, 3600-(Date.now()-started));   // let the step animation breathe
-    setTimeout(()=>{ clearInterval(stepTimer); render(data); $('gak-go').disabled=false; }, GAK_CONFIG.DEMO_MODE?wait:0);
+    if(GAK_CONFIG.DEMO_MODE){
+      const data = demoData(domain, brand, industry);
+      LAST=data;
+      if(!data.visibility) $('gak-visibility').dataset.empty='1';
+      const wait = Math.max(0, 4800-(Date.now()-started));   // let the step animation breathe
+      setTimeout(()=>{ clearInterval(stepTimer); render(data); $('gak-go').disabled=false; }, wait);
+    } else {
+      // LIVE: render the report FAST (only=fast — no paid call), then lazy-fill the Lost-Deal hero
+      // (only=lostdeal) so a slow/failed Perplexity never blocks or discards the readiness+crawler report.
+      const report = await fetchReal(domain, {brand, industry, only:'fast'});
+      LAST=report;
+      if(!report.visibility) $('gak-visibility').dataset.empty='1';
+      clearInterval(stepTimer); render(report); $('gak-go').disabled=false;
+      lazyFillLostDeal(domain, {brand, industry});
+    }
   }catch(err){
     clearInterval(stepTimer); $('gak-go').disabled=false; stage('input');
     $('gak-err').textContent='Could not run the check right now. Please try again in a moment.';
   }
 });
+/* lazy-fill the Lost-Deal hero + Perplexity matrix cell after the fast report (live mode only) */
+async function lazyFillLostDeal(domain, opts){
+  const myDomain = domain;   // bail on resolution if the user restarted / started a new check (no stale cross-domain write)
+  const el = $('gak-lostdeal');
+  el.className='gak-lostdeal';
+  el.innerHTML = `<span class="gak-ld-badge lose" style="background:rgba(100,117,118,.12);color:var(--gak-muted)">Asking Perplexity…</span><p class="gak-ld-q">Fetching the live AI answer for your category…</p>`;
+  el.classList.remove('gak-hide'); frameHeight();
+  try{
+    const r = await fetchReal(domain, {brand:opts.brand, industry:opts.industry, only:'lostdeal'});
+    if(CTX.domain !== myDomain || !LAST) return;   // moved on -> don't write onto a different report
+    if(r && r.lost_deal){
+      LAST.lost_deal = r.lost_deal;
+      renderLostDeal(r.lost_deal);
+      fillPerplexityResult(r.lost_deal);
+      addCompetitorTeaser(r.lost_deal);
+    } else { el.className='gak-lostdeal gak-hide'; el.innerHTML=''; }   // capped/failed -> hide (never fake a result)
+  }catch(e){ if(CTX.domain===myDomain){ el.className='gak-lostdeal gak-hide'; el.innerHTML=''; } }
+  if(CTX.domain===myDomain) frameHeight();
+}
+function fillPerplexityResult(ld){
+  if(!LAST || !LAST.matrix || !LAST.matrix.rows || !ld) return;
+  const row = LAST.matrix.rows.find(r=>r.engine==='Perplexity');
+  if(row){ delete row.result_locked; row.result = ld.result || 'absent'; renderMatrix(LAST.matrix); }
+}
+function addCompetitorTeaser(ld){
+  if(!LAST || !LAST.teasers) return;
+  LAST.teasers.competitor_recommended = !!(ld && !ld.mentioned && ld.top_competitor);
+  renderTeasers(LAST.teasers);
+}
 
 $('gak-gate-form').addEventListener('submit', async (e)=>{
   e.preventDefault();
@@ -503,7 +742,7 @@ $('gak-gate-form').addEventListener('submit', async (e)=>{
   await unlock();
 });
 
-$('gak-restart').addEventListener('click', ()=>{ $('gak-url').value=''; $('gak-brand').value=''; $('gak-industry').value=''; show('gak-gate'); hide('gak-full-checks'); hide('gak-visibility'); hide('gak-final'); stage('input'); });
+$('gak-restart').addEventListener('click', ()=>{ $('gak-url').value=''; $('gak-brand').value=''; $('gak-industry').value=''; LAST=null; CTX={domain:'',brand:'',industry:''}; show('gak-gate'); hide('gak-full-checks'); hide('gak-visibility'); hide('gak-final'); hide('gak-sample-note'); stage('input'); });
 
 frameHeight();
 </script>
