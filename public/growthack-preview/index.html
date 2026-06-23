@@ -173,9 +173,9 @@ body{
       <div class="gak-spin"></div>
       <ul class="gak-steps" id="gak-steps">
         <li data-step="0">Fetching robots.txt &amp; sitemap</li>
-        <li data-step="1">Testing 34 AI crawlers for access</li>
-        <li data-step="2">Asking ChatGPT &amp; Google AI about your brand</li>
-        <li data-step="3">Scoring &amp; building your report</li>
+        <li data-step="1">Testing AI crawler access</li>
+        <li data-step="2">Scoring your AI readiness</li>
+        <li data-step="3">Preparing your report</li>
       </ul>
     </div>
   </section>
@@ -393,7 +393,7 @@ async function unlock(){
   $('gak-prompts').innerHTML = '<div class="gak-prompt"><div class="gak-prompt-q">Running your live AI-visibility scan across ChatGPT, Perplexity &amp; Google… (~30s)</div></div>';
   frameHeight();
   try{
-    const v = await fetchReal(CTX.domain, {brand:CTX.brand, industry:CTX.industry, vis:1, only:'visibility'});
+    const v = await fetchReal(CTX.domain, {brand:CTX.brand, industry:CTX.industry, email:CTX.email, only:'visibility'});
     if(v && v.visibility){ LAST.visibility=v.visibility; renderVisibility(v.visibility); }
     else { hide('gak-visibility'); }
   }catch(e){ $('gak-vis-summary').textContent = "The AI-visibility scan timed out — please try again."; }
@@ -406,18 +406,28 @@ function gakApiUrl(domain, opts){
   let u = `${GAK_CONFIG.API_BASE}/?action=${GAK_CONFIG.API_ACTION}&url=${encodeURIComponent(domain)}&engines=${GAK_CONFIG.ENGINES.join(',')}`;
   if(opts.brand)    u += `&brand=${encodeURIComponent(opts.brand)}`;
   if(opts.industry) u += `&industry=${encodeURIComponent(opts.industry)}`;
-  if(opts.vis)      u += `&vis=1`;
+  if(opts.email)    u += `&email=${encodeURIComponent(opts.email)}`;   // backend requires a valid email for the visibility scan
   if(opts.only)     u += `&only=${encodeURIComponent(opts.only)}`;
   return u;
 }
 async function fetchReal(domain, opts){
-  const r = await fetch(gakApiUrl(domain, opts), {headers:{'Accept':'application/json'}});
-  if(!r.ok) throw new Error('api_'+r.status);
-  return await r.json();
+  const ctrl = new AbortController();
+  const t = setTimeout(()=>ctrl.abort(), (opts&&opts.only==='visibility')?48000:20000);  // fail fast on cold-start/gateway hang
+  try{
+    const r = await fetch(gakApiUrl(domain, opts), {headers:{'Accept':'application/json'}, signal:ctrl.signal});
+    if(!r.ok) throw new Error('api_'+r.status);
+    return await r.json();
+  } finally { clearTimeout(t); }
 }
 async function postLead(payload){
   if(!GAK_CONFIG.MAKE_WEBHOOK_URL) return;
-  try{ await fetch(GAK_CONFIG.MAKE_WEBHOOK_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}); }catch(e){}
+  // CORS-simple POST (text/plain => no preflight; Make parses the JSON body anyway). keepalive
+  // survives iframe teardown; sendBeacon fallback so a lead is never silently lost.
+  const body = JSON.stringify(payload);
+  try{
+    const ok = await fetch(GAK_CONFIG.MAKE_WEBHOOK_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body,keepalive:true}).then(r=>r.ok).catch(()=>false);
+    if(!ok && navigator.sendBeacon) navigator.sendBeacon(GAK_CONFIG.MAKE_WEBHOOK_URL, body);
+  }catch(e){ try{ navigator.sendBeacon && navigator.sendBeacon(GAK_CONFIG.MAKE_WEBHOOK_URL, body); }catch(_){} }
 }
 
 /* ---------- DEMO data (realistic, deterministic from domain) ---------- */
@@ -485,6 +495,7 @@ $('gak-gate-form').addEventListener('submit', async (e)=>{
   $('gak-gate-err').textContent='';
   const email = $('gak-email').value.trim();
   if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ $('gak-gate-err').textContent='Please enter a valid email address.'; return; }
+  CTX.email = email;
   postLead({ email, domain: CTX.domain, brand: (CTX.brand || GAK_CONFIG.BRAND.name), industry: CTX.industry,
              readiness_score: LAST&&LAST.readiness&&LAST.readiness.score,
              crawlers_blocked: LAST&&LAST.crawlers&&LAST.crawlers.summary&&LAST.crawlers.summary.blocked,
