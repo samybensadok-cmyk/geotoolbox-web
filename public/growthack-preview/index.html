@@ -11,12 +11,16 @@
   Wire up  -> edit the GAK_CONFIG block in <script> (API_BASE, MAKE_WEBHOOK_URL, ENGINES, GATE).
   Demo now -> GAK_CONFIG.DEMO_MODE = true renders realistic results with NO backend (for showing Kevin).
 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Fragment+Mono&display=swap" rel="stylesheet">
 <style>
 :root{
   /* ---- GrowthAck brand (swap these when the brand kit lands) ---- */
-  --gak-navy:#0c1a2e;        /* primary dark / headings */
-  --gak-blue:#0099ff;        /* primary accent / CTA */
-  --gak-blue-600:#0a74c4;
+  --gak-navy:#0c1a2e;        /* GrowthAck navy — dark sections, headings, text on orange */
+  --gak-orange:#ff5800;      /* GrowthAck signature accent / CTA */
+  --gak-orange-600:#e64f00;  /* accent hover */
+  --gak-periwinkle:#8aabcc;  /* GrowthAck muted secondary */
   --gak-mint:#5dc39b;        /* secondary accent / pass */
   --gak-amber:#f0a23a;       /* warn */
   --gak-red:#e5484d;         /* fail */
@@ -25,7 +29,7 @@
   --gak-ink:#242424;         /* body text */
   --gak-muted:#647576;       /* secondary text */
   --gak-line:#e7e9ec;        /* borders */
-  --gak-font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --gak-font:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
   --gak-mono:'Fragment Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
   --gak-radius:16px;
   --gak-shadow:0 1px 2px rgba(12,26,46,.04),0 8px 30px rgba(12,26,46,.07);
@@ -41,25 +45,25 @@ body{
 
 /* ---------- hero / input ---------- */
 .gak-hero{text-align:center;margin-bottom:22px}
-.gak-eyebrow{font:600 12px/1 var(--gak-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--gak-blue);margin-bottom:12px}
-.gak-h1{font-size:clamp(24px,4.4vw,34px);line-height:1.12;font-weight:800;color:var(--gak-navy);margin:0 0 10px;letter-spacing:-.02em}
+.gak-eyebrow{font:600 12px/1 var(--gak-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--gak-orange);margin-bottom:12px}
+.gak-h1{font-size:clamp(26px,4.6vw,36px);line-height:1.08;font-weight:800;color:var(--gak-navy);margin:0 0 10px;letter-spacing:-.032em}
 .gak-sub{color:var(--gak-muted);font-size:16px;margin:0 auto;max-width:48ch}
 .gak-form{display:flex;gap:10px;margin:22px auto 8px;max-width:560px;flex-wrap:wrap}
 .gak-field{flex:1 1 240px;position:relative}
 .gak-input{
-  width:100%;height:52px;padding:0 16px;font-size:16px;font-family:inherit;color:var(--gak-ink);
-  background:var(--gak-card);border:1.5px solid var(--gak-line);border-radius:12px;outline:none;transition:border-color .15s,box-shadow .15s;
+  width:100%;height:52px;padding:0 22px;font-size:16px;font-family:inherit;color:var(--gak-ink);
+  background:var(--gak-card);border:1.5px solid var(--gak-line);border-radius:999px;outline:none;transition:border-color .15s,box-shadow .15s;
 }
-.gak-input:focus{border-color:var(--gak-blue);box-shadow:0 0 0 4px rgba(0,153,255,.13)}
+.gak-input:focus{border-color:var(--gak-orange);box-shadow:0 0 0 4px rgba(255,88,0,.13)}
 .gak-btn{
-  height:52px;padding:0 26px;font-size:16px;font-weight:700;font-family:inherit;color:#fff;cursor:pointer;
-  background:var(--gak-blue);border:none;border-radius:12px;transition:transform .08s,background .15s,opacity .15s;white-space:nowrap;
+  height:52px;padding:0 30px;font-size:16px;font-weight:800;font-family:inherit;color:var(--gak-navy);cursor:pointer;letter-spacing:-.01em;
+  background:var(--gak-orange);border:none;border-radius:999px;transition:transform .08s,background .15s,opacity .15s;white-space:nowrap;
 }
-.gak-btn:hover{background:var(--gak-blue-600)}
+.gak-btn:hover{background:var(--gak-orange-600);transform:translateY(-1px)}
 .gak-btn:active{transform:translateY(1px)}
 .gak-btn[disabled]{opacity:.55;cursor:not-allowed}
-.gak-btn-cta{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:14px 24px;font:700 16px/1 var(--gak-font);color:#fff;text-decoration:none;border-radius:12px;background:var(--gak-blue);box-shadow:0 8px 22px rgba(0,153,255,.32);transition:transform .08s,background .15s;white-space:nowrap}
-.gak-btn-cta:hover{background:var(--gak-blue-600)}
+.gak-btn-cta{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:15px 28px;font:800 16px/1 var(--gak-font);letter-spacing:-.01em;color:var(--gak-navy);text-decoration:none;border-radius:999px;background:var(--gak-orange);box-shadow:0 10px 26px rgba(255,88,0,.34);transition:transform .08s,background .15s;white-space:nowrap}
+.gak-btn-cta:hover{background:var(--gak-orange-600);transform:translateY(-1px)}
 .gak-btn-cta:active{transform:translateY(1px)}
 .gak-ghost{background:transparent;color:var(--gak-muted);border:1px solid var(--gak-line)}
 .gak-ghost:hover{background:#f4f6f8;color:var(--gak-navy)}
@@ -73,22 +77,22 @@ body{
 
 /* ---------- loading ---------- */
 .gak-loading{text-align:center;padding:38px 0}
-.gak-spin{width:38px;height:38px;border:3px solid var(--gak-line);border-top-color:var(--gak-blue);border-radius:50%;margin:0 auto 18px;animation:gak-rot .8s linear infinite}
+.gak-spin{width:38px;height:38px;border:3px solid var(--gak-line);border-top-color:var(--gak-orange);border-radius:50%;margin:0 auto 18px;animation:gak-rot .8s linear infinite}
 @keyframes gak-rot{to{transform:rotate(360deg)}}
 .gak-steps{list-style:none;padding:0;margin:0;display:inline-block;text-align:left;color:var(--gak-muted);font-size:15px}
 .gak-steps li{padding:5px 0 5px 26px;position:relative;opacity:.4;transition:opacity .3s,color .3s}
 .gak-steps li.on{opacity:1;color:var(--gak-ink)}
 .gak-steps li.done{opacity:1;color:var(--gak-navy)}
 .gak-steps li::before{content:'';position:absolute;left:0;top:9px;width:10px;height:10px;border-radius:50%;border:2px solid var(--gak-line)}
-.gak-steps li.on::before{border-color:var(--gak-blue);animation:gak-pulse 1s ease-in-out infinite}
+.gak-steps li.on::before{border-color:var(--gak-orange);animation:gak-pulse 1s ease-in-out infinite}
 .gak-steps li.done::before{border-color:var(--gak-mint);background:var(--gak-mint)}
-@keyframes gak-pulse{0%,100%{box-shadow:0 0 0 0 rgba(0,153,255,.4)}50%{box-shadow:0 0 0 5px rgba(0,153,255,0)}}
+@keyframes gak-pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,88,0,.4)}50%{box-shadow:0 0 0 5px rgba(255,88,0,0)}}
 
 /* ---------- result cards ---------- */
 .gak-results{display:flex;flex-direction:column;gap:18px}
 .gak-card{background:var(--gak-card);border:1px solid var(--gak-line);border-radius:var(--gak-radius);box-shadow:var(--gak-shadow);padding:22px}
 .gak-card-h{display:flex;align-items:center;gap:10px;margin:0 0 4px;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gak-muted)}
-.gak-card-h .dot{width:8px;height:8px;border-radius:50%;background:var(--gak-blue)}
+.gak-card-h .dot{width:8px;height:8px;border-radius:50%;background:var(--gak-orange)}
 
 /* score gauge */
 .gak-score{display:flex;align-items:center;gap:26px;flex-wrap:wrap}
@@ -178,7 +182,7 @@ body{
 .gak-res.competitor{color:#9a6412}
 .gak-res-lock{display:inline-flex;align-items:center;gap:5px;color:var(--gak-muted);font-size:13px;font-weight:600;filter:blur(.3px)}
 .gak-res-lock::before{content:'🔒';filter:none}
-.gak-res-prem{font:700 10px/1 var(--gak-mono);letter-spacing:.04em;text-transform:uppercase;color:var(--gak-blue);background:rgba(0,153,255,.1);padding:4px 7px;border-radius:6px}
+.gak-res-prem{font:700 10px/1 var(--gak-mono);letter-spacing:.04em;text-transform:uppercase;color:var(--gak-orange);background:rgba(255,88,0,.1);padding:4px 7px;border-radius:6px}
 .gak-matrix-note{font-size:12.5px;color:var(--gak-muted);margin-top:12px;text-align:center}
 
 /* ---------- teaser chips (free counts) ---------- */
@@ -206,7 +210,7 @@ body{
 .gak-src-grp{margin-top:6px}
 .gak-src-grp+.gak-src-grp{margin-top:14px}
 .gak-src-lbl{font:700 11px/1 var(--gak-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--gak-muted);margin-bottom:8px}
-.gak-src-lbl .tag{color:var(--gak-blue)}
+.gak-src-lbl .tag{color:var(--gak-orange)}
 .gak-src-list{display:flex;flex-wrap:wrap;gap:6px}
 .gak-src{font-size:13px;color:var(--gak-ink);background:#fff;border:1px solid var(--gak-line);border-radius:8px;padding:5px 10px;font-family:var(--gak-mono)}
 .gak-src-note{font-size:12.5px;color:var(--gak-muted);margin-top:10px}
@@ -231,8 +235,21 @@ body{
 
 .gak-cta-final{text-align:center;padding:8px 0 0}
 .gak-foot{text-align:center;font-size:12px;color:var(--gak-muted);margin-top:24px}
-.gak-foot a{color:var(--gak-blue);text-decoration:none}
+.gak-foot a{color:var(--gak-orange);text-decoration:none}
 @media(max-width:560px){.gak-form{flex-direction:column}.gak-btn{width:100%}}
+/* ---- final polish: keyboard focus, mobile fit, reduced motion ---- */
+.gak-btn:focus-visible,.gak-btn-cta:focus-visible{outline:3px solid var(--gak-navy);outline-offset:3px}
+.gak-input:focus-visible{outline:none}
+@media(max-width:560px){
+  .gak-matrix{font-size:13px}
+  .gak-matrix th,.gak-matrix td{padding:9px 4px}
+  .gak-matrix td.eng{white-space:normal}
+  .gak-booking-in{flex-direction:column;align-items:stretch}
+  .gak-btn-cta{width:100%}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+}
 </style>
 </head>
 <body>
@@ -246,7 +263,7 @@ body{
       <p class="gak-sub">Get an instant AI-readiness score, see which AI crawlers can reach your site, and check whether ChatGPT &amp; Google AI mention you — free.</p>
     </div>
     <form class="gak-form" id="gak-form" autocomplete="off">
-      <div class="gak-field"><input class="gak-input" id="gak-url" type="text" inputmode="url" placeholder="yourwebsite.com" aria-label="Your website" maxlength="255" required></div>
+      <div class="gak-field"><input class="gak-input" id="gak-url" type="text" inputmode="url" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="yourwebsite.com" aria-label="Your website" maxlength="255" required></div>
       <button class="gak-btn" id="gak-go" type="submit">Run free AI check</button>
     </form>
     <form class="gak-form" id="gak-form2" autocomplete="off" style="margin-top:0">
@@ -300,7 +317,7 @@ body{
           <div class="gak-gauge">
             <svg width="148" height="148" viewBox="0 0 148 148">
               <circle cx="74" cy="74" r="64" fill="none" stroke="#eef0f2" stroke-width="14"></circle>
-              <circle id="gak-arc" cx="74" cy="74" r="64" fill="none" stroke="var(--gak-blue)" stroke-width="14" stroke-linecap="round" stroke-dasharray="402" stroke-dashoffset="402"></circle>
+              <circle id="gak-arc" cx="74" cy="74" r="64" fill="none" stroke="var(--gak-orange)" stroke-width="14" stroke-linecap="round" stroke-dasharray="402" stroke-dashoffset="402"></circle>
             </svg>
             <div class="val"><span class="num" id="gak-score-num">0</span><span class="den">/ 100</span></div>
           </div>
