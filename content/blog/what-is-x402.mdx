@@ -1,0 +1,154 @@
+---
+title: "What Is x402? Coinbase's Payment Protocol for AI Agents"
+description: "x402 lets AI agents pay in stablecoins over HTTP. What it is, how the 402 handshake works, whether it's a token, and how it compares to ACP, AP2 and MCP."
+date: "2026-06-24"
+author: "Samy BEN SADOK"
+tags: ["x402", "agentic-commerce", "ai-agents", "agentic-payments", "geo"]
+draft: false
+---
+
+If you have seen "x402" next to AI agents and stablecoins and could not tell whether it was a protocol, a product, or a coin, here is the plain answer. x402 is a protocol, and a genuinely new one: a way for software to pay for things over the web, per request, with no human in the loop. This covers what it is, what it is not, and whether it belongs on your radar.
+
+## What Is x402?
+
+x402 is an open protocol that lets software pay for things over the web inside a normal web request. It does this by reusing HTTP status code 402, "Payment Required," a slot that was written into the HTTP spec back in the 1990s and then left unused for nearly 30 years. When a client asks for a paid resource, the server answers with a 402 and a price. The client pays, and the server returns the resource. Payment settles in stablecoins, almost always USDC.
+
+[Coinbase built x402](https://docs.cdp.coinbase.com/x402/welcome) and launched it on May 6, 2025. In April 2026 it was contributed to the [Linux Foundation](https://www.linuxfoundation.org/x402foundation), which is standing up a neutral x402 Foundation so the standard is not owned by any single company. The clients most likely to use it are [AI agents](https://geotoolbox.ai/glossary/ai-agent): software that calls APIs, buys data, and shops on a person's behalf and cannot stop to type a card number into a form.
+
+One thing to settle up front, because it is the most common mix-up. x402 is a protocol, not a coin. There is no official x402 token. We will come back to why so many people think there is.
+
+## Why x402 Exists: The Web Never Had a Native Payment Layer
+
+The web shipped without a way to charge for a single request. The 402 status code was meant to fill that gap and never did, because there was no money that moved at the speed of an HTTP call. So the web routed around it. Sites bolted on accounts, subscriptions, API keys, and card processors, all of which assume a human is present to sign up and approve.
+
+That assumption breaks twice over for machines. An agent cannot read an SMS code or fill a checkout form, so card rails stop it at the gate. And the economics never worked for small amounts: when a processor takes around $0.30 to move $0.01, charging a fraction of a cent per API call is absurd. Micropayments stayed a nice idea that the rails could not carry.
+
+x402 targets exactly that gap. Cloudflare, whose network sees [over a billion 402 responses a day](https://blog.cloudflare.com/x402/) sent to bots, frames it as giving the web a way for clients and servers to exchange value in a common language. The point is not crypto for its own sake. It is letting one machine pay another, per request, without an account in the middle.
+
+## How x402 Works: The 402 Handshake
+
+The whole flow is a quick back-and-forth, two round trips with a payment in between. Here is the plain version, per [Coinbase's documentation](https://docs.cdp.coinbase.com/x402/core-concepts/how-it-works):
+
+1. An agent requests a resource, the same as any API call
+2. The server replies with **402 Payment Required** and the terms: the price, which network and asset to use, and where to send it
+3. The agent signs a stablecoin payment and sends the request again, this time with the payment attached
+4. A facilitator checks the payment and settles it on chain, and the server returns a normal 200 response with the resource
+
+No account, no API key, no redirect to a checkout page. On fast chains, payments confirm in a few hundred milliseconds, though the exact timing depends on the chain and facilitator.
+
+The **facilitator** is worth naming, because it does the heavy lifting. It verifies the payment (the agent signs it with its own wallet key, so a server cannot forge one) and settles it on chain, so the seller does not run blockchain infrastructure. It is technically optional, since a seller can settle on chain itself, but in practice most use a hosted one from Coinbase, thirdweb, or another provider. Coinbase's is free up to 1,000 settlements a month, then $0.001 each. That reliance is also where a lot of the honest criticism lands, which we get to below.
+
+The version most explainers describe is v1. The [v2 update](https://www.x402.org/writing/x402-v2-launch) shipped in December 2025 and tidied the mechanics: standardized headers (`PAYMENT-REQUIRED`, `PAYMENT-SIGNATURE`, `PAYMENT-RESPONSE`) instead of the older `X-PAYMENT` style, network identifiers in a common format, and wallet-based sessions so an agent does not re-sign a full payment on every single call. It stays backward compatible with v1.
+
+Set against a normal card checkout, the tradeoff is clean but two-sided:
+
+<table>
+  <thead>
+    <tr><th>Step</th><th>Card / Stripe checkout</th><th>x402</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Setup</strong></td><td>Account, KYC, a form to fill</td><td>One request, no account</td></tr>
+    <tr><td><strong>Settlement</strong></td><td>Often a day or two</td><td>Roughly 200 to 400 ms</td></tr>
+    <tr><td><strong>Fees</strong></td><td>Percentage plus a fixed fee (around $0.30)</td><td>No protocol fee; facilitator and network fees apply</td></tr>
+    <tr><td><strong>Refunds</strong></td><td>Built-in chargebacks</td><td>None natively (see caveats)</td></tr>
+    <tr><td><strong>Built for agents</strong></td><td>No, assumes a human</td><td>Yes, machine to machine</td></tr>
+  </tbody>
+</table>
+
+## Is x402 a Token? No, and Here's the Confusion
+
+The protocol has no native token. It settles in stablecoins that already exist, mainly USDC, and it does not need or issue a coin of its own. Coinbase says this plainly in the docs.
+
+So what are the "X402" tickers people trade? Unaffiliated. There are speculative tokens floating around on decentralized exchanges that borrow the name, and they have nothing to do with the standard. Buying one does not buy you a piece of the protocol.
+
+The confusion got a boost from the numbers. A memecoin called PING on Base could be minted by making an x402 payment, and because minting cost almost nothing, people did it on a loop. That farming inflated x402's early transaction counts and sent the chart near vertical, part of how the protocol later reported over 100 million cumulative payments, most of them on Base. Once the frenzy cooled, activity fell off hard. A large share of that early spike was speculative loop-minting rather than real demand.
+
+None of this means x402 is fake. It means the headline metrics are noisy, and you should read any transaction or volume figure with the scope attached. The protocol is real and shipping. The trading narrative wrapped around it is mostly separate.
+
+## What x402 Is Actually Used For
+
+Strip away the speculation and the live use cases are narrow but real. They cluster around one idea: charging per call instead of per subscription.
+
+A few that exist today. Neynar lets agents pay for individual Farcaster social-data queries. Hyperbolic sells GPU inference by the millisecond, billed through x402. Token Metrics swapped a monthly plan for pay-per-call access to its crypto data. And Cloudflare's Pay Per Crawl uses the same plumbing to let a site charge [AI crawlers](https://geotoolbox.ai/blog/ai-crawlers) for access instead of just blocking them. People can use it too, for things like paying a few cents to read one article without a subscription.
+
+On the rails: x402 runs on Base by default, with Solana, Polygon, Arbitrum, and others supported. USDC is the practical default. One honest caveat the marketing skips: x402 leans on a signing standard called EIP-3009 (it lets a wallet authorize a token transfer with one signature) that, in practice, only a couple of stablecoins like USDC and EURC support natively. "Works with any token" is true on paper and bumpier in reality, since other assets need extra plumbing. If you see x402 in production, assume USDC on Base until told otherwise.
+
+## x402 vs ACP, AP2, UCP, and MCP
+
+This is where most coverage gets muddled, because these names get listed as rivals when they mostly are not. They sit at different layers of the same stack. x402 is the settlement rail. The others handle the steps around payment: finding tools, proving consent, completing a checkout.
+
+The clearest example is Google's [Agent Payments Protocol (AP2)](https://ap2-protocol.org/). AP2 handles authorization through signed "mandates" that prove a human told the agent to spend. It does not move money. To actually settle in stablecoins, AP2 can drop down to x402: the [A2A x402 extension](https://github.com/google-agentic-commerce/a2a-x402), built by Google, Coinbase, the Ethereum Foundation, and MetaMask, lets an AP2 flow settle a payment through x402. They stack, they do not compete.
+
+The others fit the same way. MCP (Anthropic) connects agents to tools and data and is not a payment system at all. The Agentic Commerce Protocol (OpenAI and Stripe) and Universal Commerce Protocol (Google) handle merchant checkout inside chat surfaces, over existing payment rails. x402 is the layer any of them can drop down to when the payment needs to be a stablecoin moving machine to machine.
+
+<table>
+  <thead>
+    <tr><th>Protocol</th><th>Who</th><th>Job</th><th>Relation to x402</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>x402</strong></td><td>Coinbase</td><td>Stablecoin payment over HTTP</td><td>The settlement rail itself</td></tr>
+    <tr><td><strong>AP2</strong></td><td>Google</td><td>Authorization (signed mandates)</td><td>Uses x402 for stablecoin settlement</td></tr>
+    <tr><td><strong>ACP</strong> (Agentic Commerce)</td><td>OpenAI + Stripe</td><td>Merchant checkout, existing rails</td><td>Different layer, can coexist</td></tr>
+    <tr><td><strong>UCP</strong></td><td>Google</td><td>End-to-end buying in Gemini</td><td>Different layer, can coexist</td></tr>
+    <tr><td><strong>MCP</strong></td><td>Anthropic</td><td>Connect agents to tools and data</td><td>Not payments, pairs with x402</td></tr>
+  </tbody>
+</table>
+
+<Callout type="note">
+One acronym, two protocols. "ACP" usually means the **Agentic Commerce Protocol** from OpenAI and Stripe, above. It can also mean the **Agent Commerce Protocol** from Virtuals, a separate on-chain system for agents that hire each other, using escrow and an evaluator to release payment once work is verified. Neither is x402. x402 is the rail underneath.
+</Callout>
+
+## The Honest Caveats: Refunds, Overspend, and Control
+
+x402 is genuinely useful and genuinely early, and the gaps matter more than the hype.
+
+**No refunds.** On-chain payments are final. There is no chargeback and no central party to reverse a mistake. The protocol has no native dispute mechanism, so refunds depend on bolt-on escrow extensions like x402r rather than anything built in. If you pay and the service errors out or returns junk, nothing claws the money back, which is part of why pay-per-call is used for small, low-stakes amounts today, not big-ticket buys.
+
+**Nothing stops an agent overspending.** Spending limits live in the agent or wallet, not in the protocol. x402 will happily process every 402 it is handed, so a buggy loop or a hostile endpoint that keeps returning 402 can drain a budget unless you cap it yourself.
+
+The decentralization is also thinner than the pitch suggests. Most deployments lean on a hosted facilitator, usually Coinbase's, which is a convenient single point of trust and a potential chokepoint, the opposite of the permissionless promise.
+
+There is a privacy and compliance gap on top. Tying payments to HTTP requests links IP addresses and timestamps to on-chain activity, and x402 itself does no KYC or sanctions screening, so that falls to the facilitator or seller, with the legal and tax liability landing on you. A [security paper](https://arxiv.org/abs/2605.30998) has also documented logic flaws in x402 implementations, from reusing one payment across different resources to race conditions that let a request slip through unpaid. None of this is disqualifying. It is the difference between a working primitive and a finished product.
+
+## What x402 Means for Your Site
+
+Most site owners will not touch x402 directly for a while, and that is fine. The useful takeaway is upstream of payment.
+
+x402 handles the last step, the paying. It assumes the agent already found you, reached your pages, and understood what you sell. Cloudflare's Pay Per Crawl is the clearest example of why that order matters: it turns the AI crawler question from "block or allow" into "charge," but a crawler can only pay you if it can [reach and read your pages](https://geotoolbox.ai/blog/agent-ready-website) in the first place. A bot that hits a login wall, a CAPTCHA, or a blank JavaScript shell never gets to the 402.
+
+In our experience, the brands worth worrying about agent payments are the ones already winning the earlier gates, where an agent can find them, read them cleanly, and trust them enough to recommend them. That is the same groundwork behind [agentic commerce](https://geotoolbox.ai/blog/agentic-commerce) generally. Payment is the easy part to add later. Being legible to a machine is the part you build now.
+
+## The Short Version
+
+x402 is a real payment rail with real gaps: a clever revival of HTTP 402 that lets agents pay in stablecoins per request, wrapped in a noisy token narrative it does not actually have. Worth understanding, not worth panicking over. The move that pays off today is making sure agents can find and parse your site at all, long before any of them tries to pay you. If you are not sure they can, our [AI Crawler Checker](https://geotoolbox.ai/tools/ai-crawler-checker) shows what an AI bot actually sees when it visits. That is the gate x402 quietly assumes you have already passed.
+
+## Frequently Asked Questions
+
+**Is x402 a cryptocurrency or token?**
+No. x402 is a protocol, not a coin, and it has no native token. It settles payments in existing stablecoins, mainly USDC. Any "X402" token you see trading on an exchange is unaffiliated with the protocol.
+
+**Did Coinbase create x402?**
+Yes. Coinbase built x402 and launched it in May 2025. In April 2026 it was contributed to the Linux Foundation, which now hosts it as a neutral, open standard rather than a Coinbase-owned project.
+
+**How is x402 different from paying with a card?**
+There is no account, no KYC, and no checkout form, so software can pay on its own. Settlement is near instant and works for sub-cent amounts. The trade-off is that payments are final: there are no built-in chargebacks or refunds.
+
+**Is x402 the same as MCP, AP2, or ACP?**
+No, and they are not really rivals. MCP connects agents to tools, AP2 proves a user authorized a payment, and ACP handles merchant checkout. x402 is the settlement rail underneath, and AP2 actually uses it to move stablecoins.
+
+**What stops an AI agent from overspending with x402?**
+Nothing in the protocol itself. Spending limits are set in the agent or its wallet, not in x402. If you let an agent pay, you have to cap how much and how often on your side.
+
+**Can humans use x402 or only AI agents?**
+Both. It is designed for machine-to-machine payments, but a person can use it too, for example paying a few cents to read a single article instead of buying a subscription. Either way the payer needs a wallet holding USDC, and for agents that is usually a programmatic server wallet from a provider like Coinbase or thirdweb, not a browser extension.
+
+## Sources
+
+- [x402 documentation: Overview and How It Works](https://docs.cdp.coinbase.com/x402/welcome) - Coinbase Developer Docs
+- [Coinbase debuts x402 for internet-native stablecoin payments](https://www.pymnts.com/cryptocurrency/2025/coinbase-debuts-x402-internet-native-stablecoin-payments/) - PYMNTS (launch, May 2025)
+- [Introducing x402 V2](https://www.x402.org/writing/x402-v2-launch) - x402 (open standard)
+- [Launching the x402 Foundation, and support for x402 transactions](https://blog.cloudflare.com/x402/) - Cloudflare
+- [The x402 Foundation](https://www.linuxfoundation.org/x402foundation) - Linux Foundation
+- [Agent Payments Protocol (AP2)](https://ap2-protocol.org/) and the [A2A x402 extension](https://github.com/google-agentic-commerce/a2a-x402) - Google and Coinbase
+- [Free-Riding in the AI Economy: Demystifying Logic Flaws in x402-Enabled Payment Systems](https://arxiv.org/abs/2605.30998) - arXiv
+- [What is x402?](https://www.ledger.com/academy/topics/economics-and-regulation/what-is-x402) - Ledger Academy
