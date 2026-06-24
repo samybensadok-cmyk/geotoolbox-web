@@ -1,0 +1,171 @@
+---
+title: "Grok 5: Release Date, Specs & What's Confirmed (June 2026)"
+description: "Grok 5 isn't out yet. A dated look at xAI's next model: the slipping release date, confirmed-vs-rumored specs, the AGI claim, and what it means for AI search."
+date: "2026-06-24"
+author: "Samy BEN SADOK"
+tags: ["grok-5", "grok", "xai", "grok-5-release-date", "elon-musk", "llm", "guide"]
+draft: false
+---
+
+Grok 5 is the most-anticipated AI model that has not actually shipped. As of June 2026 it is still in training, xAI has not committed to a real release date, and almost everything written about its specs is rumor dressed up as fact. Here is what is actually confirmed, what is guessed, and what it means for you.
+
+Most "Grok 5" coverage either breathlessly announces features that do not exist yet or recycles a release date that already slipped. What follows separates the confirmed facts from the hype, flags the numbers nobody can verify, and skips the assumption that a bigger model is automatically a better one. One quick disambiguation first: this is about Grok 5, xAI's next flagship model, not "level 5" in Grok's Ani companion, which is a different thing entirely.
+
+## Is Grok 5 Out Yet? The Release Date and the Slipping Timeline
+
+No. As of June 2026, **Grok 5 has not been released.** xAI's next flagship model is still in training, and the only thing the company has officially said about it is a single line in its January 2026 funding announcement confirming the model exists and is being trained. There is no model card, no spec sheet, and no public benchmark. Beyond that in-training status and a handful of corroborated facts, almost everything specific is reporting, a leak, or Elon Musk posting on X.
+
+The release date has slipped more than once. Musk first pointed at late 2025. That moved to Q1 2026, a target he gave in November 2025, then to a Q2 2026 window xAI referenced after Q1 came and went. As of late June, that Q2 window is closing with no launch in sight. The prediction market Polymarket, where traders bet real money on the release date, tells the same story: its "Grok 5 released by June 30, 2026" contract was priced as a real possibility earlier in the year and has since been marked down to a long shot as that deadline approached.
+
+Why the delays? Partly because training a frontier-scale model is genuinely slow and hard. But also because xAI spent the first half of 2026 shipping nearly everything except Grok 5: Grok Voice, the Grok Imagine video model, point releases up to **Grok 4.3** (the current flagship, per [xAI's own model docs](https://docs.x.ai/docs/models)), and a separate 1.5-trillion-parameter coding model (Grok V9-Medium, covered below). Musk also has a long record of optimistic AI and Tesla timelines that land late, which is why experienced observers treat every Grok 5 date as a guess until xAI posts otherwise. Underneath the slip sit two harder problems, unsolved engineering bets rather than mere optimism: networking a multi-trillion-parameter mixture-of-experts across a gigawatt-scale cluster strains the interconnect, and training on X's real-time firehose risks feeding the model its own AI-generated output. Compute itself is not the bottleneck; xAI has poured resources into its Colossus 2 supercluster since [SpaceX acquired the company in February 2026](https://techcrunch.com/2026/02/02/elon-musk-spacex-acquires-xai-data-centers-space-merger/).
+
+The practical move is to watch the source rather than the hype. xAI announces real launches on its own News page, the official @xAI account on X, and the model docs that list what is live right now. Our own [guide to Grok and its model history](https://geotoolbox.ai/blog/what-is-grok) stops at Grok 4.3 for the same reason: that is the newest model you can actually use today.
+
+Concrete signs Grok 5 is close, rather than another rumor cycle:
+
+- a `grok-5` entry appearing in the [xAI model docs](https://docs.x.ai/docs/models)
+- an official model card or system card
+- a benchmark or leaderboard entry, such as LMArena or SWE-Bench
+- a launch post from the @xAI account, not a one-line Musk reply
+
+## Grok 5 Specs: What's Confirmed vs What's Rumored
+
+The split is straightforward. The table below separates what xAI has actually confirmed from the numbers that circulate as if they were official. The pattern worth noticing is that almost every specific spec sits in the rumored column.
+
+<table>
+<thead>
+<tr><th>Claim about Grok 5</th><th>Status</th><th>What we actually know</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>In training on Colossus 2</strong></td><td>Confirmed</td><td>Stated in xAI's January 2026 funding announcement; Colossus 2 is xAI's Memphis supercluster</td></tr>
+<tr><td><strong>Parameter count of 6 to 10 trillion (mixture-of-experts)</strong></td><td>Rumored</td><td>Musk and leaks float figures from roughly 6T to 10T; reporting disagrees on which is Grok 5 versus a sibling model training alongside it on Colossus 2. No model card confirms any number</td></tr>
+<tr><td><strong>A 1.5 million token context window</strong></td><td>Estimate</td><td>Not official; the shipping Grok 4.3 is 1M tokens and the Grok Build coding model is 256K</td></tr>
+<tr><td><strong>Native multimodal and live X data</strong></td><td>Expected</td><td>Consistent with Grok's existing direction, but not specified for Grok 5</td></tr>
+<tr><td><strong>A "Reality Engine" fact-checker</strong></td><td>Unconfirmed</td><td>A label coined in blog posts, not a feature xAI has announced</td></tr>
+<tr><td><strong>A confirmed release date</strong></td><td>None</td><td>The late-2025 and Q1 2026 targets passed; the Q2 window closes June 30, 2026 with no launch</td></tr>
+</tbody>
+</table>
+
+Two things drive the confusion. There is no Grok 5 model card, so reporters fill the gap with leaks and Musk's off-the-cuff comments, and those harden into "facts" through repetition. And xAI is training several models at once on Colossus 2 at different sizes, so a parameter figure that belongs to a different run gets pinned on Grok 5.
+
+The parameter number deserves the most caution, because it is the stat most likely to mislead. Grok 5 is described as a [mixture-of-experts model](https://geotoolbox.ai/glossary/mixture-of-experts), which means that even if the total really runs into the trillions, only a fraction of those parameters fire on any given query. A multi-trillion-parameter mixture-of-experts model is not automatically smarter than a smaller dense one; it is a bigger library where each question still pulls only a few books off the shelf. More capacity helps, but it does not convert linearly into capability, and it says nothing about reasoning quality, which is where current models actually compete.
+
+The context window is the other figure to handle carefully. The widely repeated 1.5 million tokens is an estimate, not a confirmed spec. For reference, xAI's shipping models list a [1 million token context window](https://geotoolbox.ai/glossary/context-window) for Grok 4.3 and 256K for the Grok Build coding model. Grok 5 may extend that, but no official number exists yet.
+
+<Callout type="note" title="A big parameter count is a marketing number, not a capability promise">
+Treat "6 trillion parameters" the way you would treat an engine's displacement. It tells you something about scale, not about how the thing drives. The numbers that will actually matter (reasoning benchmarks, coding accuracy, hallucination rate) do not exist for Grok 5 yet, because the model has not shipped.
+</Callout>
+
+## Grok 5 vs Grok V9-Medium: Why People Confuse Them
+
+If you have seen a headline like "Elon unveils Grok 5 with 1.5 trillion parameters," ignore it. That is not Grok 5. It describes **Grok V9-Medium**, a separate, coding-focused model that completed its base training in mid-2026 (with public release expected around then), reportedly trained partly on data from the Cursor code editor to be strong at programming. It is roughly 1.5 trillion parameters. Grok 5, the model this article is about, is the much larger flagship rumored at around 6 trillion, and it is still in training.
+
+The two get merged for a simple reason: xAI runs two parallel naming systems and rarely explains which is which. There are the consumer release names you see in the app, Grok 4, Grok 4.1, Grok 4.3, and there are internal foundation-model version numbers like "V9." They do not line up cleanly, so a "V9" coding model and "Grok 5" sound like the same generation when they are not.
+
+If you are deciding whether to wait for Grok 5, you do not want to base that decision on a separate coding model that is nearly out. And when you read a benchmark claiming "Grok 5 tops the coding charts," check whether the number actually came from V9-Medium, the model purpose-built for code.
+
+One more name to clear up while we are here: "level 5" on Grok has nothing to do with the model. That phrase refers to an affection tier in Grok's "Ani" companion persona, a separate feature entirely. Searching "Grok 5" and landing on "Grok Ani level 5" content is a common wrong turn, and the two have nothing in common beyond a number.
+
+## What Grok 5 Is Expected to Do
+
+Strip out the hype and a consistent picture of xAI's direction remains, even with the Grok 5 specifics unconfirmed. Versus the Grok 4.3 you can use today, the expected jumps fall into four areas.
+
+**Bigger multi-agent reasoning.** Grok's 4.20 beta (released February 2026, an earlier build than 4.3 despite the bigger-looking number) introduced a setup where several specialized [AI agents](https://geotoolbox.ai/glossary/ai-agent) work a problem in parallel and cross-check each other. Grok 5 is widely expected to scale that up. The caveat: more agents is an architecture choice that adds cost per answer, and it does not guarantee a quality jump.
+
+**Stronger real-time grounding.** Grok's defining trait is live access to public posts on X and the open web, which lets it answer about something that happened minutes ago. A bigger model on the same live pipe is the most predictable upgrade.
+
+**Deeper multimodality.** xAI already ships image and video generation (Grok Imagine) and voice as separate features; folding native video and audio understanding into one model is the expected next step.
+
+**More agent, less chatbot.** Musk frames Grok 5 as moving beyond a simple chatbot toward a system that plans and executes multi-step tasks. Every major lab is pushing that direction, so execution will matter more than the pitch.
+
+Two widely repeated "features" deserve a flag. The "Reality Engine," an automatic fact-checker that verifies claims against X in real time, is a label coined in blog posts; xAI has never announced it. And "rapid learning," the idea that Grok 5 will improve weekly from user feedback, describes a deployment pattern xAI has only talked about loosely. Treat both as unconfirmed until xAI says otherwise.
+
+## The AGI Claim: What Musk Said vs What's Likely
+
+The loudest claim about Grok 5 is that it might be artificial general intelligence. In October 2025, Musk posted that his "estimate of the probability of Grok 5 achieving AGI is now at 10% and rising," and added that "Grok 5 will be AGI or something indistinguishable from AGI," [as reported by Teslarati](https://www.teslarati.com/elon-musk-grok-5-now-has-10-percent-chance-of-becoming-worlds-first-agi/). Both lines traveled far. Two things are worth holding onto when you read them.
+
+First, "10%" is a self-stated probability, not a measured one, and it is an odd number to celebrate: a 10% chance of AGI is a 90% chance of not-AGI by Musk's own math. There is no agreed definition of AGI, no benchmark that declares it, and no peer-reviewed Grok 5 result to point to, because the model is not out. The claim is a posture, not a finding.
+
+Second, the people who build these systems are openly skeptical. When Musk made the claim, OpenAI research scientist Gabriel Petersson [joked](https://futurism.com/artificial-intelligence/openai-researcher-mocks-elon-musks-agi) that there was a "10 percent chance Elon declares he reached AGI a fourth time," a jab at a pattern of AGI declarations that never quite land. That captures the broader expert mood: interest in the scale, doubt about the label.
+
+There is also a serious technical argument that a bigger Grok may not be the leap it sounds like. On public leaderboards, recent frontier models cluster within roughly five to ten points of each other, which suggests raw scale is hitting diminishing returns and that reasoning techniques, rather than parameter counts, are where the gains now come from. A model at this scale could land as a strong, expensive, competitive system that still [hallucinates](https://geotoolbox.ai/blog/ai-hallucinations) and still trips on the same hard reasoning problems as everyone else. That is the likeliest outcome on current trends, and it would be a perfectly good model that simply isn't science fiction.
+
+The realistic read: Grok 5 will probably be very capable. "AGI" here is a marketing label, not a measured result, and you should price it accordingly.
+
+## Grok 5 vs the Current Frontier Models
+
+The straight answer to "how does Grok 5 compare to GPT-5.5, Claude, and Gemini" is that you cannot compare it to anything yet, because it has no published results. What you can compare is its expected shape against what already ships today.
+
+<table>
+<thead>
+<tr><th>Dimension</th><th>Grok 5 (expected, unconfirmed)</th><th>What ships today</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Status</strong></td><td>In training, no release date</td><td>Grok 4.3, GPT-5.5, Claude Opus 4.8, and Gemini 3 are all live now</td></tr>
+<tr><td><strong>Parameters</strong></td><td>Rumored 6T to 10T (mixture-of-experts)</td><td>Not officially disclosed for most flagships, so any comparison is an estimate</td></tr>
+<tr><td><strong>Context window</strong></td><td>Estimated ~1.5M tokens</td><td>Grok 4.3 and several rivals already offer 1M tokens</td></tr>
+<tr><td><strong>Real-time data</strong></td><td>Live X and web (Grok's signature edge)</td><td>Grok's live access is a genuine edge; most rivals rely on slower web search or none</td></tr>
+<tr><td><strong>Proven benchmarks</strong></td><td>None yet</td><td>Rivals have published reasoning, coding, and safety results</td></tr>
+<tr><td><strong>Price</strong></td><td>Unannounced</td><td>Grok 4.3's API is $1.25 / $2.50 per million tokens, among the cheaper frontier options</td></tr>
+</tbody>
+</table>
+
+A few things are safe to say without a launch. Grok's genuine, repeatable edge is that live connection to X and the open web, which makes it strong for breaking news and real-time sentiment in a way models without live retrieval are not. It also tends to be cheaper at high volume on the API. What is not safe to say is that Grok 5 will "beat everything," the framing in most hype coverage. Bigger has not reliably meant better for a while now, and its rivals are not standing still. Grok also carries reputational baggage a better benchmark won't erase: past content-moderation incidents and wariness of the Musk brand mean some buyers will pass on it whatever the scores say. On its own turf of live data and real-time grounding it stays genuinely strong; the gap shows up most on raw reasoning leaderboards.
+
+For a real head-to-head on the models you can actually use today, we keep two current comparisons updated: [Grok vs ChatGPT](https://geotoolbox.ai/blog/grok-vs-chatgpt) and [Grok vs Claude](https://geotoolbox.ai/blog/grok-vs-claude). Both pit shipping models against each other, which is the only comparison that means anything right now.
+
+So should you wait for Grok 5? For almost any real task, no. A model you can use today beats a better one you cannot, and if Grok 5 turns out to be the leap Musk promises, switching to it later costs you nothing. Waiting does.
+
+## Grok 5 Pricing and Access: Will It Be Free?
+
+xAI has not announced Grok 5 pricing, so anything specific is a guess. What you can do is read the pattern from how xAI prices Grok today and assume Grok 5 slots in at the top of it.
+
+There will very likely be a limited free tier. Grok already offers free, rate-limited access on X, at grok.com, and in the app, and xAI has kept a no-cost entry point through its releases. Expect the same here: a capped free tier on the older models, with Grok 5 itself reserved for paying users at launch, the way new flagships usually roll out.
+
+For full access, the existing paid ladder is the guide: SuperGrok at around $30 a month, a heavier SuperGrok tier near $300 a month for priority access and the most compute-intensive features, and X Premium+ bundling Grok with the platform. Treat those as the current shape, not Grok 5's confirmed prices, and check the live numbers on xAI's site, because consumer pricing shifts often.
+
+Developers have a firmer anchor. xAI's [official model docs](https://docs.x.ai/docs/models) list current API pricing at $1.25 per million input tokens and $2.50 per million output tokens for Grok 4.3, with the Grok Build coding model lower. xAI has priced its API aggressively against OpenAI and Anthropic, so a Grok 5 endpoint will likely cost more than 4.3 per token while staying competitive. Early analyst estimates float something like $5 to $8 per million input tokens and $20 to $30 on output, roughly three to five times Grok 4.3, but those are projections, not announced prices. When it lands, the API model name will probably be straightforward, though even that is a guess until xAI lists it.
+
+## What Grok 5 Means for AI Search and Your Brand
+
+Here is the part the release-date trackers skip. Whether or not Grok 5 turns out to be "AGI," a bigger, more capable Grok with live access to X means more people will ask Grok questions where your brand could come up, and more of them will treat its answer as the answer. That makes Grok part of your visibility surface, the way Google search results have been for years.
+
+The mechanics decide what you do about it. Grok answers in two ways: from what it absorbed during training, its parametric memory, and from what it retrieves live off X and the open web the moment you ask. What Grok and the other engines cite tends to lean on a familiar handful of sources: public posts on X, Reddit threads, YouTube, Wikipedia, and a small set of authoritative web pages. Grok leans on X more heavily than the others do, so a consistent presence on X and in the communities it surfaces matters more for Grok specifically than it does for, say, ChatGPT. If your brand is absent or thinly represented across those, the model fills the gap with whatever it can find, which is exactly how confident, wrong answers about companies happen.
+
+None of this waits for Grok 5. The work that makes you visible in a future Grok is the same work that makes you visible in the Grok shipping today, and in ChatGPT, Gemini, and Claude. It comes down to two things: being a complete, consistent entity across the open web so the model's training memory has accurate material to draw on, and being a clean, citable source so the live retrieval layer can find and quote you. That is the core of [generative engine optimization](https://geotoolbox.ai/blog/what-is-geo), and it holds across model launches in a way that chasing any single release does not.
+
+In our experience, the brands that take each new model launch in stride are the ones already measuring where they stand. They are not refreshing release-date trackers; they are watching what the engines actually say about them and closing the gaps. The first step is just seeing it: [tracking your AI visibility](https://geotoolbox.ai/blog/how-to-track-ai-visibility) across engines so a new model becomes a data point instead of a fire drill.
+
+## The Bottom Line on Grok 5
+
+Grok 5 is real, it is in training, and it is late. The 6-trillion-parameter spec, the 1.5-million-token context, and the AGI headline are all unconfirmed, and the most likely outcome is a powerful, expensive, competitive model rather than a machine that rewrites the definition of intelligence. Watch xAI's own channels for the real date, and treat unconfirmed "Grok 5 is here" coverage as speculation until then.
+
+What should not wait is your own visibility. A bigger Grok only raises the stakes on whether AI engines describe your brand accurately. The [Citation Interceptor](https://geotoolbox.ai/features/citation-interceptor) shows you what ChatGPT, Gemini, Claude, Grok, and the other engines cite when your topic comes up, and where your brand is missing from the answer, so you are ready for Grok 5 whenever it finally ships.
+
+## Frequently Asked Questions
+
+**When is Grok 5 coming out?**
+There is no confirmed release date as of June 2026. xAI originally targeted late 2025, then Q1 2026, then a Q2 2026 window; the first two passed and the Q2 window is closing with no launch. The model is still in training, and prediction markets have steadily lowered the odds of a first-half-2026 launch. Watch xAI's News page and the @xAI account for the official word rather than third-party predictions.
+
+**Is Grok V9-Medium the same as Grok 5?**
+No. Grok V9-Medium is a separate, roughly 1.5-trillion-parameter coding model that finished its base training in mid-2026. Grok 5 is the larger flagship, rumored at around 6 trillion parameters, that is still in training. Headlines merge the two because xAI's internal version numbers do not match its consumer release names.
+
+**What is "level 5" on Grok?**
+That is unrelated to the Grok 5 model. "Level 5" refers to an affection tier in Grok's "Ani" companion persona, a separate feature. If you searched for the model and found companion content, that is the mix-up.
+
+**How many parameters does Grok 5 have?**
+No official figure exists, because xAI has not published a Grok 5 model card. Musk and leaks float figures from roughly 6 trillion to 10 trillion in a mixture-of-experts design, and reporting disagrees on which number is Grok 5 versus a sibling model training alongside it. Treat all of them as unconfirmed.
+
+**Will Grok 5 achieve AGI?**
+Almost certainly not in any rigorous sense. Musk has put the odds at "10% and rising," which is his own estimate rather than a measured result, and many AI researchers are openly skeptical. Expect a very capable model, not artificial general intelligence.
+
+**Will Grok 5 be free?**
+Probably not for full access at launch. Grok keeps a free, rate-limited tier on its older models, and Grok 5 will most likely sit behind paid plans like SuperGrok at first. xAI has not announced Grok 5 pricing yet.
+
+## Sources
+
+- [Grok (chatbot) - Wikipedia](https://en.wikipedia.org/wiki/Grok_(chatbot)) - Grok version history and current model status
+- [xAI Model Documentation](https://docs.x.ai/docs/models) - official current models, context windows, and API pricing
+- [Teslarati: Musk's 10% AGI estimate for Grok 5](https://www.teslarati.com/elon-musk-grok-5-now-has-10-percent-chance-of-becoming-worlds-first-agi/) - the AGI claim, October 2025
+- [Futurism: OpenAI researcher on Musk's AGI claim](https://futurism.com/artificial-intelligence/openai-researcher-mocks-elon-musks-agi) - expert skepticism
+- [TechCrunch: SpaceX acquires xAI](https://techcrunch.com/2026/02/02/elon-musk-spacex-acquires-xai-data-centers-space-merger/) - the February 2026 merger
