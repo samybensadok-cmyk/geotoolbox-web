@@ -16,23 +16,37 @@
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Fragment+Mono&display=swap" rel="stylesheet">
 <style>
 :root{
-  /* ---- GrowthAck brand (swap these when the brand kit lands) ---- */
-  --gak-navy:#0c1a2e;        /* GrowthAck navy — dark sections, headings, text on orange */
-  --gak-orange:#ff5800;      /* GrowthAck signature accent / CTA */
+  /* ---- GrowthAck brand ---- */
+  --gak-navy:#0c1a2e;        /* authority: headings, dark sections */
+  --gak-orange:#ff5800;      /* signature accent — FILLS / CTAs only */
   --gak-orange-600:#e64f00;  /* accent hover */
-  --gak-periwinkle:#8aabcc;  /* GrowthAck muted secondary */
-  --gak-mint:#5dc39b;        /* secondary accent / pass */
-  --gak-amber:#f0a23a;       /* warn */
-  --gak-red:#e5484d;         /* fail */
-  --gak-bg:#fafaf7;          /* page bg */
+  --gak-orange-ink:#c2410c;  /* accent as TEXT on light (AA-safe, ≥4.5:1) */
+  --gak-mint:#2e9e6f;        /* pass (fills) — darkened so white glyphs clear ≥3:1 */
+  --gak-amber:#c47d16;       /* warn (fills) — darkened for white-on-fill contrast */
+  --gak-red:#d63b42;         /* fail (fills) */
+  /* surfaces — neutrals tinted toward navy for subconscious cohesion */
+  --gak-bg:#fbfbf9;
   --gak-card:#ffffff;
-  --gak-ink:#242424;         /* body text */
-  --gak-muted:#647576;       /* secondary text */
-  --gak-line:#e7e9ec;        /* borders */
+  --gak-inset:#f5f6f8;       /* recessed wells (navy-tinted) */
+  --gak-ink:#16202e;         /* near-navy body text (not cool gray) */
+  --gak-muted:#5d6b7d;       /* navy-tinted secondary (AA on light) */
+  --gak-faint:#636f7e;       /* tertiary — AA-safe (≥4.5:1) for small/mono labels */
+  --gak-line:#e9ebf0;        /* hairline (navy-tinted) */
+  --gak-line-2:#dde1e9;      /* stronger hairline */
+  /* semantic text + tint pairs (ONE green/amber/red/blue/violet — used everywhere) */
+  --gak-ok:#0f7a52;   --gak-ok-bg:#e7f5ee;   --gak-ok-line:#c2e6d4;
+  --gak-warn:#a5651a; --gak-warn-bg:#fbf1e1; --gak-warn-line:#f0d6a8;
+  --gak-bad:#c0353c;  --gak-bad-bg:#fcebec;  --gak-bad-line:#f3ccce;
+  --gak-info:#1e5fa8; --gak-info-bg:#eaf2fc; --gak-info-line:#c8ddf5;
+  --gak-violet:#6b3fa0; --gak-violet-bg:#f3edfb; --gak-violet-line:#ddccef;
+  --gak-accent-bg:#fff1ea; --gak-accent-line:#f7cdb5;
+  --gak-lock:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill-rule='evenodd' d='M12 17a2 2 0 0 0 2-2 2 2 0 0 0-2-2 2 2 0 0 0-2 2 2 2 0 0 0 2 2m6-9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2h1V6a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2zm-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3z'/%3E%3C/svg%3E");
   --gak-font:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
   --gak-mono:'Fragment Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
-  --gak-radius:16px;
-  --gak-shadow:0 1px 2px rgba(12,26,46,.04),0 8px 30px rgba(12,26,46,.07);
+  --gak-r-sm:9px; --gak-r:13px; --gak-r-lg:18px; --gak-radius:13px;
+  /* elevation: near-flat by default (crisp hairline does the work); reserve real depth for hero/CTA */
+  --gak-shadow:0 1px 2px rgba(16,32,54,.05);
+  --gak-shadow-lift:0 2px 4px rgba(16,32,54,.05),0 12px 28px -14px rgba(16,32,54,.18);
 }
 *{box-sizing:border-box}
 html,body{margin:0}
@@ -40,209 +54,257 @@ body{
   font-family:var(--gak-font);color:var(--gak-ink);background:var(--gak-bg);
   -webkit-font-smoothing:antialiased;line-height:1.5;
 }
-.gak-wrap{max-width:760px;margin:0 auto;padding:28px 20px 40px}
+.gak-wrap{max-width:720px;margin:0 auto;padding:36px 20px 48px}
 .gak-hide{display:none!important}
+@keyframes gak-rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 
 /* ---------- hero / input ---------- */
-.gak-hero{text-align:center;margin-bottom:22px}
-.gak-eyebrow{font:600 12px/1 var(--gak-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--gak-orange);margin-bottom:12px}
-.gak-h1{font-size:clamp(26px,4.6vw,36px);line-height:1.08;font-weight:800;color:var(--gak-navy);margin:0 0 10px;letter-spacing:-.032em}
-.gak-sub{color:var(--gak-muted);font-size:16px;margin:0 auto;max-width:48ch}
-.gak-form{display:flex;gap:10px;margin:22px auto 8px;max-width:560px;flex-wrap:wrap}
+.gak-hero{text-align:center;margin-bottom:26px}
+.gak-eyebrow{display:inline-block;font:600 12px/1 var(--gak-mono);letter-spacing:.16em;text-transform:uppercase;color:var(--gak-orange-ink);margin-bottom:14px}
+.gak-h1{font-size:clamp(28px,5vw,40px);line-height:1.05;font-weight:800;color:var(--gak-navy);margin:0 0 12px;letter-spacing:-.034em}
+.gak-sub{color:var(--gak-muted);font-size:16px;line-height:1.5;margin:0 auto;max-width:46ch}
+.gak-form{display:flex;gap:10px;margin:26px auto 8px;max-width:540px;flex-wrap:wrap}
 .gak-field{flex:1 1 240px;position:relative}
 .gak-input{
-  width:100%;height:52px;padding:0 22px;font-size:16px;font-family:inherit;color:var(--gak-ink);
-  background:var(--gak-card);border:1.5px solid var(--gak-line);border-radius:999px;outline:none;transition:border-color .15s,box-shadow .15s;
+  width:100%;height:54px;padding:0 22px;font-size:16px;font-family:inherit;color:var(--gak-ink);
+  background:var(--gak-card);border:1.5px solid var(--gak-line-2);border-radius:12px;outline:none;transition:border-color .16s,box-shadow .16s;
 }
-.gak-input:focus{border-color:var(--gak-orange);box-shadow:0 0 0 4px rgba(255,88,0,.13)}
+.gak-input::placeholder{color:var(--gak-faint)}
+.gak-input:focus{border-color:var(--gak-orange);box-shadow:0 0 0 4px rgba(255,88,0,.14)}
 .gak-btn{
-  height:52px;padding:0 30px;font-size:16px;font-weight:800;font-family:inherit;color:var(--gak-navy);cursor:pointer;letter-spacing:-.01em;
-  background:var(--gak-orange);border:none;border-radius:999px;transition:transform .08s,background .15s,opacity .15s;white-space:nowrap;
+  height:54px;padding:0 30px;font-size:16px;font-weight:700;font-family:inherit;color:var(--gak-navy);cursor:pointer;letter-spacing:-.01em;
+  background:var(--gak-orange);border:none;border-radius:12px;box-shadow:0 1px 1px rgba(16,32,54,.1),0 6px 16px -8px rgba(255,88,0,.5);
+  transition:transform .12s cubic-bezier(.2,.7,.3,1),background .16s,opacity .16s;white-space:nowrap;
 }
-.gak-btn:hover{background:var(--gak-orange-600);transform:translateY(-1px)}
-.gak-btn:active{transform:translateY(1px)}
-.gak-btn[disabled]{opacity:.55;cursor:not-allowed}
-.gak-btn-cta{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:15px 28px;font:800 16px/1 var(--gak-font);letter-spacing:-.01em;color:var(--gak-navy);text-decoration:none;border-radius:999px;background:var(--gak-orange);box-shadow:0 10px 26px rgba(255,88,0,.34);transition:transform .08s,background .15s;white-space:nowrap}
-.gak-btn-cta:hover{background:var(--gak-orange-600);transform:translateY(-1px)}
-.gak-btn-cta:active{transform:translateY(1px)}
-.gak-ghost{background:transparent;color:var(--gak-muted);border:1px solid var(--gak-line)}
-.gak-ghost:hover{background:#f4f6f8;color:var(--gak-navy)}
-.gak-booking{margin:18px 0 6px;border-radius:16px;padding:22px 24px;background:linear-gradient(135deg,var(--gak-navy),#11294a)}
-.gak-booking-in{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.gak-btn:hover{background:var(--gak-orange-600);transform:translateY(-2px)}
+.gak-btn[disabled]:hover{transform:none;background:var(--gak-orange)}
+.gak-btn:active{transform:translateY(0)}
+.gak-btn[disabled]{opacity:.5;cursor:not-allowed;box-shadow:none}
+.gak-btn-cta{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:15px 30px;font:700 16px/1 var(--gak-font);letter-spacing:-.01em;color:var(--gak-navy);text-decoration:none;border-radius:12px;background:var(--gak-orange);box-shadow:0 2px 6px rgba(16,32,54,.18),0 14px 30px -12px rgba(255,88,0,.6);transition:transform .12s cubic-bezier(.2,.7,.3,1),background .16s}
+.gak-btn-cta:hover{background:var(--gak-orange-600);transform:translateY(-2px)}
+.gak-btn-cta:active{transform:translateY(0)}
+.gak-ghost{background:transparent;color:var(--gak-muted);border:1px solid var(--gak-line-2);box-shadow:none;font-weight:600}
+.gak-ghost:hover{background:var(--gak-inset);color:var(--gak-navy);transform:none}
+.gak-booking{margin:22px 0 6px;border-radius:var(--gak-r-lg);padding:26px 28px;background:radial-gradient(120% 140% at 0% 0%,#16294a 0%,var(--gak-navy) 60%);box-shadow:var(--gak-shadow-lift);animation:gak-rise .45s cubic-bezier(.2,.7,.3,1) both}
+.gak-booking-in{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
 .gak-booking-txt{flex:1 1 240px;min-width:0}
-.gak-booking-h{font-size:19px;font-weight:800;letter-spacing:-.01em;margin:0 0 4px;color:#fff}
-.gak-booking-sub{font-size:14px;line-height:1.5;color:#c3d2e6;margin:0}
-.gak-note{font-size:13px;color:var(--gak-muted);text-align:center;margin-top:6px}
-.gak-err{color:var(--gak-red);font-size:14px;text-align:center;margin-top:10px;min-height:18px}
+.gak-booking-h{font-size:20px;font-weight:800;letter-spacing:-.02em;margin:0 0 5px;color:#fff}
+.gak-booking-sub{font-size:14px;line-height:1.55;color:#aebfd6;margin:0}
+.gak-note{font-size:13px;color:var(--gak-faint);text-align:center;margin-top:8px}
+.gak-err{color:var(--gak-bad);font-size:14px;text-align:center;margin-top:10px;min-height:18px}
 
 /* ---------- loading ---------- */
-.gak-loading{text-align:center;padding:38px 0}
-.gak-spin{width:38px;height:38px;border:3px solid var(--gak-line);border-top-color:var(--gak-orange);border-radius:50%;margin:0 auto 18px;animation:gak-rot .8s linear infinite}
+.gak-loading{text-align:center;padding:44px 0}
+.gak-spin{width:36px;height:36px;border:3px solid var(--gak-line-2);border-top-color:var(--gak-orange);border-radius:50%;margin:0 auto 20px;animation:gak-rot .8s linear infinite}
 @keyframes gak-rot{to{transform:rotate(360deg)}}
 .gak-steps{list-style:none;padding:0;margin:0;display:inline-block;text-align:left;color:var(--gak-muted);font-size:15px}
-.gak-steps li{padding:5px 0 5px 26px;position:relative;opacity:.4;transition:opacity .3s,color .3s}
+.gak-steps li{padding:6px 0 6px 26px;position:relative;opacity:.4;transition:opacity .3s,color .3s}
 .gak-steps li.on{opacity:1;color:var(--gak-ink)}
 .gak-steps li.done{opacity:1;color:var(--gak-navy)}
-.gak-steps li::before{content:'';position:absolute;left:0;top:9px;width:10px;height:10px;border-radius:50%;border:2px solid var(--gak-line)}
+.gak-steps li::before{content:'';position:absolute;left:0;top:9px;width:10px;height:10px;border-radius:50%;border:2px solid var(--gak-line-2)}
 .gak-steps li.on::before{border-color:var(--gak-orange);animation:gak-pulse 1s ease-in-out infinite}
 .gak-steps li.done::before{border-color:var(--gak-mint);background:var(--gak-mint)}
 @keyframes gak-pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,88,0,.4)}50%{box-shadow:0 0 0 5px rgba(255,88,0,0)}}
 
 /* ---------- result cards ---------- */
-.gak-results{display:flex;flex-direction:column;gap:18px}
-.gak-card{background:var(--gak-card);border:1px solid var(--gak-line);border-radius:var(--gak-radius);box-shadow:var(--gak-shadow);padding:22px}
-.gak-card-h{display:flex;align-items:center;gap:10px;margin:0 0 4px;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gak-muted)}
-.gak-card-h .dot{width:8px;height:8px;border-radius:50%;background:var(--gak-orange)}
+.gak-results{display:flex;flex-direction:column;gap:14px}
+.gak-card{background:var(--gak-card);border:1px solid var(--gak-line);border-radius:var(--gak-radius);box-shadow:var(--gak-shadow);padding:24px;animation:gak-rise .45s cubic-bezier(.2,.7,.3,1) both}
+/* staggered cascade on the free-report load (gated cards 7+ rise immediately on unlock, no long wait) */
+.gak-results>:nth-child(2){animation-delay:.04s}
+.gak-results>:nth-child(3){animation-delay:.08s}
+.gak-results>:nth-child(4){animation-delay:.12s}
+.gak-results>:nth-child(5){animation-delay:.16s}
+.gak-results>:nth-child(6){animation-delay:.2s}
+.gak-card-h{display:flex;align-items:center;gap:9px;margin:0 0 14px;font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--gak-faint)}
+.gak-card-h .dot{width:6px;height:14px;border-radius:3px;background:var(--gak-orange);flex:0 0 auto}
 
 /* score gauge */
-.gak-score{display:flex;align-items:center;gap:26px;flex-wrap:wrap}
-.gak-gauge{position:relative;width:148px;height:148px;flex:0 0 auto}
+.gak-score{display:flex;align-items:center;gap:28px;flex-wrap:wrap}
+.gak-gauge{position:relative;width:140px;height:140px;flex:0 0 auto}
 .gak-gauge svg{transform:rotate(-90deg)}
 .gak-gauge .val{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.gak-gauge .num{font-size:40px;font-weight:800;color:var(--gak-navy);line-height:1}
-.gak-gauge .den{font-size:13px;color:var(--gak-muted);margin-top:2px}
+.gak-gauge .num{font-size:42px;font-weight:800;color:var(--gak-navy);line-height:1;letter-spacing:-.03em}
+.gak-gauge .den{font-size:13px;color:var(--gak-faint);margin-top:3px}
 .gak-score-txt{flex:1 1 220px;min-width:200px}
-.gak-grade{display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:700;padding:5px 12px;border-radius:999px;margin-bottom:8px}
-.gak-grade.g-a{background:rgba(93,195,155,.15);color:#1f7a57}
-.gak-grade.g-b{background:rgba(93,195,155,.13);color:#2a7d5c}
-.gak-grade.g-c{background:rgba(240,162,58,.16);color:#9a6412}
-.gak-grade.g-d{background:rgba(229,72,77,.13);color:#b23438}
-.gak-verdict{font-size:16px;color:var(--gak-ink);margin:0}
+.gak-grade{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;letter-spacing:.01em;padding:5px 12px;border-radius:999px;margin-bottom:10px}
+.gak-grade.g-a{background:var(--gak-ok-bg);color:var(--gak-ok)}
+.gak-grade.g-b{background:var(--gak-ok-bg);color:var(--gak-ok)}
+.gak-grade.g-c{background:var(--gak-warn-bg);color:var(--gak-warn)}
+.gak-grade.g-d{background:var(--gak-bad-bg);color:var(--gak-bad)}
+.gak-verdict{font-size:16px;line-height:1.5;color:var(--gak-ink);margin:0}
 
 /* check rows */
-.gak-checks{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:2px}
-.gak-checks li{display:flex;gap:12px;padding:11px 0;border-top:1px solid var(--gak-line)}
-.gak-checks li:first-child{border-top:none}
+.gak-checks{list-style:none;margin:4px 0 0;padding:0;display:flex;flex-direction:column;gap:0}
+.gak-checks li{display:flex;gap:13px;padding:13px 0;border-top:1px solid var(--gak-line)}
+.gak-checks li:first-child{border-top:none;padding-top:2px}
 .gak-pill{flex:0 0 auto;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;margin-top:1px}
 .gak-pill.pass{background:var(--gak-mint)}
 .gak-pill.warn{background:var(--gak-amber)}
 .gak-pill.fail{background:var(--gak-red)}
-.gak-pill.na{background:#b9c0c7}
+.gak-pill.na{background:#7e8a99}
 .gak-check-b{flex:1}
 .gak-check-t{font-weight:600;color:var(--gak-navy)}
-.gak-check-e{font-size:14px;color:var(--gak-muted);margin-top:2px}
+.gak-check-e{font-size:14px;line-height:1.45;color:var(--gak-muted);margin-top:3px}
 
 /* crawler grid */
-.gak-crawl-sum{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:14px}
-.gak-stat{flex:1 1 120px;background:var(--gak-bg);border:1px solid var(--gak-line);border-radius:12px;padding:12px 14px}
-.gak-stat .n{font-size:26px;font-weight:800;color:var(--gak-navy);line-height:1}
-.gak-stat .l{font-size:12px;color:var(--gak-muted);margin-top:3px}
-.gak-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
-.gak-bot{display:flex;align-items:center;gap:8px;padding:9px 11px;border-radius:10px;background:var(--gak-bg);border:1px solid var(--gak-line);font-size:14px}
-.gak-bot .b-dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
+.gak-crawl-sum{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.gak-stat{flex:1 1 120px;background:var(--gak-inset);border:1px solid var(--gak-line);border-radius:11px;padding:14px 16px}
+.gak-stat .n{font-size:27px;font-weight:800;color:var(--gak-navy);line-height:1;letter-spacing:-.02em}
+.gak-stat .l{font-size:12px;color:var(--gak-muted);margin-top:4px}
+.gak-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:8px}
+.gak-bot{display:flex;align-items:center;gap:9px;padding:10px 12px;border-radius:9px;background:var(--gak-inset);border:1px solid var(--gak-line);font-size:14px}
+.gak-bot .b-dot{width:8px;height:8px;border-radius:50%;flex:0 0 auto}
 .gak-bot.ok .b-dot{background:var(--gak-mint)}
 .gak-bot.no .b-dot{background:var(--gak-red)}
 .gak-bot .b-name{font-weight:600;color:var(--gak-navy)}
 
 /* email gate */
-.gak-gate{background:linear-gradient(180deg,#fff, #f5f9ff);border:1px solid var(--gak-line);border-radius:var(--gak-radius);box-shadow:var(--gak-shadow);padding:26px;text-align:center}
-.gak-gate h3{font-size:20px;color:var(--gak-navy);margin:0 0 6px;font-weight:800}
-.gak-gate p{color:var(--gak-muted);margin:0 auto 16px;max-width:42ch}
+.gak-gate{position:relative;overflow:hidden;background:var(--gak-navy);border-radius:var(--gak-r-lg);box-shadow:var(--gak-shadow-lift);padding:30px 28px;text-align:center}
+.gak-gate::before{content:'';position:absolute;inset:0;background:radial-gradient(90% 120% at 100% 0%,rgba(255,88,0,.16),transparent 55%);pointer-events:none}
+.gak-gate h3{position:relative;font-size:21px;line-height:1.25;color:#fff;margin:0 0 8px;font-weight:800;letter-spacing:-.02em}
+.gak-gate p{position:relative;color:#aebfd6;margin:0 auto 18px;max-width:42ch;line-height:1.55}
+.gak-gate .gak-form{position:relative}
+.gak-gate .gak-input{border-color:transparent;background:rgba(255,255,255,.97)}
 .gak-locked{position:relative}
 .gak-locked .gak-blur{filter:blur(6px);opacity:.55;pointer-events:none;user-select:none}
 
 /* visibility scan */
-.gak-prompt{border:1px solid var(--gak-line);border-radius:12px;padding:14px 16px;margin-top:10px;background:var(--gak-bg)}
-.gak-prompt-q{font-weight:600;color:var(--gak-navy);font-size:15px}
-.gak-engines{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.gak-eng{display:flex;align-items:center;gap:7px;font-size:13px;padding:5px 10px;border-radius:999px;background:#fff;border:1px solid var(--gak-line)}
-.gak-eng .e-dot{width:8px;height:8px;border-radius:50%}
+.gak-prompt{border:1px solid var(--gak-line);border-radius:11px;padding:15px 17px;margin-top:10px;background:var(--gak-inset)}
+.gak-prompt-q{font-weight:600;color:var(--gak-navy);font-size:15px;line-height:1.4}
+.gak-engines{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}
+.gak-eng{display:flex;align-items:center;gap:7px;font-size:13px;padding:5px 11px;border-radius:999px;background:var(--gak-card);border:1px solid var(--gak-line)}
+.gak-eng .e-dot{width:7px;height:7px;border-radius:50%}
 .gak-eng.cited .e-dot{background:var(--gak-mint)}
 .gak-eng.absent .e-dot{background:var(--gak-red)}
 .gak-eng b{color:var(--gak-navy)}
-.gak-comp{font-size:14px;color:var(--gak-muted);margin-top:8px}
+.gak-comp{font-size:14px;color:var(--gak-muted);margin-top:9px}
 .gak-comp b{color:var(--gak-ink)}
 
 /* ---------- Lost-Deal Quote (free hero) ---------- */
-.gak-lostdeal{background:linear-gradient(180deg,#fff,#fff7f6);border:1px solid var(--gak-line);border-left:4px solid var(--gak-red);border-radius:var(--gak-radius);box-shadow:var(--gak-shadow);padding:22px}
-.gak-lostdeal.win{background:linear-gradient(180deg,#fff,#f3fbf7);border-left-color:var(--gak-mint)}
-.gak-ld-badge{display:inline-flex;align-items:center;gap:7px;font:700 12px/1 var(--gak-mono);letter-spacing:.04em;text-transform:uppercase;padding:6px 11px;border-radius:999px;margin-bottom:12px}
-.gak-ld-badge.lose{background:rgba(229,72,77,.12);color:#b23438}
-.gak-ld-badge.win{background:rgba(93,195,155,.16);color:#1f7a57}
-.gak-ld-q{font-size:13px;color:var(--gak-muted);margin:0 0 8px}
-.gak-ld-quote{font-size:17px;line-height:1.5;color:var(--gak-navy);font-weight:500;border-radius:10px;background:var(--gak-bg);border:1px solid var(--gak-line);padding:13px 15px;margin:0}
-.gak-ld-quote .src{display:block;font-size:12px;color:var(--gak-muted);font-weight:600;margin-top:8px}
-.gak-ld-rival{margin-top:12px;font-size:15px;color:var(--gak-ink)}
-.gak-ld-rival b{color:var(--gak-red)}
+.gak-lostdeal{position:relative;background:var(--gak-card);border:1px solid var(--gak-line);border-left:3px solid var(--gak-red);border-radius:var(--gak-radius);box-shadow:var(--gak-shadow);padding:24px;animation:gak-rise .45s cubic-bezier(.2,.7,.3,1) both}
+.gak-lostdeal.win{border-left-color:var(--gak-mint)}
+.gak-ld-badge{display:inline-flex;align-items:center;gap:7px;font:700 11px/1 var(--gak-mono);letter-spacing:.06em;text-transform:uppercase;padding:6px 11px;border-radius:7px;margin-bottom:14px}
+.gak-ld-badge.lose{background:var(--gak-bad-bg);color:var(--gak-bad)}
+.gak-ld-badge.win{background:var(--gak-ok-bg);color:var(--gak-ok)}
+.gak-ld-q{font-size:13px;color:var(--gak-muted);margin:0 0 9px}
+.gak-ld-quote{font-size:18px;line-height:1.55;color:var(--gak-navy);font-weight:500;border-radius:11px;background:var(--gak-inset);border:1px solid var(--gak-line);padding:15px 17px;margin:0}
+.gak-ld-quote .src{display:block;font:600 12px/1 var(--gak-mono);color:var(--gak-faint);margin-top:11px;letter-spacing:.02em}
+.gak-ld-rival{margin-top:13px;font-size:15px;color:var(--gak-ink)}
+.gak-ld-rival b{color:var(--gak-bad)}
 .gak-lostdeal.win .gak-ld-rival b{color:var(--gak-navy)}
 
 /* ---------- Reach / Read / Result matrix (free; Result locked) ---------- */
-.gak-matrix{width:100%;border-collapse:collapse;margin-top:6px;font-size:14px}
-.gak-matrix th,.gak-matrix td{padding:11px 8px;text-align:center;border-top:1px solid var(--gak-line)}
-.gak-matrix th{font:700 11px/1.2 var(--gak-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--gak-muted);border-top:none}
+.gak-matrix{width:100%;border-collapse:collapse;margin-top:4px;font-size:14px}
+.gak-matrix th,.gak-matrix td{padding:12px 8px;text-align:center;border-top:1px solid var(--gak-line)}
+.gak-matrix th{font:700 11px/1.2 var(--gak-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--gak-faint);border-top:none;padding-bottom:10px}
 .gak-matrix th:first-child,.gak-matrix td:first-child{text-align:left}
+.gak-matrix tbody tr:hover td{background:var(--gak-inset)}
 .gak-matrix td.eng{font-weight:700;color:var(--gak-navy);white-space:nowrap}
-.gak-cell{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;font-size:13px;font-weight:800;color:#fff}
+.gak-cell{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;font-size:12px;font-weight:800;color:#fff}
 .gak-cell.yes{background:var(--gak-mint)}
 .gak-cell.no{background:var(--gak-red)}
-.gak-cell.unk{background:#c4ccd3;color:#fff}
+.gak-cell.unk{background:#93a0af;color:#fff}
 .gak-res{font-weight:700;font-size:13px}
-.gak-res.present{color:#1f7a57}
-.gak-res.absent{color:var(--gak-red)}
-.gak-res.competitor{color:#9a6412}
-.gak-res-lock{display:inline-flex;align-items:center;gap:5px;color:var(--gak-muted);font-size:13px;font-weight:600;filter:blur(.3px)}
-.gak-res-lock::before{content:'🔒';filter:none}
-.gak-res-prem{font:700 10px/1 var(--gak-mono);letter-spacing:.04em;text-transform:uppercase;color:var(--gak-orange);background:rgba(255,88,0,.1);padding:4px 7px;border-radius:6px}
-.gak-matrix-note{font-size:12.5px;color:var(--gak-muted);margin-top:12px;text-align:center}
+.gak-res.present{color:var(--gak-ok)}
+.gak-res.absent{color:var(--gak-bad)}
+.gak-res.competitor{color:var(--gak-warn)}
+.gak-res-lock{display:inline-flex;align-items:center;gap:5px;color:var(--gak-faint);font-size:13px;font-weight:600}
+.gak-res-lock::before{content:'';width:11px;height:12px;background:currentColor;-webkit-mask:var(--gak-lock) center/contain no-repeat;mask:var(--gak-lock) center/contain no-repeat}
+.gak-res-prem{font:700 11px/1 var(--gak-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--gak-orange-ink);background:var(--gak-accent-bg);padding:4px 7px;border-radius:6px}
+.gak-matrix-note{font-size:13px;color:var(--gak-faint);margin-top:14px;text-align:center;line-height:1.5}
 
 /* ---------- teaser chips (free counts) ---------- */
-.gak-teasers{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
-.gak-teaser{flex:1 1 160px;display:flex;gap:11px;align-items:center;background:var(--gak-card);border:1px solid var(--gak-line);border-radius:12px;padding:13px 15px}
-.gak-teaser .tn{font-size:24px;font-weight:800;line-height:1;color:var(--gak-navy)}
-.gak-teaser.alert .tn{color:var(--gak-red)}
-.gak-teaser .tl{font-size:13px;color:var(--gak-muted);line-height:1.3}
+.gak-teasers{display:flex;gap:10px;flex-wrap:wrap;margin-top:0}
+.gak-teaser{flex:1 1 160px;display:flex;gap:12px;align-items:center;background:var(--gak-inset);border:1px solid var(--gak-line);border-radius:11px;padding:14px 16px}
+.gak-teaser .tn{font-size:25px;font-weight:800;line-height:1;color:var(--gak-navy);letter-spacing:-.02em}
+.gak-teaser.alert .tn{color:var(--gak-bad)}
+.gak-teaser .tl{font-size:13px;color:var(--gak-muted);line-height:1.35}
 .gak-teaser.locked{position:relative}
 .gak-teaser.locked .tn{filter:blur(7px);user-select:none}
-.gak-teaser.locked::after{content:'🔒';position:absolute;left:15px;top:13px;font-size:15px}
+.gak-teaser.locked::after{content:'';position:absolute;left:16px;top:15px;width:14px;height:15px;background:var(--gak-navy);-webkit-mask:var(--gak-lock) center/contain no-repeat;mask:var(--gak-lock) center/contain no-repeat}
 
 /* gated: losing headline + causal join */
-.gak-losing{display:inline-flex;align-items:baseline;gap:8px;background:rgba(229,72,77,.1);color:#b23438;font-weight:700;border-radius:10px;padding:8px 13px;margin:2px 0 12px;font-size:14px}
+.gak-losing{display:inline-flex;align-items:baseline;gap:8px;background:var(--gak-bad-bg);color:var(--gak-bad);font-weight:700;border-radius:9px;padding:9px 14px;margin:0 0 14px;font-size:14px}
 .gak-losing b{font-size:20px}
-.gak-causal{font-size:13px;color:#9a6412;background:#fff7ed;border:1px solid #f0c98a;border-radius:8px;padding:7px 11px;margin-top:8px}
-.gak-causal b{color:#7c4a0a}
+.gak-causal{font-size:13px;line-height:1.5;color:var(--gak-warn);background:var(--gak-warn-bg);border:1px solid var(--gak-warn-line);border-radius:8px;padding:8px 12px;margin-top:9px}
+.gak-causal b{color:var(--gak-navy)}
 
 /* gated: chips (competitors) */
 .gak-chips{display:flex;flex-wrap:wrap;gap:8px}
-.gak-chip{display:inline-flex;align-items:center;gap:7px;background:var(--gak-bg);border:1px solid var(--gak-line);border-radius:999px;padding:7px 13px;font-size:14px;font-weight:600;color:var(--gak-navy)}
-.gak-chip .rank{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:var(--gak-red);color:#fff;font-size:11px;font-weight:800}
+.gak-chip{display:inline-flex;align-items:center;gap:8px;background:var(--gak-inset);border:1px solid var(--gak-line);border-radius:999px;padding:7px 14px 7px 7px;font-size:14px;font-weight:600;color:var(--gak-navy)}
+.gak-chip .rank{display:inline-flex;align-items:center;justify-content:center;width:19px;height:19px;border-radius:50%;background:var(--gak-bad);color:#fff;font-size:11px;font-weight:800;flex:0 0 auto}
 
 /* gated: source map */
 .gak-src-grp{margin-top:6px}
-.gak-src-grp+.gak-src-grp{margin-top:14px}
-.gak-src-lbl{font:700 11px/1 var(--gak-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--gak-muted);margin-bottom:8px}
-.gak-src-lbl .tag{color:var(--gak-orange)}
+.gak-src-grp+.gak-src-grp{margin-top:16px}
+.gak-src-lbl{font:700 11px/1 var(--gak-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--gak-faint);margin-bottom:9px}
+.gak-src-lbl .tag{color:var(--gak-orange-ink)}
 .gak-src-list{display:flex;flex-wrap:wrap;gap:6px}
-.gak-src{font-size:13px;color:var(--gak-ink);background:#fff;border:1px solid var(--gak-line);border-radius:8px;padding:5px 10px;font-family:var(--gak-mono)}
-.gak-src-note{font-size:12.5px;color:var(--gak-muted);margin-top:10px}
+.gak-src{font-size:13px;color:var(--gak-ink);background:var(--gak-inset);border:1px solid var(--gak-line);border-radius:7px;padding:5px 10px;font-family:var(--gak-mono)}
+.gak-src-note{font-size:13px;line-height:1.55;color:var(--gak-muted);margin-top:12px}
+/* gated: citation target list */
+.gak-src-sub{margin-top:0;margin-bottom:14px;color:var(--gak-muted);line-height:1.55}
+.gak-src-empty{font-size:14px;line-height:1.5;color:var(--gak-navy);background:var(--gak-accent-bg);border:1px solid var(--gak-accent-line);border-radius:11px;padding:14px 16px;margin-top:4px}
+.gak-tg-list{display:flex;flex-direction:column;gap:0;margin-top:4px;border:1px solid var(--gak-line);border-radius:12px;overflow:hidden}
+.gak-tg-row{display:flex;align-items:center;gap:11px;background:var(--gak-card);padding:12px 14px;flex-wrap:wrap;border-top:1px solid var(--gak-line);transition:background .14s}
+.gak-tg-row:first-child{border-top:none}
+.gak-tg-row:hover{background:var(--gak-inset)}
+.gak-tg-rank{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:6px;background:var(--gak-inset);border:1px solid var(--gak-line);color:var(--gak-faint);font:700 11px/1 var(--gak-mono)}
+.gak-tg-badge{flex:0 0 auto;font:700 11px/1 var(--gak-mono);letter-spacing:.05em;text-transform:uppercase;padding:4px 7px;border-radius:6px;border:1px solid var(--gak-line);color:var(--gak-muted);background:var(--gak-inset)}
+.gak-tg-badge.b-listicle{color:var(--gak-orange-ink);background:var(--gak-accent-bg);border-color:var(--gak-accent-line)}
+.gak-tg-badge.b-directory{color:var(--gak-info);background:var(--gak-info-bg);border-color:var(--gak-info-line)}
+.gak-tg-badge.b-review{color:var(--gak-ok);background:var(--gak-ok-bg);border-color:var(--gak-ok-line)}
+.gak-tg-badge.b-community{color:var(--gak-violet);background:var(--gak-violet-bg);border-color:var(--gak-violet-line)}
+.gak-tg-main{flex:1 1 200px;min-width:0;display:flex;flex-direction:column;gap:2px}
+.gak-tg-main a{color:var(--gak-navy);font-weight:600;font-size:14px;text-decoration:none;word-break:break-word}
+.gak-tg-main a:hover{color:var(--gak-orange-ink);text-decoration:underline}
+.gak-tg-host{font:500 12px/1.2 var(--gak-mono);color:var(--gak-faint)}
+.gak-tg-meta{flex:0 0 auto;display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap}
+.gak-tg-pill{font:700 11px/1 var(--gak-mono);padding:5px 9px;border-radius:999px;white-space:nowrap}
+.gak-tg-pill.ok{color:var(--gak-ok);background:var(--gak-ok-bg);border:1px solid var(--gak-ok-line)}
+.gak-tg-pill.no{color:var(--gak-orange-ink);background:var(--gak-accent-bg);border:1px solid var(--gak-accent-line)}
+.gak-tg-hard{font:600 11px/1 var(--gak-mono);color:var(--gak-faint);text-transform:uppercase;letter-spacing:.04em}
+.gak-tg-freq{font:500 11px/1 var(--gak-mono);color:var(--gak-faint)}
+.gak-owned-grp{margin-top:16px;opacity:.9}
 
 /* gated: fix list */
-.gak-fixes{margin:6px 0 0;padding-left:22px;display:flex;flex-direction:column;gap:10px}
-.gak-fixes li{color:var(--gak-ink);font-size:14.5px;line-height:1.5}
+.gak-fixes{margin:4px 0 0;padding:0;list-style:none;counter-reset:gakfix;display:flex;flex-direction:column;gap:0}
+.gak-fixes li{position:relative;counter-increment:gakfix;color:var(--gak-ink);font-size:15px;line-height:1.55;padding:14px 0 14px 40px;border-top:1px solid var(--gak-line)}
+.gak-fixes li:first-child{border-top:none}
+.gak-fixes li::before{content:counter(gakfix);position:absolute;left:0;top:13px;width:24px;height:24px;border-radius:7px;background:var(--gak-navy);color:#fff;font:800 12px/24px var(--gak-mono);text-align:center}
 .gak-fixes li b{color:var(--gak-navy)}
-.gak-fix-tag{display:inline-block;font:700 10px/1 var(--gak-mono);letter-spacing:.04em;text-transform:uppercase;padding:3px 7px;border-radius:5px;margin-right:7px;vertical-align:middle}
-.gak-fix-tag.reach{background:rgba(229,72,77,.12);color:#b23438}
-.gak-fix-tag.read{background:rgba(240,162,58,.16);color:#9a6412}
+.gak-fix-tag{display:inline-block;font:700 11px/1 var(--gak-mono);letter-spacing:.05em;text-transform:uppercase;padding:3px 7px;border-radius:5px;margin-right:8px;vertical-align:1px}
+.gak-fix-tag.reach{background:var(--gak-bad-bg);color:var(--gak-bad)}
+.gak-fix-tag.read{background:var(--gak-warn-bg);color:var(--gak-warn)}
 
 /* gated: offering gap */
-.gak-og-row{display:flex;gap:10px;align-items:flex-start;margin-top:8px}
-.gak-og-k{flex:0 0 84px;font:700 11px/1.4 var(--gak-mono);letter-spacing:.04em;text-transform:uppercase}
-.gak-og-k.miss{color:var(--gak-red)}.gak-og-k.ok{color:#1f7a57}
-.gak-og-v{flex:1;font-size:14px;color:var(--gak-ink)}
+.gak-og-row{display:flex;gap:12px;align-items:flex-start;margin-top:10px}
+.gak-og-k{flex:0 0 78px;font:700 11px/1.5 var(--gak-mono);letter-spacing:.05em;text-transform:uppercase}
+.gak-og-k.miss{color:var(--gak-bad)}.gak-og-k.ok{color:var(--gak-ok)}
+.gak-og-v{flex:1;font-size:14px;line-height:1.5;color:var(--gak-ink)}
 
 /* sample-data notice (synthetic demo domains) */
-.gak-sample-note{background:#fff7ed;border:1px solid #f0c98a;color:#9a6412;font-size:13px;border-radius:10px;padding:10px 14px;text-align:center}
-.gak-sample-note b{color:#7c4a0a}
+.gak-sample-note{background:var(--gak-warn-bg);border:1px solid var(--gak-warn-line);color:var(--gak-warn);font-size:13px;line-height:1.5;border-radius:10px;padding:11px 15px;text-align:center}
+.gak-sample-note b{color:var(--gak-navy)}
 
-.gak-cta-final{text-align:center;padding:8px 0 0}
-.gak-foot{text-align:center;font-size:12px;color:var(--gak-muted);margin-top:24px}
-.gak-foot a{color:var(--gak-orange);text-decoration:none}
-@media(max-width:560px){.gak-form{flex-direction:column}.gak-btn{width:100%}}
-/* ---- final polish: keyboard focus, mobile fit, reduced motion ---- */
-.gak-btn:focus-visible,.gak-btn-cta:focus-visible{outline:3px solid var(--gak-navy);outline-offset:3px}
+.gak-cta-final{text-align:center;padding:10px 0 0}
+.gak-foot{text-align:center;font-size:12px;color:var(--gak-faint);margin-top:28px}
+.gak-foot a{color:var(--gak-orange-ink);text-decoration:none;font-weight:600}
+.gak-foot a:hover{text-decoration:underline}
+
+/* ---- accessibility: visible keyboard focus everywhere ---- */
+.gak-btn:focus-visible,.gak-btn-cta:focus-visible,.gak-ghost:focus-visible{outline:3px solid var(--gak-navy);outline-offset:3px}
+.gak-gate .gak-btn:focus-visible{outline-color:#fff}
+.gak-tg-main a:focus-visible,.gak-foot a:focus-visible{outline:2px solid var(--gak-orange);outline-offset:2px;border-radius:3px}
 .gak-input:focus-visible{outline:none}
+
 @media(max-width:560px){
+  .gak-wrap{padding:24px 16px 36px}
+  .gak-form{flex-direction:column}
+  .gak-btn{width:100%}
+  .gak-card{padding:20px}
   .gak-matrix{font-size:13px}
-  .gak-matrix th,.gak-matrix td{padding:9px 4px}
+  .gak-matrix th,.gak-matrix td{padding:10px 4px}
   .gak-matrix td.eng{white-space:normal}
   .gak-booking-in{flex-direction:column;align-items:stretch}
   .gak-btn-cta{width:100%}
@@ -368,7 +430,7 @@ body{
 
       <!-- GATED: offering gap (hidden unless available) -->
       <div class="gak-card gak-hide" id="gak-offering">
-        <div class="gak-card-h"><span class="dot"></span> What AI doesn't know you offer</div>
+        <div class="gak-card-h"><span class="dot"></span> Categories AI didn't mention for you</div>
         <div id="gak-offering-body"></div>
       </div>
 
@@ -448,8 +510,16 @@ const REAL_VIS = {
       quote:"The best B2B marketing agencies in Nottingham include Finsbury Media, Impression Digital, and Hallam Internet. Finsbury Media is an award-winning digital marketing agency in Nottingham with over a decade of experience helping UK businesses grow online.",
       top_competitor:"Finsbury Media", competitors:["Finsbury Media","Impression Digital"], result:"competitor" },
     competitors: ["finsburymedia.com","hallam.agency","impressiondigital.com","perceptric.com","exposureninja.com"],
-    sources: { owned:[], earned:["finsburymedia.com","hallam.agency","impressiondigital.com","perceptric.com","thegrowthsyndicate.com","adzooma.com"] },
-    offering_gap: null,
+    sources: { owned:[], competitor_sources:["finsburymedia.com","hallam.agency","impressiondigital.com"], cited_total:8, ai_cites_nobody:false,
+      earned:["clutch.co","designrush.com","techround.co.uk","trustpilot.com","reddit.com"],
+      targets:[
+        {host:"clutch.co", url:"https://clutch.co/agencies/digital-marketing/nottingham", title:"Top Digital Marketing Agencies in Nottingham", type:"Directory", count:3, cited:false, hard_to_pitch:false},
+        {host:"designrush.com", url:"https://www.designrush.com/agency/digital-marketing/uk", title:"Best Digital Marketing Agencies in the UK", type:"Directory", count:2, cited:false, hard_to_pitch:false},
+        {host:"techround.co.uk", url:"https://techround.co.uk/guides/best-seo-agencies-uk/", title:"Best SEO Agencies in the UK 2026", type:"Listicle", count:2, cited:false, hard_to_pitch:false},
+        {host:"trustpilot.com", url:"https://www.trustpilot.com/categories/marketing_agency", title:"Marketing Agencies — Trustpilot reviews", type:"Review", count:1, cited:false, hard_to_pitch:false},
+        {host:"reddit.com", url:"https://www.reddit.com/r/agency/", title:"r/agency — agency recommendations", type:"Community", count:1, cited:false, hard_to_pitch:false}
+      ] },
+    offering_gap: { basis:"what AI returned when asked what you offer, vs. your own site", missing:["AI search optimisation","GEO services","Conversion rate optimisation"], correct:["SEO","PPC","Web design"] },
     prompts: [
       {query:"best B2B marketing agencies in Nottingham", engines:[{label:"Perplexity",cited:false},{label:"ChatGPT",cited:false}], competitors_cited:["Finsbury Media","Impression Digital","Hallam"]},
       {query:"best AI search & GEO agencies UK", engines:[{label:"Perplexity",cited:false},{label:"ChatGPT",cited:false},{label:"Google AI Overviews",cited:false}], competitors_cited:["Exposure Ninja","Neural ADX"]},
@@ -484,8 +554,16 @@ const REAL_VIS = {
     },
     losing: 2, total_cells: 3,
     competitors: ["careco.co.uk","essentialaids.com","mobilitysmart.co.uk"],
-    sources: { owned:["manageathome.co.uk"], earned:["eden-mobility.co.uk","essentialaids.com","careco.co.uk","specifiedby.com","trustpilot.com","nhs.uk"] },
-    offering_gap: null,
+    sources: { owned:["manageathome.co.uk"], competitor_sources:["eden-mobility.co.uk","careco.co.uk","essentialaids.com"], cited_total:9, ai_cites_nobody:false,
+      earned:["specifiedby.com","trustpilot.com","which.co.uk","nhs.uk","ageuk.org.uk"],
+      targets:[
+        {host:"specifiedby.com", url:"https://www.specifiedby.com/", title:"SpecifiedBy — product & supplier directory", type:"Directory", count:2, cited:false, hard_to_pitch:false},
+        {host:"trustpilot.com", url:"https://www.trustpilot.com/categories/mobility_equipment_supplier", title:"Mobility Equipment Suppliers — Trustpilot", type:"Review", count:1, cited:false, hard_to_pitch:false},
+        {host:"which.co.uk", url:"https://www.which.co.uk/reviews/mobility-aids", title:"Best Mobility Aids — Which?", type:"Listicle", count:1, cited:false, hard_to_pitch:false},
+        {host:"nhs.uk", url:"https://www.nhs.uk/conditions/social-care-and-support-guide/care-and-support-you-can-get-for-free/", title:"NHS — equipment & home adaptations", type:"Reference", count:2, cited:true, hard_to_pitch:true},
+        {host:"ageuk.org.uk", url:"https://www.ageuk.org.uk/information-advice/care/", title:"Age UK — mobility & daily-living guidance", type:"Reference", count:1, cited:false, hard_to_pitch:true}
+      ] },
+    offering_gap: { basis:"what AI returned when asked what you offer, vs. your own site", missing:["Stairlifts","Bathroom safety aids","Kitchen & dining aids"], correct:["Mobility aids","Daily living aids"] },
     prompts: [{
       query: "best UK retailers for mobility aids & daily living equipment",
       engines: [{label:"Perplexity",cited:true},{label:"ChatGPT",cited:false},{label:"Google AI Overviews",cited:false}],
@@ -721,7 +799,7 @@ function causalNote(p){
   const blocked=(p.engines||[]).filter(e=>!e.cited && engineReach(e.label)===false)
     .map(e=>matrixEngineKey(e.label)).filter((v,i,a)=>v&&a.indexOf(v)===i);
   if(!blocked.length) return '';
-  return `<div class="gak-causal">🔒 ${blocked.map(eng=>`<b>${esc(BOT_OF[eng]||eng)}</b> blocked → ${esc(eng)} can't crawl you to recommend you`).join('; ')}.</div>`;
+  return `<div class="gak-causal">${blocked.map(eng=>`<b>${esc(BOT_OF[eng]||eng)}</b> blocked → ${esc(eng)} can't crawl you to recommend you`).join('; ')}.</div>`;
 }
 /* render + reveal the whole gated layer (called on unlock) */
 function renderGated(vis){
@@ -738,17 +816,81 @@ function renderCompetitors(list){
   $('gak-comp-list').innerHTML = list.slice(0,6).map((c,i)=>`<span class="gak-chip"><span class="rank">${i+1}</span>${esc(c)}</span>`).join('');
   show('gak-competitors');
 }
+/* Citation Target List: the 3rd-party PAGES AI pulls from for the prospect's buying questions, with
+   competitors subtracted out (they live on the competitors card). Three states: AI cites you / AI cites
+   rivals+platforms but no neutral media yet / AI cites nobody. ✗-rows are the action list. */
+function gakSafeUrl(u, host){
+  const v = String(u||'');
+  if(/^https?:\/\//i.test(v)) return v;                 // already an http(s) page URL
+  return host ? 'https://'+String(host).replace(/^https?:\/\//i,'') : '#';  // never emit a non-http scheme (no javascript:/data:)
+}
+function srcTargetRow(t,i){
+  const host = esc(t.host||'');
+  const url  = gakSafeUrl(t.url, t.host);
+  const type = String(t.type||'Media');
+  const label = esc(t.title || t.host || '');
+  const showHost = t.title && t.host && String(t.title).toLowerCase()!==String(t.host).toLowerCase();
+  const pill = t.cited
+    ? `<span class="gak-tg-pill ok" title="this page appeared in an AI answer that named you (answer-level, not a per-page scrape)">✓ in an answer that names you</span>`
+    : `<span class="gak-tg-pill no">✗ not yet</span>`;
+  const hard = t.hard_to_pitch ? `<span class="gak-tg-hard">hard to pitch</span>` : '';
+  const freq = (Number(t.count)>1) ? `<span class="gak-tg-freq">pulled ${Number(t.count)}×</span>` : '';
+  return `<div class="gak-tg-row">`
+    + `<span class="gak-tg-rank">${i+1}</span>`
+    + `<span class="gak-tg-badge b-${esc(type.toLowerCase())}">${esc(type)}</span>`
+    + `<span class="gak-tg-main"><a href="${esc(url)}" target="_blank" rel="noopener nofollow">${label}</a>`
+    + (showHost?`<span class="gak-tg-host">${host}</span>`:'')+`</span>`
+    + `<span class="gak-tg-meta">${pill}${hard}${freq}</span>`
+    + `</div>`;
+}
+function srcOwnedRow(owned){
+  if(!owned.length) return '';
+  return `<div class="gak-src-grp gak-owned-grp"><div class="gak-src-lbl">Your own pages AI uses <span class="tag">owned</span></div>`
+    + `<div class="gak-src-list">${owned.slice(0,8).map(s=>`<span class="gak-src">${esc(s)}</span>`).join('')}</div></div>`;
+}
 function renderSources(src){
-  if(!src || (!(src.owned&&src.owned.length) && !(src.earned&&src.earned.length))){ hide('gak-sources'); return; }
-  const grp=(lbl,tag,items)=>(items&&items.length)?`<div class="gak-src-grp"><div class="gak-src-lbl">${lbl} <span class="tag">${esc(tag)}</span></div><div class="gak-src-list">${items.slice(0,12).map(s=>`<span class="gak-src">${esc(s)}</span>`).join('')}</div></div>`:'';
-  $('gak-sources-body').innerHTML = grp('Owned','your domains',src.owned)+grp('Earned','PR / 3rd-party — your targets',src.earned)+
-    `<div class="gak-src-note">Earned sources are where AI is already looking — get cited on these to win the answers above.</div>`;
+  src = src || {};
+  const owned   = (src.owned||[]).filter(Boolean);
+  let   targets = (src.targets||[]).filter(Boolean);
+  // back-compat: an older backend sends a flat `earned` host list with no `targets`
+  if(!targets.length && (src.earned||[]).length){
+    targets = src.earned.filter(Boolean).map(h=>({host:h,url:gakSafeUrl('',h),title:'',type:'Media',count:1,cited:false,hard_to_pitch:false}));
+  }
+  const rivals = (src.competitor_sources||[]).filter(Boolean);
+  const subLine = `The 3rd-party sources AI pulls from to answer your buyers' questions`
+    + (rivals.length?` — your rivals' own sites are listed separately above` : ``)
+    + `. These are sites you can realistically earn a place on.`;
+  const sub = `<p class="gak-src-note gak-src-sub">${subLine}</p>`;
+  const rivalPtr = rivals.length
+    ? `<div class="gak-src-note">AI also pulls straight from <b>${rivals.length}</b> rival ${rivals.length>1?'sites':'site'} → see “Who AI recommends instead of you” above. Those aren't placements you can win.</div>` : '';
+
+  // State C — AI cited no source at all (a URL-citing engine ran and returned nothing)
+  if(src.ai_cites_nobody){
+    $('gak-sources-body').innerHTML = sub
+      + `<div class="gak-src-empty">AI isn't citing any source for these questions yet — a genuine first-mover opportunity. Publish the definitive answer and you can own the citation before anyone else.</div>`;
+    show('gak-sources'); return;
+  }
+  if(!targets.length && !owned.length && !rivals.length){ hide('gak-sources'); return; }
+
+  // State B — no winnable 3rd-party media in the answer. Two honest sub-cases: rivals/platforms vs owned-only.
+  if(!targets.length){
+    const msg = rivals.length
+      ? `AI is answering these questions from your competitors' own sites and a few locked platforms — there's no independent 3rd-party source in the answer yet. The opening: become the first neutral source AI can cite.`
+      : `AI is answering these questions without citing any independent 3rd-party source yet${owned.length?` — it leans on your own pages and locked platforms`:``}. The opening: get named on the review sites, directories and listicles your buyers trust.`;
+    $('gak-sources-body').innerHTML = sub + `<div class="gak-src-empty">${msg}</div>` + rivalPtr + srcOwnedRow(owned);
+    show('gak-sources'); return;
+  }
+
+  // State A — ranked citation target list
+  const rows = targets.slice(0,12).map((t,i)=>srcTargetRow(t,i)).join('');
+  const note = `<div class="gak-src-note">Ranked by how often AI pulls from each source. <b>✗ not yet</b> = AI uses this source in an answer that didn't name you — getting cited there is the move. <b>✓</b> = it appeared in an answer that already names you (answer-level, not a per-page check).</div>`;
+  $('gak-sources-body').innerHTML = sub + `<div class="gak-tg-list">${rows}</div>` + note + rivalPtr + srcOwnedRow(owned);
   show('gak-sources');
 }
 function renderOffering(og){
   if(!og || !((og.missing||[]).length)){ hide('gak-offering'); return; }
   const row=(k,cls,items)=>(items&&items.length)?`<div class="gak-og-row"><div class="gak-og-k ${cls}">${k}</div><div class="gak-og-v">${items.map(esc).join(', ')}</div></div>`:'';
-  $('gak-offering-body').innerHTML = `<p class="gak-src-note">Based on ${esc(og.basis||'your site vs the live AI answers')}:</p>`+row('Missing','miss',og.missing)+row('AI knows','ok',og.correct);
+  $('gak-offering-body').innerHTML = `<p class="gak-src-note">Based on ${esc(og.basis||'what AI returned when asked what you offer, vs. your own site')}:</p>`+row('Not mentioned','miss',og.missing)+row('AI mentions','ok',og.correct);
   show('gak-offering');
 }
 // Order matters — SPECIFIC patterns first; the generic robots.txt catch-all is LAST so a label like
@@ -900,7 +1042,13 @@ function demoData(domain, brandIn, industry){
       : { summary:`Your brand was named in ${mentions} of ${tot} AI answers across ${vprompts.length} buying questions. ${mentions<tot?'Competitors are recommended where you are absent.':'Strong AI presence.'}`,
           losing: tot-mentions, total_cells: tot, prompts:vprompts,
           competitors: comps.slice(0,3),
-          sources: { owned:[domain], earned:['trustpilot.com','reddit.com','an-industry-directory.co.uk'] },
+          sources: { owned:[domain], competitor_sources:[], cited_total:4, ai_cites_nobody:false,
+            earned:['clutch.co','trustpilot.com','reddit.com'],
+            targets:[
+              {host:'clutch.co', url:'https://clutch.co/', title:'Industry directory listing', type:'Directory', count:2, cited:false, hard_to_pitch:false},
+              {host:'trustpilot.com', url:'https://www.trustpilot.com/', title:'Trustpilot category page', type:'Review', count:1, cited:false, hard_to_pitch:false},
+              {host:'reddit.com', url:'https://www.reddit.com/', title:'Reddit recommendation thread', type:'Community', count:1, cited:false, hard_to_pitch:false}
+            ] },
           offering_gap: null }
   };
 }
