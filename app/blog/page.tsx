@@ -1,7 +1,8 @@
 import type { Metadata } from "next"
-import { getAllPosts, getAllTags } from "@/lib/content"
+import { getAllPosts } from "@/lib/content"
 import { formatDate } from "@/lib/utils"
 import type { Post } from "@/lib/content"
+import { TOPICS, primaryTopic, topicBySlug, topicCounts } from "@/lib/blog-topics"
 import Link from "next/link"
 import { siteConfig } from "@/lib/config"
 import { JsonLd } from "@/components/seo/json-ld"
@@ -57,7 +58,7 @@ function PostCard({ post }: { post: Post }) {
     >
       <div className="flex items-center justify-between">
         <span className="font-mono text-[10px] font-semibold uppercase tracking-widest text-accent-700">
-          {post.tags[0] ? tagLabel(post.tags[0]) : "Article"}
+          {primaryTopic(post).label}
         </span>
         <span className="font-mono text-[10px] text-gray-400">{post.readingTime} min read</span>
       </div>
@@ -82,7 +83,7 @@ function PostCard({ post }: { post: Post }) {
 export default function BlogIndex({
   searchParams,
 }: {
-  searchParams: Promise<{ tag?: string }>
+  searchParams: Promise<{ tag?: string; topic?: string }>
 }) {
   return <BlogIndexInner searchParams={searchParams} />
 }
@@ -90,13 +91,24 @@ export default function BlogIndex({
 async function BlogIndexInner({
   searchParams,
 }: {
-  searchParams: Promise<{ tag?: string }>
+  searchParams: Promise<{ tag?: string; topic?: string }>
 }) {
   const params = await searchParams
-  const activeTag = params.tag
   const allPosts = getAllPosts()
-  const allTags = getAllTags()
-  const posts = activeTag ? allPosts.filter((p) => p.tags.includes(activeTag)) : allPosts
+  const counts = topicCounts(allPosts)
+
+  // New: curated topic filter (`?topic=`). Legacy: raw tag filter (`?tag=`) is
+  // still honored so existing per-article tag links keep working.
+  const activeTopic = params.topic ? topicBySlug(params.topic) : undefined
+  const legacyTag = !activeTopic && params.tag ? params.tag : undefined
+  const isFiltered = Boolean(activeTopic || legacyTag)
+  const activeLabel = activeTopic?.label ?? (legacyTag ? tagLabel(legacyTag) : undefined)
+
+  const posts = activeTopic
+    ? allPosts.filter((p) => primaryTopic(p).slug === activeTopic.slug)
+    : legacyTag
+      ? allPosts.filter((p) => p.tags.includes(legacyTag))
+      : allPosts
 
   const featured = posts[0]
   const sideList = posts.slice(1, 4)
@@ -108,7 +120,7 @@ async function BlogIndexInner({
       <JsonLd data={breadcrumbsSchema([{ name: "Home", url: "/" }, { name: "Blog", url: "/blog" }])} />
 
       {/* ===== Header band ===== */}
-      <section className="border-b border-gray-100 bg-white px-6 pt-16 pb-10 sm:pt-20">
+      <section className="border-b border-gray-100 bg-white px-6 pt-12 pb-8 sm:pt-14">
         <div className="mx-auto max-w-7xl">
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-accent-700">
             GEO Toolbox · Blog
@@ -126,19 +138,18 @@ async function BlogIndexInner({
             </p>
           </div>
 
-          {allTags.length > 0 && (
-            <div className="mt-9 flex flex-wrap items-center gap-2">
-              <span className="mr-1 font-mono text-[11px] uppercase tracking-widest text-gray-400">
-                Topics
-              </span>
-              <Chip href="/blog" active={!activeTag}>All</Chip>
-              {allTags.map((tag) => (
-                <Chip key={tag} href={`/blog?tag=${tag}`} active={activeTag === tag}>
-                  {tagLabel(tag)}
-                </Chip>
-              ))}
-            </div>
-          )}
+          <div className="mt-7 flex flex-wrap items-center gap-2">
+            <span className="mr-1 font-mono text-[11px] uppercase tracking-widest text-gray-400">
+              Topics
+            </span>
+            <Chip href="/blog" active={!isFiltered}>All</Chip>
+            {TOPICS.map((t) => (
+              <Chip key={t.slug} href={`/blog?topic=${t.slug}`} active={activeTopic?.slug === t.slug}>
+                {t.label}
+                <span className="ml-1.5 font-normal opacity-50">{counts[t.slug]}</span>
+              </Chip>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -150,7 +161,7 @@ async function BlogIndexInner({
               <p className="text-gray-600">
                 No articles tagged{" "}
                 <span className="font-semibold text-gray-900">
-                  {activeTag ? tagLabel(activeTag) : ""}
+                  {activeLabel ?? ""}
                 </span>{" "}
                 yet.
               </p>
@@ -179,11 +190,9 @@ async function BlogIndexInner({
                         <span className="h-1.5 w-1.5 rounded-full bg-accent-400" />
                         Latest
                       </span>
-                      {featured.tags[0] && (
-                        <span className="font-mono text-[11px] uppercase tracking-widest text-gray-400">
-                          {tagLabel(featured.tags[0])}
-                        </span>
-                      )}
+                      <span className="font-mono text-[11px] uppercase tracking-widest text-gray-400">
+                        {primaryTopic(featured).label}
+                      </span>
                     </div>
                     <h2 className="mt-6 max-w-2xl text-[clamp(1.6rem,3vw,2.4rem)] font-bold leading-[1.12] tracking-tight text-white transition-colors group-hover:text-accent-200">
                       {featured.title}
@@ -212,7 +221,7 @@ async function BlogIndexInner({
                         className="group flex flex-1 flex-col justify-center p-6 transition-colors hover:bg-white/[0.04] sm:p-7"
                       >
                         <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-gray-500">
-                          {post.tags[0] && <span className="text-accent-300/90">{tagLabel(post.tags[0])}</span>}
+                          <span className="text-accent-300/90">{primaryTopic(post).label}</span>
                           <span>·</span>
                           <span>{post.readingTime} min</span>
                         </div>
@@ -230,7 +239,7 @@ async function BlogIndexInner({
                 <>
                   <div className="mt-14 mb-6 flex items-center gap-4">
                     <h2 className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-500">
-                      {activeTag ? `${tagLabel(activeTag)} articles` : "More articles"}
+                      {activeLabel ? `${activeLabel} articles` : "More articles"}
                     </h2>
                     <span className="h-px flex-1 bg-gray-200" />
                     <span className="font-mono text-[11px] text-gray-400">{posts.length} total</span>
