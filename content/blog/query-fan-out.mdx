@@ -1,0 +1,189 @@
+---
+title: "What Is Query Fan-Out? How AI Search Turns One Question Into Many"
+description: "Query fan-out is how AI search splits one question into many parallel sub-queries. What Google documents, which engines do it, and what it means for citations."
+date: "2026-06-25"
+author: "Samy BEN SADOK"
+tags: ["query-fan-out", "geo", "ai-search", "ai-mode", "guide"]
+draft: false
+---
+
+Query fan-out is the technique where an AI search engine takes one question, quietly splits it into many related sub-queries, runs them in parallel, and writes a single answer from everything it pulls back. It is the reason you are no longer competing for one keyword. You are competing across a whole neighborhood of questions the engine generates on its own.
+
+The term comes from Google, and the mechanics are better documented than most of the advice written about them. What Google documents and what the industry has inferred are two different things, and most advice blurs the line. This page keeps it sharp.
+
+## What Query Fan-Out Actually Is
+
+**Query fan-out** (sometimes written "query fanout") is one query in, many queries out, one answer back. The engine reads your question, expands it into a set of narrower searches, retrieves results for each, and synthesizes them into a single response with a few citations underneath.
+
+Google uses the term in its own documentation. The [Search Central guidance](https://developers.google.com/search/docs/appearance/ai-features) states that "both AI Overviews and AI Mode may use a 'query fan-out' technique, issuing multiple related searches across subtopics and data sources, to develop a response." Google's own [I/O 2025 write-up](https://blog.google/products-and-platforms/products/search/google-search-ai-mode-update/) describes it the same way: "Under the hood, AI Mode uses our query fan-out technique, breaking down your question into subtopics and issuing a multitude of queries simultaneously on your behalf."
+
+The classic example makes it concrete. Ask for "a 5-day trip to Japan" and the engine does not run that one search. It might fan out into searches like hotels in Tokyo, weather in Kyoto in your travel month, rail pass prices, day trips from Osaka, and a dozen other angles you never typed. Each runs as its own retrieval. The answer you read is stitched together from all of them.
+
+It is a common opening move in AI answers that use live retrieval, and we cover the full pipeline in our breakdown of [how AI search works](https://geotoolbox.ai/blog/how-does-ai-search-work). Where it runs, fan-out is step one: query understanding and expansion, before any page gets retrieved or ranked.
+
+This changes the unit of competition. Traditional search matched your page against one query. Fan-out matches passages from your page against a spread of sub-queries, most of which never appear in any keyword tool. Being the best answer to the headline question is no longer enough if a competitor is the best answer to six of the sub-questions around it.
+
+## "Fan-Out" Already Meant Something Else
+
+The word is overloaded, and the confusion is real. Search "fan-out" without "query" in front of it and most of what you find has nothing to do with AI search.
+
+In software architecture, **fan-out** is a distribution pattern: one event, message, or write is pushed out to many consumers at once. A social feed that copies a new post into thousands of followers' timelines is doing "fan-out on write." In SQL and BI tools, a "fan-out" is what happens when a join repeats parent rows across child rows (Looker even has a `fanout_on` parameter for it). In electronics, fan-out is how many gate inputs a single output can drive. Same word, unrelated worlds.
+
+That overlap is not just trivia. When we pulled the broader content landscape for the bare phrase, the most-cited pages skewed toward electronics and databases, not AI search. The engineering senses still own most of the corpus. The AI-search meaning is the newcomer borrowing an established term, which is exactly why a search for it surfaces distributed-systems documentation first and why this section exists. For the rest of this page, "query fan-out" means the AI-search technique and nothing else.
+
+## How Query Fan-Out Works, Step by Step
+
+Strip away the marketing and fan-out is four moves. The implementations differ across engines, but the shape holds.
+
+1. **Decomposition.** The model reads your question and generates a set of sub-queries: rephrasings, narrower angles, comparisons, and follow-ups you did not type. This is the "fan" part, and it is generative, so the exact sub-queries change from run to run.
+2. **Parallel retrieval.** Each sub-query is fired against an index, matching against [chunked passages](https://geotoolbox.ai/blog/content-chunking) of pages rather than whole documents. Each sub-query returns its own candidate pool, so one prompt produces many overlapping result sets.
+3. **Source evaluation and merging.** The system pools the candidates and ranks them. A page that surfaces across several sub-query result sets gets a cumulative advantage, the kind of cross-query reinforcement that hybrid-search systems implement with techniques like reciprocal rank fusion. A passage that answers one narrow sub-query well still has to beat everything else retrieved for it.
+4. **Synthesis with citation.** The model fills its context window with the surviving passages and writes one grounded answer, attributing a subset as sources.
+
+In the heavier modes, AI Mode's deeper dives and ChatGPT's deep research, this is not a single pass but a loop: the system reads the first round of results and fans out again on what it learned. It is the [retrieval-augmented generation](https://geotoolbox.ai/glossary/retrieval-augmented-generation) pattern with an expansion step bolted onto the front, and it is worth reading [what RAG is](https://geotoolbox.ai/blog/what-is-rag) for how grounding works once the passages are chosen. Two parts of the pipeline decide your fate before the model writes a word: whether the engine generated a sub-query your page can answer, and whether your passage won retrieval for it. That matching leans on semantic similarity, computed with [vector embeddings](https://geotoolbox.ai/blog/vector-embeddings) rather than exact keywords, which is why a passage can be retrieved for a sub-query whose words it never contains. In production this rides on top of Google's full ranking stack, not a standalone vector index.
+
+The practical reframe: fan-out turns one ranking contest into a dozen smaller ones, run in parallel, on questions you cannot see in advance. Coverage of the surrounding territory beats a single perfectly optimized page.
+
+## What Google Documents, and What the Industry Inferred
+
+Most explainers blur a line worth keeping sharp. "Query fan-out" is Google's term for a Google feature. Everything beyond that is observation, not vendor confirmation, and the honest version of this topic says so.
+
+What is documented: Google names the technique for [AI Overviews](https://geotoolbox.ai/blog/google-ai-overviews-seo) and AI Mode, both powered by a custom version of [Gemini](https://geotoolbox.ai/blog/what-is-gemini). Note the hedge in Google's own wording: both features "may use" fan-out, not "always do." Several Google patents describe the underlying machinery. The most on-point, ["Generating query variants using a trained generative model"](https://patents.google.com/patent/US11663201B2/en) (US11663201B2, filed 2018, granted 2023), produces query variants at run time and is widely read as feeding query-refinement features like People Also Search For. A newer filing, ["Search with stateful chat"](https://patents.google.com/patent/US20240289407A1/en) (US20240289407A1), describes generating sub-queries from a user's whole session, not just the latest message.
+
+The caveat the patent crowd often skips: Google has never branded any single one of these as "the query fan-out patent," and it does not call the underlying process "query fan-out" inside the filings. The formal patent term is "query variant generation." Google also routinely notes that a patent does not mean the invention is live in production. So these are plausibly related techniques, not a confirmed blueprint of AI Mode's internals. Treat anyone who shows you "the patent that powers fan-out" with mild suspicion.
+
+What is inferred: every other engine. ChatGPT, Perplexity, Copilot, and Grok all show fan-out-like behavior, decomposing a prompt into several searches, but their makers have mostly not published the term or the architecture. The behavior is observable; the label is borrowed.
+
+<table>
+  <thead>
+    <tr><th>Engine</th><th>Fan-out status</th><th>What's on the record</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Google AI Mode</td><td><strong>Documented</strong></td><td>Google uses the term; powered by a custom Gemini</td></tr>
+    <tr><td>Google AI Overviews</td><td><strong>Documented</strong></td><td>Google says it "may use" fan-out to build the answer</td></tr>
+    <tr><td>Google Gemini (app)</td><td>Observed</td><td>Grounds via Google Search when web search runs; not always labeled "fan-out"</td></tr>
+    <tr><td>ChatGPT (search)</td><td>Observed</td><td>Runs multiple searches per prompt; OpenAI hasn't published the retrieval architecture</td></tr>
+    <tr><td>Perplexity</td><td>Observed</td><td>Multi-query retrieval matches the pattern; not clearly vendor-labeled</td></tr>
+    <tr><td>Copilot / Grok</td><td>Assumed</td><td>Same RAG family; little public documentation</td></tr>
+  </tbody>
+</table>
+
+The engines also differ in how eagerly they fan out. Perplexity, built as an answer engine, searches on nearly every query; ChatGPT and Copilot decide case by case whether a question needs the web at all; Google's AI Mode is the most openly documented, and its deep-research mode can loop into hundreds of searches. Controlled cross-engine comparisons are still thin, so read these as directional. The [engine-by-engine breakdown](https://geotoolbox.ai/blog/how-does-ai-search-work) covers those differences in detail.
+
+The takeaway is not that fan-out is fake everywhere but Google. It is that the mechanism generalizes while the certainty does not, so optimize for the behavior, not for a specific vendor's unpublished recipe.
+
+## The Ways a Query Fans Out
+
+A prompt does not just spawn random rephrasings. The expansion follows recognizable patterns. One useful framework, from [Dan Petrovic's breakdown](https://dejan.ai/blog/googles-query-fan-out-system-a-technical-overview/) of Google's query-variant patent (US11663201B2), groups the expansion into eight types. The labels are a reading of the patent, not an official Google list, but they map the territory well.
+
+<table>
+  <thead>
+    <tr><th>Fan-out type</th><th>What the engine does</th><th>Example from "best CRM for small business"</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Equivalent</strong></td><td>Rephrases your query without changing intent</td><td>"top CRM software for small companies"</td></tr>
+    <tr><td><strong>Follow-up</strong></td><td>Asks the logical next question</td><td>"how much does a small-business CRM cost"</td></tr>
+    <tr><td><strong>Generalization</strong></td><td>Zooms out to the broader topic</td><td>"what is a CRM"</td></tr>
+    <tr><td><strong>Specification</strong></td><td>Zooms in on a narrower facet</td><td>"CRM with email automation under 10 users"</td></tr>
+    <tr><td><strong>Canonicalization</strong></td><td>Maps to the standard form of the question</td><td>"best CRM 2026"</td></tr>
+    <tr><td><strong>Entailment</strong></td><td>Surfaces an implied need you didn't state</td><td>"does Salesforce integrate with Gmail"</td></tr>
+    <tr><td><strong>Clarification</strong></td><td>Resolves an ambiguity in the prompt</td><td>"CRM for B2B vs B2C small business"</td></tr>
+    <tr><td><strong>Translation</strong></td><td>Runs the query in another language to widen the pool</td><td>"mejor CRM para pequeñas empresas"</td></tr>
+  </tbody>
+</table>
+
+You will notice these map onto things SEOs already track: People Also Ask, related searches, and the questions a thorough topic page answers anyway. That is the point. The vocabulary is new, but the underlying move, anticipate the related questions and answer them, is not. What is genuinely new is the scale, the invisibility, and that the engine can loop, searching again based on what the first round returned.
+
+For you, the framework is a coverage checklist, not a tactic. If your page answers the headline query but ignores the obvious follow-up, specification, and entailment questions around it, you are retrievable on one sub-query and absent on the rest.
+
+## How Many Sub-Queries Does One Prompt Trigger?
+
+Nobody outside Google knows the exact number, and the published estimates vary enough that you should hold them loosely. Google itself states no figure. What exists is third-party measurement.
+
+[Seer Interactive's analysis](https://www.seerinteractive.com/insights/gemini-3-query-fan-outs-research) found an average of roughly 10.7 sub-queries per prompt on Gemini 3, up from about 6 on Gemini 2.5, with some prompts reaching 28. That near-doubling across one model generation is the real lesson: the count is model-version-dependent, not a fixed law of fan-out. A separate [study from Nectiv](https://nectivdigital.com/blog/new-research-we-analyzed-60k-google-fan-out-queries) across more than 60,000 fan-out queries found that 59% of prompts triggered 5 to 11 searches and 24% triggered 12 to 19. At the extreme end, [Ahrefs documented](https://ahrefs.com/blog/query-fan-out/) a ChatGPT deep-research task running hundreds of searches for a single request. So the realistic range is "usually several to a couple dozen, occasionally far more," not a clean number anyone can promise.
+
+The more useful finding is what those sub-queries look like as keyword targets: they mostly are not. Multiple analyses report that the vast majority of generated fan-out queries have little or no recurring monthly search volume, which is exactly why [Ahrefs notes](https://ahrefs.com/blog/query-fan-out/) standard keyword tools miss them. They are invented for your prompt, in your context, and may not be generated the same way twice.
+
+So you cannot build a list of "the fan-out queries" the way you would for traditional search. Cyrus Shepard calls the belief that you can the "fan-out myth": run the same prompt ten times and you can get ten different sets. The durable target is the theme, not the string: find the commonalities and cover them well enough that whatever variant the engine invents, your page is a plausible answer.
+
+## What This Means for Getting Cited
+
+Start with what Google says, because it constrains everything else. Its [guidance is blunt](https://developers.google.com/search/docs/appearance/ai-features): "There are no additional requirements to appear in AI Overviews or AI Mode, nor other special optimizations necessary." No special files, no AI-only markup, no fan-out schema. The same fundamentals that win traditional search, crawlable pages, genuinely useful content, sound structure, are the price of entry.
+
+That floor is also your biggest lever. The strongest predictor of getting cited is still ranking well in classic search: in [Cyrus Shepard's fan-out framework](https://signal.zyppy.com/p/fan-out-framework), AirOps data shows a Google #1 result is cited by ChatGPT roughly 43% of the time, far more often than pages outside the top 20. Rank first; fan-out multiplies the visibility you already earned.
+
+Plenty of practitioners push back, framing fan-out as a game you can play harder, sometimes describing it as a raffle where you buy more tickets by ranking for more sub-queries. There is a real insight in that, but it cohabits with a real risk, so here is the defensible read. Three things actually follow from how fan-out works:
+
+**Cover the neighborhood, on one page.** Answer the obvious sub-questions around your main topic (the fan-out types above), in self-contained sections. This is topical coverage, and it is the closest thing to a direct lever fan-out gives you. The [answer-first restructuring playbook](https://geotoolbox.ai/blog/how-to-optimize-for-ai-search) walks through doing it on existing pages.
+
+**Do not spin up a page per sub-query.** This is the trap. Generating a thin page for every fan-out variant is exactly the [scaled content abuse](https://developers.google.com/search/docs/essentials/spam-policies) Google's spam policies target, and it backfires. One thorough page with well-structured sections beats fifty fragments, because retrieval works at the [passage level](https://geotoolbox.ai/blog/content-chunking) anyway. A focused page can win a sub-query; a thin doorway page wins a penalty. Reasonable people split on whether to consolidate into one deep page or keep a tight hub-and-spoke cluster, but both camps agree the unit is a real, useful page, not a doorway per query.
+
+**Write passages that survive being lifted out.** Retrieval pulls a section away from its page and judges it alone, so each one has to make sense on its own and answer a specific question cleanly. That craft, the [per-passage citability work](https://geotoolbox.ai/blog/ai-content-optimization), is what determines whether you win the sub-query retrieval after fan-out puts you in the running.
+
+Does any of this actually move citations? A little, and unpredictably. When [Semrush ran its own test](https://www.semrush.com/blog/query-fan-out-experiment/), broadening four articles to cover fan-out queries, citations rose from two to five. That is a 150% gain and also just three more citations; they peaked at nine, then fell, and the brand's share of voice slipped during the same window. Treat fan-out coverage as a sound bet on a noisy outcome, not a lever with a predictable payout.
+
+In our experience tracking which pages get cited across engines, the winners are rarely the ones stuffed with sub-query variants. They are the ones where a single well-structured section happens to be the cleanest answer to whatever the engine asked. The fan-out does the multiplying; your job is to be genuinely good on the underlying topic, not to out-guess the expansion.
+
+## Can You Actually See the Fan-Out?
+
+Mostly no, and this is where the tools get oversold. A growing set of "fan-out simulators" and "query fan-out generators" promise to show you the sub-queries an engine will run. Read the fine print on what they actually do: they prompt a language model to generate plausible sub-queries using the patterns from Google's patents. That is an educated guess at the expansion, not a readout of the engine's real internal process.
+
+Useful guesses, sometimes. But they are reconstructions, and the gap matters because the real fan-out is generative and, by the patents' design, can be stateful and personalized, varying with context like session or location and changing between runs, so even a good simulator models a moving target. Google's AI Mode exposes some of the sources it drew on; it does not hand you the sub-query list, and ChatGPT and Perplexity expose even less. (The studies earlier could count fan-out queries because Gemini's API grounding returns them as metadata, but that is developer telemetry, not what you see inside consumer AI Mode.) So treat any "we reveal the exact fan-out" pitch with the skepticism it earns, and do not optimize against a simulator's output as if it were ground truth.
+
+The honest move is to measure the outcome instead of the mechanism. You cannot watch the fan-out, but you can watch whether engines cite you, for which prompts, and against which competitors, then see whether that improves after you broaden a page's coverage. Google Search Console now has a dedicated [generative AI performance report](https://developers.google.com/search/blog/2026/06/gen-ai-performance-reports) for your impressions in AI Overviews and AI Mode, but it stops there: no clicks, and no sub-queries. [Bing Webmaster Tools](https://blogs.bing.com/webmaster/February-2026/Introducing-AI-Performance-in-Bing-Webmaster-Tools-Public-Preview) goes a step further and shows the grounding queries behind your citations (grounding queries fact-check an answer rather than expand it, so they are cousins of fan-out queries, not the same thing, but a rare public window). Neither hands you the consumer fan-out list. You can also spot-check by hand, running your priority prompts in each engine and noting who gets cited, but that does not scale, which is why a dedicated [AI visibility tracking](https://geotoolbox.ai/blog/how-to-track-ai-visibility) approach exists. Citations are noisy run to run, so read trends, not single samples.
+
+## Frequently Asked Questions
+
+**Is query fan-out just query expansion with a new name?**
+
+It shares the lineage, but it is more than classic expansion. Search engines have padded queries with synonyms and related terms for years. Fan-out goes further: it issues many independent searches in parallel, sometimes loops to search again based on what it finds, then synthesizes one answer with a language model. The family resemblance is real, but calling it "just" query expansion erases the agentic, multi-search loop that makes it new.
+
+**Does ChatGPT use query fan-out?**
+
+It behaves like it does. ChatGPT with search routinely fires several searches for one prompt and writes a combined answer. But "query fan-out" is Google's term for Google's feature, and OpenAI has not published ChatGPT's retrieval architecture or adopted the phrase. So the accurate statement is that ChatGPT shows fan-out-like behavior, not that it is confirmed to run "query fan-out."
+
+**Can I optimize for the specific sub-queries an engine will generate?**
+
+No, and tools that promise this are guessing. The sub-queries are generated per prompt, shift between runs, and most have no standing search volume, so there is no fixed list to target. What you can do is cover the theme thoroughly enough that whatever variant the engine invents, your page answers it.
+
+**Is this the same as "fan-out" in coding or SQL?**
+
+No. In software and databases, fan-out means distributing one message or write to many consumers, or a join that multiplies rows. Query fan-out in AI search is unrelated despite the shared word. If a search for the term returns distributed-systems or BigQuery documentation, you have wandered into the other meaning.
+
+**How do I measure my query fan-out coverage?**
+
+Indirectly, by measuring citations rather than the hidden sub-queries. Track which prompts cite your pages across engines, which competitors win the ones you lose, and whether broadening a page's coverage moves those results over time. Search Console now shows your AI Overview and AI Mode impressions but not the fan-out queries themselves, so for cross-engine coverage a dedicated AI-visibility tool is the practical route.
+
+**Does query fan-out mean SEO is dead?**
+
+No. Fan-out multiplies the number of sub-queries you can be retrieved for, but each one still runs against an index your page has to be in, ranked by signals that look a lot like classic SEO. Google is explicit that no special optimization is required, only the usual foundations done well. Fan-out raises the ceiling on how visible you can be; it does not remove the floor.
+
+## Where This Leaves You
+
+Query fan-out is the strongest argument yet for an old idea: cover a topic completely, in clean, self-contained sections, on pages a crawler can actually read. The engine multiplies one question into many. You cannot see the expansion, predict the exact sub-queries, or game the simulators that claim to reveal them. What you can do is be the page that answers the neighborhood of questions well enough to get retrieved no matter which way the prompt fans out.
+
+And then check whether it worked. geotoolbox's [Content Analyzer](https://geotoolbox.ai/features/content-analyzer) grades a page's citability and shows which engines actually cite it, so you can see whether broader coverage is winning more of the fan-out instead of guessing at sub-queries you will never observe. It cannot tell you exactly why an engine picked a competitor over you, but it measures the thing you actually care about. Watch the trend, since the mechanism is built to stay hidden.
+
+## Sources
+
+- [Google Search Central: AI features and your website](https://developers.google.com/search/docs/appearance/ai-features)
+- [Google: AI Mode in Google Search, I/O 2025 update](https://blog.google/products-and-platforms/products/search/google-search-ai-mode-update/)
+- [Google Patents: Generating query variants using a trained generative model (US11663201B2)](https://patents.google.com/patent/US11663201B2/en)
+- [Google Patents: Search with stateful chat (US20240289407A1)](https://patents.google.com/patent/US20240289407A1/en)
+- [Dan Petrovic (dejan.ai): Google's Query Fan-Out System, A Technical Overview](https://dejan.ai/blog/googles-query-fan-out-system-a-technical-overview/)
+- [Semrush: We Tested Query Fan-Out Optimization](https://www.semrush.com/blog/query-fan-out-experiment/)
+- [Cyrus Shepard (Zyppy Signal): Fan-out Framework, 5 Steps to Improve SEO and AI Visibility](https://signal.zyppy.com/p/fan-out-framework)
+- [Google Search Central: Generative AI performance reports in Search Console](https://developers.google.com/search/blog/2026/06/gen-ai-performance-reports)
+- [Bing Webmaster Tools: Introducing AI Performance (grounding queries)](https://blogs.bing.com/webmaster/February-2026/Introducing-AI-Performance-in-Bing-Webmaster-Tools-Public-Preview)
+- [Seer Interactive: Gemini query fan-out research](https://www.seerinteractive.com/insights/gemini-3-query-fan-outs-research)
+- [Nectiv: What we learned analyzing 60K+ Google fan-out queries](https://nectivdigital.com/blog/new-research-we-analyzed-60k-google-fan-out-queries)
+- [Ahrefs: What is query fan-out?](https://ahrefs.com/blog/query-fan-out/)
+- [Google: Spam policies for Google web search](https://developers.google.com/search/docs/essentials/spam-policies)
+
+
+
+
+
+
+
+

@@ -35,7 +35,7 @@ export const TOPICS: Topic[] = [
     tags: [
       "transformer", "tokens", "tokenization", "vector-embeddings", "rag",
       "temperature", "ai-temperature", "llm-temperature", "sampling",
-      "constitutional-ai", "content-chunking",
+      "constitutional-ai", "content-chunking", "query-fan-out", "ai-mode",
       "how-does-chatgpt-work", "how-does-claude-work",
     ],
   },
