@@ -53,7 +53,7 @@ export const TOPICS: Topic[] = [
     label: "Tools & Tracking",
     tags: [
       "tools", "measurement", "metrics", "rank-tracking", "audit",
-      "share-of-voice", "ai-citation", "ai-overviews", "pricing",
+      "share-of-voice", "ai-citation", "ai-overviews", "pricing", "review",
     ],
   },
   {
