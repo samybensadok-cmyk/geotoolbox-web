@@ -71,6 +71,9 @@ body{
 }
 .gak-input::placeholder{color:var(--gak-faint)}
 .gak-input:focus{border-color:var(--gak-orange);box-shadow:0 0 0 4px rgba(255,88,0,.14)}
+select.gak-input{appearance:none;-webkit-appearance:none;-moz-appearance:none;cursor:pointer;padding-right:44px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' fill='none' stroke='%230C1A2E' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 18px center;background-size:12px}
 .gak-btn{
   height:54px;padding:0 30px;font-size:16px;font-weight:700;font-family:inherit;color:var(--gak-navy);cursor:pointer;letter-spacing:-.01em;
   background:var(--gak-orange);border:none;border-radius:12px;box-shadow:0 1px 1px rgba(16,32,54,.1),0 6px 16px -8px rgba(255,88,0,.5);
@@ -331,8 +334,18 @@ body{
     <form class="gak-form" id="gak-form2" autocomplete="off" style="margin-top:0">
       <div class="gak-field"><input class="gak-input" id="gak-brand" type="text" placeholder="Brand name (optional)" aria-label="Brand name" maxlength="80"></div>
       <div class="gak-field"><input class="gak-input" id="gak-industry" type="text" placeholder="Industry, e.g. mobility aids (optional)" aria-label="Industry" maxlength="80"></div>
+      <div class="gak-field"><select class="gak-input" id="gak-country" aria-label="Target market">
+        <option value="">Market: auto-detect</option>
+        <option value="United Kingdom">United Kingdom</option>
+        <option value="United States">United States</option>
+        <option value="Canada">Canada</option>
+        <option value="Australia">Australia</option>
+        <option value="Ireland">Ireland</option>
+        <option value="New Zealand">New Zealand</option>
+        <option value="Global">Global (no country)</option>
+      </select></div>
     </form>
-    <div class="gak-note">No signup to see your score · adding your brand &amp; industry sharpens the AI-visibility check</div>
+    <div class="gak-note">No signup to see your score · adding your brand, industry &amp; market sharpens the AI-visibility check</div>
     <div class="gak-err" id="gak-err" role="alert"></div>
   </section>
 
@@ -935,7 +948,7 @@ async function unlock(){
   frameHeight();
   const myDomain = CTX.domain;   // bail if the user restarts / re-checks while this scan is in flight
   try{
-    const v = await fetchReal(CTX.domain, {brand:CTX.brand, industry:CTX.industry, email:CTX.email, only:'visibility'});
+    const v = await fetchReal(CTX.domain, {brand:CTX.brand, industry:CTX.industry, country:CTX.country, email:CTX.email, only:'visibility'});
     if(CTX.domain !== myDomain || !LAST) return;   // moved on -> don't write a stale scan into the new report
     if(v && v.visibility){ LAST.visibility=v.visibility; renderGated(v.visibility); }
     else { hide('gak-visibility'); }
@@ -949,6 +962,7 @@ function gakApiUrl(domain, opts){
   let u = `${GAK_CONFIG.API_BASE}/?action=${GAK_CONFIG.API_ACTION}&url=${encodeURIComponent(domain)}&engines=${GAK_CONFIG.ENGINES.join(',')}`;
   if(opts.brand)    u += `&brand=${encodeURIComponent(opts.brand)}`;
   if(opts.industry) u += `&industry=${encodeURIComponent(opts.industry)}`;
+  if(opts.country)  u += `&country=${encodeURIComponent(opts.country)}`;   // market for prompt wording + DataForSEO/SerpAPI geo
   if(opts.email)    u += `&email=${encodeURIComponent(opts.email)}`;   // backend requires a valid email for the visibility scan
   if(opts.only)     u += `&only=${encodeURIComponent(opts.only)}`;
   return u;
@@ -1054,7 +1068,7 @@ function demoData(domain, brandIn, industry){
 }
 
 /* ---------- flow ---------- */
-let LAST=null, CTX={domain:'',brand:'',industry:''};
+let LAST=null, CTX={domain:'',brand:'',industry:'',country:''};
 $('gak-form').addEventListener('submit', async (e)=>{
   e.preventDefault();
   $('gak-err').textContent='';
@@ -1062,7 +1076,8 @@ $('gak-form').addEventListener('submit', async (e)=>{
   if(!domain){ $('gak-err').textContent='Please enter a valid website, e.g. yourcompany.com'; return; }
   const brand = ($('gak-brand').value||'').trim().slice(0,80);
   const industry = ($('gak-industry').value||'').trim().slice(0,80);
-  CTX = {domain, brand, industry};
+  const country = (($('gak-country')||{}).value||'').trim().slice(0,40);
+  CTX = {domain, brand, industry, country};
   $('gak-go').disabled=true;
   stage('loading'); runSteps();
   const started=Date.now();
@@ -1076,13 +1091,13 @@ $('gak-form').addEventListener('submit', async (e)=>{
     } else {
       // LIVE: render the report FAST (only=fast — no paid call), then lazy-fill the Lost-Deal hero
       // (only=lostdeal) so a slow/failed Perplexity never blocks or discards the readiness+crawler report.
-      const report = await fetchReal(domain, {brand, industry, only:'fast'});
+      const report = await fetchReal(domain, {brand, industry, country, only:'fast'});
       // guard: a malformed / error-at-200 body (no readiness) must hit the catch, never render a fake 0/100 "At risk" scorecard
       if(!report || !report.readiness || typeof report.readiness.score!=='number') throw new Error('api_empty');
       LAST=report;
       if(!report.visibility) $('gak-visibility').dataset.empty='1';
       clearInterval(stepTimer); render(report); $('gak-go').disabled=false;
-      lazyFillLostDeal(domain, {brand, industry});
+      lazyFillLostDeal(domain, {brand, industry, country});
     }
   }catch(err){
     clearInterval(stepTimer); $('gak-go').disabled=false; stage('input');
@@ -1097,7 +1112,7 @@ async function lazyFillLostDeal(domain, opts){
   el.innerHTML = `<span class="gak-ld-badge lose" style="background:rgba(100,117,118,.12);color:var(--gak-muted)">Asking Perplexity…</span><p class="gak-ld-q">Fetching the live AI answer for your category…</p>`;
   el.classList.remove('gak-hide'); frameHeight();
   try{
-    const r = await fetchReal(domain, {brand:opts.brand, industry:opts.industry, only:'lostdeal'});
+    const r = await fetchReal(domain, {brand:opts.brand, industry:opts.industry, country:opts.country, only:'lostdeal'});
     if(CTX.domain !== myDomain || !LAST) return;   // moved on -> don't write onto a different report
     if(r && r.lost_deal){
       LAST.lost_deal = r.lost_deal;
@@ -1132,7 +1147,7 @@ $('gak-gate-form').addEventListener('submit', async (e)=>{
   await unlock();
 });
 
-$('gak-restart').addEventListener('click', ()=>{ ['gak-url','gak-brand','gak-industry','gak-email'].forEach(id=>{const e=$(id); if(e) e.value='';}); const ge=$('gak-gate-err'); if(ge) ge.textContent=''; LAST=null; CTX={domain:'',brand:'',industry:''}; const go=$('gak-go'); if(go) go.disabled=false; show('gak-gate'); ['gak-full-checks','gak-visibility','gak-competitors','gak-sources','gak-offering','gak-fixlist','gak-final','gak-sample-note','gak-matrix-card','gak-teasers','gak-lostdeal','gak-booking'].forEach(hide); ['gak-matrix-body','gak-teasers','gak-lostdeal','gak-prompts','gak-vis-summary'].forEach(id=>{const e=$(id); if(e) e.innerHTML='';}); stage('input'); });
+$('gak-restart').addEventListener('click', ()=>{ ['gak-url','gak-brand','gak-industry','gak-country','gak-email'].forEach(id=>{const e=$(id); if(e) e.value='';}); const ge=$('gak-gate-err'); if(ge) ge.textContent=''; LAST=null; CTX={domain:'',brand:'',industry:'',country:''}; const go=$('gak-go'); if(go) go.disabled=false; show('gak-gate'); ['gak-full-checks','gak-visibility','gak-competitors','gak-sources','gak-offering','gak-fixlist','gak-final','gak-sample-note','gak-matrix-card','gak-teasers','gak-lostdeal','gak-booking'].forEach(hide); ['gak-matrix-body','gak-teasers','gak-lostdeal','gak-prompts','gak-vis-summary'].forEach(id=>{const e=$(id); if(e) e.innerHTML='';}); stage('input'); });
 
 frameHeight();
 </script>
