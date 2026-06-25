@@ -1111,16 +1111,25 @@ async function lazyFillLostDeal(domain, opts){
   el.className='gak-lostdeal';
   el.innerHTML = `<span class="gak-ld-badge lose" style="background:rgba(100,117,118,.12);color:var(--gak-muted)">Asking Perplexity…</span><p class="gak-ld-q">Fetching the live AI answer for your category…</p>`;
   el.classList.remove('gak-hide'); frameHeight();
-  try{
-    const r = await fetchReal(domain, {brand:opts.brand, industry:opts.industry, country:opts.country, only:'lostdeal'});
-    if(CTX.domain !== myDomain || !LAST) return;   // moved on -> don't write onto a different report
-    if(r && r.lost_deal){
-      LAST.lost_deal = r.lost_deal;
-      renderLostDeal(r.lost_deal);
-      fillPerplexityResult(r.lost_deal);
-      addCompetitorTeaser(r.lost_deal);
-    } else { el.className='gak-lostdeal gak-hide'; el.innerHTML=''; }   // capped/failed -> hide (never fake a result)
-  }catch(e){ if(CTX.domain===myDomain){ el.className='gak-lostdeal gak-hide'; el.innerHTML=''; } }
+  // QA 2026-06-25: RETRY once before hiding. A single transient failure (cold Autoscale instance right after a
+  // deploy, a slow/timed-out Perplexity call, a network blip) used to hide the hero permanently for the whole
+  // session (unlock doesn't re-fetch it) -> "loading then vanished". A 2nd attempt hits a now-warm instance (~5s).
+  let r = null;
+  for(let attempt=0; attempt<2; attempt++){
+    try{
+      r = await fetchReal(domain, {brand:opts.brand, industry:opts.industry, country:opts.country, only:'lostdeal'});
+      if(CTX.domain !== myDomain || !LAST) return;   // user moved on -> never write onto a different report
+      if(r && r.lost_deal) break;                    // got it -> stop retrying
+    }catch(e){ r = null; if(CTX.domain !== myDomain || !LAST) return; }
+    if(attempt===0){ el.querySelector('.gak-ld-q') && (el.querySelector('.gak-ld-q').textContent='Fetching the live AI answer for your category…'); await new Promise(res=>setTimeout(res, 1200)); }  // brief pause, then one retry
+  }
+  if(CTX.domain !== myDomain || !LAST) return;
+  if(r && r.lost_deal){
+    LAST.lost_deal = r.lost_deal;
+    renderLostDeal(r.lost_deal);
+    fillPerplexityResult(r.lost_deal);
+    addCompetitorTeaser(r.lost_deal);
+  } else { el.className='gak-lostdeal gak-hide'; el.innerHTML=''; }   // both attempts failed/capped -> hide cleanly (never fake a result)
   if(CTX.domain===myDomain) frameHeight();
 }
 function fillPerplexityResult(ld){
