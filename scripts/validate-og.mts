@@ -4,9 +4,9 @@
  */
 import { ImageResponse } from "next/og"
 import fs from "node:fs"
-import * as contentNs from "../lib/content.ts"
-import * as cardNs from "../lib/og/blog-card.tsx"
-import * as fontsNs from "../lib/og/og-fonts.ts"
+import * as contentNs from "../lib/content"
+import * as cardNs from "../lib/og/blog-card"
+import * as fontsNs from "../lib/og/og-fonts"
 
 // Under tsx the .ts/.tsx libs compile to CJS, so unwrap `.default`. The real
 // Next build imports these as ESM named exports (the route works as written).
