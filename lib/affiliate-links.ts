@@ -44,15 +44,16 @@ export type AffiliateLink = {
 // each account is approved, then remove `pending`. Homepages are the safe fallback.
 export const AFFILIATE_LINKS: Record<string, AffiliateLink> = {
   // --- C1 · Content optimization / AI writing ------------------------------
-  surfer: { url: "https://surferseo.com/", program: "Surfer SEO", cluster: "c1-content", pending: true },
+  surfer: { url: "https://get.surferseo.com/geotoolbox", program: "Surfer SEO", cluster: "c1-content" },
+  "surfer-editor": { url: "https://get.surferseo.com/geotoolbox2", program: "Surfer SEO (Content Editor)", cluster: "c1-content" },
   frase: { url: "https://www.frase.io/", program: "Frase", cluster: "c1-content", pending: true },
   scalenut: { url: "https://www.scalenut.com/", program: "Scalenut", cluster: "c1-content", pending: true },
-  neuronwriter: { url: "https://neuronwriter.com/", program: "NeuronWriter", cluster: "c1-content", pending: true },
+  neuronwriter: { url: "https://app.neuronwriter.com/ar/ce76bd1e456723f7e0ddca82479539ab", program: "NeuronWriter", cluster: "c1-content" },
   copyai: { url: "https://www.copy.ai/", program: "Copy.ai", cluster: "c1-content", pending: true },
   writesonic: { url: "https://writesonic.com/", program: "Writesonic", cluster: "c1-content", pending: true },
 
   // --- C2 · Link building / digital PR / outreach --------------------------
-  collaborator: { url: "https://collaborator.pro/", program: "Collaborator.pro", cluster: "c2-linkbuilding", pending: true },
+  collaborator: { url: "https://collaborator.pro/signup?ref=VJPwz8", program: "Collaborator.pro", cluster: "c2-linkbuilding" },
   snov: { url: "https://snov.io/", program: "Snov.io", cluster: "c2-linkbuilding", pending: true },
   hunter: { url: "https://hunter.io/", program: "Hunter.io", cluster: "c2-linkbuilding", pending: true },
   instantly: { url: "https://instantly.ai/", program: "Instantly.ai", cluster: "c2-linkbuilding", pending: true },
