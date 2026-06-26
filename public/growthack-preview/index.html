@@ -480,13 +480,75 @@ select.gak-input{appearance:none;-webkit-appearance:none;-moz-appearance:none;cu
 #gak-pdf-root .pdf-foot{position:absolute;left:52px;right:52px;bottom:22px;display:flex;justify-content:space-between;font:600 10px/1 var(--gak-mono);color:#93a0af;border-top:1px solid #e9ebf0;padding-top:12px}
 
 /* ---------- print fallback (window.print() when html2pdf can't load) ---------- */
+/* ===== Suso-style score hero + breakdown grid (GrowthAck brand) ===== */
+/* free-first ordering: SCORE hero on top (Kevin: "score comes up straight away"), free teasers collapsed below,
+   email gate next, everything gated (incl. AI-crawler) below the gate. */
+#gak-sample-note{order:-5}
+#gak-hero{order:-4}
+#gak-free-extra{order:-3}
+#gak-gate{order:-2}
+.gak-scorehero{background:var(--gak-card);border:1px solid var(--gak-line);border-radius:var(--gak-r-lg);box-shadow:var(--gak-shadow-lift);padding:30px 30px 32px;display:grid;grid-template-columns:minmax(220px,300px) 1fr;gap:34px;align-items:start;animation:gak-rise .45s cubic-bezier(.2,.7,.3,1) both}
+@media(max-width:680px){.gak-scorehero{grid-template-columns:1fr;gap:24px;padding:24px 20px 26px}}
+.gak-hero-h{font-size:20px;font-weight:800;color:var(--gak-navy);letter-spacing:-.025em;margin:0 0 18px}
+.gak-hero-l{display:flex;flex-direction:column;align-items:center;text-align:center}
+.gak-hero-l .gak-gauge{width:170px;height:170px;margin:2px 0 4px}
+.gak-hero-l .gak-gauge .num{font-size:50px}
+.gak-hero-pill{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:800;letter-spacing:.01em;padding:7px 16px;border-radius:999px;margin:14px 0 12px}
+.gak-hero-pill.b-strong,.gak-hero-pill.b-good{background:var(--gak-ok-bg);color:var(--gak-ok)}
+.gak-hero-pill.b-fair{background:var(--gak-warn-bg);color:var(--gak-warn)}
+.gak-hero-pill.b-weak,.gak-hero-pill.b-no-data{background:var(--gak-bad-bg);color:var(--gak-bad)}
+.gak-hero-verdict{font-size:14px;line-height:1.55;color:var(--gak-muted);margin:0;max-width:34ch}
+.gak-hero-cov{font-size:12px;line-height:1.5;color:var(--gak-faint);margin:10px 0 0}
+.gak-hero-r{position:relative}
+.gak-hero-lead{font-size:13.5px;line-height:1.55;color:var(--gak-muted);margin:0 0 16px}
+.gak-hero-lead b{color:var(--gak-navy)}
+.gak-bd-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}
+@media(max-width:560px){.gak-bd-grid{grid-template-columns:repeat(2,1fr)}}
+.gak-bd{border-radius:var(--gak-r);padding:14px 14px 15px;border:1px solid transparent;text-align:left;background:var(--gak-inset);border-color:var(--gak-line)}   /* informational cards — no cursor:pointer (codex: not interactive) */
+.gak-bd.b-strong,.gak-bd.b-good{background:var(--gak-ok-bg);border-color:var(--gak-ok-line)}
+.gak-bd.b-fair{background:var(--gak-warn-bg);border-color:var(--gak-warn-line)}
+.gak-bd.b-weak{background:var(--gak-bad-bg);border-color:var(--gak-bad-line)}
+.gak-bd.b-no-data{background:var(--gak-inset);border-color:var(--gak-line)}
+.gak-bd-lbl{font:700 10.5px/1.25 var(--gak-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--gak-faint)}
+.gak-bd-num{font:800 24px/1 var(--gak-mono);color:var(--gak-navy);margin:9px 0 6px;letter-spacing:-.02em}
+.gak-bd-num .den{font-size:13px;color:var(--gak-faint);font-weight:600}
+.gak-bd-tag{font-size:11.5px;font-weight:600;color:var(--gak-muted)}
+/* locked breakdown (free state): blur the grid + lock overlay */
+.gak-bd-wrap{position:relative}
+.gak-bd-wrap.locked .gak-bd-grid{filter:blur(5px);opacity:.55;pointer-events:none;user-select:none}
+.gak-bd-overlay{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6px;padding:16px}
+.gak-bd-wrap.locked .gak-bd-overlay{display:flex}
+.gak-bd-overlay .lk{width:26px;height:26px;background:var(--gak-navy);-webkit-mask:var(--gak-lock) center/18px no-repeat;mask:var(--gak-lock) center/18px no-repeat}
+.gak-bd-overlay .t{font-size:13.5px;font-weight:700;color:var(--gak-navy)}
+.gak-bd-overlay .s{font-size:12px;color:var(--gak-muted);max-width:30ch}
+/* single accessibility (crawler) score card */
+.gak-acc{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.gak-acc-num{font:800 38px/1 var(--gak-mono);letter-spacing:-.02em}
+.gak-acc-num.b-strong,.gak-acc-num.b-good{color:var(--gak-ok)} .gak-acc-num.b-fair{color:var(--gak-warn)} .gak-acc-num.b-weak{color:var(--gak-bad)}
+.gak-acc-meta .t{font-weight:700;color:var(--gak-navy);font-size:15px} .gak-acc-meta .s{font-size:13px;color:var(--gak-muted);margin-top:3px}
+/* collapsible deep-dive sections (Suso "Expand analysis") */
+details.gak-collapse{background:var(--gak-card);border:1px solid var(--gak-line);border-radius:var(--gak-radius);box-shadow:var(--gak-shadow);overflow:hidden;animation:gak-rise .45s cubic-bezier(.2,.7,.3,1) both}
+details.gak-collapse>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 22px;font-size:14px;font-weight:700;color:var(--gak-navy);letter-spacing:-.01em}
+details.gak-collapse>summary::-webkit-details-marker{display:none}
+details.gak-collapse>summary .gak-cl-chev{font-size:13px;color:var(--gak-faint);font-weight:600;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+details.gak-collapse>summary .gak-cl-chev::after{content:'▾';transition:transform .2s}
+details.gak-collapse[open]>summary .gak-cl-chev::after{transform:rotate(180deg)}
+details.gak-collapse>summary .gak-cl-mini{margin-left:auto;font:700 12px/1 var(--gak-mono);color:var(--gak-faint)}
+details.gak-collapse .gak-cl-body{padding:0 22px 22px}
+@media print{details.gak-collapse{border:1px solid #d9dde4}details.gak-collapse>summary .gak-cl-chev{display:none}details.gak-collapse .gak-cl-body{display:block!important}}
 @media print{
-  #gak-pdf-root{display:none!important}
+  /* PDF-blank backup: when the Download button falls back to window.print() (html2pdf unavailable), print ONLY the
+     formatted 8-page #gak-pdf-root (built just before), not the live widget. body.gak-printing is toggled in downloadPdf. */
+  body.gak-printing #gak-app{display:none!important}
+  body.gak-printing #gak-pdf-root{display:block!important;position:static!important;left:0!important;top:0!important;z-index:auto!important;width:100%!important}
+  body.gak-printing #gak-pdf-root .pdf-page{break-after:page;page-break-after:always;break-inside:avoid}
+  /* manual Ctrl+P (no gak-printing class): print the live report, hide chrome + the off-screen pdf-root */
+  body:not(.gak-printing) #gak-pdf-root{display:none!important}
   #gak-stage-input,#gak-stage-loading,#gak-gate,#gak-booking,#gak-final,#gak-pdf-btn,.gak-foot,
   #gak-teasers,#gak-matrix-card .gak-matrix-note{display:none!important}
   html,body{background:#fff!important}
   .gak-wrap{max-width:none;padding:0}
-  .gak-card,.gak-lostdeal{box-shadow:none!important;border:1px solid #d9dde4!important;break-inside:avoid;page-break-inside:avoid;animation:none!important}
+  .gak-card,.gak-lostdeal,.gak-scorehero{box-shadow:none!important;border:1px solid #d9dde4!important;break-inside:avoid;page-break-inside:avoid;animation:none!important}
   .gak-results{gap:12px}
   .gak-gauge svg{transform:rotate(-90deg)!important}
   a[href]{color:#0c1a2e!important;text-decoration:none}
@@ -527,7 +589,7 @@ select.gak-input{appearance:none;-webkit-appearance:none;-moz-appearance:none;cu
     </form>
     <form class="gak-form" id="gak-form2" autocomplete="off" style="margin-top:0">
       <div class="gak-field"><input class="gak-input" id="gak-brand" type="text" placeholder="Brand name (optional, if different)" aria-label="Brand name" maxlength="80"></div>
-      <div class="gak-field"><input class="gak-input" id="gak-industry" type="text" placeholder="Industry, e.g. mobility aids (optional)" aria-label="Industry" maxlength="80"></div>
+      <div class="gak-field"><input class="gak-input" id="gak-industry" type="text" placeholder="Industry (optional) — sharpens the check" aria-label="Industry" maxlength="80"></div>
       <div class="gak-field"><select class="gak-input" id="gak-country" aria-label="Target market">
         <option value="">Market: auto-detect</option>
         <option value="United Kingdom">United Kingdom</option>
@@ -565,87 +627,90 @@ select.gak-input{appearance:none;-webkit-appearance:none;-moz-appearance:none;cu
       <!-- Sample-data notice (DEMO synthetic domains only) -->
       <div class="gak-sample-note gak-hide" id="gak-sample-note">These figures are <b>sample data</b> for preview — run the live tool, or try a pilot domain, for real results.</div>
 
-      <!-- Lost-Deal Quote (FREE hero — the bait) -->
-      <div class="gak-lostdeal gak-hide" id="gak-lostdeal"></div>
-
-      <!-- Reach / Read / Result matrix (FREE; Result column locked) -->
-      <div class="gak-card gak-hide" id="gak-matrix-card">
-        <div class="gak-card-h"><span class="dot"></span> Can AI reach, read &amp; recommend you?</div>
-        <table class="gak-matrix"><thead><tr>
-          <th>AI engine</th><th>Reach</th><th>Read</th><th>Recommends you</th>
-        </tr></thead><tbody id="gak-matrix-body"></tbody></table>
-        <div class="gak-matrix-note" id="gak-matrix-note">Reach = can its crawler access your site · Read = is your site machine-readable · Recommends = does it name you in buying answers</div>
-      </div>
-
-      <!-- Teaser counts (FREE) -->
-      <div class="gak-teasers gak-hide" id="gak-teasers"></div>
-
-      <!-- Headline score (composite AI Visibility Score when score present; AI Readiness preview as fallback) -->
-      <div class="gak-card">
-        <div class="gak-card-h" id="gak-score-h"><span class="dot"></span> <span class="gak-score-h-txt" id="gak-score-h-txt">AI Readiness Score</span></div>
-        <div class="gak-score">
+      <!-- SCORE HERO (Suso-style): gauge + verdict (left) · breakdown grid (right; locked until email) -->
+      <div class="gak-scorehero" id="gak-hero">
+        <div class="gak-hero-l">
+          <h2 class="gak-hero-h" id="gak-score-h-txt">Your AI Readiness Score</h2>
           <div class="gak-gauge">
-            <svg width="148" height="148" viewBox="0 0 148 148">
+            <svg width="170" height="170" viewBox="0 0 148 148">
               <circle cx="74" cy="74" r="64" fill="none" stroke="#eef0f2" stroke-width="14"></circle>
               <circle id="gak-arc" cx="74" cy="74" r="64" fill="none" stroke="var(--gak-orange)" stroke-width="14" stroke-linecap="round" stroke-dasharray="402" stroke-dashoffset="402"></circle>
             </svg>
             <div class="val"><span class="num" id="gak-score-num">0</span><span class="den">/ 100</span></div>
           </div>
-          <div class="gak-score-txt">
-            <span class="gak-grade" id="gak-grade">—</span>
-            <p class="gak-verdict" id="gak-verdict"></p>
-            <p class="gak-score-cov gak-hide" id="gak-score-cov"></p>
+          <span class="gak-hero-pill" id="gak-grade">—</span>
+          <p class="gak-hero-verdict" id="gak-verdict"></p>
+          <p class="gak-hero-cov gak-hide" id="gak-score-cov"></p>
+        </div>
+        <div class="gak-hero-r">
+          <h2 class="gak-hero-h">Score Breakdown</h2>
+          <p class="gak-hero-lead" id="gak-bd-lead">Your AI Visibility Score is built from <b>6 components</b> of how AI engines find, read &amp; recommend you. Unlock your full report to see each one.</p>
+          <div class="gak-bd-wrap locked" id="gak-bd-wrap">
+            <div class="gak-bd-grid" id="gak-bd-grid"></div>
+            <div class="gak-bd-overlay"><span class="lk"></span><span class="t">Your 6-part breakdown is ready</span><span class="s">Enter your email below to unlock your full AI Visibility Score &amp; breakdown.</span></div>
           </div>
         </div>
       </div>
 
+      <!-- FREE supporting detail — collapsed so the SCORE is the hero (Kevin: "make them clickable, hidden first") -->
+      <details class="gak-collapse gak-hide" id="gak-free-extra">
+        <summary>See what AI answers about you today <span class="gak-cl-chev">View</span></summary>
+        <div class="gak-cl-body" style="display:flex;flex-direction:column;gap:14px">
+          <!-- Lost-Deal Quote (FREE hero — the bait) -->
+          <div class="gak-lostdeal gak-hide" id="gak-lostdeal"></div>
+          <!-- Reach / Read / Result matrix (FREE; Result column locked) -->
+          <div class="gak-card gak-hide" id="gak-matrix-card" style="box-shadow:none;border-color:var(--gak-line)">
+            <div class="gak-card-h"><span class="dot"></span> Can AI reach, read &amp; recommend you?</div>
+            <table class="gak-matrix"><thead><tr>
+              <th>AI engine</th><th>Reach</th><th>Read</th><th>Recommends you</th>
+            </tr></thead><tbody id="gak-matrix-body"></tbody></table>
+            <div class="gak-matrix-note" id="gak-matrix-note">Reach = can its crawler access your site · Read = is your site machine-readable · Recommends = does it name you in buying answers</div>
+          </div>
+          <!-- Teaser counts (FREE) -->
+          <div class="gak-teasers gak-hide" id="gak-teasers"></div>
+        </div>
+      </details>
+
       <!-- BRIEF: Executive Summary -->
-      <div class="gak-card gak-hide" id="gak-exec">
-        <div class="gak-card-h"><span class="dot"></span> Executive Summary</div>
-        <p class="gak-verdict" id="gak-exec-body" style="font-size:15px"></p>
-      </div>
+      <!-- GATED deep-dives — Suso-style collapsibles (Brand Performance removed; the hero grid is the breakdown) -->
+      <details class="gak-collapse gak-hide" id="gak-exec">
+        <summary>Executive Summary <span class="gak-cl-chev">Read</span></summary>
+        <div class="gak-cl-body"><p class="gak-verdict" id="gak-exec-body" style="font-size:15px;margin:0"></p></div>
+      </details>
 
-      <!-- BRIEF: Scoring Framework (weighted categories) -->
-      <div class="gak-card gak-hide" id="gak-framework">
-        <div class="gak-card-h"><span class="dot"></span> Scoring Framework</div>
-        <div id="gak-framework-body"></div>
-      </div>
+      <details class="gak-collapse gak-hide" id="gak-framework">
+        <summary>Scoring Framework <span class="gak-cl-chev">Expand analysis</span></summary>
+        <div class="gak-cl-body"><div id="gak-framework-body"></div></div>
+      </details>
 
-      <!-- BRIEF: Brand Performance (sub-score band chips) -->
-      <div class="gak-card gak-hide" id="gak-brandperf">
-        <div class="gak-card-h"><span class="dot"></span> Brand Performance</div>
-        <div id="gak-brandperf-body" class="gak-bp-grid"></div>
-      </div>
+      <details class="gak-collapse gak-hide" id="gak-sw">
+        <summary>Strengths &amp; Weaknesses <span class="gak-cl-chev">Expand analysis</span></summary>
+        <div class="gak-cl-body"><div id="gak-sw-body" class="gak-sw-grid"></div></div>
+      </details>
 
-      <!-- BRIEF: Strengths & Weaknesses -->
-      <div class="gak-card gak-hide" id="gak-sw">
-        <div class="gak-card-h"><span class="dot"></span> Strengths &amp; Weaknesses</div>
-        <div id="gak-sw-body" class="gak-sw-grid"></div>
-      </div>
+      <details class="gak-collapse gak-hide" id="gak-recs">
+        <summary>Recommendations <span class="gak-cl-chev">Expand analysis</span></summary>
+        <div class="gak-cl-body"><div id="gak-recs-body"></div></div>
+      </details>
 
-      <!-- BRIEF: Recommendations (quick wins + strategic actions) -->
-      <div class="gak-card gak-hide" id="gak-recs">
-        <div class="gak-card-h"><span class="dot"></span> Recommendations</div>
-        <div id="gak-recs-body"></div>
-      </div>
+      <details class="gak-collapse gak-hide" id="gak-chatgpt">
+        <summary>ChatGPT Visibility <span class="gak-cl-chev">Expand analysis</span></summary>
+        <div class="gak-cl-body"><div id="gak-chatgpt-body"></div></div>
+      </details>
 
-      <!-- BRIEF: ChatGPT Visibility -->
-      <div class="gak-card gak-hide" id="gak-chatgpt">
-        <div class="gak-card-h"><span class="dot"></span> ChatGPT Visibility</div>
-        <div id="gak-chatgpt-body"></div>
-      </div>
+      <details class="gak-collapse gak-hide" id="gak-aio">
+        <summary>Google AI Overview Readiness <span class="gak-cl-chev">Expand analysis</span></summary>
+        <div class="gak-cl-body"><div id="gak-aio-body"></div></div>
+      </details>
 
-      <!-- BRIEF: Google AI Overview Readiness -->
-      <div class="gak-card gak-hide" id="gak-aio">
-        <div class="gak-card-h"><span class="dot"></span> Google AI Overview Readiness</div>
-        <div id="gak-aio-body"></div>
-      </div>
-
-      <!-- Crawler access (FREE summary) -->
-      <div class="gak-card">
-        <div class="gak-card-h"><span class="dot"></span> AI Crawler Access</div>
-        <div class="gak-crawl-sum" id="gak-crawl-sum"></div>
-        <div class="gak-grid" id="gak-crawl-grid"></div>
+      <!-- AI Crawler Accessibility (GATED; score only, no bot grid — Kevin: "hide the breakdown, just show the score, display after gate") -->
+      <div class="gak-card gak-hide" id="gak-crawler">
+        <div class="gak-card-h"><span class="dot"></span> AI Crawler Accessibility</div>
+        <div class="gak-acc" id="gak-crawl-acc"></div>
+        <details class="gak-collapse" id="gak-crawl-details" style="margin-top:14px;box-shadow:none">
+          <summary>See all AI crawlers checked <span class="gak-cl-chev">View</span></summary>
+          <div class="gak-cl-body"><div class="gak-grid" id="gak-crawl-grid"></div></div>
+        </details>
       </div>
 
       <!-- EMAIL GATE -->
@@ -766,8 +831,8 @@ const REAL_VIS = {
       {name:"Claude-User",allowed:true},{name:"Bingbot",allowed:true},{name:"Amazonbot",allowed:true},
       {name:"Applebot-Extended",allowed:true},{name:"meta-externalagent",allowed:true},{name:"CCBot",allowed:true},{name:"Bytespider",allowed:true}
     ] },
-    lost_deal: { query:"best B2B marketing agencies in Nottingham", engine:"Perplexity", mentioned:false, mentioned_in_quote:false, _asof:"Jun 2026",
-      quote:"The best B2B marketing agencies in Nottingham include Finsbury Media, Impression Digital, and Hallam Internet. Finsbury Media is an award-winning digital marketing agency in Nottingham with over a decade of experience helping UK businesses grow online.",
+    lost_deal: { query:"best SEO agencies in Nottingham", engine:"Perplexity", mentioned:false, mentioned_in_quote:false, _asof:"Jun 2026",
+      quote:"The best SEO agencies in Nottingham include Impression Digital, Hallam, and Adtrak. Impression is an award-winning SEO &amp; digital PR agency in Nottingham with a strong track record ranking UK businesses in competitive search results.",
       top_competitor:"Finsbury Media", competitors:["Finsbury Media","Impression Digital"], result:"competitor" },
     competitors: ["finsburymedia.com","hallam.agency","impressiondigital.com","perceptric.com","exposureninja.com"],
     sources: { owned:[], competitor_sources:["finsburymedia.com","hallam.agency","impressiondigital.com"], cited_total:8, ai_cites_nobody:false,
@@ -781,9 +846,9 @@ const REAL_VIS = {
       ] },
     offering_gap: { basis:"what AI returned when asked what you offer, vs. your own site", missing:["AI search optimisation","GEO services","Conversion rate optimisation"], correct:["SEO","PPC","Web design"] },
     prompts: [
-      {query:"best B2B marketing agencies in Nottingham", engines:[{label:"Perplexity",cited:false},{label:"ChatGPT",cited:false}], competitors_cited:["Finsbury Media","Impression Digital","Hallam"]},
+      {query:"best SEO agencies in Nottingham", engines:[{label:"Perplexity",cited:false},{label:"ChatGPT",cited:false}], competitors_cited:["Impression Digital","Hallam","Adtrak"]},
       {query:"best AI search & GEO agencies UK", engines:[{label:"Perplexity",cited:false},{label:"ChatGPT",cited:false},{label:"Google AI Overviews",cited:false}], competitors_cited:["Exposure Ninja","Neural ADX"]},
-      {query:"best SEO agencies in Nottingham", engines:[{label:"Perplexity",cited:false},{label:"ChatGPT",cited:false}], competitors_cited:["Adtrak","DesignRush"]}
+      {query:"best technical SEO agencies UK", engines:[{label:"Perplexity",cited:false},{label:"ChatGPT",cited:false}], competitors_cited:["Adtrak","DesignRush"]}
     ],
     // BRIEF: real AI Visibility Score report for Kevin's own site — technically flawless, yet AI-invisible.
     score: {
@@ -817,7 +882,7 @@ const REAL_VIS = {
         Product:        { present: false, status: "na",   source: null,      evidence: "not on homepage (usually on inner pages)" }
       }, available_points: 20, earned_points: 20, unavailable: false },
       entity: { about:{status:"pass",evidence:"found: /about"}, team:{status:"pass",evidence:"found: /team"}, contact:{status:"pass",evidence:"found: /contact"}, author:{status:"na",evidence:"not linked on homepage"}, reviews:{status:"pass",evidence:"found: testimonials"}, case_studies:{status:"pass",evidence:"found: /case-studies"}, awards:{status:"na",evidence:"not linked on homepage"}, count_pass: 5 },
-      content: { service_descriptions:{status:"pass",evidence:"4 categories detected"}, service_pages:{status:"pass",evidence:"4 service/solution pages",count:4}, value_proposition:{status:"pass",evidence:"H1: B2B marketing that compounds"}, faq_content:{status:"fail",evidence:"no FAQ page or schema (homepage scope)"}, mission_positioning:{status:"pass",evidence:"About/Story page present"}, render:{status:"pass",evidence:"200, 5KB visible text"} },
+      content: { service_descriptions:{status:"pass",evidence:"4 categories detected"}, service_pages:{status:"pass",evidence:"4 service/solution pages",count:4}, value_proposition:{status:"pass",evidence:"H1: SEO that compounds"}, faq_content:{status:"fail",evidence:"no FAQ page or schema (homepage scope)"}, mission_positioning:{status:"pass",evidence:"About/Story page present"}, render:{status:"pass",evidence:"200, 5KB visible text"} },
       authority: { earned_count: 8, earned_hosts: ["clutch.co","designrush.com","techround.co.uk"], pr_hosts: ["techround.co.uk"], directory_hosts: ["clutch.co","designrush.com"], social: [{platform:"linkedin",url:"https://www.linkedin.com/company/growthack"}], ai_cites_nobody: false }
     },
     report: {
@@ -910,8 +975,8 @@ const REAL_VIS = {
 
 /* ---------- tiny helpers ---------- */
 const $ = (id) => document.getElementById(id);
-const show = (id) => $(id).classList.remove('gak-hide');
-const hide = (id) => $(id).classList.add('gak-hide');
+const show = (id) => { const e=$(id); if(e) e.classList.remove('gak-hide'); };   // null-safe (codex: restart hid the removed #gak-brandperf -> threw)
+const hide = (id) => { const e=$(id); if(e) e.classList.add('gak-hide'); };
 /* HTML-escape ALL dynamic/third-party values before innerHTML (LLM/SerpAPI text is untrusted). */
 const esc = (s) => String(s==null?'':s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 /* hybrid routing: baked (instant, no backend) for showcase domains in REAL_VIS; live backend scan for every other domain.
@@ -940,7 +1005,7 @@ const ro = new ResizeObserver(frameHeight); ro.observe(document.body);
     b.style.cssText = 'background:#0c1a2e;color:#fff;font:600 12px/1.4 var(--gak-mono);text-align:center;padding:8px 12px;border-radius:8px;margin:0 0 18px;letter-spacing:.02em';
     var app = $('gak-app'); app.insertBefore(b, app.firstChild);
     // lead with his OWN site so the first thing he sees is his own absence
-    var urlEl=$('gak-url'); if(urlEl && !urlEl.value){ urlEl.value='growthack.io'; var ind=$('gak-industry'); if(ind) ind.value='B2B marketing agency'; var co=$('gak-company'); if(co && !co.value) co.value='GrowthAck'; }
+    var urlEl=$('gak-url'); if(urlEl && !urlEl.value){ urlEl.value='growthack.io'; var ind=$('gak-industry'); if(ind) ind.value='SEO agency'; var co=$('gak-company'); if(co && !co.value) co.value='GrowthAck'; }
   }
   $('gak-foot-link').textContent = GAK_CONFIG.BRAND.name;
   $('gak-foot-link').href = gakSafeUrl(GAK_CONFIG.BRAND.url || '', null);   // route white-label config URLs through the scheme guard too
@@ -997,18 +1062,17 @@ function render(data){
   // 1. score (free) — when the brief payload carries data.score, renderBrief() repaints this gauge as the
   // composite AI Visibility Score; otherwise it stays the AI Readiness preview gauge.
   if(!data.score){
-    paintScore(Number(data.readiness && data.readiness.score) || 0);
+    const rs = Number(data.readiness && data.readiness.score) || 0;
+    paintScore(rs);
+    setHeroPill(rs, true);                  // readiness band ("Well prepared for AI" etc.)
     $('gak-verdict').textContent = (data.readiness && data.readiness.verdict) || '';
+    renderBreakdownLocked();                // breakdown stays locked until email
   }
 
-  // 2. crawler summary + grid (free) — counts are numbers; bot names escaped
-  const s=(data.crawlers && data.crawlers.summary) || {allowed:0,blocked:0,total:0};
-  $('gak-crawl-sum').innerHTML = `
-    <div class="gak-stat"><div class="n" style="color:var(--gak-mint)">${Number(s.allowed)||0}</div><div class="l">crawlers allowed</div></div>
-    <div class="gak-stat"><div class="n" style="color:${(Number(s.blocked)||0)? 'var(--gak-red)':'var(--gak-navy)'}">${Number(s.blocked)||0}</div><div class="l">crawlers blocked</div></div>
-    <div class="gak-stat"><div class="n">${Number(s.total)||0}</div><div class="l">AI bots checked</div></div>`;
-  $('gak-crawl-grid').innerHTML = ((data.crawlers && data.crawlers.bots) || []).map(b=>
-    `<div class="gak-bot ${b.allowed?'ok':'no'}"><span class="b-dot"></span><span class="b-name">${esc(b.name)}</span></div>`).join('');
+  // 2. AI Crawler Accessibility is a single GATED score card (rendered by renderCrawler() once unlocked). Keep it
+  //    hidden on the free render; show the collapsed "what AI answers today" section.
+  if(!GATE_UNLOCKED) hide('gak-crawler');
+  show('gak-free-extra');
 
   // 3. gated readiness breakdown (built now, revealed after email)
   $('gak-checks').innerHTML = ((data.readiness && data.readiness.checks) || []).map(c=>{
@@ -1042,6 +1106,54 @@ const BAND_LABEL = {strong:'Strong',good:'Good',fair:'Fair',weak:'Weak','no-data
 const barColor = (s)=> s>=70?'var(--gak-mint)':s>=50?'var(--gak-amber)':'var(--gak-red)';
 const prettyKey = (k)=> String(k||'').replace(/_/g,' ').replace(/\b\w/g, m=>m.toUpperCase());
 
+/* ---- Suso-style score hero: verbal band pill + 6-card breakdown grid ---- */
+const BD_LABELS = {brand_clarity:'Brand Clarity', ai_cited_authority:'AI-Cited Authority', ai_accessibility:'AI Accessibility', trust_signals:'Trust Signals', citation_strength:'Citation Strength', content_coverage:'Content Coverage'};
+const BD_ORDER = ['brand_clarity','ai_cited_authority','ai_accessibility','trust_signals','citation_strength','content_coverage'];
+const BD_TAG = {strong:'Strong', good:'Good', fair:'Fair', weak:'Needs work', 'no-data':'Not enough data'};
+const bandOf = (s)=> s==null?'no-data':(s>=70?'strong':s>=50?'good':s>=30?'fair':'weak');
+function scoreBand(s, readiness){ s=Number(s)||0;
+  if(readiness){ return s>=70?{cls:'b-strong',label:'Well prepared for AI'}:s>=50?{cls:'b-fair',label:'Partly AI-ready'}:{cls:'b-weak',label:'AI may struggle to read you'}; }
+  return s>=80?{cls:'b-strong',label:'Strong AI presence'}:s>=60?{cls:'b-good',label:'Good AI visibility'}:s>=40?{cls:'b-fair',label:'Limited visibility'}:{cls:'b-weak',label:'Barely visible'};
+}
+function setHeroPill(score, readiness){ const gr=$('gak-grade'); if(!gr) return; const b=scoreBand(score, readiness); gr.textContent=b.label; gr.className='gak-hero-pill '+b.cls;
+  const g=document.querySelector('#gak-hero .gak-gauge');   // a11y (codex): the gauge is a graphic — give it a spoken label
+  if(g){ g.setAttribute('role','img'); g.setAttribute('aria-label', (readiness?'AI Readiness Score: ':'AI Visibility Score: ')+(Number(score)||0)+' out of 100 — '+b.label); }
+}
+function renderBreakdownLocked(){ const grid=$('gak-bd-grid'); if(!grid) return;
+  grid.innerHTML = BD_ORDER.map(k=>'<div class="gak-bd b-no-data"><div class="gak-bd-lbl">'+esc(BD_LABELS[k])+'</div><div class="gak-bd-num">—</div><div class="gak-bd-tag">Locked</div></div>').join('');
+  grid.setAttribute('aria-hidden','true');   // a11y (swarm): don't let screen readers read the blurred "Locked" placeholders
+  const w=$('gak-bd-wrap'); if(w) w.classList.add('locked');
+}
+function renderBreakdown(sc){ const grid=$('gak-bd-grid'); if(!grid) return;
+  if(!GATE_UNLOCKED){ renderBreakdownLocked(); return; }   // defence-in-depth: never reveal the breakdown before the gate
+  const byKey={}; ((sc&&sc.sub_scores)||[]).forEach(s=>{ if(s&&s.key) byKey[s.key]=s; });
+  grid.innerHTML = BD_ORDER.map(k=>{ const s=byKey[k]; const sv=(s&&s.score!=null)?Number(s.score):null; const band=(s&&s.band&&s.band!=='no-data')?s.band:bandOf(sv);
+    const num = sv==null ? '<span style="color:var(--gak-faint);font-size:18px">N/A</span>' : sv+'<span class="den"> /100</span>';
+    return '<div class="gak-bd b-'+band+'"><div class="gak-bd-lbl">'+esc(BD_LABELS[k]||prettyKey(k))+'</div><div class="gak-bd-num">'+num+'</div><div class="gak-bd-tag">'+esc(BD_TAG[band]||'')+'</div></div>';
+  }).join('');
+  grid.removeAttribute('aria-hidden');   // unlocked: screen readers read the real breakdown
+  const w=$('gak-bd-wrap'); if(w) w.classList.remove('locked');
+  const lead=$('gak-bd-lead'); if(lead) lead.innerHTML='Your AI Visibility Score across <b>6 components</b> of how AI engines find, read &amp; recommend you.';
+}
+/* GATED AI-Crawler Accessibility — a single score card (Kevin: "hide the breakdown, just show the score"); the full
+   bot list lives in a nested collapsible. Reads from LAST (crawlers from the free call + ai_accessibility from the gated score). */
+function renderCrawler(){
+  if(!GATE_UNLOCKED){ hide('gak-crawler'); return; }   // gated — never reveal before the email gate (and re-hide if a prior render showed it)
+  const data = LAST || {}; const accEl=$('gak-crawl-acc'); if(!accEl) return;
+  const cr = data.crawlers || {summary:{},bots:[]}; const s = cr.summary || {allowed:0,blocked:0,total:0};
+  const cat = data.score && data.score.categories && data.score.categories.ai_accessibility;
+  let acc = (cat && cat.state==='ok' && cat.score!=null) ? Number(cat.score) : (Number(s.total)? Math.round(100*(Number(s.allowed)||0)/Number(s.total)) : null);
+  const band = bandOf(acc);
+  if(acc==null){ accEl.innerHTML = '<div class="gak-acc-meta"><div class="t">Not enough data to assess crawler access</div></div>'; }
+  else {
+    accEl.innerHTML = '<div class="gak-acc-num b-'+band+'">'+acc+'<span style="font-size:18px;color:var(--gak-faint);font-weight:600"> /100</span></div>'
+      + '<div class="gak-acc-meta"><div class="t">'+(Number(s.allowed)||0)+' of '+(Number(s.total)||0)+' AI crawlers can reach your site</div>'
+      + '<div class="s">'+(Number(s.blocked)||0 ? (Number(s.blocked)+' blocked in robots.txt — they can’t read or cite you') : 'All checked AI crawlers are allowed')+'</div></div>';
+  }
+  const g=$('gak-crawl-grid'); if(g) g.innerHTML = (cr.bots||[]).map(function(b){ return '<div class="gak-bot '+(b.allowed?'ok':'no')+'"><span class="b-dot"></span><span class="b-name">'+esc(b.name)+'</span></div>'; }).join('');
+  show('gak-crawler');
+}
+
 function renderBrief(data){
   // R2 (defence-in-depth): if the visibility scan came back unverified (wrong-entity homonym), NEVER repaint the
   // headline gauge with a composite — renderVisibility already blanked it to '—'. Backend suppresses `score` here
@@ -1050,19 +1162,22 @@ function renderBrief(data){
   const sc = data && data.score, rep = data && data.report;
   const hTxt = $('gak-score-h-txt'), cov = $('gak-score-cov');
   if(sc){
+    renderCrawler();   // gated AI-crawler accessibility score card (reveals #gak-crawler)
     if(hTxt) hTxt.textContent = 'AI Visibility Score';
     const honest = (rep && rep.executive_summary && rep.executive_summary.text) || sc.na_note || '';
     if(sc.state==='ok' && sc.composite!=null){
       paintScore(Number(sc.composite)||0);
-      const gr=$('gak-grade'); gr.textContent = sc.grade || ''; gr.className = 'gak-grade '+GRADE_CLASS(sc.grade);
+      setHeroPill(Number(sc.composite)||0, false);   // composite band ("Strong AI presence" etc.)
       // honest lead only when the composite is floor-capped (so we don't imply confidence we don't have)
       $('gak-verdict').textContent = sc.visibility_floor_capped ? honest : '';
+      renderBreakdown(sc);                            // unlock + fill the 6-card grid
     } else {
       // insufficient data — show the gauge but never imply an "X% visible" number
       const arc=$('gak-arc'); if(arc){ arc.style.strokeDashoffset=402; arc.style.stroke='var(--gak-amber)'; }
       $('gak-score-num').textContent = '—';
-      const gr=$('gak-grade'); gr.textContent = 'Limited data'; gr.className='gak-grade g-c';
+      const gr=$('gak-grade'); if(gr){ gr.textContent='Limited data'; gr.className='gak-hero-pill b-fair'; }
       $('gak-verdict').textContent = honest;
+      renderBreakdown(sc);                            // unlock the grid (N/A cards) so it doesn't stay locked post-gate
     }
     if(cov){ if(sc.coverage){ cov.textContent = sc.coverage; cov.classList.remove('gak-hide'); } else cov.classList.add('gak-hide'); }
   } else {
@@ -1099,6 +1214,7 @@ function renderFramework(sc){
   show('gak-framework');
 }
 function renderBrandPerf(sc, rep){
+  if(!$('gak-brandperf-body')) return;   // iter: Brand Performance card removed — the hero breakdown grid IS the sub-score view
   const subs = sc && sc.sub_scores;
   if(!subs || !subs.length){ hide('gak-brandperf'); return; }
   const labels = {}; ((rep&&rep.brand_performance)||[]).forEach(x=>{ if(x&&x.key) labels[x.key]=x.label; });
@@ -1423,6 +1539,7 @@ function renderFixList(){
 
 /* ---------- email gate unlock (live: fetch the visibility scan as the 2nd call) ---------- */
 async function unlock(){
+  GATE_UNLOCKED=true;   // email captured -> the gated breakdown grid + crawler card may now reveal
   hide('gak-gate'); show('gak-full-checks'); show('gak-booking'); show('gak-final');
   if(LAST && LAST.visibility){ show('gak-visibility'); renderGated(LAST.visibility); frameHeight(); return; }
   if(GAK_CONFIG.DEMO_MODE){ frameHeight(); return; }
@@ -1667,6 +1784,7 @@ function demoData(domain, brandIn, industry){
 
 /* ---------- flow ---------- */
 let LAST=null, CTX={domain:'',brand:'',industry:'',country:''};
+let GATE_UNLOCKED=false;   // defence-in-depth (codex/swarm): the breakdown grid + crawler card only unlock when truly past the email gate (or a baked showcase domain) — never just because a score object appeared early.
 $('gak-form').addEventListener('submit', async (e)=>{
   e.preventDefault();
   $('gak-err').textContent='';
@@ -1682,11 +1800,13 @@ $('gak-form').addEventListener('submit', async (e)=>{
   const industry = ($('gak-industry').value||'').trim().slice(0,80);
   const country = (($('gak-country')||{}).value||'').trim().slice(0,40);
   CTX = {domain, brand, industry, country};
+  GATE_UNLOCKED=false;   // new scan -> re-lock until email (or baked showcase)
   $('gak-go').disabled=true;
   stage('loading'); runSteps();
   const started=Date.now();
   try{
     if(isBaked(domain)){
+      GATE_UNLOCKED=true;   // baked showcase domains (Kevin's own/pilot sites) display the full report without a gate
       const data = demoData(domain, brand, industry);
       LAST=data;
       if(!data.visibility) $('gak-visibility').dataset.empty='1';
@@ -1757,7 +1877,7 @@ $('gak-gate-form').addEventListener('submit', async (e)=>{
   await unlock();
 });
 
-$('gak-restart').addEventListener('click', ()=>{ ['gak-url','gak-company','gak-brand','gak-industry','gak-country','gak-email'].forEach(id=>{const e=$(id); if(e) e.value='';}); const ge=$('gak-gate-err'); if(ge) ge.textContent=''; LAST=null; CTX={domain:'',brand:'',industry:'',country:''}; const go=$('gak-go'); if(go) go.disabled=false; show('gak-gate'); ['gak-full-checks','gak-visibility','gak-competitors','gak-sources','gak-offering','gak-fixlist','gak-final','gak-sample-note','gak-matrix-card','gak-teasers','gak-lostdeal','gak-booking','gak-exec','gak-framework','gak-brandperf','gak-sw','gak-recs','gak-chatgpt','gak-aio'].forEach(hide); ['gak-matrix-body','gak-teasers','gak-lostdeal','gak-prompts','gak-vis-summary'].forEach(id=>{const e=$(id); if(e) e.innerHTML='';}); const pr=$('gak-pdf-root'); if(pr) pr.innerHTML=''; stage('input'); });
+$('gak-restart').addEventListener('click', ()=>{ ['gak-url','gak-company','gak-brand','gak-industry','gak-country','gak-email'].forEach(id=>{const e=$(id); if(e) e.value='';}); const ge=$('gak-gate-err'); if(ge) ge.textContent=''; LAST=null; CTX={domain:'',brand:'',industry:'',country:''}; const go=$('gak-go'); if(go) go.disabled=false; show('gak-gate'); ['gak-full-checks','gak-visibility','gak-competitors','gak-sources','gak-offering','gak-fixlist','gak-final','gak-sample-note','gak-free-extra','gak-matrix-card','gak-teasers','gak-lostdeal','gak-booking','gak-crawler','gak-exec','gak-framework','gak-sw','gak-recs','gak-chatgpt','gak-aio'].forEach(hide); ['gak-matrix-body','gak-teasers','gak-lostdeal','gak-prompts','gak-vis-summary'].forEach(id=>{const e=$(id); if(e) e.innerHTML='';}); const pr=$('gak-pdf-root'); if(pr) pr.innerHTML=''; stage('input'); });
 
 /* ============================================================
    PDF EXPORT — 8-page branded PDF built off-screen in #gak-pdf-root from LAST, captured by html2pdf.js.
@@ -1779,18 +1899,24 @@ const GAK_PDF = {
 function loadHtml2Pdf(){
   if(window.html2pdf) return Promise.resolve(window.html2pdf);
   if(GAK_PDF._loading) return GAK_PDF._loading;
+  // PDF-blank fix: try a SAME-ORIGIN self-hosted bundle FIRST (a host/Framer CSP can't block same-origin), then the
+  // configured CDN. A CSP-blocked CDN was silently falling back to window.print() -> a blank PDF in Kevin's iframe embed.
+  const sameOrigin = (function(){ try{ return new URL('html2pdf.bundle.min.js', location.href).href; }catch(e){ return ''; } })();
+  const urls = [sameOrigin, GAK_PDF.BUNDLE_URL].filter(function(u,i,a){ return u && a.indexOf(u)===i; });
   GAK_PDF._loading = new Promise((resolve,reject)=>{
-    let done=false;
+    let done=false, idx=0;
     const finish=(fn,arg)=>{ if(done) return; done=true; clearTimeout(to); fn(arg); };
     const to=setTimeout(()=>{ GAK_PDF._loading=null; finish(reject, new Error('pdf_timeout')); }, GAK_PDF.TIMEOUT_MS);
-    const s=document.createElement('script');
-    const _bu=gakSafeUrl(GAK_PDF.BUNDLE_URL||'', null);   // validate the script src scheme too (config-derived, but a src sink)
-    if(_bu==='#'){ GAK_PDF._loading=null; return finish(reject, new Error('pdf_bad_url')); }
-    s.src=_bu;
-    if(GAK_PDF.INTEGRITY){ s.integrity=GAK_PDF.INTEGRITY; s.crossOrigin='anonymous'; }
-    s.onload=()=>{ window.html2pdf ? finish(resolve, window.html2pdf) : (GAK_PDF._loading=null, finish(reject, new Error('pdf_no_global'))); };
-    s.onerror=()=>{ GAK_PDF._loading=null; finish(reject, new Error('pdf_load_error')); };
-    document.head.appendChild(s);
+    function tryNext(){
+      if(idx>=urls.length){ GAK_PDF._loading=null; return finish(reject, new Error('pdf_load_error')); }
+      const _bu=gakSafeUrl(urls[idx++]||'', null);
+      if(_bu==='#') return tryNext();
+      const s=document.createElement('script'); s.src=_bu;
+      s.onload=()=>{ window.html2pdf ? finish(resolve, window.html2pdf) : tryNext(); };
+      s.onerror=()=>{ tryNext(); };
+      document.head.appendChild(s);
+    }
+    tryNext();
   });
   return GAK_PDF._loading;
 }
@@ -2019,7 +2145,18 @@ function buildPdfRoot(){
   frameHeight();
   return root;
 }
-/* click handler: lazy-load html2pdf (4s budget) → build off-screen DOM → capture; print() on any failure */
+/* print fallback: isolate the formatted #gak-pdf-root (built just before) via body.gak-printing, then print. Cleanup
+   runs on afterprint (NOT a fixed delay) so we never clear the DOM mid-render and blank the print (codex BLOCKER). */
+function printPdfRoot(){
+  let done=false;
+  const cleanup=function(){ if(done) return; done=true; try{ window.removeEventListener('afterprint',cleanup); }catch(_){}
+    try{ document.body.classList.remove('gak-printing'); }catch(_){}
+    try{ const r=$('gak-pdf-root'); if(r) r.innerHTML=''; }catch(_){} };
+  try{ window.addEventListener('afterprint', cleanup); }catch(_){}
+  setTimeout(cleanup, 5000);   // fallback: some iframes never fire afterprint
+  try{ document.body.classList.add('gak-printing'); window.print(); }catch(_){ cleanup(); }
+}
+/* click handler: lazy-load html2pdf (4s budget) → build off-screen DOM → capture; print the pdf-root on any failure */
 async function downloadPdf(){
   const btn=$('gak-pdf-btn');
   if(btn){ if(btn.dataset.busy) return; btn.dataset.busy='1'; btn.disabled=true; btn._txt=btn.textContent; btn.textContent='Preparing PDF…'; }
@@ -2039,14 +2176,16 @@ async function downloadPdf(){
         jsPDF:{unit:'pt', format:'a4', orientation:'portrait'},
         pagebreak:{mode:['css','legacy'], before:'.pdf-page'}
       }).from(root).save();
+      try{ const r=$('gak-pdf-root'); if(r) r.innerHTML=''; }catch(_){ }   // html2pdf finished -> safe to release now
     } else {
-      window.print();   // bundle unavailable → print the on-screen report (see @media print)
+      printPdfRoot();   // bundle unavailable → print the formatted #gak-pdf-root; it self-cleans on afterprint (codex: don't race-clear)
     }
   }catch(e){
-    try{ window.print(); }catch(_){ }
+    try{ printPdfRoot(); }catch(_){ }
   } finally {
     if(btn){ delete btn.dataset.busy; btn.disabled=false; if(btn._txt){ btn.textContent=btn._txt; } }
-    try{ const r=$('gak-pdf-root'); if(r) r.innerHTML=''; }catch(_){ }   // release the off-screen DOM
+    // NOTE: the print-fallback path clears #gak-pdf-root on afterprint (printPdfRoot), NOT here — clearing now would
+    // race the async print and re-blank the PDF (codex BLOCKER). The html2pdf path already cleared above.
   }
 }
 (function(){ const b=$('gak-pdf-btn'); if(b) b.addEventListener('click', downloadPdf); })();
