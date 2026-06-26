@@ -396,8 +396,10 @@ select.gak-input{appearance:none;-webkit-appearance:none;-moz-appearance:none;cu
 
 /* ---------- PDF render root (off-screen A4 print DOM) ---------- */
 #gak-pdf-root{position:fixed;left:-10000px;top:0;width:794px;background:#fff;color:#16202e;font-family:var(--gak-font);z-index:-1}
-/* page-breaks are driven by html2pdf's pagebreak{before:'.pdf-page'} option (NOT a CSS page-break-after here —
-   that would double up with the option and emit blank pages). min-height keeps each page ~one A4 tall. */
+/* pagination uses html2pdf's pagebreak{mode:['avoid-all','css']} — it keeps each .pdf-page from splitting WITHOUT a
+   forced per-element break. We deliberately do NOT force a break before each section (neither JS `before:'.pdf-page'`
+   nor a CSS break-before rule): in this html2pdf build a forced break injects a full BLANK page before each section
+   (16 pages, every odd one blank). min-height keeps each section ~one A4 tall so they pack near page boundaries. */
 #gak-pdf-root .pdf-page{width:794px;min-height:1040px;padding:48px 52px 64px;background:#fff;box-sizing:border-box;position:relative}
 #gak-pdf-root .pdf-brandbar{display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #0c1a2e;padding-bottom:14px;margin-bottom:26px}
 #gak-pdf-root .pdf-kicker{font:700 11px/1 var(--gak-mono);letter-spacing:.14em;text-transform:uppercase;color:#c2410c}
@@ -2183,8 +2185,13 @@ async function downloadPdf(){
       try{
         await lib().set({
           margin:[28,28,40,28], filename:fname, image:{type:'jpeg', quality:0.96},
-          html2canvas:{scale:pscale, useCORS:true, backgroundColor:'#ffffff', logging:false, windowWidth:794},
-          jsPDF:{unit:'pt', format:'a4', orientation:'portrait'}, pagebreak:{mode:['css','legacy'], before:'.pdf-page'}
+          // x:0/scrollX:0/scrollY:0 anchor html2canvas's capture window to the document origin — without them the
+          // windowWidth:794 re-layout shifted the in-flow root ~50px right, clipping the left edge of every line.
+          html2canvas:{scale:pscale, useCORS:true, backgroundColor:'#ffffff', logging:false, windowWidth:794, x:0, scrollX:0, scrollY:0},
+          // pagebreak: 'avoid-all' keeps each .pdf-page intact without splitting. We do NOT use before:'.pdf-page' here —
+          // in this html2pdf build a forced per-element break (JS `before` OR a CSS break-before rule) inserts a FULL
+          // BLANK page before each section (16 pages, every odd one blank). avoid-all = clean 8-page report, zero blanks.
+          jsPDF:{unit:'pt', format:'a4', orientation:'portrait'}, pagebreak:{mode:['avoid-all','css']}
         }).from(root).save();
       } finally {
         root.style.cssText=prevCss; try{ root.innerHTML=''; }catch(_){ }
