@@ -41,7 +41,10 @@ export async function generateMetadata({
       publishedTime: post.date,
       modifiedTime: post.updated ?? post.date,
       authors: [post.author],
-      images: post.image ? [post.image] : undefined,
+      // Omit `images` when no frontmatter override, so Next auto-injects the
+      // file-convention card from app/blog/[slug]/opengraph-image.tsx. A future
+      // `image:` in frontmatter still wins.
+      ...(post.image ? { images: [post.image] } : {}),
     },
     twitter: {
       card: "summary_large_image",
