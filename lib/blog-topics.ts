@@ -54,6 +54,7 @@ export const TOPICS: Topic[] = [
     tags: [
       "tools", "measurement", "metrics", "rank-tracking", "audit",
       "share-of-voice", "ai-citation", "ai-overviews", "pricing", "review",
+      "link building", "link building platforms", "backlinks", "digital pr",
     ],
   },
   {
