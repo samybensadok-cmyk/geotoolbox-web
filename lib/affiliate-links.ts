@@ -57,7 +57,7 @@ export const AFFILIATE_LINKS: Record<string, AffiliateLink> = {
   snov: { url: "https://snov.io/", program: "Snov.io", cluster: "c2-linkbuilding", pending: true },
   hunter: { url: "https://hunter.io/", program: "Hunter.io", cluster: "c2-linkbuilding", pending: true },
   instantly: { url: "https://instantly.ai/", program: "Instantly.ai", cluster: "c2-linkbuilding", pending: true },
-  adsy: { url: "https://adsy.com/", program: "Adsy", cluster: "c2-linkbuilding", pending: true },
+  adsy: { url: "https://ref.adsy.com/?ref=referral&ref_type=direct&ref_id=fmenyt1rplcdgiwt&ref_item=3", program: "Adsy", cluster: "c2-linkbuilding" },
   getfluence: { url: "https://www.getfluence.com/", program: "Getfluence", cluster: "c2-linkbuilding", pending: true },
   postaga: { url: "https://postaga.com/", program: "Postaga", cluster: "c2-linkbuilding", pending: true },
   smartlead: { url: "https://www.smartlead.ai/", program: "Smartlead", cluster: "c2-linkbuilding", pending: true },
