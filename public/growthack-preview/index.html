@@ -1043,6 +1043,10 @@ const barColor = (s)=> s>=70?'var(--gak-mint)':s>=50?'var(--gak-amber)':'var(--g
 const prettyKey = (k)=> String(k||'').replace(/_/g,' ').replace(/\b\w/g, m=>m.toUpperCase());
 
 function renderBrief(data){
+  // R2 (defence-in-depth): if the visibility scan came back unverified (wrong-entity homonym), NEVER repaint the
+  // headline gauge with a composite — renderVisibility already blanked it to '—'. Backend suppresses `score` here
+  // today, so this only fires if that contract ever regresses; it's the last guard before a prospect's eyes.
+  if(data && data.visibility && data.visibility.state==='unverified') return;
   const sc = data && data.score, rep = data && data.report;
   const hTxt = $('gak-score-h-txt'), cov = $('gak-score-cov');
   if(sc){
@@ -1217,7 +1221,9 @@ function matrixEngineKey(label){
   return null;
 }
 function updateMatrixFromVisibility(vis){
-  if(!LAST || !LAST.matrix || !LAST.matrix.rows || !vis || !vis.prompts) return;
+  // M5: `[]` is truthy, so `!vis.prompts` let an empty/unverified scan past the guard and leave the matrix stuck on
+  // "Locked". Guard on .length so a prompt-less result returns cleanly (the unverified path handles its own render).
+  if(!LAST || !LAST.matrix || !LAST.matrix.rows || !vis || !vis.prompts || !vis.prompts.length) return;
   const agg = {};
   vis.prompts.forEach(p=>{
     const hasComp = !!(p.competitors_cited && p.competitors_cited.length);
@@ -1254,6 +1260,18 @@ function renderTeasers(t){
 function renderVisibility(vis){
   if(!vis){ $('gak-visibility').dataset.empty='1'; return; }
   delete $('gak-visibility').dataset.empty;
+  // C-D: backend marks state:'unverified' when AI answers describe a DIFFERENT company sharing the name (homonym).
+  // Render the honest message ONLY — no score, no competitor card, no map — and BLANK the headline gauge so a prior
+  // readiness number can't read as a confident AI-visibility score on the wrong entity. Missing state -> 'ok' (demo).
+  if(vis.state==='unverified'){
+    $('gak-vis-summary').textContent = vis.message || "We couldn't confirm this is your company in AI answers.";
+    $('gak-prompts').innerHTML = '';
+    var _n=$('gak-score-num'); if(_n) _n.textContent='—';
+    var _arc=$('gak-arc'); if(_arc){ _arc.style.strokeDashoffset=402; _arc.style.stroke='var(--gak-amber)'; }
+    var _gr=$('gak-grade'); if(_gr){ _gr.textContent='Unverified'; _gr.className='gak-grade g-c'; }
+    var _vd=$('gak-verdict'); if(_vd) _vd.textContent = vis.message || '';
+    return;
+  }
   const losing = (typeof vis.losing==='number' && vis.total_cells) ? `<div class="gak-losing"><b>${Number(vis.losing)}</b> of ${Number(vis.total_cells)} AI answers don't mention you</div>` : '';
   $('gak-vis-summary').innerHTML = losing + esc(vis.summary||'');
   $('gak-prompts').innerHTML = (vis.prompts||[]).map(p=>{
@@ -1281,6 +1299,9 @@ function causalNote(p){
 /* render + reveal the whole gated layer (called on unlock) */
 function renderGated(vis){
   renderVisibility(vis);
+  // C-D: on an unverified (wrong-entity) result there's no honest card/source/offering to show, and we must NOT flip
+  // the matrix Result off a wrong-company scan. Render the message only (renderVisibility did it) and hide the rest.
+  if(vis && vis.state==='unverified'){ hide('gak-competitors'); hide('gak-sources'); hide('gak-offering'); renderFixList(); return; }
   updateMatrixFromVisibility(vis);
   renderCompetitors(vis&&vis.competitors);
   renderSources(vis&&vis.sources);
