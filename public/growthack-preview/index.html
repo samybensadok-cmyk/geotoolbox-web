@@ -61,7 +61,9 @@ body{
   font-family:var(--gak-font);color:var(--gak-ink);background:var(--gak-bg);
   -webkit-font-smoothing:antialiased;line-height:1.5;
 }
-.gak-wrap{max-width:720px;margin:0 auto;padding:36px 20px 48px}
+.gak-wrap{max-width:1080px;margin:0 auto;padding:36px 22px 48px}
+/* the INPUT stage stays a comfortable centered column even though the results use the full width */
+#gak-stage-input{max-width:620px;margin:0 auto}
 .gak-hide{display:none!important}
 @keyframes gak-rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 
@@ -536,6 +538,9 @@ details.gak-collapse[open]>summary .gak-cl-chev::after{transform:rotate(180deg)}
 details.gak-collapse>summary .gak-cl-mini{margin-left:auto;font:700 12px/1 var(--gak-mono);color:var(--gak-faint)}
 details.gak-collapse .gak-cl-body{padding:0 22px 22px}
 @media print{details.gak-collapse{border:1px solid #d9dde4}details.gak-collapse>summary .gak-cl-chev{display:none}details.gak-collapse .gak-cl-body{display:block!important}}
+/* PDF capture veil — while html2pdf renders the pages IN-FLOW (so html2canvas can measure them), cover the viewport. */
+body.gak-capturing::before{content:'';position:fixed;inset:0;background:var(--gak-bg);z-index:2147483646}
+body.gak-capturing::after{content:'Preparing your PDF…';position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:2147483647;font:700 16px/1 var(--gak-font);color:var(--gak-navy);letter-spacing:-.01em}
 @media print{
   /* PDF-blank backup: when the Download button falls back to window.print() (html2pdf unavailable), print ONLY the
      formatted 8-page #gak-pdf-root (built just before), not the live widget. body.gak-printing is toggled in downloadPdf. */
@@ -1901,7 +1906,7 @@ function loadHtml2Pdf(){
   if(GAK_PDF._loading) return GAK_PDF._loading;
   // PDF-blank fix: try a SAME-ORIGIN self-hosted bundle FIRST (a host/Framer CSP can't block same-origin), then the
   // configured CDN. A CSP-blocked CDN was silently falling back to window.print() -> a blank PDF in Kevin's iframe embed.
-  const sameOrigin = (function(){ try{ return new URL('html2pdf.bundle.min.js', location.href).href; }catch(e){ return ''; } })();
+  const sameOrigin = (function(){ try{ let b=location.href.split(/[?#]/)[0]; const last=b.split('/').pop(); if(last.indexOf('.')===-1 && !b.endsWith('/')) b+='/'; return new URL('html2pdf.bundle.min.js', b).href; }catch(e){ return ''; } })();
   const urls = [sameOrigin, GAK_PDF.BUNDLE_URL].filter(function(u,i,a){ return u && a.indexOf(u)===i; });
   GAK_PDF._loading = new Promise((resolve,reject)=>{
     let done=false, idx=0;
@@ -2168,15 +2173,24 @@ async function downloadPdf(){
     const root=$('gak-pdf-root');
     if(lib && root && root.children.length){
       const fname=('ai-visibility-'+(pdfData().domain||'report')).replace(/[^a-z0-9.-]+/gi,'-').replace(/^-+|-+$/g,'')+'.pdf';
-      await lib().set({
-        margin:[28,28,40,28],
-        filename:fname,
-        image:{type:'jpeg', quality:0.96},
-        html2canvas:{scale:2, useCORS:true, backgroundColor:'#ffffff', logging:false, windowWidth:794},
-        jsPDF:{unit:'pt', format:'a4', orientation:'portrait'},
-        pagebreak:{mode:['css','legacy'], before:'.pdf-page'}
-      }).from(root).save();
-      try{ const r=$('gak-pdf-root'); if(r) r.innerHTML=''; }catch(_){ }   // html2pdf finished -> safe to release now
+      // html2canvas CANNOT measure an off-screen (fixed/absolute left:-10000px) element -> 0-height canvas -> BLANK PDF.
+      // Render the pages IN-FLOW (position:static) during capture, behind a full-viewport veil, with the resize-observer
+      // paused so the embed iframe doesn't balloon to the 8-page height. Dynamic scale keeps the canvas < the 16384px limit.
+      const prevCss=root.style.cssText; let roPaused=false; try{ ro.disconnect(); roPaused=true; }catch(_){}
+      document.body.classList.add('gak-capturing');
+      root.style.position='static'; root.style.left='auto'; root.style.top='auto'; root.style.zIndex='auto'; root.style.visibility='visible';
+      const ph=root.getBoundingClientRect().height||1; const pscale=Math.max(1, Math.min(2, 15000/ph));
+      try{
+        await lib().set({
+          margin:[28,28,40,28], filename:fname, image:{type:'jpeg', quality:0.96},
+          html2canvas:{scale:pscale, useCORS:true, backgroundColor:'#ffffff', logging:false, windowWidth:794},
+          jsPDF:{unit:'pt', format:'a4', orientation:'portrait'}, pagebreak:{mode:['css','legacy'], before:'.pdf-page'}
+        }).from(root).save();
+      } finally {
+        root.style.cssText=prevCss; try{ root.innerHTML=''; }catch(_){ }
+        document.body.classList.remove('gak-capturing');
+        if(roPaused){ try{ ro.observe(document.body); }catch(_){} } try{ frameHeight(); }catch(_){ }
+      }
     } else {
       printPdfRoot();   // bundle unavailable → print the formatted #gak-pdf-root; it self-cleans on afterprint (codex: don't race-clear)
     }
