@@ -26,7 +26,7 @@ export const TOPICS: Topic[] = [
     tags: [
       "ai-comparison", "comparison", "agency-vs-software",
       "claude-vs-chatgpt", "claude-vs-gemini", "gemini-vs-chatgpt",
-      "grok-vs-chatgpt", "grok-vs-claude", "chatgpt-vs-perplexity",
+      "grok-vs-chatgpt", "grok-vs-claude", "grok-vs-gemini", "chatgpt-vs-perplexity",
     ],
   },
   {
