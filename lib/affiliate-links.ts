@@ -77,7 +77,7 @@ export const AFFILIATE_LINKS: Record<string, AffiliateLink> = {
   seopowersuite: { url: "https://www.link-assistant.com/", program: "SEO PowerSuite", cluster: "c4-rank-tracking", pending: true },
 
   // --- C5 · Hosting / performance ------------------------------------------
-  kinsta: { url: "https://kinsta.com/", program: "Kinsta", cluster: "c5-hosting", pending: true },
+  kinsta: { url: "https://kinsta.com/?kaid=NULDDEDMWHUX", program: "Kinsta", cluster: "c5-hosting" },
   cloudways: { url: "https://www.cloudways.com/", program: "Cloudways", cluster: "c5-hosting", pending: true },
   wpengine: { url: "https://wpengine.com/", program: "WP Engine", cluster: "c5-hosting", pending: true },
   rocket: { url: "https://rocket.net/", program: "Rocket.net", cluster: "c5-hosting", pending: true },
