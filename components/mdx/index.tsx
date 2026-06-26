@@ -4,6 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Callout } from "./callout"
 import { YouTube } from "./youtube"
+import { AffiliateDisclosure } from "./affiliate-disclosure"
 import { AiCrawlerCheckerWidget } from "@/components/tools/ai-crawler-checker-widget"
 import { slugify } from "@/lib/utils"
 
@@ -26,6 +27,7 @@ function childrenToText(children: ReactNode): string {
 export const mdxComponents: MDXComponents = {
   Callout,
   YouTube,
+  AffiliateDisclosure,
   AiCrawlerCheckerWidget,
   Image,
   h2: ({ children, ...props }) => (
@@ -39,6 +41,15 @@ export const mdxComponents: MDXComponents = {
     </h3>
   ),
   a: ({ href, children, ...props }) => {
+    // Affiliate redirect links (/go/<slug>) — sponsored, open in a new tab, and
+    // NOT client-routed (it's a server 302 redirect handler, not a page).
+    if (href?.startsWith("/go/")) {
+      return (
+        <a href={href} target="_blank" rel="sponsored nofollow noopener noreferrer" {...props}>
+          {children}
+        </a>
+      )
+    }
     if (href?.startsWith("/")) {
       return (
         <Link href={href} {...props}>

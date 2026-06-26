@@ -75,6 +75,7 @@ export function Footer() {
               <li><Link href="/contact" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Contact</Link></li>
               <li><Link href="/privacy" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Privacy Policy</Link></li>
               <li><Link href="/terms" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Terms of Service</Link></li>
+              <li><Link href="/affiliate-disclosure" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Affiliate Disclosure</Link></li>
             </ul>
           </div>
         </div>

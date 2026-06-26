@@ -1,0 +1,98 @@
+// ---------------------------------------------------------------------------
+// Affiliate link registry — the single source of truth for monetized outbound
+// links. MDX articles link to `/go/<slug>`; `app/go/[slug]/route.ts` looks the
+// slug up here and 302-redirects to `url`. Swap a partner, fix a dead deep-link,
+// or flip a program off in ONE place — never by editing articles.
+//
+// IMPORTANT — `url` must become the AFFILIATE TRACKING link once the program
+// account is approved. Until then it points at the plain homepage and the entry
+// is marked `pending: true`: the link still works for the reader, it just earns
+// $0 (no tracking) and should not be presented as "tested/recommended" copy that
+// implies a commission relationship until the real link is in.
+//
+// `rel` is always "sponsored nofollow noopener noreferrer" and target=_blank —
+// set by the MDX `<a>` override and the route handler. Do not pass equity.
+// ---------------------------------------------------------------------------
+
+export type AffiliateCluster =
+  | "c1-content"
+  | "c2-linkbuilding"
+  | "c3-seo-suite"
+  | "c4-rank-tracking"
+  | "c5-hosting"
+  | "c6-entity"
+  | "c7-reputation"
+
+export type AffiliateLink = {
+  /** Destination. Affiliate tracking URL once approved; plain homepage until then. */
+  url: string
+  /** Program / brand name — used for click logging and internal reference. */
+  program: string
+  /** Which content cluster this brand belongs to (see the monetization plan). */
+  cluster: AffiliateCluster
+  /** True until a real tracking URL is in place (points at homepage, earns nothing). */
+  pending?: boolean
+  /**
+   * Skip appending utm_* query params. Some networks (Impact, PartnerStack,
+   * Everflow) use their own deep-link param structure and can break or drop the
+   * referral when extra params are added — set this once the real link is in if so.
+   */
+  noUtm?: boolean
+}
+
+// All entries seeded `pending` — replace `url` with the network tracking link as
+// each account is approved, then remove `pending`. Homepages are the safe fallback.
+export const AFFILIATE_LINKS: Record<string, AffiliateLink> = {
+  // --- C1 · Content optimization / AI writing ------------------------------
+  surfer: { url: "https://surferseo.com/", program: "Surfer SEO", cluster: "c1-content", pending: true },
+  frase: { url: "https://www.frase.io/", program: "Frase", cluster: "c1-content", pending: true },
+  scalenut: { url: "https://www.scalenut.com/", program: "Scalenut", cluster: "c1-content", pending: true },
+  neuronwriter: { url: "https://neuronwriter.com/", program: "NeuronWriter", cluster: "c1-content", pending: true },
+  copyai: { url: "https://www.copy.ai/", program: "Copy.ai", cluster: "c1-content", pending: true },
+  writesonic: { url: "https://writesonic.com/", program: "Writesonic", cluster: "c1-content", pending: true },
+
+  // --- C2 · Link building / digital PR / outreach --------------------------
+  collaborator: { url: "https://collaborator.pro/", program: "Collaborator.pro", cluster: "c2-linkbuilding", pending: true },
+  snov: { url: "https://snov.io/", program: "Snov.io", cluster: "c2-linkbuilding", pending: true },
+  hunter: { url: "https://hunter.io/", program: "Hunter.io", cluster: "c2-linkbuilding", pending: true },
+  instantly: { url: "https://instantly.ai/", program: "Instantly.ai", cluster: "c2-linkbuilding", pending: true },
+  adsy: { url: "https://adsy.com/", program: "Adsy", cluster: "c2-linkbuilding", pending: true },
+  getfluence: { url: "https://www.getfluence.com/", program: "Getfluence", cluster: "c2-linkbuilding", pending: true },
+  postaga: { url: "https://postaga.com/", program: "Postaga", cluster: "c2-linkbuilding", pending: true },
+  smartlead: { url: "https://www.smartlead.ai/", program: "Smartlead", cluster: "c2-linkbuilding", pending: true },
+  lemlist: { url: "https://www.lemlist.com/", program: "lemlist", cluster: "c2-linkbuilding", pending: true },
+  brand24: { url: "https://brand24.com/", program: "Brand24", cluster: "c2-linkbuilding", pending: true },
+  prowly: { url: "https://prowly.com/", program: "Prowly", cluster: "c2-linkbuilding", pending: true },
+
+  // --- C3 · SEO suites / research ------------------------------------------
+  semrush: { url: "https://www.semrush.com/", program: "Semrush", cluster: "c3-seo-suite", pending: true },
+  spyfu: { url: "https://www.spyfu.com/", program: "SpyFu", cluster: "c3-seo-suite", pending: true },
+  seranking: { url: "https://seranking.com/", program: "SE Ranking", cluster: "c3-seo-suite", pending: true },
+  mangools: { url: "https://mangools.com/", program: "Mangools", cluster: "c3-seo-suite", pending: true },
+  serpstat: { url: "https://serpstat.com/", program: "Serpstat", cluster: "c3-seo-suite", pending: true },
+
+  // --- C4 · Rank tracking --------------------------------------------------
+  accuranker: { url: "https://www.accuranker.com/", program: "AccuRanker", cluster: "c4-rank-tracking", pending: true },
+  wincher: { url: "https://www.wincher.com/", program: "Wincher", cluster: "c4-rank-tracking", pending: true },
+  seopowersuite: { url: "https://www.link-assistant.com/", program: "SEO PowerSuite", cluster: "c4-rank-tracking", pending: true },
+
+  // --- C5 · Hosting / performance ------------------------------------------
+  kinsta: { url: "https://kinsta.com/", program: "Kinsta", cluster: "c5-hosting", pending: true },
+  cloudways: { url: "https://www.cloudways.com/", program: "Cloudways", cluster: "c5-hosting", pending: true },
+  wpengine: { url: "https://wpengine.com/", program: "WP Engine", cluster: "c5-hosting", pending: true },
+  rocket: { url: "https://rocket.net/", program: "Rocket.net", cluster: "c5-hosting", pending: true },
+  hostinger: { url: "https://www.hostinger.com/", program: "Hostinger", cluster: "c5-hosting", pending: true },
+  siteground: { url: "https://www.siteground.com/", program: "SiteGround", cluster: "c5-hosting", pending: true },
+
+  // --- C6 · Entity / semantic SEO (GEO-native) -----------------------------
+  inlinks: { url: "https://inlinks.com/", program: "InLinks", cluster: "c6-entity", pending: true },
+  wordlift: { url: "https://wordlift.io/", program: "WordLift", cluster: "c6-entity", pending: true },
+  schemaapp: { url: "https://www.schemaapp.com/", program: "Schema App", cluster: "c6-entity", pending: true },
+  linkwhisper: { url: "https://linkwhisper.com/", program: "Link Whisper", cluster: "c6-entity", pending: true },
+  marketmuse: { url: "https://www.marketmuse.com/", program: "MarketMuse", cluster: "c6-entity", pending: true },
+}
+
+/** Resolve a slug (case-insensitive) to its affiliate link, or undefined. */
+export function getAffiliateLink(slug: string): AffiliateLink | undefined {
+  return AFFILIATE_LINKS[slug.toLowerCase()]
+}
