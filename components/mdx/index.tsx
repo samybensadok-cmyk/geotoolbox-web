@@ -5,6 +5,7 @@ import Link from "next/link"
 import { Callout } from "./callout"
 import { YouTube } from "./youtube"
 import { AffiliateDisclosure } from "./affiliate-disclosure"
+import { BlogImage } from "./blog-image"
 import { AiCrawlerCheckerWidget } from "@/components/tools/ai-crawler-checker-widget"
 import { slugify } from "@/lib/utils"
 
@@ -30,6 +31,7 @@ export const mdxComponents: MDXComponents = {
   AffiliateDisclosure,
   AiCrawlerCheckerWidget,
   Image,
+  BlogImage,
   h2: ({ children, ...props }) => (
     <h2 id={slugify(childrenToText(children))} className="scroll-mt-24" {...props}>
       {children}
