@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AI Visibility Check</title>
 <!--
-  GrowthAck — AI Visibility Checker (embeddable widget)
+  Growthack — AI Visibility Checker (embeddable widget)
   Self-contained: host this single file on Cloudflare, embed in Framer via <iframe>.
   Theme   -> edit the :root CSS variables below (brand colours/font/logo).
   Wire up  -> edit the GAK_CONFIG block in <script> (API_BASE, MAKE_WEBHOOK_URL, ENGINES, GATE).
@@ -23,7 +23,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Fragment+Mono&display=swap" rel="stylesheet">
 <style>
 :root{
-  /* ---- GrowthAck brand ---- */
+  /* ---- Growthack brand ---- */
   --gak-navy:#0c1a2e;        /* authority: headings, dark sections */
   --gak-orange:#ff5800;      /* signature accent — FILLS / CTAs only */
   --gak-orange-600:#e64f00;  /* accent hover */
@@ -72,8 +72,21 @@ body{
 .gak-eyebrow{display:inline-block;font:600 12px/1 var(--gak-mono);letter-spacing:.16em;text-transform:uppercase;color:var(--gak-orange-ink);margin-bottom:14px}
 .gak-h1{font-size:clamp(28px,5vw,40px);line-height:1.05;font-weight:800;color:var(--gak-navy);margin:0 0 12px;letter-spacing:-.034em}
 .gak-sub{color:var(--gak-muted);font-size:16px;line-height:1.5;margin:0 auto;max-width:46ch}
-.gak-form{display:flex;gap:10px;margin:26px auto 8px;max-width:540px;flex-wrap:wrap}
-.gak-field{flex:1 1 240px;position:relative}
+/* refined input panel — required action up top (prominent), optional inputs demoted below */
+.gak-panel{max-width:540px;margin:28px auto 0;display:flex;flex-direction:column;gap:14px;text-align:left}
+.gak-form{display:grid;grid-template-columns:1.55fr 1fr;gap:10px}
+.gak-field{position:relative;min-width:0}
+/* confident, unmissable primary CTA spanning the full panel width */
+.gak-btn-go{grid-column:1 / -1;width:100%;height:56px;display:inline-flex;align-items:center;justify-content:center;gap:10px;font-size:16.5px;font-weight:800;letter-spacing:-.012em;
+  box-shadow:0 2px 5px rgba(16,32,54,.12),0 16px 34px -14px rgba(255,88,0,.62)}
+.gak-go-arrow{font-size:18px;line-height:1;transition:transform .18s cubic-bezier(.2,.7,.3,1)}
+.gak-btn-go:hover .gak-go-arrow{transform:translateX(4px)}
+.gak-btn-go[disabled] .gak-go-arrow{opacity:0}
+/* OPTIONAL row — visually subordinate (smaller, recessed wells, mono tag) so required vs optional reads instantly */
+.gak-form-opt{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
+.gak-opt-tag{grid-column:1 / -1;font:600 10.5px/1 var(--gak-mono);letter-spacing:.15em;text-transform:uppercase;color:var(--gak-faint);margin:2px 0 -3px}
+.gak-form-opt .gak-input{height:46px;font-size:14px;padding:0 16px;background:var(--gak-inset);border-color:var(--gak-line)}
+.gak-form-opt select.gak-input{padding-right:38px;background-position:right 14px center}
 .gak-input{
   width:100%;height:54px;padding:0 22px;font-size:16px;font-family:inherit;color:var(--gak-ink);
   background:var(--gak-card);border:1.5px solid var(--gak-line-2);border-radius:12px;outline:none;transition:border-color .16s,box-shadow .16s;
@@ -102,7 +115,12 @@ select.gak-input{appearance:none;-webkit-appearance:none;-moz-appearance:none;cu
 .gak-booking-txt{flex:1 1 240px;min-width:0}
 .gak-booking-h{font-size:20px;font-weight:800;letter-spacing:-.02em;margin:0 0 5px;color:#fff}
 .gak-booking-sub{font-size:14px;line-height:1.55;color:#aebfd6;margin:0}
-.gak-note{font-size:13px;color:var(--gak-faint);text-align:center;margin-top:8px}
+.gak-note{display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--gak-faint);margin-top:4px;line-height:1.4}
+.gak-note-dot{width:7px;height:7px;border-radius:50%;background:var(--gak-mint);box-shadow:0 0 0 3px rgba(46,158,111,.16);flex:0 0 auto}
+@media(max-width:560px){
+  .gak-form{grid-template-columns:1fr}
+  .gak-form-opt{grid-template-columns:1fr}
+}
 .gak-err{color:var(--gak-bad);font-size:14px;text-align:center;margin-top:10px;min-height:18px}
 
 /* ---------- loading ---------- */
@@ -484,7 +502,7 @@ select.gak-input{appearance:none;-webkit-appearance:none;-moz-appearance:none;cu
 #gak-pdf-root .pdf-foot{position:absolute;left:52px;right:52px;bottom:22px;display:flex;justify-content:space-between;font:600 10px/1 var(--gak-mono);color:#93a0af;border-top:1px solid #e9ebf0;padding-top:12px}
 
 /* ---------- print fallback (window.print() when html2pdf can't load) ---------- */
-/* ===== Suso-style score hero + breakdown grid (GrowthAck brand) ===== */
+/* ===== Suso-style score hero + breakdown grid (Growthack brand) ===== */
 /* free-first ordering: SCORE hero on top (Kevin: "score comes up straight away"), free teasers collapsed below,
    email gate next, everything gated (incl. AI-crawler) below the gate. */
 #gak-sample-note{order:-5}
@@ -585,30 +603,33 @@ body.gak-capturing::after{content:'Preparing your PDF…';position:fixed;inset:0
   <!-- ===== INPUT ===== -->
   <section id="gak-stage-input">
     <div class="gak-hero">
-      <div class="gak-eyebrow" id="gak-eyebrow">GrowthAck · AI Visibility</div>
+      <div class="gak-eyebrow" id="gak-eyebrow">Growthack · AI visibility</div>
       <h1 class="gak-h1">Can AI find &amp; recommend your brand?</h1>
-      <p class="gak-sub">Get an instant AI-readiness score, see which AI crawlers can reach your site, and check whether ChatGPT &amp; Google AI mention you — free.</p>
+      <p class="gak-sub">Get an instant AI-readiness score, see which AI crawlers reach your site, and check whether ChatGPT &amp; Google AI mention you — free.</p>
     </div>
-    <form class="gak-form" id="gak-form" autocomplete="off">
-      <div class="gak-field"><input class="gak-input" id="gak-url" type="text" inputmode="url" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="yourwebsite.com" aria-label="Your website" maxlength="255" required></div>
-      <div class="gak-field"><input class="gak-input" id="gak-company" type="text" placeholder="Company name" aria-label="Company name" maxlength="80" required></div>
-      <button class="gak-btn" id="gak-go" type="submit">Run free AI check</button>
-    </form>
-    <form class="gak-form" id="gak-form2" autocomplete="off" style="margin-top:0">
-      <div class="gak-field"><input class="gak-input" id="gak-brand" type="text" placeholder="Brand name (optional, if different)" aria-label="Brand name" maxlength="80"></div>
-      <div class="gak-field"><input class="gak-input" id="gak-industry" type="text" placeholder="Industry (optional) — sharpens the check" aria-label="Industry" maxlength="80"></div>
-      <div class="gak-field"><select class="gak-input" id="gak-country" aria-label="Target market">
-        <option value="">Market: auto-detect</option>
-        <option value="United Kingdom">United Kingdom</option>
-        <option value="United States">United States</option>
-        <option value="Canada">Canada</option>
-        <option value="Australia">Australia</option>
-        <option value="Ireland">Ireland</option>
-        <option value="New Zealand">New Zealand</option>
-        <option value="Global">Global (no country)</option>
-      </select></div>
-    </form>
-    <div class="gak-note">No signup to see your score · adding your brand, industry &amp; market sharpens the AI-visibility check</div>
+    <div class="gak-panel">
+      <form class="gak-form" id="gak-form" autocomplete="off">
+        <div class="gak-field gak-field-url"><input class="gak-input" id="gak-url" type="text" inputmode="url" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="yourwebsite.com" aria-label="Your website" maxlength="255" required></div>
+        <div class="gak-field"><input class="gak-input" id="gak-company" type="text" placeholder="Company name" aria-label="Company name" maxlength="80" required></div>
+        <button class="gak-btn gak-btn-go" id="gak-go" type="submit">Run free AI check<span class="gak-go-arrow" aria-hidden="true">→</span></button>
+      </form>
+      <form class="gak-form gak-form-opt" id="gak-form2" autocomplete="off">
+        <span class="gak-opt-tag">Optional · sharpens your results</span>
+        <div class="gak-field"><input class="gak-input" id="gak-brand" type="text" placeholder="Brand name" aria-label="Brand name (if different from company)" maxlength="80"></div>
+        <div class="gak-field"><input class="gak-input" id="gak-industry" type="text" placeholder="Industry" aria-label="Industry" maxlength="80"></div>
+        <div class="gak-field"><select class="gak-input" id="gak-country" aria-label="Target market">
+          <option value="">Market</option>
+          <option value="United Kingdom">United Kingdom</option>
+          <option value="United States">United States</option>
+          <option value="Canada">Canada</option>
+          <option value="Australia">Australia</option>
+          <option value="Ireland">Ireland</option>
+          <option value="New Zealand">New Zealand</option>
+          <option value="Global">Global (no country)</option>
+        </select></div>
+      </form>
+      <div class="gak-note"><span class="gak-note-dot"></span>No signup to see your score · results in seconds</div>
+    </div>
     <div class="gak-err" id="gak-err" role="alert"></div>
   </section>
 
@@ -773,7 +794,7 @@ body.gak-capturing::after{content:'Preparing your PDF…';position:fixed;inset:0
       <div class="gak-booking gak-hide" id="gak-booking">
         <div class="gak-booking-in">
           <div class="gak-booking-txt">
-            <div class="gak-booking-h" id="gak-booking-h">Want GrowthAck to fix this?</div>
+            <div class="gak-booking-h" id="gak-booking-h">Want Growthack to fix this?</div>
             <p class="gak-booking-sub" id="gak-booking-sub">Book a 20-minute call — we'll show you how to get named by ChatGPT, Perplexity &amp; Google AI in your category.</p>
           </div>
           <div class="gak-booking-cta-group">
@@ -790,7 +811,7 @@ body.gak-capturing::after{content:'Preparing your PDF…';position:fixed;inset:0
     </div>
   </section>
 
-  <div class="gak-foot">Powered by <a href="#" id="gak-foot-link">GrowthAck</a> · AI search visibility</div>
+  <div class="gak-foot">Powered by <a href="#" id="gak-foot-link">Growthack</a> · AI search visibility</div>
 </div>
 
 <!-- ===== PDF RENDER ROOT (off-screen; built on demand from LAST, captured by html2pdf.js) =====
@@ -811,7 +832,7 @@ const GAK_CONFIG = {
   API_ACTION: "gak_ai_check",            // ?action= handler (see API_CONTRACT.md)
   MAKE_WEBHOOK_URL: "",                  // <-- Kevin's Make.com webhook (lead -> HubSpot + MailChimp). Empty = skip POST.
   ENGINES: ["chatgpt","perplexity","google_aio"],  // ChatGPT+Perplexity (DataForSEO) + Google AI Overviews (SerpAPI)
-  BRAND: { name: "GrowthAck", url: "https://growthack.io", cta_url: "https://growthack.io/contact", cta_label: "Book a call →", cta_sub: "Book a 20-minute call — we'll show you how to get named by ChatGPT, Perplexity & Google AI in your category." },
+  BRAND: { name: "Growthack", url: "https://growthack.io", cta_url: "https://growthack.io/contact", cta_label: "Book a call →", cta_sub: "Book a 20-minute call — we'll show you how to get named by ChatGPT, Perplexity & Google AI in your category." },
   GATE: { freeChecksVisible: true, mode: "upfront", requireCompany: true }      // score + crawler shown free; full breakdown + visibility behind email. mode:"upfront" = score/report come back in the main payload (brief model).
 };
 
@@ -893,7 +914,7 @@ const REAL_VIS = {
       authority: { earned_count: 8, earned_hosts: ["clutch.co","designrush.com","techround.co.uk"], pr_hosts: ["techround.co.uk"], directory_hosts: ["clutch.co","designrush.com"], social: [{platform:"linkedin",url:"https://www.linkedin.com/company/growthack"}], ai_cites_nobody: false }
     },
     report: {
-      executive_summary: { text: "GrowthAck's AI Visibility Score is 38/100 (Grade D). Your site is technically flawless — 100/100 readiness, every AI crawler allowed — yet you were named in 0 of 7 AI answers we tested, while Finsbury Media, Impression Digital and Hallam appear for your own city. The gap isn't access; it's being cited. The fastest win: earn listings on the Nottingham-agency directories and listicles AI already pulls from.",
+      executive_summary: { text: "Growthack's AI Visibility Score is 38/100 (Grade D). Your site is technically flawless — 100/100 readiness, every AI crawler allowed — yet you were named in 0 of 7 AI answers we tested, while Finsbury Media, Impression Digital and Hallam appear for your own city. The gap isn't access; it's being cited. The fastest win: earn listings on the Nottingham-agency directories and listicles AI already pulls from.",
         source: "deterministic", facts_used: { mentioned_count: 0, engines_tested: 7, top_competitor: "Finsbury Media", weakest_category: "chatgpt_visibility" } },
       brand_performance: [
         { label: "Brand Clarity",      key: "brand_clarity",      score: 100, band: "strong" },
@@ -920,7 +941,7 @@ const REAL_VIS = {
         ],
         strategic_actions: [
           { title: "Launch a digital-PR push for Nottingham-agency listicles", detail: "Earn placements on the 'best agencies in Nottingham' listicles and review sites AI already reads, so it has a neutral source that names you.", linked_gap: "No earned citations in the answer set", impact: 0.05, target_domain: "techround.co.uk" },
-          { title: "Build founder authority", detail: "Publish founder-bylined expertise and keep entity signals consistent (NAP, schema, LinkedIn) so AI reinforces who GrowthAck is.", linked_gap: "Weak entity reinforcement off-site", impact: 0.03 }
+          { title: "Build founder authority", detail: "Publish founder-bylined expertise and keep entity signals consistent (NAP, schema, LinkedIn) so AI reinforces who Growthack is.", linked_gap: "Weak entity reinforcement off-site", impact: 0.03 }
         ]
       },
       offering_perception: { title: "How AI describes your offerings", correct: ["SEO","PPC","Web design"], ai_missing: ["AI search optimisation","GEO services","Conversion rate optimisation"], hidden: false },
@@ -1007,12 +1028,12 @@ const ro = new ResizeObserver(frameHeight); ro.observe(document.body);
   if (GAK_CONFIG.PREVIEW) {
     var b = document.createElement('div');
     b.textContent = GAK_CONFIG.HYBRID
-      ? 'PREVIEW for GrowthAck · growthack.io + manageathome.co.uk load instantly with real baked data — type any other domain for a live AI-visibility scan'
-      : 'PREVIEW for GrowthAck · real AI-visibility data baked in for growthack.io (your own site) + your client manageathome.co.uk';
+      ? 'PREVIEW for Growthack · growthack.io + manageathome.co.uk load instantly with real baked data — type any other domain for a live AI-visibility scan'
+      : 'PREVIEW for Growthack · real AI-visibility data baked in for growthack.io (your own site) + your client manageathome.co.uk';
     b.style.cssText = 'background:#0c1a2e;color:#fff;font:600 12px/1.4 var(--gak-mono);text-align:center;padding:8px 12px;border-radius:8px;margin:0 0 18px;letter-spacing:.02em';
     var app = $('gak-app'); app.insertBefore(b, app.firstChild);
     // lead with his OWN site so the first thing he sees is his own absence
-    var urlEl=$('gak-url'); if(urlEl && !urlEl.value){ urlEl.value='growthack.io'; var ind=$('gak-industry'); if(ind) ind.value='SEO agency'; var co=$('gak-company'); if(co && !co.value) co.value='GrowthAck'; }
+    var urlEl=$('gak-url'); if(urlEl && !urlEl.value){ urlEl.value='growthack.io'; var ind=$('gak-industry'); if(ind) ind.value='SEO agency'; var co=$('gak-company'); if(co && !co.value) co.value='Growthack'; }
   }
   $('gak-foot-link').textContent = GAK_CONFIG.BRAND.name;
   $('gak-foot-link').href = gakSafeUrl(GAK_CONFIG.BRAND.url || '', null);   // route white-label config URLs through the scheme guard too
@@ -1938,9 +1959,9 @@ const PDF_BANDHEX = (b)=> b==='strong'||b==='good' ? ['#0f7a52','#e7f5ee','#c2e6
   : ['#636f7e','#f5f6f8','#e9ebf0'];
 let PDF_DATE='';
 /* inline-SVG wordmark (NOT a cross-origin <img>, so it never taints the html2canvas canvas) */
-const PDF_LOGO = '<svg width="150" height="24" viewBox="0 0 150 24" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="GrowthAck">'
+const PDF_LOGO = '<svg width="150" height="24" viewBox="0 0 150 24" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Growthack">'
   + '<text x="0" y="19" font-family="Manrope,Arial,Helvetica,sans-serif" font-size="21" font-weight="800" letter-spacing="-0.6">'
-  + '<tspan fill="#0c1a2e">Growth</tspan><tspan fill="#ff5800">Ack</tspan></text></svg>';
+  + '<tspan fill="#0c1a2e">Growth</tspan><tspan fill="#ff5800">ack</tspan></text></svg>';
 
 /* self-contained PDF gauge (literal hex, no var()/currentColor; arc rotated via SVG attribute) */
 function pdfGauge(score, color, numText){
@@ -1961,7 +1982,7 @@ function pdfData(){
     readiness:L.readiness||null };
 }
 function pdfPageWrap(kicker, n, total, inner){
-  const agency = (GAK_CONFIG.BRAND && GAK_CONFIG.BRAND.name) || 'GrowthAck';
+  const agency = (GAK_CONFIG.BRAND && GAK_CONFIG.BRAND.name) || 'Growthack';
   return '<div class="pdf-page"><div class="pdf-brandbar">'+PDF_LOGO+'<span class="pdf-kicker">'+esc(kicker)+'</span></div>'
     + inner
     + '<div class="pdf-foot"><span>'+esc(agency)+' · AI Visibility Report</span><span>Page '+n+' of '+total+'</span></div></div>';
@@ -2109,7 +2130,7 @@ function pdfNextStepsPage(D){
   const composite=(sc&&sc.state==='ok'&&sc.composite!=null)?Number(sc.composite):null;
   const seg=composite!=null?gakSegment(composite):null;
   const B=GAK_CONFIG.BRAND||{};
-  const agency=B.name||'GrowthAck';
+  const agency=B.name||'Growthack';
   const ctaUrl=gakSafeUrl(B.cta_url||B.url||'', null);
   const ctaLabel=(B.cta_label||'Book a call').replace(/[\s→]+$/,'');
   const ctaSub=B.cta_sub||'';
