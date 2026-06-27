@@ -1,0 +1,169 @@
+---
+title: "Gemini SEO: How to Get Cited in Google Gemini"
+description: "Gemini SEO means getting cited in Google Gemini's answers. How grounding, the Google index, Google-Extended, and the four Gemini surfaces actually work."
+date: "2026-06-27"
+author: "Samy BEN SADOK"
+tags: ["gemini", "gemini-seo", "geo", "ai-visibility", "guide"]
+draft: false
+---
+
+Gemini SEO is not a new playbook so much as your existing Google SEO aimed at a new target: getting your brand named when someone asks Google Gemini a question, instead of just ranking a blue link. Most guides skip the reason it works. Gemini does not run its own index of the web; it grounds its answers on Google's Search index, the same one behind your rankings, and it shows up in four different places, from the [Gemini app](https://geotoolbox.ai/blog/what-is-gemini) to the AI answers inside Search. Get a few mechanics right and the same body of work feeds all four. This guide is the specifics, current as of June 2026.
+
+## What "Gemini SEO" Actually Means
+
+Search "Gemini SEO" and most of what you find is about using Gemini to do your SEO work: drafting content, building schema, auditing a site. This guide is the other job. It is about getting your brand cited when someone asks Google Gemini a question, and that is now a distinct surface worth optimizing for because Gemini shows up in far more places than the chat app.
+
+"Gemini" is not one product. It is a family of models that powers several different answer surfaces, and each one can name your brand or skip it:
+
+- The **Gemini app** at gemini.google.com, where people chat directly
+- **AI Overviews**, the synthesized answer boxes at the top of Google Search
+- **AI Mode**, Google's conversational search tab that fans a question into many parallel sub-queries
+- **Gemini grounding** in the API, where other companies build apps on Google's search-grounded model
+
+What ties all four together is where they get their facts, and that is where every tactic below begins. It is also why optimizing for Gemini is mostly your existing [Google SEO and GEO](https://geotoolbox.ai/blog/what-is-geo) work, aimed at four AI surfaces instead of ten ranked links.
+
+## Where Gemini Gets Its Answers
+
+When Gemini answers a question that needs facts, it does not invent them from memory. It runs a search, reads the results, and writes an answer that cites them. This is [grounding](https://geotoolbox.ai/glossary/grounding): the model is anchored to live, retrieved web content instead of relying only on what it learned in training. Google describes the developer version plainly in its [Gemini API grounding docs](https://ai.google.dev/gemini-api/docs/google-search), which connect the model to real-time Google Search and return inline citations to the pages it used.
+
+The retrieval pool is the important part. Gemini grounds on Google's own Search index, the corpus Googlebot already built. There is no separate "Gemini index" of the web that you submit to or optimize for independently. If your page is indexed, it is eligible for those grounded answers. If it is not indexed, it is invisible to every Gemini surface, no matter how good the content is. This is why the work overlaps so heavily with classic [AI search optimization](https://geotoolbox.ai/blog/how-does-ai-search-work).
+
+One twist changes how you structure a page. Gemini, and especially AI Mode, uses [query fan-out](https://geotoolbox.ai/blog/query-fan-out): it breaks one question into several related sub-questions, runs them in parallel, and assembles the answer from the best passage for each. So a single page that cleanly answers the main question plus the obvious follow-ups can be cited several times in one response, while a page that answers only the headline question gets cited once or not at all. You are not optimizing for one query anymore. You are optimizing for a small tree of them.
+
+## The Crawler Question: Googlebot, Google-Extended, and the Trap
+
+This is where most "Gemini SEO" advice goes wrong, and the mistake can quietly remove you from the answers you want. There is no dedicated "GeminiBot" search crawler to allow. Discovery runs on **Googlebot**, the same crawler that indexes you for normal Search. The bot people confuse it with, [Google-Extended](https://geotoolbox.ai/glossary/google-extended), is not a search crawler at all. It is a control token in robots.txt that governs whether your content trains Google's generative models and grounds the Gemini app and Vertex AI.
+
+<table>
+  <thead>
+    <tr><th>Token</th><th>What it controls</th><th>Block it and...</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Googlebot</strong></td><td>Crawling and indexing for Google Search: the pool AI Overviews and AI Mode draw from, and the prerequisite index for the Gemini app and API too</td><td>You fall out of the index, so you cannot be cited in AI Overviews, AI Mode, or grounded Gemini answers</td></tr>
+    <tr><td><strong>Google-Extended</strong></td><td>Whether your content trains Google's models and grounds the Gemini app and the API (Vertex AI)</td><td>You opt out of training and of grounding in the Gemini app and the API, with no effect on your Search ranking or on AI Overviews and AI Mode eligibility</td></tr>
+    <tr><td><strong>"GeminiBot"</strong></td><td>Does not exist as a separate search crawler</td><td>Nothing to block; do not add invented user-agents to robots.txt</td></tr>
+  </tbody>
+</table>
+
+Google is explicit that these are separate doors. Its documentation on [AI features and your website](https://developers.google.com/search/docs/appearance/ai-features) states that AI Overviews and AI Mode are built into Search, so "robots.txt directives for Googlebot is the control for site owners to manage access," and that you limit what they show with the standard `nosnippet`, `data-nosnippet`, `max-snippet`, or `noindex` controls. Google-Extended is for "some of Google's other systems," not Search. Google's own [crawler documentation](https://developers.google.com/search/docs/crawling-indexing/google-common-crawlers) puts the load-bearing line plainly: "Google-Extended does not impact a site's inclusion in Google Search nor is it used as a ranking signal in Google Search."
+
+So training and citation are two switches, not one. Plenty of brands block Google-Extended to opt out of AI training, a perfectly reasonable choice, and assume they have "blocked Gemini." Not quite. Blocking Google-Extended does drop you from the two surfaces it gates, the Gemini app and the API, but you stay fully eligible for AI Overviews and AI Mode, because those ride Googlebot. The damaging mistake is the reverse: a broad firewall or robots rule that blocks Googlebot, which pulls you out of the index every Gemini surface draws from. Our [AI Crawler Checker](https://geotoolbox.ai/tools/ai-crawler-checker) fetches your robots.txt server-side and shows which of 34 AI crawlers, Google-Extended and Googlebot included, you are allowing or blocking, so you can confirm you have not closed the wrong door.
+
+## The Four Gemini Surfaces, and How Each Picks Sources
+
+Because all four surfaces ground on the same Google index, the foundation is shared, but they differ in how they retrieve and where you check whether you won. Treat them as one optimization target with four scoreboards.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/gemini-seo/four-gemini-surfaces-one-index.png" alt="The four Google Gemini surfaces, all grounded on one Google Search index." w="2200" h="1272" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Googlebot builds the index; all four Gemini surfaces draw their citations from it.</figcaption>
+</figure>
+
+<table>
+  <thead>
+    <tr><th>Surface</th><th>What powers it</th><th>How you influence it</th><th>Where to check</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Gemini app</strong></td><td>The Gemini model, grounded on Google Search when a question needs fresh facts</td><td>Be indexed and be the clean, current answer; off-site mentions help corroborate the brand too</td><td>Ask Gemini your questions in a signed-out session and read the cited links</td></tr>
+    <tr><td><strong>AI Overviews</strong></td><td>The standard Search index, summarized at the top of results</td><td>Be indexed and extractable; position is a weak signal, so see the dedicated playbook</td><td>Search Console, bundled under "Web"; manual SERP checks</td></tr>
+    <tr><td><strong>AI Mode</strong></td><td>The same index, with heavier query fan-out and deeper synthesis</td><td>Cover the question neighborhood on one page so you win multiple sub-queries</td><td>Manual checks; Search Console does not break it out separately yet</td></tr>
+    <tr><td><strong>Gemini API grounding</strong></td><td>Developer apps calling Gemini with Grounding with Google Search enabled</td><td>Be indexed and keep Google-Extended unblocked; this surface is gated by Google-Extended, like the app</td><td>Inspect the inline <code>url_citation</code> annotations the API returns</td></tr>
+  </tbody>
+</table>
+
+The first two are familiar territory. The [Gemini app](https://geotoolbox.ai/blog/what-is-gemini) behaves like the other assistant chatbots: it searches, it cites, and the citation is a link the user can click. AI Overviews is a Search feature with its own established craft, which we cover in depth in [how to get cited in Google AI Overviews](https://geotoolbox.ai/blog/google-ai-overviews-seo).
+
+[AI Mode](https://geotoolbox.ai/glossary/google-ai-mode) is the one to watch. It leans hardest on fan-out, running many sub-queries behind a single conversational thread, which means the page that answers a whole topic cleanly tends to be pulled in repeatedly. The fourth surface is the one almost no guide mentions: the **Gemini API**. When another company builds a feature on Gemini with grounding turned on, Google's [API documentation](https://ai.google.dev/gemini-api/docs/google-search) shows it returns inline `url_citation` annotations pointing back to source pages. You do not optimize for it separately. You appear there for the same reason you appear in the app: you are in the Google index, you have not blocked Google-Extended, and you are the best passage for the sub-question. Same work, one more place it pays off.
+
+## First, Can Gemini Reach Your Pages?
+
+Every tactic below assumes one thing: your page is in Google's index and the content Gemini needs is actually in the HTML it reads. That assumption fails more often than people expect, and when it fails, nothing else matters.
+
+Start with indexation. If a page is not indexed in Google Search, it cannot surface in any Gemini surface, full stop. Check coverage in Search Console before you spend an afternoon on formatting. A page that returns a soft 404, sits behind a `noindex` you forgot about, or never got crawled is not a citation candidate.
+
+Then check rendering. Gemini's grounding works from what Google has indexed, and a search-time read favors content that exists in the raw HTML. If your key facts, prices, or definitions are injected client-side by JavaScript, a crawler or grounding fetch can land on a near-empty shell and move on to a competitor whose answer sits in the served markup. Server-rendered, text-first pages are easier to extract than app-shell pages that paint the important parts after load.
+
+This is the reachability gate that governs [optimizing for AI search](https://geotoolbox.ai/blog/how-to-optimize-for-ai-search) on every engine, not just Gemini. Confirm the page is indexed, confirm the answer is in the HTML, and confirm no robots or firewall rule is blocking Googlebot. Only then is it worth tuning the content itself.
+
+## What Gets You Cited in Gemini
+
+With the page reachable, citation comes down to being the clearest, most credible source for a specific claim. The fundamentals match the rest of AI search, with a few Gemini-shaped emphases.
+
+1. **Lead with the answer.** State the fact directly in a self-contained sentence near the top of the relevant section. Gemini lifts passages, so a clean claim it can quote in one line beats the same point spread across three paragraphs. Aggarwal et al.'s [generative engine optimization study](https://arxiv.org/abs/2311.09735) found that adding citations, quotations, and statistics improved a source's visibility in their benchmark by up to 40 percent. This is the core of [writing pages LLMs cite](https://geotoolbox.ai/blog/ai-content-optimization).
+2. **Cover the neighborhood.** Because of query fan-out, answer the obvious follow-up questions on the same page, each under its own clear heading. The page that satisfies the whole question tree gets cited across the thread; the page that answers only the headline gets cited once.
+3. **Be a recognized entity.** Gemini leans on Google's [Knowledge Graph](https://geotoolbox.ai/glossary/knowledge-graph) and entity systems to know who you are. Consistent naming across the web, an Organization profile, and `sameAs` links to authoritative profiles help Google treat you as one verified entity rather than a stranger. This is where [entity SEO](https://geotoolbox.ai/blog/entity-seo) pays off.
+4. **Make it verifiable and current.** Back claims with specific numbers, named sources, and visible dates. On changing topics, a fresh page is a stronger candidate than stale content, and dated facts help on exactly the queries that trigger a live search. There is no guaranteed pickup time; grounded retrieval favors recently crawled pages, so a visible last-updated date and a real refresh earn their keep.
+5. **Earn off-site consensus.** Gemini synthesizes from many sources, so being named accurately in roundups, reputable reviews, and community threads matters as much as your own page. Video is its own lane here: Gemini is multimodal and YouTube is Google-owned, so a relevant video can be pulled into an answer the way a page is. AI engines cite what multiple sources agree on, not what a brand claims about itself. This is the [E-E-A-T signal](https://geotoolbox.ai/blog/eeat-ai-search) that moves you from eligible to cited.
+6. **Structure for extraction.** Clear headings, short lists, comparison tables, and a tight definition near the top all make a passage easier to lift cleanly.
+
+One pattern surprises SEOs. Ranking number one does not guarantee the citation. In the scans we run at geotoolbox, AI Overviews and AI Mode regularly cite a clean, well-structured page ranking well down the results over the top-ranked result that buries its answer under a long intro. Position helps you qualify; extractable structure wins the slot. If you rank well but never get cited, the cause is usually not authority. Your best fact is just too buried to lift.
+
+## The "Gemini SEO" Myths to Skip
+
+A few tactics get sold as Gemini requirements that Google's own documentation contradicts. Skip them and spend the time on the list above.
+
+**You need an llms.txt file.** You do not. Google states directly that you "don't need to create new machine readable files, AI text files, or markup" to appear in these features. There is no evidence Gemini reads llms.txt, so treat it as unproven, not a requirement.
+
+**Schema markup triggers citations.** It does not, at least not directly. The same Google guidance is explicit that there is "no special schema.org structured data that you need to add" to appear in AI Overviews or AI Mode. Standard schema still earns its place by helping Google understand your entities and by qualifying you for rich results, but it is plumbing, not a citation button. Do not expect a FAQ block to pull you into an answer on its own.
+
+**You have to be in the training data.** Also false, and this is the one the crawler section already debunked. Gemini grounds on the live index for current questions, so a page published yesterday can be cited today as long as it is crawled and indexed. Being part of a past training run is neither necessary nor sufficient.
+
+## How to Measure Gemini Visibility
+
+Be honest with yourself about the measurement gap before you build a dashboard, because Google's tools do not make this easy yet. Search Console folds AI Overviews into the regular "Web" search type and does not break out AI Mode separately, so you cannot cleanly isolate how much of your impression count comes from an AI answer. Referral data is worse: clicks from Gemini answers often arrive stripped of a clear referrer, so a meaningful share of Gemini-driven sessions land in your analytics as direct traffic rather than anything labeled "gemini." To recover the clicks that do carry a referrer, set up a GA4 custom channel that matches the gemini.google.com referrer, and treat it as a floor, since it misses the zero-click majority.
+
+So measurement is mostly manual, and it works like this:
+
+1. **Build a prompt set.** Write down the 10 to 20 real questions your customers would ask Gemini in your category, the ones an answer about you should appear in.
+2. **Run them and read the citations.** Ask each in a signed-out Gemini session, in AI Mode, and watch the AI Overview on the same query in Search. Record whether you are cited and, just as useful, who is cited instead.
+3. **Sample, do not snapshot.** Gemini is non-deterministic; the same prompt can cite different sources on different runs. Ask each question a few times before you conclude you have won or lost a slot, and track your citation rate rather than a single yes or no.
+4. **Re-run on a schedule.** Monthly checks turn into a trend you can act on, and the list of answers you are missing from becomes a ranked to-do list of passages to improve.
+
+Doing that by hand across surfaces and runs gets old fast, which is the gap our tools are built for. geotoolbox's [Citation Interceptor](https://geotoolbox.ai/features/citation-interceptor) tracks brand citations across Gemini and Google AI Overviews alongside the other major engines, and the [Domain Overview](https://geotoolbox.ai/features/domain-overview) turns repeated checks into a visibility baseline over time. Whether you automate it or keep a spreadsheet, the discipline is the same: sample real prompts, log who gets cited, and close the gaps one passage at a time. For the broader workflow, see our guide on [measuring AI visibility](https://geotoolbox.ai/blog/how-to-track-ai-visibility).
+
+## Is Gemini Worth Optimizing For?
+
+More than almost any other AI engine, and not because the Gemini app is the biggest chatbot. The reach comes through Search. At Google I/O in May 2026, Sundar Pichai said [AI Overviews had passed 2.5 billion monthly users](https://www.cnbc.com/video/2026/05/19/google-ceo-pichai-ai-overviews-now-has-over-2-point-5-billion-monthly-users.html), and AI Mode crossed a billion monthly users in its first year. Those are Gemini-powered answers sitting on top of the search results your audience already runs. Being cited there is visibility at a scale no standalone assistant matches today.
+
+It also reframes what a win looks like. As AI answers absorb more of the clicks, the payoff shifts from a visit to a mention: being named in the answer, plus the branded searches and direct visits that follow when someone trusts what they read. Plan for presence in the answer, not only traffic to the page.
+
+The better argument is the marginal cost. The four surfaces share the same Google foundation, so optimizing for Gemini is not a separate project. It is the SEO and [GEO](https://geotoolbox.ai/blog/geo-vs-aeo-vs-seo) work you already do: a reachable, indexed site, clear and current answers, real entity authority, and off-site consensus, with Google-Extended left open if you want the app and API surfaces too. So stop treating "Gemini SEO" as its own discipline. It is the highest-reach payoff of doing AI search optimization properly, the same way [getting cited in Claude](https://geotoolbox.ai/blog/claude-seo) or [Perplexity](https://geotoolbox.ai/blog/perplexity-seo) is.
+
+## Frequently Asked Questions
+
+**Does Gemini cite sources?**
+
+Yes, when it grounds a question on a live search. Gemini answers built from retrieval carry inline citations to the pages they used, and the Gemini API returns the same as inline citation annotations with the source URLs. When it answers from memory alone on an evergreen question, there are no per-claim sources, which is why getting cited means earning a place in the grounded answers.
+
+**Is there a Gemini crawler I need to allow?**
+
+No dedicated one. Discovery runs on Googlebot, the same crawler that indexes you for normal Search, so if Googlebot can reach you, Gemini's surfaces can cite you. Google-Extended is a training and grounding control, not a search crawler, and there is no "GeminiBot" user-agent to add to robots.txt.
+
+**Does blocking Google-Extended hurt my Google rankings or AI Overviews?**
+
+No. Google has confirmed Google-Extended is not a ranking signal and does not affect your inclusion in Search. Blocking it opts you out of model training and of grounding in the Gemini app and the API, while leaving you fully eligible for AI Overviews and AI Mode, which run on Googlebot.
+
+**How is Gemini SEO different from Google SEO?**
+
+It shares the same foundation, since Gemini grounds on the Google index, but the goal shifts from position to citation. That raises the weight on an answer-first, extractable structure, on covering the follow-up questions for query fan-out, and on off-site consensus, while lowering the weight on simply ranking first.
+
+**How do I check if Gemini mentions my brand?**
+
+Ask Gemini your category questions in a signed-out session, repeat across AI Mode and the AI Overview on the same query, and record whether you are cited and who is cited instead. Because answers vary between runs, sample each prompt a few times and track your citation rate rather than a single result.
+
+**Can I see Gemini referral traffic in analytics?**
+
+Partly. Clicks from the Gemini app can arrive with a gemini.google.com referrer, but most AI answers are read without a click, and many sessions lose the referrer and show up as direct traffic. Treat referral data as a floor, not a full count, and lean on manual citation checks for the real picture.
+
+## Start with Reachability
+
+That is the whole job: make your pages reachable, then make them the cleanest answer to the question. Do those two things and Gemini follows the rest of your AI visibility work, no separate playbook required.
+
+Start at the gate the citation guides skip: can Googlebot actually reach and render your pages? geotoolbox's free [AI Crawler Checker](https://geotoolbox.ai/tools/ai-crawler-checker) shows whether your robots.txt allows Googlebot and Google-Extended, the free [AI-Readiness Score](https://geotoolbox.ai/tools/ai-readiness) checks the wider crawler-access foundations, and the [Content Analyzer](https://geotoolbox.ai/features/content-analyzer) grades how citable a page is once they are in place. Confirm the door is open, make your best pages the clearest current answer to the questions you want, and you give every Gemini surface its best reason to pick you.
+
+## Sources
+
+- [AI features and your website](https://developers.google.com/search/docs/appearance/ai-features) - Google Search Central
+- [Grounding with Google Search](https://ai.google.dev/gemini-api/docs/google-search) - Google AI for Developers (Gemini API)
+- [Google-Extended and the Google crawlers](https://developers.google.com/search/docs/crawling-indexing/google-common-crawlers) - Google Search Central
+- [GEO: Generative Engine Optimization](https://arxiv.org/abs/2311.09735) - Aggarwal et al., KDD 2024
+- [Google CEO Pichai: AI Overviews now has over 2.5 billion monthly users](https://www.cnbc.com/video/2026/05/19/google-ceo-pichai-ai-overviews-now-has-over-2-point-5-billion-monthly-users.html) - CNBC, Google I/O 2026
