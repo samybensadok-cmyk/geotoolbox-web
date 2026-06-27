@@ -159,22 +159,28 @@ The list is the easy part, though. The harder question is whether the bots you w
 
 ## Frequently Asked Questions
 
-**Do I need a separate robots.txt rule for every AI bot?**
+### Do I need a separate robots.txt rule for every AI bot?
+
 Yes, robots.txt has no wildcard for "all AI bots": each user-agent token needs its own block, which is why generated configs from the community trackers are worth using. A single Disallow under User-agent: * also hits Googlebot and Bingbot, the classic accidental-option-3 mistake.
 
-**Does blocking Google-Extended affect AI Overviews citations?**
+### Does blocking Google-Extended affect AI Overviews citations?
+
 No on both counts: it does not touch your Search ranking, and it does not remove you from AI Overviews either, because those are built from the regular Googlebot crawl. Google-Extended only governs Gemini training and grounding, so it is the one token you can block with no visibility cost in Google surfaces today.
 
-**If I block GPTBot, am I out of ChatGPT?**
+### If I block GPTBot, am I out of ChatGPT?
+
 No. GPTBot is the training crawler. ChatGPT's search answers come through OAI-SearchBot and ChatGPT-User, so blocking GPTBot leaves your ChatGPT visibility intact. One caveat: your content may already sit in training sets through CCBot, which blocking GPTBot today does not undo.
 
-**Does blocking AI crawlers in robots.txt actually work?**
+### Does blocking AI crawlers in robots.txt actually work?
+
 For the major operators, yes, and you can verify it: their published IP ranges let you confirm in your server logs whether requests stopped after the change. If a blocked bot keeps appearing, check the IP before blaming the operator; it is usually a spoofer borrowing the name.
 
-**How do I stop Bytespider from draining my bandwidth?**
+### How do I stop Bytespider from draining my bandwidth?
+
 Because Bytespider often ignores robots.txt, the reliable fix is a firewall or WAF rule that blocks its user agent or IP ranges, not a Disallow line. Verify the IP rather than trusting the user-agent string, since the name is easy to fake.
 
-**Which exact user agent does each AI engine use?**
+### Which exact user agent does each AI engine use?
+
 The full strings carry version and contact info beyond the token, for example "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatible; GPTBot/1.2; +https://openai.com/gptbot". For robots.txt you only need the token (GPTBot, OAI-SearchBot, Claude-SearchBot, and so on per the table above); for log analysis, match on the token plus the operator's published IP ranges.
 
 ## Where to Start

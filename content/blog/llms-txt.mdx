@@ -118,19 +118,24 @@ So treat it as what it is: a ten-minute footnote, not a strategy. The work that 
 
 ## Frequently Asked Questions
 
-**Does ChatGPT, Claude, or Perplexity actually read llms.txt?**
+### Does ChatGPT, Claude, or Perplexity actually read llms.txt?
+
 You can answer this for your own site in five minutes: publish the file, wait a few weeks, and grep your server logs for requests to /llms.txt by bot user agent. Every published test so far has come back empty or close to it for the search crawlers; the largest, [Limy's May 2026 analysis](https://limy.ai/blog/llms.txt-in-2026-the-full-guide) of 515 million AI bot events across the brands it monitors, logged just 408 requests for the file. That is stronger evidence than any vendor statement.
 
-**Where exactly does the llms.txt file go?**
+### Where exactly does the llms.txt file go?
+
 At the root of your domain, like robots.txt: yoursite.com/llms.txt, served as plain text or markdown with a 200 status. On WordPress, several SEO plugins write it for you; on hosted docs platforms it is usually generated automatically; on anything else it is a static file in your web root.
 
-**What's the difference between llms.txt and llms-full.txt?**
+### What's the difference between llms.txt and llms-full.txt?
+
 llms.txt is the short, curated index defined by the spec; llms-full.txt dumps the entire documentation into one file. The practical selection rule: a coding assistant with a small context window wants the index, while a tool building a local knowledge base wants the full dump. If you only ship one, ship the index.
 
-**Should I add llms.txt to a marketing site or just documentation?**
+### Should I add llms.txt to a marketing site or just documentation?
+
 A middle case worth knowing: SaaS sites with a /docs section can serve llms.txt scoped to the docs while skipping it for the marketing pages. That gets the coding-assistant benefit where it exists without pretending the homepage needs it.
 
-**Does llms.txt affect Google indexing or my robots.txt rules?**
+### Does llms.txt affect Google indexing or my robots.txt rules?
+
 No interaction in either direction. Googlebot indexes your pages whether or not the file exists, and llms.txt cannot override a robots.txt block: a crawler disallowed in robots.txt should not fetch your llms.txt either. Treat them as fully independent files.
 
 ## Sources

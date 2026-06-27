@@ -137,22 +137,28 @@ The cheapest first move is to stop guessing. Run your homepage and a key product
 
 ## Frequently Asked Questions
 
-**Can AI agents execute JavaScript, or is my React site invisible to them?**
+### Can AI agents execute JavaScript, or is my React site invisible to them?
+
 Know which class you are serving: Chromium-based agentic browsers (Comet, ChatGPT Atlas, Gemini in Chrome) run JavaScript and even read screenshots, while the answer-fetching bots behind citations (OAI-SearchBot, PerplexityBot and peers) read raw HTML only. A React site is fine for the first group and invisible to the second unless it renders server-side.
 
-**Will Cloudflare or a CAPTCHA block AI shopping agents from buying on my site?**
+### Will Cloudflare or a CAPTCHA block AI shopping agents from buying on my site?
+
 Check your own logs before guessing: filter for agent user-agent strings and look for 403s and challenge pages on product and checkout paths. If you find them, scope the rule by path rather than removing it; challenges on /account and /admin cost you nothing, challenges on public product pages cost you delegated purchases.
 
-**Should I block AI agents, or will that make me invisible?**
+### Should I block AI agents, or will that make me invisible?
+
 The decision is per bot class, and the one genuinely new call is agentic traffic: unlike training crawlers, an agentic browser session often ends in a transaction, so blocking it has a direct revenue cost rather than a visibility cost. Audit which classes your current rules block before deciding anything.
 
-**Does Google Analytics track AI agent traffic?**
+### Does Google Analytics track AI agent traffic?
+
 The workarounds that exist today: server-log analysis by user-agent string, a custom dimension keyed to known agent UAs, and watching for sessions with impossible interaction speed. None are complete, because in-browser agents inherit the user's fingerprint, which is why log-level checks beat analytics dashboards here.
 
-**Is llms.txt worth doing if Google says it does not affect ranking?**
+### Is llms.txt worth doing if Google says it does not affect ranking?
+
 Yes, but for the right reason. llms.txt is not a ranking or AI-citation signal, and you should not sell it as one. It did just land in Google's own tooling, though: Lighthouse 13.3's Agentic Browsing audits include an optional llms.txt check (May 2026) that flags only a server error, which is a fair picture of its current weight. Our breakdown of [whether llms.txt is worth it](https://geotoolbox.ai/blog/llms-txt) covers the narrow group it genuinely helps and the decision rule for everyone else.
 
-**Is agentic checkout real today, or just hype?**
+### Is agentic checkout real today, or just hype?
+
 Real, and the protocol layer has now arrived: the [Agentic Commerce Protocol](https://www.agenticcommerce.dev/), an open standard from OpenAI and Stripe, already serves as the connective layer between merchants and ChatGPT users, and the [Universal Commerce Protocol](https://ucp.dev/), co-developed by Google, Shopify, Amazon, Walmart, and Stripe among others, covers catalog search, cart building, identity linking, checkout, and order management. A separate crypto-native rail, [x402](https://geotoolbox.ai/blog/what-is-x402), settles agent payments in stablecoins over HTTP. But those rails only work where a merchant has integrated them; everywhere else, an agent buys through your normal human checkout. That is exactly why the boring fixes still matter.
 
 ## Sources

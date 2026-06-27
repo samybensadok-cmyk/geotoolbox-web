@@ -112,22 +112,28 @@ In your access log, genuine traffic looks like `Mozilla/5.0 AppleWebKit/537.36 (
 
 ## Frequently Asked Questions
 
-**Can I block GPTBot for only part of my site?**
+### Can I block GPTBot for only part of my site?
+
 Yes; robots.txt rules are path-based, so you can disallow GPTBot from /research/ or /pricing/ while leaving the blog open. Partial blocks are the practical middle ground for sites that want general visibility but have sections they consider proprietary.
 
-**Does blocking GPTBot remove content already used in training?**
+### Does blocking GPTBot remove content already used in training?
+
 No. A robots.txt block only affects future crawls; anything absorbed in past training runs stays in those models. Your content may also have entered training sets through CCBot (Common Crawl), which needs its own Disallow if that matters to you.
 
-**What is the GPTBot user agent?**
+### What is the GPTBot user agent?
+
 GPTBot identifies itself with a user agent ending in `+https://openai.com/gptbot` (currently a `GPTBot/1.x` token on a Mozilla/AppleWebKit string). The version changes, so match on the `GPTBot` token and the openai.com URL rather than the full string, and verify by IP for anything you act on.
 
-**Does GPTBot execute JavaScript?**
+### Does GPTBot execute JavaScript?
+
 No; like most AI training crawlers it reads raw HTML. Content that only appears after scripts run is invisible to it, which matters more for the citation bots, but it means a JavaScript-heavy site contributes less to training than its rendered pages suggest.
 
-**Will blocking GPTBot hurt my Google SEO?**
+### Will blocking GPTBot hurt my Google SEO?
+
 No. GPTBot is OpenAI's crawler and has nothing to do with Googlebot or Google rankings. Blocking GPTBot only affects whether OpenAI can use your content for training; your Google Search visibility is governed by Google's own crawlers.
 
-**How often does GPTBot crawl a site?**
+### How often does GPTBot crawl a site?
+
 There is no published schedule; frequency tracks how often your content changes and how OpenAI prioritizes domains. If crawl load is the concern, rate-limiting verified GPTBot IPs at the server is safer than a robots block, since it caps the cost without opting you out of training entirely.
 
 ## Where to Start
