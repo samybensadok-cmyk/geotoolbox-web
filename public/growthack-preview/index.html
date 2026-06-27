@@ -417,8 +417,16 @@ select.gak-input{appearance:none;-webkit-appearance:none;-moz-appearance:none;cu
 /* pagination uses html2pdf's pagebreak{mode:['avoid-all','css']} — it keeps each .pdf-page from splitting WITHOUT a
    forced per-element break. We deliberately do NOT force a break before each section (neither JS `before:'.pdf-page'`
    nor a CSS break-before rule): in this html2pdf build a forced break injects a full BLANK page before each section
-   (16 pages, every odd one blank). min-height keeps each section ~one A4 tall so they pack near page boundaries. */
-#gak-pdf-root .pdf-page{width:794px;min-height:1040px;padding:48px 52px 64px;background:#fff;box-sizing:border-box;position:relative}
+   (16 pages, every odd one blank).
+   CRITICAL: each .pdf-page must be EXACTLY one printable A4 page tall so sections map 1:1 to physical pages — a
+   shorter box (the old min-height:1040 ≈ 706pt vs the 773.89pt printable area) let the offset drift down the
+   document, orphaning items, floating footers mid-page and leaving a near-empty trailing page. A4 = 841.89pt;
+   margins [28 top, 40 bottom] → 773.89pt printable height; the 794px canvas renders to 539.28pt wide (1px = .6792pt),
+   so one page = 773.89/.6792 ≈ 1139px. We use 1139px (a hair under the 1139.4 boundary, so avoid-all snaps each box
+   to its page top instead of orphaning a chunk onto the previous page) with overflow:hidden as an alignment guard.
+   Sections in this report are bounded (3–5 prompts, a handful of recs/sources) and fit; an unusually long section
+   would clip its tail rather than drift the whole document. */
+#gak-pdf-root .pdf-page{width:794px;height:1139px;overflow:hidden;padding:48px 52px 64px;background:#fff;box-sizing:border-box;position:relative}
 #gak-pdf-root .pdf-brandbar{display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #0c1a2e;padding-bottom:14px;margin-bottom:26px}
 #gak-pdf-root .pdf-kicker{font:700 11px/1 var(--gak-mono);letter-spacing:.14em;text-transform:uppercase;color:#c2410c}
 #gak-pdf-root .pdf-pageno{font:600 11px/1 var(--gak-mono);color:#636f7e}
@@ -860,7 +868,7 @@ const REAL_VIS = {
       {name:"Applebot-Extended",allowed:true},{name:"meta-externalagent",allowed:true},{name:"CCBot",allowed:true},{name:"Bytespider",allowed:true}
     ] },
     lost_deal: { query:"best SEO agencies in Nottingham", engine:"Perplexity", mentioned:false, mentioned_in_quote:false, _asof:"Jun 2026",
-      quote:"The best SEO agencies in Nottingham include Impression Digital, Hallam, and Adtrak. Impression is an award-winning SEO &amp; digital PR agency in Nottingham with a strong track record ranking UK businesses in competitive search results.",
+      quote:"The best SEO agencies in Nottingham include Impression Digital, Hallam, and Adtrak. Impression is an award-winning SEO & digital PR agency in Nottingham with a strong track record ranking UK businesses in competitive search results.",
       top_competitor:"Finsbury Media", competitors:["Finsbury Media","Impression Digital"], result:"competitor" },
     competitors: ["finsburymedia.com","hallam.agency","impressiondigital.com","perceptric.com","exposureninja.com"],
     sources: { owned:[], competitor_sources:["finsburymedia.com","hallam.agency","impressiondigital.com"], cited_total:8, ai_cites_nobody:false,
@@ -1005,8 +1013,16 @@ const REAL_VIS = {
 const $ = (id) => document.getElementById(id);
 const show = (id) => { const e=$(id); if(e) e.classList.remove('gak-hide'); };   // null-safe (codex: restart hid the removed #gak-brandperf -> threw)
 const hide = (id) => { const e=$(id); if(e) e.classList.add('gak-hide'); };
-/* HTML-escape ALL dynamic/third-party values before innerHTML (LLM/SerpAPI text is untrusted). */
-const esc = (s) => String(s==null?'':s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+/* HTML-escape ALL dynamic/third-party values before innerHTML (LLM/SerpAPI text is untrusted).
+   Decode HTML entities FIRST so already-encoded source text (baked data or an LLM that emits "&amp;",
+   "&#39;", "&rsquo;" etc.) is NOT double-escaped into a literal "&amp;" in the output (PDF + on-page).
+   Decode-then-escape is XSS-safe: we still re-escape <>&"' afterwards, so any decoded markup is neutralised. */
+const ENT_MAP={amp:'&',lt:'<',gt:'>',quot:'"',apos:"'",nbsp:' ',rsquo:'’',lsquo:'‘',ldquo:'“',rdquo:'”',ndash:'–',mdash:'—',hellip:'…'};
+const decodeEnt = (s) => String(s==null?'':s).replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (m,e)=>{
+  if(e[0]==='#'){ const n=(e[1]==='x'||e[1]==='X')?parseInt(e.slice(2),16):parseInt(e.slice(1),10); return (isNaN(n)||n<1||n>0x10FFFF)?m:String.fromCodePoint(n); }
+  const k=e.toLowerCase(); return Object.prototype.hasOwnProperty.call(ENT_MAP,k)?ENT_MAP[k]:m;
+});
+const esc = (s) => decodeEnt(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 /* hybrid routing: baked (instant, no backend) for showcase domains in REAL_VIS; live backend scan for every other domain.
    DEMO_MODE=true forces baked for ALL domains (offline demo). */
 const isBaked = (domain) => GAK_CONFIG.DEMO_MODE || (GAK_CONFIG.HYBRID && !!REAL_VIS[domain]);
