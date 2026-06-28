@@ -70,6 +70,7 @@ export const TOPICS: Topic[] = [
       "moonshot-ai", "qwen", "qwen3", "tongyi-qianwen", "alibaba",
       "glm", "glm-5-2", "zhipu-ai", "z-ai", "openai", "anthropic",
       "copilot", "microsoft-copilot", "copilot-ai", "copilot-seo",
+      "copilot-studio", "microsoft-copilot-studio", "copilot-agents",
       "elon-musk", "chinese-ai", "ai-assistant", "ai-news", "open-weights",
       "what-is-claude-ai", "what-is-gemini", "what-is-grok", "what-is-copilot",
       "what-is-deepseek", "what-is-kimi-ai", "what-is-qwen", "what-is-glm-5-2",
