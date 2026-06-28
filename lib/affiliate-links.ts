@@ -69,7 +69,7 @@ export const AFFILIATE_LINKS: Record<string, AffiliateLink> = {
   semrush: { url: "https://www.semrush.com/", program: "Semrush", cluster: "c3-seo-suite", pending: true },
   spyfu: { url: "https://www.spyfu.com/", program: "SpyFu", cluster: "c3-seo-suite", pending: true },
   seranking: { url: "https://seranking.com/?ga=5177285&source=link", program: "SE Ranking", cluster: "c3-seo-suite", noUtm: true },
-  mangools: { url: "https://mangools.com/", program: "Mangools", cluster: "c3-seo-suite", pending: true },
+  mangools: { url: "https://mangools.com/#a5c67fb19feebf86deb273724", program: "Mangools", cluster: "c3-seo-suite", noUtm: true },
   serpstat: { url: "https://serpstat.com/", program: "Serpstat", cluster: "c3-seo-suite", pending: true },
 
   // --- C4 · Rank tracking --------------------------------------------------
