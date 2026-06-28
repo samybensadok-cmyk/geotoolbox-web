@@ -46,6 +46,7 @@ export const TOPICS: Topic[] = [
       "ai-crawlers", "gptbot", "robots-txt", "llms-txt",
       "agentic-ai", "ai-agents", "agent-ready-website", "agentic-browsing",
       "agentic-commerce", "agentic-payments", "what-is-agentic-ai", "x402",
+      "ai-browser", "comet", "perplexity-comet",
     ],
   },
   {
@@ -68,7 +69,7 @@ export const TOPICS: Topic[] = [
       "perplexity", "deepseek", "deepseek-r1", "kimi-ai", "kimi-k2",
       "moonshot-ai", "qwen", "qwen3", "tongyi-qianwen", "alibaba",
       "glm", "glm-5-2", "zhipu-ai", "z-ai", "openai", "anthropic",
-      "copilot", "microsoft-copilot", "copilot-ai",
+      "copilot", "microsoft-copilot", "copilot-ai", "copilot-seo",
       "elon-musk", "chinese-ai", "ai-assistant", "ai-news", "open-weights",
       "what-is-claude-ai", "what-is-gemini", "what-is-grok", "what-is-copilot",
       "what-is-deepseek", "what-is-kimi-ai", "what-is-qwen", "what-is-glm-5-2",
