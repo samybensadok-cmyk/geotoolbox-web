@@ -234,7 +234,7 @@ export default function QueryFanoutPage() {
       </section>
 
       {/* ——— How it works: numbered rail (not cards) ——— */}
-      <section id="how" className="scroll-mt-20 border-t border-gray-100 bg-gray-50 px-6 py-20 sm:py-24">
+      <section id="how" className="scroll-mt-20 border-t border-[var(--surface-iris-border)] bg-[var(--surface-iris)] px-6 py-20 sm:py-24">
         <div className="mx-auto max-w-7xl">
           <div className="max-w-2xl">
             <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">How it works</p>
@@ -319,7 +319,7 @@ export default function QueryFanoutPage() {
       </section>
 
       {/* ——— What's inside: numbered editorial grid (anti-card) ——— */}
-      <section className="border-t border-gray-100 bg-gray-50 px-6 py-20 sm:py-28">
+      <section className="border-t border-[var(--surface-iris-border)] bg-[var(--surface-iris)] px-6 py-20 sm:py-28">
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-[5fr_7fr] lg:items-end lg:gap-16">
             <div>
@@ -341,7 +341,7 @@ export default function QueryFanoutPage() {
               <div key={s.num} className="relative pl-12">
                 <span
                   aria-hidden="true"
-                  className="absolute left-0 top-0 font-mono text-[22px] font-bold leading-none tabular-nums text-gray-300"
+                  className="absolute left-0 top-0 font-mono text-[22px] font-bold leading-none tabular-nums text-accent-500"
                 >
                   {s.num}
                 </span>
@@ -485,7 +485,7 @@ function FanOutDevice() {
           { v: "4", l: "engines" },
         ].map((s) => (
           <div key={s.l} className="px-2">
-            <div className="font-mono text-2xl font-bold tabular-nums text-gray-900">{s.v}</div>
+            <div className="font-mono text-2xl font-bold tabular-nums text-accent-700">{s.v}</div>
             <div className="mt-0.5 font-mono text-[10px] uppercase tracking-widest text-gray-500">{s.l}</div>
           </div>
         ))}
