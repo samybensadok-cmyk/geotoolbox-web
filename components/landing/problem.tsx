@@ -22,7 +22,7 @@ export function Problem() {
       <div className="mx-auto max-w-7xl">
         {/* Editorial header */}
         <div className="max-w-2xl">
-          <p className="text-xs font-semibold uppercase tracking-widest text-accent-400">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-400">
             The problem
           </p>
           <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.75rem)] font-bold leading-tight tracking-tight text-white">
@@ -38,10 +38,10 @@ export function Problem() {
           {/* Left — sidebar, tiny, muted. "You already have this covered." */}
           <aside className="lg:pt-2">
             <div className="flex items-baseline gap-2">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-gray-600">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-gray-400">
                 What you track today
               </p>
-              <span className="font-mono text-[11px] font-semibold tabular-nums text-gray-500">
+              <span className="font-mono text-[11px] font-semibold tabular-nums text-gray-400">
                 &middot;{tracked.length}
               </span>
             </div>
@@ -49,13 +49,13 @@ export function Problem() {
               {tracked.map((item) => (
                 <li
                   key={item}
-                  className="text-sm text-gray-500"
+                  className="text-sm text-gray-400"
                 >
                   {item}
                 </li>
               ))}
             </ul>
-            <p className="mt-6 text-xs italic text-gray-600">
+            <p className="mt-6 text-xs italic text-gray-400">
               Already measured.
             </p>
           </aside>

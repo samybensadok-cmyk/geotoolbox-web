@@ -26,7 +26,7 @@ export function ScanSignal() {
             Eyebrow "The answer" directly echoes Problem's closing "What about you?" */}
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[5fr_7fr] lg:items-end lg:gap-16">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-accent-300">
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-300">
               The answer
             </p>
             <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.75rem)] font-bold leading-tight tracking-tight text-white">
@@ -38,13 +38,15 @@ export function ScanSignal() {
           </p>
         </div>
 
-        {/* Animation — spans full editorial width */}
-        <div className="mt-12 sm:mt-16">
+        {/* Animation — spans full editorial width. Decorative illustrative demo;
+            hidden from assistive tech so the churning sample data isn't announced
+            (the disclaimer below conveys the meaning). */}
+        <div className="mt-12 sm:mt-16" aria-hidden="true">
           <CitationSignal />
         </div>
 
         {/* Footer micro-copy — makes it clear this is an illustrative demo, not live customer data */}
-        <p className="mt-8 max-w-2xl text-sm leading-relaxed text-gray-500">
+        <p className="mt-8 max-w-2xl text-sm leading-relaxed text-gray-400">
           Demo shown with sample queries and responses. Production scans run against your real domain and return real engine responses in under two minutes.
         </p>
       </div>

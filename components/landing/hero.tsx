@@ -24,7 +24,7 @@ export function Hero() {
         className="pointer-events-none absolute inset-0"
         style={{
           background: [
-            "radial-gradient(ellipse 640px 440px at 12% 18%, rgba(253, 248, 243, 0.65), transparent 70%)",
+            "radial-gradient(ellipse 640px 440px at 12% 18%, rgba(241, 243, 252, 0.7), transparent 70%)",
             "radial-gradient(ellipse 720px 520px at 85% 10%, rgba(204, 251, 241, 0.55), transparent 72%)",
           ].join(","),
         }}
@@ -50,7 +50,7 @@ export function Hero() {
           {/* Text column — left, spans 6 on desktop */}
           <div className="lg:col-span-6">
             {/* Trust microline — positions the product for audience */}
-            <p className="animate-fade-up text-[11px] font-semibold uppercase tracking-widest text-gray-500">
+            <p className="animate-fade-up font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-500">
               Made by an SEO agency, for SEO teams
             </p>
 
@@ -81,7 +81,10 @@ export function Hero() {
             </h1>
 
             <p className="stagger-2 mt-6 max-w-xl text-lg leading-relaxed text-gray-600">
-              Eleven tools to see where AI mentions you, learn why it doesn&apos;t, and win the citations your competitors are taking — across all seven engines, from the first scan to the published fix.
+              See where AI cites you, learn why it doesn&apos;t, and win the citations your competitors are taking.
+            </p>
+            <p className="stagger-2 mt-3 font-mono text-[12px] text-gray-500">
+              11 tools &middot; 7 engines &middot; from the first scan to the published fix
             </p>
 
             <div className="stagger-2 mt-8 flex flex-wrap items-center gap-3">

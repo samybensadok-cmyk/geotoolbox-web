@@ -15,7 +15,7 @@ export function LatestPosts() {
         {/* Editorial header */}
         <div className="flex items-end justify-between gap-8">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
               Research
             </p>
             <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.75rem)] font-bold leading-tight tracking-tight text-gray-900">

@@ -29,7 +29,7 @@ export function HowItWorks() {
         {/* Editorial header — asymmetric, left-aligned */}
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[5fr_7fr] lg:items-end lg:gap-16">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
               How it works
             </p>
             <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.75rem)] font-bold leading-tight tracking-tight text-gray-900">
@@ -50,14 +50,14 @@ export function HowItWorks() {
                 <span className="font-mono text-4xl font-bold tabular-nums text-accent-700 md:text-5xl">
                   {s.num}
                 </span>
-                <span className="text-xs font-semibold uppercase tracking-widest text-gray-500 md:hidden">
+                <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-500 md:hidden">
                   {s.verb}
                 </span>
               </div>
 
               {/* Content — verb + title + body */}
               <div>
-                <p className="hidden text-xs font-semibold uppercase tracking-widest text-gray-500 md:block">
+                <p className="hidden font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-500 md:block">
                   {s.verb}
                 </p>
                 <h3 className="mt-1 text-xl font-semibold tracking-tight text-gray-900">

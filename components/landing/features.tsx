@@ -12,11 +12,24 @@ function ScanVisual() {
     { name: "Grok", cited: true, delay: 600 },
   ]
   return (
-    <div className="flex h-full min-h-[260px] items-center justify-center p-8">
+    <div className="flex h-full min-h-[260px] flex-col justify-between p-8">
+      <div className="flex items-center justify-between gap-3 border-b border-gray-100 pb-4">
+        <span className="truncate font-mono text-[12px] text-gray-600">&ldquo;best CRM software for small business&rdquo;</span>
+        <span className="shrink-0 font-mono text-[10px] font-semibold uppercase tracking-widest text-accent-700">live</span>
+      </div>
       <div className="grid w-full grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-3">
         {engines.map((e) => (
           <EngineRow key={e.name} {...e} />
         ))}
+      </div>
+      <div className="flex items-center justify-between border-t border-gray-100 pt-4 font-mono text-[11px]">
+        <span className="text-gray-500">
+          cited <span className="font-semibold text-accent-700">5 / 7</span> engines
+        </span>
+        <span className="text-gray-500">
+          visibility <span className="font-semibold text-accent-700">71</span>
+          <span className="text-gray-400">/100</span>
+        </span>
       </div>
     </div>
   )
@@ -68,7 +81,7 @@ function ScoreVisual() {
             />
           ))}
         </div>
-        <p className="mt-3 text-xs font-semibold uppercase tracking-widest text-accent-700">
+        <p className="mt-3 font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
           +8 this week
         </p>
       </div>
@@ -156,7 +169,7 @@ export function Features() {
     <section id="features" className="bg-accent-50/40 px-6 py-20 sm:py-28">
       <div className="mx-auto max-w-7xl">
         <div className="max-w-2xl">
-          <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
             The workflow
           </p>
           <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.5rem)] font-bold leading-tight tracking-tight text-gray-900">
@@ -170,11 +183,14 @@ export function Features() {
         <div className="mt-14 grid grid-cols-1 gap-x-6 gap-y-10 md:grid-cols-3">
           {cards.map((card) => (
             <div key={card.tag} className={card.span}>
-              <div className="relative overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-[0_20px_40px_-20px_rgba(15,23,42,0.08)] transition-shadow hover:shadow-[0_24px_48px_-20px_rgba(15,23,42,0.14)]">
+              <div
+                aria-hidden="true"
+                className="relative overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-[0_20px_40px_-20px_rgba(15,23,42,0.08)] transition-shadow hover:shadow-[0_24px_48px_-20px_rgba(15,23,42,0.14)]"
+              >
                 {card.visual}
               </div>
               <div className="mt-5 px-1">
-                <p className="text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+                <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
                   {card.tag}
                 </p>
                 <h3 className="mt-2 text-[22px] font-bold leading-tight tracking-tight text-gray-900 md:text-[24px]">
@@ -188,7 +204,35 @@ export function Features() {
           ))}
         </div>
 
-        <div className="mt-16 flex flex-col items-start gap-5 border-t border-gray-100 pt-10 sm:flex-row sm:items-center sm:justify-between">
+        {/* The full eleven — substantiate the breadth a borderless index, not cards */}
+        <div className="mt-16 grid grid-cols-2 gap-x-8 gap-y-9 border-t border-gray-100 pt-12 sm:grid-cols-4">
+          {[
+            { stage: "Scan", tools: [["GEO Scan", "geo-scan"], ["Query Fan-Out", "query-fanout"], ["Agent Readiness", "agent-readiness"]] },
+            { stage: "Analyze", tools: [["Content Analyzer", "content-analyzer"], ["Content Studio", "content-studio"]] },
+            { stage: "Intelligence", tools: [["Domain Overview", "domain-overview"], ["Competitor Intel", "competitor-intel"], ["Citation Interceptor", "citation-interceptor"], ["Community", "community"]] },
+            { stage: "Report", tools: [["Analytics", "analytics"], ["PR Coverage Tracker", "pr-coverage-tracker"]] },
+          ].map((g) => (
+            <div key={g.stage}>
+              <p className="font-mono text-[10px] font-semibold uppercase tracking-widest text-accent-700">
+                {g.stage}
+              </p>
+              <ul className="mt-3 space-y-2">
+                {g.tools.map(([name, slug]) => (
+                  <li key={slug}>
+                    <Link
+                      href={`/features/${slug}`}
+                      className="text-[14px] font-medium text-gray-700 transition-colors hover:text-accent-700"
+                    >
+                      {name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-12 flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:justify-between">
           <p className="max-w-lg text-[15px] leading-relaxed text-gray-600">
             Eleven tools across scan, analyze, act, and track.{" "}
             <Link href="/features" className="font-semibold text-accent-700 underline-offset-2 hover:underline">
