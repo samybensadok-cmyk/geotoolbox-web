@@ -112,10 +112,10 @@ export default function PricingPage() {
         <div className="mx-auto max-w-3xl text-center">
           <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">Pricing</p>
           <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.25rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-            See what AI search says about your brand
+            One credit pool. <span className="text-accent-700">Every tool. Any scale.</span>
           </h1>
           <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-            Credit-based plans that scale from a single brand to a full agency portfolio. Start free with 1,000 credits, no card required.
+            Eleven tools to get your brand cited by AI, on credit-based plans that scale from a single brand to a full agency portfolio. Start free with 1,000 credits, no card required.
           </p>
         </div>
 

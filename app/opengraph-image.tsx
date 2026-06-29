@@ -38,7 +38,7 @@ export default function OGImage() {
             maxWidth: 800,
           }}
         >
-          See what AI search says about your brand
+          Get your brand cited by AI
         </div>
 
         {/* Subtitle */}
@@ -51,7 +51,7 @@ export default function OGImage() {
             lineHeight: 1.4,
           }}
         >
-          Track visibility across ChatGPT, Perplexity, Gemini, Claude, and 3 more AI engines.
+          Eleven tools to measure and own your visibility across seven AI engines.
         </div>
 
         {/* Bottom bar */}

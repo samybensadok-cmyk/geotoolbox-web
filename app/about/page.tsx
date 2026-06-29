@@ -8,7 +8,7 @@ import { siteConfig } from "@/lib/config"
 export const metadata: Metadata = {
   title: "About",
   description:
-    "GEO Toolbox is a measurement and intelligence layer for AI search. It's built to answer one question: when someone asks an AI engine about your space, who gets cited?",
+    "GEO Toolbox is the platform to get your brand cited by AI — eleven tools to measure your AI search visibility, find why a page isn't cited, and win the citations you're missing across seven engines.",
   alternates: { canonical: `${siteConfig.url}/about` },
 }
 
@@ -27,7 +27,7 @@ export default function AboutPage() {
             Built for the AI search era.
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-gray-700">
-            GEO Toolbox is a measurement and intelligence layer for generative engine optimization. One scan, seven engines, every citation, so teams can see, track, and shape how ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Bing Copilot, and Grok describe their brand.
+            GEO Toolbox is the platform to get your brand cited by AI. Eleven tools to measure your visibility across seven engines — ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Bing Copilot, and Grok — find why a page isn&apos;t cited, and win the citations your competitors are taking.
           </p>
         </div>
       </section>
@@ -37,13 +37,13 @@ export default function AboutPage() {
         <div className="mx-auto max-w-3xl">
           <div className="space-y-6 text-[17px] leading-relaxed text-gray-700">
             <p>
-              AI engines are becoming the default interface between questions and answers. That shift rewrites the rules of visibility: there&apos;s no SERP to scroll, no ten blue links, just a generated response that either cites you or doesn&apos;t. Generative engine optimization (GEO) is the discipline that forms around that new reality, and measurement is the foundation.
+              AI engines are becoming the default interface between questions and answers. That shift rewrites the rules of visibility: there&apos;s no SERP to scroll, no ten blue links, just a generated response that either cites you or doesn&apos;t. Generative engine optimization (GEO) is the discipline that forms around that new reality — measuring where you stand, then winning the citations you&apos;re missing.
             </p>
             <p>
-              GEO Toolbox exists to make that layer legible. Every scan runs a prompt across seven engines, aggregates every domain and URL cited, and returns an AI visibility score from 0 to 100 alongside the raw citations, yours and your competitors&apos;. Eight connected tools build on top of that primitive: scanning, agent readiness, content grading, briefing, competitive tracking, community monitoring, and AI-driven analytics.
+              GEO Toolbox exists to make that layer legible, then actionable. Every scan runs a prompt across seven engines, aggregates every domain and URL cited, and returns an AI visibility score from 0 to 100 alongside the raw citations, yours and your competitors&apos;. Eleven connected tools build on that primitive: scanning and query fan-out, agent readiness, content grading and briefing, competitive and community intelligence, offsite citation interception, earned-media tracking, and AI-driven analytics — the full workflow from the first scan to the published fix.
             </p>
             <p>
-              The tool is built and operated by Samy Ben Sadok, its founder and an SEO and growth strategist with over a decade of experience. It offers a free plan plus paid plans from $49/mo, supports eight countries, and is used daily by agency teams and in-house SEO professionals tracking how AI sees their brands.
+              The tool is built and operated by Samy Ben Sadok, its founder and an SEO and growth strategist with over a decade of experience. It offers a free plan plus paid plans from $49/mo, supports eight countries, and is used daily by agency teams and in-house SEO professionals tracking how AI cites their brands.
             </p>
             <p className="text-base text-gray-600">
               Questions, partnerships, or feedback?{" "}

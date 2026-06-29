@@ -44,7 +44,7 @@ export default function GlossaryIndex() {
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-[6fr_6fr] lg:items-end lg:gap-16">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
                 Reference
               </p>
               <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
