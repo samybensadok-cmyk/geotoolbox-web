@@ -31,7 +31,7 @@ const steps: Step[] = [
   {
     verb: "Scan",
     title: "Your prompts, across the engines",
-    body: "Citation Interceptor reads the AI answers for the prompts your buyers actually ask and pulls every offsite source the engines cite — across ChatGPT, Perplexity, Gemini, Claude, AI Overviews, Bing Copilot, and Grok.",
+    body: "Citation Interceptor reads the AI answers for the prompts your buyers actually ask and pulls every offsite source the engines cite — across ChatGPT, Perplexity, Gemini, Claude, AI Overviews, AI Mode, Bing Copilot, and Grok.",
   },
   {
     verb: "See",
@@ -78,7 +78,7 @@ const faqs = [
   {
     question: "Which AI engines does it cover?",
     answer:
-      "The same seven GEO Scan covers: ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Bing Copilot, and Grok.",
+      "The same eight GEO Scan covers: ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Google AI Mode, Bing Copilot, and Grok.",
   },
   {
     question: "Can I track what I've actioned?",
@@ -222,7 +222,7 @@ export default function CitationInterceptorPage() {
           </h2>
         </div>
         <div className="mt-10">
-          <SocialProofBlock provenanceLine="Source families and the worklist are computed from real, live AI citations across all seven engines — never scraped guesses or invented numbers." />
+          <SocialProofBlock provenanceLine="Source families and the worklist are computed from real, live AI citations across all eight engines — never scraped guesses or invented numbers." />
         </div>
       </section>
 

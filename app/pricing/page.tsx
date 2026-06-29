@@ -10,12 +10,12 @@ import { PLANS } from "@/lib/plans"
 export const metadata: Metadata = {
   title: "Pricing — GEO Toolbox",
   description:
-    "Simple, credit-based pricing for AI visibility tracking. Start free with 1,000 credits, no card. Paid plans from $49/mo across all 7 AI engines.",
+    "Simple, credit-based pricing for AI visibility tracking. Start free with 1,000 credits, no card. Paid plans from $49/mo across all 8 AI engines.",
   alternates: { canonical: "/pricing" },
   openGraph: {
     title: "GEO Toolbox Pricing",
     description:
-      "Track your brand across ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Bing Copilot and Grok. Free plan, paid from $49/mo.",
+      "Track your brand across ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Google AI Mode, Bing Copilot and Grok. Free plan, paid from $49/mo.",
     url: "/pricing",
     type: "website",
   },
@@ -25,6 +25,7 @@ const ENGINES = [
   "ChatGPT",
   "Perplexity",
   "Google AI Overviews",
+  "Google AI Mode",
   "Gemini",
   "Bing Copilot",
   "Claude",
@@ -55,7 +56,7 @@ const FAQ = [
   {
     question: "Which AI engines do you track, and which plans unlock all of them?",
     answer:
-      "We track seven: ChatGPT, Perplexity, Google AI Overviews, Gemini, Bing Copilot, Claude and Grok. Free covers ChatGPT, Starter adds Perplexity and Google AI Overviews, Consultant lets you pick 3 of 5, Growth picks 5 of all 7, and Scale and Enterprise run all seven.",
+      "We track eight: ChatGPT, Perplexity, Google AI Overviews, Google AI Mode, Gemini, Bing Copilot, Claude and Grok. Free covers ChatGPT, Starter adds Perplexity and Google AI Overviews, Consultant lets you pick 3 of 5, Growth picks 5 of all 8, and Scale and Enterprise run all eight.",
   },
   {
     question: "What is the difference between a brand and a prompt?",
@@ -260,7 +261,7 @@ export default function PricingPage() {
             Start free in under two minutes
           </h2>
           <p className="mx-auto mt-4 max-w-lg text-[15px] leading-relaxed text-gray-600">
-            1,000 credits, no credit card. Upgrade only when you are ready to track more brands across all seven engines.
+            1,000 credits, no credit card. Upgrade only when you are ready to track more brands across all eight engines.
           </p>
           <Link
             href={siteConfig.appSignupUrl}

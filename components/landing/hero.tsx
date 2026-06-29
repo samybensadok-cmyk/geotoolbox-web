@@ -9,6 +9,7 @@ const HERO_ENGINES: { id: EngineId; label: string }[] = [
   { id: "gemini",     label: "Gemini" },
   { id: "claude",     label: "Claude" },
   { id: "aio",        label: "AI Overviews" },
+  { id: "aimode",     label: "AI Mode" },
   { id: "copilot",    label: "Bing Copilot" },
   { id: "grok",       label: "Grok" },
 ]
@@ -84,7 +85,7 @@ export function Hero() {
               See where AI cites you, learn why it doesn&apos;t, and win the citations your competitors are taking.
             </p>
             <p className="stagger-2 mt-3 font-mono text-[12px] text-gray-500">
-              11 tools &middot; 7 engines &middot; from the first scan to the published fix
+              11 tools &middot; 8 engines &middot; from the first scan to the published fix
             </p>
 
             <div className="stagger-2 mt-8 flex flex-wrap items-center gap-3">
@@ -103,7 +104,7 @@ export function Hero() {
             </div>
 
             <p className="stagger-3 mt-4 text-xs text-gray-600">
-              First scan in under two minutes &middot; no credit card &middot; free plan covers ChatGPT, paid tiers up to all seven engines
+              First scan in under two minutes &middot; no credit card &middot; free plan covers ChatGPT, paid tiers up to all eight engines
             </p>
 
             {/* Engines strip — mark + name pairs. Monochrome inline SVG

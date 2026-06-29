@@ -18,11 +18,11 @@ import { softwareApplicationSchema, howToSchema } from "@/lib/seo-schema"
 export const metadata: Metadata = {
   title: "AI Visibility Tool for AI Search",
   description:
-    "See whether ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Bing Copilot, and Grok cite you — or your competitors. One prompt, seven engines, a 0–100 visibility score, in minutes.",
+    "See whether ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Google AI Mode, Bing Copilot, and Grok cite you — or your competitors. One prompt, eight engines, a 0–100 visibility score, in minutes.",
   openGraph: {
     title: "AI Visibility Tool for AI Search",
     description:
-      "See whether the seven major AI engines cite you or your competitors. One prompt, seven engines, a 0–100 visibility score, in minutes.",
+      "See whether the eight major AI engines cite you or your competitors. One prompt, eight engines, a 0–100 visibility score, in minutes.",
   },
   alternates: { canonical: `${siteConfig.url}/features/geo-scan` },
 }
@@ -35,8 +35,8 @@ const steps: Step[] = [
   },
   {
     verb: "Run",
-    title: "Seven engines, in parallel",
-    body: "GEO Scan queries ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Bing Copilot, and Grok with the same prompt, in your chosen market.",
+    title: "Eight engines, in parallel",
+    body: "GEO Scan queries ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Google AI Mode, Bing Copilot, and Grok with the same prompt, in your chosen market.",
   },
   {
     verb: "See",
@@ -46,7 +46,7 @@ const steps: Step[] = [
 ]
 
 const comparisonRows = [
-  { label: "AI engines per run", cells: ["1 at a time", "Varies", "7 in parallel"] },
+  { label: "AI engines per run", cells: ["1 at a time", "Varies", "8 in parallel"] },
   { label: "Cited vs. mentioned vs. recommended", cells: [false, "Partial", true] },
   { label: "Competitor citations in the same scan", cells: [false, true, "Up to 4 domains"] },
   { label: "Live search, not training data", cells: ["Sometimes", "Varies", true] },
@@ -81,7 +81,7 @@ const faqs = [
   {
     question: "What AI engines does GEO Scan check?",
     answer:
-      "Seven engines today: ChatGPT, Perplexity, Claude, Gemini, Google AI Overviews, Bing Copilot, and Grok. Every scan queries all seven in parallel, so you get the full picture in one pass.",
+      "Eight engines today: ChatGPT, Perplexity, Claude, Gemini, Google AI Overviews, Google AI Mode, Bing Copilot, and Grok. Every scan queries all eight in parallel, so you get the full picture in one pass.",
   },
   {
     question: "What's the difference between cited, mentioned, and recommended?",
@@ -106,7 +106,7 @@ const faqs = [
   {
     question: "Can I compare my domain against competitors in the same scan?",
     answer:
-      "Yes. Add up to four competitor domains and the scan returns side-by-side citation status for each, across all seven engines — which prompts they win, which they lose, and the citations they earn that you don't.",
+      "Yes. Add up to four competitor domains and the scan returns side-by-side citation status for each, across all eight engines — which prompts they win, which they lose, and the citations they earn that you don't.",
   },
   {
     question: "Can I export my scan results?",
@@ -125,7 +125,7 @@ export default function GeoScanPage() {
             softwareApplicationSchema({
               name: "GEO Scan",
               description:
-                "An AI visibility tool that scans ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Bing Copilot, and Grok to show whether they cite your brand or your competitors.",
+                "An AI visibility tool that scans ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Google AI Mode, Bing Copilot, and Grok to show whether they cite your brand or your competitors.",
               url: `${siteConfig.url}/features/geo-scan`,
             }),
             howToSchema({
@@ -150,7 +150,7 @@ export default function GeoScanPage() {
               <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
                 ChatGPT, Perplexity, Gemini, and Google AI Overviews already answer your customers&apos;
                 buying questions. Most brands have no idea whether they&apos;re in the answer or invisible.
-                GEO Scan queries seven engines with one prompt and shows you exactly who gets cited, who
+                GEO Scan queries eight engines with one prompt and shows you exactly who gets cited, who
                 gets recommended instead, and a 0–100 visibility score — in minutes, from live search.
               </p>
               <div className="mt-8">

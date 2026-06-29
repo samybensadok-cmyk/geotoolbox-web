@@ -13,6 +13,7 @@ export function Problem() {
     "Gemini answers",
     "Claude mentions",
     "Google AI Overviews",
+    "Google AI Mode answers",
     "Bing Copilot responses",
     "Grok answers",
   ]

@@ -7,7 +7,7 @@
  *
  * Adding an engine: extend the discriminated union + add a case.
  * Removing an engine: flip the dark-launch flag in the PHP app and remove
- *   here. Keep in sync with the 7-engine roster documented in
+ *   here. Keep in sync with the 8-engine roster documented in
  *   vault/reference/marketing-design-system.md.
  */
 
@@ -17,6 +17,7 @@ export type EngineId =
   | "gemini"
   | "claude"
   | "aio"
+  | "aimode"
   | "copilot"
   | "grok"
 
@@ -109,6 +110,18 @@ export function EngineMark({ engine, className = "h-3.5 w-3.5" }: { engine: Engi
             strokeWidth="1.4"
             strokeLinecap="round"
           />
+        </svg>
+      )
+
+    /* Google AI Mode — sparkle with accent spark */
+    case "aimode":
+      return (
+        <svg viewBox="0 0 16 16" className={className} aria-hidden="true">
+          <path
+            d="M8 1 L9.6 6.4 L15 8 L9.6 9.6 L8 15 L6.4 9.6 L1 8 L6.4 6.4 Z"
+            fill="currentColor"
+          />
+          <circle cx="13" cy="3" r="1.3" fill="currentColor" />
         </svg>
       )
 

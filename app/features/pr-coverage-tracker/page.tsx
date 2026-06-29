@@ -41,7 +41,7 @@ const steps: Step[] = [
   {
     verb: "Attribute",
     title: "Which placements AI actually cites",
-    body: "We cross-reference your placements against the sources AI engines cite for the brand's tracked prompts — across all seven engines — so you see exactly which pieces of coverage show up in AI answers, and which media you're not yet tracking.",
+    body: "We cross-reference your placements against the sources AI engines cite for the brand's tracked prompts — across all eight engines — so you see exactly which pieces of coverage show up in AI answers, and which media you're not yet tracking.",
   },
 ]
 
@@ -182,7 +182,7 @@ export default function PrCoverageTrackerPage() {
           },
           {
             title: "Built on real citations",
-            body: "Attribution reads your live Tracker scans — the actual sources AI engines cited across all seven engines. No scraped guesses, no invented numbers.",
+            body: "Attribution reads your live Tracker scans — the actual sources AI engines cited across all eight engines. No scraped guesses, no invented numbers.",
           },
           {
             title: "Billable with confidence",
@@ -228,7 +228,7 @@ export default function PrCoverageTrackerPage() {
           </h2>
         </div>
         <div className="mt-10">
-          <SocialProofBlock provenanceLine="Coverage health and AI-citation attribution are computed from real, live data — your placement URLs and the actual citations across all seven AI engines. Never scraped guesses or invented numbers." />
+          <SocialProofBlock provenanceLine="Coverage health and AI-citation attribution are computed from real, live data — your placement URLs and the actual citations across all eight AI engines. Never scraped guesses or invented numbers." />
         </div>
       </section>
 

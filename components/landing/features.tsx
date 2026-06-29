@@ -1,6 +1,6 @@
 import Link from "next/link"
 
-/* ——— Card 1: Scan — 7 engines with pulsing citation dots ——— */
+/* ——— Card 1: Scan — 8 engines with pulsing citation dots ——— */
 function ScanVisual() {
   const engines = [
     { name: "ChatGPT", cited: true, delay: 0 },
@@ -8,6 +8,7 @@ function ScanVisual() {
     { name: "Gemini", cited: false, delay: 0 },
     { name: "Claude", cited: true, delay: 300 },
     { name: "AI Overviews", cited: true, delay: 450 },
+    { name: "AI Mode", cited: true, delay: 525 },
     { name: "Bing Copilot", cited: false, delay: 0 },
     { name: "Grok", cited: true, delay: 600 },
   ]
@@ -24,7 +25,7 @@ function ScanVisual() {
       </div>
       <div className="flex items-center justify-between border-t border-gray-100 pt-4 font-mono text-[11px]">
         <span className="text-gray-500">
-          cited <span className="font-semibold text-accent-700">5 / 7</span> engines
+          cited <span className="font-semibold text-accent-700">6 / 8</span> engines
         </span>
         <span className="text-gray-500">
           visibility <span className="font-semibold text-accent-700">71</span>
@@ -159,7 +160,7 @@ function StatusDot({ cited }: { cited: boolean }) {
 /* ——— Section ——— */
 export function Features() {
   const cards = [
-    { visual: <ScanVisual />, tag: "Scan", title: "See where AI cites you — and where it doesn't", body: "GEO Scan runs one prompt across all seven engines; Query Fan-Out captures the dozens of sub-questions they really ask. Your domain, your competitors, every citation.", span: "md:col-span-2" },
+    { visual: <ScanVisual />, tag: "Scan", title: "See where AI cites you — and where it doesn't", body: "GEO Scan runs one prompt across all eight engines; Query Fan-Out captures the dozens of sub-questions they really ask. Your domain, your competitors, every citation.", span: "md:col-span-2" },
     { visual: <ScoreVisual />, tag: "Track", title: "One score, week over week", body: "Domain Overview rolls every scan into a single 0–100 visibility score, with GSC + GA4 attribution — so you catch drift before it costs you traffic.", span: "md:col-span-1" },
     { visual: <AnalyzeVisual />, tag: "Analyze & act", title: "Find why a page isn't cited — then fix it", body: "Content Analyzer grades any URL across 21 citability signals; Content Studio briefs and writes the fix. Turn a Not-found into a citation.", span: "md:col-span-1" },
     { visual: <IntelVisual />, tag: "Own the gap", title: "Win the prompts competitors are taking", body: "Competitor Intel tracks who's cited instead of you; Citation Interceptor and Community surface the offsite threads AI quotes — so you show up where the answer is formed.", span: "md:col-span-2" },

@@ -12,11 +12,12 @@ const LABELS: Record<EngineId, string> = {
   gemini: "Gemini",
   claude: "Claude",
   aio: "Google AI Overviews",
+  aimode: "Google AI Mode",
   copilot: "Bing Copilot",
   grok: "Grok",
 }
 
-const ALL: EngineId[] = ["chatgpt", "perplexity", "gemini", "claude", "aio", "copilot", "grok"]
+const ALL: EngineId[] = ["chatgpt", "perplexity", "gemini", "claude", "aio", "aimode", "copilot", "grok"]
 
 export function AiEngineLogoGrid({
   engines = ALL,

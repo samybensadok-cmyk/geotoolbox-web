@@ -7,7 +7,7 @@ import { breadcrumbsSchema, itemListSchema } from "@/lib/seo-schema"
 export const metadata: Metadata = {
   title: "AI SEO & GEO Tools",
   description:
-    "Nine connected tools for generative engine optimization (GEO) and AI search visibility. Scan, analyze, brief, and monitor your brand across ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Bing Copilot, and Grok.",
+    "Nine connected tools for generative engine optimization (GEO) and AI search visibility. Scan, analyze, brief, and monitor your brand across ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Google AI Mode, Bing Copilot, and Grok.",
   alternates: { canonical: `${siteConfig.url}/features` },
 }
 
@@ -51,8 +51,8 @@ const groups: Group[] = [
       {
         slug: "geo-scan",
         name: "GEO Scan",
-        blurb: "Run a single prompt across 7 AI engines and see who gets cited. Your domain, competitors, and every mention, in minutes.",
-        highlights: ["7 AI engines", "8 countries", "Competitor comparison"],
+        blurb: "Run a single prompt across 8 AI engines and see who gets cited. Your domain, competitors, and every mention, in minutes.",
+        highlights: ["8 AI engines", "8 countries", "Competitor comparison"],
         tint: "mint",
       },
       {

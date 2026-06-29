@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og"
 
-export const alt = "GEO Scan: 7-engine AI visibility scan"
+export const alt = "GEO Scan: 8-engine AI visibility scan"
 export const size = { width: 1200, height: 630 }
 export const contentType = "image/png"
 
@@ -33,7 +33,7 @@ export default function OGImage() {
             See who AI cites for your keywords.
           </div>
           <div style={{ fontSize: 20, color: "#4b5563", marginTop: 20, lineHeight: 1.4 }}>
-            One prompt, seven engines, every citation, in minutes.
+            One prompt, eight engines, every citation, in minutes.
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: "auto", fontSize: 15, color: "#6b7280" }}>
@@ -63,6 +63,7 @@ export default function OGImage() {
               { name: "Gemini", cited: false },
               { name: "Claude", cited: true },
               { name: "AI Overviews", cited: true },
+              { name: "AI Mode", cited: true },
               { name: "Bing Copilot", cited: false },
               { name: "Grok", cited: true },
             ].map((e) => (

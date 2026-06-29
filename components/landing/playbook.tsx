@@ -3,7 +3,7 @@ import Link from "next/link"
 const faqs = [
   {
     q: "How do I see where AI cites my brand?",
-    a: "Run a GEO scan and get a visibility score from 0 to 100, verbatim citation snippets, and a side-by-side competitor read-out across all seven engines. That baseline is where every answer engine optimization (AEO) program starts.",
+    a: "Run a GEO scan and get a visibility score from 0 to 100, verbatim citation snippets, and a side-by-side competitor read-out across all eight engines. That baseline is where every answer engine optimization (AEO) program starts.",
   },
   {
     q: "Why isn't AI citing my pages?",
@@ -19,7 +19,7 @@ const faqs = [
   },
   {
     q: "What's the difference between GEO, AEO, and LLM SEO?",
-    a: "Three names for the same job: being the source AI engines cite when your customer asks a question. Generative engine optimization (GEO) covers the full workflow across ChatGPT, Perplexity, Claude, Gemini, Google AI Overviews, Bing Copilot, and Grok. Answer engine optimization (AEO) focuses on earning citations in answer engines specifically. LLM SEO is the crawler-facing work: robots.txt, schema markup, entity clarity, and bot access. GEO Toolbox covers all three.",
+    a: "Three names for the same job: being the source AI engines cite when your customer asks a question. Generative engine optimization (GEO) covers the full workflow across ChatGPT, Perplexity, Claude, Gemini, Google AI Overviews, Google AI Mode, Bing Copilot, and Grok. Answer engine optimization (AEO) focuses on earning citations in answer engines specifically. LLM SEO is the crawler-facing work: robots.txt, schema markup, entity clarity, and bot access. GEO Toolbox covers all three.",
   },
 ]
 
