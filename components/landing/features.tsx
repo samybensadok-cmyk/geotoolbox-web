@@ -146,10 +146,10 @@ function StatusDot({ cited }: { cited: boolean }) {
 /* ——— Section ——— */
 export function Features() {
   const cards = [
-    { visual: <ScanVisual />, tag: "Scan", title: "Every engine on a single prompt", body: "ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Bing Copilot, and Grok — scanned in one run, side by side.", span: "md:col-span-2" },
-    { visual: <ScoreVisual />, tag: "Score", title: "One visibility score, week over week", body: "A single 0-100 number your team can align on. Tracked weekly, alerted on change, benchmarked against competitors.", span: "md:col-span-1" },
-    { visual: <AnalyzeVisual />, tag: "Analyze", title: "See what makes AI cite you", body: "21 signals graded per URL across two scores, Citability and AI Readability: schema, bot access, freshness, structure, entity clarity. Fix the lowest-scoring first.", span: "md:col-span-1" },
-    { visual: <IntelVisual />, tag: "Intel", title: "See who gets recommended instead", body: "Per-prompt competitor citations, co-cited domains, and real-time alerts the day a competitor overtakes you.", span: "md:col-span-2" },
+    { visual: <ScanVisual />, tag: "Scan", title: "See where AI cites you — and where it doesn't", body: "GEO Scan runs one prompt across all seven engines; Query Fan-Out captures the dozens of sub-questions they really ask. Your domain, your competitors, every citation.", span: "md:col-span-2" },
+    { visual: <ScoreVisual />, tag: "Track", title: "One score, week over week", body: "Domain Overview rolls every scan into a single 0–100 visibility score, with GSC + GA4 attribution — so you catch drift before it costs you traffic.", span: "md:col-span-1" },
+    { visual: <AnalyzeVisual />, tag: "Analyze & act", title: "Find why a page isn't cited — then fix it", body: "Content Analyzer grades any URL across 21 citability signals; Content Studio briefs and writes the fix. Turn a Not-found into a citation.", span: "md:col-span-1" },
+    { visual: <IntelVisual />, tag: "Own the gap", title: "Win the prompts competitors are taking", body: "Competitor Intel tracks who's cited instead of you; Citation Interceptor and Community surface the offsite threads AI quotes — so you show up where the answer is formed.", span: "md:col-span-2" },
   ]
 
   return (
@@ -157,13 +157,13 @@ export function Features() {
       <div className="mx-auto max-w-7xl">
         <div className="max-w-2xl">
           <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">
-            Capabilities
+            The workflow
           </p>
           <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.5rem)] font-bold leading-tight tracking-tight text-gray-900">
-            Full-spectrum AI visibility.
+            See it. Fix it. Own it.
           </h2>
           <p className="mt-4 text-base text-gray-600">
-            From scanning to strategy. The workflow SEO teams run to stay visible in AI search.
+            Eleven tools across one workflow — from the first scan to the published fix that wins the citation.
           </p>
         </div>
 
@@ -190,7 +190,10 @@ export function Features() {
 
         <div className="mt-16 flex flex-col items-start gap-5 border-t border-gray-100 pt-10 sm:flex-row sm:items-center sm:justify-between">
           <p className="max-w-lg text-[15px] leading-relaxed text-gray-600">
-            One scan. All four capabilities. See where you stand in AI search in under two minutes.
+            Eleven tools across scan, analyze, act, and track.{" "}
+            <Link href="/features" className="font-semibold text-accent-700 underline-offset-2 hover:underline">
+              Explore all eleven&nbsp;→
+            </Link>
           </p>
           <Link
             href="/app" prefetch={false}

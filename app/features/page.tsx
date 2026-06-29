@@ -183,7 +183,7 @@ export default function FeaturesPage() {
                 Features
               </p>
               <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-                Nine tools.
+                Eleven tools.
                 <br />
                 <span className="text-accent-600">One AI visibility stack.</span>
               </h1>
@@ -324,13 +324,13 @@ export default function FeaturesPage() {
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-[7fr_5fr] lg:items-end lg:gap-16">
             <div>
               <h2 className="text-[clamp(1.5rem,3.5vw,2.5rem)] font-bold leading-tight tracking-tight text-white">
-                One scan, all nine tools.
+                One scan unlocks the stack.
               </h2>
               <p className="mt-3 max-w-xl text-base text-gray-300">
-                Run a GEO Scan once and every other capability activates for that domain: Domain Overview, Competitor Intel, Community, and the rest.
+                Run a GEO Scan once and the intelligence layer activates for that domain — Domain Overview, Competitor Intel, Community, Citation Interceptor, and the rest.
               </p>
               <div className="mt-5 flex flex-wrap items-center gap-1.5">
-                {["GEO Scan", "Domain Overview", "Content Analyzer", "Content Studio", "Competitor Intel", "Analytics", "Community"].map((f) => (
+                {["GEO Scan", "Query Fan-Out", "Domain Overview", "Content Analyzer", "Content Studio", "Competitor Intel", "Citation Interceptor", "Analytics", "Community", "PR Coverage"].map((f) => (
                   <span
                     key={f}
                     className="rounded-full border border-gray-800 bg-gray-900/50 px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-widest text-gray-400"

@@ -67,9 +67,9 @@ export function Hero() {
             </div>
 
             <h1 className="stagger-1 mt-6 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-              See what{" "}
+              Get your brand{" "}
               <span className="relative inline-block text-accent-700">
-                AI search
+                cited by AI
                 <span
                   aria-hidden="true"
                   className="absolute left-0 right-0 -bottom-0.5 h-[2px]"
@@ -77,12 +77,11 @@ export function Hero() {
                     background: "linear-gradient(90deg, transparent, rgba(45,212,191,0.55), transparent)",
                   }}
                 />
-              </span>{" "}
-              says about your brand.
+              </span>.
             </h1>
 
             <p className="stagger-2 mt-6 max-w-xl text-lg leading-relaxed text-gray-600">
-              One scan shows exactly how ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Bing Copilot, and Grok describe your brand. The measurement layer for generative engine optimization and AI search visibility.
+              Eleven tools to see where AI mentions you, learn why it doesn&apos;t, and win the citations your competitors are taking — across all seven engines, from the first scan to the published fix.
             </p>
 
             <div className="stagger-2 mt-8 flex flex-wrap items-center gap-3">
