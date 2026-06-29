@@ -61,7 +61,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.8,
     },
-    ...["ai-readiness", "ai-crawler-checker", "llms-txt-checker"].map((slug) => ({
+    ...["query-fanout", "ai-readiness", "ai-crawler-checker", "llms-txt-checker"].map((slug) => ({
       url: `${siteConfig.url}/tools/${slug}`,
       lastModified: new Date(),
       changeFrequency: "weekly" as const,

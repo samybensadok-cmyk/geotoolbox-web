@@ -23,6 +23,12 @@ export const tools: ToolEntry[] = [
     navDesc: "Turn keywords into trackable AI prompts",
   },
   {
+    slug: "query-fanout",
+    name: "AI Query Fan-Out",
+    desc: "Run a real query fan-out in your browser with your own Gemini key — see the actual sub-queries an engine fires for a topic, clustered into intents with a cross-engine divergence map. Free, keys stay local.",
+    navDesc: "See the real sub-queries AI fans out (BYOK)",
+  },
+  {
     slug: "ai-readiness",
     name: "AI-Readiness Score",
     desc: "Score any domain on the foundations AI agents need — robots, crawler access, content signals, sitemap, markdown — across 5 of our 28 readiness checks. Free.",
