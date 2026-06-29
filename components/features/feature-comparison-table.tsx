@@ -32,9 +32,9 @@ export function FeatureComparisonTable({
       )
     if (c === false)
       return (
-        <span className="text-gray-300" aria-label="no">
-          <svg className="mx-auto h-3.5 w-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M3 8h10" strokeLinecap="round" />
+        <span className="text-gray-400" aria-label="no">
+          <svg className="mx-auto h-3.5 w-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <path d="M3.5 8h9" strokeLinecap="round" />
           </svg>
         </span>
       )
@@ -46,10 +46,11 @@ export function FeatureComparisonTable({
       <table className="w-full border-collapse text-left">
         <thead>
           <tr className="border-b border-gray-200">
-            <th className="py-3 pr-4 text-[13px] font-medium text-gray-500" />
+            <td className="py-3 pr-4 text-[13px] font-medium text-gray-500" />
             {columns.map((col, i) => (
               <th
                 key={col}
+                scope="col"
                 className={`px-4 py-3 text-center text-[13px] font-bold ${
                   i === highlightCol ? "rounded-t-xl bg-accent-50 text-accent-900" : "text-gray-700"
                 }`}
@@ -62,7 +63,7 @@ export function FeatureComparisonTable({
         <tbody>
           {rows.map((row, ri) => (
             <tr key={ri} className="border-b border-gray-100">
-              <td className="py-3 pr-4 text-[13px] font-medium text-gray-700">{row.label}</td>
+              <th scope="row" className="py-3 pr-4 text-left text-[13px] font-medium text-gray-700">{row.label}</th>
               {row.cells.map((c, ci) => (
                 <td
                   key={ci}

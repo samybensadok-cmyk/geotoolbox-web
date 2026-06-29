@@ -20,6 +20,7 @@ export const siteConfig = {
       features: [
         { slug: "geo-scan", name: "GEO Scan", desc: "7-engine AI visibility scan" },
         { slug: "agent-readiness", name: "Agent Readiness", desc: "Site-level AI agent + crawler readiness scan" },
+        { slug: "query-fanout", name: "Query Fan-Out", desc: "The real questions AI fans out for a topic" },
       ],
     },
     {

@@ -22,6 +22,7 @@ const tintMap = {
   blush: { bg: "bg-[var(--surface-blush)]", border: "border-[var(--surface-blush-border)]", accent: "text-rose-700",     dot: "bg-rose-500" },
   peach: { bg: "bg-[var(--surface-peach)]", border: "border-[var(--surface-peach-border)]", accent: "text-orange-700",   dot: "bg-orange-500" },
   cool:  { bg: "bg-[var(--surface-cool)]",  border: "border-[var(--surface-cool-border)]",  accent: "text-sky-700",      dot: "bg-sky-500" },
+  iris:  { bg: "bg-[var(--surface-iris)]",  border: "border-[var(--surface-iris-border)]",  accent: "text-violet-700",   dot: "bg-violet-500" },
 } as const
 
 type TintKey = keyof typeof tintMap
@@ -60,6 +61,13 @@ const groups: Group[] = [
         blurb: "Scan any root URL for AI agent readiness. 28 checks across standards, 34 AI crawlers, a headless-browser render of what an agent sees, and JS-rendering parity.",
         highlights: ["34 AI crawlers", "Headless render", "JS parity"],
         tint: "steel",
+      },
+      {
+        slug: "query-fanout",
+        name: "Query Fan-Out",
+        blurb: "Capture the real sub-questions ChatGPT, Gemini, Perplexity, and Grok fan out for a topic — validated, never guessed — with a cross-engine divergence map and a ranked content worklist.",
+        highlights: ["4 engines", "Divergence map", "Ranked actions"],
+        tint: "iris",
       },
     ],
   },
@@ -144,7 +152,7 @@ const groups: Group[] = [
 
 // Grid column count per group — matches card count so no group has an orphan.
 const gridColsByGroup: Record<string, string> = {
-  Scanning: "grid-cols-1",                      // 1 card, full-bleed feature
+  Scanning: "grid-cols-1",                      // full-bleed stacked cards
   Analysis: "grid-cols-1 md:grid-cols-2",       // 2 cards
   Intelligence: "grid-cols-1 md:grid-cols-2", // 4 cards (2×2)
   Reporting: "grid-cols-1 md:grid-cols-2",       // 2 cards
