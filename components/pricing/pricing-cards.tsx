@@ -5,9 +5,10 @@ import { useState } from "react"
 import { cn } from "@/lib/utils"
 import { PLANS, type Plan } from "@/lib/plans"
 
-// Free + Enterprise are handled as standalone strips (Ahrefs-style); the cards
-// and the comparison table show the paid self-serve tiers only.
-const SELF_SERVE = PLANS.filter((p) => p.id !== "enterprise" && p.id !== "free")
+// Card row anchors high: Consultant → Agency → Scale → Enterprise. Free and the
+// entry-level Starter tier are demoted to a one-line strip below the cards so the
+// pricing reads premium for agencies/large teams rather than cheap.
+const CARD_TIERS = PLANS.filter((p) => p.id !== "starter" && p.id !== "free")
 
 function priceDisplay(plan: Plan, annual: boolean) {
   if (plan.priceMonthly === null) return { big: "Custom", sub: null, save: null }
@@ -66,8 +67,9 @@ export function PricingCards() {
 
       {/* Cards */}
       <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        {SELF_SERVE.map((plan) => {
+        {CARD_TIERS.map((plan) => {
           const p = priceDisplay(plan, annual)
+          const isExternal = plan.cta.href.startsWith("http")
           return (
             <div
               key={plan.id}
@@ -106,6 +108,7 @@ export function PricingCards() {
               <Link
                 href={plan.cta.href}
                 prefetch={false}
+                {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                 className={cn(
                   "mt-5 inline-flex items-center justify-center rounded-full px-5 py-2.5 text-[14px] font-semibold transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2",
                   plan.featured

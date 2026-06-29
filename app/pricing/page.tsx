@@ -153,7 +153,11 @@ export default function PricingPage() {
         <div className="mx-auto mt-6 max-w-7xl">
           <div className="flex flex-col items-center justify-between gap-3 rounded-2xl border border-gray-200 bg-gray-50 px-6 py-4 sm:flex-row">
             <p className="text-[14px] text-gray-700">
-              <span className="font-semibold text-gray-900">Just exploring?</span> The Free plan gives you 1,000 credits a month of ChatGPT tracking, no credit card.
+              <span className="font-semibold text-gray-900">Solo or just exploring?</span> Start free with 1,000 credits and no card, or go deep on a single brand with our{" "}
+              <Link href={siteConfig.appSignupUrl} prefetch={false} className="font-semibold text-accent-700 underline-offset-2 hover:underline">
+                Starter tier at $49/mo
+              </Link>{" "}
+              (3 engines, weekly scans).
             </p>
             <Link
               href={siteConfig.appSignupUrl}
@@ -231,10 +235,12 @@ export default function PricingPage() {
             </p>
           </div>
           <Link
-            href="/contact?topic=enterprise"
+            href="https://calendly.com/samy-bensadok/30min-call"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex shrink-0 items-center justify-center rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-colors hover:bg-gray-100"
           >
-            Talk to sales
+            Book a call
           </Link>
         </div>
       </section>

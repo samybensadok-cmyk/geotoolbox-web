@@ -49,7 +49,7 @@ export type Plan = {
 }
 
 const SIGNUP = "/app/?page=signup"
-const SALES = "/contact?topic=enterprise"
+const BOOK_CALL = "https://calendly.com/samy-bensadok/30min-call"
 
 export const PLANS: Plan[] = [
   {
@@ -190,7 +190,7 @@ export const PLANS: Plan[] = [
       "SSO, security review & SLA",
       "Custom contract & invoicing",
     ],
-    cta: { label: "Talk to sales", href: SALES },
+    cta: { label: "Book a call", href: BOOK_CALL },
   },
 ]
 
