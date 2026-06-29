@@ -211,7 +211,7 @@ export default function DomainOverviewPage() {
       </section>
 
       {/* What's inside */}
-      <section id="whats-inside" className="bg-gray-50 px-6 py-24 sm:py-28">
+      <section id="whats-inside" className="border-t border-gray-100 bg-white px-6 py-24 sm:py-28">
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-[5fr_7fr] lg:items-end lg:gap-16">
             <div>
@@ -230,7 +230,7 @@ export default function DomainOverviewPage() {
               <div key={s.tag} className="relative pl-12">
                 <span
                   aria-hidden="true"
-                  className="absolute left-0 top-0 font-mono text-[22px] font-bold tabular-nums leading-none text-gray-300"
+                  className="absolute left-0 top-0 font-mono text-[22px] font-bold tabular-nums leading-none text-accent-500"
                 >
                   {s.num}
                 </span>
@@ -246,7 +246,7 @@ export default function DomainOverviewPage() {
       </section>
 
       {/* AI competitors visual */}
-      <section className="bg-white px-6 py-24 sm:py-28">
+      <section className="border-t border-[var(--surface-steel-border)] bg-[var(--surface-steel)] px-6 py-24 sm:py-28">
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
             <div className="lg:col-span-5">
@@ -260,7 +260,8 @@ export default function DomainOverviewPage() {
             </div>
 
             <div className="lg:col-span-7">
-              <div className="rounded-[2rem] border border-gray-200 bg-white p-6 sm:p-8 shadow-[0_20px_40px_-20px_rgba(15,23,42,0.08)]">
+              <figure aria-label="Illustrative example with sample data" className="m-0 rounded-[2rem] border border-gray-200 bg-white p-6 sm:p-8 shadow-[0_20px_40px_-20px_rgba(15,23,42,0.08)]">
+                <span className="sr-only">Example, illustrative data:</span>
                 <div className="flex items-center justify-between border-b border-gray-100 pb-3">
                   <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-600">
                     Top 4 of 12 · share of voice
@@ -275,12 +276,12 @@ export default function DomainOverviewPage() {
                         <div className="flex items-center justify-between">
                           <span className="font-mono text-[13px] font-medium text-gray-900">{c.domain}</span>
                           <div className="flex items-center gap-3">
-                            <span className="font-mono text-sm font-semibold tabular-nums text-gray-900">{c.share}%</span>
+                            <span className="font-mono text-sm font-semibold tabular-nums text-accent-700">{c.share}%</span>
                             <span className={`font-mono text-[11px] font-semibold ${positive ? "text-accent-700" : "text-red-600"}`}>{c.delta}</span>
                           </div>
                         </div>
                         <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-gray-100">
-                          <div className="h-full rounded-full bg-accent-500" style={{ width: `${c.share}%` }} />
+                          <div className="h-full rounded-full bg-accent-700" style={{ width: `${c.share}%` }} />
                         </div>
                       </div>
                     )
@@ -299,7 +300,7 @@ export default function DomainOverviewPage() {
                     </svg>
                   </Link>
                 </div>
-              </div>
+              </figure>
             </div>
           </div>
         </div>

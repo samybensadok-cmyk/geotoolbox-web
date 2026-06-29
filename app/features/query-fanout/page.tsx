@@ -287,7 +287,7 @@ export default function QueryFanoutPage() {
               <dl className="mt-8 space-y-5">
                 <div className="flex gap-4">
                   <dt className="mt-1 shrink-0">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-accent-500">
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-accent-700">
                       <span className="h-2 w-2 rounded-full bg-white" />
                     </span>
                   </dt>

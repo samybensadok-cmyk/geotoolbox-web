@@ -113,42 +113,45 @@ export default function PrCoverageTrackerPage() {
           ]}
         />
 
-        <div className="mx-auto max-w-5xl">
+        <div className="mx-auto max-w-7xl">
           <Breadcrumbs featureName="PR Coverage Tracker" />
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-amber-800">
-              Earned media in AI search
-            </p>
-            <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-              You earned the coverage. Can you prove it&apos;s still working?
-            </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
-              Six months after a campaign, half the links may be dead and you have no idea which placements
-              AI engines actually cite when a buyer asks about your client. PR Coverage Tracker takes the
-              coverage you placed and shows you what&apos;s <em>still live</em>, <em>indexed in Google</em>, and
-              <em> cited by AI</em> — the proof a retainer renewal is built on.
-            </p>
-            <div className="mt-8">
-              <DualCTA
-                primaryLabel="See Scale plans"
-                primaryHref="/pricing"
-                secondaryLabel="How it works"
-                secondaryHref="#how"
-                microcopy="On Scale & Enterprise plans"
+          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-14">
+            {/* Left — message */}
+            <div className="animate-fade-up lg:col-span-6">
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+                Earned media in AI search
+              </p>
+              <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
+                You earned the coverage. Can you prove it&apos;s <span className="text-accent-700">still working?</span>
+              </h1>
+              <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
+                Six months after a campaign, half the links may be dead and you have no idea which placements
+                AI engines actually cite when a buyer asks about your client. PR Coverage Tracker takes the
+                coverage you placed and shows you what&apos;s <em>still live</em>, <em>indexed in Google</em>, and
+                <em> cited by AI</em> — the proof a retainer renewal is built on.
+              </p>
+              <div className="mt-8">
+                <DualCTA
+                  primaryLabel="See Scale plans"
+                  primaryHref="/pricing"
+                  secondaryLabel="How it works"
+                  secondaryHref="#how"
+                  microcopy="On Scale & Enterprise plans"
+                />
+              </div>
+            </div>
+
+            {/* Right — real coverage table (anonymized: publication hosts + status, no client named) */}
+            <div className="animate-fade-up stagger-2 lg:col-span-6">
+              <ScreenshotFrame
+                src="/screenshots/pr-coverage-tracker/coverage-table.png"
+                alt="PR Coverage Tracker results: earned media placements with a per-row status — Dead 404, Blocked, Live 200, or Check failed — and a Google index badge (In Google / Not found in Google). A WAF-blocked publisher (ft.com) is confirmed still indexed in Google instead of being marked dead, while a genuine 404 is flagged Dead."
+                width={2010}
+                height={980}
+                priority
+                caption="Every placement checked for liveness and Google indexing. A publisher that blocks our crawler (ft.com — “Blocked”) is verified via Google rather than falsely marked dead; a real 404 (top row) is. AI-citation attribution sits alongside, per brand."
               />
             </div>
-          </div>
-
-          {/* Real coverage table — anonymized (publication hosts + status, no client named) */}
-          <div className="mx-auto mt-12 max-w-4xl">
-            <ScreenshotFrame
-              src="/screenshots/pr-coverage-tracker/coverage-table.png"
-              alt="PR Coverage Tracker results: earned media placements with a per-row status — Dead 404, Blocked, Live 200, or Check failed — and a Google index badge (In Google / Not found in Google). A WAF-blocked publisher (ft.com) is confirmed still indexed in Google instead of being marked dead, while a genuine 404 is flagged Dead."
-              width={2010}
-              height={980}
-              priority
-              caption="Every placement checked for liveness and Google indexing. A publisher that blocks our crawler (ft.com — “Blocked”) is verified via Google rather than falsely marked dead; a real 404 (top row) is. AI-citation attribution sits alongside, per brand."
-            />
           </div>
         </div>
       </section>
@@ -197,9 +200,9 @@ export default function PrCoverageTrackerPage() {
       />
 
       {/* Comparison */}
-      <section className="border-t border-gray-100 bg-gray-50 px-6 py-16 sm:py-20">
+      <section className="border-t border-[var(--surface-warm-border)] bg-[var(--surface-warm)] px-6 py-16 sm:py-20">
         <div className="mx-auto max-w-3xl">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-amber-800">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
             How it compares
           </p>
           <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
@@ -217,7 +220,7 @@ export default function PrCoverageTrackerPage() {
       {/* Light proof — provenance (no fabricated numbers) */}
       <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
         <div className="mx-auto max-w-3xl text-center">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-amber-800">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
             Built on real data
           </p>
           <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">

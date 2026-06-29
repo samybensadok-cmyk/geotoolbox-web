@@ -208,7 +208,7 @@ export default function CompetitorIntelPage() {
                     <p className="font-mono text-[10px] font-semibold uppercase tracking-widest text-gray-500">
                       Share of voice &middot; 30 days
                     </p>
-                    <p className="font-mono text-[10px] text-gray-400">4 / 5 tracked</p>
+                    <p className="font-mono text-[10px] text-gray-500">4 / 5 tracked</p>
                   </div>
                   <div className="space-y-2">
                     {competitors.map((c) => {
@@ -217,9 +217,9 @@ export default function CompetitorIntelPage() {
                         <div key={c.domain} className="flex items-center gap-3">
                           <span className="w-44 shrink-0 truncate font-mono text-[12px] font-medium text-gray-800">{c.domain}</span>
                           <div className="h-1 flex-1 overflow-hidden rounded-full bg-gray-100">
-                            <div className="h-full rounded-full bg-accent-500" style={{ width: `${c.share}%` }} />
+                            <div className="h-full rounded-full bg-accent-700" style={{ width: `${c.share}%` }} />
                           </div>
-                          <span className="w-9 shrink-0 text-right font-mono text-[11px] font-semibold tabular-nums text-gray-900">{c.share}%</span>
+                          <span className="w-9 shrink-0 text-right font-mono text-[11px] font-semibold tabular-nums text-accent-700">{c.share}%</span>
                           <span className={`w-6 shrink-0 text-right font-mono text-[10px] font-semibold ${positive ? "text-accent-700" : "text-red-600"}`}>{c.delta}</span>
                         </div>
                       )
@@ -233,7 +233,7 @@ export default function CompetitorIntelPage() {
       </section>
 
       {/* Gap matrix section */}
-      <section className="bg-gray-50 px-6 py-24 sm:py-28">
+      <section className="border-y border-[var(--surface-blush-border)] bg-[var(--surface-blush)] px-6 py-24 sm:py-28">
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-[5fr_7fr] lg:items-end lg:gap-16">
             <div>
@@ -250,7 +250,7 @@ export default function CompetitorIntelPage() {
           {/* Legend — explains the symbols before the reader has to guess */}
           <div className="mt-8 flex flex-wrap items-center gap-5 text-[13px] text-gray-600">
             <span className="inline-flex items-center gap-2">
-              <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-accent-500">
+              <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-accent-700">
                 <svg className="h-3 w-3 text-white" viewBox="0 0 14 14" fill="none">
                   <path d="M3 7l3 3 5-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
@@ -267,15 +267,16 @@ export default function CompetitorIntelPage() {
             </span>
           </div>
 
-          <div className="mt-6 overflow-hidden rounded-[2rem] border border-gray-200 bg-white">
+          <figure aria-label="Illustrative example with sample data" className="mt-6 overflow-hidden rounded-[2rem] border border-gray-200 bg-white">
+            <span className="sr-only">Example, illustrative data:</span>
             <div className="overflow-x-auto">
               <table className="w-full min-w-[600px] text-sm">
                 <thead>
                   <tr className="border-b border-gray-200 text-left">
-                    <th className="px-6 py-4 font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-600">Topic</th>
-                    <th className="px-4 py-4 text-center font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-600">You</th>
-                    <th className="px-4 py-4 text-center font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-600">ahrefs.com</th>
-                    <th className="px-4 py-4 text-center font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-600">semrush.com</th>
+                    <th scope="col" className="px-6 py-4 font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-600">Topic</th>
+                    <th scope="col" className="px-4 py-4 text-center font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-600">You</th>
+                    <th scope="col" className="px-4 py-4 text-center font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-600">ahrefs.com</th>
+                    <th scope="col" className="px-4 py-4 text-center font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-600">semrush.com</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
@@ -296,7 +297,7 @@ export default function CompetitorIntelPage() {
                 </tbody>
               </table>
             </div>
-          </div>
+          </figure>
 
           {/* Inline CTA at point of peak intent */}
           <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
@@ -329,7 +330,7 @@ export default function CompetitorIntelPage() {
               <div key={s.tag} className="relative pl-12">
                 <span
                   aria-hidden="true"
-                  className="absolute left-0 top-0 font-mono text-[22px] font-bold tabular-nums leading-none text-gray-300"
+                  className="absolute left-0 top-0 font-mono text-[22px] font-bold tabular-nums leading-none text-accent-500"
                 >
                   {s.num}
                 </span>
@@ -371,7 +372,7 @@ export default function CompetitorIntelPage() {
 
 function Cell({ present }: { present: boolean }) {
   return present ? (
-    <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-accent-500">
+    <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-accent-700">
       <svg className="h-3.5 w-3.5 text-white" viewBox="0 0 14 14" fill="none">
         <path d="M3 7l3 3 5-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       </svg>

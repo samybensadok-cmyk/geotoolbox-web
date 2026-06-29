@@ -105,7 +105,7 @@ export default function CommunityPage() {
   return (
     <>
       {/* Hero — warm social atmosphere */}
-      <section className="bg-[var(--surface-peach)] px-6 pt-20 pb-16 sm:pt-24 sm:pb-20">
+      <section className="border-b border-[var(--surface-peach-border)] bg-[var(--surface-peach)] px-6 pt-20 pb-16 sm:pt-24 sm:pb-20">
       <JsonLd data={[
         softwareApplicationSchema({
           name: "Community Insights",
@@ -139,7 +139,8 @@ export default function CommunityPage() {
             </div>
 
             {/* Community visual */}
-            <div className="lg:col-span-6" aria-hidden="true">
+            <figure className="m-0 lg:col-span-6" aria-label="Illustrative example with sample data">
+              <span className="sr-only">Example, illustrative data:</span>
               <div className="relative rounded-[2rem] border border-gray-200 bg-white p-6 sm:p-8 shadow-[0_20px_60px_-20px_rgba(15,23,42,0.12)]">
                 <div className="flex items-center justify-between border-b border-gray-100 pb-3">
                   <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-600">
@@ -163,7 +164,7 @@ export default function CommunityPage() {
                       <p className="mt-1 text-[13px] font-medium text-gray-900">{t.title}</p>
                       <div className="mt-1.5 flex items-center justify-between text-[11px]">
                         <div className="flex items-center gap-1.5 text-gray-600">
-                          <span className="h-1.5 w-1.5 rounded-full bg-accent-500" />
+                          <span className="h-1.5 w-1.5 rounded-full bg-accent-700" />
                           <span>Cited by {t.engines.join(", ")}</span>
                         </div>
                         <span
@@ -182,13 +183,13 @@ export default function CommunityPage() {
                   ))}
                 </ul>
               </div>
-            </div>
+            </figure>
           </div>
         </div>
       </section>
 
-      {/* Outcomes — atmosphere continues (peach) */}
-      <section id="outcomes" className="bg-[var(--surface-peach)] px-6 py-24 sm:py-28">
+      {/* Outcomes — white breather alternating with the peach atmosphere */}
+      <section id="outcomes" className="bg-white px-6 py-24 sm:py-28">
         <div className="mx-auto max-w-7xl">
           <div className="max-w-2xl">
             <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">What you get</p>
@@ -208,8 +209,8 @@ export default function CommunityPage() {
         </div>
       </section>
 
-      {/* What it catches — concrete examples */}
-      <section className="bg-white px-6 py-24 sm:py-28">
+      {/* What it catches — concrete examples (peach tint, breaks the white run before FAQ) */}
+      <section className="border-y border-[var(--surface-peach-border)] bg-[var(--surface-peach)] px-6 py-24 sm:py-28">
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-[5fr_7fr] lg:items-end lg:gap-16">
             <div>

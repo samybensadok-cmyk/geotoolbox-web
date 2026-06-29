@@ -284,8 +284,9 @@ export default function AnalyticsPage() {
             </div>
 
             {/* AI traffic visual */}
-            <div className="lg:col-span-6" aria-hidden="true">
-              <div className="relative rounded-[2rem] border border-gray-200 bg-white p-6 sm:p-8 shadow-[0_20px_60px_-20px_rgba(15,23,42,0.12)]">
+            <div className="lg:col-span-6">
+              <figure aria-label="Illustrative example with sample data" className="relative m-0 rounded-[2rem] border border-gray-200 bg-white p-6 sm:p-8 shadow-[0_20px_60px_-20px_rgba(15,23,42,0.12)]">
+                <span className="sr-only">Example, illustrative data:</span>
                 <div className="flex items-center justify-between border-b border-gray-100 pb-3">
                   <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-600">
                     AI traffic · last 30 days
@@ -295,7 +296,7 @@ export default function AnalyticsPage() {
                   </span>
                 </div>
                 <div className="mt-4 flex items-end gap-3 font-mono">
-                  <p className="text-4xl font-bold tabular-nums text-gray-900">1,321</p>
+                  <p className="text-4xl font-bold tabular-nums text-accent-700">1,321</p>
                   <p className="pb-1 text-sm text-gray-600">AI-attributed sessions</p>
                   <p className="pb-1 ml-auto text-sm font-semibold text-accent-700">+27%</p>
                 </div>
@@ -312,20 +313,20 @@ export default function AnalyticsPage() {
                           </div>
                         </div>
                         <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-gray-100">
-                          <div className="h-full rounded-full bg-accent-500" style={{ width: `${pct}%` }} />
+                          <div className="h-full rounded-full bg-accent-700" style={{ width: `${pct}%` }} />
                         </div>
                       </div>
                     )
                   })}
                 </div>
-              </div>
+              </figure>
             </div>
           </div>
         </div>
       </section>
 
       {/* 13 sub-dashboards */}
-      <section id="dashboards" className="bg-gray-50 px-6 py-24 sm:py-28">
+      <section id="dashboards" className="border-t border-gray-100 bg-white px-6 py-24 sm:py-28">
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-[5fr_7fr] lg:items-end lg:gap-16">
             <div>
@@ -430,7 +431,7 @@ export default function AnalyticsPage() {
       </section>
 
       {/* Outcomes */}
-      <section className="bg-white px-6 py-24 sm:py-28">
+      <section className="border-t border-[var(--surface-cool-border)] bg-[var(--surface-cool)] px-6 py-24 sm:py-28">
         <div className="mx-auto max-w-7xl">
           <div className="max-w-2xl">
             <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">What makes it different</p>

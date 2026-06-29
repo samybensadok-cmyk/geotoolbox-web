@@ -135,41 +135,45 @@ export default function GeoScanPage() {
           ]}
         />
 
-        <div className="mx-auto max-w-5xl">
+        <div className="mx-auto max-w-7xl">
           <Breadcrumbs featureName="GEO Scan" />
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-              AI Visibility Tool
-            </p>
-            <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-              See if AI is recommending you — or your competitors.
-            </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
-              ChatGPT, Perplexity, Gemini, and Google AI Overviews already answer your customers&apos;
-              buying questions. Most brands have no idea whether they&apos;re in the answer or invisible.
-              GEO Scan queries seven engines with one prompt and shows you exactly who gets cited, who
-              gets recommended instead, and a 0–100 visibility score — in minutes, from live search.
-            </p>
-            <div className="mt-8">
-              <DualCTA
-                primaryLabel="Run a free scan"
-                secondaryLabel="See how it works"
-                secondaryHref="#how"
-                microcopy="Free plan · no credit card · results in minutes"
+
+          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-14">
+            {/* Left — message */}
+            <div className="animate-fade-up lg:col-span-6">
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+                AI Visibility Tool
+              </p>
+              <h1 className="mt-3 text-[clamp(2rem,4.2vw,3.25rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
+                See if AI is <span className="text-accent-700">recommending you</span> — or your competitors.
+              </h1>
+              <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
+                ChatGPT, Perplexity, Gemini, and Google AI Overviews already answer your customers&apos;
+                buying questions. Most brands have no idea whether they&apos;re in the answer or invisible.
+                GEO Scan queries seven engines with one prompt and shows you exactly who gets cited, who
+                gets recommended instead, and a 0–100 visibility score — in minutes, from live search.
+              </p>
+              <div className="mt-8">
+                <DualCTA
+                  primaryLabel="Run a free scan"
+                  secondaryLabel="See how it works"
+                  secondaryHref="#how"
+                  microcopy="Free plan · no credit card · results in minutes"
+                />
+              </div>
+            </div>
+
+            {/* Right — the real scan result as proof (anonymized, brand kept unnamed) */}
+            <div className="animate-fade-up stagger-2 lg:col-span-6">
+              <ScreenshotFrame
+                src="/screenshots/geo-scan/ai-citation-lawyers-result.png"
+                alt="GEO Scan result for 'how to run google ads for lawyers': all 7 AI engines cite the brand, ranked the #1 cited source above google.com, with 63 total citations."
+                width={1999}
+                height={1602}
+                priority
+                caption="Real GEO Scan — for “how to run google ads for lawyers,” all 7 AI engines cite the brand, which ranks the #1 cited source — above google.com, Reddit, and Clio."
               />
             </div>
-          </div>
-
-          {/* Real scan result, anonymized — domain-free metrics strip (brand kept unnamed) */}
-          <div className="mx-auto mt-12 max-w-4xl">
-            <ScreenshotFrame
-              src="/screenshots/geo-scan/ai-citation-lawyers-result.png"
-              alt="GEO Scan result for 'how to run google ads for lawyers': all 7 AI engines cite the brand, ranked the #1 cited source above google.com, with 63 total citations."
-              width={1999}
-              height={1602}
-              priority
-              caption="Real GEO Scan — for “how to run google ads for lawyers,” all 7 AI engines cite the brand, which ranks the #1 cited source — above google.com, Reddit, and Clio."
-            />
           </div>
         </div>
       </section>
@@ -182,7 +186,7 @@ export default function GeoScanPage() {
       />
 
       {/* What a scan gives you back — anchor the score + cited vs mentioned */}
-      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
+      <section className="border-t border-[var(--surface-mint-border)] bg-[var(--surface-mint)] px-6 py-16 sm:py-24">
         <div className="mx-auto max-w-3xl">
           <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
             What you get back
@@ -197,16 +201,22 @@ export default function GeoScanPage() {
           <div className="mt-6">
             <ScoreLegend variant="0-100" />
           </div>
-          <dl className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <dl className="mt-8 divide-y divide-gray-200/70 border-y border-gray-200/70">
             {[
-              ["Cited", "Your domain is the linked source — defend it."],
-              ["Recommended", "Named as a top pick — protect the position."],
-              ["Mentioned", "Named without a link — your highest-leverage upgrade."],
-              ["Not found", "The gap to close first."],
-            ].map(([term, def]) => (
-              <div key={term} className="rounded-xl border border-gray-200 bg-white p-4">
-                <dt className="text-[14px] font-bold text-gray-900">{term}</dt>
-                <dd className="mt-1 text-[13px] leading-relaxed text-gray-600">{def}</dd>
+              ["01", "Cited", "Your domain is the linked source — defend it."],
+              ["02", "Recommended", "Named as a top pick — protect the position."],
+              ["03", "Mentioned", "Named without a link — your highest-leverage upgrade."],
+              ["04", "Not found", "The gap to close first."],
+            ].map(([num, term, def]) => (
+              <div key={term} className="flex items-baseline gap-4 py-4 sm:gap-6">
+                <span
+                  aria-hidden="true"
+                  className="shrink-0 font-mono text-[15px] font-bold tabular-nums text-accent-500"
+                >
+                  {num}
+                </span>
+                <dt className="w-32 shrink-0 text-[14px] font-bold text-gray-900 sm:w-40">{term}</dt>
+                <dd className="text-[13px] leading-relaxed text-gray-600">{def}</dd>
               </div>
             ))}
           </dl>
@@ -255,7 +265,7 @@ export default function GeoScanPage() {
       </section>
 
       {/* Comparison */}
-      <section className="border-t border-gray-100 bg-gray-50 px-6 py-16 sm:py-20">
+      <section className="border-t border-[var(--surface-mint-border)] bg-[var(--surface-mint)] px-6 py-16 sm:py-24">
         <div className="mx-auto max-w-3xl">
           <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
             How it compares

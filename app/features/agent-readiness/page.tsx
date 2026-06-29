@@ -165,40 +165,44 @@ export default function AgentReadinessPage() {
           ]}
         />
 
-        <div className="mx-auto max-w-5xl">
+        <div className="mx-auto max-w-7xl">
           <Breadcrumbs featureName="Agent Readiness" />
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-              AI Crawler &amp; Agent Readiness
-            </p>
-            <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-              Can AI agents even reach your site?
-            </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
-              One forgotten robots.txt line or a JS-only page, and GPTBot, ClaudeBot, and PerplexityBot
-              can&apos;t read you — so AI never cites you, and you never see an error. Agent Readiness scans
-              any root URL across 34 AI crawlers, renders the page in a headless browser to show what an
-              agent actually sees, and hands you the exact fixes.
-            </p>
-            <div className="mt-8">
-              <DualCTA
-                primaryLabel="Scan a URL free"
-                secondaryLabel="See the 28 checks"
-                secondaryHref="#layers"
-                microcopy="One root URL is all it takes · results in minutes"
+          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-14">
+            {/* Left — message */}
+            <div className="animate-fade-up lg:col-span-6">
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+                AI Crawler &amp; Agent Readiness
+              </p>
+              <h1 className="mt-3 text-[clamp(2rem,4.2vw,3.25rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
+                Can AI agents even <span className="text-accent-700">reach your site?</span>
+              </h1>
+              <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
+                One forgotten robots.txt line or a JS-only page, and GPTBot, ClaudeBot, and PerplexityBot
+                can&apos;t read you — so AI never cites you, and you never see an error. Agent Readiness scans
+                any root URL across 34 AI crawlers, renders the page in a headless browser to show what an
+                agent actually sees, and hands you the exact fixes.
+              </p>
+              <div className="mt-8">
+                <DualCTA
+                  primaryLabel="Scan a URL free"
+                  secondaryLabel="See the 28 checks"
+                  secondaryHref="#layers"
+                  microcopy="One root URL is all it takes · results in minutes"
+                />
+              </div>
+            </div>
+
+            {/* Right — a real readiness report as proof */}
+            <div className="animate-fade-up stagger-2 lg:col-span-6">
+              <ScreenshotFrame
+                src="/screenshots/agent-readiness/readiness-scores.png"
+                alt="Agent Readiness report: an overall score of 44/100 (grade C), a breakdown of blockers, critical issues, quick wins and passing checks, and per-job scores for Product Discovery, Navigation, Task Completion and Form Handling."
+                width={3270}
+                height={938}
+                priority
+                caption="A real readiness report: one overall score, a blockers/critical/quick-wins breakdown, and per-job scores for the four things an AI agent has to do on your site."
               />
             </div>
-          </div>
-
-          <div className="mx-auto mt-12 max-w-4xl">
-            <ScreenshotFrame
-              src="/screenshots/agent-readiness/readiness-scores.png"
-              alt="Agent Readiness report: an overall score of 44/100 (grade C), a breakdown of blockers, critical issues, quick wins and passing checks, and per-job scores for Product Discovery, Navigation, Task Completion and Form Handling."
-              width={3270}
-              height={938}
-              priority
-              caption="A real readiness report: one overall score, a blockers/critical/quick-wins breakdown, and per-job scores for the four things an AI agent has to do on your site."
-            />
           </div>
         </div>
       </section>
@@ -214,8 +218,8 @@ export default function AgentReadinessPage() {
       <HowItWorks3Step heading="From root URL to readiness report in three steps" steps={steps} />
 
       {/* The 28 checks — 3 layers */}
-      <section id="layers" className="border-t border-gray-100 bg-gray-50 px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-5xl">
+      <section id="layers" className="scroll-mt-20 border-t border-[var(--surface-steel-border)] bg-[var(--surface-steel)] px-6 py-16 sm:py-24">
+        <div className="mx-auto max-w-7xl">
           <div className="max-w-2xl">
             <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">28 checks, 3 layers</p>
             <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
@@ -225,15 +229,21 @@ export default function AgentReadinessPage() {
               An agent has to get past your robots and firewall, render the page without a real browser, and pull meaning out of it. Each layer checks one of those.
             </p>
           </div>
-          <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
-            {layers.map((l) => (
-              <div key={l.tag} className="flex flex-col rounded-2xl border border-gray-200 bg-white p-7">
-                <div className="flex items-center justify-between">
+          <div className="mt-14 grid grid-cols-1 gap-x-10 gap-y-12 md:grid-cols-3">
+            {layers.map((l, i) => (
+              <div key={l.tag} className="relative pl-12">
+                <span
+                  aria-hidden="true"
+                  className="absolute left-0 top-0 font-mono text-[22px] font-bold leading-none tabular-nums text-accent-500"
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <div className="flex items-baseline justify-between gap-3">
                   <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">{l.tag}</span>
                   <span className="font-mono text-[10px] text-gray-500">{l.note}</span>
                 </div>
-                <h3 className="mt-3 text-lg font-semibold tracking-tight text-gray-900">{l.title}</h3>
-                <ul className="mt-4 space-y-2.5">
+                <h3 className="mt-2 text-lg font-semibold tracking-tight text-gray-900">{l.title}</h3>
+                <ul className="mt-4 space-y-2.5 border-t border-[var(--surface-steel-border)] pt-4">
                   {l.checks.map((c) => (
                     <li key={c} className="flex items-start gap-2.5 text-[14px] leading-snug text-gray-700">
                       <svg className="mt-0.5 h-3.5 w-3.5 shrink-0 text-accent-600" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
@@ -257,17 +267,23 @@ export default function AgentReadinessPage() {
       />
 
       {/* Outcomes */}
-      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-5xl">
+      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-24">
+        <div className="mx-auto max-w-7xl">
           <div className="max-w-2xl">
             <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">What makes it different</p>
             <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
               The access path, not just the page.
             </h2>
           </div>
-          <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:gap-12">
-            {outcomes.map((o) => (
-              <div key={o.tag}>
+          <div className="mt-14 grid grid-cols-1 gap-x-10 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
+            {outcomes.map((o, i) => (
+              <div key={o.tag} className="relative pl-12">
+                <span
+                  aria-hidden="true"
+                  className="absolute left-0 top-0 font-mono text-[22px] font-bold leading-none tabular-nums text-accent-500"
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </span>
                 <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">{o.tag}</p>
                 <h3 className="mt-2 text-lg font-semibold tracking-tight text-gray-900">{o.title}</h3>
                 <p className="mt-2 text-[15px] leading-relaxed text-gray-600">{o.body}</p>

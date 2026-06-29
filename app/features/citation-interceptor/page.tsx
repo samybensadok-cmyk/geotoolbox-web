@@ -107,41 +107,45 @@ export default function CitationInterceptorPage() {
           ]}
         />
 
-        <div className="mx-auto max-w-5xl">
+        <div className="mx-auto max-w-7xl">
           <Breadcrumbs featureName="Citation Interceptor" />
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-indigo-700">
-              AI Citation Gap
-            </p>
-            <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-              AI cites Reddit threads about your category. You&apos;re not in them.
-            </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
-              When buyers ask AI about your space, the engines cite a Reddit thread, a forum answer, a
-              competitor&apos;s page — the places opinions actually form. Citation Interceptor finds every
-              offsite source AI cites where your brand is <em>absent</em>, grades the evidence, and hands you a
-              worklist of real opportunities — without a single fake review.
-            </p>
-            <div className="mt-8">
-              <DualCTA
-                primaryLabel="Find your citation gaps"
-                secondaryLabel="See how it works"
-                secondaryHref="#how"
-                microcopy="Free plan · no credit card"
+
+          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-14">
+            {/* Left — message */}
+            <div className="animate-fade-up lg:col-span-6">
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+                AI Citation Gap
+              </p>
+              <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.25rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
+                AI cites <span className="text-accent-700">Reddit threads</span>{" "}about your category. You&apos;re not in them.
+              </h1>
+              <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
+                When buyers ask AI about your space, the engines cite a Reddit thread, a forum answer, a
+                competitor&apos;s page — the places opinions actually form. Citation Interceptor finds every
+                offsite source AI cites where your brand is <em>absent</em>, grades the evidence, and hands you a
+                worklist of real opportunities — without a single fake review.
+              </p>
+              <div className="mt-8">
+                <DualCTA
+                  primaryLabel="Find your citation gaps"
+                  secondaryLabel="See how it works"
+                  secondaryHref="#how"
+                  microcopy="Free plan · no credit card"
+                />
+              </div>
+            </div>
+
+            {/* Right — the real worklist (anonymized: host table + evidence grades; no brand named) */}
+            <div className="animate-fade-up stagger-2 lg:col-span-6">
+              <ScreenshotFrame
+                src="/screenshots/citation-interceptor/citation-worklist.png"
+                alt="Citation Interceptor worklist: offsite sources AI cites where a brand is absent — grouped by family (community, editorial, competitor), each with a brand-absent percentage, an Observed evidence grade, and triage controls."
+                width={1698}
+                height={890}
+                priority
+                caption="The worklist: offsite sources AI cites where the brand is absent — by family, with brand-absent %, evidence grades, and the actual cited threads to review."
               />
             </div>
-          </div>
-
-          {/* Real worklist — anonymized (host table + evidence grades; no brand named) */}
-          <div className="mx-auto mt-12 max-w-4xl">
-            <ScreenshotFrame
-              src="/screenshots/citation-interceptor/citation-worklist.png"
-              alt="Citation Interceptor worklist: offsite sources AI cites where a brand is absent — grouped by family (community, editorial, competitor), each with a brand-absent percentage, an Observed evidence grade, and triage controls."
-              width={1698}
-              height={890}
-              priority
-              caption="The worklist: offsite sources AI cites where the brand is absent — by family, with brand-absent %, evidence grades, and the actual cited threads to review."
-            />
           </div>
         </div>
       </section>
@@ -190,9 +194,9 @@ export default function CitationInterceptorPage() {
       />
 
       {/* Comparison */}
-      <section className="border-t border-gray-100 bg-gray-50 px-6 py-16 sm:py-20">
+      <section className="border-t border-[var(--surface-lilac-border)] bg-[var(--surface-lilac)] px-6 py-16 sm:py-20">
         <div className="mx-auto max-w-3xl">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-indigo-700">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
             How it compares
           </p>
           <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
@@ -209,8 +213,8 @@ export default function CitationInterceptorPage() {
 
       {/* Light proof — engines + provenance (no fabricated numbers) */}
       <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl text-center">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-indigo-700">
+        <div className="mx-auto max-w-3xl">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
             Built on real citations
           </p>
           <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">

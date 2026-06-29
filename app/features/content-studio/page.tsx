@@ -151,41 +151,46 @@ export default function ContentStudioPage() {
           ]}
         />
 
-        <div className="mx-auto max-w-5xl">
+        <div className="mx-auto max-w-7xl">
           <Breadcrumbs featureName="Content Studio" />
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-              Content Studio
-            </p>
-            <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-              Your article is well-written. AI still won&apos;t cite it.
-            </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
-              Content Studio is an AI content brief and article writer. A clean, readable post can be invisible to
-              ChatGPT, Perplexity and Google AI Overviews &mdash; because it&apos;s missing the entities, facts and
-              structure the engines actually extract. It reverse-engineers what gets cited, builds the brief, and
-              writes the draft against it.
-            </p>
-            <div className="mt-8">
-              <DualCTA
-                primaryLabel="Generate a brief"
-                primaryHref="/app"
-                secondaryLabel="See what's in a brief"
-                secondaryHref="#brief"
-                microcopy="Built on live SERPs + real AI engine responses · see plans"
+
+          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-14">
+            {/* Left — message */}
+            <div className="animate-fade-up lg:col-span-6">
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+                Content Studio
+              </p>
+              <h1 className="mt-3 text-[clamp(2rem,4.2vw,3.25rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
+                Your article is well-written. <span className="text-accent-700">AI still won&apos;t cite it.</span>
+              </h1>
+              <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
+                Content Studio is an AI content brief and article writer. A clean, readable post can be invisible to
+                ChatGPT, Perplexity and Google AI Overviews &mdash; because it&apos;s missing the entities, facts and
+                structure the engines actually extract. It reverse-engineers what gets cited, builds the brief, and
+                writes the draft against it.
+              </p>
+              <div className="mt-8">
+                <DualCTA
+                  primaryLabel="Generate a brief"
+                  primaryHref="/app"
+                  secondaryLabel="See what's in a brief"
+                  secondaryHref="#brief"
+                  microcopy="Built on live SERPs + real AI engine responses · see plans"
+                />
+              </div>
+            </div>
+
+            {/* Right — the real brief, as proof */}
+            <div className="animate-fade-up stagger-2 lg:col-span-6">
+              <ScreenshotFrame
+                src="/screenshots/content-studio/brief-studio.png"
+                alt="A real Content Studio brief for the keyword 'LLM SEO': a tabbed brief (Strategy, Content Framework, AI Extractability Checklist, Recommended Outline, Statistics & Evidence, Entities & Topics, Article), a Write Article button, PDF/DOCX/Markdown export, and a strategy read of the SERP and the pages AI cites."
+                width={2136}
+                height={1090}
+                priority
+                caption="A real brief for ‘LLM SEO’: a strategy read of what AI cites, a framework-aware outline, and — one click away — the written article. Export to PDF, DOCX or Markdown. No fabricated mockup."
               />
             </div>
-          </div>
-
-          <div className="mx-auto mt-12 max-w-4xl">
-            <ScreenshotFrame
-              src="/screenshots/content-studio/brief-studio.png"
-              alt="A real Content Studio brief for the keyword 'LLM SEO': a tabbed brief (Strategy, Content Framework, AI Extractability Checklist, Recommended Outline, Statistics & Evidence, Entities & Topics, Article), a Write Article button, PDF/DOCX/Markdown export, and a strategy read of the SERP and the pages AI cites."
-              width={2136}
-              height={1090}
-              priority
-              caption="A real brief for ‘LLM SEO’: a strategy read of what AI cites, a framework-aware outline, and — one click away — the written article. Export to PDF, DOCX or Markdown. No fabricated mockup."
-            />
           </div>
         </div>
       </section>
@@ -201,7 +206,7 @@ export default function ContentStudioPage() {
       <HowItWorks3Step heading="From keyword to citation-ready article" steps={steps} />
 
       {/* What's in a brief — the real modules */}
-      <section id="brief" className="border-t border-gray-100 bg-gray-50 px-6 py-16 sm:py-20">
+      <section id="brief" className="border-t border-[var(--surface-warm-border)] bg-[var(--surface-warm)] px-6 py-16 sm:py-20">
         <div className="mx-auto max-w-5xl">
           <div className="max-w-2xl">
             <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
@@ -263,9 +268,15 @@ export default function ContentStudioPage() {
               Briefs that earn the citation.
             </h2>
           </div>
-          <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:gap-12">
-            {outcomes.map((o) => (
-              <div key={o.tag}>
+          <div className="mt-12 grid grid-cols-1 gap-x-10 gap-y-12 md:grid-cols-2 lg:gap-x-16">
+            {outcomes.map((o, i) => (
+              <div key={o.tag} className="relative pl-12">
+                <span
+                  aria-hidden="true"
+                  className="absolute left-0 top-0 font-mono text-[22px] font-bold leading-none tabular-nums text-accent-500"
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </span>
                 <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">{o.tag}</p>
                 <h3 className="mt-2 text-lg font-semibold tracking-tight text-gray-900">{o.title}</h3>
                 <p className="mt-2 text-[15px] leading-relaxed text-gray-600">{o.body}</p>
@@ -287,7 +298,7 @@ export default function ContentStudioPage() {
       </section>
 
       {/* Comparison */}
-      <section className="border-t border-gray-100 bg-gray-50 px-6 py-16 sm:py-20">
+      <section className="border-t border-[var(--surface-warm-border)] bg-[var(--surface-warm)] px-6 py-16 sm:py-20">
         <div className="mx-auto max-w-4xl">
           <div className="max-w-2xl">
             <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">Where it fits</p>

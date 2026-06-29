@@ -175,48 +175,52 @@ export default function ContentAnalyzerPage() {
           ]}
         />
 
-        <div className="mx-auto max-w-5xl">
+        <div className="mx-auto max-w-7xl">
           <Breadcrumbs featureName="Content Analyzer" />
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-              Content Analyzer
-            </p>
-            <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-              Why isn&apos;t AI citing your content?
-            </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
-              Your competitor&apos;s page passes the access, structure and authority checks AI engines run
-              before they cite anyone. Yours is failing some of them &mdash; and you can&apos;t see which. Paste any
-              URL and get an A&ndash;F citability grade, a live check of which AI engines cite the page, and
-              the exact fixes.
-            </p>
-            <div className="mt-8">
-              <DualCTA
-                primaryLabel="Get my citability report"
-                primaryHref="/app"
-                secondaryLabel="See the signals it checks"
-                secondaryHref="#signals"
-                microcopy="Live AI-bot fetches + real engine checks · see plans"
+          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-14">
+            {/* Left — message */}
+            <div className="animate-fade-up lg:col-span-6">
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+                Content Analyzer
+              </p>
+              <h1 className="mt-3 text-[clamp(2rem,4.2vw,3.25rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
+                Why isn&apos;t AI <span className="text-accent-700">citing your content?</span>
+              </h1>
+              <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
+                Your competitor&apos;s page passes the access, structure and authority checks AI engines run
+                before they cite anyone. Yours is failing some of them &mdash; and you can&apos;t see which. Paste any
+                URL and get an A&ndash;F citability grade, a live check of which AI engines cite the page, and
+                the exact fixes.
+              </p>
+              <div className="mt-8">
+                <DualCTA
+                  primaryLabel="Get my citability report"
+                  primaryHref="/app"
+                  secondaryLabel="See the signals it checks"
+                  secondaryHref="#signals"
+                  microcopy="Live AI-bot fetches + real engine checks · see plans"
+                />
+              </div>
+              <div className="mt-7">
+                <ScoreLegend variant="A-F" />
+              </div>
+              <p className="mt-4 max-w-xl text-[13px] leading-relaxed text-gray-500">
+                Each score is a letter grade backed by a 0&ndash;100 number, benchmarked against the pages AI
+                actually cite for your keyword &mdash; the guide below scores 95 (Citability) and 90 (AI Readability).
+              </p>
+            </div>
+
+            {/* Right — the real two-score analyzer result */}
+            <div className="animate-fade-up stagger-2 lg:col-span-6">
+              <ScreenshotFrame
+                src="/screenshots/content-analyzer/citability-result.png"
+                alt="A real Content Analyzer result: a Citability Score of A (95/100) and an AI Readability Score of A (90/100), a live per-engine line showing the page cited by Google AI Overview, Perplexity, Claude and Gemini and not cited by Grok and ChatGPT, and three prioritized HIGH-impact actions."
+                width={2108}
+                height={1134}
+                priority
+                caption="A real analysis of a StubGroup guide targeting ‘google ads for lawyers’: two grades, a live per-engine cited / not-cited check across six AI engines, and the prioritized fixes — no fabricated mockup."
               />
             </div>
-            <div className="mt-7 flex justify-center">
-              <ScoreLegend variant="A-F" />
-            </div>
-            <p className="mx-auto mt-4 max-w-xl text-[13px] leading-relaxed text-gray-500">
-              Each score is a letter grade backed by a 0&ndash;100 number, benchmarked against the pages AI
-              actually cite for your keyword &mdash; the guide below scores 95 (Citability) and 90 (AI Readability).
-            </p>
-          </div>
-
-          <div className="mx-auto mt-12 max-w-4xl">
-            <ScreenshotFrame
-              src="/screenshots/content-analyzer/citability-result.png"
-              alt="A real Content Analyzer result: a Citability Score of A (95/100) and an AI Readability Score of A (90/100), a live per-engine line showing the page cited by Google AI Overview, Perplexity, Claude and Gemini and not cited by Grok and ChatGPT, and three prioritized HIGH-impact actions."
-              width={2108}
-              height={1134}
-              priority
-              caption="A real analysis of a StubGroup guide targeting ‘google ads for lawyers’: two grades, a live per-engine cited / not-cited check across six AI engines, and the prioritized fixes — no fabricated mockup."
-            />
           </div>
         </div>
       </section>
@@ -231,24 +235,32 @@ export default function ContentAnalyzerPage() {
       {/* How it works (HowTo schema source) */}
       <HowItWorks3Step heading="From URL to punch list in minutes" steps={steps} />
 
-      {/* Who it's for — persona self-select */}
-      <section className="border-t border-gray-100 bg-white px-6 pb-12 pt-2">
-        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-3">
-          {[
-            { who: "In-house SEO", job: "Find the exact signal keeping a page that ranks out of the AI answer." },
-            { who: "Agency", job: "Grade a client's page, export the PDF, and attach the proof to the proposal." },
-            { who: "Content lead", job: "Turn the gap into a brief your writer can execute the same day." },
-          ].map((p) => (
-            <div key={p.who} className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">{p.who}</p>
-              <p className="mt-2 text-[14px] leading-relaxed text-gray-600">{p.job}</p>
-            </div>
-          ))}
+      {/* Who it's for — persona self-select (numbered editorial grid, anti-card) */}
+      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid grid-cols-1 gap-x-10 gap-y-12 md:grid-cols-3">
+            {[
+              { who: "In-house SEO", job: "Find the exact signal keeping a page that ranks out of the AI answer." },
+              { who: "Agency", job: "Grade a client's page, export the PDF, and attach the proof to the proposal." },
+              { who: "Content lead", job: "Turn the gap into a brief your writer can execute the same day." },
+            ].map((p, i) => (
+              <div key={p.who} className="relative pl-12">
+                <span
+                  aria-hidden="true"
+                  className="absolute left-0 top-0 font-mono text-[22px] font-bold leading-none tabular-nums text-accent-500"
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">{p.who}</p>
+                <p className="mt-2 text-[14px] leading-relaxed text-gray-600">{p.job}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* What it checks — the real two-module model, shown in full */}
-      <section id="signals" className="border-t border-gray-100 bg-gray-50 px-6 py-16 sm:py-20">
+      <section id="signals" className="border-t border-[var(--surface-lilac-border)] bg-[var(--surface-lilac)] px-6 py-16 sm:py-24">
         <div className="mx-auto max-w-5xl">
           <div className="max-w-2xl">
             <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
@@ -264,9 +276,9 @@ export default function ContentAnalyzerPage() {
             </p>
           </div>
 
-          <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <div className="mt-12 grid grid-cols-1 gap-x-12 gap-y-12 lg:grid-cols-2">
             {/* Citability */}
-            <div className="rounded-2xl border border-gray-200 bg-white p-7">
+            <div className="border-t-2 border-accent-200 pt-6">
               <div className="flex items-baseline justify-between">
                 <h3 className="text-lg font-semibold tracking-tight text-gray-900">Citability signals</h3>
                 <span className="font-mono text-[10px] uppercase tracking-widest text-gray-500">
@@ -296,7 +308,7 @@ export default function ContentAnalyzerPage() {
             </div>
 
             {/* AI Readability */}
-            <div className="rounded-2xl border border-gray-200 bg-white p-7">
+            <div className="border-t-2 border-accent-200 pt-6">
               <div className="flex items-baseline justify-between">
                 <h3 className="text-lg font-semibold tracking-tight text-gray-900">AI Readability checks</h3>
                 <span className="font-mono text-[10px] uppercase tracking-widest text-gray-500">
@@ -352,15 +364,15 @@ export default function ContentAnalyzerPage() {
       </section>
 
       {/* Per-engine, live — the differentiator */}
-      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl text-center">
+      <section className="border-t border-[var(--surface-lilac-border)] bg-[var(--surface-lilac)] px-6 py-16 sm:py-24">
+        <div className="mx-auto max-w-3xl">
           <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
             It doesn&apos;t infer. It checks.
           </p>
           <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
             Which AI engines cite the page &mdash; live, per engine.
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-[15px] leading-relaxed text-gray-600">
+          <p className="mt-4 max-w-2xl text-[15px] leading-relaxed text-gray-600">
             Most tools estimate AI visibility from training-data patterns. Content Analyzer queries each engine
             live and tells you, for this URL, exactly who cites it and who doesn&apos;t &mdash; so you know whether to
             fix the content, clear an access block, or both. Pair it with{" "}
@@ -409,7 +421,7 @@ export default function ContentAnalyzerPage() {
       </section>
 
       {/* Comparison */}
-      <section className="border-t border-gray-100 bg-gray-50 px-6 py-16 sm:py-20">
+      <section className="border-t border-[var(--surface-lilac-border)] bg-[var(--surface-lilac)] px-6 py-16 sm:py-24">
         <div className="mx-auto max-w-4xl">
           <div className="max-w-2xl">
             <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">Where it fits</p>
