@@ -48,9 +48,14 @@ const FAQ = [
       "No. Credits refresh at the start of each billing cycle and do not carry over, so plans are sized to give you comfortable monthly headroom. If your usage is spiky, a top-up pack is the simplest way to cover a busy month.",
   },
   {
+    question: "How does article generation work — does it use my credits?",
+    answer:
+      "No. Article generation has its own monthly allowance, separate from your tracking credits, so writing content never eats into your scans. Consultant includes 15 SEO briefs a month; Growth adds full AI article writing with the 5-stage copywriter at 30 articles a month; Scale raises that to 100; and Enterprise is unlimited. Your tracking credits stay dedicated to checking prompts across engines.",
+  },
+  {
     question: "Which AI engines do you track, and which plans unlock all of them?",
     answer:
-      "We track seven: ChatGPT, Perplexity, Google AI Overviews, Gemini, Bing Copilot, Claude and Grok. Free covers ChatGPT, Starter adds Perplexity and Google AI Overviews, Consultant lets you pick 3 of 5, Agency picks 5 of all 7, and Scale and Enterprise run all seven.",
+      "We track seven: ChatGPT, Perplexity, Google AI Overviews, Gemini, Bing Copilot, Claude and Grok. Free covers ChatGPT, Starter adds Perplexity and Google AI Overviews, Consultant lets you pick 3 of 5, Growth picks 5 of all 7, and Scale and Enterprise run all seven.",
   },
   {
     question: "What is the difference between a brand and a prompt?",
@@ -134,11 +139,12 @@ export default function PricingPage() {
               "AI visibility tracker",
               "Share of voice",
               "GEO Scan",
+              "Query Fan-Out",
               "Agent Readiness scan",
               "Content Analyzer",
               "Competitor Intel",
               "AI-ready export",
-              "Search Console analytics",
+              "Analytics (GSC + GA4)",
             ].map((f) => (
               <li
                 key={f}
@@ -231,7 +237,7 @@ export default function PricingPage() {
             <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-400">Enterprise</p>
             <h2 className="mt-2 text-2xl font-bold tracking-tight text-white">For large teams and portfolios</h2>
             <p className="mt-3 text-[15px] leading-relaxed text-gray-300">
-              Custom credit volumes, unlimited brands and prompts, premium models, API &amp; MCP access (coming soon), SSO, a dedicated CSM, and a 4-hour support SLA — on a contract that fits your security and procurement needs.
+              Custom credit volumes, unlimited brands and prompts, premium frontier models, custom features built for your team, priority API &amp; MCP access, SSO/SAML, a dedicated CSM, white-glove onboarding, and a 4-hour support SLA — on a contract, DPA and security review that fit your procurement needs.
             </p>
           </div>
           <Link
