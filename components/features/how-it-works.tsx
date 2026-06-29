@@ -25,17 +25,29 @@ export function HowItWorks3Step({
 }) {
   return (
     <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
-      <div className="mx-auto max-w-5xl">
-        <h2 className="text-center text-[clamp(1.4rem,2.6vw,2rem)] font-bold tracking-tight text-gray-900">
+      <div className="mx-auto max-w-6xl">
+        <h2 className="max-w-2xl text-[clamp(1.4rem,2.6vw,2rem)] font-bold tracking-tight text-gray-900">
           {heading}
         </h2>
-        <ol className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-3">
+        {/* Numbered connector rail — not boxed cards (anti-slop, design-system v2) */}
+        <ol className="mt-12 grid grid-cols-1 gap-x-10 gap-y-10 sm:grid-cols-3">
           {steps.map((s, i) => (
-            <li key={i} className="rounded-2xl border border-gray-200 bg-white p-6">
-              <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700 tabular-nums">
-                {String(i + 1).padStart(2, "0")} · {s.verb}
-              </span>
-              <h3 className="mt-3 text-[17px] font-bold leading-snug tracking-tight text-gray-900">
+            <li key={i} className="relative">
+              {i < steps.length - 1 && (
+                <span
+                  aria-hidden="true"
+                  className="absolute left-12 right-0 top-[18px] hidden h-px bg-gradient-to-r from-gray-300 to-transparent sm:block"
+                />
+              )}
+              <div className="flex items-center gap-4">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-accent-200 bg-white font-mono text-[13px] font-bold tabular-nums text-accent-700">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+                  {s.verb}
+                </span>
+              </div>
+              <h3 className="mt-5 text-[17px] font-bold leading-snug tracking-tight text-gray-900">
                 {s.title}
               </h3>
               <p className="mt-2 text-[14px] leading-relaxed text-gray-600">{s.body}</p>
