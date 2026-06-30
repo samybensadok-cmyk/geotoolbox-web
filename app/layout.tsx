@@ -1,5 +1,7 @@
 import type { Metadata } from "next"
 import { DM_Sans, DM_Mono } from "next/font/google"
+import { getLocale } from "next-intl/server"
+import { bcp47, type Locale } from "@/i18n/routing"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { ClarityAnalytics } from "@/components/analytics/clarity"
@@ -44,22 +46,22 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  // NOTE: <html lang> is static "en" here. FR content pages (under [locale])
-  // therefore inherit lang="en" — an accepted P0 limitation since those pages
-  // are noindex until graduation. The correct per-locale <html lang> requires
-  // moving <html> into app/[locale]/layout.tsx, which lands with the full
-  // marketing-route migration (spec §10 P3). Reading getLocale() here instead
-  // was tested and rejected: it forces the ENTIRE app into dynamic rendering
-  // (all static/SSG pages → ƒ SSR), a major perf regression. hreflang — the
-  // load-bearing SEO signal — is emitted correctly per page regardless.
+  // <html lang> is locale-aware. FR content graduated to indexed (2026-06-30),
+  // so the lang attribute must match the page language (en-US vs fr-FR) or an
+  // indexed /fr/ page wrongly declares English. Reading getLocale() opts the
+  // shared layout into dynamic rendering — a deliberate tradeoff now that FR is
+  // indexed (small marketing site, Vercel CDN-caches responses; 1-line revert).
+  // The perf-preserving alternative is multiple root layouts via route groups.
+  const locale = await getLocale()
+  const lang = bcp47[locale as Locale] ?? "en-US"
   return (
     <html
-      lang="en"
+      lang={lang}
       className={`${dmSans.variable} ${dmMono.variable} h-full`}
     >
       <body className="min-h-full flex flex-col antialiased">

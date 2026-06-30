@@ -6,8 +6,8 @@ import rehypeShiki from "@shikijs/rehype"
 import { getPostBySlug, getAllPostSlugs, getRelatedPosts, extractHeadings, extractFaq } from "@/lib/content"
 import { mdxComponents } from "@/components/mdx"
 import { formatDate } from "@/lib/utils"
-import { routing } from "@/i18n/routing"
-import { alternatesFor } from "@/lib/i18n/siblings"
+import { routing, bcp47, type Locale } from "@/i18n/routing"
+import { alternatesFor, urlFor } from "@/lib/i18n/siblings"
 import { setRequestLocale } from "next-intl/server"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
 import { JsonLd } from "@/components/seo/json-ld"
@@ -121,8 +121,10 @@ export default async function BlogPost({
               updated: post.updated,
               author: post.author,
               image: post.image,
+              inLanguage: bcp47[locale as Locale],
+              url: urlFor("blog", post.slug, locale),
             }),
-            ...(faqs.length > 0 ? [faqPageSchema(faqs)] : []),
+            ...(faqs.length > 0 ? [faqPageSchema(faqs, bcp47[locale as Locale])] : []),
           ]}
         />
         <div className="mx-auto max-w-5xl">

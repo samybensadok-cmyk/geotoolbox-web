@@ -102,8 +102,10 @@ export function articleSchema(post: {
   updated?: string
   author?: string
   image?: string
+  inLanguage?: string
+  url?: string
 }) {
-  const pageUrl = `${siteConfig.url}/blog/${post.slug}`
+  const pageUrl = post.url ?? `${siteConfig.url}/blog/${post.slug}`
   const fallbackImage = `${siteConfig.url}/blog/${post.slug}/opengraph-image`
   const profile = getAuthorByName(post.author)
   const author = profile
@@ -140,6 +142,7 @@ export function articleSchema(post: {
       "@id": pageUrl,
     },
     image: [post.image || fallbackImage],
+    ...(post.inLanguage ? { inLanguage: post.inLanguage } : {}),
   }
 }
 
@@ -224,10 +227,11 @@ export function authorProfileSchema(author: Author) {
  * FAQPage schema — a single "What is {term}?" question/answer. This is the
  * format that most reliably earns AI Overview and People-Also-Ask placement.
  */
-export function faqPageSchema(qa: Array<{ question: string; answer: string }>) {
+export function faqPageSchema(qa: Array<{ question: string; answer: string }>, inLanguage?: string) {
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",
+    ...(inLanguage ? { inLanguage } : {}),
     mainEntity: qa.map((item) => ({
       "@type": "Question",
       name: item.question,
