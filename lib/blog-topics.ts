@@ -65,7 +65,7 @@ export const TOPICS: Topic[] = [
     label: "AI Engines",
     tags: [
       "chatgpt", "chatgpt-search", "gemini", "google-gemini", "gemini-ai", "gemini-gems", "gemini-seo",
-      "claude", "claude-seo", "claude-fable-5", "claude-mythos",
+      "claude", "claude-seo", "claude-fable-5", "claude-mythos", "claude-sonnet-5", "sonnet-5",
       "grok", "grok-ai", "grok-5", "grok-5-release-date", "grok-imagine", "xai",
       "perplexity", "deepseek", "deepseek-r1", "kimi-ai", "kimi-k2",
       "moonshot-ai", "qwen", "qwen3", "tongyi-qianwen", "alibaba",
