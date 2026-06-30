@@ -1,0 +1,181 @@
+---
+title: "Claude Sonnet 5 : date de sortie, prix et benchmarks (2026)"
+description: "Claude Sonnet 5 est sorti le 30 juin 2026 : prix, benchmarks face à Sonnet 4.6 et Opus 4.8, disponibilité, et là où les rumeurs Fennec se trompaient."
+date: "2026-06-30"
+author: "Samy BEN SADOK"
+tags: ["claude-sonnet-5", "claude", "anthropic", "sonnet-5", "llm", "guide"]
+draft: false
+locale: "fr"
+donorSlug: "claude-sonnet-5"
+donorCommit: "f814c01"
+noindex: false
+---
+
+Claude Sonnet 5 a été lancé le 30 juin 2026. Pendant des mois, des fuites et des rumeurs avaient circulé sous un mauvais nom de code, et le modèle réel se rapproche de ce qu'elles laissaient entrevoir : l'essentiel des capacités agentiques d'Opus 4.8, à un prix nettement inférieur, avec quelques vraies limites que les annonces de lancement passent sous silence.
+
+## Qu'est-ce que Claude Sonnet 5 ?
+
+Claude Sonnet 5 est le modèle Claude de milieu de gamme d'Anthropic, lancé le 30 juin 2026. Il se situe entre Haiku 4.5, rapide et économique, et les modèles phares Opus 4.8 et Fable 5. Anthropic le présente comme « le modèle Sonnet le plus agentique à ce jour ».
+
+Cette description est précise, pas un simple argument marketing. Sonnet 5 sait élaborer un plan en plusieurs étapes, choisir les outils dont il a besoin (un navigateur, un terminal, un éditeur de fichiers), exécuter ce plan avec un minimum d'intervention humaine, puis vérifier son propre résultat avant de le restituer. Le compte-rendu d'Anthropic décrit des testeurs lui demandant d'enquêter sur un bug. Sans qu'on le lui demande, il a écrit un test qui reproduisait le bug, implémenté le correctif, puis annulé temporairement sa modification pour confirmer que le bug revenait bien sans elle, le tout en une seule passe.
+
+Sonnet 5 comble une grande partie de l'écart avec Opus 4.8 tout en restant au tarif de la gamme Sonnet. Pour beaucoup de tâches agentiques et de codage, les utilisateurs de [Claude](https://geotoolbox.ai/blog/what-is-claude-ai) disposent désormais d'une option nettement moins chère qui ne donne pas l'impression d'un choix au rabais. Mais ce n'est pas vrai à tous les niveaux d'effort, et le vrai calcul de coût fait l'objet de sa propre section plus bas.
+
+<figure>
+  <BlogImage src="/blog/claude-sonnet-5/benchmark-comparison.png" w={1200} h={638} alt="Diagramme comparant les scores SWE-bench Pro de Claude Sonnet 5, Sonnet 4.6 et Opus 4.8 : 58,1 %, 63,2 % et 69,2 %" />
+  <figcaption>Sonnet 5 dépasse Sonnet 4.6 sur chaque benchmark publié, et fait quasiment jeu égal avec Opus 4.8 sur le travail intellectuel en particulier.</figcaption>
+</figure>
+
+## Non, vous ne vous trompez pas en vous souvenant de « Sonnet 5 » il y a plusieurs mois
+
+Si « Claude Sonnet 5 » vous rappelle quelque chose, c'est sans doute « Fennec ». Début février 2026, [un journal d'erreurs de Google Vertex AI a exposé un identifiant de modèle](https://dev.to/marc0dev/claude-sonnet-5-fennec-leak-what-the-vertex-ai-logs-actually-show-3ho5), `claude-sonnet-5@20260203`, accompagné de ce nom de code interne. Cela ressemblait à la preuve d'un lancement imminent, et une vague d'articles spéculatifs a déferlé pendant des mois, avec des tableaux de benchmarks fabriqués de toutes pièces et au moins un [article satirique publié le 1er avril](https://dev.to/best_codes/anthropic-just-dropped-claude-sonnet-5-and-the-benchmarks-are-kind-of-insane-3ppc) annonçant des scores inventés comme 92,4 % sur SWE-bench Verified. Rien de tout cela ne venait d'Anthropic.
+
+Ce qui s'est réellement passé : [ce checkpoint qui avait fuité est sorti sous le nom de Claude Sonnet 4.6](https://www.nxcode.io/resources/news/claude-sonnet-5-fennec-leak-2026) le 17 février 2026, pas sous celui de Sonnet 5. Sonnet 5 lui-même a été lancé quatre mois plus tard, le 30 juin 2026, avec une annonce officielle, une fiche technique et les chiffres ci-dessous. Si vous gardiez une fiche « Fennec » de côté, jetez-la, elle décrivait un autre modèle.
+
+La confusion n'a rien d'historique : elle est encore active aujourd'hui dans les résultats francophones. Au moment de la rédaction, plusieurs pages en français répondant à « quand sort Claude Sonnet 5 » affichent toujours la mauvaise date de février 2026 et des scores de benchmark inventés, repris tels quels dans l'encart de questions associées de Google. Fiez-vous à la date de lancement et au tableau ci-dessous plutôt qu'à ces pages.
+
+## Le prix de Claude Sonnet 5
+
+[Claude Sonnet 5 est lancé avec un tarif promotionnel](https://www.anthropic.com/news/claude-sonnet-5) valable jusqu'au 31 août 2026, avant de passer à son tarif standard :
+
+<table>
+<thead>
+<tr><th>Période</th><th>Entrée (par million de tokens)</th><th>Sortie (par million de tokens)</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Tarif de lancement (jusqu'au 31 août 2026)</strong></td><td>2,00 $</td><td>10,00 $</td></tr>
+<tr><td><strong>Tarif standard (à partir du 1er septembre 2026)</strong></td><td>3,00 $</td><td>15,00 $</td></tr>
+</tbody>
+</table>
+
+À titre de comparaison, Claude Opus 4.8 coûte 5 $ par million de tokens en entrée et 25 $ en sortie. Le tarif de lancement de Sonnet 5 est environ 60 % moins cher dans les deux cas, et son tarif standard, identique au tarif actuel de Sonnet 4.6, reste 40 % moins cher qu'Opus.
+
+À noter : Anthropic facture son API en dollars américains partout dans le monde, il n'existe pas de grille tarifaire par token en euros. Les clients en France règlent en USD, avec la TVA française applicable en plus, sauf pour les entreprises ayant renseigné un numéro de TVA intracommunautaire valide, qui peuvent passer en autoliquidation depuis la console Claude.
+
+Le tokeniseur a aussi changé, ce qui fait que la comparaison du prix au token surestime les économies réelles. Sonnet 5 utilise un tokeniseur mis à jour, le même changement qu'Anthropic avait introduit avec Opus 4.7, qui génère environ 30 % de tokens en plus (un facteur de l'ordre de 1,3) à partir du même texte d'entrée. Anthropic a calibré son tarif de lancement précisément pour que la transition reste « globalement neutre en coût » malgré ce changement. La version concrète de ce calcul, ce que cela signifie pour votre charge de travail réelle, fait l'objet d'une section plus loin.
+
+Anthropic indique aussi avoir relevé les limites de débit sur Chat, Cowork, Claude Code et la plateforme Claude pour absorber la hausse de consommation de tokens liée aux niveaux d'effort élevés de Sonnet 5 (une refonte des limites de débit à l'échelle de la plateforme était déjà entrée en vigueur le 26 avril 2026, en amont de ce lancement).
+
+## Benchmarks de Claude Sonnet 5 : face à Sonnet 4.6 et Opus 4.8
+
+[Anthropic a publié cinq comparaisons de benchmarks au lancement](https://www.anthropic.com/news/claude-sonnet-5). Sonnet 5 dépasse son prédécesseur sur chacune d'entre elles, et comble la majeure partie, mais pas la totalité, de l'écart avec Opus 4.8.
+
+<table>
+<thead>
+<tr><th>Benchmark</th><th>Sonnet 4.6</th><th>Sonnet 5</th><th>Opus 4.8</th><th>Ce qu'il mesure</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>SWE-bench Pro</strong></td><td>58,1 %</td><td>63,2 %</td><td>69,2 %</td><td>Ingénierie logicielle agentique sur le long terme</td></tr>
+<tr><td><strong>Terminal-Bench 2.1</strong></td><td>67,0 %</td><td>80,4 %</td><td>82,7 %</td><td>Utilisation d'outils en ligne de commande</td></tr>
+<tr><td><strong>Humanity's Last Exam (avec outils)</strong></td><td>46,8 %</td><td>57,4 %</td><td>57,9 %</td><td>Raisonnement pluridisciplinaire de niveau master</td></tr>
+<tr><td><strong>OSWorld-Verified</strong></td><td>78,5 %</td><td>81,2 %</td><td>83,4 %</td><td>Utilisation d'un ordinateur (tâches système)</td></tr>
+<tr><td><strong>GDPval-AA v2</strong></td><td>-</td><td>1 618 pts</td><td>1 615 pts</td><td>Travail intellectuel professionnel en conditions réelles</td></tr>
+</tbody>
+</table>
+
+SWE-bench Pro est le plus difficile et le plus spécifique au codage des cinq, et Opus 4.8 le domine sur tous les indicateurs sauf un ; Anthropic reconnaît d'ailleurs qu'Opus reste « le modèle à privilégier pour une précision supérieure » sur ce type de travail. GDPval-AA v2 rompt ce schéma. Il évalue des tâches de travail intellectuel en conditions réelles plutôt que des problèmes de code, et Sonnet 5 y dépasse numériquement Opus 4.8, 1 618 contre 1 615, un écart assez faible pour qu'il vaille mieux parler d'égalité que de victoire nette.
+
+Anthropic a aussi mis à jour son barème de notation pour Humanity's Last Exam et OSWorld-Verified à l'occasion de ce lancement, et a réévalué rétroactivement Sonnet 4.6 selon la nouvelle méthode : son score HLE est passé à 46,8 % avec outils, son score OSWorld à 78,5 %. C'est pourquoi les chiffres de Sonnet 4.6 ci-dessus peuvent ne pas correspondre à ceux que vous aviez en tête depuis son propre lancement. Ce tableau utilise la référence réévaluée, la comparaison la plus juste.
+
+Les tests indépendants vont dans le même sens. Cursor a fait tourner son propre benchmark interne, [CursorBench](https://www.testingcatalog.com/anthropic-launches-claude-sonnet-5-model-on-claude-and-apis/), et rapporte un score de 57 % pour Sonnet 5 contre 49 % pour Sonnet 4.6. Ce n'est pas l'une des évaluations publiées par Anthropic mais un test propriétaire de Cursor, cela dit la tendance rejoint tout le reste.
+
+## Nouvelles capacités : niveaux d'effort et comportement agentique
+
+Sonnet 5 fonctionne avec la [réflexion adaptative](https://geotoolbox.ai/blog/how-does-claude-work) activée par défaut. Le niveau de réflexion se règle via un paramètre d'effort, de Faible à Moyen, Élevé, Extra élevé puis Max. Extra élevé est une nouveauté pour la gamme Sonnet : Sonnet 5 est le premier modèle Sonnet à le proposer, même si Max, le vrai plafond, existait déjà sur Sonnet 4.6. L'effort est réglé sur Élevé par défaut, aussi bien sur l'API que dans Claude Code. Un effort plus élevé veut dire plus de raisonnement, plus d'appels d'outils et, comme vu plus haut, plus de dépense.
+
+Le modèle dispose d'une fenêtre de contexte d'un million de tokens et d'une sortie maximale de 128 000 tokens par réponse, extensible à 300 000 via un en-tête bêta de l'API batch pour les tâches longues. Les données d'entraînement s'arrêtent en janvier 2026.
+
+En pratique, selon les partenaires d'accès anticipé cités par Anthropic, cela se traduit par moins de tâches bloquées à mi-parcours. [Zapier](https://techcrunch.com/2026/06/30/anthropic-launches-claude-sonnet-5-as-a-cheaper-way-to-run-agents/) a confié à Sonnet 5 une tâche en deux temps : mettre à jour des niveaux de comptes Salesforce, puis envoyer une annonce de lancement aux contacts entreprise. Le modèle a mené l'ensemble de bout en bout, alors que cela calait à mi-chemin avec les modèles précédents. La plateforme legal-tech Eve indique que Sonnet 5 « se situe sur la frontière de Pareto » pour ses tâches liées au droit des plaignants, grâce à un rapport prix-performance qui a rendu le changement de modèle évident. ClickHouse note que le modèle raisonne en étapes plus resserrées et fournit des réponses nettement plus rapides lors de l'exploration de données en direct.
+
+Anthropic insiste aussi sur la solidité du modèle face au code « brownfield » : les parties désordonnées et déjà en production d'une base de code que personne ne veut toucher, comme les conditions de concurrence ou les échecs de test masqués. L'argument est qu'il remonte jusqu'à la cause réelle d'une panne au lieu de corriger le symptôme visible. Ce n'est pas la même compétence que générer du code neuf à partir de rien, et particulièrement utile pour le travail en [IA agentique](https://geotoolbox.ai/blog/agentic-ai), parce qu'un correctif tient ou ne tient pas face au test qui échouait à l'origine.
+
+Une réserve à connaître : malgré la fenêtre d'un million de tokens, certains premiers testeurs rapportent que le modèle perd le fil de certains détails sur des documents ou des bases de code très longs, plus qu'ils ne s'y attendaient vu le chiffre annoncé. Considérez la fenêtre de contexte comme un plafond sur ce que vous pouvez fournir au modèle, pas comme une garantie qu'il pèsera chaque partie de cette entrée avec la même attention.
+
+## Évolutions en matière de sécurité et de cybersécurité
+
+Les évaluations de sécurité menées par Anthropic avant le déploiement montrent que Sonnet 5 constitue une amélioration globale par rapport à Sonnet 4.6. Il refuse mieux les requêtes malveillantes, résiste mieux aux tentatives de détournement par injection de prompt, et hallucine ou flatte moins.
+
+Sur l'audit comportemental automatisé qui teste la coopération à des usages détournés et la tromperie, Sonnet 5 obtient un score globalement plus sûr que Sonnet 4.6. Anthropic note qu'il affiche des taux de comportement désaligné légèrement plus élevés qu'Opus 4.8, pourtant plus capable, sur cette évaluation précise, un rappel que « plus sûr que son prédécesseur » et « aussi sûr que le modèle phare » sont deux affirmations différentes.
+
+C'est sur la cybersécurité qu'Anthropic a posé une limite délibérée. Sonnet 5 n'a pas été entraîné sur des tâches de cybersécurité, et sur les évaluations qui testent des compétences réellement dangereuses, comme développer des exploits logiciels fonctionnels, ses performances restent nettement en retrait par rapport à Opus 4.8 et Mythos 5. Sur un test bâti autour de vraies vulnérabilités Firefox, Sonnet 5 n'a jamais produit un seul exploit pleinement fonctionnel, même s'il affiche un taux de réussite partielle légèrement supérieur à Sonnet 4.6. Anthropic attribue cela à des progrès d'intelligence générale plutôt qu'à un entraînement spécifique à la cybersécurité.
+
+À cause de cette légère hausse, Sonnet 5 embarque par défaut des garde-fous cyber en temps réel, identiques à ceux déjà actifs sur Opus 4.7 et 4.8. Ils restent plus légers que les restrictions qu'Anthropic applique à [Fable 5](https://geotoolbox.ai/blog/fable-5-ban), qui bloquent un éventail bien plus large de tâches liées à la cybersécurité. Le contexte compte ici : Fable 5 et son équivalent à accès restreint Mythos 5 sont les deux modèles actuellement soumis à une restriction à l'export du gouvernement américain pour risque cyber. Sonnet 5 est lancé sans ce poids, positionné comme l'option sûre et largement déployable pendant que les modèles les plus capables d'Anthropic restent sous contrainte. Les organisations qui ont besoin de garde-fous allégés pour des travaux de sécurité légitimes peuvent passer par le Cyber Verification Program d'Anthropic, disponible dès aujourd'hui sur la plateforme Claude native, AWS et Microsoft Foundry, la prise en charge de Google Vertex étant prévue prochainement.
+
+## Le vrai coût du passage à Sonnet 5
+
+Le tarif affiché situe Sonnet 5 entre 40 et 60 % en dessous d'Opus 4.8. Que votre facture réelle baisse autant dépend de deux facteurs que la comparaison du prix au token ne prend pas en compte.
+
+Le premier est le changement de tokeniseur vu dans la section tarifs : plus de tokens pour le même texte d'entrée, par construction, selon le type de contenu. Anthropic a calibré son tarif de lancement pour que la transition reste « globalement neutre en coût », mais une neutralité en moyenne n'est pas une neutralité pour votre charge de travail spécifique. Le contenu riche en code ou rédigé dans une langue autre que l'anglais a tendance à se situer dans le haut de cette fourchette.
+
+Le second facteur pèse davantage, et c'est un sujet propre à la comparaison Sonnet 5 / Sonnet 4.6, pas Sonnet 5 / Opus 4.8. [L'analyse du lancement par The Decoder](https://the-decoder.com/anthropics-new-claude-sonnet-5-closes-the-gap-to-the-pricier-opus-model-series/) pose le constat clairement : parce que Sonnet 5 fonctionne de façon plus agentique, il consomme vraisemblablement plus de tokens par tâche que son prédécesseur, donc même à tarif par token inchangé, le faire tourner peut coûter plus cher que Sonnet 4.6 pour le même travail. Anthropic avait observé le même phénomène en passant d'Opus 4.6 à 4.7. Aux niveaux d'effort élevés en particulier, ce volume de tokens supplémentaire s'accumule, si bien que les économies par tâche face à n'importe quel modèle précédent, Sonnet ou Opus, peuvent finir bien en dessous de ce que suggère la grille tarifaire seule.
+
+Même son de cloche côté français. Quentin Pleplé, ingénieur chez Theodo (un cabinet français qui accompagne ses clients sur l'adoption de Claude Code), a publié dès le jour du lancement [une mise en garde](https://fr.linkedin.com/posts/qpleple_nouveau-mod%C3%A8le-claude-sonnet-5-moins-cher-activity-7477809915273646080-O4ds) quasi identique : à effort élevé, l'économie de prix par token ne se traduit pas forcément en économie réelle, et il vaut mieux réserver ce niveau aux tâches qui le justifient vraiment.
+
+Nous en avons fait l'expérience directe. En faisant tourner notre propre workflow de contenu multiphase et multi-agent sur Sonnet 5 le jour même du lancement, la session a consommé environ le double du budget de tokens que ce même workflow utilise d'habitude sur Opus, au point de déclencher une compaction de fenêtre de contexte en cours de route, ce qui ne nous était jamais arrivé en exécutant le même processus à l'identique auparavant. Une seule donnée interne, pas un benchmark, mais elle va dans le sens de ce que décrivent Anthropic et The Decoder.
+
+À effort Faible ou Moyen, les économies face à Opus 4.8 tiennent clairement la route. À effort Élevé et au-delà, comparez la dépense réelle par tâche, pas seulement le prix au token, avant de conclure que votre facture a baissé.
+
+## Où utiliser Claude Sonnet 5 aujourd'hui
+
+Sonnet 5 est le nouveau modèle par défaut pour les formules Free et Pro, et il est aussi disponible pour les utilisateurs Max, Team et Enterprise. Les développeurs y accèdent via l'API Claude sous l'identifiant `claude-sonnet-5`, et il est proposé dans Claude Code dès le premier jour. Côté infrastructure, il est accessible via la plateforme Claude sur AWS, Amazon Bedrock, Microsoft Foundry (en préversion) et Google Cloud (Vertex AI) ; seule la prise en charge complète du Cyber Verification Program sur Vertex reste en cours de déploiement.
+
+<Callout type="note" title="Hébergement en Europe et confidentialité des données">
+Ni claude.ai ni l'API Claude directe ne sont nativement hébergés dans l'UE. Pour un hébergement régional garanti (Francfort, Irlande, Paris), il faut passer par AWS Bedrock ou Google Vertex AI. Indépendamment de la région, l'API propose une option de rétention nulle des données (ZDR) pour les organisations qui en font la demande, aucune conservation au-delà de la requête, aucune utilisation pour l'entraînement.
+</Callout>
+
+Pour les équipes qui évaluent une alternative souveraine : Mistral reste l'option européenne de référence. Mistral Medium 3.5 facture 1,50 $ en entrée et 7,50 $ en sortie par million de tokens, moins cher que le tarif standard de Sonnet 5 (le tarif de lancement de Sonnet 5 réduit l'écart, sans l'effacer). Côté codage agentique, Mistral propose Vibe, vendu en abonnement plutôt qu'au token (à partir de 14,99 $/mois en formule Pro), ce qui rend la comparaison directe avec Claude Code difficile. Sonnet 5 garde l'avantage sur la fenêtre de contexte (1M contre 256K tokens chez Mistral Medium 3.5) et, selon plusieurs comparatifs tiers, sur la qualité du français produit, qui sonne moins « traduit ». Mistral, lui, conserve l'argument de la souveraineté : société française, hébergement européen.
+
+Des outils tiers l'ont intégré dès le jour du lancement. [GitHub Copilot a rendu Sonnet 5 disponible](https://github.blog/changelog/2026-06-30-claude-sonnet-5-is-generally-available-for-github-copilot/) pour tous dès la sortie, sur les formules Copilot Pro, Pro+, Max, Business et Enterprise, avec un déploiement progressif sur VS Code, Visual Studio, le CLI Copilot, JetBrains et Xcode. Cursor l'a intégré le même jour, avec ses propres chiffres CursorBench.
+
+Les premiers utilisateurs ont signalé deux accrocs au lancement. Si l'API et Claude Code proposaient Sonnet 5 immédiatement, certains rapportent qu'il n'était pas encore sélectionnable dans l'application Claude Desktop ni dans l'extension Claude Code pour VS Code durant les premières heures, un simple décalage de séquencement plutôt qu'un signe que le modèle n'était pas vraiment disponible. Par ailleurs, Anthropic n'a pas réinitialisé les quotas d'usage pour ce lancement, donc certains utilisateurs ayant déjà atteint leur plafond Sonnet 4.6 n'ont pas pu essayer le nouveau modèle tout de suite. Les plateformes principales (chat, API, Claude Code) fonctionnaient correctement dès le départ.
+
+## Premières réactions : ce que disent les développeurs
+
+Les réactions du premier jour ont suivi des clivages prévisibles. Les développeurs qui font tourner des workflows de codage agentique se sont montrés enthousiastes face au bond en usage d'outils et en suivi multi-étapes, plusieurs premiers retours le qualifiant de nouveau choix par défaut pour le travail Claude Code qui n'exige pas la précision d'Opus. D'autres ont contesté l'intérêt aux niveaux d'effort élevés, pour les raisons de coût vues plus haut, et une minorité très critique a estimé que le saut depuis Sonnet 4.6 ne méritait pas le « 5 » dans le nom, puisqu'il ne revendique pas un nouveau record de codage comme certaines versions Sonnet précédentes. C'est un argument valable sur le nom, pas sur les faits : les gains de benchmark face à Sonnet 4.6 sont réels, quel que soit le nom retenu pour la sortie. C'est le même schéma observé avec [Grok 5](https://geotoolbox.ai/blog/grok-5), où une sortie confirmée se fait tout de même critiquer par des observateurs en quête de raisons pour lesquelles le numéro n'aurait pas dû augmenter.
+
+Autre point à noter : cet article ne tente pas de comparaison directe avec les modèles actuels d'OpenAI ou de Google. La page de benchmarks d'Anthropic ne les inclut pas, et les chiffres tiers qui ont circulé dans les heures suivant le lancement n'étaient pas assez cohérents entre eux pour s'y fier. Pour une comparaison directe Claude contre ChatGPT, voir [notre analyse des deux modèles](https://geotoolbox.ai/blog/claude-vs-chatgpt) ; nous y traiterons Sonnet 5 spécifiquement à mesure que le tableau se précisera.
+
+## Ce que cela change si vous suivez votre visibilité dans l'IA
+
+Voici un exemple concret qui montre pourquoi cela compte. Quelques heures après le lancement de Sonnet 5, nous avons vérifié comment différents moteurs d'IA répondaient aux questions à son sujet. La plupart ont correctement retrouvé et cité l'annonce réelle d'Anthropic. Un moteur majeur, en revanche, continuait d'affirmer avec assurance que Sonnet 5 n'était pas encore sorti, en citant comme source des articles de plusieurs mois sur la rumeur « Fennec », alors même que la recherche web en direct était activée. Avoir la recherche activée ne veut pas dire être à jour, et sur une sortie qui évolue vite, un moteur d'IA peut continuer à citer des informations obsolètes bien après que les faits ont changé.
+
+Nous avons reproduit ce test nous-mêmes le 1er juillet 2026, cette fois en interrogeant un panel de moteurs en français : trois sur quatre donnaient les bonnes informations dans les 24 heures (date de lancement, prix de lancement, position face à Opus 4.8), mais l'un d'eux affirmait encore que Sonnet 5 n'avait « pas encore été officiellement annoncé » et mélangeait les scores de la rumeur Fennec avec ceux du vrai modèle, malgré la recherche web activée. Même schéma, même décalage, cette fois constaté directement en français.
+
+C'est exactement la faille que le suivi des citations de marque sert à combler, et pas seulement les jours de lancement. Un modèle Claude moins cher et plus agentique réduit le coût de faire tourner des agents autonomes de recherche, d'achat et de support à grande échelle, ce qui veut dire qu'une part croissante du parcours d'achat se joue dans une conversation avec l'IA plutôt que sur une page de résultats de recherche. D'après notre expérience, c'est dans les jours qui suivent une mise à jour majeure de modèle que les réponses des moteurs d'IA bougent le plus, parfois parce que le modèle raisonne vraiment différemment, parfois, justement, à cause du décalage de données obsolètes qu'on vient de voir.
+
+Si vous voulez savoir si ChatGPT, Gemini, Claude, Grok et les autres grands moteurs citent réellement votre marque, ou mettent en avant vos concurrents à la place, [Citation Interceptor](https://geotoolbox.ai/features/citation-interceptor) suit cela sur huit moteurs d'IA dont Claude, et signale les manques dans ce que ces moteurs citent quand vos acheteurs posent leurs questions.
+
+## Foire aux questions
+
+**Claude Sonnet 5 est-il disponible dès maintenant ?**
+Oui. Il a été lancé le 30 juin 2026 et est désormais le modèle par défaut pour les formules Free et Pro, disponible aussi pour Max, Team et Enterprise, ainsi que via l'API Claude et Claude Code.
+
+**Combien coûte Claude Sonnet 5 ?**
+2 $ par million de tokens en entrée et 10 $ en sortie jusqu'au 31 août 2026. Ensuite, le tarif standard s'applique : 3 $ en entrée et 15 $ en sortie par million de tokens. Ces prix sont en dollars américains ; il n'existe pas de grille en euros.
+
+**Claude Sonnet 5 est-il meilleur qu'Opus 4.8 ?**
+Pas sur tous les plans. Opus 4.8 reste en tête sur le benchmark de codage agentique le plus exigeant, SWE-bench Pro, et reste le choix recommandé par Anthropic pour les tâches qui exigent la plus grande précision. Sur le travail intellectuel (GDPval-AA v2), les deux sont à peu près à égalité. Le meilleur choix dépend de la tâche et du niveau d'effort utilisé.
+
+**Puis-je utiliser Claude Sonnet 5 gratuitement ?**
+Oui. C'est le modèle par défaut de la formule gratuite de Claude depuis le lancement, sans inscription séparée.
+
+**Qu'est devenu « Fennec », le Sonnet 5 qui avait fuité plus tôt dans l'année ?**
+« Fennec » était le nom de code interne attaché à un identifiant de modèle qui a fuité via les journaux Google Vertex AI en février 2026. Ce checkpoint précis est sorti sous le nom de Claude Sonnet 4.6, pas Sonnet 5, et des mois de rumeurs construites dessus, scores de benchmark inventés compris, ne sont jamais venus d'Anthropic. Le vrai Claude Sonnet 5 a été lancé le 30 juin 2026, avec ses propres spécifications vérifiées.
+
+**Claude Sonnet 5 est-il disponible dans Claude Code ?**
+Oui, dès le premier jour, en même temps que l'API Claude et la plateforme Claude. Certaines autres interfaces, comme l'application Claude Desktop, ont connu un léger décalage de déploiement dans les heures qui ont suivi le lancement.
+
+**Claude Sonnet 5 est-il la même chose que Claude Science ?**
+Non. Claude Science, lancé le même jour, est une application distincte pour la recherche scientifique, pas une fonctionnalité de Sonnet 5.
+
+## Sources
+
+- [Présentation de Claude Sonnet 5 - Anthropic](https://www.anthropic.com/news/claude-sonnet-5) - l'annonce officielle : prix, benchmarks, évaluations de sécurité et témoignages clients
+- [Anthropic lance Claude Sonnet 5, une option moins chère pour faire tourner des agents - TechCrunch](https://techcrunch.com/2026/06/30/anthropic-launches-claude-sonnet-5-as-a-cheaper-way-to-run-agents/) - contexte tarifaire concurrentiel et angle business
+- [Le nouveau Claude Sonnet 5 d'Anthropic comble l'écart avec la gamme Opus, plus chère - The Decoder](https://the-decoder.com/anthropics-new-claude-sonnet-5-closes-the-gap-to-the-pricier-opus-model-series/) - analyse complète des benchmarks et du vrai coût en tokens
+- [Anthropic lance le modèle Claude Sonnet 5 sur Claude et via ses API - TestingCatalog](https://www.testingcatalog.com/anthropic-launches-claude-sonnet-5-model-on-claude-and-apis/) - intégration Cursor et le benchmark tiers CursorBench
+- [Claude Sonnet 5 disponible pour tous sur GitHub Copilot - GitHub Changelog](https://github.blog/changelog/2026-06-30-claude-sonnet-5-is-generally-available-for-github-copilot/) - disponibilité dès le lancement chez GitHub Copilot et les formules concernées
+- [Fuite Claude Sonnet 5 « Fennec » : ce que montrent vraiment les journaux Vertex AI - Dev Community](https://dev.to/marc0dev/claude-sonnet-5-fennec-leak-what-the-vertex-ai-logs-actually-show-3ho5) - le journal Vertex AI qui a fuité et l'identifiant du checkpoint
+- [Fuite Claude Sonnet 5 « Fennec » : ce qui est réellement sorti sous le nom de Claude Sonnet 4.6 - NxCode](https://www.nxcode.io/resources/news/claude-sonnet-5-fennec-leak-2026) - confirme que le checkpoint qui a fuité est sorti sous le nom de Sonnet 4.6 le 17 février 2026
+- [Anthropic vient de sortir Claude Sonnet 5 - Dev Community (satire du 1er avril, indiquée comme telle)](https://dev.to/best_codes/anthropic-just-dropped-claude-sonnet-5-and-the-benchmarks-are-kind-of-insane-3ppc) - l'article fictif cité en exemple de l'ampleur du cycle de rumeurs
+- [Tarifs Mistral - Mistral AI](https://mistral.ai/pricing/) - tarifs Mistral Medium 3.5 et formules Vibe, pour la comparaison de l'alternative européenne
