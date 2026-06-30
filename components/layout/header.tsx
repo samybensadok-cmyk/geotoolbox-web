@@ -6,7 +6,7 @@ import { siteConfig } from "@/lib/config"
 import { tools } from "@/lib/tools"
 import { cn } from "@/lib/utils"
 
-export function Header() {
+export function Header({ nav }: { nav?: Record<string, string> }) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [featuresOpen, setFeaturesOpen] = useState(false)
   const [mobileFeaturesOpen, setMobileFeaturesOpen] = useState(false)
@@ -85,7 +85,7 @@ export function Header() {
               aria-haspopup="true"
               className="flex min-h-[40px] items-center gap-1 rounded-md px-3 text-[13px] font-medium text-gray-700 transition-colors hover:text-gray-900 hover:bg-gray-50"
             >
-              Features
+              {nav?.features ?? "Features"}
               <svg
                 className={cn("h-3 w-3 transition-transform duration-200", featuresOpen && "rotate-180")}
                 viewBox="0 0 12 12"
@@ -131,7 +131,7 @@ export function Header() {
                       onClick={() => setFeaturesOpen(false)}
                       className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-accent-700 hover:text-accent-800"
                     >
-                      See all features
+                      {nav?.seeAllFeatures ?? "See all features"}
                       <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
@@ -156,7 +156,7 @@ export function Header() {
               aria-haspopup="true"
               className="flex min-h-[40px] items-center gap-1 rounded-md px-3 text-[13px] font-medium text-gray-700 transition-colors hover:text-gray-900 hover:bg-gray-50"
             >
-              Tools
+              {nav?.tools ?? "Tools"}
               <svg
                 className={cn("h-3 w-3 transition-transform duration-200", toolsOpen && "rotate-180")}
                 viewBox="0 0 12 12"
@@ -171,7 +171,7 @@ export function Header() {
             {toolsOpen && (
               <div className="absolute left-1/2 top-full z-50 mt-2 -translate-x-1/2 animate-fade-up" style={{ animationDuration: "0.18s" }}>
                 <div className="w-[340px] rounded-2xl border border-gray-200 bg-white p-4 shadow-[0_20px_60px_-20px_rgba(15,23,42,0.18)]">
-                  <p className="px-2 font-mono text-[10px] font-semibold uppercase tracking-widest text-gray-500">Free tools</p>
+                  <p className="px-2 font-mono text-[10px] font-semibold uppercase tracking-widest text-gray-500">{nav?.freeTools ?? "Free tools"}</p>
                   <ul className="mt-2 space-y-0.5">
                     {tools.map((t) => (
                       <li key={t.slug}>
@@ -192,7 +192,7 @@ export function Header() {
                       onClick={() => setToolsOpen(false)}
                       className="inline-flex items-center gap-1.5 px-2 text-[13px] font-semibold text-accent-700 hover:text-accent-800"
                     >
-                      See all tools
+                      {nav?.seeAllTools ?? "See all tools"}
                       <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
@@ -207,19 +207,19 @@ export function Header() {
             href="/pricing"
             className="flex min-h-[40px] items-center rounded-md px-3 text-[13px] font-medium text-gray-700 transition-colors hover:text-gray-900 hover:bg-gray-50"
           >
-            Pricing
+            {nav?.pricing ?? "Pricing"}
           </Link>
 
           <Link
             href="/blog"
             className="flex min-h-[40px] items-center rounded-md px-3 text-[13px] font-medium text-gray-700 transition-colors hover:text-gray-900 hover:bg-gray-50"
           >
-            Blog
+            {nav?.blog ?? "Blog"}
           </Link>
 
           <Link
             href="/search"
-            aria-label="Search"
+            aria-label={nav?.search ?? "Search"}
             className="flex min-h-[40px] items-center rounded-md px-3 text-gray-600 transition-colors hover:text-gray-900 hover:bg-gray-50"
           >
             <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
@@ -234,14 +234,14 @@ export function Header() {
               prefetch={false}
               className="flex min-h-[40px] items-center rounded-full border border-gray-200 px-3.5 text-[13px] font-medium text-gray-700 transition-colors hover:border-gray-400 hover:text-gray-900"
             >
-              Log in
+              {nav?.login ?? "Log in"}
             </Link>
             <Link
               href={siteConfig.appSignupUrl}
               prefetch={false}
               className="flex min-h-[40px] items-center rounded-full bg-accent-900 px-3.5 text-[13px] font-medium text-white transition-colors hover:bg-accent-800"
             >
-              Start free
+              {nav?.startFree ?? "Start free"}
             </Link>
           </div>
         </nav>
@@ -250,7 +250,7 @@ export function Header() {
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
           className="flex flex-col items-center justify-center gap-1 md:hidden min-h-[44px] min-w-[44px]"
-          aria-label="Toggle menu"
+          aria-label={nav?.toggleMenu ?? "Toggle menu"}
           aria-expanded={mobileOpen}
           aria-controls="mobile-nav-panel"
         >
@@ -270,7 +270,7 @@ export function Header() {
               className="flex items-center justify-between rounded-lg px-2 py-3 text-left text-sm font-medium text-gray-900 hover:bg-gray-50"
               aria-expanded={mobileFeaturesOpen}
             >
-              Features
+              {nav?.features ?? "Features"}
               <svg
                 className={cn("h-4 w-4 transition-transform duration-200", mobileFeaturesOpen && "rotate-180")}
                 viewBox="0 0 16 16"
@@ -308,7 +308,7 @@ export function Header() {
                   onClick={() => setMobileOpen(false)}
                   className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-accent-700"
                 >
-                  See all features →
+                  {nav?.seeAllFeatures ?? "See all features"} →
                 </Link>
               </div>
             )}
@@ -320,7 +320,7 @@ export function Header() {
               className="flex items-center justify-between rounded-lg px-2 py-3 text-left text-sm font-medium text-gray-900 hover:bg-gray-50"
               aria-expanded={mobileToolsOpen}
             >
-              Tools
+              {nav?.tools ?? "Tools"}
               <svg
                 className={cn("h-4 w-4 transition-transform duration-200", mobileToolsOpen && "rotate-180")}
                 viewBox="0 0 16 16"
@@ -348,7 +348,7 @@ export function Header() {
                   onClick={() => setMobileOpen(false)}
                   className="inline-flex items-center gap-1.5 pt-1 text-[13px] font-semibold text-accent-700"
                 >
-                  See all tools →
+                  {nav?.seeAllTools ?? "See all tools"} →
                 </Link>
               </div>
             )}
@@ -358,7 +358,7 @@ export function Header() {
               onClick={() => setMobileOpen(false)}
               className="rounded-lg px-2 py-3 text-sm font-medium text-gray-900 hover:bg-gray-50"
             >
-              Pricing
+              {nav?.pricing ?? "Pricing"}
             </Link>
 
             <Link
@@ -366,7 +366,7 @@ export function Header() {
               onClick={() => setMobileOpen(false)}
               className="rounded-lg px-2 py-3 text-sm font-medium text-gray-900 hover:bg-gray-50"
             >
-              Blog
+              {nav?.blog ?? "Blog"}
             </Link>
 
             <Link
@@ -374,7 +374,7 @@ export function Header() {
               onClick={() => setMobileOpen(false)}
               className="rounded-lg px-2 py-3 text-sm font-medium text-gray-900 hover:bg-gray-50"
             >
-              Search
+              {nav?.search ?? "Search"}
             </Link>
 
             <div className="mt-4 flex flex-col gap-2">
@@ -384,7 +384,7 @@ export function Header() {
                 onClick={() => setMobileOpen(false)}
                 className="rounded-full border border-gray-200 py-3 text-center text-sm font-medium text-gray-700"
               >
-                Log in
+                {nav?.login ?? "Log in"}
               </Link>
               <Link
                 href={siteConfig.appSignupUrl}
@@ -392,7 +392,7 @@ export function Header() {
                 onClick={() => setMobileOpen(false)}
                 className="rounded-full bg-accent-900 py-3 text-center text-sm font-medium text-white"
               >
-                Start free
+                {nav?.startFree ?? "Start free"}
               </Link>
             </div>
           </nav>

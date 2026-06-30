@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import { DM_Sans, DM_Mono } from "next/font/google"
-import { getLocale } from "next-intl/server"
+import { getLocale, getMessages } from "next-intl/server"
 import { bcp47, type Locale } from "@/i18n/routing"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
@@ -59,16 +59,24 @@ export default async function RootLayout({
   // The perf-preserving alternative is multiple root layouts via route groups.
   const locale = await getLocale()
   const lang = bcp47[locale as Locale] ?? "en-US"
+  // Chrome (nav/footer) labels resolved server-side from messages/{locale}.json
+  // and passed as plain-string props to the client Header/Footer. Each label
+  // falls back to its English literal in the component, so a missing key never
+  // crashes or blanks the global nav.
+  const messages = (await getMessages()) as Record<string, Record<string, string>>
+  const nav = messages.nav
+  const common = messages.common
+  const footer = messages.footer
   return (
     <html
       lang={lang}
       className={`${dmSans.variable} ${dmMono.variable} h-full`}
     >
       <body className="min-h-full flex flex-col antialiased">
-        <a href="#main-content" className="skip-link">Skip to main content</a>
-        <Header />
+        <a href="#main-content" className="skip-link">{common?.skipToContent ?? "Skip to main content"}</a>
+        <Header nav={nav} />
         <main id="main-content" className="flex-1">{children}</main>
-        <Footer />
+        <Footer nav={nav} footer={footer} />
         <ClarityAnalytics />
         <GoogleAnalytics />
       </body>
