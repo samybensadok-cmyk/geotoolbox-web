@@ -4,17 +4,33 @@ import { getAllGlossaryTerms, getGlossaryCategories } from "@/lib/content"
 import { siteConfig } from "@/lib/config"
 import { JsonLd } from "@/components/seo/json-ld"
 import { breadcrumbsSchema } from "@/lib/seo-schema"
+import { setRequestLocale } from "next-intl/server"
 
-export const metadata: Metadata = {
-  title: "GEO Glossary",
-  description:
-    "Plain-English definitions of generative engine optimization (GEO), AI search, and AI crawler terms. Short answers that link to the full guides.",
-  alternates: { canonical: `${siteConfig.url}/glossary` },
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  const basePath = locale === "en" ? "" : `/${locale}`
+  return {
+    title: "GEO Glossary",
+    description:
+      "Plain-English definitions of generative engine optimization (GEO), AI search, and AI crawler terms. Short answers that link to the full guides.",
+    alternates: { canonical: `${siteConfig.url}${basePath}/glossary` },
+  }
 }
 
-export default function GlossaryIndex() {
-  const terms = getAllGlossaryTerms()
-  const categories = getGlossaryCategories()
+export default async function GlossaryIndex({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
+  setRequestLocale(locale)
+  const basePath = locale === "en" ? "" : `/${locale}`
+  const terms = getAllGlossaryTerms(locale)
+  const categories = getGlossaryCategories(locale)
 
   return (
     <>
@@ -29,14 +45,14 @@ export default function GlossaryIndex() {
               "@context": "https://schema.org",
               "@type": "DefinedTermSet",
               name: `${siteConfig.name} Glossary`,
-              url: `${siteConfig.url}/glossary`,
+              url: `${siteConfig.url}${basePath}/glossary`,
               description:
                 "Definitions of generative engine optimization, AI search, and AI crawler terms.",
               hasDefinedTerm: terms.map((t) => ({
                 "@type": "DefinedTerm",
                 name: t.term,
                 description: t.definition,
-                url: `${siteConfig.url}/glossary/${t.slug}`,
+                url: `${siteConfig.url}${basePath}/glossary/${t.slug}`,
               })),
             },
           ]}

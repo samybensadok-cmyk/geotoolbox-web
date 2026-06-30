@@ -6,10 +6,13 @@ import rehypeShiki from "@shikijs/rehype"
 import {
   getGlossaryTermBySlug,
   getAllGlossaryTerms,
+  getAllGlossarySlugs,
 } from "@/lib/content"
 import { mdxComponents } from "@/components/mdx"
 import { formatDate } from "@/lib/utils"
-import { siteConfig } from "@/lib/config"
+import { routing } from "@/i18n/routing"
+import { alternatesFor } from "@/lib/i18n/siblings"
+import { setRequestLocale } from "next-intl/server"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
 import { JsonLd } from "@/components/seo/json-ld"
 import {
@@ -18,16 +21,18 @@ import {
 } from "@/lib/seo-schema"
 
 export async function generateStaticParams() {
-  return getAllGlossaryTerms().map((t) => ({ slug: t.slug }))
+  return routing.locales.flatMap((locale) =>
+    getAllGlossarySlugs(locale).map((slug) => ({ locale, slug }))
+  )
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>
+  params: Promise<{ locale: string; slug: string }>
 }): Promise<Metadata> {
-  const { slug } = await params
-  const term = getGlossaryTermBySlug(slug)
+  const { locale, slug } = await params
+  const term = getGlossaryTermBySlug(slug, locale)
   if (!term) return {}
   const title = `${term.term}: Definition`
   return {
@@ -35,20 +40,21 @@ export async function generateMetadata({
     description: term.definition,
     openGraph: { title, description: term.definition, type: "article" },
     twitter: { card: "summary", title, description: term.definition },
-    alternates: { canonical: `${siteConfig.url}/glossary/${slug}` },
+    alternates: alternatesFor("glossary", slug, locale),
   }
 }
 
 export default async function GlossaryEntry({
   params,
 }: {
-  params: Promise<{ slug: string }>
+  params: Promise<{ locale: string; slug: string }>
 }) {
-  const { slug } = await params
-  const term = getGlossaryTermBySlug(slug)
+  const { locale, slug } = await params
+  setRequestLocale(locale)
+  const term = getGlossaryTermBySlug(slug, locale)
   if (!term) notFound()
 
-  const all = getAllGlossaryTerms()
+  const all = getAllGlossaryTerms(locale)
   const related = term.related
     .map((s) => all.find((t) => t.slug === s))
     .filter((t): t is NonNullable<typeof t> => Boolean(t))

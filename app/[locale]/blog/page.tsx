@@ -6,12 +6,21 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { breadcrumbsSchema } from "@/lib/seo-schema"
 import { TOPICS, primaryTopic, topicBySlug, topicCounts } from "@/lib/blog-topics"
 import { BlogResults, type LitePost } from "@/components/blog/blog-results"
+import { setRequestLocale } from "next-intl/server"
 
-export const metadata: Metadata = {
-  title: "Blog",
-  description:
-    "Research and insights on Generative Engine Optimization, AI visibility, and the future of search.",
-  alternates: { canonical: `${siteConfig.url}/blog` },
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  const basePath = locale === "en" ? "" : `/${locale}`
+  return {
+    title: "Blog",
+    description:
+      "Research and insights on Generative Engine Optimization, AI visibility, and the future of search.",
+    alternates: { canonical: `${siteConfig.url}${basePath}/blog` },
+  }
 }
 
 // Render tag slugs as clean labels: "ai-visibility" -> "AI Visibility", "geo" -> "GEO".
@@ -50,21 +59,27 @@ function Chip({ href, active, children }: { href: string; active: boolean; child
   )
 }
 
-export default function BlogIndex({
+export default async function BlogIndex({
+  params,
   searchParams,
 }: {
+  params: Promise<{ locale: string }>
   searchParams: Promise<{ tag?: string; topic?: string }>
 }) {
-  return <BlogIndexInner searchParams={searchParams} />
+  const { locale } = await params
+  setRequestLocale(locale)
+  return <BlogIndexInner locale={locale} searchParams={searchParams} />
 }
 
 async function BlogIndexInner({
+  locale,
   searchParams,
 }: {
+  locale: string
   searchParams: Promise<{ tag?: string; topic?: string }>
 }) {
   const params = await searchParams
-  const allPosts = getAllPosts()
+  const allPosts = getAllPosts(locale)
   const counts = topicCounts(allPosts)
 
   // New: curated topic filter (`?topic=`). Legacy: raw tag filter (`?tag=`) is

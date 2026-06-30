@@ -69,7 +69,14 @@ export function extractFaq(content: string): Array<{ question: string; answer: s
   return faqs.length >= 2 ? faqs : []
 }
 
-const CONTENT_DIR = path.join(process.cwd(), "content", "blog")
+// Locale-aware content roots. `en` keeps the original flat dirs
+// (content/blog, content/glossary) so existing EN URLs + builds are
+// byte-identical; other locales read content/{locale}/blog|glossary.
+function blogDir(locale: string = "en") {
+  return locale === "en"
+    ? path.join(process.cwd(), "content", "blog")
+    : path.join(process.cwd(), "content", locale, "blog")
+}
 
 export type Post = {
   slug: string
@@ -86,14 +93,20 @@ export type Post = {
   inlineCta?: boolean
   readingTime: number
   content: string
+  /** locale of this post; "en" for the root content/blog dir */
+  locale: string
+  /** localization provenance (set on non-en files by the translation pipeline) */
+  donorSlug?: string
+  donorCommit?: string
 }
 
-export function getAllPosts(): Post[] {
-  if (!fs.existsSync(CONTENT_DIR)) return []
-  const files = fs.readdirSync(CONTENT_DIR).filter((f) => f.endsWith(".mdx"))
+export function getAllPosts(locale: string = "en"): Post[] {
+  const dir = blogDir(locale)
+  if (!fs.existsSync(dir)) return []
+  const files = fs.readdirSync(dir).filter((f) => f.endsWith(".mdx"))
   return files
     .map((file) => {
-      const raw = fs.readFileSync(path.join(CONTENT_DIR, file), "utf-8")
+      const raw = fs.readFileSync(path.join(dir, file), "utf-8")
       const { data, content } = matter(raw)
       return {
         slug: file.replace(".mdx", ""),
@@ -109,6 +122,9 @@ export function getAllPosts(): Post[] {
         inlineCta: data.inlineCta,
         readingTime: calculateReadingTime(content),
         content,
+        locale,
+        donorSlug: data.donorSlug,
+        donorCommit: data.donorCommit,
       } as Post
     })
     .filter((p) => !p.draft)
@@ -116,8 +132,8 @@ export function getAllPosts(): Post[] {
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 }
 
-export function getPostBySlug(slug: string): Post | undefined {
-  const filePath = path.join(CONTENT_DIR, `${slug}.mdx`)
+export function getPostBySlug(slug: string, locale: string = "en"): Post | undefined {
+  const filePath = path.join(blogDir(locale), `${slug}.mdx`)
   if (!fs.existsSync(filePath)) return undefined
   const raw = fs.readFileSync(filePath, "utf-8")
   const { data, content } = matter(raw)
@@ -135,14 +151,36 @@ export function getPostBySlug(slug: string): Post | undefined {
     inlineCta: data.inlineCta,
     readingTime: calculateReadingTime(content),
     content,
+    locale,
+    donorSlug: data.donorSlug,
+    donorCommit: data.donorCommit,
   }
 }
 
-export function getAllTags(): string[] {
-  const posts = getAllPosts()
+export function getAllTags(locale: string = "en"): string[] {
+  const posts = getAllPosts(locale)
   const tags = new Set<string>()
   posts.forEach((p) => p.tags.forEach((t) => tags.add(t)))
   return Array.from(tags).sort()
+}
+
+/**
+ * Slugs of all NON-DRAFT posts for a locale, INCLUDING noindex ones — for
+ * generateStaticParams. noindexed pages (e.g. un-graduated localized articles,
+ * spec §8) must still prerender + be reachable + crawlable; only listings,
+ * sitemap, and hreflang (via getAllPosts) hide them. Drafts never render.
+ */
+export function getAllPostSlugs(locale: string = "en"): string[] {
+  const dir = blogDir(locale)
+  if (!fs.existsSync(dir)) return []
+  return fs
+    .readdirSync(dir)
+    .filter((f) => f.endsWith(".mdx"))
+    .filter((f) => {
+      const { data } = matter(fs.readFileSync(path.join(dir, f), "utf-8"))
+      return !(data.draft ?? false)
+    })
+    .map((f) => f.replace(".mdx", ""))
 }
 
 // ---------------------------------------------------------------------------
@@ -196,10 +234,10 @@ function getPopularityBoosts(): Map<string, number> {
  * even with thin tags (cold-start guarantee). Excludes self; drafts and
  * noindex posts are already excluded by getAllPosts().
  */
-export function getRelatedPosts(slug: string, n = 3): Post[] {
-  const current = getPostBySlug(slug)
+export function getRelatedPosts(slug: string, n = 3, locale: string = "en"): Post[] {
+  const current = getPostBySlug(slug, locale)
   if (!current) return []
-  const pool = getAllPosts().filter((p) => p.slug !== slug)
+  const pool = getAllPosts(locale).filter((p) => p.slug !== slug)
   const boosts = getPopularityBoosts()
   const currentTags = new Set(current.tags)
   const currentTokens = titleTokens(current.title)
@@ -246,7 +284,11 @@ export function getRelatedPosts(slug: string, n = 3): Post[] {
 // pipeline but reads content/glossary/*.mdx. Each entry is one term.
 // ---------------------------------------------------------------------------
 
-const GLOSSARY_DIR = path.join(process.cwd(), "content", "glossary")
+function glossaryDir(locale: string = "en") {
+  return locale === "en"
+    ? path.join(process.cwd(), "content", "glossary")
+    : path.join(process.cwd(), "content", locale, "glossary")
+}
 
 export type GlossaryTerm = {
   slug: string
@@ -261,10 +303,13 @@ export type GlossaryTerm = {
   updated: string
   draft: boolean
   content: string
+  locale: string
+  donorSlug?: string
+  donorCommit?: string
 }
 
-function parseGlossaryFile(file: string): GlossaryTerm {
-  const raw = fs.readFileSync(path.join(GLOSSARY_DIR, file), "utf-8")
+function parseGlossaryFile(file: string, locale: string = "en"): GlossaryTerm {
+  const raw = fs.readFileSync(path.join(glossaryDir(locale), file), "utf-8")
   const { data, content } = matter(raw)
   return {
     slug: file.replace(".mdx", ""),
@@ -279,26 +324,44 @@ function parseGlossaryFile(file: string): GlossaryTerm {
     updated: data.updated ?? "",
     draft: data.draft ?? false,
     content,
+    locale,
+    donorSlug: data.donorSlug,
+    donorCommit: data.donorCommit,
   }
 }
 
-export function getAllGlossaryTerms(): GlossaryTerm[] {
-  if (!fs.existsSync(GLOSSARY_DIR)) return []
+export function getAllGlossaryTerms(locale: string = "en"): GlossaryTerm[] {
+  const dir = glossaryDir(locale)
+  if (!fs.existsSync(dir)) return []
   return fs
-    .readdirSync(GLOSSARY_DIR)
+    .readdirSync(dir)
     .filter((f) => f.endsWith(".mdx"))
-    .map(parseGlossaryFile)
+    .map((f) => parseGlossaryFile(f, locale))
     .filter((t) => !t.draft)
     .sort((a, b) => a.term.localeCompare(b.term))
 }
 
-export function getGlossaryTermBySlug(slug: string): GlossaryTerm | undefined {
-  const filePath = path.join(GLOSSARY_DIR, `${slug}.mdx`)
+export function getGlossaryTermBySlug(slug: string, locale: string = "en"): GlossaryTerm | undefined {
+  const filePath = path.join(glossaryDir(locale), `${slug}.mdx`)
   if (!fs.existsSync(filePath)) return undefined
-  return parseGlossaryFile(`${slug}.mdx`)
+  return parseGlossaryFile(`${slug}.mdx`, locale)
 }
 
-export function getGlossaryCategories(): string[] {
-  const cats = new Set(getAllGlossaryTerms().map((t) => t.category))
+/** Slugs of all non-draft glossary terms (incl. noindex) for generateStaticParams. */
+export function getAllGlossarySlugs(locale: string = "en"): string[] {
+  const dir = glossaryDir(locale)
+  if (!fs.existsSync(dir)) return []
+  return fs
+    .readdirSync(dir)
+    .filter((f) => f.endsWith(".mdx"))
+    .filter((f) => {
+      const { data } = matter(fs.readFileSync(path.join(dir, f), "utf-8"))
+      return !(data.draft ?? false)
+    })
+    .map((f) => f.replace(".mdx", ""))
+}
+
+export function getGlossaryCategories(locale: string = "en"): string[] {
+  const cats = new Set(getAllGlossaryTerms(locale).map((t) => t.category))
   return Array.from(cats).sort()
 }

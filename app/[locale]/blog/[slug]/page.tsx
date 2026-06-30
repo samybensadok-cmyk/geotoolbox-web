@@ -3,10 +3,12 @@ import { notFound } from "next/navigation"
 import Link from "next/link"
 import { MDXRemote } from "next-mdx-remote/rsc"
 import rehypeShiki from "@shikijs/rehype"
-import { getPostBySlug, getAllPosts, getRelatedPosts, extractHeadings, extractFaq } from "@/lib/content"
+import { getPostBySlug, getAllPostSlugs, getRelatedPosts, extractHeadings, extractFaq } from "@/lib/content"
 import { mdxComponents } from "@/components/mdx"
 import { formatDate } from "@/lib/utils"
-import { siteConfig } from "@/lib/config"
+import { routing } from "@/i18n/routing"
+import { alternatesFor } from "@/lib/i18n/siblings"
+import { setRequestLocale } from "next-intl/server"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
 import { JsonLd } from "@/components/seo/json-ld"
 import { articleSchema, faqPageSchema } from "@/lib/seo-schema"
@@ -18,16 +20,18 @@ import { injectInlineCta } from "@/lib/inline-cta"
 import { Avatar } from "@/components/ui/avatar"
 
 export async function generateStaticParams() {
-  return getAllPosts().map((p) => ({ slug: p.slug }))
+  return routing.locales.flatMap((locale) =>
+    getAllPostSlugs(locale).map((slug) => ({ locale, slug }))
+  )
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>
+  params: Promise<{ locale: string; slug: string }>
 }): Promise<Metadata> {
-  const { slug } = await params
-  const post = getPostBySlug(slug)
+  const { locale, slug } = await params
+  const post = getPostBySlug(slug, locale)
   if (!post) return {}
 
   return {
@@ -42,8 +46,8 @@ export async function generateMetadata({
       modifiedTime: post.updated ?? post.date,
       authors: [post.author],
       // Omit `images` when no frontmatter override, so Next auto-injects the
-      // file-convention card from app/blog/[slug]/opengraph-image.tsx. A future
-      // `image:` in frontmatter still wins.
+      // file-convention card from opengraph-image.tsx. A future `image:` in
+      // frontmatter still wins.
       ...(post.image ? { images: [post.image] } : {}),
     },
     twitter: {
@@ -51,9 +55,9 @@ export async function generateMetadata({
       title: post.title,
       description: post.description,
     },
-    alternates: {
-      canonical: `${siteConfig.url}/blog/${slug}`,
-    },
+    // Self-canonical + reciprocal hreflang from the sibling map. Pre-FR this
+    // returns only the canonical, so EN output is unchanged.
+    alternates: alternatesFor("blog", slug, locale),
   }
 }
 
@@ -90,16 +94,17 @@ const relatedFeatures = [
 export default async function BlogPost({
   params,
 }: {
-  params: Promise<{ slug: string }>
+  params: Promise<{ locale: string; slug: string }>
 }) {
-  const { slug } = await params
-  const post = getPostBySlug(slug)
+  const { locale, slug } = await params
+  setRequestLocale(locale)
+  const post = getPostBySlug(slug, locale)
   if (!post) notFound()
 
   const author = getAuthorByName(post.author)
   const headings = extractHeadings(post.content)
   const faqs = extractFaq(post.content)
-  const relatedPosts = getRelatedPosts(slug)
+  const relatedPosts = getRelatedPosts(slug, 3, locale)
   const { source: mdxSource } = injectInlineCta(post)
 
   return (

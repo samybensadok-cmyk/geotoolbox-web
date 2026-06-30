@@ -49,6 +49,14 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  // NOTE: <html lang> is static "en" here. FR content pages (under [locale])
+  // therefore inherit lang="en" — an accepted P0 limitation since those pages
+  // are noindex until graduation. The correct per-locale <html lang> requires
+  // moving <html> into app/[locale]/layout.tsx, which lands with the full
+  // marketing-route migration (spec §10 P3). Reading getLocale() here instead
+  // was tested and rejected: it forces the ENTIRE app into dynamic rendering
+  // (all static/SSG pages → ƒ SSR), a major perf regression. hreflang — the
+  // load-bearing SEO signal — is emitted correctly per page regardless.
   return (
     <html
       lang="en"

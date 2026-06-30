@@ -1,5 +1,9 @@
 import type { NextConfig } from "next"
 import path from "path"
+import createNextIntlPlugin from "next-intl/plugin"
+
+// Wires the next-intl request config (i18n/request.ts) into the build.
+const withNextIntl = createNextIntlPlugin()
 
 const nextConfig: NextConfig = {
   // Pin the workspace root — a stray ~/package-lock.json otherwise makes Turbopack
@@ -44,4 +48,4 @@ const nextConfig: NextConfig = {
   },
 }
 
-export default nextConfig
+export default withNextIntl(nextConfig)

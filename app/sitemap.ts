@@ -1,11 +1,10 @@
 import type { MetadataRoute } from "next"
 import { getAllPosts, getAllGlossaryTerms } from "@/lib/content"
 import { siteConfig } from "@/lib/config"
+import { routing } from "@/i18n/routing"
+import { alternatesFor } from "@/lib/i18n/siblings"
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const posts = getAllPosts()
-  const glossary = getAllGlossaryTerms()
-
   return [
     {
       url: siteConfig.url,
@@ -67,17 +66,33 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly" as const,
       priority: 0.8,
     })),
-    ...posts.map((post) => ({
-      url: `${siteConfig.url}/blog/${post.slug}`,
-      lastModified: new Date(post.updated ?? post.date),
-      changeFrequency: "monthly" as const,
-      priority: 0.8,
-    })),
-    ...glossary.map((t) => ({
-      url: `${siteConfig.url}/glossary/${t.slug}`,
-      lastModified: t.updated ? new Date(t.updated) : new Date(),
-      changeFrequency: "monthly" as const,
-      priority: 0.6,
-    })),
+    // Content URLs across all locales, each with reciprocal hreflang
+    // alternates from the sibling map. Pre-FR this yields exactly the
+    // original EN entries (no `alternates` key), so the sitemap is
+    // byte-identical until FR content lands.
+    ...routing.locales.flatMap((locale) =>
+      getAllPosts(locale).map((post) => {
+        const alt = alternatesFor("blog", post.slug, locale)
+        return {
+          url: alt.canonical,
+          lastModified: new Date(post.updated ?? post.date),
+          changeFrequency: "monthly" as const,
+          priority: 0.8,
+          ...(alt.languages ? { alternates: { languages: alt.languages } } : {}),
+        }
+      })
+    ),
+    ...routing.locales.flatMap((locale) =>
+      getAllGlossaryTerms(locale).map((t) => {
+        const alt = alternatesFor("glossary", t.slug, locale)
+        return {
+          url: alt.canonical,
+          lastModified: t.updated ? new Date(t.updated) : new Date(),
+          changeFrequency: "monthly" as const,
+          priority: 0.6,
+          ...(alt.languages ? { alternates: { languages: alt.languages } } : {}),
+        }
+      })
+    ),
   ]
 }
