@@ -160,7 +160,7 @@ async function BlogIndexInner({
               </Link>
             </div>
           ) : (
-            <BlogResults posts={lite} activeLabel={activeLabel} />
+            <BlogResults posts={lite} activeLabel={activeLabel} locale={locale} />
           )}
         </div>
       </section>

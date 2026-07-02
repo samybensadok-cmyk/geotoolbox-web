@@ -261,7 +261,7 @@ export default async function BlogPost({
 
           {author && <AuthorBio author={author} />}
 
-          <RelatedPosts posts={relatedPosts} />
+          <RelatedPosts posts={relatedPosts} locale={locale} />
         </div>
       </section>
 

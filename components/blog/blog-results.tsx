@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react"
 import Link from "next/link"
 import { formatDate } from "@/lib/utils"
+import { localePath } from "@/lib/i18n/paths"
 
 export type LitePost = {
   slug: string
@@ -21,10 +22,10 @@ function Arrow() {
   )
 }
 
-function PostCard({ post }: { post: LitePost }) {
+function PostCard({ post, locale }: { post: LitePost; locale: string }) {
   return (
     <Link
-      href={`/blog/${post.slug}`}
+      href={localePath("blog", post.slug, locale)}
       className="group flex flex-col rounded-2xl border border-gray-200 bg-white p-6 transition-all duration-200 hover:-translate-y-0.5 hover:border-accent-300 hover:shadow-[0_8px_30px_-12px_rgba(13,148,136,0.25)]"
     >
       <div className="flex items-center justify-between">
@@ -54,9 +55,11 @@ function PostCard({ post }: { post: LitePost }) {
 export function BlogResults({
   posts,
   activeLabel,
+  locale,
 }: {
   posts: LitePost[]
   activeLabel?: string
+  locale: string
 }) {
   const [q, setQ] = useState("")
   const query = q.trim().toLowerCase()
@@ -139,7 +142,7 @@ export function BlogResults({
           </div>
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {filtered.map((post) => (
-              <PostCard key={post.slug} post={post} />
+              <PostCard key={post.slug} post={post} locale={locale} />
             ))}
           </div>
         </>
@@ -152,7 +155,7 @@ export function BlogResults({
             }`}
           >
             <Link
-              href={`/blog/${featured.slug}`}
+              href={localePath("blog", featured.slug, locale)}
               className="group flex flex-col justify-between gap-10 p-8 sm:p-10 lg:p-12"
             >
               <div>
@@ -188,7 +191,7 @@ export function BlogResults({
                 {sideList.map((post) => (
                   <Link
                     key={post.slug}
-                    href={`/blog/${post.slug}`}
+                    href={localePath("blog", post.slug, locale)}
                     className="group flex flex-1 flex-col justify-center p-6 transition-colors hover:bg-white/[0.04] sm:p-7"
                   >
                     <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-gray-500">
@@ -216,7 +219,7 @@ export function BlogResults({
               </div>
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 {grid.map((post) => (
-                  <PostCard key={post.slug} post={post} />
+                  <PostCard key={post.slug} post={post} locale={locale} />
                 ))}
               </div>
             </>

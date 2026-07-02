@@ -12,6 +12,7 @@ import { getMdxComponents } from "@/components/mdx"
 import { formatDate } from "@/lib/utils"
 import { routing } from "@/i18n/routing"
 import { alternatesFor } from "@/lib/i18n/siblings"
+import { localePath } from "@/lib/i18n/paths"
 import { setRequestLocale } from "next-intl/server"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
 import { JsonLd } from "@/components/seo/json-ld"
@@ -163,7 +164,7 @@ export default async function GlossaryEntry({
                 {related.map((r) => (
                   <Link
                     key={r.slug}
-                    href={`/glossary/${r.slug}`}
+                    href={localePath("glossary", r.slug, locale)}
                     className="rounded-full border border-gray-200 bg-white px-3 py-1.5 text-[13px] font-medium text-gray-700 transition-colors hover:border-gray-400 hover:text-accent-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600"
                   >
                     {r.term}

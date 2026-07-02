@@ -5,6 +5,7 @@ import { siteConfig } from "@/lib/config"
 import { JsonLd } from "@/components/seo/json-ld"
 import { breadcrumbsSchema } from "@/lib/seo-schema"
 import { setRequestLocale } from "next-intl/server"
+import { localePath } from "@/lib/i18n/paths"
 
 export async function generateMetadata({
   params,
@@ -94,7 +95,7 @@ export default async function GlossaryIndex({
                       {inCat.map((t) => (
                         <Link
                           key={t.slug}
-                          href={`/glossary/${t.slug}`}
+                          href={localePath("glossary", t.slug, locale)}
                           className="group block rounded-2xl border border-gray-200 bg-white p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-[0_16px_32px_-16px_rgba(15,23,42,0.16)] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
                         >
                           <h3 className="text-[15px] font-semibold tracking-tight text-gray-900 transition-colors group-hover:text-accent-700">

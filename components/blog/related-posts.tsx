@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { formatDate } from "@/lib/utils"
+import { localePath } from "@/lib/i18n/paths"
 import type { Post } from "@/lib/content"
 
 // Same tinted-card surfaces as the "What's next" feature cards so the two
@@ -10,7 +11,7 @@ const cardTints = [
   { bg: "bg-[var(--surface-steel)]", border: "border-[var(--surface-steel-border)]", dot: "bg-slate-500" },
 ]
 
-export function RelatedPosts({ posts }: { posts: Post[] }) {
+export function RelatedPosts({ posts, locale }: { posts: Post[]; locale: string }) {
   if (posts.length === 0) return null
 
   return (
@@ -28,7 +29,7 @@ export function RelatedPosts({ posts }: { posts: Post[] }) {
           return (
             <Link
               key={post.slug}
-              href={`/blog/${post.slug}`}
+              href={localePath("blog", post.slug, locale)}
               className={`group/card flex flex-col rounded-2xl border ${tint.border} ${tint.bg} p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_16px_32px_-16px_rgba(15,23,42,0.16)] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2`}
             >
               {post.tags.length > 0 && (
