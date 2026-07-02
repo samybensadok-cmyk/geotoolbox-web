@@ -1,0 +1,242 @@
+---
+title: "Embeddings : comment l'IA choisit ce qu'elle cite"
+description: "Les embeddings expliqués pour le SEO : comment les moteurs IA transforment le contenu en vecteurs, choisissent quoi citer et ce qu'on peut vraiment optimiser."
+date: "2026-07-02"
+author: "Samy BEN SADOK"
+tags: ["vector-embeddings", "geo", "ai-search", "guide"]
+draft: false
+locale: "fr"
+donorSlug: "vector-embeddings"
+donorCommit: "6981852"
+noindex: false
+---
+
+Les embeddings sont la couche mathématique qui décide quel contenu les moteurs de recherche IA vont récupérer lorsqu'ils composent une réponse. Les guides les mieux positionnés sur ce sujet en France expliquent aux développeurs comment s'en servir pour créer des applications. Celui-ci couvre ce qu'ils changent pour les personnes qui publient du contenu : comment les nombres fonctionnent, comment les moteurs s'en servent pour présélectionner ce qui sera cité, et quelles parties de « l'optimisation des embeddings » sont réelles plutôt que simplement recyclées.
+
+## Que sont les embeddings vectoriels ?
+
+Un **embedding vectoriel** (parfois traduit « plongement vectoriel ») est une représentation numérique d'un contenu. Un modèle d'embedding prend un morceau de texte (ou une image, ou de l'audio) et le convertit en une longue liste de nombres, appelée vecteur, qui capture le sens du contenu. Deux passages qui veulent dire des choses proches obtiennent des vecteurs situés côte à côte dans un espace mathématique. Deux passages sur des sujets sans rapport se retrouvent très éloignés.
+
+Cette seule propriété, le sens encodé sous forme de distance, c'est tout le principe. Un logiciel ne peut pas comparer deux paragraphes comme vous le faites. Il peut comparer deux listes de nombres instantanément. Les embeddings transforment la question « ce passage parle-t-il de la même chose que cette requête ? » en un problème mathématique dont la réponse est nette.
+
+Un embedding ressemble à ceci : [0,012 ; -0,738 ; 0,291 ; …], avec des centaines ou des milliers de valeurs. Aucun nombre pris isolément ne signifie quoi que ce soit. C'est le motif d'ensemble qui encode le sens, de la même façon qu'aucun pixel unique ne fait une photo.
+
+Pourquoi vous en soucier en tant que professionnel du SEO ou du marketing de contenu ? Parce que ChatGPT, Perplexity et les AI Overviews de Google reposent tous sur la récupération (la sélection des passages candidats) pour choisir ce qu'ils citent, et que les embeddings sont une pièce maîtresse de la récupération moderne. Quand un moteur IA décide quels passages du web entrent dans une réponse, la similarité entre l'embedding de la question et celui de votre contenu fait partie du tri qui établit la liste des candidats.
+
+Autrement dit : les embeddings sont le mécanisme derrière les conseils que vous avez déjà entendus. « Écrivez clairement. » « Une idée par section. » « Gardez une terminologie cohérente. » Ces recommandations fonctionnent en partie en raison du comportement de cette couche du pipeline. La comprendre permet de séparer les conseils qui reposent sur un mécanisme réel de ceux qui sont inventés.
+
+## Comment fonctionnent les embeddings vectoriels ?
+
+Personne n'écrit les embeddings à la main. Ils sortent de **modèles d'embedding**, des algorithmes d'apprentissage automatique (les plus récents sont des réseaux de neurones) entraînés sur d'énormes quantités de texte jusqu'à apprendre quels mots et expressions apparaissent dans des contextes similaires.
+
+Comment un modèle apprend-il le sens ? Par le contexte. Entraînez-le sur assez de texte et les mots qui reviennent dans des environnements proches finissent par être placés les uns près des autres, à des positions qui reflètent leurs relations sémantiques. La géométrie obtenue autorise une arithmétique presque trop nette : dans [le tutoriel illustré de Jay Alammar](https://jalammar.github.io/illustrated-word2vec/) sur les embeddings lexicaux de l'ère word2vec, prendre le vecteur de « king », soustraire « man » et ajouter « woman » produit un vecteur dont le voisin nommé le plus proche est « queen » (la démo classique exclut les mots d'entrée eux-mêmes, une nuance à connaître avant de la répéter en public). Les directions dans cet espace correspondent à des concepts réels, comme la royauté ou le genre, alors que personne ne les y a programmées.
+
+Un mot sur les dimensions. Chaque vecteur a une longueur fixe, et cette longueur est le **nombre de dimensions** du modèle. [BERT](https://arxiv.org/abs/1810.04805) utilise 768 dimensions dans sa version de base et 1 024 dans sa version large (768 est un choix d'architecture, la taille des têtes d'attention multipliée par leur nombre, pas un nombre magique). [Les modèles d'embedding d'OpenAI](https://developers.openai.com/api/docs/guides/embeddings) produisent 1 536 dimensions pour text-embedding-3-small et 3 072 pour text-embedding-3-large. Un nombre plus élevé de dimensions peut capturer des distinctions plus fines, au prix du stockage et de la vitesse, ce qui explique qu'OpenAI laisse les développeurs raccourcir les vecteurs via un paramètre `dimensions` plutôt que de tourner en permanence à pleine taille. (Et non, la taille d'embedding qu'utilise GPT-4 en interne n'est pas publiée, quoi qu'un vendeur d'outil ait pu vous dire.)
+
+Les autres fournisseurs se situent dans des ordres de grandeur comparables. Le modèle **Gemini Embedding** de Google (`gemini-embedding-001`, en version stable) génère par défaut 3 072 dimensions, réductibles à 1 536, 768 ou 256 via la technique Matryoshka ; sa déclinaison multimodale **Gemini Embedding 2** (préversion publique, mars 2026) conserve ces mêmes tailles. Côté européen, **Mistral** propose `mistral-embed` (1 024 dimensions) et `codestral-embed`, spécialisé dans le code (jusqu'à 3 072 dimensions, taille ajustable via `output_dimension`), avec l'avantage d'un hébergement des données dans l'UE par défaut, sans transfert vers un pays tiers.
+
+Les premiers modèles, comme word2vec et GloVe, étaient statiques : un mot, un vecteur, pour toujours. Cela coince sur les mots ambigus, parce que « avocat » a plusieurs sens et qu'un vecteur unique doit tous les moyenner. Les modèles à base de Transformer, comme BERT, ont réglé ce point. Ils lisent d'abord l'entrée entière, si bien que le vecteur de chaque mot varie selon les mots qui l'entourent. « Avocat » près de « tribunal » et « avocat » près de « salade » produisent des embeddings différents.
+
+Les modèles d'embedding modernes appliquent la même idée au-delà des mots isolés. Ils produisent un vecteur par phrase, par passage ou par document, la forme qui compte pour la recherche : dans de nombreux systèmes de récupération IA, le contenu est découpé en morceaux puis stocké sous forme d'embeddings de passages.
+
+<Callout type="note" title="Le nombre de dimensions n'est pas un levier de qualité">
+Vous verrez des fournisseurs comparer les modèles sur le nombre de dimensions. Plus de dimensions ne veut pas dire, à lui seul, une meilleure représentation du contenu, et de toute façon vous ne choisissez pas ce qu'utilisent les moteurs en production. Rangez ce chiffre dans « comment ça marche », pas dans « ce qu'il faut optimiser ».
+</Callout>
+
+## Exemple concret : comment se mesure la similarité
+
+Imaginons qu'une personne demande à un assistant IA : « pourquoi Googlebot n'explore-t-il pas mon site ? » Le moteur crée l'embedding de la question, puis le compare aux embeddings du contenu indexé. Voici une version simplifiée à 4 dimensions au lieu de 1 536 (les nombres sont inventés pour illustrer le mécanisme, les vecteurs réels sont bien plus longs) :
+
+<table>
+<thead>
+<tr><th>Contenu</th><th>Embedding simplifié (exemple)</th><th>Similarité avec la requête</th></tr>
+</thead>
+<tbody>
+<tr><td>Requête : « pourquoi Googlebot n'explore-t-il pas mon site »</td><td>[0,9 ; 0,1 ; 0,8 ; -0,2]</td><td><strong>-</strong></td></tr>
+<tr><td>Votre passage sur le budget d'exploration et les erreurs serveur</td><td>[0,8 ; 0,2 ; 0,9 ; -0,1]</td><td><strong>0,99</strong></td></tr>
+<tr><td>Votre passage sur les règles de blocage du fichier robots.txt</td><td>[0,7 ; 0,3 ; 0,6 ; -0,1]</td><td><strong>0,97</strong></td></tr>
+<tr><td>La recette de levain d'un concurrent</td><td>[0,1 ; 0,9 ; 0,0 ; 0,5]</td><td><strong>0,06</strong></td></tr>
+</tbody>
+</table>
+
+Le score de la dernière colonne est la **similarité cosinus** : une mesure de l'angle entre deux vecteurs. En pratique, on lit l'échelle de 1 (même direction, même sens) jusqu'à 0, le contenu sans rapport tombant près de zéro. (Dans les vrais espaces d'embedding, même un texte sans rapport obtient rarement un score fortement négatif, et les anciens modèles comme ada-002 compriment tout dans une bande positive étroite ; en le testant vous-même, attendez-vous à des écarts plus faibles que dans un exemple simplifié.) [La documentation d'OpenAI](https://developers.openai.com/api/docs/guides/embeddings) recommande la similarité cosinus pour comparer ses embeddings, et c'est la métrique par défaut dans la majeure partie du secteur parce qu'elle compare la direction du sens en ignorant la magnitude du vecteur. (La distance euclidienne et le produit scalaire sont les autres mesures que vous croiserez ; le cosinus est la norme pour le texte.)
+
+L'étape de récupération se résume alors à un tri. Le système classe chaque passage candidat par score de similarité et retient les premiers, ses **plus proches voisins**, comme liste restreinte pour la réponse (en production, des algorithmes de recherche de voisins proches approximatifs font ce tri très vite sur des millions de points). Vos deux passages de SEO technique passent la sélection. La recette de levain n'avait aucune chance.
+
+Notez ce qui a fait la différence : le passage sur le budget d'exploration a obtenu le meilleur score parce que son contenu se concentre précisément sur ce que la question demande. C'est la recherche sémantique à l'œuvre. Le passage n'avait pas besoin de contenir l'expression exacte « googlebot n'explore pas ».
+
+## Comment les moteurs IA utilisent les embeddings pour choisir leurs citations
+
+Quand un moteur IA répond à une question avec des citations, les embeddings ont généralement déjà effectué une grande partie du tri avant que le modèle n'écrive un seul mot. Le pipeline ressemble à ceci :
+
+1. **Votre question devient un embedding.** Le moteur convertit la requête en vecteur avec le même modèle d'embedding qui a servi à indexer le contenu (souvent après avoir [éclaté un prompt](https://geotoolbox.ai/glossary/query-fan-out) en plusieurs sous-requêtes). En pratique, la requête doit utiliser le modèle de l'index : les vecteurs bruts de modèles différents vivent dans des espaces distincts et ne sont pas directement comparables.
+2. **Les candidats sont récupérés.** Le moteur lance une recherche par similarité dans son index et remonte les passages dont les embeddings sont les plus proches du vecteur de la requête.
+3. **Les candidats sont souvent reclassés.** Un second modèle, ou un système de classement, peut réévaluer la liste restreinte avec des vérifications de pertinence plus coûteuses, et les systèmes ajoutent des signaux comme la fraîcheur et l'autorité.
+4. **Le modèle rédige, en citant un sous-ensemble.** Le générateur lit les passages survivants et compose une réponse, en en citant certains comme sources.
+
+Une exception documentée à noter : [Google indique](https://developers.google.com/search/docs/fundamentals/ai-optimization-guide) que le grounding des AI Overviews remonte les candidats via ses systèmes de classement Search principaux (le Mode IA y ajoutant le query fan-out), donc les embeddings travaillent à l'intérieur du classement classique plutôt que comme un index vectoriel autonome. ChatGPT Search et Perplexity semblent plus proches du pipeline ci-dessus, d'après le comportement observé ; les rouages internes de la recherche web en direct ne sont pas entièrement publiés.
+
+<Callout type="tip" title="Nouveau en France : les AI Overviews arrivent">
+Google a confirmé (courrier aux éditeurs de presse du 29 juin 2026) le déploiement des AI Overviews et du Mode IA en France **d'ici le 23 septembre 2026**, après le déblocage réglementaire lié aux droits voisins. L'accord prévoit que chaque média puisse choisir d'apparaître ou non dans les réponses IA, une transparence sur les impressions générées et une rémunération au titre des droits voisins pour les quelque 450 éditeurs déjà couverts. Concrètement, les mécanismes de récupération décrits ici devraient bientôt s'appliquer aux résultats IA affichés en France si le calendrier annoncé est tenu.
+</Callout>
+
+C'est le schéma de la génération augmentée par la récupération (RAG), et notre analyse du [fonctionnement de la recherche IA](https://geotoolbox.ai/blog/how-does-ai-search-work) détaille tout le pipeline. La version courte : la [génération augmentée par récupération](https://geotoolbox.ai/glossary/retrieval-augmented-generation) ancre le modèle dans des passages récupérés au lieu de le laisser répondre à partir de sa seule mémoire d'entraînement. Pour l'explication complète, voir [ce qu'est le RAG](https://geotoolbox.ai/blog/what-is-rag).
+
+Deux conséquences sont sans cesse ignorées.
+
+**Être récupéré n'est pas être cité.** La similarité d'embedding vous fait entrer dans la liste restreinte à l'étape 2. Elle ne décide pas qui est crédité à l'étape 4. Un passage peut être récupéré et jamais cité, doublé au dernier moment par un concurrent plus clair ou faisant davantage autorité. Les embeddings décident qui est dans la pièce, pas qui est cité.
+
+**La recherche vectorielle pure n'est pas le fonctionnement réel des systèmes en production.** Les architectures de recherche en production associent la notation classique par mots-clés (BM25) et la similarité vectorielle, puis fusionnent les résultats. [La documentation d'Azure AI Search de Microsoft](https://learn.microsoft.com/en-us/azure/search/hybrid-search-overview) dit clairement que les requêtes à correspondance exacte (codes produit, jargon spécialisé, noms propres) fonctionnent mieux avec la recherche par mots-clés, et rapporte que « la recherche hybride avec classement sémantique offre des bénéfices significatifs sur la pertinence ». Les mots-clés ne sont donc pas morts : ils restent indispensables à la façon dont la récupération en production est construite.
+
+Alors, ChatGPT utilise-t-il des embeddings ? Oui, de deux façons sans rapport, et les confondre cause la plupart des confusions qu'on voit. En interne, chaque [LLM](https://geotoolbox.ai/glossary/large-language-model) représente les tokens sous forme de vecteurs pendant le traitement ; c'est simplement [la manière dont les Transformers calculent](https://geotoolbox.ai/fr/blog/comment-fonctionne-chatgpt).
+
+À part cela, la récupération décide de ce qui atteint le modèle : OpenAI documente que sa [recherche de fichiers s'appuie sur des bases de données vectorielles](https://developers.openai.com/api/docs/guides/tools-file-search) via une « recherche sémantique et par mots-clés ». Les moteurs ne publient pas les rouages de leur recherche web en direct, mais ce schéma de récupération est là aussi le mécanisme standard pour y réduire le nombre de candidats. Les vecteurs de tokens internes n'ont rien à voir avec votre visibilité. C'est la couche de récupération qui met votre contenu en compétition.
+
+<Callout type="tip" title="Pas besoin d'être dans les données d'entraînement pour être cité">
+Données d'entraînement et récupération sont deux portes différentes. Une page publiée hier peut être récupérée et citée aujourd'hui, parce que la récupération lit l'index en direct, pas l'instantané d'entraînement du modèle. C'est toute la raison pour laquelle la visibilité IA est une discipline sur laquelle on peut agir, et non une attente de cinq ans.
+</Callout>
+
+## Ce que les embeddings changent à votre façon d'écrire et de structurer
+
+La chose la plus utile à intégrer : **les systèmes de récupération IA modernes découpent et encodent souvent des passages, pas seulement des pages entières**. Votre guide de 3 000 mots peut être scindé en unités plus petites qui concourent chacune pour la récupération.
+
+Une partie tient à une contrainte incontournable. Les modèles d'embedding plafonnent leur entrée ([les modèles d'OpenAI](https://developers.openai.com/api/docs/guides/embeddings) acceptent au plus 8 192 [tokens](https://geotoolbox.ai/blog/what-are-tokens-in-ai)), et le sens est de toute façon compressé bien avant cette limite. Un embedding forcé de résumer cinq sous-sujets finit par n'être qu'une moyenne de tous, sans en représenter distinctement aucun. Les systèmes de récupération découpent le contenu parce que des segments ciblés produisent des vecteurs plus nets.
+
+Ce mécanisme donne trois règles pratiques.
+
+**Une idée par passage.** Une section qui annonce son idée d'emblée et s'y tient produit un embedding concentré sur ce sens, plus facile à faire correspondre à la question à laquelle elle répond. Une section qui s'éparpille sur trois sujets produit un vecteur dilué qui ne correspond fermement à rien. C'est la raison mécanique pour laquelle les pratiques de [découpage du contenu](https://geotoolbox.ai/blog/content-chunking), comme les paragraphes qui répondent d'emblée et les sections autonomes, tiennent la route, là où les « astuces de découpage » vendues autour ne tiennent pas. (La question de la taille des sections est traitée dans cet article aussi.)
+
+**Faites en sorte que chaque passage survive seul.** La récupération arrache votre passage de sa page. Si le morceau dit « ce réglage l'affecte aussi » sans référent, le texte récupéré devient ambigu une fois isolé. Nommez le sujet. Un passage qui se lit clairement isolé est un passage qu'un système de reclassement peut noter avec confiance.
+
+**Gardez une terminologie cohérente.** Les embeddings gèrent les synonymes bien mieux que la correspondance par mots-clés ne l'a jamais fait, mais chaque passage se joue encore sur la concentration de son sens. Donner trois noms différents à la même notion sur une page dilue votre signal sémantique plus que nécessaire.
+
+Ces règles ont au moins un petit test public derrière elles. [L'expérience de Chris Green sur la structure de contenu](https://www.chris-green.net/post/content-structure-for-ai-search) a encodé la même information dans trois formats et a trouvé que le format questions-réponses « a systématiquement offert la meilleure pertinence sémantique aux requêtes dans tous les scénarios », la prose dense étant la pire, avec son propre avertissement qu'il s'agit d'une petite simulation et que la similarité vectorielle n'est pas le classement. Testé, restreint, honnêtement étiqueté : exactement le genre de preuve dont ce domaine a besoin.
+
+Et le contenu long en général ? On vous dira que les pages longues sont « moyennées » et donnent de moins bons résultats en recherche vectorielle. Le mécanisme est plausible selon l'endroit où les passages sont découpés, mais nous n'avons pas vu de preuve publique contrôlée que la longueur de page en soi nuise à la récupération une fois les segments bien formés. Traitez-le comme une hypothèse, pas un fait. La version défendable est plus modeste : structurez votre page longue pour que chaque section puisse être extraite et garder son sens.
+
+## Peut-on optimiser pour les embeddings ? Une réponse honnête
+
+Pour l'essentiel non, et les parties qui marchent ne sont pas ce que le discours marketing laisse croire. Cela mérite d'être dit clairement, parce que le discours SEO francophone sur les embeddings est souvent plus enthousiaste que prudent : plusieurs outils et agences vendent déjà des « scores d'embedding » et des « audits d'embedding » sans jamais distinguer cela d'une écriture claire.
+
+Vous ne pouvez pas voir les modèles d'embedding que ChatGPT, Perplexity ou Google font tourner en production, ni les interroger directement, ni vérifier auprès d'eux un quelconque « score d'embedding » attribué à votre page. Un outil qui vous vend une note de similarité vectorielle évalue votre contenu par rapport à un modèle qu'il a choisi, pas par rapport à celui qui décide de votre visibilité. Ces chiffres peuvent diverger, et vous n'avez aucun moyen de vérifier. Traitez tout argumentaire « optimisez votre score d'embedding » en conséquence.
+
+Il n'y a pas non plus de cible stable à viser. Les moteurs changent de modèle d'embedding, et un changement veut dire ré-encoder le contenu que le nouveau modèle explore. Un contenu réglé sur les particularités d'un modèle n'hérite de rien quand le modèle change.
+
+Ce qui tient est peu spectaculaire, et fonctionne grâce au mécanisme plutôt que contre lui :
+
+**Désambiguïsation.** Un passage qui dit « geotoolbox suit les citations sur sept moteurs IA » s'encode distinctement. Un passage qui dit « notre plateforme délivre des résultats » s'encode comme dix mille autres pages vagues. La spécificité, c'est ce qui crée une séparation plus nette dans l'espace vectoriel.
+
+**Structure et cohérence.** Les trois règles de la section précédente, inchangées. Elles sont ce qui se rapproche le plus d'un vrai levier, et c'est bien là tout l'enjeu.
+
+Rien de tout cela n'est nouveau. Le mécanisme est nouveau ; l'écriture, elle, est une bonne pratique depuis des décennies. C'est le meilleur indice que « l'optimisation des embeddings » n'est pas une discipline à part entière : quand les recommandations pratiques sont identiques à celles d'une écriture claire, le vendeur renomme des fondamentaux, il n'offre pas un avantage.
+
+Un dernier point d'honnêteté. Les modèles d'embedding héritent de tout ce que contiennent leurs données d'entraînement. Le célèbre [article de Bolukbasi (2016)](https://arxiv.org/abs/1607.06520) a montré que des embeddings entraînés sur Google Actualités « présentent des stéréotypes de genre femme/homme à un degré inquiétant ». Le guide OpenAI cité tout au long de cet article ne le mentionne pas une seule fois, mais cela compte quand il s'agit d'accorder une confiance aveugle à ces systèmes : les scores de similarité encodent les biais et les angles morts du texte dont le modèle a appris.
+
+D'expérience, la discipline utile est de mesurer les résultats plutôt que les intermédiaires. Vous ne pouvez pas auditer les vecteurs d'un moteur en production, mais vous pouvez vérifier si les moteurs IA vous citent réellement, sur quels prompts, contre quels concurrents. C'est observable et relié à ce que vous voulez vraiment, même si c'est suffisamment bruité pour qu'il faille lire des tendances plutôt que des résultats isolés.
+
+## Comment observer les embeddings en action vous-même
+
+Vous n'avez pas à croire tout cela sur parole. Deux expériences peu coûteuses rendent tout le mécanisme concret.
+
+**Explorez votre propre site avec les embeddings activés.** Le SEO Spider de Screaming Frog peut générer des embeddings pour chaque page pendant un crawl. Son [tutoriel de similarité sémantique](https://www.screamingfrog.co.uk/seo-spider/tutorials/how-to-identify-semantically-similar-pages-outliers/) détaille la configuration (les libellés ci-dessous sont ceux de l'interface en anglais) :
+
+1. Connectez un fournisseur d'IA dans Config > API Access > AI (OpenAI, Gemini ou un modèle Ollama local)
+2. Activez les embeddings dans Config > Content
+3. Lancez le crawl
+4. Lancez l'analyse de crawl
+
+Vous obtenez un score de similarité de 0 à 1 pour chaque page contre son plus proche voisin, plus des filtres qui font remonter les doublons sémantiques et les pages qui dérivent hors sujet. Notez que cela encode des pages entières, utile pour repérer doublons et dérives, même si la récupération en production travaille surtout sur des morceaux plus petits. Voir deux pages que vous croyiez différentes obtenir un score de 0,95 l'une contre l'autre est le moyen le plus rapide d'intégrer ce que ces vecteurs mesurent vraiment.
+
+C'est une pratique courante, pas une nouveauté. [Le guide iPullRank de Mike King](https://ipullrank.com/vector-embeddings-is-all-you-need) recense les usages SEO en production des embeddings générés au crawl, de la mise en correspondance des mots-clés au maillage interne, en passant par la cartographie des redirections et le clustering de contenu, et les SEO font tourner ces workflows depuis bien avant que la recherche IA ne rende les embeddings à la mode.
+
+**Encodez deux phrases vous-même.** L'API d'embeddings d'OpenAI coûte des fractions de centime par appel ; [sa propre documentation](https://developers.openai.com/api/docs/guides/embeddings) chiffre le petit modèle à environ 62 500 pages de texte par dollar. Envoyez-lui une question que posent vos clients et le paragraphe de votre site censé y répondre, calculez la similarité cosinus entre les deux vecteurs, puis testez la même question contre le paragraphe d'un concurrent. Demandez à n'importe quel assistant de programmation un script de dix lignes ; en moins d'une demi-heure, vous aurez vu tourner l'opération centrale de la récupération sur votre propre contenu.
+
+<Callout type="warning" title="Un point RGPD à garder en tête">
+Envoyer du contenu à l'API d'un fournisseur américain (OpenAI, Google) constitue un transfert de données dès lors que ce contenu comporte des données personnelles. C'est licite si le fournisseur est certifié Data Privacy Framework (OpenAI, Google et Microsoft le sont, à vérifier au moment de l'intégration) ou via des clauses contractuelles types, avec un accord de sous-traitance (DPA) signé. Pour du contenu marketing ne contenant pas de données personnelles, l'enjeu RGPD est généralement moindre. Pour du texte contenant des données personnelles, un fournisseur hébergé dans l'UE comme Mistral permet d'éviter la question du transfert hors UE, à condition que le traitement et l'hébergement soient bien contractualisés dans l'UE. À noter aussi : un embedding n'est pas une boîte noire irréversible ; des travaux de recherche ont reconstruit une part significative d'un texte à partir de ses seuls vecteurs, donc « ce ne sont que des chiffres » ne dispense pas d'appliquer les mêmes précautions qu'aux données sources.
+</Callout>
+
+Cette question de souveraineté ne concerne qu'un cas précis : celui où vous construisez vous-même un système RAG ou un chatbot sur vos données propriétaires (base de connaissances, docs support). Si votre sujet est plutôt « mon contenu public est-il cité par ChatGPT », l'API qui l'indexe est celle du moteur, que vous ne contrôlez pas, et le choix du fournisseur d'embedding ne vous appartient pas. Pour une architecture interne à contrainte réglementaire, des modèles européens (Mistral) et des bases vectorielles déployables dans l'UE (Qdrant, Weaviate), voire une offre souveraine du type OVHcloud, couvrent le besoin sans sortir de l'UE.
+
+Aucune de ces deux expériences ne montre ce que calculent les moteurs en production, leurs modèles et index leur appartiennent. Ce que vous gagnez, c'est le bon modèle mental, plus un audit de site réellement utile dans le cas de Screaming Frog.
+
+## Après la récupération, qu'est-ce qui fait gagner la citation ?
+
+La récupération vous fait entrer dans la pièce. La dernière étape, quel passage est nommé comme source, dépend de couches de classement sur lesquelles les moteurs publient encore moins.
+
+Ce qui est observable : la pertinence reclassée (votre passage répond-il à la question exacte), l'autonomie (peut-il être cité sans le reste de sa page) et des signaux au niveau de la source comme l'autorité et la fraîcheur, que les moteurs disent ajouter. Ce qui n'est pas publié : les pondérations. Personne hors de ces entreprises ne sait combien pèse chaque signal, et quiconque cite des pourcentages exacts improvise.
+
+En pratique : les embeddings sont l'épreuve de qualification, et la qualité d'écriture de chaque passage fait l'essentiel de l'étape finale de sélection des sources. Notre analyse du [fonctionnement de la recherche IA](https://geotoolbox.ai/blog/how-does-ai-search-work) couvre, moteur par moteur, les différences dans cette étape finale.
+
+## Embeddings, entités et recherche sémantique : que veut dire chaque terme ?
+
+Le vocabulaire autour de ce sujet est un fouillis, et la moitié de la confusion dans les discussions SEO vient de termes employés comme s'ils étaient interchangeables. Voici la carte :
+
+<table>
+<thead>
+<tr><th>Terme</th><th>Ce que c'est</th><th>Relation aux embeddings</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Mot-clé</strong></td><td>Une chaîne littérale que vous ciblez et faites correspondre</td><td>Le complément, pas le prédécesseur. La récupération hybride combine la notation par mots-clés et la similarité vectorielle, côte à côte</td></tr>
+<tr><td><strong>Vecteur</strong></td><td>Toute liste de nombres</td><td>En récupération, « vecteur » et « embedding » sont employés de façon interchangeable ; l'embedding est le vecteur</td></tr>
+<tr><td><strong>Embedding vectoriel</strong></td><td>Un vecteur qui encode un sens, produit par un modèle d'apprentissage automatique</td><td>Le sujet de cet article</td></tr>
+<tr><td><strong>Entité</strong></td><td>Une chose nommée précise (personne, marque, produit) dans un graphe de connaissances</td><td>Une couche largement distincte. Les entités sont des enregistrements explicites avec des relations définies ; les embeddings relèvent de la géométrie statistique. Le <a href="https://geotoolbox.ai/blog/entity-seo">SEO d'entités</a> travaille la couche du graphe de connaissances, pas la couche vectorielle</td></tr>
+<tr><td><strong>Recherche sémantique</strong></td><td>Recherche qui fait correspondre le sens plutôt que les mots exacts</td><td>L'application. La <a href="https://geotoolbox.ai/glossary/semantic-search">recherche sémantique</a> est ce que les embeddings rendent possible</td></tr>
+<tr><td><strong>Base de données vectorielle</strong></td><td>Une base conçue pour stocker et interroger des embeddings à grande échelle</td><td>L'infrastructure. Des outils comme Pinecone ou pgvector indexent des millions de vecteurs pour un plus-proche-voisin rapide</td></tr>
+<tr><td><strong>RAG</strong></td><td>L'architecture qui récupère des passages et les donne à un modèle avant qu'il réponde</td><td>Le pipeline qui met les embeddings au travail dans la recherche IA</td></tr>
+</tbody>
+</table>
+
+La distinction qui perturbe le plus est entité contre embedding. Les deux sont rangés sous « SEO sémantique », mais ce sont des systèmes séparés. Une entité est un enregistrement en base de données : Google sait que « geotoolbox » est un logiciel aux propriétés précises. Un embedding est une position dans l'espace : ce paragraphe se trouve près d'autres paragraphes sur les outils de visibilité IA. Vous pouvez être fort dans une couche et invisible dans l'autre, ce qui explique pourquoi les deux méritent une attention distincte plutôt qu'un seul fourre-tout « sémantique » flou.
+
+## Foire aux questions
+
+### Que sont les embeddings denses et les embeddings épars ?
+
+Les embeddings denses sont ceux dont parle tout cet article : des vecteurs compacts où presque chaque nombre porte de l'information, produits par des réseaux de neurones. Les embeddings épars (ou creux) sont surtout faits de zéros, chaque position correspondant à un terme explicite, à la manière des index de mots-clés classiques sous le capot. Les systèmes de récupération hybrides utilisent les deux : des vecteurs denses pour le sens et des signaux épars pour les correspondances exactes.
+
+### Le français est-il désavantagé par les modèles d'embedding ?
+
+En partie, mais moins qu'on ne le croit. Le mécanisme est réel : le français produit plus de tokens que l'anglais (accents, apostrophes, mots composés), et l'anglais reste sur-représenté dans les corpus d'entraînement, même « multilingues ». Les vieux modèles anglocentrés capturent donc mal certaines constructions françaises (la négation « ne… pas », la concordance des temps). Mais les moteurs en production (ChatGPT, Perplexity, Google) tournent sur des modèles multilingues récents bien plus robustes : le `gemini-embedding-001` de Google, par exemple, a dominé le classement MTEB multilingue. La conséquence pratique n'est pas la panique, c'est que la cohérence terminologique et un français explicite et non ambigu comptent encore un peu plus qu'en anglais.
+
+### Perplexity fonctionne-t-il comme la recherche de ChatGPT ?
+
+Dans les grandes lignes oui : les deux récupèrent des passages candidats avant de répondre, et c'est là que les embeddings comptent. Ils diffèrent sur la source de récupération. Des études publiées sur les recoupements ont trouvé que les citations de Perplexity collent bien plus aux résultats de Google que celles de ChatGPT (notre comparaison [ChatGPT vs Perplexity](https://geotoolbox.ai/blog/chatgpt-vs-perplexity) le détaille), si bien qu'une même page peut être citée par un moteur et invisible pour l'autre.
+
+### Les embeddings sont-ils la même chose que les mots-clés ?
+
+Non. Les mots-clés sont des chaînes littérales comparées à un index ; les embeddings encodent le sens, de sorte que « corriger les erreurs de paiement » et « résoudre les échecs de paiement » se retrouvent proches sans partager un mot. La recherche de mots-clés compte encore dans les systèmes hybrides BM25 + vecteurs : les termes exacts sont ce qui permet aux moteurs d'attraper noms de produits, codes et jargon, et ils restent votre meilleure preuve de ce que les gens demandent réellement.
+
+### Le balisage Schema change-t-il vos embeddings ?
+
+Pas directement. Les embeddings de texte se calculent à partir de votre contenu visible, et les données structurées sont un signal distinct qui sert une autre couche du système. Le [balisage Schema pour l'IA](https://geotoolbox.ai/blog/schema-markup-for-ai) garde son intérêt pour la désambiguïsation d'entités et les résultats enrichis, simplement pas en déplaçant vos vecteurs.
+
+### Les embeddings deviennent-ils obsolètes ?
+
+Les embeddings eux-mêmes ne se dégradent pas, mais ce sont des instantanés : quand vous réécrivez une page, rien ne change tant que le moteur ne l'a pas réexplorée et réencodée. Dans la recherche IA, la fraîcheur vient de la couche de récupération qui capte le contenu à jour, une raison de plus pour laquelle l'accès au crawl compte davantage que n'importe quelle astuce d'optimisation.
+
+## Ce qu'il faut retenir
+
+Vous en savez maintenant plus sur les mécanismes de récupération que ce que suppose une bonne part de ce qui se vend comme « optimisation IA ».
+
+Ce que vous ne contrôlez pas, c'est le modèle de production qui évalue votre contenu et la manière dont il le fait, et c'est justement ce pour quoi il faut cesser de payer. Le levier que vous tenez, c'est l'écriture elle-même, et le travail, passage par passage, qui rend chaque section [plus facilement citable](https://geotoolbox.ai/blog/ai-content-optimization) et récupérable seule.
+
+Ce que vous pouvez vérifier, c'est le résultat. geotoolbox existe pour cette moitié du problème : GEO Scan exécute vos prompts sur jusqu'à sept moteurs IA et montre quelles pages sont citées et qui vous devance, tandis que le [Content Analyzer](https://geotoolbox.ai/features/content-analyzer) note la citabilité d'une URL précise et vérifie en direct quels moteurs la citent. Les citations sont bruitées d'une exécution à l'autre, les moteurs répondent différemment à chaque fois ; traitez donc chaque vérification comme un échantillon et regardez la tendance. C'est quand même la bonne chose à mesurer : observable, reliée au résultat que vous voulez et, contrairement à un score vectoriel, vérifiable dans les faits.
+
+## Sources
+
+- [Guide des embeddings](https://developers.openai.com/api/docs/guides/embeddings) - Documentation API OpenAI
+- [Outil de recherche de fichiers](https://developers.openai.com/api/docs/guides/tools-file-search) - Documentation API OpenAI
+- [Gemini Embedding](https://ai.google.dev/gemini-api/docs/embeddings) - Google AI for Developers
+- [Embeddings Mistral](https://docs.mistral.ai/capabilities/embeddings/) - Documentation Mistral AI
+- [Qu'est-ce qu'un embedding ou plongement vectoriel ?](https://www.lbke.fr/ressources/definition-embedding) - LBKE
+- [L'essentiel sur les modèles d'embeddings](https://www.lemagit.fr/conseil/Lessentiel-sur-les-modeles-dembeddings) - LeMagIT
+- [The Illustrated Word2vec](https://jalammar.github.io/illustrated-word2vec/) - Jay Alammar, 2019
+- [BERT : Pre-training of Deep Bidirectional Transformers](https://arxiv.org/abs/1810.04805) - Devlin et al., 2018
+- [Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings](https://arxiv.org/abs/1607.06520) - Bolukbasi et al., 2016
+- [Présentation de la recherche hybride, Azure AI Search](https://learn.microsoft.com/en-us/azure/search/hybrid-search-overview) - Microsoft Learn
+- [Les fonctionnalités d'IA et votre site web](https://developers.google.com/search/docs/fundamentals/ai-optimization-guide) - Google Search Central
+- [Content Structure for AI Search](https://www.chris-green.net/post/content-structure-for-ai-search) - Chris Green, 2025
+- [SEO Use Cases for Vectorizing the Web](https://ipullrank.com/vector-embeddings-is-all-you-need) - Mike King, iPullRank, 2024
+- [Identifier les pages sémantiquement similaires](https://www.screamingfrog.co.uk/seo-spider/tutorials/how-to-identify-semantically-similar-pages-outliers/) - Screaming Frog
+- [AI Overviews : arrivée en France été 2026](https://www.abondance.com/20260630-2528492-google-ai-overviews-arrivee-france-ete.html) - Abondance, 2026
+- [Adéquation des États-Unis : questions-réponses (Data Privacy Framework)](https://www.cnil.fr/fr/adequation-des-etats-unis-les-premieres-questions-reponses) - CNIL
