@@ -36,7 +36,7 @@ export const TOPICS: Topic[] = [
     tags: [
       "transformer", "tokens", "tokenization", "vector-embeddings", "rag",
       "temperature", "ai-temperature", "llm-temperature", "sampling",
-      "constitutional-ai", "content-chunking", "query-fan-out", "ai-mode",
+      "constitutional-ai", "content-chunking", "query-fan-out", "ai-mode", "google-ai-mode",
       "how-does-chatgpt-work", "how-does-claude-work",
     ],
   },
@@ -57,7 +57,7 @@ export const TOPICS: Topic[] = [
       "tools", "measurement", "metrics", "rank-tracking", "audit",
       "share-of-voice", "ai-citation", "ai-overviews", "pricing", "review",
       "link building", "link building platforms", "backlinks", "digital pr",
-      "gemini-pricing", "gemini-api", "ai-pricing", "copilot-pricing",
+      "gemini-pricing", "gemini-api", "ai-pricing", "copilot-pricing", "chatgpt-pricing",
     ],
   },
   {
