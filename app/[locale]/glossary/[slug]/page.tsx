@@ -8,7 +8,7 @@ import {
   getAllGlossaryTerms,
   getAllGlossarySlugs,
 } from "@/lib/content"
-import { mdxComponents } from "@/components/mdx"
+import { getMdxComponents } from "@/components/mdx"
 import { formatDate } from "@/lib/utils"
 import { routing } from "@/i18n/routing"
 import { alternatesFor } from "@/lib/i18n/siblings"
@@ -107,7 +107,7 @@ export default async function GlossaryEntry({
             <article className="prose prose-gray max-w-none prose-headings:tracking-tight prose-a:text-accent-700 prose-a:underline-offset-4 prose-strong:text-gray-900 prose-code:text-accent-700">
               <MDXRemote
                 source={term.content}
-                components={mdxComponents}
+                components={getMdxComponents(locale)}
                 options={{
                   mdxOptions: {
                     rehypePlugins: [

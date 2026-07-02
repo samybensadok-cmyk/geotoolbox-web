@@ -4,7 +4,7 @@ import Link from "next/link"
 import { MDXRemote } from "next-mdx-remote/rsc"
 import rehypeShiki from "@shikijs/rehype"
 import { getPostBySlug, getAllPostSlugs, getRelatedPosts, extractHeadings, extractFaq } from "@/lib/content"
-import { mdxComponents } from "@/components/mdx"
+import { getMdxComponents } from "@/components/mdx"
 import { formatDate } from "@/lib/utils"
 import { routing, bcp47, type Locale } from "@/i18n/routing"
 import { alternatesFor, urlFor } from "@/lib/i18n/siblings"
@@ -247,7 +247,7 @@ export default async function BlogPost({
             <article className="prose prose-gray max-w-none prose-headings:tracking-tight prose-a:text-accent-700 prose-a:underline-offset-4 prose-strong:text-gray-900 prose-code:text-accent-700">
               <MDXRemote
                 source={mdxSource}
-                components={{ ...mdxComponents, InlineCta }}
+                components={{ ...getMdxComponents(locale), InlineCta }}
                 options={{
                   mdxOptions: {
                     rehypePlugins: [
