@@ -1,0 +1,204 @@
+---
+title: "Gemini Omni: What It Is, Pricing, and How to Get Access (2026)"
+description: "Gemini Omni is Google's any-input-to-video AI model. What Omni Flash does, which Google AI plans include it, API pricing at $0.10/sec, and what breaks."
+date: "2026-07-02"
+author: "Samy BEN SADOK"
+tags: ["gemini-omni", "gemini", "google-gemini", "ai-video", "ai-models"]
+draft: false
+---
+
+Gemini Omni went from I/O stage demo to a model you can bill against in six weeks, and most of what ranks about it is already out of date. Here's what Gemini Omni is, which Google AI plans include it, what the API costs, and where the sharp edges are, verified against Google's launch and pricing documentation as of July 2, 2026.
+
+## What Is Gemini Omni?
+
+**Gemini Omni** is Google DeepMind's "any-to-any" model family: you feed it any mix of text, images, audio, and video, and it generates a finished video. Google announced the family at [Google I/O 2026](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-omni/) with the tagline "create anything from any input, starting with video," and began rolling the first member, **Gemini Omni Flash**, out to consumers the same day, May 19, 2026.
+
+Video is only the starting point. Google says image and audio output are on the Omni roadmap, which is why the family carries the "anything from anything" framing rather than a video-generator label.
+
+<figure>
+  <BlogImage src="/blog/gemini-omni/gemini-omni-inputs-outputs-access-diagram.png" alt="How Gemini Omni Flash works: mixed inputs, one model, a 10-second video, and five access surfaces." w="2600" h="1348" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption>One model takes any mix of inputs and returns a finished clip. Five official ways to reach it.</figcaption>
+</figure>
+
+The internal pitch is simple: Nano Banana, but for video. Where Nano Banana handles image generation and editing inside the Gemini app, Omni does the same for moving pictures, drawing on what Google describes as Gemini's world knowledge of physics, history, and science. Google positions it as a native multimodal AI model rather than a text-to-video engine with adapters bolted on. And despite the name, this is not a GPT-4o-style live voice mode: "Omni" describes what the model accepts, not how you talk to it.
+
+One point worth clearing up, because early coverage muddied it: Gemini Omni is an official Google product line, with its own [DeepMind model page](https://deepmind.google/models/gemini-omni/) and API. Several explainers written before I/O treated "Gemini Omni" as a community nickname for Gemini-plus-Veo pipelines. That framing is now wrong, and some of those pages still rank.
+
+Omni sits inside the wider Gemini stack alongside the chat models, Veo, Imagen, and Lyria. If you want the full map of what Google ships under the Gemini name, we broke down [the wider Gemini ecosystem](https://geotoolbox.ai/blog/what-is-gemini) separately.
+
+## Gemini Omni vs Veo: What Happened to Veo?
+
+The short version: **Omni replaces Veo inside the Gemini app**, and Veo carries on as the high-fidelity specialist everywhere else.
+
+Google's own product FAQ states it plainly: Gemini Omni is the newest video generation and editing model, and it takes over from Veo 3.1 as the default when you ask the Gemini app for video. As the rollout completes, video prompts in the app route to Omni Flash instead.
+
+Veo is not dead, though. The DeepMind lineup still lists Veo as a separate specialized model, and the Gemini API sells both. The practical split looks like this: Veo 3.1 is the realism engine, generating up to 4K broadcast-quality clips. Omni Flash tops out at 720p but accepts any input mix and lets you edit the result by talking to it.
+
+Here's the way to think about it. Veo is the cinematographer you hand a finished shot list. Omni is the editor sitting next to you who keeps the whole scene in its head while you change your mind, turn after turn.
+
+The cost gap runs the same direction: standard Veo 3.1 output costs four times as much per second as Omni Flash.
+
+## What Gemini Omni Flash Can Do
+
+The headline capability is **conversational video editing**. Every instruction builds on the last one, and the scene keeps its continuity. DeepMind's demo sequence shows the pattern: "Transport the violinist to the image environment," then "Make the violin invisible," then "Change the camera angle to be over the violinist's shoulder," three plain-language turns on one shot. In those demos, characters hold their faces and clothing across edits without re-uploading references each turn.
+
+The reference system is the second pillar. In the consumer apps you can feed Omni Flash up to five reference photos, one video clip, and a text brief in one prompt, and it merges them into a single coherent output. Audio support starts narrow: voice references only, including **Avatars**, a digital version of you that looks and sounds like you in generated clips. Google gates avatar creation behind an onboarding flow intended to stop people from cloning someone else.
+
+**Native audio** ships with every clip: sound is generated in the same pass as the video, so you get synchronized dialogue and effects rather than silent footage you dub later. Multi-turn **character consistency** rounds out the pitch.
+
+On quality, the benchmark numbers are strong, and for once Google published the methodology. On [DeepMind's evaluations](https://deepmind.google/models/gemini-omni/), human raters preferred Omni's edits over rival models across 504 side-by-side editing examples, and ranked it first for overall preference and instruction following on MovieGenBench's 1,003 text-to-video prompts. On the VBench image-to-video test (355 pairs), Omni Flash tied with Grok-Imagine-Video and Kling. Third-party signal agrees: [VentureBeat reported](https://venturebeat.com/technology/googles-gemini-omni-flash-hits-the-api-turning-enterprise-video-production-into-a-conversation) Omni Flash at number one on LMArena's Text-to-Video Arena with a score of 1527.
+
+Now the part the launch posts skip. Power users are split. In the 323-point [Hacker News thread](https://news.ycombinator.com/item?id=48196609) on the announcement, commenters picked apart the marketing demos: in the marble-physics showcase, "the marble jumps up for no reason." One heavy Seedance user was blunter:
+
+> "I've probably spent a couple grand on Seedance 2 to date, and I can't find anything google omni flash does better than Seedance from running a handful of samples through the system."
+
+The other recurring complaint is the content filter: subscribers regularly report prompts rejected as policy violations. Our read of the tester consensus: Omni's real edge is editing and manipulating footage conversationally, not raw text-to-video quality, and "follows real-world physics" is a goal, not a guarantee.
+
+## Specs and Current Limits
+
+The spec sheet, as the model ships today:
+
+<table>
+<thead>
+<tr><th>Spec</th><th>Gemini Omni Flash at launch</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Model ID</strong></td><td>gemini-omni-flash-preview (public preview)</td></tr>
+<tr><td><strong>Output</strong></td><td>Video with native synchronized audio</td></tr>
+<tr><td><strong>Resolution</strong></td><td>720p, in 16:9 or 9:16</td></tr>
+<tr><td><strong>Clip length</strong></td><td>Up to 10 seconds (a rollout decision, not a model ceiling; longer durations announced as coming)</td></tr>
+<tr><td><strong>Inputs</strong></td><td>Any mix of text, images (up to 5 reference photos), video, and voice references</td></tr>
+<tr><td><strong>Provenance</strong></td><td>SynthID watermark on every clip; C2PA Content Credentials on Gemini app, Flow, and YouTube output, verifiable in the Gemini app</td></tr>
+<tr><td><strong>Age gate</strong></td><td>18+</td></tr>
+</tbody>
+</table>
+
+The API carries a longer list of caveats. Per [Google's developer launch post](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-omni-flash-nano-banana-2-lite/) and the [API docs](https://ai.google.dev/gemini-api/docs/omni): audio reference uploads and scene extension are not supported yet, video references up to 3 seconds are "accepted by the API schema but are not correctly processed," multi-video reasoning and video interpolation are unsupported, and character consistency degrades on scene changes and panning shots. English is the only evaluated language so far.
+
+App-side, the limits are fuzzier by design. Gemini subscriptions use [compute-based usage limits](https://support.google.com/gemini/answer/16275805) that refresh every 5 hours under a weekly cap, with AI Plus at 2x standard limits, Pro at 4x, and Ultra at 5x or 20x Pro depending on the plan. Google publishes no per-video quota, and video generation burns compute fast.
+
+After the May 17 limits overhaul, subscribers filled Google's forums with complaints that one or two Omni generations emptied a full 5-hour window. Google's Gemini app VP Josh Woodward [acknowledged the bug by late May](https://www.androidauthority.com/gemini-usage-limit-changes-3672488/): failed requests no longer count against quotas, and Ultra subscribers had their Omni video allowance doubled.
+
+## How to Get Gemini Omni
+
+There are five official doors in, and one of them is free.
+
+<table>
+<thead>
+<tr><th>Access path</th><th>Who gets it</th><th>Cost</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Gemini app</strong></td><td>Google AI Plus, Pro, and Ultra subscribers, globally, 18+</td><td>From $4.99/mo (AI Plus)</td></tr>
+<tr><td><strong>Google Flow</strong></td><td>Same subscribers; Flow AI credits: 200/mo on Plus, 1,000 on Pro, 10,000 to 25,000 on Ultra</td><td>Included in plan</td></tr>
+<tr><td><strong>YouTube Shorts + YouTube Create</strong></td><td>YouTube users as the rollout reaches them</td><td>Free</td></tr>
+<tr><td><strong>Google AI Studio + Gemini API</strong></td><td>Developers, public preview</td><td>$0.10 per second of video, paid tier only</td></tr>
+<tr><td><strong>Gemini Enterprise Agent Platform</strong></td><td>Enterprise customers</td><td>Enterprise terms</td></tr>
+</tbody>
+</table>
+
+The cheapest paid route is **Google AI Plus** at $4.99 a month (cut from $7.99 in June 2026), which includes Omni Flash with the lowest usage ceiling. Pro at $19.99 raises the limits and [the Flow credit pool](https://one.google.com/about/google-ai-plans/). We keep the full tier-by-tier breakdown current in our [Gemini pricing breakdown](https://geotoolbox.ai/blog/gemini-pricing), including what Ultra actually costs.
+
+Two access restrictions catch people out. First, per the official API documentation, editing uploaded videos is not available in the European Economic Area, Switzerland, or the UK, and Google's app help page adds some US states to that list; images containing minors are blocked from upload in the EEA, Switzerland, and the UK. Second, business access has its own rules: personal accounts need a Google AI plan, while [work and school accounts need a qualifying Workspace license](https://support.google.com/gemini/answer/16126339), a distinction that filled Google's support forum with locked-out business users in the launch window.
+
+<Callout type="note">
+There is no official Gemini Omni APK, login portal, or desktop app. "Gemini omni apk" and "gemini omni app download" searches lead to squatter sites, and as of early July 2026 at least one unofficial domain ranks on page one for the model's name. Consumer access runs through Google's surfaces listed above; developers can also reach the model through licensed API platforms, never through download portals.
+</Callout>
+
+## Gemini Omni API Pricing
+
+Developer access arrived on June 30, 2026, when Google [brought Omni Flash to the Gemini API and AI Studio](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-omni-flash-nano-banana-2-lite/) in public preview, priced at **$0.10 per second of generated video**. A 10-second clip, the current maximum, costs about a dollar.
+
+Under the hood that dollar is token math: video output is billed at [5,792 tokens per second of 720p footage](https://ai.google.dev/gemini-api/docs/pricing) against a $17.50 per million video-output-token rate, with input at $1.50 per million tokens across text, image, video, and audio.
+
+Here's how that sits against the rest of Google's video lineup at 720p:
+
+<table>
+<thead>
+<tr><th>Model</th><th>720p, per second</th><th>Positioning</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Veo 3.1 Lite</strong></td><td>$0.05</td><td>Cheapest, 1080p max</td></tr>
+<tr><td><strong>Gemini Omni Flash</strong></td><td>$0.10</td><td>Any-input generation + conversational editing</td></tr>
+<tr><td><strong>Veo 3.1 Fast</strong></td><td>$0.10</td><td>Speed-tier realism, up to 4K at $0.30</td></tr>
+<tr><td><strong>Veo 3.1</strong></td><td>$0.40</td><td>Full realism tier, up to 4K at $0.60</td></tr>
+</tbody>
+</table>
+
+The multi-turn editing runs on Google's **Interactions API**, a stateful interface that carries the previous video and its references forward so you can stack up to three sequential edits with the session context carried forward. It is the same multimodal session layer Nano Banana uses, which is what makes the two models chainable.
+
+Google's intended pattern is chaining: generate stills with **Nano Banana 2 Lite**, the sibling image model launched alongside it at $0.034 per 1K-resolution image with 4-second latency, then hand them to Omni Flash to animate and refine. Google shipped three remixable demo apps (Anywhere, Space Lift, and Omni Product Studio) to show the image-to-video pipeline end to end.
+
+For enterprise buyers, Omni Flash is live in the Gemini Enterprise Agent Platform, and this API release is the moment the model stopped being a consumer toy. As VentureBeat put it, the missing programmatic interface was "the catch" at I/O; the API rollout is what puts conversational editing in front of the marketing and training teams that produce most corporate video. One gap if you build on Google Cloud: the June 30 rollout names the Gemini API, AI Studio, and the Enterprise Agent Platform, and Vertex AI availability has not been announced.
+
+## How Gemini Omni Stacks Up Against Rivals
+
+The competitive backdrop shifted twice in spring 2026. OpenAI [shut down the Sora app on April 26, 2026](https://the-decoder.com/openai-sets-two-stage-sora-shutdown-with-app-closing-april-2026-and-api-following-in-september/), with the API following in September, taking the most famous consumer video generator off the board. Three weeks later, Google announced Omni.
+
+That leaves a different rival at the top of power users' rankings: **ByteDance's Seedance 2.0**, which testers consistently cite for raw generation quality, higher resolution output, and bigger reference budgets per generation. The Hacker News verdict quoted earlier came from someone who had spent thousands of dollars on Seedance and saw no reason to switch.
+
+The rest of the field: **Kling** and **Grok-Imagine-Video** tied Omni Flash on DeepMind's own image-to-video benchmark, so treat "leading results" claims from any of the three with that context. We covered xAI's entry separately in our [Grok Imagine](https://geotoolbox.ai/blog/grok-imagine) review. Runway remains the professional editing suite of the group.
+
+Omni's genuine differentiators are narrower than the marketing but real: conversational editing with scene memory, the stateful Interactions API workflow, and a $0.10-per-second price that undercuts most premium rivals. Native audio in a single pass helps, though it is no longer unique, and former Sora users rate Omni's generated voices as robotic. Where it loses today: resolution (720p vs 1080p-4K elsewhere), clip length, stylized output, and, by heavy-user consensus, raw text-to-video fidelity.
+
+## What Gemini Omni Means for Brands and GEO
+
+Video is becoming an answer surface, and Omni accelerates that. When we ran the LLM citation data for this exact topic through DataForSEO's mentions index (July 2026, tested), YouTube was the single most-cited domain in Google's AI answers about Gemini Omni: 483 of 737 tracked citations, ahead of Google's own blog. AI engines already lean on video pages to answer questions; a model that lets anyone produce credible product video at $1 per clip will flood that surface.
+
+Three practical takeaways for anyone managing a brand's AI visibility:
+
+**Provenance becomes a trust signal.** Every Omni clip carries SynthID, consumer-surface output adds C2PA Content Credentials, and Google is wiring verification into Search, Chrome, and the Gemini app. Brands publishing real footage should expect provenance signals to start separating them from synthetic filler.
+
+**Watch video citations, not just text.** In our experience at GEO Toolbox, teams tracking AI visibility monitor text answers and skip video entirely, even though YouTube already dominates citations on queries like this one. If your competitors' clips get cited in AI answers and yours don't exist, that gap won't show up in any keyword-ranking report.
+
+**The ecosystem is a distribution channel.** [Picsart is putting Omni Flash in front of 130 million creators](https://deepmind.google/models/gemini-omni/), with Artlist, OpusClip, and Higgsfield running similar integrations. Branded video volume is about to spike, and the same brand-kit consistency that Omni's partners sell is what keeps machine-generated brand mentions on-message.
+
+The family is also just getting started: Google has teased image and audio output, launch coverage points to a heavier Omni model above Flash, and the drip-release cycle looks like the one we tracked with [Gemini 3.5 Pro](https://geotoolbox.ai/blog/gemini-3-5-pro). If Omni content starts answering questions in your category, the playbook for [getting cited in Gemini](https://geotoolbox.ai/blog/gemini-seo) applies to your video the same way it applies to your pages.
+
+## Where This Goes Next
+
+Omni Flash has only been a developer product since June 30, and Google is shipping against a public roadmap: longer clips, audio reference support, and image and audio output, with a heavier Omni model reported on the way. Expect the spec table above to age in weeks, not years. We update this page as the family grows.
+
+Meanwhile, the searches AI engines answer about your brand are already being fed by whoever publishes first, in text and now in video. If you want to know where you stand before that wave hits, you can [check how AI systems see your site](https://geotoolbox.ai/tools/ai-readiness) with GEO Toolbox's free AI readiness scan; it takes about a minute and shows what the crawlers behind these answers can actually reach.
+
+## FAQ
+
+**Is Gemini Omni released?**
+
+Yes. Google announced the Omni family at I/O 2026 on May 19 and began rolling Gemini Omni Flash out to Google AI subscribers in the Gemini app the same day, then opened developer access via the Gemini API on June 30, 2026. It remains labeled a preview on the API side.
+
+**Is Gemini Omni free?**
+
+Partly. Omni Flash video generation is rolling out at no cost inside YouTube Shorts and the YouTube Create app. Using it in the Gemini app or Google Flow requires a Google AI Plus ($4.99/mo), Pro, or Ultra subscription, and API use is paid-tier only.
+
+**How much does the Gemini Omni API cost?**
+
+$0.10 per second of generated 720p video, billed as 5,792 video tokens per second at $17.50 per million output tokens. A maximum-length 10-second clip costs about $1, the same per-second rate as Veo 3.1 Fast.
+
+**What is the difference between Gemini Omni and Veo?**
+
+Omni replaces Veo as the video model inside the Gemini app and focuses on any-input generation and conversational editing at 720p. Veo 3.1 continues separately as Google's realism specialist, generating up to 4K clips at up to $0.60 per second via the API.
+
+**Can you use Gemini Omni with a Google Workspace account?**
+
+Yes, with the right license. Google's video generation help page says work and school accounts need a qualifying Workspace license, while personal accounts need a Google AI plan (Plus, Pro, or Ultra). Many Workspace users reported being locked out in the launch window before licensing caught up, and developers on any account type can use the paid Gemini API.
+
+**Can you use Gemini Omni videos commercially?**
+
+Generally yes. Google's terms do not claim ownership of generated output, and commercial use is allowed within its content policies. Every clip carries the invisible SynthID watermark no matter where it was made (users report a visible badge on consumer-app clips too), and purely AI-generated footage may not qualify for copyright protection on its own.
+
+## Sources
+
+- [Introducing Gemini Omni - blog.google](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-omni/)
+- [Start building with Nano Banana 2 Lite and Gemini Omni Flash - blog.google](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-omni-flash-nano-banana-2-lite/)
+- [Gemini Omni Flash API documentation - ai.google.dev](https://ai.google.dev/gemini-api/docs/omni)
+- [Gemini Omni model page and benchmarks - Google DeepMind](https://deepmind.google/models/gemini-omni/)
+- [Gemini Apps limits and upgrades for Google AI subscribers - Google Support](https://support.google.com/gemini/answer/16275805)
+- [Generate videos with Gemini Apps - Google Support](https://support.google.com/gemini/answer/16126339)
+- [Gemini Developer API pricing - ai.google.dev](https://ai.google.dev/gemini-api/docs/pricing)
+- [Google AI plans - Google One](https://one.google.com/about/google-ai-plans/)
+- [Google's Gemini Omni Flash hits the API - VentureBeat](https://venturebeat.com/technology/googles-gemini-omni-flash-hits-the-api-turning-enterprise-video-production-into-a-conversation)
+- [Gemini Omni discussion - Hacker News](https://news.ycombinator.com/item?id=48196609)
+- [Google may have fixed the issue exhausting Gemini usage limits - Android Authority](https://www.androidauthority.com/gemini-usage-limit-changes-3672488/)
+- [OpenAI sets two-stage Sora shutdown - The Decoder](https://the-decoder.com/openai-sets-two-stage-sora-shutdown-with-app-closing-april-2026-and-api-following-in-september/)
+
+
