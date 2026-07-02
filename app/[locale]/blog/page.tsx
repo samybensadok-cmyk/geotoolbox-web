@@ -6,7 +6,7 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { breadcrumbsSchema } from "@/lib/seo-schema"
 import { TOPICS, primaryTopic, topicBySlug, topicCounts } from "@/lib/blog-topics"
 import { BlogResults, type LitePost } from "@/components/blog/blog-results"
-import { setRequestLocale } from "next-intl/server"
+import { setRequestLocale, getTranslations } from "next-intl/server"
 
 export async function generateMetadata({
   params,
@@ -15,11 +15,19 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params
   const basePath = locale === "en" ? "" : `/${locale}`
+  const t = await getTranslations({ locale, namespace: "blogIndex" })
   return {
     title: "Blog",
-    description:
-      "Research and insights on Generative Engine Optimization, AI visibility, and the future of search.",
-    alternates: { canonical: `${siteConfig.url}${basePath}/blog` },
+    description: t("description"),
+    alternates: {
+      canonical: `${siteConfig.url}${basePath}/blog`,
+      languages: {
+        "en-US": `${siteConfig.url}/blog`,
+        "fr-FR": `${siteConfig.url}/fr/blog`,
+        "x-default": `${siteConfig.url}/blog`,
+      },
+    },
+    openGraph: { locale: locale === "fr" ? "fr_FR" : "en_US" },
   }
 }
 
@@ -79,6 +87,9 @@ async function BlogIndexInner({
   searchParams: Promise<{ tag?: string; topic?: string }>
 }) {
   const params = await searchParams
+  const t = await getTranslations("blogIndex")
+  const tBlog = await getTranslations("blog")
+  const base = locale === "en" ? "" : `/${locale}`
   const allPosts = getAllPosts(locale)
   const counts = topicCounts(allPosts)
 
@@ -107,36 +118,35 @@ async function BlogIndexInner({
 
   return (
     <>
-      <JsonLd data={breadcrumbsSchema([{ name: "Home", url: "/" }, { name: "Blog", url: "/blog" }])} />
+      <JsonLd data={breadcrumbsSchema([{ name: tBlog("home"), url: base || "/" }, { name: "Blog", url: `${base}/blog` }])} />
 
       {/* ===== Header band ===== */}
       <section className="border-b border-gray-100 bg-white px-6 pt-12 pb-8 sm:pt-14">
         <div className="mx-auto max-w-7xl">
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-accent-700">
-            GEO Toolbox · Blog
+            {t("eyebrow")}
           </p>
           <div className="mt-4 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <h1 className="max-w-2xl text-[clamp(2.25rem,5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-              Playbooks for getting cited by AI.
+              {t("heading")}
             </h1>
             <p className="max-w-sm text-[15px] leading-relaxed text-gray-600">
-              Research, tactics, and honest takes on generative engine optimization, AI
-              visibility, and the future of search.
+              {t("intro")}
               <span className="mt-1 block font-mono text-[12px] text-gray-400">
-                {allPosts.length} articles and counting.
+                {t("count", { count: allPosts.length })}
               </span>
             </p>
           </div>
 
           <div className="mt-7 flex flex-wrap items-center gap-2">
             <span className="mr-1 font-mono text-[11px] uppercase tracking-widest text-gray-400">
-              Topics
+              {t("topics")}
             </span>
-            <Chip href="/blog" active={!isFiltered}>All</Chip>
-            {TOPICS.map((t) => (
-              <Chip key={t.slug} href={`/blog?topic=${t.slug}`} active={activeTopic?.slug === t.slug}>
-                {t.label}
-                <span className="ml-1.5 font-normal opacity-50">{counts[t.slug]}</span>
+            <Chip href={`${base}/blog`} active={!isFiltered}>{t("all")}</Chip>
+            {TOPICS.map((topic) => (
+              <Chip key={topic.slug} href={`${base}/blog?topic=${topic.slug}`} active={activeTopic?.slug === topic.slug}>
+                {topic.label}
+                <span className="ml-1.5 font-normal opacity-50">{counts[topic.slug]}</span>
               </Chip>
             ))}
           </div>
@@ -149,14 +159,13 @@ async function BlogIndexInner({
           {posts.length === 0 ? (
             <div className="rounded-3xl border border-gray-200 bg-white px-6 py-20 text-center">
               <p className="text-gray-600">
-                No articles tagged{" "}
-                <span className="font-semibold text-gray-900">{activeLabel ?? ""}</span> yet.
+                {t("noArticles", { label: activeLabel ?? "" })}
               </p>
               <Link
-                href="/blog"
+                href={`${base}/blog`}
                 className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-accent-700 hover:text-accent-800"
               >
-                View all articles <Arrow />
+                {t("viewAll")} <Arrow />
               </Link>
             </div>
           ) : (

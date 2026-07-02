@@ -1,16 +1,32 @@
 import Link from "next/link"
 import type { InlineCtaTarget } from "@/lib/inline-cta"
 
-const variants: Record<InlineCtaTarget, { text: string; button: string; href: string }> = {
-  "ai-readiness": {
-    text: "Curious how your own site stacks up? Run the free AI-Readiness check — five live checks on your domain, no signup.",
-    button: "Check your site free",
-    href: "/tools/ai-readiness",
+type Variant = { text: string; button: string; href: string }
+
+const variants: Record<string, Record<InlineCtaTarget, Variant>> = {
+  en: {
+    "ai-readiness": {
+      text: "Curious how your own site stacks up? Run the free AI-Readiness check — five live checks on your domain, no signup.",
+      button: "Check your site free",
+      href: "/tools/ai-readiness",
+    },
+    "content-analyzer": {
+      text: "Want this analysis for your own pages? Content Analyzer grades any URL A–F across 21 AI-citability signals.",
+      button: "Grade a page",
+      href: "/features/content-analyzer",
+    },
   },
-  "content-analyzer": {
-    text: "Want this analysis for your own pages? Content Analyzer grades any URL A–F across 21 AI-citability signals.",
-    button: "Grade a page",
-    href: "/features/content-analyzer",
+  fr: {
+    "ai-readiness": {
+      text: "Envie de savoir ce que vaut votre site ? Lancez le score de préparation IA gratuit : cinq vérifications en direct sur votre domaine, sans inscription.",
+      button: "Tester mon site gratuitement",
+      href: "/tools/ai-readiness",
+    },
+    "content-analyzer": {
+      text: "Vous voulez cette analyse pour vos propres pages ? L’Analyseur de contenu note chaque URL de A à F sur 21 signaux de citabilité IA.",
+      button: "Évaluer une page",
+      href: "/features/content-analyzer",
+    },
   },
 }
 
@@ -19,8 +35,15 @@ const variants: Record<InlineCtaTarget, { text: string; button: string; href: st
  * lib/inline-cta.ts. One sentence + one button — deliberately lighter than
  * the page-closing "What's next" block so it doesn't compete with it.
  */
-export function InlineCta({ target = "ai-readiness" }: { target?: InlineCtaTarget }) {
-  const v = variants[target] ?? variants["ai-readiness"]
+export function InlineCta({
+  target = "ai-readiness",
+  locale = "en",
+}: {
+  target?: InlineCtaTarget
+  locale?: string
+}) {
+  const table = variants[locale] ?? variants.en
+  const v = table[target] ?? table["ai-readiness"]
   return (
     <aside className="not-prose my-10 flex flex-col items-start gap-4 rounded-2xl border border-[var(--surface-mint-border)] bg-[var(--surface-mint)] p-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
       <p className="text-[14.5px] leading-relaxed text-gray-800">{v.text}</p>

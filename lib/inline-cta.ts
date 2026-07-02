@@ -5,7 +5,7 @@ export type InlineCtaTarget = "ai-readiness" | "content-analyzer"
 const MIN_WORDS = 1200
 const TARGET_DEPTH = 0.66
 // H2s that start the article's tail (FAQ/Sources) — never inject at or after these
-const TERMINAL_H2 = /^(frequently asked|faqs?\b|sources|references|further reading)/i
+const TERMINAL_H2 = /^(frequently asked|faqs?\b|sources|references|further reading|foire aux questions|questions fr[ée]quentes)/i
 // any in-body link to a product/tool surface counts as an existing CTA
 const CTA_LINK = /\(\/(app|features|tools)([/)#?]|$)/
 

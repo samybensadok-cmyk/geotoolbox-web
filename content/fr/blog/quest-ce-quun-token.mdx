@@ -2,6 +2,7 @@
 title: "Qu'est-ce qu'un token en IA ? Pourquoi ChatGPT compte mal"
 description: "Qu'est-ce qu'un token en IA ? Le jeton que les modèles lisent à la place des mots : tokenisation, coût par token, surcoût du français et visibilité IA."
 date: "2026-07-02"
+updated: "2026-07-02"
 author: "Samy BEN SADOK"
 tags: ["tokens", "tokenization", "ai-search", "geo", "guide"]
 draft: false
@@ -16,6 +17,14 @@ Demandez à ChatGPT combien il y a de « r » dans le mot anglais « strawberry 
 En IA, les tokens sont les fragments de texte qu'un modèle traite réellement. Une fois qu'on en comprend le principe, toute une série de comportements étranges cessent d'être mystérieux : les lettres mal comptées, les factures au token, les erreurs « longueur de contexte dépassée », les noms de marque écorchés. Cet article explique ce qu'est un token, pour les personnes qui publient du contenu plutôt que celles qui construisent des modèles, y compris la partie que les guides techniques sautent : ce que la tokenisation change, et ne change pas, pour votre visibilité dans la recherche IA.
 
 Le token dont il est question ici n'a rien à voir avec les jetons crypto, un piège fréquent de la recherche en français. On y revient plus bas.
+
+## Ce qu'il faut retenir
+
+- Un token est un fragment de texte qu'un modèle d'IA traite comme une seule unité : environ quatre caractères, soit à peu près les trois quarts d'un mot, et 100 tokens font environ 75 mots d'anglais.
+- ChatGPT compte mal les lettres de « strawberry » ou de « fraise » parce qu'il manipule des tokens, pas des lettres ; la limite est structurelle, pas conjoncturelle.
+- Dans les API, les tokens de sortie coûtent plus cher que les tokens d'entrée, et tout l'historique d'une conversation est refacturé à chaque tour.
+- Un texte français consomme environ 1,2 à 1,5 fois plus de tokens que le même texte en anglais, soit autour de 30 % de plus.
+- La tokenisation n'est pas un réglage que vous pouvez optimiser : pour la visibilité IA, le vrai levier est l'accès de vos pages aux robots d'IA.
 
 ## Qu'est-ce qu'un token en IA ?
 
@@ -46,7 +55,7 @@ Si vous avez cherché « token IA » ou « jeton IA » et que vous êtes tombé 
 
 ## Comment fonctionne la tokenisation : du texte aux identifiants
 
-Avant même que votre texte n'atteigne le modèle, un programme distinct, le **tokeniseur**, le découpe en tokens et remplace chacun par un nombre. « Hello, world ! » n'entre pas dans le modèle sous forme de mots. Il y entre comme une courte liste d'identifiants entiers, quelque chose comme [9906, 11, 1917, 0] (ce sont les identifiants du tokeniseur de GPT-4 ; un modèle plus récent attribue d'autres numéros). Le modèle travaille avec les nombres. Il reçoit le plus souvent des identifiants de tokeniseur plutôt qu'un flux brut de caractères, si bien que la structure au niveau des lettres ne lui est pas directement accessible.
+Avant même que votre texte n'atteigne le modèle, un programme distinct, le **tokeniseur**, le découpe en tokens et remplace chacun par un nombre. « Hello, world! » n'entre pas dans le modèle sous forme de mots. Il y entre comme une courte liste d'identifiants entiers, quelque chose comme [9906, 11, 1917, 0] (ce sont les identifiants du tokeniseur de GPT-4 ; un modèle plus récent attribue d'autres numéros). Le modèle travaille avec les nombres. Il reçoit le plus souvent des identifiants de tokeniseur plutôt qu'un flux brut de caractères, si bien que la structure au niveau des lettres ne lui est pas directement accessible.
 
 Le découpage suit une méthode dite de **tokenisation en sous-mots**. Les mots fréquents obtiennent leur propre token. Les mots rares, les noms de marque et les longs mots composés sont brisés en morceaux. « Tokenisation » pourrait se scinder en « token » et « isation ». Un nom de produit inventé peut éclater en quatre ou cinq fragments, et c'est pour cela qu'un modèle écorche parfois une marque inhabituelle : il la reconstruit à partir de bouts, il ne la restitue pas d'un bloc. Le tokeniseur ne lit pas pour comprendre, il fait seulement correspondre le texte à un vocabulaire figé de morceaux connus, construit une fois pour toutes, à l'avance. Les images et l'audio subissent le même sort dans les modèles multimodaux, découpés eux aussi en tokens d'image et en tokens audio, donc la logique reste la même.
 
@@ -60,11 +69,11 @@ L'erreur célèbre, celle où un modèle jure que « strawberry » ne contient q
 
 Une question d'orthographe est donc, pour un modèle, un exercice de mémoire, pas de perception. Pour compter les « r », il doit se rappeler comment le mot s'écrit d'après ses données d'entraînement, puis compter les lettres ainsi restituées, et chacune de ces deux étapes peut déraper. C'est comme demander combien de fois la lettre « e » apparaît dans un mot que vous n'avez jamais lu, seulement entendu.
 
-Les tokens n'expliquent pas tout, soyons honnêtes. Demandez à un modèle d'épeler « strawberry » et il y arrive en général, puis il se trompe quand même dans le comptage, ce qui prouve que c'est bien l'étape de comptage qui échoue, à elle seule. Les tokens rendent la tâche difficile. Ils ne sont pas la seule raison de l'échec.
+Les tokens n'expliquent pas tout, il faut le dire. Demandez à un modèle d'épeler « strawberry » et il y arrive en général, puis il se trompe quand même dans le comptage, ce qui prouve que c'est bien l'étape de comptage qui échoue, à elle seule. Les tokens rendent la tâche difficile. Ils ne sont pas la seule raison de l'échec.
 
 L'arithmétique déraille pour une raison voisine. Les nombres longs sont coupés en tokens à des endroits arbitraires, si bien que « 1234567 » peut se scinder en morceaux qui ne s'alignent pas pour un calcul chiffre par chiffre. C'est en partie pour cela que des modèles ont hésité sur des questions comme « 9,11 est-il plus grand que 9,9 ? ». Et la quantité de calcul par token est fixe, rien à voir avec les étapes de calcul, aussi nombreuses qu'il le faut, qu'on enchaînerait pour retenir les chiffres d'une longue addition.
 
-Les modèles récents s'en sortent mieux, mais il faut dire pourquoi avec soin. La parade habituelle consiste à faire écrire le mot en toutes lettres, ou à espacer les lettres, ce qui simplifie la tâche au niveau des caractères. C'est un contournement, pas un correctif au niveau du tokeniseur. Fin 2025, [des tests attrapaient encore GPT-5.2 en flagrant délit de mauvais comptage](https://dataconomy.com/2025/12/15/gpt-5-2-still-counts-two-rs-in-strawberry/) sur certaines variantes (les modèles de premier plan ont depuis évolué, mais la limite est structurelle, pas conjoncturelle). C'est la même famille de failles qui produit d'autres [hallucinations de l'IA](https://geotoolbox.ai/fr/blog/hallucination-ia) : le modèle affirme avec aplomb une chose que son architecture ne lui a pas permis de vérifier.
+Les modèles récents s'en sortent mieux, mais il faut dire pourquoi avec soin. La parade habituelle consiste à faire épeler le mot, ou à espacer les lettres, ce qui simplifie la tâche au niveau des caractères. C'est un contournement, pas un correctif au niveau du tokeniseur. Fin 2025, [des tests prenaient encore GPT-5.2 en flagrant délit de mauvais comptage](https://dataconomy.com/2025/12/15/gpt-5-2-still-counts-two-rs-in-strawberry/) sur certaines variantes (les modèles de premier plan ont depuis évolué, mais la limite est structurelle, pas conjoncturelle). C'est la même famille de failles qui produit d'autres [hallucinations de l'IA](https://geotoolbox.ai/fr/blog/hallucination-ia) : le modèle affirme avec aplomb une chose que son architecture ne lui a pas permis de vérifier.
 
 Le phénomène a une saveur bien française. ChatGPT s'est longtemps trompé aussi sur le nombre de « r » de « fraise », et les correctifs restent au cas par cas : quand un modèle finit par réussir « fraise », il bute encore sur d'autres mots courants. La leçon vaut pour toutes les langues, la découpe en tokens ne connaît pas de frontières.
 
@@ -75,7 +84,7 @@ Le même angle mort explique une frustration que tout rédacteur a connue : dema
 La **fenêtre de contexte** d'un modèle, c'est le maximum qu'on peut lui présenter d'un coup, et elle se mesure en tokens, pas en mots ni en pages. Tout doit y tenir : votre prompt, les documents que vous collez, les instructions système que vous ne voyez jamais, et la réponse que le modèle s'apprête à écrire. Quand on dit qu'un modèle « se souvient » d'une longue conversation, cela veut simplement dire que toute la conversation tient encore dans la fenêtre.
 
 <Callout type="warning" title="Données personnelles dans le contexte : le réflexe RGPD">
-« Les documents que vous collez » remplissent la fenêtre de contexte, et c'est là que se cache un angle mort. Coller un contrat client, un fichier RH ou un tableau de prospects dans un prompt n'est pas qu'un problème de budget de tokens : c'est un transfert de données personnelles vers le fournisseur du modèle, parfois hébergé hors UE selon l'offre. La CNIL l'a rappelé dans sa délibération n° 2025-047 (5 juin 2025) : le RGPD s'applique pleinement aux données saisies dans les prompts. L'employeur reste responsable de traitement, doit cadrer les usages autorisés et sécuriser un contrat de sous-traitance (DPA, au sens de l'article 28 du RGPD) avec le fournisseur. Le risque ne vient pas de la tokenisation, il vient du fait de saisir des données personnelles dans un outil grand public. Un point de gouvernance, distinct des mécanismes de tokens décrits ici.
+« Les documents que vous collez » remplissent la fenêtre de contexte, et c'est là que se cache un angle mort. Coller un contrat client, un fichier RH ou un tableau de prospects dans un prompt n'est pas qu'un problème de budget de tokens : c'est un transfert de données personnelles vers le fournisseur du modèle, parfois hébergé hors UE selon l'offre. La CNIL l'a rappelé dans sa [délibération n° 2025-047 du 5 juin 2025](https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000051986911) : le RGPD s'applique pleinement aux données saisies dans les prompts. L'employeur reste responsable de traitement, doit cadrer les usages autorisés et sécuriser un contrat de sous-traitance (DPA, au sens de l'article 28 du RGPD) avec le fournisseur. Le risque ne vient pas de la tokenisation, il vient du fait de saisir des données personnelles dans un outil grand public. Un point de gouvernance, distinct des mécanismes de tokens décrits ici.
 </Callout>
 
 Ces fenêtres ont grossi vite et continuent de bouger, donc prenez chaque chiffre pour un instantané. La trajectoire par époque :
@@ -94,7 +103,7 @@ Ces fenêtres ont grossi vite et continuent de bouger, donc prenez chaque chiffr
 </tbody>
 </table>
 
-Mi-2026, [plus d'une douzaine de modèles de pointe proposent des fenêtres d'un million de tokens ou plus](https://artificialanalysis.ai/models), à l'échelle mondiale, et le plus grand modèle à poids ouverts en annonce 10 millions. Une mise en garde honnête que le marketing oublie : le contexte réellement exploitable est plus petit que le chiffre affiché, donc une fenêtre d'un million de tokens ne garantit pas un million de tokens d'attention fiable.
+Mi-2026, [plus d'une douzaine de modèles de pointe proposent des fenêtres d'un million de tokens ou plus](https://artificialanalysis.ai/models), à l'échelle mondiale, et le plus grand modèle à poids ouverts en annonce 10 millions. Une mise en garde que le marketing oublie : le contexte réellement exploitable est plus petit que le chiffre affiché, donc une fenêtre d'un million de tokens ne garantit pas un million de tokens d'attention fiable.
 
 Quand vous dépassez la fenêtre, le système ne prévient pas poliment. Une API peut renvoyer une erreur de limite de contexte, tandis qu'un outil de chat peut tronquer, résumer, compacter ou gérer autrement l'ancien contexte, et c'est pourquoi une longue session finit par oublier son début ou perdre le haut d'un document collé. Aucun comportement n'est garanti. La seule certitude, c'est que le texte d'origine complet ne tient plus.
 
@@ -106,10 +115,10 @@ Quand une entreprise développe un produit à partir d'un modèle d'IA via son A
 
 Ensuite, une conversation n'est pas facturée sur votre seul dernier message. Pour répondre au cinquième tour, le modèle relit les tours un à quatre, donc tout l'historique repart avec la requête et se paie de nouveau, ce qui explique qu'un long va-et-vient devienne plus cher à chaque réponse. Les fournisseurs facturent désormais moins cher le texte répété via la mise en cache des prompts, mais le principe tient : l'historique suit à chaque tour. Les entrées invisibles s'accumulent elles aussi, du prompt système aux tokens de raisonnement interne qu'un modèle consomme avant sa réponse visible.
 
-Il existe ici un vrai levier de coût, à nommer avec soin pour qu'on ne le détourne pas. Retirer le remplissage des prompts et des instructions peut réduire la facture API, [une société de sécurité chiffrant l'économie autour de 10 à 30 %](https://www.pivotpointsecurity.com/ai-tokens-how-they-impact-usage-costs/). C'est une pratique réelle, mais elle relève entièrement de la construction d'applications. Elle porte sur les prompts qu'un développeur envoie, pas sur le contenu web que vous publiez. Tenez fermement cette distinction, car le monde du SEO la brouille sans arrêt. Pour un usage courant, un autre levier concret existe : sur environ 80 % des tâches de routine (résumés, brouillons, tri, réponses de FAQ), un modèle léger comme GPT-4o mini ou Gemini Flash revient 10 à 20 fois moins cher qu'un modèle haut de gamme.
+Il existe ici un vrai levier de coût, à nommer avec soin pour qu'on ne le détourne pas. Retirer le remplissage des prompts et des instructions peut réduire la facture API, [une société de sécurité chiffrant l'économie autour de 10 à 30 %](https://www.pivotpointsecurity.com/ai-tokens-how-they-impact-usage-costs/). C'est une pratique réelle, mais elle relève entièrement de la construction d'applications. Elle porte sur les prompts qu'un développeur envoie, pas sur le contenu web que vous publiez. Gardez bien cette distinction en tête, car le monde du SEO la brouille sans arrêt. Pour un usage courant, un autre levier concret existe : pour la grande majorité des tâches courantes (résumés, brouillons, tri, réponses de FAQ), un modèle léger comme GPT-4o mini ou Gemini Flash revient à une fraction du coût d'un modèle haut de gamme.
 
 <Callout type="note" title="Combien de tokens vaut un euro ?">
-Pas de réponse toute faite, puisque les tarifs varient selon les modèles et changent souvent, mais l'ordre de grandeur tient. Aux tarifs de quelques euros (souvent affichés en dollars) par million de tokens, courants en 2026, un euro achète plusieurs centaines de milliers de tokens d'entrée, de l'ordre de quelques centaines de pages de texte. Les tokens de sortie, plus chers, en achètent moins.
+Pas de réponse toute faite, puisque les tarifs varient selon les modèles et changent souvent, mais l'ordre de grandeur tient. Aux tarifs de quelques euros (souvent affichés en dollars) par million de tokens, courants en 2026, un euro achète plusieurs centaines de milliers de tokens d'entrée, de l'ordre de quelques centaines de pages de texte. En sortie, où les tarifs sont plus élevés, un euro en achète moins.
 </Callout>
 
 Une précision encore, car c'est la question derrière beaucoup de confusions : un abonnement ChatGPT Plus (environ 24 € TTC par mois en France, 20 € HT) est un forfait mensuel, pas une facturation au token. Le paiement au token, c'est l'univers des API. La plupart des gens qui rédigent du contenu n'y touchent jamais directement.
@@ -124,9 +133,9 @@ Ce surcoût du français a trois conséquences que presque personne ne relie au 
 
 - **Votre contenu français coûte plus cher à traiter.** À volume égal, une page française consomme plus de tokens qu'une page anglaise, donc chaque appel d'API la concernant coûte un peu plus. Sur un chatbot support qui brasse des milliers de messages par jour, ces 30 % finissent par peser, et le pire est qu'ils n'apparaissent sur aucune ligne comptable avant l'arrivée de la facture.
 - **La fenêtre de contexte tient moins de votre contenu français.** Le même budget de tokens avale moins de texte en français, donc un modèle qui récupère des passages pour répondre en tient une part plus petite d'un coup.
-- **Densité et clarté comptent un cran de plus.** Pour la visibilité IA, écrire dense et sans remplissage aide un passage français à rester entier dans le budget de tokens que le moteur lui accorde.
+- **Densité et clarté comptent un cran de plus.** Pour la [visibilité IA](https://geotoolbox.ai/fr/blog/generative-engine-optimization), écrire dense et sans remplissage aide un passage français à rester entier dans le budget de tokens que le moteur lui accorde.
 
-Le contrepoint européen mérite d'être connu : Mistral entraîne son tokeniseur sur un corpus plus équilibré en langues européennes, ce qui réduit nettement l'écart pour le français. Pour une entreprise sensible à la souveraineté (données hébergées dans l'UE, offres qualifiées SecNumCloud du côté d'OVHcloud), c'est un argument qui s'ajoute au reste, pas seulement une histoire de tokens.
+Le contrepoint européen mérite d'être connu : d'après Mistral, son tokeniseur est entraîné sur un corpus plus équilibré en langues européennes, conçu pour réduire l'écart pour le français. Pour une entreprise sensible à la souveraineté (données hébergées dans l'UE, offres qualifiées SecNumCloud du côté d'OVHcloud), c'est un argument qui s'ajoute au reste, pas seulement une histoire de tokens.
 
 ## Les tokens influencent-ils votre visibilité dans la recherche IA ?
 
@@ -142,7 +151,7 @@ D'expérience, chez geotoolbox, les personnes les plus perdues sur ce point ont 
 
 ### Combien de mots font 1 000 tokens ?
 
-Environ 750 mots d'anglais. La règle est d'un token pour à peu près trois quarts de mot, donc une réponse de 1 000 tokens fait dans les deux pages de poche. La ponctuation, les mots rares et les autres langues font varier le compte, et le français tourne autour de 30 % de tokens en plus, mais 750 reste une bonne base pour planifier.
+Environ 750 mots d'anglais. La règle est d'un token pour à peu près trois quarts de mot, donc une réponse de 1 000 tokens fait environ deux pages d'un livre de poche. La ponctuation, les mots rares et les autres langues font varier le compte, et le français tourne autour de 30 % de tokens en plus, mais 750 reste une bonne base pour planifier.
 
 ### Pourquoi ChatGPT n'arrive-t-il pas à compter les lettres de « strawberry » ?
 
@@ -162,7 +171,7 @@ Oui, mais modérément. Sur les tokeniseurs récents d'OpenAI, un texte françai
 
 ### Que se passe-t-il quand j'atteins la limite de tokens ?
 
-Dans une API, vous obtenez une erreur « longueur de contexte dépassée » ; dans un chat, les tours les plus anciens sont généralement tronqués ou retirés du contexte. Si cela arrive, ouvrez une nouvelle discussion, recollez seulement ce qui compte, ou demandez un résumé à emporter. Un modèle à plus grande fenêtre de contexte vous donne de la marge, pas une immunité.
+Dans une API, vous obtenez une erreur « longueur de contexte dépassée » ; dans un chat, les tours les plus anciens sont généralement tronqués ou retirés du contexte. Si cela arrive, ouvrez une nouvelle discussion, recollez seulement ce qui compte, ou demandez un résumé de la conversation. Un modèle à plus grande fenêtre de contexte vous donne de la marge, pas une immunité.
 
 ### Un « token IA » est-il une cryptomonnaie ?
 
@@ -170,9 +179,9 @@ Non. Ce sont deux sens sans rapport. En IA, un token est une unité de texte qu'
 
 ## Ce que les tokens changent vraiment pour vous
 
-Les tokens sont un diagnostic, pas un tableau de bord. Ils expliquent pourquoi la machine compte mal, tronque et facture comme elle le fait. Les vrais leviers sont ailleurs.
+Les tokens sont un diagnostic, pas un tableau de bord. Ils expliquent pourquoi la machine compte mal, tronque et facture comme elle le fait. Le vrai levier est ailleurs.
 
-La première, c'est l'accès. Si un robot d'IA ne peut pas atteindre votre page, aucun de ces mécanismes de tokens ne s'y appliquera jamais, parce que la page n'entrera jamais dans le budget. Cette condition-là, vous pouvez la tester : notre [test gratuit AI Readiness](https://geotoolbox.ai/tools/ai-readiness) indique si les robots et agents utiles à ChatGPT Search, Perplexity et aux fonctionnalités IA de Google Search peuvent atteindre une page, et ce qui les bloque le cas échéant. Les tokens vous disent comment la machine lit. L'accès des robots vous dit si elle vous lit tout court.
+Ce levier, c'est l'accès. Si un robot d'IA ne peut pas atteindre votre page, aucun de ces mécanismes de tokens ne s'y appliquera jamais, parce que la page n'entrera jamais dans le budget. Cette condition-là, vous pouvez la tester : notre [score de préparation IA](https://geotoolbox.ai/tools/ai-readiness) gratuit indique si les robots et agents utiles à ChatGPT Search, Perplexity et aux fonctionnalités IA de Google Search peuvent atteindre une page, et ce qui les bloque le cas échéant. Les tokens vous disent comment la machine lit. L'accès des robots vous dit si elle vous lit tout court.
 
 ## Sources
 
@@ -183,7 +192,7 @@ La première, c'est l'accès. Si un robot d'IA ne peut pas atteindre votre page,
 - [Comprendre les tokens de l'IA générative](https://technologies.insign.fr/articles/comprendre-tokens-ia-generative) - Insign
 - [ChatGPT sait combien il y a de « r » dans « fraise » (mais pas partout)](https://www.phonandroid.com/chatgpt-sait-enfin-combien-il-y-a-de-r-dans-le-mot-fraise-mais-pas-dans-les-autres.html) - Phonandroid
 - [Dataconomy : GPT-5.2 compte toujours deux « r » dans « strawberry »](https://dataconomy.com/2025/12/15/gpt-5-2-still-counts-two-rs-in-strawberry/)
-- [Recommandations RGPD sur l'IA, délibération n° 2025-047](https://www.cnil.fr/fr/intelligence-artificielle) - CNIL
+- [Délibération CNIL n° 2025-047 du 5 juin 2025, recommandations RGPD sur l'IA](https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000051986911) - Légifrance
 - [Google Search Central : fonctionnalités d'IA et IA générative](https://developers.google.com/search/docs/fundamentals/ai-optimization-guide)
 - [Pivot Point Security : les tokens IA et leur impact sur les coûts](https://www.pivotpointsecurity.com/ai-tokens-how-they-impact-usage-costs/)
 - [Artificial Analysis : comparaison des modèles d'IA, dont les fenêtres de contexte (2026)](https://artificialanalysis.ai/models)

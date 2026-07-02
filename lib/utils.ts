@@ -5,11 +5,12 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function formatDate(dateString: string): string {
+export function formatDate(dateString: string, locale: string = "en"): string {
+  const intlLocale = locale === "fr" ? "fr-FR" : "en-US"
   const hasTime = /[T:]/.test(dateString)
   if (hasTime) {
     const d = new Date(dateString)
-    const date = d.toLocaleDateString("en-US", {
+    const date = d.toLocaleDateString(intlLocale, {
       year: "numeric",
       month: "long",
       day: "numeric",
@@ -18,7 +19,7 @@ export function formatDate(dateString: string): string {
     const mm = String(d.getUTCMinutes()).padStart(2, "0")
     return `${date} · ${hh}:${mm} UTC`
   }
-  return new Date(dateString).toLocaleDateString("en-US", {
+  return new Date(dateString).toLocaleDateString(intlLocale, {
     year: "numeric",
     month: "long",
     day: "numeric",

@@ -143,6 +143,12 @@ export function articleSchema(post: {
     },
     image: [post.image || fallbackImage],
     ...(post.inLanguage ? { inLanguage: post.inLanguage } : {}),
+    // Voice/AI-assistant extraction anchor (same pattern as Abondance/BDM):
+    // the headline + the hero summary paragraph.
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: ["h1", ".speakable-summary"],
+    },
   }
 }
 

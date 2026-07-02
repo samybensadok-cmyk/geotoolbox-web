@@ -8,7 +8,8 @@ import { getMdxComponents } from "@/components/mdx"
 import { formatDate } from "@/lib/utils"
 import { routing, bcp47, type Locale } from "@/i18n/routing"
 import { alternatesFor, urlFor } from "@/lib/i18n/siblings"
-import { setRequestLocale } from "next-intl/server"
+import { setRequestLocale, getTranslations } from "next-intl/server"
+import { frenchTypography, rehypeFrenchTypography } from "@/lib/french-typography"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
 import { JsonLd } from "@/components/seo/json-ld"
 import { articleSchema, faqPageSchema } from "@/lib/seo-schema"
@@ -42,6 +43,8 @@ export async function generateMetadata({
       title: post.title,
       description: post.description,
       type: "article",
+      url: urlFor("blog", slug, locale),
+      locale: bcp47[locale as Locale].replace("-", "_"),
       publishedTime: post.date,
       modifiedTime: post.updated ?? post.date,
       authors: [post.author],
@@ -101,6 +104,10 @@ export default async function BlogPost({
   const post = getPostBySlug(slug, locale)
   if (!post) notFound()
 
+  const t = await getTranslations("blog")
+  const tc = await getTranslations("common")
+  const isFr = locale === "fr"
+  const typo = (s: string) => (isFr ? frenchTypography(s) : s)
   const author = getAuthorByName(post.author)
   const headings = extractHeadings(post.content)
   const faqs = extractFaq(post.content)
@@ -130,8 +137,8 @@ export default async function BlogPost({
         <div className="mx-auto max-w-5xl">
           <Breadcrumbs
             trail={[
-              { name: "Home", href: "/" },
-              { name: "Blog", href: "/blog" },
+              { name: t("home"), href: "/" },
+              { name: "Blog", href: isFr ? "/fr/blog" : "/blog" },
               { name: post.title, href: "" },
             ]}
           />
@@ -149,10 +156,10 @@ export default async function BlogPost({
               </div>
             )}
             <h1 className="text-[clamp(1.75rem,4vw,2.75rem)] font-bold leading-[1.15] tracking-tight text-gray-900">
-              {post.title}
+              {typo(post.title)}
             </h1>
-            <p className="mt-5 max-w-3xl text-[17px] leading-relaxed text-gray-700">
-              {post.description}
+            <p className="speakable-summary mt-5 max-w-3xl text-[17px] leading-relaxed text-gray-700">
+              {typo(post.description)}
             </p>
             <div className="mt-6 flex items-center gap-3 text-sm text-gray-600">
               {author ? (
@@ -170,10 +177,12 @@ export default async function BlogPost({
               )}
               <span aria-hidden="true" className="text-gray-400">&middot;</span>
               <time dateTime={post.updated ?? post.date}>
-                {post.updated ? `Updated ${formatDate(post.updated)}` : formatDate(post.date)}
+                {post.updated
+                  ? t("updated", { date: formatDate(post.updated, locale) })
+                  : formatDate(post.date, locale)}
               </time>
               <span aria-hidden="true" className="text-gray-400">&middot;</span>
-              <span>{post.readingTime} min read</span>
+              <span>{t("minRead", { count: post.readingTime })}</span>
             </div>
           </header>
         </div>
@@ -188,9 +197,9 @@ export default async function BlogPost({
               <summary className="cursor-pointer list-none rounded-md font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2 [&::-webkit-details-marker]:hidden">
                 <span className="flex items-center justify-between gap-4">
                   <span>
-                    In this post
+                    {t("inThisPost")}
                     <span className="ml-2 font-normal text-gray-500">
-                      {headings.filter((h) => h.level === 2).length} sections
+                      {t("sections", { count: headings.filter((h) => h.level === 2).length })}
                     </span>
                   </span>
                   <svg className="h-3 w-3 transition-transform duration-200 group-open:rotate-90" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2">
@@ -219,7 +228,7 @@ export default async function BlogPost({
               <aside className="hidden lg:block">
                 <div className="sticky top-24">
                   <p className="mb-4 font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-500">
-                    In this post
+                    {t("inThisPost")}
                   </p>
                   <nav aria-label="Article sections">
                     <ul className="space-y-2.5">
@@ -247,11 +256,17 @@ export default async function BlogPost({
             <article className="prose prose-gray max-w-none prose-headings:tracking-tight prose-a:text-accent-700 prose-a:underline-offset-4 prose-strong:text-gray-900 prose-code:text-accent-700">
               <MDXRemote
                 source={mdxSource}
-                components={{ ...getMdxComponents(locale), InlineCta }}
+                components={{
+                  ...getMdxComponents(locale),
+                  InlineCta: (props: { target?: Parameters<typeof InlineCta>[0]["target"] }) => (
+                    <InlineCta {...props} locale={locale} />
+                  ),
+                }}
                 options={{
                   mdxOptions: {
                     rehypePlugins: [
                       [rehypeShiki, { themes: { light: "github-light", dark: "one-dark-pro" } }],
+                      ...(isFr ? [rehypeFrenchTypography] : []),
                     ],
                   },
                 }}
@@ -271,13 +286,13 @@ export default async function BlogPost({
           <div className="mb-10 flex flex-col items-start gap-4 sm:flex-row sm:items-end sm:justify-between sm:gap-8">
             <div>
               <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-                What&rsquo;s next
+                {t("whatsNext")}
               </p>
               <h2 className="mt-2 text-[clamp(1.5rem,3vw,2rem)] font-bold tracking-tight text-gray-900">
-                Put this into practice.
+                {t("putIntoPractice")}
               </h2>
               <p className="mt-2 max-w-xl text-[15px] text-gray-600">
-                Stop guessing whether AI engines cite your brand. Run a scan, grade your pages, and watch your visibility over time.
+                {t("whatsNextCopy")}
               </p>
             </div>
             <Link
@@ -285,7 +300,7 @@ export default async function BlogPost({
               prefetch={false}
               className="inline-flex shrink-0 items-center gap-2 rounded-full bg-accent-900 px-6 py-3 text-[14.5px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
             >
-              Try it for free
+              {tc("tryForFree")}
               <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
@@ -322,13 +337,13 @@ export default async function BlogPost({
 
           <div className="mt-10 flex items-center justify-center">
             <Link
-              href="/blog"
+              href={isFr ? "/fr/blog" : "/blog"}
               className="inline-flex items-center gap-1.5 rounded-sm text-[13px] font-semibold text-gray-600 transition-colors duration-200 hover:text-accent-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
             >
               <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M10 7H4m0 0l3-3m-3 3l3 3" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-              Back to all posts
+              {t("backToPosts")}
             </Link>
           </div>
         </div>
