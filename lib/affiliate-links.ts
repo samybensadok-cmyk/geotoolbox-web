@@ -47,14 +47,14 @@ export const AFFILIATE_LINKS: Record<string, AffiliateLink> = {
   surfer: { url: "https://get.surferseo.com/geotoolbox", program: "Surfer SEO", cluster: "c1-content" },
   "surfer-editor": { url: "https://get.surferseo.com/geotoolbox2", program: "Surfer SEO (Content Editor)", cluster: "c1-content" },
   frase: { url: "https://www.frase.io/", program: "Frase", cluster: "c1-content", pending: true },
-  scalenut: { url: "https://www.scalenut.com/", program: "Scalenut", cluster: "c1-content", pending: true },
+  scalenut: { url: "https://scalenut.com/?fpr=samy10", program: "Scalenut", cluster: "c1-content" },
   neuronwriter: { url: "https://app.neuronwriter.com/ar/ce76bd1e456723f7e0ddca82479539ab", program: "NeuronWriter", cluster: "c1-content" },
   copyai: { url: "https://www.copy.ai/", program: "Copy.ai", cluster: "c1-content", pending: true },
   writesonic: { url: "https://writesonic.com/", program: "Writesonic", cluster: "c1-content", pending: true },
 
   // --- C2 · Link building / digital PR / outreach --------------------------
   collaborator: { url: "https://collaborator.pro/signup?ref=VJPwz8", program: "Collaborator.pro", cluster: "c2-linkbuilding" },
-  snov: { url: "https://snov.io/", program: "Snov.io", cluster: "c2-linkbuilding", pending: true },
+  snov: { url: "https://snov.io?fp_ref=samy17", program: "Snov.io", cluster: "c2-linkbuilding" },
   hunter: { url: "https://hunter.io/", program: "Hunter.io", cluster: "c2-linkbuilding", pending: true },
   instantly: { url: "https://instantly.ai/", program: "Instantly.ai", cluster: "c2-linkbuilding", pending: true },
   adsy: { url: "https://ref.adsy.com/?ref=referral&ref_type=direct&ref_id=fmenyt1rplcdgiwt&ref_item=3", program: "Adsy", cluster: "c2-linkbuilding" },
