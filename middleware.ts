@@ -1,10 +1,39 @@
 import createMiddleware from "next-intl/middleware"
-import type { NextRequest } from "next/server"
+import { NextResponse, type NextRequest } from "next/server"
 import { routing } from "./i18n/routing"
 
 const handleI18nRouting = createMiddleware(routing)
 
+// Markdown mirrors for AI agents/crawlers (which don't render JS and pay per
+// token): /blog/<slug>.md and /glossary/<slug>.md serve the article as plain
+// markdown, as does requesting the canonical URL with `Accept: text/markdown`.
+// Both rewrite to the internal /md/<locale>/<section>/<slug> route handler.
+const MD_TWIN = /^\/(?:(fr)\/)?(blog|glossary)\/([^/]+)\.md$/
+const ARTICLE_PATH = /^\/(?:(fr)\/)?(blog|glossary)\/([^/]+)$/
+
+function markdownRewrite(request: NextRequest, locale: string, section: string, slug: string) {
+  const res = NextResponse.rewrite(new URL(`/md/${locale}/${section}/${slug}`, request.url))
+  res.headers.set("Vary", "Accept")
+  return res
+}
+
 export default function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl
+
+  const twin = MD_TWIN.exec(pathname)
+  if (twin) {
+    return markdownRewrite(request, twin[1] ?? "en", twin[2], twin[3])
+  }
+
+  // Content negotiation: only when the client explicitly asks for markdown
+  // (browsers never send text/markdown, so human traffic is unaffected).
+  if (request.headers.get("accept")?.includes("text/markdown")) {
+    const article = ARTICLE_PATH.exec(pathname)
+    if (article) {
+      return markdownRewrite(request, article[1] ?? "en", article[2], article[3])
+    }
+  }
+
   // Static assets that live under a matched section (e.g. in-body article images at
   // /blog/<slug>/diagram.png) must NOT pass through next-intl locale routing, which
   // rewrites them into the locale tree and 404s the file. Anything with a file

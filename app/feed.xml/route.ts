@@ -2,21 +2,28 @@ import { getAllPosts } from "@/lib/content"
 import { siteConfig } from "@/lib/config"
 
 export async function GET() {
-  const posts = getAllPosts()
+  // All locales in one feed; FR slugs live under /fr/blog/. pubDate uses the
+  // `updated` date when present so refreshed posts carry a freshness signal
+  // (AI ingestion pipelines + feed readers resurface them).
+  const posts = [...getAllPosts("en"), ...getAllPosts("fr")].sort(
+    (a, b) =>
+      new Date(b.updated ?? b.date).getTime() - new Date(a.updated ?? a.date).getTime()
+  )
 
   const items = posts
-    .map(
-      (post) => `
+    .map((post) => {
+      const url = `${siteConfig.url}${post.locale === "en" ? "" : `/${post.locale}`}/blog/${post.slug}`
+      return `
     <item>
       <title><![CDATA[${post.title}]]></title>
-      <link>${siteConfig.url}/blog/${post.slug}</link>
-      <guid isPermaLink="true">${siteConfig.url}/blog/${post.slug}</guid>
+      <link>${url}</link>
+      <guid isPermaLink="true">${url}</guid>
       <description><![CDATA[${post.description}]]></description>
-      <pubDate>${new Date(post.date).toUTCString()}</pubDate>
+      <pubDate>${new Date(post.updated ?? post.date).toUTCString()}</pubDate>
       <author>${post.author}</author>
       ${post.tags.map((t) => `<category>${t}</category>`).join("\n      ")}
     </item>`
-    )
+    })
     .join("")
 
   const feed = `<?xml version="1.0" encoding="UTF-8"?>

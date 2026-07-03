@@ -1,0 +1,30 @@
+# Pings IndexNow (Bing -> ChatGPT Search / Copilot index) for content files
+# changed by each push to main. Waits for the Vercel deploy to go live first.
+name: IndexNow ping
+on:
+  push:
+    branches: [main]
+    paths:
+      - "content/**"
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Collect changed content files
+        id: changed
+        run: |
+          FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} -- 'content/**' | tr '\n' ' ')
+          echo "files=$FILES" >> "$GITHUB_OUTPUT"
+          echo "Changed: $FILES"
+      - name: Wait for Vercel deploy
+        if: steps.changed.outputs.files != ''
+        run: sleep 180
+      - name: Submit to IndexNow
+        if: steps.changed.outputs.files != ''
+        run: node scripts/indexnow.mjs --files ${{ steps.changed.outputs.files }}

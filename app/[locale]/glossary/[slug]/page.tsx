@@ -11,7 +11,7 @@ import {
 import { getMdxComponents } from "@/components/mdx"
 import { formatDate } from "@/lib/utils"
 import { routing } from "@/i18n/routing"
-import { alternatesFor } from "@/lib/i18n/siblings"
+import { alternatesFor, urlFor } from "@/lib/i18n/siblings"
 import { localePath } from "@/lib/i18n/paths"
 import { setRequestLocale } from "next-intl/server"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
@@ -41,7 +41,11 @@ export async function generateMetadata({
     description: term.definition,
     openGraph: { title, description: term.definition, type: "article" },
     twitter: { card: "summary", title, description: term.definition },
-    alternates: alternatesFor("glossary", slug, locale),
+    alternates: {
+      ...alternatesFor("glossary", slug, locale),
+      // .md twin for AI agents (middleware.ts markdown mirrors)
+      types: { "text/markdown": `${urlFor("glossary", slug, locale)}.md` },
+    },
   }
 }
 

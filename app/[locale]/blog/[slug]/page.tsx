@@ -59,8 +59,12 @@ export async function generateMetadata({
       description: post.description,
     },
     // Self-canonical + reciprocal hreflang from the sibling map. Pre-FR this
-    // returns only the canonical, so EN output is unchanged.
-    alternates: alternatesFor("blog", slug, locale),
+    // returns only the canonical, so EN output is unchanged. The text/markdown
+    // alternate advertises the .md twin served for AI agents (middleware.ts).
+    alternates: {
+      ...alternatesFor("blog", slug, locale),
+      types: { "text/markdown": `${urlFor("blog", slug, locale)}.md` },
+    },
   }
 }
 
