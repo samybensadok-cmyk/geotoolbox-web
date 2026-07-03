@@ -1975,7 +1975,7 @@ $('gak-gate-form').addEventListener('submit', async (e)=>{
   const email = $('gak-email').value.trim();
   if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ $('gak-gate-err').textContent='Please enter a valid email address.'; return; }
   // GDPR consent gate: no lead leaves the browser without an explicit tick (recorded in the Make payload).
-  if(!($('gak-terms') && $('gak-terms').checked)){ $('gak-gate-err').textContent='Please tick the box to agree to the terms of service.'; return; }
+  if(!($('gak-terms') && $('gak-terms').checked)){ $('gak-gate-err').textContent='Please tick the box to agree to the privacy policy.'; return; }
   CTX.email = email; CTX.terms = true;
   postLead(buildLead('captured'));   // guaranteed lead-capture the instant the email is given (the 'scored' upsert follows from unlock())
   await unlock();
