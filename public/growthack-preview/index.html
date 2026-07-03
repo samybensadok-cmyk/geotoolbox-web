@@ -76,6 +76,7 @@ body{
 .gak-panel{max-width:540px;margin:28px auto 0;display:flex;flex-direction:column;gap:14px;text-align:left}
 .gak-form{display:grid;grid-template-columns:1.55fr 1fr;gap:10px}
 .gak-field{position:relative;min-width:0}
+.gak-field-industry{grid-column:1 / -1}
 /* confident, unmissable primary CTA spanning the full panel width */
 .gak-btn-go{grid-column:1 / -1;width:100%;height:56px;display:inline-flex;align-items:center;justify-content:center;gap:10px;font-size:16.5px;font-weight:800;letter-spacing:-.012em;
   box-shadow:0 2px 5px rgba(16,32,54,.12),0 16px 34px -14px rgba(255,88,0,.62)}
@@ -83,7 +84,7 @@ body{
 .gak-btn-go:hover .gak-go-arrow{transform:translateX(4px)}
 .gak-btn-go[disabled] .gak-go-arrow{opacity:0}
 /* OPTIONAL row — visually subordinate (smaller, recessed wells, mono tag) so required vs optional reads instantly */
-.gak-form-opt{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
+.gak-form-opt{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:4px}
 .gak-opt-tag{grid-column:1 / -1;font:600 10.5px/1 var(--gak-mono);letter-spacing:.15em;text-transform:uppercase;color:var(--gak-faint);margin:2px 0 -3px}
 .gak-form-opt .gak-input{height:46px;font-size:14px;padding:0 16px;background:var(--gak-inset);border-color:var(--gak-line)}
 .gak-form-opt select.gak-input{padding-right:38px;background-position:right 14px center}
@@ -636,12 +637,12 @@ body.gak-capturing::after{content:'Preparing your PDF…';position:fixed;inset:0
       <form class="gak-form" id="gak-form" autocomplete="off">
         <div class="gak-field gak-field-url"><input class="gak-input" id="gak-url" type="text" inputmode="url" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="yourwebsite.com" aria-label="Your website" maxlength="255" required></div>
         <div class="gak-field"><input class="gak-input" id="gak-company" type="text" placeholder="Company name" aria-label="Company name" maxlength="80" required></div>
+        <div class="gak-field gak-field-industry"><input class="gak-input" id="gak-industry" type="text" placeholder="Your industry, e.g. family law, skincare, SaaS" aria-label="Your industry" maxlength="80" required></div>
         <button class="gak-btn gak-btn-go" id="gak-go" type="submit">Run free AI check<span class="gak-go-arrow" aria-hidden="true">→</span></button>
       </form>
       <form class="gak-form gak-form-opt" id="gak-form2" autocomplete="off">
         <span class="gak-opt-tag">Optional · sharpens your results</span>
         <div class="gak-field"><input class="gak-input" id="gak-brand" type="text" placeholder="Brand name" aria-label="Brand name (if different from company)" maxlength="80"></div>
-        <div class="gak-field"><input class="gak-input" id="gak-industry" type="text" placeholder="Industry" aria-label="Industry" maxlength="80"></div>
         <div class="gak-field"><select class="gak-input" id="gak-country" aria-label="Target market">
           <option value="">Market</option>
           <option value="United Kingdom">United Kingdom</option>
@@ -1900,6 +1901,8 @@ $('gak-form').addEventListener('submit', async (e)=>{
   }
   const brand = (company || brandOpt).slice(0,80);
   const industry = ($('gak-industry').value||'').trim().slice(0,80);
+  // Industry is REQUIRED — it drives the unbranded category prompts; without it results fall back to brand-only questions.
+  if(!industry){ $('gak-err').textContent='Please enter your industry — it decides which questions we ask the AI engines.'; return; }
   const country = (($('gak-country')||{}).value||'').trim().slice(0,40);
   CTX = {domain, brand, industry, country, company, brandName: brandOpt};   // keep RAW fields too — Make gets every field as typed
   GATE_UNLOCKED=false;   // new scan -> re-lock until email (or baked showcase)
