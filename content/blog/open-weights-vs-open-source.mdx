@@ -1,0 +1,169 @@
+---
+title: "Open Weights vs Open Source: The Real Difference (2026)"
+description: "Open weights and open source are not the same thing. See what each term means, which 2026 AI models are which, the license catches, and why it matters."
+date: "2026-07-03"
+author: "Samy BEN SADOK"
+tags: ["open-weights", "open-source-ai", "open-weight-vs-open-source", "llama", "deepseek", "gpt-oss", "olmo", "ai-licensing", "geo", "guide"]
+draft: false
+---
+
+Open weights and open source get used as if they mean the same thing. They do not. Open weights means you can download the finished model and run it. Open source means you also get the recipe: the training code and enough detail about the data to rebuild and audit the model from scratch. Almost every model marketed as "open source" today - Llama, DeepSeek, Qwen, Gemma - is actually only open-weight. This guide covers what each term really means, which 2026 models fall where, the license catches that bite in production, and why the distinction matters if you care about being cited in AI answers.
+
+## Open Weights vs Open Source: The Short Answer
+
+An [open-weights model](https://geotoolbox.ai/glossary/open-weights) hands you the trained model. An open-source model hands you the model plus everything needed to reproduce it.
+
+Both let you download and run the thing. The difference is what you can do beyond running it: study how it was built, verify what went into it, and rebuild it yourself if you need to. Open weights give you the product. Open source gives you the product and the factory.
+
+<table>
+<thead>
+<tr><th>What you get</th><th>Open weight</th><th>Open source (OSAID)</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Trained weights to download and run</strong></td><td>Yes</td><td>Yes</td></tr>
+<tr><td><strong>Fine-tune on your own data</strong></td><td>Yes</td><td>Yes</td></tr>
+<tr><td><strong>Training code</strong></td><td>No</td><td>Yes</td></tr>
+<tr><td><strong>Training data (or detailed data information)</strong></td><td>No</td><td>Yes</td></tr>
+<tr><td><strong>Rebuild from scratch and fully audit</strong></td><td>No</td><td>Yes</td></tr>
+<tr><td><strong>Typical license</strong></td><td>Permissive or custom (Apache, MIT, or vendor terms)</td><td>OSI-approved (e.g. Apache 2.0)</td></tr>
+</tbody>
+</table>
+
+That single distinction drives everything else: what you can legally do with the model, whether you can trust what is inside it, and whether the "open" label means anything at all. And notice what the license column does not settle. The same permissive license, Apache 2.0, turns up on both sides in the model table below. What separates open weight from open source is not the license name, it is whether the training code and data come with it.
+
+## What "Open Weights" Actually Means
+
+The weights are the numbers a model learned during training. Billions of parameters that, together, decide how it turns your prompt into a response. When a lab publishes those weights, you can download them, run the model on your own hardware, and [fine-tune](https://geotoolbox.ai/glossary/fine-tuning) it on your own data. That is a real and useful kind of openness. You are no longer renting the model through someone else's API on their meter and their terms.
+
+What you do not get is how it was made. The training code, the exact data it was trained on, the filtering and cleaning steps, the specific recipe - all of that usually stays private. You have the finished parameters, not the process that produced them.
+
+A common way to describe this: the weights are the compiled output, not the source. It is like shipping a program as an executable instead of the source code. You can run it and even patch it, but you cannot read the logic that built it or recreate it cleanly. The comparison is not perfect, and some engineers push back on it, since in practice most people work with a model by adjusting weights, not by retraining from raw data. But it captures the core limit. You are trusting the creator's choices about what went in, because you cannot see them.
+
+In practice, open weights show up on hubs like Hugging Face, where you download a model file and a license, run it locally or on rented GPUs, and adapt it. Downloading the weights is easy. Whether you can use them the way you want is a separate question, and it lives entirely in the license.
+
+## What "Open Source AI" Actually Means
+
+Open source has a specific definition, and it is stricter than "you can download it." The Open Source Initiative, the same body that has defined open source software since 1998, published its [Open Source AI Definition](https://opensource.org/ai/open-source-ai-definition) (OSAID 1.0) on October 28, 2024. It sets the bar for what a genuinely [open-source model](https://geotoolbox.ai/glossary/open-source-ai) has to provide.
+
+The definition grants four freedoms, inherited from free software: the freedom to use the system for any purpose, to study how it works, to modify it, and to share it. To make those freedoms real, an open-source model has to release the "preferred form for making modifications." For an AI system, that means three things together: the model weights, the full code used to train and run it, and sufficiently detailed information about the training data.
+
+There is one nuance that trips people up. OSAID does not force a lab to publish the raw training dataset, which is often impossible to redistribute for copyright or privacy reasons. It requires detailed data information instead: where the data came from, how it was selected and filtered, and enough documentation that a skilled person could assemble a substantially equivalent dataset and retrain the model. Critics argue this is too soft and that true openness should require the data itself. That debate is still live.
+
+The practical test is reproducibility. If you have the weights, the training code, and the data information, an independent team can rebuild the model, inspect it for bias or backdoors, and verify what it claims to be. Very few models clear that bar. The clearest current example is OLMo from the Allen Institute for AI, which ships its weights and full training code under Apache 2.0, along with its Dolma training dataset. It has company: EleutherAI's Pythia and LLM360's Amber and CrystalCoder are among the models the Open Source Initiative has pointed to as genuinely conforming. That is what open source actually looks like.
+
+## The Openness Spectrum: Closed, Open-Weight, Open-Source
+
+Treating this as open versus closed hides the part that matters. Openness is a spectrum, and most of the interesting models sit in the middle.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/open-weights-vs-open-source/openness-spectrum.png" alt="The AI openness spectrum from closed to open-weight to open-source, showing what you get at each tier: closed gives API access only, open-weight adds downloadable weights, open-source adds training code and data information." w="2360" h="1253" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Openness is a spectrum. Most models people call "open" are open-weight, not open-source.</figcaption>
+</figure>
+
+At one end are closed models like GPT-5.x, Claude, and Gemini. You reach them through an API. You never touch the weights, and you cannot run them yourself. In the middle are open-weight models: the weights are downloadable, but the recipe is not. At the far end are open-source models that meet OSAID, where the full stack is public.
+
+<table>
+<thead>
+<tr><th>Tier</th><th>What you get</th><th>Example models</th><th>Typical license</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Closed</strong></td><td>API access only; no weights</td><td>GPT-5.x, Claude, Gemini</td><td>Proprietary terms of service</td></tr>
+<tr><td><strong>Open-weight</strong></td><td>Downloadable weights; run and fine-tune; no training code or data</td><td>Llama, DeepSeek, Qwen, Gemma, gpt-oss, Kimi K2</td><td>Custom or permissive, varies</td></tr>
+<tr><td><strong>Open-source (OSAID)</strong></td><td>Weights, training code, and data information; fully reproducible</td><td>OLMo</td><td>OSI-approved (Apache 2.0)</td></tr>
+</tbody>
+</table>
+
+There is a fourth label worth knowing: restricted weights. These are open-weight models released under terms that limit who can use them or how, often for regulated industries. The Open Source Initiative keeps a hard line here. In its view, any restriction on use or field of endeavor means a model is source-available or proprietary, not open source. Others prefer the spectrum framing, arguing that "usable but limited" deserves its own category rather than being lumped in with fully closed systems.
+
+## Which AI Models Are Open Weight vs Open Source? (2026)
+
+Now the useful part: which real models are which. This is where the labels get sloppiest, because nearly every model below is called "open source" somewhere. Only one of them actually is.
+
+<table>
+<thead>
+<tr><th>Model</th><th>Open-weight or open-source?</th><th>License</th><th>Commercial-use catch</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Llama (Meta)</strong></td><td>Open-weight</td><td>Llama Community License + Acceptable Use Policy</td><td>Free unless you exceed 700M monthly active users; use-case and regional bans apply</td></tr>
+<tr><td><strong>OLMo (Allen Institute for AI)</strong></td><td>Open-source</td><td>Apache 2.0</td><td>None; full code and Dolma data released</td></tr>
+<tr><td><strong>DeepSeek (R1, V3)</strong></td><td>Open-weight</td><td>MIT</td><td>None; distillation and commercial use allowed</td></tr>
+<tr><td><strong>Qwen (Alibaba)</strong></td><td>Open-weight</td><td>Apache 2.0 (Qwen3 and Qwen3.5)</td><td>None on current models; older Qwen used a community license</td></tr>
+<tr><td><strong>Kimi K2 (Moonshot)</strong></td><td>Open-weight</td><td>Modified MIT</td><td>Attribution or display required above large usage thresholds</td></tr>
+<tr><td><strong>GLM (Zhipu / z.ai)</strong></td><td>Open-weight</td><td>MIT</td><td>None</td></tr>
+<tr><td><strong>Mistral</strong></td><td>Mixed</td><td>Apache 2.0 or research/non-production license, by model</td><td>Research-licensed models are not for commercial use</td></tr>
+<tr><td><strong>Gemma (Google)</strong></td><td>Open-weight</td><td>Apache 2.0 (Gemma 4)</td><td>None on Gemma 4; earlier Gemma used custom Google terms</td></tr>
+<tr><td><strong>gpt-oss (OpenAI)</strong></td><td>Open-weight</td><td>Apache 2.0</td><td>None</td></tr>
+</tbody>
+</table>
+
+Read that top row carefully, because it is the one people get wrong most. Meta calls Llama open source in its own marketing, but [Wikipedia's summary](https://en.wikipedia.org/wiki/Llama_(language_model)) reflects the view of the definition-setting bodies: Llama's license discriminates against certain users and uses, which the Open Source Definition forbids, so it is not open source. The Free Software Foundation reached the same conclusion. Meta's [Community License](https://www.llama.com/llama4/license/) requires anyone above 700 million monthly active users to ask for permission, which Meta can refuse.
+
+The permissive open-weight releases are more generous. [DeepSeek](https://geotoolbox.ai/blog/what-is-deepseek) ships its recent models under the [MIT license](https://github.com/deepseek-ai/DeepSeek-R1), [Qwen](https://geotoolbox.ai/blog/what-is-qwen) moved its current models to [Apache 2.0](https://github.com/QwenLM/Qwen3), and [OpenAI's gpt-oss](https://github.com/openai/gpt-oss) models are Apache 2.0 as well. [Kimi K2](https://geotoolbox.ai/blog/what-is-kimi-ai) uses a Modified MIT license that adds an attribution requirement at scale, and Zhipu's [GLM](https://geotoolbox.ai/blog/what-is-glm-5-2) models are MIT too. Google flipped [Gemma 4 to Apache 2.0](https://blog.google/innovation-and-ai/technology/developers-tools/gemma-4/) in April 2026, dropping the custom terms its earlier models carried. In our experience helping brands track how AI systems cite them, the license is the detail teams skip and later regret, because the download page and the terms of use tell two different stories. Notice the pattern across the whole [field of Chinese open-weight models](https://geotoolbox.ai/blog/chinese-ai-models-compared) and beyond: permissive licenses are common, but open source, in the strict sense, is rare.
+
+## Why the Difference Matters
+
+This is not a semantic argument. The gap between open weights and open source has three consequences that land on real projects.
+
+The first is legal. Downloading the weights does not give you the right to do anything you want with them. The license does. A custom open-weight license can cap you at a user threshold, ban entire fields of use, forbid using the model's outputs to train a competitor, or exclude whole regions. Meta's multimodal Llama models, for example, are not licensed to individuals or companies based in the European Union. The permissive open-source licenses, MIT and Apache 2.0, carry almost none of that. So "is it free to use commercially" has no general answer. It depends on which model and which release.
+
+The second is trust. With an open-weight model you inherit the creator's decisions about training data, filtering, and safety tuning, and you cannot fully audit any of them. That is a genuine liability in regulated sectors like finance or healthcare, where you may need to prove what a model was and was not trained on. Downloadable is also not the same as vetted. You cannot read a block of weights for a hidden backdoor the way you can read source code, and poisoned model files do surface on public hubs, so open weights still need scanning rather than blind trust. Only a reproducible, open-source model lets an outside team verify those claims in full.
+
+The third is control. Open weights let you fine-tune, which is cheap and practical. They do not let you retrain from scratch, which for a frontier model is wildly expensive and, without the data and code, impossible anyway. So your ability to truly change the model is bounded. Self-hosting is not the automatic saving people expect, either: renting the GPUs and keeping a large model running usually costs more than a metered API until you are serving very high volume. And an open-weight model still depends on its vendor. Terms can change, and a model can be [pulled or restricted](https://geotoolbox.ai/blog/fable-5-ban), as export controls have already shown, leaving teams scrambling for a replacement.
+
+The capability cost of choosing open is smaller than most people assume. [Epoch AI finds](https://epoch.ai/data-insights/open-weights-vs-closed-weights-models) that the best open-weight models trail the best closed models by only a few months, about three and a half on average by its tracking. When the performance gap is that narrow, licensing and control become the real decision, not raw capability.
+
+## Why Companies Release Weights but Call It "Open Source"
+
+If open weights are not open source, why do so many labs use the term anyway? Part of it is genuine, and part of it is marketing.
+
+The genuine part is that publishing full training data and code is hard and risky. The data often contains copyrighted or private material a company cannot legally redistribute. The training recipe is a trade secret worth hundreds of millions in compute and research. And a fully open pipeline makes it easier for someone to strip out the safety tuning. Releasing weights while holding back the rest is a real compromise between openness and those pressures.
+
+The marketing part is where it gets slippery. "Open source" carries goodwill that "open weights" does not, so labs reach for the stronger term. Critics call this openwashing: dressing up a weights-only release as something more transparent than it is. When Meta published its 2024 essay framing Llama as open source, the Open Source Initiative pushed back publicly, and the dispute became the clearest example of the gap between the label and the definition.
+
+There is even a linguistic argument that the word has drifted. In this view "open source" has fossilized into a loose synonym for "not locked behind an API," with the "source" part no longer meant literally. Whether you find that reasonable or misleading, it is why precise terms matter.
+
+Others are trying to fix the vocabulary rather than fight it. The [Open Weight Definition](https://www.forbes.com/sites/adrianbridgwater/2025/01/22/open-weight-definition-adds-balance-to-open-source-ai-integrity/), from the Open Source Alliance, gives weights-only releases their own honest standard instead of forcing them under the open-source banner. The practical takeaway for anyone choosing a model is simple: ignore the label on the announcement and read the license on the model card. That is the only thing that actually governs what you can do.
+
+## What Open Weights vs Open Source Means for AI Visibility
+
+For most marketers this reads as an engineering debate, but it shapes where your brand does and does not get mentioned. The biggest answer engines, ChatGPT and Google's AI Overviews and Gemini and Copilot, still run on closed frontier models. Open weights widen the long tail underneath them. Anyone can run DeepSeek, Qwen, Kimi, Llama, or gpt-oss, so a growing set of assistants, search features, and [web-browsing agents](https://geotoolbox.ai/blog/how-does-ai-search-work) is built on downloadable models rather than a big lab's API. Perplexity's Sonar, for one, is fine-tuned from Meta's Llama.
+
+The lever that decides whether you get named is the same across all of them, open or closed. None of these systems let you touch the weights, but every one of them pulls in outside sources at answer time and picks which to cite. That evidence is the part you can influence, and open weights simply mean more systems are making the call.
+
+## Frequently Asked Questions
+
+**Is Llama open source or open weight?**
+Open weight. Meta calls Llama open source, but its Community License restricts certain users and fields of use, which the Open Source Definition forbids, so the Open Source Initiative and the Free Software Foundation both say it is not open source. You can download and fine-tune the weights, but the training data and code are not released, and companies above 700 million monthly active users need a separate license from Meta.
+
+**Is DeepSeek open source or open weight?**
+Open weight. DeepSeek's R1 and V3 weights are published under a permissive MIT license, so commercial use and even distillation are allowed. But DeepSeek does not release its training data or full training code, so you cannot reproduce or fully audit the model. Very permissive, still not open source in the strict sense.
+
+**Is ChatGPT open source? What about gpt-oss?**
+ChatGPT and the GPT-5.x models behind it are closed. You only reach them through OpenAI's API or app. Separately, OpenAI released gpt-oss-120b and gpt-oss-20b as open-weight models under Apache 2.0, which you can download and run yourself. Those are open weight, not open source, because the training data and code stay private.
+
+**Is Qwen open source?**
+Qwen's current open-weight models, Qwen3 and Qwen3.5, are released under Apache 2.0, so they are free for commercial use with no user cap. Older Qwen models used a custom community license with more conditions. Like the others, the weights are open but the training data and recipe are not, so it is open weight rather than open source.
+
+**Can I use open-weight models commercially?**
+Usually yes, but the license decides, not the download button. Permissive licenses like MIT and Apache 2.0 allow commercial use freely. Custom licenses may add user thresholds, attribution requirements, field-of-use bans, or regional exclusions. Always read the license on the model card before you build on it.
+
+**What is the difference between open weights and open source in one sentence?**
+Open weights give you the finished model to run and fine-tune, while open source gives you the model plus the training code and data information needed to rebuild and fully audit it.
+
+## The Label Is Loose, the License Is Not
+
+The word "open" is doing a lot of unearned work in AI right now. What almost always sits behind it is open weights: downloadable and genuinely useful, but not reproducible and not free of strings. That is not a scandal, just a different thing, with real consequences for what you are allowed to do and what you can trust. So read the license on the model card, not the label on the announcement.
+
+If your buyers are getting answers from AI, being named in those answers is its own problem to solve, whichever models the engines happen to run on. geotoolbox's [Citation Interceptor](https://geotoolbox.ai/features/citation-interceptor) shows which offsite sources the major AI engines cite when they answer questions in your market, and where your brand is missing from them, so you can work on the evidence these systems actually retrieve.
+
+## Sources
+
+- [Open Source Initiative - The Open Source AI Definition 1.0 (OSAID)](https://opensource.org/ai/open-source-ai-definition)
+- [Wikipedia - Llama (language model): open source status and license](https://en.wikipedia.org/wiki/Llama_(language_model))
+- [Meta - Llama 4 Community License Agreement](https://www.llama.com/llama4/license/)
+- [Google - Gemma 4 released under Apache 2.0](https://blog.google/innovation-and-ai/technology/developers-tools/gemma-4/)
+- [OpenAI - gpt-oss open-weight models, Apache 2.0 (GitHub)](https://github.com/openai/gpt-oss)
+- [DeepSeek-R1 - MIT License (GitHub)](https://github.com/deepseek-ai/DeepSeek-R1)
+- [Qwen3 - Apache 2.0 open-weight models (GitHub)](https://github.com/QwenLM/Qwen3)
+- [Epoch AI - Open-weight models lag the best closed models by about three and a half months](https://epoch.ai/data-insights/open-weights-vs-closed-weights-models)
+- [Forbes - Open Weight Definition Adds Balance To Open Source AI Integrity](https://www.forbes.com/sites/adrianbridgwater/2025/01/22/open-weight-definition-adds-balance-to-open-source-ai-integrity/)
