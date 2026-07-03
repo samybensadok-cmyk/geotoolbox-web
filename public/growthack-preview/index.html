@@ -20,7 +20,7 @@
 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Fragment+Mono&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&family=Fragment+Mono&display=swap" rel="stylesheet">
 <style>
 :root{
   /* ---- Growthack brand ---- */
@@ -195,6 +195,11 @@ select.gak-input{appearance:none;-webkit-appearance:none;-moz-appearance:none;cu
 .gak-gate p{position:relative;color:#aebfd6;margin:0 auto 18px;max-width:42ch;line-height:1.55}
 .gak-gate .gak-form{position:relative}
 .gak-gate .gak-input{border-color:transparent;background:rgba(255,255,255,.97)}
+.gak-gate .gak-terms{position:relative;display:inline-flex;align-items:center;gap:9px;margin:14px auto 2px;color:#aebfd6;font-size:13px;line-height:1.45;cursor:pointer;text-align:left}
+.gak-gate .gak-terms input{width:16px;height:16px;margin:0;flex:0 0 auto;accent-color:var(--gak-orange);cursor:pointer}
+.gak-gate .gak-terms input:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.gak-gate .gak-terms a{color:#dbe6f5;text-decoration:underline;text-underline-offset:2px}
+.gak-gate .gak-terms a:hover{color:#fff}
 .gak-locked{position:relative}
 .gak-locked .gak-blur{filter:blur(6px);opacity:.55;pointer-events:none;user-select:none}
 
@@ -224,6 +229,7 @@ select.gak-input{appearance:none;-webkit-appearance:none;-moz-appearance:none;cu
 .gak-lostdeal.win .gak-ld-rival b{color:var(--gak-navy)}
 
 /* ---------- Reach / Read / Result matrix (free; Result locked) ---------- */
+.gak-matrix-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}  /* last-resort: scroll, never clip (Kevin 2026-07-02 mobile spillover) */
 .gak-matrix{width:100%;border-collapse:collapse;margin-top:4px;font-size:14px}
 .gak-matrix th,.gak-matrix td{padding:12px 8px;text-align:center;border-top:1px solid var(--gak-line)}
 .gak-matrix th{font:700 11px/1.2 var(--gak-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--gak-faint);border-top:none;padding-bottom:10px}
@@ -406,6 +412,11 @@ select.gak-input{appearance:none;-webkit-appearance:none;-moz-appearance:none;cu
 
 /* ---------- dual CTA (Book a call + Download PDF) ---------- */
 .gak-booking-cta-group{display:flex;gap:10px;flex-wrap:wrap;flex:0 0 auto;align-items:center}
+/* PDF button loading state — report takes 20-75s after email; never allow a half-empty PDF download */
+.gak-btn-cta.gak-btn-loading{opacity:.75;cursor:default;display:inline-flex;align-items:center;gap:9px}
+.gak-spin{width:14px;height:14px;border-radius:50%;border:2px solid rgba(255,255,255,.28);border-top-color:var(--gak-orange);animation:gak-spin .7s linear infinite;flex:0 0 auto}
+@keyframes gak-spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.gak-spin{animation-duration:1.6s}}
 .gak-btn-cta.gak-cta-ghost{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.42);box-shadow:none}
 .gak-btn-cta.gak-cta-ghost:hover{background:rgba(255,255,255,.09);border-color:#fff;transform:translateY(-2px)}
 .gak-btn-cta.gak-cta-ghost:active{transform:translateY(0)}
@@ -413,101 +424,100 @@ select.gak-input{appearance:none;-webkit-appearance:none;-moz-appearance:none;cu
 .gak-btn-cta.gak-cta-ghost:focus-visible{outline:3px solid #fff;outline-offset:3px}
 
 /* ---------- PDF render root (off-screen A4 print DOM) ---------- */
-#gak-pdf-root{position:fixed;left:-10000px;top:0;width:794px;background:#fff;color:#16202e;font-family:var(--gak-font);z-index:-1}
+#gak-pdf-root{position:fixed;left:-10000px;top:0;width:794px;background:#0c1a2e;color:#fff;font-family:'Inter',var(--gak-font);font-weight:300;z-index:-1}
 /* pagination uses html2pdf's pagebreak{mode:['avoid-all','css']} — it keeps each .pdf-page from splitting WITHOUT a
    forced per-element break. We deliberately do NOT force a break before each section (neither JS `before:'.pdf-page'`
-   nor a CSS break-before rule): in this html2pdf build a forced break injects a full BLANK page before each section
-   (16 pages, every odd one blank).
+   nor a CSS break-before rule): html2pdf inserts a blank page when a forced break lands near a page boundary
+   (the 16-pages-8-blank bug, 2026-06-26).
    CRITICAL: each .pdf-page must be EXACTLY one printable A4 page tall so sections map 1:1 to physical pages — a
-   shorter box (the old min-height:1040 ≈ 706pt vs the 773.89pt printable area) let the offset drift down the
-   document, orphaning items, floating footers mid-page and leaving a near-empty trailing page. A4 = 841.89pt;
-   margins [28 top, 40 bottom] → 773.89pt printable height; the 794px canvas renders to 539.28pt wide (1px = .6792pt),
-   so one page = 773.89/.6792 ≈ 1139px. We use 1139px (a hair under the 1139.4 boundary, so avoid-all snaps each box
-   to its page top instead of orphaning a chunk onto the previous page) with overflow:hidden as an alignment guard.
-   Sections in this report are bounded (3–5 prompts, a handful of recs/sources) and fit; an unusually long section
-   would clip its tail rather than drift the whole document. */
-#gak-pdf-root .pdf-page{width:794px;height:1139px;overflow:hidden;padding:48px 52px 64px;background:#fff;box-sizing:border-box;position:relative}
-#gak-pdf-root .pdf-brandbar{display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #0c1a2e;padding-bottom:14px;margin-bottom:26px}
-#gak-pdf-root .pdf-kicker{font:700 11px/1 var(--gak-mono);letter-spacing:.14em;text-transform:uppercase;color:#c2410c}
-#gak-pdf-root .pdf-pageno{font:600 11px/1 var(--gak-mono);color:#636f7e}
-#gak-pdf-root .pdf-h1{font-size:34px;line-height:1.08;font-weight:800;color:#0c1a2e;letter-spacing:-.03em;margin:0 0 8px}
-#gak-pdf-root .pdf-h2{font-size:21px;font-weight:800;color:#0c1a2e;letter-spacing:-.02em;margin:0 0 16px}
-#gak-pdf-root .pdf-meta{font:600 13px/1.5 var(--gak-mono);color:#636f7e;margin:0 0 26px}
-#gak-pdf-root .pdf-lead{font-size:14px;line-height:1.6;color:#16202e;margin:0 0 16px}
-#gak-pdf-root .pdf-sub{font:700 12px/1 var(--gak-mono);letter-spacing:.06em;text-transform:uppercase;color:#5d6b7d;margin:24px 0 12px}
+   taller/shorter page de-syncs every following break. 794x1123 is A4 @96dpi; jsPDF rounds to 1122.5, and html2canvas
+   needs the +16px fudge (1139) so the LAST page's bottom padding isn't clipped. Do not change these numbers casually.
+   BRAND (2026-07-02, Kevin's deck): navy #0c1a2e pages, white text, Manrope-medium headings, Inter-light body,
+   accent #90afcf, CTA #ff5800, error #c25d5d. */
+#gak-pdf-root .pdf-page{width:794px;height:1139px;overflow:hidden;padding:48px 52px 64px;background:#0c1a2e;box-sizing:border-box;position:relative}
+#gak-pdf-root .pdf-brandbar{position:relative;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.55);padding-bottom:14px;margin-bottom:26px}
+#gak-pdf-root .pdf-brandbar::after{content:'';position:absolute;left:0;bottom:-2.5px;width:46px;height:4px;background:#ff5800}
+#gak-pdf-root .pdf-kicker{font:600 11px/1 var(--gak-mono);letter-spacing:.14em;text-transform:uppercase;color:#90afcf}
+#gak-pdf-root .pdf-pageno{font:600 11px/1 var(--gak-mono);color:#90afcf}
+#gak-pdf-root .pdf-h1{font-family:'Manrope',var(--gak-font);font-size:34px;line-height:1.12;font-weight:500;color:#fff;letter-spacing:-.02em;margin:0 0 8px}
+#gak-pdf-root .pdf-h2{font-family:'Manrope',var(--gak-font);font-size:21px;font-weight:500;color:#fff;letter-spacing:-.01em;margin:0 0 16px}
+#gak-pdf-root .pdf-meta{font:500 13px/1.5 var(--gak-mono);color:#90afcf;margin:0 0 26px}
+#gak-pdf-root .pdf-lead{font-size:14px;line-height:1.6;color:#e6edf5;font-weight:300;margin:0 0 16px}
+#gak-pdf-root .pdf-lead b{font-weight:600;color:#fff}
+#gak-pdf-root .pdf-sub{font:600 12px/1 var(--gak-mono);letter-spacing:.06em;text-transform:uppercase;color:#90afcf;margin:24px 0 12px}
 #gak-pdf-root .pdf-score-row{display:flex;align-items:center;gap:30px;margin:8px 0 22px}
-#gak-pdf-root .pdf-grade{display:inline-block;font-size:13px;font-weight:800;letter-spacing:.02em;padding:6px 14px;border-radius:999px;margin-bottom:10px}
-#gak-pdf-root .pdf-cov{font-size:12px;line-height:1.5;color:#636f7e;margin:6px 0 0}
-#gak-pdf-root .pdf-quote{font-size:15px;line-height:1.55;color:#0c1a2e;font-weight:500;border-left:3px solid #d63b42;background:#f5f6f8;border-radius:0 10px 10px 0;padding:16px 18px;margin:6px 0 0}
-#gak-pdf-root .pdf-quote .src{display:block;font:600 11px/1 var(--gak-mono);color:#636f7e;margin-top:10px}
-#gak-pdf-root .pdf-quote.win{border-left-color:#2e9e6f}
-#gak-pdf-root .pdf-rival{font-size:13px;color:#16202e;margin-top:10px}
-#gak-pdf-root .pdf-rival b{color:#c0353c}
-#gak-pdf-root .pdf-bar-row{padding:11px 0;border-top:1px solid #e9ebf0}
+#gak-pdf-root .pdf-grade{display:inline-block;font-size:13px;font-weight:700;letter-spacing:.02em;padding:6px 14px;border-radius:999px;margin-bottom:10px}
+#gak-pdf-root .pdf-cov{font-size:12px;line-height:1.5;color:#90afcf;margin:6px 0 0}
+#gak-pdf-root .pdf-quote{font-size:15px;line-height:1.55;color:#fff;font-weight:400;border-left:3px solid #c25d5d;background:#13233c;border-radius:0 10px 10px 0;padding:16px 18px;margin:6px 0 0}
+#gak-pdf-root .pdf-quote .src{display:block;font:500 11px/1 var(--gak-mono);color:#90afcf;margin-top:10px}
+#gak-pdf-root .pdf-quote.win{border-left-color:#5dc39b}
+#gak-pdf-root .pdf-rival{font-size:13px;color:#e6edf5;margin-top:10px}
+#gak-pdf-root .pdf-rival b{color:#e08f8f;font-weight:600}
+#gak-pdf-root .pdf-bar-row{padding:11px 0;border-top:1px solid #24354e}
 #gak-pdf-root .pdf-bar-row:first-child{border-top:none}
 #gak-pdf-root .pdf-bar-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
-#gak-pdf-root .pdf-bar-label{font-weight:600;color:#0c1a2e;font-size:13px}
-#gak-pdf-root .pdf-bar-weight{font:700 11px/1 var(--gak-mono);color:#636f7e;background:#f5f6f8;border:1px solid #e9ebf0;padding:4px 8px;border-radius:6px}
+#gak-pdf-root .pdf-bar-label{font-weight:500;color:#fff;font-size:13px}
+#gak-pdf-root .pdf-bar-weight{font:600 11px/1 var(--gak-mono);color:#90afcf;background:#13233c;border:1px solid #24354e;padding:4px 8px;border-radius:6px}
 #gak-pdf-root .pdf-bar-barwrap{display:flex;align-items:center;gap:10px}
-#gak-pdf-root .pdf-bar-track{flex:1;height:9px;border-radius:999px;background:#f5f6f8;border:1px solid #e9ebf0;overflow:hidden}
+#gak-pdf-root .pdf-bar-track{flex:1;height:9px;border-radius:999px;background:#1c2e47;border:1px solid #24354e;overflow:hidden}
 #gak-pdf-root .pdf-bar-fill{height:100%;border-radius:999px}
-#gak-pdf-root .pdf-bar-score{font:700 13px/1 var(--gak-mono);color:#0c1a2e;min-width:42px;text-align:right}
-#gak-pdf-root .pdf-bar-nodata{font-size:13px;color:#93a0af;font-style:italic}
+#gak-pdf-root .pdf-bar-score{font:600 13px/1 var(--gak-mono);color:#fff;min-width:42px;text-align:right}
+#gak-pdf-root .pdf-bar-nodata{font-size:13px;color:#90afcf;font-style:italic}
 #gak-pdf-root .pdf-bands{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
-#gak-pdf-root .pdf-band{display:inline-flex;align-items:center;gap:9px;border-radius:11px;padding:9px 13px;border:1px solid #e9ebf0;background:#f5f6f8}
-#gak-pdf-root .pdf-band-label{font-weight:600;font-size:12px;color:#0c1a2e}
-#gak-pdf-root .pdf-band-tag{font:700 10px/1 var(--gak-mono);letter-spacing:.05em;text-transform:uppercase;padding:3px 7px;border-radius:5px;background:#fff}
-#gak-pdf-root .pdf-band-score{font:700 12px/1 var(--gak-mono);color:#0c1a2e}
-#gak-pdf-root .pdf-prompt{border:1px solid #e9ebf0;border-radius:10px;padding:13px 15px;margin-top:10px;background:#f5f6f8}
-#gak-pdf-root .pdf-prompt-q{font-weight:600;color:#0c1a2e;font-size:14px;line-height:1.4}
-#gak-pdf-root .pdf-state{display:inline-block;font:700 12px/1 var(--gak-font);margin-top:9px;padding:5px 11px;border-radius:999px}
-#gak-pdf-root .pdf-state.yes{color:#0f7a52;background:#e7f5ee}
-#gak-pdf-root .pdf-state.no{color:#c0353c;background:#fcebec}
-#gak-pdf-root .pdf-prompt-comp{font-size:12px;color:#5d6b7d;margin-top:8px}
-#gak-pdf-root .pdf-prompt-comp b{color:#16202e}
-#gak-pdf-root .pdf-aio-band{display:inline-block;font:800 16px/1 var(--gak-font);padding:8px 14px;border-radius:10px;margin-right:10px}
-#gak-pdf-root .pdf-aio-band.b-high{color:#0f7a52;background:#e7f5ee;border:1px solid #c2e6d4}
-#gak-pdf-root .pdf-aio-band.b-medium{color:#a5651a;background:#fbf1e1;border:1px solid #f0d6a8}
-#gak-pdf-root .pdf-aio-band.b-low{color:#c0353c;background:#fcebec;border:1px solid #f3ccce}
-#gak-pdf-root .pdf-aio-deriv{font-size:13px;line-height:1.55;color:#5d6b7d;margin:14px 0 0}
+#gak-pdf-root .pdf-band{display:inline-flex;align-items:center;gap:9px;border-radius:11px;padding:9px 13px;border:1px solid #24354e;background:#13233c}
+#gak-pdf-root .pdf-band-label{font-weight:500;font-size:12px;color:#fff}
+#gak-pdf-root .pdf-band-tag{font:600 10px/1 var(--gak-mono);letter-spacing:.05em;text-transform:uppercase;padding:3px 7px;border-radius:5px;background:#0c1a2e}
+#gak-pdf-root .pdf-band-score{font:600 12px/1 var(--gak-mono);color:#fff}
+#gak-pdf-root .pdf-prompt{border:1px solid #24354e;border-radius:10px;padding:13px 15px;margin-top:10px;background:#13233c}
+#gak-pdf-root .pdf-prompt-q{font-weight:500;color:#fff;font-size:14px;line-height:1.4}
+#gak-pdf-root .pdf-state{display:inline-block;font:600 12px/1 var(--gak-font);margin-top:9px;padding:5px 11px;border-radius:999px}
+#gak-pdf-root .pdf-state.yes{color:#7fd7b2;background:#0f2b26}
+#gak-pdf-root .pdf-state.no{color:#e08f8f;background:#331a1c}
+#gak-pdf-root .pdf-prompt-comp{font-size:12px;color:#90afcf;margin-top:8px}
+#gak-pdf-root .pdf-prompt-comp b{color:#e6edf5;font-weight:600}
+#gak-pdf-root .pdf-aio-band{display:inline-block;font:600 16px/1 var(--gak-font);padding:8px 14px;border-radius:10px;margin-right:10px}
+#gak-pdf-root .pdf-aio-band.b-high{color:#7fd7b2;background:#0f2b26;border:1px solid #1d4a3d}
+#gak-pdf-root .pdf-aio-band.b-medium{color:#e6b566;background:#2f2415;border:1px solid #57431f}
+#gak-pdf-root .pdf-aio-band.b-low{color:#e08f8f;background:#331a1c;border:1px solid #5c2f33}
+#gak-pdf-root .pdf-aio-deriv{font-size:13px;line-height:1.55;color:#90afcf;margin:14px 0 0}
 #gak-pdf-root .pdf-cols{display:flex;gap:26px}
 #gak-pdf-root .pdf-col{flex:1;min-width:0}
-#gak-pdf-root .pdf-col-h{font:700 12px/1 var(--gak-mono);letter-spacing:.05em;text-transform:uppercase;margin-bottom:12px}
-#gak-pdf-root .pdf-col-h.good{color:#0f7a52} #gak-pdf-root .pdf-col-h.bad{color:#c0353c}
+#gak-pdf-root .pdf-col-h{font:600 12px/1 var(--gak-mono);letter-spacing:.05em;text-transform:uppercase;margin-bottom:12px}
+#gak-pdf-root .pdf-col-h.good{color:#7fd7b2} #gak-pdf-root .pdf-col-h.bad{color:#e08f8f}
 #gak-pdf-root .pdf-item{display:flex;gap:9px;margin-bottom:11px}
 #gak-pdf-root .pdf-item-dot{flex:0 0 auto;width:8px;height:8px;border-radius:50%;margin-top:6px}
-#gak-pdf-root .pdf-item.good .pdf-item-dot{background:#2e9e6f} #gak-pdf-root .pdf-item.bad .pdf-item-dot{background:#d63b42}
-#gak-pdf-root .pdf-item-t{font-size:13px;color:#0c1a2e;font-weight:600;line-height:1.4}
-#gak-pdf-root .pdf-item-e{font-size:11px;color:#5d6b7d;margin-top:2px;line-height:1.4}
-#gak-pdf-root .pdf-empty{font-size:13px;color:#5d6b7d;line-height:1.5}
+#gak-pdf-root .pdf-item.good .pdf-item-dot{background:#5dc39b} #gak-pdf-root .pdf-item.bad .pdf-item-dot{background:#c25d5d}
+#gak-pdf-root .pdf-item-t{font-size:13px;color:#fff;font-weight:500;line-height:1.4}
+#gak-pdf-root .pdf-item-e{font-size:11px;color:#90afcf;margin-top:2px;line-height:1.4}
+#gak-pdf-root .pdf-empty{font-size:13px;color:#90afcf;line-height:1.5}
 #gak-pdf-root .pdf-rec-grp{margin-bottom:18px}
-#gak-pdf-root .pdf-rec-gh{font:700 11px/1 var(--gak-mono);letter-spacing:.05em;text-transform:uppercase;padding:5px 9px;border-radius:6px;display:inline-block;margin-bottom:10px}
-#gak-pdf-root .pdf-rec-gh.qw{color:#c2410c;background:#fff1ea;border:1px solid #f7cdb5}
-#gak-pdf-root .pdf-rec-gh.sa{color:#1e5fa8;background:#eaf2fc;border:1px solid #c8ddf5}
-#gak-pdf-root .pdf-rec{position:relative;padding:10px 0 10px 34px;border-top:1px solid #e9ebf0}
+#gak-pdf-root .pdf-rec-gh{font:600 11px/1 var(--gak-mono);letter-spacing:.05em;text-transform:uppercase;padding:5px 9px;border-radius:6px;display:inline-block;margin-bottom:10px}
+#gak-pdf-root .pdf-rec-gh.qw{color:#ffb38a;background:#33200f;border:1px solid #66401e}
+#gak-pdf-root .pdf-rec-gh.sa{color:#90afcf;background:#13233c;border:1px solid #24354e}
+#gak-pdf-root .pdf-rec{position:relative;padding:10px 0 10px 34px;border-top:1px solid #24354e}
 #gak-pdf-root .pdf-rec:first-child{border-top:none}
-#gak-pdf-root .pdf-rec-n{position:absolute;left:0;top:10px;width:22px;height:22px;border-radius:7px;background:#0c1a2e;color:#fff;font:800 11px/22px var(--gak-mono);text-align:center}
-#gak-pdf-root .pdf-rec-t{font-weight:700;color:#0c1a2e;font-size:14px;line-height:1.4}
-#gak-pdf-root .pdf-rec-d{font-size:12px;color:#5d6b7d;margin-top:3px;line-height:1.5}
+#gak-pdf-root .pdf-rec-n{position:absolute;left:0;top:10px;width:22px;height:22px;border-radius:7px;background:#ff5800;color:#fff;font:700 11px/22px var(--gak-mono);text-align:center}
+#gak-pdf-root .pdf-rec-t{font-weight:600;color:#fff;font-size:14px;line-height:1.4}
+#gak-pdf-root .pdf-rec-d{font-size:12px;color:#90afcf;margin-top:3px;line-height:1.5}
 #gak-pdf-root .pdf-src-grp{margin-bottom:16px}
-#gak-pdf-root .pdf-src-lbl{font:700 11px/1 var(--gak-mono);letter-spacing:.06em;text-transform:uppercase;color:#5d6b7d;margin-bottom:9px}
-#gak-pdf-root .pdf-src-row{display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid #e9ebf0;border-radius:8px;margin-top:6px;background:#fff;flex-wrap:wrap}
-#gak-pdf-root .pdf-src-badge{font:700 10px/1 var(--gak-mono);letter-spacing:.04em;text-transform:uppercase;padding:4px 7px;border-radius:5px;border:1px solid #e9ebf0;color:#5d6b7d;background:#f5f6f8}
-#gak-pdf-root .pdf-src-url{flex:1;min-width:0;font:500 12px/1.4 var(--gak-mono);color:#0c1a2e;word-break:break-all}
-#gak-pdf-root .pdf-src-pill{font:700 10px/1 var(--gak-mono);padding:4px 8px;border-radius:999px}
-#gak-pdf-root .pdf-src-pill.ok{color:#0f7a52;background:#e7f5ee;border:1px solid #c2e6d4}
-#gak-pdf-root .pdf-src-pill.no{color:#c2410c;background:#fff1ea;border:1px solid #f7cdb5}
-#gak-pdf-root .pdf-seg{display:inline-block;font-size:15px;font-weight:800;letter-spacing:-.01em;padding:8px 16px;border-radius:10px;margin-bottom:16px}
-#gak-pdf-root .pdf-seg.hot{color:#c0353c;background:#fcebec;border:1px solid #f3ccce}
-#gak-pdf-root .pdf-seg.warm{color:#a5651a;background:#fbf1e1;border:1px solid #f0d6a8}
-#gak-pdf-root .pdf-seg.nurture{color:#1e5fa8;background:#eaf2fc;border:1px solid #c8ddf5}
-#gak-pdf-root .pdf-cta-box{border:1.5px solid #0c1a2e;border-radius:12px;padding:22px 24px;margin:6px 0 18px;background:#f5f6f8}
-#gak-pdf-root .pdf-cta-box .t{font-size:17px;font-weight:800;color:#0c1a2e;margin:0 0 6px}
-#gak-pdf-root .pdf-cta-box .d{font-size:13px;line-height:1.55;color:#5d6b7d;margin:0 0 12px}
-#gak-pdf-root .pdf-cta-box .u{display:inline-block;font:700 13px/1 var(--gak-font);color:#fff;background:#ff5800;padding:11px 20px;border-radius:9px;text-decoration:none}
-#gak-pdf-root .pdf-cta-box .u.sec{color:#0c1a2e;background:#fff;border:1.5px solid #0c1a2e;margin-left:8px}
-#gak-pdf-root .pdf-honesty{font-size:11px;line-height:1.55;color:#636f7e;font-style:italic;margin-top:18px;border-top:1px solid #e9ebf0;padding-top:14px}
-#gak-pdf-root .pdf-foot{position:absolute;left:52px;right:52px;bottom:22px;display:flex;justify-content:space-between;font:600 10px/1 var(--gak-mono);color:#93a0af;border-top:1px solid #e9ebf0;padding-top:12px}
+#gak-pdf-root .pdf-src-lbl{font:600 11px/1 var(--gak-mono);letter-spacing:.06em;text-transform:uppercase;color:#90afcf;margin-bottom:9px}
+#gak-pdf-root .pdf-src-row{display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid #24354e;border-radius:8px;margin-top:6px;background:#13233c;flex-wrap:wrap}
+#gak-pdf-root .pdf-src-badge{font:600 10px/1 var(--gak-mono);letter-spacing:.04em;text-transform:uppercase;padding:4px 7px;border-radius:5px;border:1px solid #24354e;color:#90afcf;background:#0c1a2e}
+#gak-pdf-root .pdf-src-url{flex:1;min-width:0;font:400 12px/1.4 var(--gak-mono);color:#e6edf5;word-break:break-all}
+#gak-pdf-root .pdf-src-pill{font:600 10px/1 var(--gak-mono);padding:4px 8px;border-radius:999px}
+#gak-pdf-root .pdf-src-pill.ok{color:#7fd7b2;background:#0f2b26;border:1px solid #1d4a3d}
+#gak-pdf-root .pdf-src-pill.no{color:#ffb38a;background:#33200f;border:1px solid #66401e}
+#gak-pdf-root .pdf-seg{display:inline-block;font-size:15px;font-weight:600;letter-spacing:-.01em;padding:8px 16px;border-radius:10px;margin-bottom:16px}
+#gak-pdf-root .pdf-seg.hot{color:#e08f8f;background:#331a1c;border:1px solid #5c2f33}
+#gak-pdf-root .pdf-seg.warm{color:#e6b566;background:#2f2415;border:1px solid #57431f}
+#gak-pdf-root .pdf-seg.nurture{color:#90afcf;background:#13233c;border:1px solid #24354e}
+#gak-pdf-root .pdf-cta-box{border:1.5px solid #ff5800;border-radius:12px;padding:22px 24px;margin:6px 0 18px;background:#13233c}
+#gak-pdf-root .pdf-cta-box .t{font-family:'Manrope',var(--gak-font);font-size:17px;font-weight:500;color:#fff;margin:0 0 6px}
+#gak-pdf-root .pdf-cta-box .d{font-size:13px;line-height:1.55;color:#c7d3e2;margin:0 0 12px}
+#gak-pdf-root .pdf-cta-box .u{display:inline-block;font:600 13px/1 var(--gak-font);color:#fff;background:#ff5800;padding:11px 20px;border-radius:9px;text-decoration:none}
+#gak-pdf-root .pdf-cta-box .u.sec{color:#fff;background:transparent;border:1.5px solid rgba(255,255,255,.7);margin-left:8px}
+#gak-pdf-root .pdf-honesty{font-size:11px;line-height:1.55;color:#90afcf;font-style:italic;margin-top:18px;border-top:1px solid #24354e;padding-top:14px}
+#gak-pdf-root .pdf-foot{position:absolute;left:52px;right:52px;bottom:22px;display:flex;justify-content:space-between;font:500 10px/1 var(--gak-mono);color:#90afcf;border-top:1px solid #24354e;padding-top:12px}
 
 /* ---------- print fallback (window.print() when html2pdf can't load) ---------- */
 /* ===== Suso-style score hero + breakdown grid (Growthack brand) ===== */
@@ -595,6 +605,13 @@ body.gak-capturing::after{content:'Preparing your PDF…';position:fixed;inset:0
   .gak-matrix{font-size:13px}
   .gak-matrix th,.gak-matrix td{padding:10px 4px}
   .gak-matrix td.eng{white-space:normal}
+  /* Kevin 2026-07-02: at iPhone widths the 4-col table's min-content width beat the card and the third
+     column clipped mid-word ("RECOMMEN | Locke"). Shrink the mono headers + chips so all 4 columns fit
+     at 320px; the .gak-matrix-scroll wrapper is the never-clip backstop below that. */
+  .gak-matrix th{font-size:9.5px;letter-spacing:.03em}
+  .gak-matrix th,.gak-matrix td{padding:10px 3px}
+  .gak-res,.gak-res-lock{font-size:12px}
+  .gak-res-prem{font-size:10px;padding:3px 5px}
   .gak-booking-in{flex-direction:column;align-items:stretch}
   .gak-btn-cta{width:100%}
   .gak-booking-cta-group{flex-direction:column;width:100%}
@@ -697,9 +714,9 @@ body.gak-capturing::after{content:'Preparing your PDF…';position:fixed;inset:0
           <!-- Reach / Read / Result matrix (FREE; Result column locked) -->
           <div class="gak-card gak-hide" id="gak-matrix-card" style="box-shadow:none;border-color:var(--gak-line)">
             <div class="gak-card-h"><span class="dot"></span> Can AI reach, read &amp; recommend you?</div>
-            <table class="gak-matrix"><thead><tr>
+            <div class="gak-matrix-scroll"><table class="gak-matrix"><thead><tr>
               <th>AI engine</th><th>Reach</th><th>Read</th><th>Recommends you</th>
-            </tr></thead><tbody id="gak-matrix-body"></tbody></table>
+            </tr></thead><tbody id="gak-matrix-body"></tbody></table></div>
             <div class="gak-matrix-note" id="gak-matrix-note">Reach = can its crawler access your site · Read = is your site machine-readable · Recommends = does it name you in buying answers</div>
           </div>
           <!-- Teaser counts (FREE) -->
@@ -757,6 +774,10 @@ body.gak-capturing::after{content:'Preparing your PDF…';position:fixed;inset:0
           <div class="gak-field"><input class="gak-input" id="gak-email" type="email" placeholder="you@company.com" aria-label="Your email" required></div>
           <button class="gak-btn" id="gak-unlock" type="submit">Get my full report</button>
         </form>
+        <label class="gak-terms" for="gak-terms">
+          <input type="checkbox" id="gak-terms">
+          <span>By submitting, you agree to our <a href="https://growthack.io/privacy-policy" target="_blank" rel="noopener">privacy policy</a>.</span>
+        </label>
         <div class="gak-note" id="gak-gate-consent">We'll email your report. No spam — unsubscribe anytime.</div>
         <div class="gak-err" id="gak-gate-err" role="alert"></div>
       </div>
@@ -1171,6 +1192,14 @@ function renderBreakdownLocked(){ const grid=$('gak-bd-grid'); if(!grid) return;
 function renderBreakdown(sc){ const grid=$('gak-bd-grid'); if(!grid) return;
   if(!GATE_UNLOCKED){ renderBreakdownLocked(); return; }   // defence-in-depth: never reveal the breakdown before the gate
   const byKey={}; ((sc&&sc.sub_scores)||[]).forEach(s=>{ if(s&&s.key) byKey[s.key]=s; });
+  // 2026-07-02: ai_accessibility fallback — mirror renderCrawler(). If the gated score call couldn't compute it
+  // but the free call's crawler summary exists in LAST, derive allowed/total so this card can NEVER show
+  // "N/A Not enough data" beside a crawler card saying "34 of 34 allowed" (operator bug report).
+  const _acc=byKey.ai_accessibility, _cs=(typeof LAST!=='undefined'&&LAST&&LAST.crawlers&&LAST.crawlers.summary)||null;
+  if((!_acc||_acc.score==null) && _cs && Number(_cs.total)){
+    const _v=Math.round(100*(Number(_cs.allowed)||0)/Number(_cs.total));
+    byKey.ai_accessibility={key:'ai_accessibility', score:_v, band:bandOf(_v)};
+  }
   grid.innerHTML = BD_ORDER.map(k=>{ const s=byKey[k]; const sv=(s&&s.score!=null)?Number(s.score):null; const band=(s&&s.band&&s.band!=='no-data')?s.band:bandOf(sv);
     const num = sv==null ? '<span style="color:var(--gak-faint);font-size:18px">N/A</span>' : sv+'<span class="den"> /100</span>';
     return '<div class="gak-bd b-'+band+'"><div class="gak-bd-lbl">'+esc(BD_LABELS[k]||prettyKey(k))+'</div><div class="gak-bd-num">'+num+'</div><div class="gak-bd-tag">'+esc(BD_TAG[band]||'')+'</div></div>';
@@ -1302,7 +1331,7 @@ function renderChatgptVis(vis){
     if(!eng) return '';
     const cited = !!eng.cited;
     const comps = (p.competitors_cited||[]).filter(Boolean);
-    const compLine = comps.length ? `<div class="gak-cg-comp">Named instead: <b>${comps.map(esc).join(', ')}</b></div>` : '';
+    const compLine = comps.length ? `<div class="gak-cg-comp">${cited?'Also named':'Named instead'}: <b>${comps.map(esc).join(', ')}</b></div>` : '';
     return `<div class="gak-cg-row"><div class="gak-cg-q">“${esc(p.query)}”</div>`
       + `<div class="gak-cg-state ${cited?'yes':'no'}">${cited?'✓ ChatGPT names you':'✕ Not mentioned'}</div>`
       + compLine + `</div>`;
@@ -1581,28 +1610,50 @@ function renderFixList(){
   show('gak-fixlist');
 }
 
+/* PDF button gate: 'loading' (spinner, disabled) while the report is still being built, 'ready' once the
+   full report rendered, 'failed' if it never arrived — a user must never download a half-empty branded PDF. */
+function pdfBtnState(state){
+  const b=$('gak-pdf-btn'); if(!b) return;
+  if(state==='loading'){ b.disabled=true; b.classList.add('gak-btn-loading'); b.innerHTML='<span class="gak-spin" aria-hidden="true"></span>Preparing your report…'; }
+  else if(state==='ready'){ b.disabled=false; b.classList.remove('gak-btn-loading'); b.textContent='Download PDF'; }
+  else { b.disabled=true; b.classList.remove('gak-btn-loading'); b.textContent='Full report unavailable'; }
+}
 /* ---------- email gate unlock (live: fetch the visibility scan as the 2nd call) ---------- */
 async function unlock(){
   GATE_UNLOCKED=true;   // email captured -> the gated breakdown grid + crawler card may now reveal
   hide('gak-gate'); show('gak-full-checks'); show('gak-booking'); show('gak-final');
-  if(LAST && LAST.visibility){ show('gak-visibility'); renderGated(LAST.visibility); frameHeight(); return; }
-  if(GAK_CONFIG.DEMO_MODE){ frameHeight(); return; }
+  if(LAST && LAST.visibility){ pdfBtnState('ready'); show('gak-visibility'); renderGated(LAST.visibility); frameHeight(); return; }
+  if(GAK_CONFIG.DEMO_MODE){ pdfBtnState('ready'); frameHeight(); return; }
   // live: run the (expensive) full Lost-Deal Map now, only after the email is captured
+  pdfBtnState('loading');
   show('gak-visibility'); delete $('gak-visibility').dataset.empty;
   $('gak-vis-summary').textContent = 'Mapping your buying questions across ChatGPT, Perplexity & Google AI…';
   $('gak-prompts').innerHTML = '<div class="gak-prompt"><div class="gak-prompt-q">Running your live Lost-Deal Map across ChatGPT, Perplexity &amp; Google… (~20–30s)</div></div>';
   frameHeight();
   const myDomain = CTX.domain;   // bail if the user restarts / re-checks while this scan is in flight
-  try{
-    const v = await fetchReal(CTX.domain, {brand:CTX.brand, industry:CTX.industry, country:CTX.country, email:CTX.email, only:'visibility'});
-    if(CTX.domain !== myDomain || !LAST) return;   // moved on -> don't write a stale scan into the new report
-    if(v && v.visibility){ LAST.visibility=v.visibility; renderGated(v.visibility); }
-    else { hide('gak-visibility'); }
-    // capture the brief layer (composite score + on-page signals + report) that came back with the visibility scan
-    if(v && (v.score||v.report||v.signals)){ if(v.score)LAST.score=v.score; if(v.signals)LAST.signals=v.signals; if(v.report)LAST.report=v.report; try{ renderBrief(v); }catch(_){ } }
-    postLead(buildLead('scored'));   // enriched lead with composite + segment (upsert on email in Make)
-  }catch(e){ if(CTX.domain===myDomain) $('gak-vis-summary').textContent = "The Lost-Deal Map couldn't load — please try again."; }
-  if(CTX.domain===myDomain) frameHeight();
+  // RETRY (2026-07-02): one cold-start/timeout on this single call used to strand a user who had already
+  // given their email (error message + breakdown stays locked). Attempt 1 warms the instance; attempt 2
+  // then typically answers in ~15-25s. Same lesson as the Lost-Deal lazy-fill retry.
+  let v = null, visErr = false;
+  for(let attempt=1; attempt<=2; attempt++){
+    try{
+      v = await fetchReal(CTX.domain, {brand:CTX.brand, industry:CTX.industry, country:CTX.country, email:CTX.email, only:'visibility'});
+      visErr = false; break;
+    }catch(e){
+      visErr = true;
+      if(CTX.domain !== myDomain) return;   // user moved on mid-flight
+      if(attempt === 1){ await new Promise(r=>setTimeout(r,1500)); }
+    }
+  }
+  if(CTX.domain !== myDomain || !LAST) return;   // moved on -> don't write a stale scan into the new report
+  if(visErr){ pdfBtnState('failed'); $('gak-vis-summary').textContent = "The Lost-Deal Map couldn't load — please try again."; frameHeight(); return; }
+  if(v && v.visibility){ LAST.visibility=v.visibility; renderGated(v.visibility); }
+  else { hide('gak-visibility'); }
+  // capture the brief layer (composite score + on-page signals + report) that came back with the visibility scan
+  if(v && (v.score||v.report||v.signals)){ if(v.score)LAST.score=v.score; if(v.signals)LAST.signals=v.signals; if(v.report)LAST.report=v.report; try{ renderBrief(v); }catch(_){ } }
+  pdfBtnState((v && (v.score || v.visibility)) ? 'ready' : 'failed');   // enable only once the full report actually rendered
+  postLead(buildLead('scored'));   // enriched lead with composite + segment (upsert on email in Make)
+  frameHeight();
 }
 
 /* ---------- backend ---------- */
@@ -1628,13 +1679,18 @@ async function fetchReal(domain, opts){
 }
 async function postLead(payload){
   if(!GAK_CONFIG.MAKE_WEBHOOK_URL) return;
-  // CORS-simple POST (text/plain => no preflight; Make parses the JSON body anyway). keepalive
-  // survives iframe teardown; sendBeacon fallback so a lead is never silently lost.
-  const body = JSON.stringify(payload);
+  // FORM-ENCODED send (2026-07-02): Make does NOT auto-parse text/plain JSON (whole body arrived as ONE
+  // blob field), but it DOES auto-parse application/x-www-form-urlencoded into separate mappable fields —
+  // and that content-type is also CORS-safelisted (no preflight). So the payload is a FLAT object and each
+  // key lands in Make as its own field, ready to map into HubSpot/Mailchimp with no Parse JSON module.
+  // sendBeacon(URLSearchParams) sends form-encoding natively; it is PRIMARY because Make's webhook returns
+  // no CORS headers (a cors-mode fetch can't read r.ok and would double-fire). no-cors keepalive fetch = fallback.
+  const params = new URLSearchParams(payload);
+  const fallback = () => { try{ fetch(GAK_CONFIG.MAKE_WEBHOOK_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},body:params.toString(),keepalive:true}).catch(()=>{}); }catch(_){} };
   try{
-    const ok = await fetch(GAK_CONFIG.MAKE_WEBHOOK_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body,keepalive:true}).then(r=>r.ok).catch(()=>false);
-    if(!ok && navigator.sendBeacon) navigator.sendBeacon(GAK_CONFIG.MAKE_WEBHOOK_URL, body);
-  }catch(e){ try{ navigator.sendBeacon && navigator.sendBeacon(GAK_CONFIG.MAKE_WEBHOOK_URL, body); }catch(_){} }
+    if(navigator.sendBeacon && navigator.sendBeacon(GAK_CONFIG.MAKE_WEBHOOK_URL, params)) return;
+    fallback();
+  }catch(e){ fallback(); }
 }
 /* Lead segmentation by the brief's composite score: 80+ Hot · 60-79 Warm · <60 Nurture. */
 function gakSegment(c){ return (c>=80)?'Hot':((c>=60)?'Warm':'Nurture'); }
@@ -1647,24 +1703,26 @@ function buildLead(stage){
   const composite = (sc && sc.state==='ok' && Number.isFinite(_rawC)) ? Math.max(0, Math.min(100, _rawC)) : null;
   const cats = (sc && sc.categories) ? sc.categories : {};
   const catScore = k => (cats[k] && cats[k].state==='ok' && cats[k].score!=null) ? Number(cats[k].score) : null;
+  const S = v => (v==null ? '' : String(v));   // FLAT form fields: null/undefined -> '' (Make maps empties cleanly)
   return {
     source:'growthack-ai-visibility-tool', stage: stage||'scored', ts:new Date().toISOString(),
     // stable idempotency key so Make/HubSpot can UPSERT the 'captured' then 'scored' events as ONE lead (no duplicates)
     lead_key: ((CTX.email||'').toLowerCase()+'|'+(CTX.domain||'')+'|growthack-ai-visibility-tool'),
-    lead:{ email: (CTX.email||''), company_name: (CTX.brand||GAK_CONFIG.BRAND.name||''), website: (CTX.domain||'') },
-    score: composite!=null ? {
-      composite, grade:(sc.grade||''), state:sc.state, coverage:(sc.coverage||''),
-      categories:{
-        chatgpt_visibility:catScore('chatgpt_visibility'), google_aio_visibility:catScore('google_aio_visibility'),
-        ai_accessibility:catScore('ai_accessibility'), technical_readiness:catScore('technical_readiness'),
-        ai_cited_authority:catScore('ai_cited_authority') }
-    } : null,
-    segment: composite!=null ? gakSegment(composite) : null,
-    signals:{
-      crawlers_blocked: (LAST&&LAST.crawlers&&LAST.crawlers.summary&&LAST.crawlers.summary.blocked)||0,
-      readiness_score: (LAST&&LAST.readiness&&LAST.readiness.score)!=null ? LAST.readiness.score : null,
-      js_rendered: !!(LAST&&LAST.signals&&LAST.signals.fetch_meta&&LAST.signals.fetch_meta.js_rendered)
-    },
+    email: (CTX.email||''), company_name: (CTX.company||CTX.brand||''), brand_name: (CTX.brandName||''),
+    website: (CTX.domain||''), terms_accepted: (CTX.terms ? 'true' : 'false'),
+    segment: (composite!=null ? gakSegment(composite) : ''),
+    score_composite: S(composite),
+    score_grade: (composite!=null && sc ? S(sc.grade) : ''),
+    score_state: (sc ? S(sc.state) : ''),
+    score_coverage: (sc ? S(sc.coverage) : ''),
+    cat_chatgpt_visibility: S(catScore('chatgpt_visibility')),
+    cat_google_aio_visibility: S(catScore('google_aio_visibility')),
+    cat_ai_accessibility: S(catScore('ai_accessibility')),
+    cat_technical_readiness: S(catScore('technical_readiness')),
+    cat_ai_cited_authority: S(catScore('ai_cited_authority')),
+    crawlers_blocked: S((LAST&&LAST.crawlers&&LAST.crawlers.summary&&LAST.crawlers.summary.blocked)||0),
+    readiness_score: S((LAST&&LAST.readiness&&LAST.readiness.score)!=null ? LAST.readiness.score : ''),
+    js_rendered: (!!(LAST&&LAST.signals&&LAST.signals.fetch_meta&&LAST.signals.fetch_meta.js_rendered)) ? 'true' : 'false',
     industry: (CTX.industry||''), country: (CTX.country||'')
   };
 }
@@ -1843,7 +1901,7 @@ $('gak-form').addEventListener('submit', async (e)=>{
   const brand = (company || brandOpt).slice(0,80);
   const industry = ($('gak-industry').value||'').trim().slice(0,80);
   const country = (($('gak-country')||{}).value||'').trim().slice(0,40);
-  CTX = {domain, brand, industry, country};
+  CTX = {domain, brand, industry, country, company, brandName: brandOpt};   // keep RAW fields too — Make gets every field as typed
   GATE_UNLOCKED=false;   // new scan -> re-lock until email (or baked showcase)
   $('gak-go').disabled=true;
   stage('loading'); runSteps();
@@ -1916,12 +1974,14 @@ $('gak-gate-form').addEventListener('submit', async (e)=>{
   $('gak-gate-err').textContent='';
   const email = $('gak-email').value.trim();
   if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ $('gak-gate-err').textContent='Please enter a valid email address.'; return; }
-  CTX.email = email;
+  // GDPR consent gate: no lead leaves the browser without an explicit tick (recorded in the Make payload).
+  if(!($('gak-terms') && $('gak-terms').checked)){ $('gak-gate-err').textContent='Please tick the box to agree to the terms of service.'; return; }
+  CTX.email = email; CTX.terms = true;
   postLead(buildLead('captured'));   // guaranteed lead-capture the instant the email is given (the 'scored' upsert follows from unlock())
   await unlock();
 });
 
-$('gak-restart').addEventListener('click', ()=>{ ['gak-url','gak-company','gak-brand','gak-industry','gak-country','gak-email'].forEach(id=>{const e=$(id); if(e) e.value='';}); const ge=$('gak-gate-err'); if(ge) ge.textContent=''; LAST=null; CTX={domain:'',brand:'',industry:'',country:''}; const go=$('gak-go'); if(go) go.disabled=false; show('gak-gate'); ['gak-full-checks','gak-visibility','gak-competitors','gak-sources','gak-offering','gak-fixlist','gak-final','gak-sample-note','gak-free-extra','gak-matrix-card','gak-teasers','gak-lostdeal','gak-booking','gak-crawler','gak-exec','gak-framework','gak-sw','gak-recs','gak-chatgpt','gak-aio'].forEach(hide); ['gak-matrix-body','gak-teasers','gak-lostdeal','gak-prompts','gak-vis-summary'].forEach(id=>{const e=$(id); if(e) e.innerHTML='';}); const pr=$('gak-pdf-root'); if(pr) pr.innerHTML=''; stage('input'); });
+$('gak-restart').addEventListener('click', ()=>{ ['gak-url','gak-company','gak-brand','gak-industry','gak-country','gak-email'].forEach(id=>{const e=$(id); if(e) e.value='';}); const tc=$('gak-terms'); if(tc) tc.checked=false; CTX.terms=false; const ge=$('gak-gate-err'); if(ge) ge.textContent=''; LAST=null; CTX={domain:'',brand:'',industry:'',country:''}; const go=$('gak-go'); if(go) go.disabled=false; show('gak-gate'); ['gak-full-checks','gak-visibility','gak-competitors','gak-sources','gak-offering','gak-fixlist','gak-final','gak-sample-note','gak-free-extra','gak-matrix-card','gak-teasers','gak-lostdeal','gak-booking','gak-crawler','gak-exec','gak-framework','gak-sw','gak-recs','gak-chatgpt','gak-aio'].forEach(hide); ['gak-matrix-body','gak-teasers','gak-lostdeal','gak-prompts','gak-vis-summary'].forEach(id=>{const e=$(id); if(e) e.innerHTML='';}); const pr=$('gak-pdf-root'); if(pr) pr.innerHTML=''; stage('input'); });
 
 /* ============================================================
    PDF EXPORT — 8-page branded PDF built off-screen in #gak-pdf-root from LAST, captured by html2pdf.js.
@@ -1966,30 +2026,30 @@ function loadHtml2Pdf(){
 }
 
 /* literal-hex helpers (mirror barColor / GRADE_CLASS / BAND_LABEL but as hex, for html2canvas) */
-const PDF_BARHEX = (s)=> s>=70?'#2e9e6f':s>=50?'#c47d16':'#d63b42';
-const PDF_GAUGEHEX = (g)=> (g==='A+'||g==='A'||g==='B')?'#2e9e6f':(g==='C'?'#c47d16':'#d63b42');
-const PDF_GRADEHEX = (g)=> (g==='A+'||g==='A'||g==='B')?['#0f7a52','#e7f5ee']:(g==='C'?['#a5651a','#fbf1e1']:['#c0353c','#fcebec']);
-const PDF_BANDHEX = (b)=> b==='strong'||b==='good' ? ['#0f7a52','#e7f5ee','#c2e6d4']
-  : b==='fair' ? ['#a5651a','#fbf1e1','#f0d6a8']
-  : b==='weak' ? ['#c0353c','#fcebec','#f3ccce']
-  : ['#636f7e','#f5f6f8','#e9ebf0'];
+const PDF_BARHEX = (s)=> s>=70?'#5dc39b':s>=50?'#e6b566':'#c25d5d';
+const PDF_GAUGEHEX = (g)=> (g==='A+'||g==='A'||g==='B')?'#5dc39b':(g==='C'?'#e6b566':'#c25d5d');
+const PDF_GRADEHEX = (g)=> (g==='A+'||g==='A'||g==='B')?['#7fd7b2','#0f2b26']:(g==='C'?['#e6b566','#2f2415']:['#e08f8f','#331a1c']);
+const PDF_BANDHEX = (b)=> b==='strong'||b==='good' ? ['#7fd7b2','#0f2b26','#1d4a3d']
+  : b==='fair' ? ['#e6b566','#2f2415','#57431f']
+  : b==='weak' ? ['#e08f8f','#331a1c','#5c2f33']
+  : ['#90afcf','#13233c','#24354e'];
 let PDF_DATE='';
 /* inline-SVG wordmark (NOT a cross-origin <img>, so it never taints the html2canvas canvas) */
-const PDF_LOGO = '<svg width="150" height="24" viewBox="0 0 150 24" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Growthack">'
-  + '<text x="0" y="19" font-family="Manrope,Arial,Helvetica,sans-serif" font-size="21" font-weight="800" letter-spacing="-0.6">'
-  + '<tspan fill="#0c1a2e">Growth</tspan><tspan fill="#ff5800">ack</tspan></text></svg>';
+const PDF_LOGO = '<svg width="168" height="24" viewBox="0 0 168 24" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Growthack">'
+  + '<text x="0" y="18" font-family="Manrope,Arial,Helvetica,sans-serif" font-size="15" font-weight="600" letter-spacing="4.2">'
+  + '<tspan fill="#ff5800">GROWTHACK</tspan></text></svg>';   /* deck-style wordmark (swap for Kevin's logo file when supplied) */
 
 /* self-contained PDF gauge (literal hex, no var()/currentColor; arc rotated via SVG attribute) */
 function pdfGauge(score, color, numText){
   const C=402, pct=Math.max(0,Math.min(100,Number(score)||0)), off=C-(C*pct/100);
   return '<div style="position:relative;width:148px;height:148px;flex:0 0 auto">'
     + '<svg width="148" height="148" viewBox="0 0 148 148">'
-    + '<circle cx="74" cy="74" r="64" fill="none" stroke="#eef0f2" stroke-width="14"></circle>'
+    + '<circle cx="74" cy="74" r="64" fill="none" stroke="#1c2e47" stroke-width="14"></circle>'
     + '<circle cx="74" cy="74" r="64" fill="none" stroke="'+color+'" stroke-width="14" stroke-linecap="round" stroke-dasharray="402" stroke-dashoffset="'+off+'" transform="rotate(-90 74 74)"></circle>'
     + '</svg>'
     + '<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">'
-    + '<span style="font-size:40px;font-weight:800;color:#0c1a2e;line-height:1;letter-spacing:-.03em">'+esc(numText)+'</span>'
-    + '<span style="font-size:12px;color:#636f7e;margin-top:3px">/ 100</span></div></div>';
+    + '<span style="font-size:40px;font-weight:600;color:#ffffff;line-height:1;letter-spacing:-.03em">'+esc(numText)+'</span>'
+    + '<span style="font-size:12px;color:#90afcf;margin-top:3px">/ 100</span></div></div>';
 }
 function pdfData(){
   const L=LAST||{};
@@ -1999,7 +2059,10 @@ function pdfData(){
 }
 function pdfPageWrap(kicker, n, total, inner){
   const agency = (GAK_CONFIG.BRAND && GAK_CONFIG.BRAND.name) || 'Growthack';
-  return '<div class="pdf-page"><div class="pdf-brandbar">'+PDF_LOGO+'<span class="pdf-kicker">'+esc(kicker)+'</span></div>'
+  // data-pdf-link -> a real clickable link annotation is overlaid after capture (html2canvas output is a flat image)
+  const brandUrl = gakSafeUrl((GAK_CONFIG.BRAND && GAK_CONFIG.BRAND.url) || '', null);
+  const logo = (brandUrl && brandUrl!=='#') ? '<span data-pdf-link="'+esc(brandUrl)+'">'+PDF_LOGO+'</span>' : PDF_LOGO;
+  return '<div class="pdf-page"><div class="pdf-brandbar">'+logo+'<span class="pdf-kicker">'+esc(kicker)+'</span></div>'
     + inner
     + '<div class="pdf-foot"><span>'+esc(agency)+' · AI Visibility Report</span><span>Page '+n+' of '+total+'</span></div></div>';
 }
@@ -2008,8 +2071,8 @@ function pdfCover(D){
   const sc=D.score, grade=(sc&&sc.grade)||'';
   const insufficient = !(sc && sc.state==='ok' && sc.composite!=null);
   const numText = insufficient ? '—' : String(Number(sc.composite)||0);
-  const gColor  = insufficient ? '#c47d16' : PDF_GAUGEHEX(grade);
-  const gPair   = insufficient ? ['#a5651a','#fbf1e1'] : PDF_GRADEHEX(grade);
+  const gColor  = insufficient ? '#e6b566' : PDF_GAUGEHEX(grade);
+  const gPair   = insufficient ? ['#e6b566','#2f2415'] : PDF_GRADEHEX(grade);
   const gradeLabel = insufficient ? 'Limited data' : (grade||'—');
   const exec = (D.report&&D.report.executive_summary&&D.report.executive_summary.text) || (sc&&sc.na_note) || '';
   const cov  = (sc&&sc.coverage)||'';
@@ -2062,7 +2125,7 @@ function pdfChatgptPage(D){
     const eng=(p.engines||[]).find(function(e){ return String(e.label||'').toLowerCase().indexOf('chatgpt')===0; });
     if(!eng) return '';
     const cited=!!eng.cited, comps=(p.competitors_cited||[]).filter(Boolean);
-    const compLine=comps.length?'<div class="pdf-prompt-comp">Named instead: <b>'+comps.map(esc).join(', ')+'</b></div>':'';
+    const compLine=comps.length?'<div class="pdf-prompt-comp">'+(cited?'Also named':'Named instead')+': <b>'+comps.map(esc).join(', ')+'</b></div>':'';
     return '<div class="pdf-prompt"><div class="pdf-prompt-q">&ldquo;'+esc(p.query)+'&rdquo;</div><div class="pdf-state '+(cited?'yes':'no')+'">'+(cited?'✓ ChatGPT names you':'✕ Not mentioned')+'</div>'+compLine+'</div>';
   }).filter(Boolean).join('');
   if(!rows) return null;
@@ -2080,7 +2143,7 @@ function pdfAioPage(D){
     const band=['high','medium','low'].indexOf(String(aio.band).toLowerCase())>=0?String(aio.band).toLowerCase():'low';
     const bandTxt=band.charAt(0).toUpperCase()+band.slice(1);
     const tag=aio.label==='observed'?'observed':'estimated';
-    inner+='<div style="margin:6px 0 4px"><span class="pdf-aio-band b-'+band+'">'+esc(bandTxt)+'</span><span style="font-size:13px;color:#5d6b7d">likelihood of appearing in Google AI Overviews · <b>'+esc(tag)+'</b></span></div>';
+    inner+='<div style="margin:6px 0 4px"><span class="pdf-aio-band b-'+band+'">'+esc(bandTxt)+'</span><span style="font-size:13px;color:#90afcf">likelihood of appearing in Google AI Overviews · <b>'+esc(tag)+'</b></span></div>';
     if(aio.derivation) inner+='<p class="pdf-aio-deriv">How we derived this: '+esc(aio.derivation)+'</p>';
   }
   const prompts=D.visibility&&D.visibility.prompts;
@@ -2160,10 +2223,13 @@ function pdfNextStepsPage(D){
       : 'AI rarely names you yet — the upside is large and most of the fixes are within your control.';
     inner+='<span class="pdf-seg '+segCls+'">'+esc(seg)+' priority</span><p class="pdf-lead">'+esc(segCopy)+'</p>';
   }
+  // data-pdf-link makes the CTA button + URL chip REAL links in the exported PDF (Kevin 2026-07-02:
+  // "the PDF button doesn't work" — the rasterised Book-a-call button was a dead image before this).
+  const ctaAttr=(ctaUrl&&ctaUrl!=='#')?' data-pdf-link="'+esc(ctaUrl)+'"':'';
   inner+='<div class="pdf-cta-box"><div class="t">Want '+esc(agency)+' to fix this?</div>'
     + (ctaSub?'<div class="d">'+esc(ctaSub)+'</div>':'')
-    + '<span class="u">'+esc(ctaLabel)+'</span>'
-    + (ctaUrl&&ctaUrl!=='#'?'<span class="u sec">'+esc(ctaUrl)+'</span>':'')
+    + '<span class="u"'+ctaAttr+'>'+esc(ctaLabel)+'</span>'
+    + (ctaUrl&&ctaUrl!=='#'?'<span class="u sec"'+ctaAttr+'>'+esc(ctaUrl)+'</span>':'')
     + '</div>';
   const promptTxt = n ? (n+' buying-question prompt'+(n===1?'':'s')) : 'the buying-question prompts';
   inner+='<p class="pdf-honesty">This report is based on '+esc(promptTxt)+' run '+esc(PDF_DATE)+'. AI answers are probabilistic — they vary between runs, engines and over time — so treat this as a directional snapshot, not a guarantee.</p>';
@@ -2186,6 +2252,24 @@ function buildPdfRoot(){
   const total=defs.length;
   const root=$('gak-pdf-root');
   root.innerHTML = defs.map(function(d,i){ return pdfPageWrap(d[0], i+1, total, d[1]); }).join('');
+  // Calibration marker at each page's top-left corner: 1 shade off the page background (invisible to the eye,
+  // exact-matchable in the capture canvas). Lets the link-annotation pass measure the REAL canvas offset+scale
+  // instead of assuming html2canvas geometry (which shifts/scales with the embed's layout).
+  [].slice.call(root.querySelectorAll('.pdf-page')).forEach(function(pg){
+    const m=document.createElement('div');
+    m.style.cssText='position:absolute;left:0;top:0;width:4px;height:4px;background:#0d1b2f;pointer-events:none';
+    pg.appendChild(m);
+  });
+  // Same trick per LINK: a #0d1b30 marker at each [data-pdf-link] element's own corner. The annotation pass
+  // finds these in the rendered canvas and snaps each link rect to its marker — immune to the ~20px drift
+  // html2canvas's own text rasteriser introduces vs any DOM/clone measurement.
+  [].slice.call(root.querySelectorAll('[data-pdf-link]')).forEach(function(el){
+    el.style.position='relative';
+    if(getComputedStyle(el).display==='inline') el.style.display='inline-block';
+    const m=document.createElement('div');
+    m.style.cssText='position:absolute;left:0;top:0;width:4px;height:4px;background:#0d1b30;pointer-events:none';
+    el.appendChild(m);
+  });
   frameHeight();
   return root;
 }
@@ -2219,17 +2303,127 @@ async function downloadPdf(){
       document.body.classList.add('gak-capturing');
       root.style.position='static'; root.style.left='auto'; root.style.top='auto'; root.style.zIndex='auto'; root.style.visibility='visible';
       const ph=root.getBoundingClientRect().height||1; const pscale=Math.max(1, Math.min(2, 15000/ph));
+      // Measure every [data-pdf-link] element (px, relative to its .pdf-page) while the root is in-flow, so real
+      // link annotations can be overlaid after capture — html2canvas output is a flat image, so without this the
+      // Book-a-call button in the PDF is dead pixels (Kevin 2026-07-02).
+      const pdfLinks=[];
+      window.__gakCloneLinks=null; window.__gakPdfCal=null;   // never reuse a prior run's geometry
+      [].slice.call(root.querySelectorAll('.pdf-page')).forEach(function(pg,pi){
+        const pr=pg.getBoundingClientRect();
+        [].slice.call(pg.querySelectorAll('[data-pdf-link]')).forEach(function(el){
+          const u=gakSafeUrl(el.getAttribute('data-pdf-link')||'', null); if(!u||u==='#') return;
+          const r=el.getBoundingClientRect();
+          if(r.width>0&&r.height>0) pdfLinks.push({page:pi+1, x:r.left-pr.left, y:r.top-pr.top, w:r.width, h:r.height, url:u});
+        });
+      });
       try{
         await lib().set({
           margin:[28,28,40,28], filename:fname, image:{type:'jpeg', quality:0.96},
           // x:0/scrollX:0/scrollY:0 anchor html2canvas's capture window to the document origin — without them the
           // windowWidth:794 re-layout shifted the in-flow root ~50px right, clipping the left edge of every line.
-          html2canvas:{scale:pscale, useCORS:true, backgroundColor:'#ffffff', logging:false, width:794, windowWidth:794, x:0, scrollX:0, scrollY:0},
+          // onclone: measure the [data-pdf-link] rects in html2canvas's OWN clone (windowWidth:794 layout) — the
+          // live DOM shifts vs the clone (QA: +38px x from wrap centering, ~20px y from reflow), so measuring in
+          // the exact layout being rasterised is the only drift-free source for the link-annotation overlay.
+          html2canvas:{scale:pscale, useCORS:true, backgroundColor:'#ffffff', logging:false, width:794, windowWidth:794, x:0, scrollX:0, scrollY:0,
+            onclone:function(doc){
+              window.__gakCloneLinks=null;
+              try{
+                var rt=doc.getElementById('gak-pdf-root'); if(!rt) return;
+                var rr=rt.getBoundingClientRect();   // clone coords are ROOT-relative (the clone's own viewport offset is irrelevant)
+                var out=[];
+                [].slice.call(rt.querySelectorAll('[data-pdf-link]')).forEach(function(el){
+                  var u=gakSafeUrl(el.getAttribute('data-pdf-link')||'', null); if(!u||u==='#') return;
+                  var r=el.getBoundingClientRect();
+                  if(r.width>0&&r.height>0) out.push({x:r.left-rr.left, y:r.top-rr.top, w:r.width, h:r.height, url:u});
+                });
+                window.__gakCloneLinks=out;
+              }catch(_){ }
+            }},
           // pagebreak: 'avoid-all' keeps each .pdf-page intact without splitting. We do NOT use before:'.pdf-page' here —
           // in this html2pdf build a forced per-element break (JS `before` OR a CSS break-before rule) inserts a FULL
           // BLANK page before each section (16 pages, every odd one blank). avoid-all = clean 8-page report, zero blanks.
           jsPDF:{unit:'pt', format:'a4', orientation:'portrait'}, pagebreak:{mode:['avoid-all','css']}
-        }).from(root).save();
+        }).from(root).toCanvas().get('canvas').then(function(canvas){
+          // Locate the per-page calibration markers (#0d1b2f, planted by buildPdfRoot) in the capture canvas.
+          // This measures the REAL page origins + scale, so the link overlay below needs zero assumptions
+          // about html2canvas clone offsets (verified drifting +38px/+3.9% in QA when computed from the DOM).
+          window.__gakPdfCal=null; window.__gakSnapped=null;
+          try{
+            const ctx=canvas.getContext('2d'), colW=Math.min(canvas.width,200);
+            const img=ctx.getImageData(0,0,colW,canvas.height).data;
+            const at=function(x,y){ const o=(y*colW+x)*4; return img[o]===13&&img[o+1]===27&&img[o+2]===47; };
+            const marks=[]; let y=0;
+            while(y<canvas.height-1){
+              let hit=null;
+              for(let x=0;x<colW-1;x++){ if(at(x,y)&&at(x+1,y)&&at(x,y+1)&&at(x+1,y+1)){ hit={x:x,y:y}; break; } }
+              if(hit){ marks.push(hit); y+=200; } else y++;
+            }
+            window.__gakPdfCal={marks:marks, cw:canvas.width};
+            // snap each link to ITS OWN #0d1b30 marker: predict the position from the clone rects, then search
+            // ±100px in the canvas for the exact marker colour — the found pixel is raster ground truth.
+            // NOTE: this scans the RAW canvas (exact colours), BEFORE any JPEG encoding — JPEG only happens
+            // later inside toPdf()'s addImage, so lossy compression can never break the 1-shade markers.
+            const cl=window.__gakCloneLinks;
+            if(cl&&cl.length&&marks.length){
+              const s=marks.length>1 ? (marks[marks.length-1].y-marks[0].y)/((marks.length-1)*1139) : canvas.width/794;
+              const snapped=[];
+              cl.forEach(function(L){
+                let li=Math.max(0,Math.min(marks.length-1,Math.floor(L.y/1139)));
+                const ex=marks[li].x+L.x*s, ey=marks[li].y+(L.y-li*1139)*s;
+                let fx=ex, fy=ey, best=Infinity;
+                const x0=Math.max(0,Math.floor(ex-100)), x1=Math.min(canvas.width-2,Math.ceil(ex+100));
+                const y0=Math.max(0,Math.floor(ey-100)), y1=Math.min(canvas.height-2,Math.ceil(ey+100));
+                const win=ctx.getImageData(x0,y0,x1-x0+2,y1-y0+2), wd=win.data, ww=win.width;
+                for(let yy=0;yy<win.height-1;yy++) for(let xx=0;xx<ww-1;xx++){
+                  const o=(yy*ww+xx)*4;
+                  if(wd[o]===13&&wd[o+1]===27&&wd[o+2]===48&&wd[o+4]===13&&wd[o+5]===27&&wd[o+6]===48){
+                    const d=(xx+x0-ex)*(xx+x0-ex)+(yy+y0-ey)*(yy+y0-ey);
+                    if(d<best){ best=d; fx=xx+x0; fy=yy+y0; }
+                  }
+                }
+                snapped.push({cx:fx, cy:fy, w:L.w*s, h:L.h*s, url:L.url});
+              });
+              window.__gakSnapped=snapped;
+            }
+          }catch(_){ }
+        }).toPdf().get('pdf').then(function(pdf){
+          // Overlay REAL link annotations on the rasterised pages (html2canvas output is a flat image — the
+          // Book-a-call button in the PDF was dead pixels before this; Kevin 2026-07-02). Geometry mirrors
+          // html2pdf's own slicing: pxPage=floor(cw*innerH/innerW), each slice drawn at innerW pt wide.
+          try{
+            const cal=window.__gakPdfCal, cloneLinks=window.__gakCloneLinks, nLayout=root.querySelectorAll('.pdf-page').length;
+            const ML=28, MT=28, innerW=595.28-56, innerH=841.89-68;
+            const nP=pdf.internal.getNumberOfPages();
+            const snapped=window.__gakSnapped;
+            if(cal&&snapped&&snapped.length){
+              // primary: each link snapped to its own marker in the rendered canvas — raster ground truth
+              const k2=innerW/cal.cw, pxPage=Math.floor(cal.cw*innerH/innerW);
+              snapped.forEach(function(L){
+                const pg=Math.floor(L.cy/pxPage)+1; if(pg<1||pg>nP) return;
+                pdf.setPage(pg);
+                pdf.link(ML+L.cx*k2, MT+(L.cy-(pg-1)*pxPage)*k2, L.w*k2, L.h*k2, {url:L.url});
+              });
+            } else if(cal&&cal.marks.length===nLayout){
+              // secondary: live-DOM rects re-anchored to the per-page calibration markers found in the canvas
+              const s=cal.cw/794, k2=innerW/cal.cw, pxPage=Math.floor(cal.cw*innerH/innerW);
+              pdfLinks.forEach(function(L){
+                const m=cal.marks[L.page-1]; if(!m) return;
+                const cX=m.x+L.x*s, cY=m.y+L.y*s;
+                const pg=Math.floor(cY/pxPage)+1; if(pg<1||pg>nP) return;
+                pdf.setPage(pg);
+                pdf.link(ML+cX*k2, MT+(cY-(pg-1)*pxPage)*k2, L.w*s*k2, L.h*s*k2, {url:L.url});
+              });
+            } else {
+              // fallback (markers not found): constant-K mapping — close enough that generous targets still work
+              const K=innerW/794, PAGE_PX=innerH/K;
+              pdfLinks.forEach(function(L){
+                if(L.page<1||L.page>nP) return;
+                pdf.setPage(L.page);
+                pdf.link(ML+L.x*K, MT+(L.y-(L.page-1)*(PAGE_PX-1139))*K, L.w*K, L.h*K, {url:L.url});
+              });
+            }
+          }catch(_){ }
+        }).save();
       } finally {
         root.style.cssText=prevCss; try{ root.innerHTML=''; }catch(_){ }
         document.body.classList.remove('gak-capturing');
