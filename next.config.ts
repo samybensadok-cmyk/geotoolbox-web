@@ -13,6 +13,8 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // NOTE: www.geotoolbox.ai → geotoolbox.ai (308) is handled at the Vercel
+      // domain layer (Settings → Domains), not here.
       { source: "/login",  destination: "/app?page=login",  permanent: true },
       { source: "/signup", destination: "/app?page=signup", permanent: true },
       { source: "/features/content-brief", destination: "/features/content-studio", permanent: true },
