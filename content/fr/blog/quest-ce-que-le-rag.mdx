@@ -1,0 +1,252 @@
+---
+title: "Qu'est-ce que le RAG (retrieval-augmented generation) ?"
+description: "Le RAG (retrieval-augmented generation) est le moteur de la recherche IA : ce qu'il est, comment il marche, et comment devenir la page qu'il récupère et cite."
+date: "2026-07-03"
+author: "Samy BEN SADOK"
+tags: ["rag", "geo", "ai-search", "ai-visibility", "guide"]
+draft: false
+locale: "fr"
+donorSlug: "what-is-rag"
+donorCommit: "5195e94"
+noindex: false
+---
+
+Le RAG, abréviation de « retrieval-augmented generation » (génération augmentée par récupération), est la technique qui permet à un modèle d'IA de consulter des sources avant de répondre, au lieu de se fier à sa seule mémoire. C'est aussi le mécanisme qui fait tourner la recherche IA. Quand ChatGPT, Perplexity ou un aperçu IA de Google répond à une question et cite quelques pages, c'est le RAG qui explique pourquoi ces pages ont été récupérées.
+
+La plupart des explications sur le RAG s'adressent à ceux qui le construisent. Celle-ci est pour ceux qui se trouvent à l'autre bout : toute personne qui publie du contenu et veut comprendre pourquoi certaines pages sont récupérées et citées quand d'autres ne le sont jamais.
+
+## Ce qu'il faut retenir
+
+- **Le RAG (génération augmentée par récupération) permet à un grand modèle de langage (LLM) de récupérer des documents pertinents avant de répondre**, au lieu de puiser uniquement dans sa mémoire d'entraînement.
+- Il tient en trois verbes : récupérer les passages utiles, enrichir la requête avec eux, puis générer une réponse ancrée dans ces sources.
+- C'est le moteur de la recherche IA : ChatGPT, Perplexity et les AI Overviews (aperçus IA) de Google récupèrent des pages avant de répondre, donc se faire récupérer est le tour de qualification pour se faire citer.
+- Le RAG réduit les hallucinations sans les supprimer : une étude de Stanford a mesuré 17 à 34 % de réponses inventées sur des outils juridiques qui reposent pourtant sur le RAG.
+- En France, connecter vos documents internes à un RAG fait de vous le responsable de traitement au sens du RGPD (position de la CNIL) : un point à cadrer avant d'y brancher des données personnelles.
+
+## Qu'est-ce que la génération augmentée par récupération (RAG) ?
+
+**La génération augmentée par récupération (RAG)** est une technique qui permet à un grand modèle de langage de chercher de l'information au moment de répondre, au lieu de se fier uniquement à ce qu'il a mémorisé pendant l'entraînement. Le système RAG récupère les documents pertinents ; le modèle lit ensuite le contexte fourni et rédige une réponse qui s'appuie dessus.
+
+La meilleure image, c'est l'examen à livre ouvert. Un modèle de langage seul passe un examen à livre fermé : il répond de mémoire, et quand la mémoire flanche, il devine avec assurance. Le RAG donne au même modèle le manuel et le laisse consulter la bonne page avant de répondre. Les connaissances qu'il utilise n'ont plus besoin d'être gravées dans ses poids : elles peuvent être extraites d'une source à l'instant même où la question est posée.
+
+Cette étape « à livre ouvert », c'est aussi le moment où votre contenu entre en jeu. Quand le modèle part chercher une page pour fonder sa réponse, il organise une sorte de concours de récupération, et votre page y participe ou non. Vous en avez sûrement déjà vu le résultat : une réponse IA avec une poignée de sources listées en dessous, c'est la génération augmentée par récupération en action.
+
+Le nom décrit la séquence à la lettre : **récupérer** les documents pertinents, en **enrichir** la requête, puis **générer** la réponse. Gardez ces trois mots dans l'ordre et tout le reste du RAG en découle.
+
+Un mot sur le terme, car il est instable en français. La traduction retenue par l'administration française (France Num, Direction générale des entreprises) est **« génération augmentée par récupération »**. Wikipédia et AWS parlent plutôt de **« génération à enrichissement contextuel »**, d'autres de « génération augmentée de récupération » (Google Cloud emploie les deux sur une même page). Trois formules pour une même idée : dans cet article, on garde la version institutionnelle et on écrit **« le RAG »** au masculin, même si certains glossaires disent « la RAG ». L'acronyme anglais, lui, reste la référence partagée par tout le monde.
+
+## Comment fonctionne le RAG : récupération, enrichissement, génération
+
+À chaque question posée, le système RAG exécute trois étapes.
+
+**Récupération.** Le système transforme la question en recherche et va chercher les passages les plus pertinents dans une base de connaissances. Cette base est en général un ensemble de documents découpés en morceaux (le découpage, ou *chunking*) puis convertis en [embeddings](https://geotoolbox.ai/blog/vector-embeddings), des représentations numériques qui permettent à un logiciel de comparer le sens plutôt que de faire correspondre des mots à l'identique. Un modèle d'embedding convertit aussi la question en vecteur, et le récupérateur trouve les passages dont les vecteurs sont les plus proches. C'est de la [recherche sémantique](https://geotoolbox.ai/glossary/semantic-search), souvent combinée à une bonne vieille correspondance par mots-clés pour les termes qui doivent tomber juste.
+
+**Enrichissement.** Les passages récupérés sont collés dans la requête, à côté de la question d'origine. Le modèle voit désormais les mots de l'utilisateur plus quelques paragraphes de preuves qu'il n'avait pas une seconde plus tôt. Rien n'a changé dans le modèle : il a simplement davantage de contexte sous les yeux pour cette requête précise.
+
+**Génération.** Le modèle rédige sa réponse à partir du contexte fourni, et un système bien conçu lui demande de citer les passages sur lesquels il s'est appuyé.
+
+Un exemple concret. Un client demande au chatbot d'une boutique : « quel est votre délai de rétractation ? ». Le système récupère, dans les conditions générales de vente, le passage qui mentionne les quatorze jours, le glisse dans la requête, et le modèle répond en citant ce passage précis, au lieu d'inventer un délai plausible. Sans récupération, le même modèle aurait pu répondre « trente jours » avec le même aplomb.
+
+Voici la partie que la plupart des explications passent sous silence, et la plus importante si vous publiez du contenu. **Dans la boucle RAG, le modèle n'apprend pas votre page. Il la lit comme s'il la découvrait, pour cette réponse-là, et l'oublie dès qu'elle est terminée.** Les pages publiques peuvent tout de même être absorbées dans les poids d'un modèle pendant l'entraînement, mais c'est lent, opaque, hors de votre contrôle et impossible à mettre à jour. La récupération, elle, est sous votre contrôle. Votre contenu est récupéré, utilisé, puis relâché à chaque requête : voilà pourquoi être structuré, à jour et facile à récupérer compte plus que d'être assez connu pour que le modèle vous « connaisse ».
+
+Le vocabulaire prête à confusion ici. Une base de données vectorielle est la façon la plus courante de stocker ces embeddings pour une récupération rapide, mais c'est un détail d'implémentation, pas un élément de la définition. Le RAG, c'est l'idée générale d'associer la récupération d'information à la génération, en ancrant la réponse dans les documents récupérés. La tuyauterie en dessous peut varier.
+
+## D'où vient le RAG ?
+
+Le terme vient d'un article de 2020, [« Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks »](https://arxiv.org/abs/2005.11401), signé par Patrick Lewis et une équipe de chercheurs de Facebook AI Research (aujourd'hui Meta AI), de l'University College London et de l'université de New York (NYU). En juillet 2026, Google Scholar recense [plus de 24 000 citations](https://scholar.google.com/scholar?q=Retrieval-Augmented+Generation+for+Knowledge-Intensive+NLP+Tasks) : c'est la référence sur laquelle tout le monde s'appuie.
+
+Le cadre posé par l'article reste le plus utile. Il décrit la combinaison d'une **mémoire paramétrique**, les connaissances stockées dans les poids entraînés d'un modèle, et d'une **mémoire non paramétrique**, un index consultable que le modèle peut interroger au moment de l'inférence. Dans le travail d'origine, cet index était une représentation vectorielle dense de Wikipédia, consultée par un récupérateur neuronal. Remplacez Wikipédia par « le Web en direct » et vous obtenez un croquis fidèle du fonctionnement des moteurs de recherche IA d'aujourd'hui.
+
+Lewis a même [déclaré regretter cet acronyme peu élégant](https://blogs.nvidia.com/blog/what-is-retrieval-augmented-generation/), déclarant : « Nous aurions certainement davantage réfléchi au choix du nom si nous avions su que notre travail prendrait une telle ampleur. » C'est ce qui est arrivé.
+
+## Pourquoi le RAG existe : ce qu'il résout (et ce qu'il ne résout pas)
+
+Un modèle de langage seul a des faiblesses prévisibles, et le RAG a été conçu pour les corriger.
+
+Le modèle a d'abord une **date de coupure des connaissances**. Les données d'entraînement sont figées à un instant donné, si bien que le modèle vieillit peu à peu jusqu'à ce qu'on le réentraîne. Le RAG contourne le problème en allant chercher l'information à jour au moment de la question. Il n'a pas non plus **accès aux données privées ou propriétaires**, ces documents internes et pages récentes qui n'ont jamais figuré dans son corpus d'entraînement. Le RAG raccorde ces connaissances externes sans réentraînement. Et comme la récupération coûte bien moins cher que le fine-tuning sur de nouvelles données, c'est la manière la plus économique de garder des réponses à jour.
+
+L'atout principal, c'est l'[ancrage](https://geotoolbox.ai/glossary/grounding) (*grounding*). En arrimant les réponses à des sources récupérées, le RAG **réduit les hallucinations**, ces réponses inventées que les modèles produisent avec assurance quand ils travaillent de mémoire. Il rend aussi les réponses vérifiables, puisque le système peut citer les passages utilisés.
+
+Passons à la partie qui fâche, car c'est l'affirmation la plus survendue de toute la catégorie : **le RAG réduit les hallucinations, il ne les élimine pas.** Le modèle peut toujours mal lire une source correcte, assembler des passages contradictoires ou écrire quelque chose d'infondé quand la récupération revient maigre. La qualité de la récupération impose un plafond infranchissable à tout le système : un modèle ne peut pas ancrer une réponse dans un passage que le récupérateur n'a jamais trouvé.
+
+Les chiffres, eux, sont sans appel. Une étude de Stanford, [« Hallucination-Free? Assessing the Reliability of Leading AI Legal Research Tools »](https://reglab.stanford.edu/publications/hallucination-free-assessing-the-reliability-of-leading-ai-legal-research-tools/), a testé des outils commerciaux de recherche juridique qui sont eux-mêmes des systèmes RAG bâtis sur des bibliothèques juridiques soigneusement constituées et faisant autorité. Elle a relevé que Lexis+ AI hallucinait sur plus de 17 % des requêtes, et l'outil de Westlaw sur plus d'un tiers, alors que leur marketing laissait entendre le contraire. Si un RAG conçu exprès pour un corpus juridique « propre » se trompe encore aussi souvent, traitez avec méfiance toute promesse de « zéro hallucination ». Le RAG est un garde-fou solide, et c'est exactement là qu'est sa valeur. Sur les raisons profondes du phénomène, voyez notre analyse des [hallucinations de l'IA](https://geotoolbox.ai/blog/ai-hallucinations).
+
+En France, l'enjeu est déjà passé devant les tribunaux. Des juridictions administratives ont commencé à sanctionner des écritures truffées de références jurisprudentielles inventées par une IA générative : le tribunal administratif d'Orléans a relevé une quinzaine de références entièrement fausses dans les conclusions d'un avocat et lui a adressé un avertissement (29 décembre 2025, n° 2506461) ; le tribunal administratif de Grenoble avait pointé des références « fantaisistes » quelques semaines plus tôt (3 décembre 2025). Un système RAG qui affiche les passages qu'il a récupérés est justement la parade technique à ce genre de dérapage : il rend la réponse traçable et vérifiable, source à l'appui.
+
+## RAG ou fine-tuning : la confusion « entraîner ChatGPT sur nos documents »
+
+Quand un décideur dit « on va entraîner ChatGPT sur notre site », il pense presque toujours au RAG, pas à un entraînement. On confond les deux en permanence, et se tromper de choix coûte cher.
+
+Le **fine-tuning** modifie le modèle lui-même. Vous lancez un entraînement supplémentaire pour inscrire de nouveaux schémas dans ses poids. Après quoi la connaissance est interne, il n'y a plus d'étape de consultation, et la mettre à jour veut dire réentraîner. Le fine-tuning est l'outil adapté pour apprendre à un modèle un style, un format ou un comportement.
+
+Le **RAG** laisse le modèle intact et lui donne des documents à lire au moment de répondre. La connaissance vit dans un index séparé que vous actualisez quand vous voulez, et le modèle cite ce qu'il a récupéré. Le RAG est l'outil adapté pour les faits qui changent ou que le modèle n'a jamais appris.
+
+<table>
+  <thead>
+    <tr>
+      <th>Question</th>
+      <th>RAG</th>
+      <th>Fine-tuning</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Qu'est-ce qui change ?</td>
+      <td>Un index externe de documents</td>
+      <td>Les poids du modèle lui-même</td>
+    </tr>
+    <tr>
+      <td>Quand la connaissance est-elle ajoutée ?</td>
+      <td>Au moment de la réponse, à chaque requête</td>
+      <td>Pendant un entraînement, en amont</td>
+    </tr>
+    <tr>
+      <td>Idéal pour</td>
+      <td>Des faits récents ou propriétaires</td>
+      <td>Style, ton, format, comportement</td>
+    </tr>
+    <tr>
+      <td>Mise à jour</td>
+      <td>On modifie l'index, sans réentraînement</td>
+      <td>On réentraîne ou on réajuste le modèle</td>
+    </tr>
+    <tr>
+      <td>Peut-il citer ses sources ?</td>
+      <td>Oui</td>
+      <td>Pas de lui-même, ni de façon fiable</td>
+    </tr>
+  </tbody>
+</table>
+
+Ce ne sont pas des rivaux. Les systèmes en production font souvent du fine-tuning pour le comportement et du RAG pour les faits du moment. Les auteurs d'origine décrivaient d'ailleurs leur méthode comme « une recette de fine-tuning polyvalente » pour construire des modèles RAG. La règle pratique : si le problème est « le modèle ne connaît pas ce fait », prenez le RAG ; si le problème est « le modèle ne répond pas comme il faut », prenez le fine-tuning.
+
+<Callout type="warning" title="Le point RGPD : brancher vos documents internes sur un RAG">
+En France, le RAG est surtout présenté comme un moteur de recherche sur les documents internes de l'entreprise (contrats, RH, base clients). La CNIL est claire sur les responsabilités : « le déployeur qui choisit de connecter le système à sa propre base de connaissance (RAG) sera lui aussi responsable de son traitement lorsqu'elle contient des données personnelles. » Autrement dit, c'est vous, pas le fournisseur du modèle, qui devenez responsable de traitement. Si vous passez par une API, clarifiez le rôle du fournisseur et prévoyez un contrat de sous-traitance. Deux réflexes utiles : le RAG doit reproduire vos droits d'accès existants (un document réservé à certains collaborateurs ne doit pas devenir accessible à tous via l'assistant), et pour des données sensibles en volume, la CNIL invite à privilégier un hébergement maîtrisé plutôt que d'envoyer votre base vectorisée chez un tiers.
+</Callout>
+
+Pour les éditeurs, la distinction compte pour une raison bien précise : les moteurs d'IA susceptibles de vous citer font du RAG, pas du fine-tuning sur votre site. Ce qui nous amène à la partie qui touche vraiment votre trafic.
+
+## Le RAG, c'est le vrai moteur de la recherche IA
+
+Les systèmes RAG avec lesquels la plupart des gens interagissent vraiment, ce sont les moteurs de recherche IA dans lesquels vous cherchez déjà à apparaître, et c'est le lien que les présentations des fournisseurs oublient. Elles décrivent le RAG comme la plomberie de l'entreprise : un chatbot d'assistance qui répond sur les données internes, une recherche documentaire interne, un assistant qui lit des fichiers propriétaires. Ces cas existent, mais ils ne sont qu'une petite partie du tableau.
+
+Quand ChatGPT explore le Web pour répondre, la récupération passe par sa fonction de recherche, qui, selon OpenAI, s'appuie sur des moteurs de recherche tiers, du contenu fourni par des partenaires et ses propres systèmes d'exploration. [Perplexity](https://geotoolbox.ai/blog/perplexity-seo) récupère et cite généralement ses sources. Les AI Overviews de Google puisent dans l'index de recherche de Google et dans ses systèmes de classement et de qualité, puis synthétisent une sélection de sources. Des moteurs différents, les trois mêmes étapes : récupérer, enrichir, générer. C'est tout simplement [le fonctionnement de la recherche IA](https://geotoolbox.ai/blog/how-does-ai-search-work) en coulisses.
+
+ChatGPT illustre à lui seul comment les pièces s'emboîtent. Le modèle de base est un modèle de langage, mais son mode recherche et navigation l'enveloppe dans une boucle RAG, en récupérant des pages en direct avant de répondre. Le modèle est le générateur ; le produit autour de lui est le système RAG.
+
+Ce recadrage change ce que veut dire « être cité ». **Si la recherche IA, c'est du RAG, alors se faire citer commence par se faire récupérer par un pipeline RAG.** La récupération est le tour de qualification : le modèle choisit toujours quelles sources récupérées il cite, mais une page jamais récupérée ne peut pas être citée du tout. Plus de liste de dix liens bleus à faire défiler, juste une réponse synthétisée avec quelques sources. La récupération est un concours que la plupart des pages n'ont jamais été conçues pour disputer.
+
+<Callout type="tip" title="Nouveau en France : la recherche IA de Google arrive">
+Les AI Overviews et le Mode IA (AI Mode) de Google se déploient en France à partir de l'été 2026, une fois réglée la question des droits voisins avec la presse. Concrètement, une part croissante des recherches françaises va basculer vers des réponses synthétisées qui récupèrent et citent quelques pages, au lieu d'afficher dix liens. Le concours de récupération que ChatGPT et Perplexity organisent déjà est sur le point de se jouer aussi sur Google, pour les éditeurs francophones. Autant s'y préparer avant qu'il ne s'installe.
+</Callout>
+
+## Comment devenir la page qui se fait récupérer
+
+Si vous voulez que vos pages entrent dans les réponses IA, vous devez les rendre faciles à récupérer. C'est là que le RAG cesse d'être une curiosité pour devenir une stratégie de contenu, et quelques règles découlent directement du fonctionnement du pipeline.
+
+**Ce sont des passages qui sont récupérés, pas des pages.** Un système RAG découpe les documents en morceaux et récupère celui qui colle le mieux à la requête, pas votre article entier. Chaque section doit donc tenir debout seule. Placez la réponse juste sous un titre clair formulé comme une question, dans la première ou les deux premières phrases, avant le contexte et les nuances.
+
+D'après notre expérience d'audit de pages pour la visibilité IA, c'est le problème le plus courant et le plus facile à corriger : la réponse existe, mais elle est enfouie trois phrases plus loin dans un paragraphe, et le morceau récupéré, c'est l'introduction, pas le contenu utile. Écrivez chaque section pour qu'un lecteur qui y arrive à froid trouve quand même la réponse. C'est le même réflexe qu'un bon [découpage du contenu](https://geotoolbox.ai/blog/content-chunking), avec une nuance : il s'agit d'écrire des sections autonomes pour des lecteurs, pas de hacher vos pages en fragments artificiels pour des machines. On y revient plus bas.
+
+**On ne peut pas vous récupérer si on ne peut pas vous atteindre.** La récupération se fait sur un index, et vous n'y entrez que si le robot d'exploration du moteur a le droit d'aller vous chercher. Vérifiez que vous ne bloquez pas les [robots d'exploration IA](https://geotoolbox.ai/blog/ai-crawlers) que vous voulez voir vous citer. L'accessibilité est le socle ; tout le reste est perdu si la page n'est jamais explorée.
+
+**Écrivez sans la moindre ambiguïté.** Les modèles lisent mal les sources vagues ou qui dépendent d'un contexte extérieur. Formulez vos affirmations de façon simple et autonome, pour qu'un extrait récupéré ne puisse pas être mal compris.
+
+**La fraîcheur aide, avec une réserve.** La récence est l'un des rares signaux corrélés au fait d'être cité, puisque tout l'intérêt de la récupération est de faire mieux que la mémoire périmée d'un modèle. Les vraies mises à jour valent le coup, pas les changements de date. Traitez simplement la fraîcheur comme une corrélation, pas comme un levier garanti.
+
+<table>
+  <thead>
+    <tr>
+      <th>Que faire</th>
+      <th>Pourquoi ça aide la récupération</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Des sections « réponse d'abord » sous des titres clairs</td>
+      <td>Le morceau récupéré contient la réponse, pas la mise en bouche</td>
+    </tr>
+    <tr>
+      <td>Des paragraphes autonomes (une idée chacun)</td>
+      <td>Un extrait reste compréhensible sorti de son contexte</td>
+    </tr>
+    <tr>
+      <td>Autoriser les robots d'exploration IA que vous voulez voir vous citer</td>
+      <td>On ne peut être récupéré que si l'on figure dans l'index</td>
+    </tr>
+    <tr>
+      <td>Des affirmations simples, précises, sans ambiguïté</td>
+      <td>Moins de risque qu'un passage soit mal interprété</td>
+    </tr>
+    <tr>
+      <td>Garder les pages vraiment à jour</td>
+      <td>La récence est corrélée au fait d'être repris dans les réponses</td>
+    </tr>
+  </tbody>
+</table>
+
+Bien se classer et se faire citer ne sont pas le même métier. Le classement peut faire considérer une page, mais c'est la récupération qui décide si un passage à vous est cité ; une page peut donc trôner en tête de Google sans jamais apparaître dans une réponse IA.
+
+Et non, ce n'est pas juste du SEO relooké, même si ça s'en rapproche plus que le battage ne le laisse croire. Google affirme lui-même que ses systèmes [savent lire des pages longues traitant plusieurs sujets et en extraire le bon passage](https://developers.google.com/search/docs/fundamentals/ai-optimization-guide) sans que vous ayez à hacher le contenu en fragments artificiels, et que les fondamentaux du [GEO et de l'AEO restent du SEO](https://geotoolbox.ai/blog/geo-vs-aeo-vs-seo). En résumé : les mêmes fondamentaux (profondeur thématique, autorité, clarté), plus un vrai changement d'unité de récupération, qui passe de la page au passage. Pour le mode d'emploi complet, on couvre ça dans [comment optimiser pour la recherche IA](https://geotoolbox.ai/blog/how-to-optimize-for-ai-search) et [rédiger des pages que les LLM citent](https://geotoolbox.ai/blog/ai-content-optimization).
+
+## Le RAG est-il mort ? RAG agentique et débat sur le contexte long
+
+Ni les fenêtres de contexte géantes ni le virage vers les agents IA ne tuent la récupération, quoi qu'en disent les gros titres sur la « mort du RAG ». Ce sont les deux raisons qu'on avance d'habitude : des modèles capables d'avaler tout un jeu de documents en une seule requête, et des agents plus autonomes qui font le travail.
+
+Le slogan vise en réalité le RAG **naïf**, la version la plus simple, qui récupère une fois et génère une fois. Ce pipeline de base ne suffit souvent pas pour un travail en plusieurs étapes, et le secteur s'oriente vers le **RAG agentique**, où un agent décide quand récupérer, reformule la requête, récupère à nouveau et vérifie ce qu'il a obtenu avant de répondre. C'est donc plus de récupération, mieux pilotée, pas moins.
+
+Les modèles à contexte long sont une vraie alternative pour certaines tâches, mais tout coller dans la requête est plus lent et plus coûteux que de récupérer les quelques passages qui comptent, et ça ne passe pas à l'échelle du Web ouvert. La récupération reste donc centrale.
+
+Pour qui publie du contenu, la conclusion pratique ne bouge pas. Les moteurs de recherche IA récupèrent toujours avant de répondre. Que le système soit naïf ou agentique, il doit trouver votre page pour la citer. Être récupérable reste le prix d'entrée.
+
+## Foire aux questions
+
+### ChatGPT est-il un modèle RAG ?
+
+Le modèle sous-jacent, non ; mais le mode recherche et navigation de ChatGPT, oui. Quand ChatGPT va chercher quelque chose avant de répondre, il récupère des pages web en direct, les ajoute à la requête et génère une réponse ancrée. Cette boucle récupérer-enrichir-générer, c'est du RAG, le modèle jouant le rôle de générateur à l'intérieur.
+
+### Le RAG met-il fin aux hallucinations ?
+
+Il les réduit, il ne les supprime pas. Ancrer les réponses dans des sources récupérées fait baisser le taux de contenu inventé, mais le modèle peut encore mal lire une source ou combler les trous quand la récupération revient faible. Une étude de Stanford a montré que des outils juridiques RAG commerciaux hallucinaient encore sur 17 à 34 % des requêtes : traitez donc avec prudence toute promesse de « zéro hallucination ».
+
+### Quelle différence entre le RAG et une base de données vectorielle ?
+
+Le RAG est la technique d'ensemble, celle qui consiste à ancrer la réponse d'un modèle dans des documents récupérés. Une base de données vectorielle est l'un des composants que certains systèmes RAG utilisent pour stocker des embeddings et faire une recherche de similarité rapide. On peut construire un RAG sans elle, avec une recherche par mots-clés ou un graphe de connaissances : la base vectorielle est une brique fréquente, pas une obligation.
+
+### Quels sont les types ou « niveaux » de RAG ?
+
+On décrit d'habitude une progression : le RAG naïf (récupérer une fois, générer une fois), le RAG avancé (meilleur découpage, réordonnancement et recherche hybride pour améliorer ce qui est récupéré) et le RAG agentique (un agent décide quand et quoi récupérer, et peut itérer). Ce sont des points sur un spectre, pas des catégories rigides.
+
+### Quelle différence entre le RAG et le CAG ?
+
+Le CAG (*cache-augmented generation*, génération augmentée par cache) est une alternative au RAG. Au lieu de récupérer des documents à la volée à chaque question, il précharge toute la base de connaissances dans la fenêtre de contexte du modèle et met en cache le résultat, une fois pour toutes. Il n'y a plus d'étape de récupération : le modèle « a déjà tout sous les yeux ». Le CAG est adapté à un corpus petit et stable, où il gagne en vitesse et en simplicité ; le RAG reste préférable pour de gros volumes ou des données qui changent souvent, car il ne va chercher que les passages utiles. C'est le prolongement direct du débat contexte long contre récupération.
+
+### Peut-on faire du RAG avec des outils français ou souverains ?
+
+Oui. Côté européen, **Mistral** propose avec « Vibe » (ex-Le Chat) une fonction RAG native, les « Libraries » : vous y déposez des documents, l'assistant les interroge en temps réel et cite les passages récupérés, avec un hébergement des données dans l'UE. **OVHcloud** donne accès, via ses AI Endpoints, à des modèles d'embedding et à PostgreSQL avec l'extension pgvector, avec un engagement de non-rétention des données. **Dust**, jeune pousse française, permet de brancher des agents IA sur vos outils internes (Notion, Slack, Drive) par récupération. De quoi garder une base de connaissances sensible dans un périmètre européen plutôt que de l'envoyer chez un fournisseur non européen.
+
+### Un système RAG est-il concerné par l'AI Act ?
+
+Cela dépend de l'usage. Un chatbot RAG public à visée informative relève surtout du risque limité : une obligation de transparence (dire que l'utilisateur parle à une IA). Un RAG qui aide à décider dans un domaine sensible, santé ou justice par exemple, peut basculer en « haut risque », avec des obligations bien plus strictes (explicabilité, journalisation des sources, supervision humaine). Ces obligations montent en charge à partir d'août 2026 : mieux vaut classer votre cas d'usage tôt.
+
+### Dois-je construire un système RAG pour profiter de la recherche IA ?
+
+Non. La plupart des éditeurs se trouvent à l'autre bout du RAG d'un tiers : ils n'en construisent pas. Votre travail, c'est de rendre votre contenu existant facile à récupérer et à citer, pas de monter un pipeline.
+
+## On n'entre pas dans le modèle. On se fait récupérer.
+
+Le travail concret tient donc en peu de choses, mais ne s'arrête jamais : gardez vos pages atteignables, écrivez des sections qui tiennent seules comme des réponses nettes, restez à jour, et donnez à chacune une réponse directe qui mérite d'être citée. Faites cela et vous optimisez pour l'étape de récupération que chaque moteur IA exécute, au lieu de courir après un classement qui ne se transformera peut-être jamais en citation.
+
+La première chose à vérifier, c'est si les moteurs IA peuvent ne serait-ce qu'atteindre et lire vos pages, parce que rien d'autre ne compte s'ils ne le peuvent pas. C'est exactement ce que regarde notre [score de préparation IA](https://geotoolbox.ai/tools/ai-readiness), et de là vous pouvez [mesurer à quelle fréquence vous êtes réellement cité](https://geotoolbox.ai/blog/how-to-track-ai-visibility) sur les moteurs qui tournent à la récupération.
+
+## Sources
+
+- [Génération augmentée par récupération (RAG) : guide pour les TPE-PME](https://www.francenum.gouv.fr/guides-et-conseils/intelligence-artificielle/recherche-intelligente-et-analyse-documentaire-0) - France Num (Direction générale des entreprises), 2024
+- [Les questions-réponses de la CNIL sur l'utilisation d'un système d'IA générative](https://www.cnil.fr/fr/les-questions-reponses-de-la-cnil-sur-lutilisation-dun-systeme-dia-generative) - CNIL
+- [Les hallucinations d'intelligence artificielle devant les juridictions françaises](https://www.village-justice.com/articles/les-hallucinations-intelligence-artificielle-devant-les-juridictions-francaises,56337.html) - Village de la Justice, 2026
+- [Génération à enrichissement contextuel](https://fr.wikipedia.org/wiki/G%C3%A9n%C3%A9ration_%C3%A0_enrichissement_contextuel) - Wikipédia
+- [Mistral Vibe (anciennement Le Chat) et les Libraries](https://mistral.ai/products/vibe/) - Mistral AI
+- [Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks](https://arxiv.org/abs/2005.11401) - Lewis et al., 2020 (NeurIPS 2020)
+- [What Is Retrieval-Augmented Generation, aka RAG?](https://blogs.nvidia.com/blog/what-is-retrieval-augmented-generation/) - NVIDIA, 2023 (mis à jour en 2025)
+- [Hallucination-Free? Assessing the Reliability of Leading AI Legal Research Tools](https://reglab.stanford.edu/publications/hallucination-free-assessing-the-reliability-of-leading-ai-legal-research-tools/) - Magesh et al., Stanford RegLab & HAI, 2024
+- [Guide to Optimizing for Generative AI Features on Google Search](https://developers.google.com/search/docs/fundamentals/ai-optimization-guide) - Google Search Central
