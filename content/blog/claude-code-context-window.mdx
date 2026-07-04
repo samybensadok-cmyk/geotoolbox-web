@@ -1,0 +1,177 @@
+---
+title: "Claude Code Context Window: What It Is and Why It Controls Costs"
+description: "What the Claude Code context window is, how big it gets (200K vs 1M), what fills it, and how to read the /context meter before it degrades your output."
+date: "2026-07-04"
+author: "Samy BEN SADOK"
+tags: ["claude-code", "context-window", "agentic-ai", "claude", "anthropic"]
+draft: false
+---
+
+The Claude Code context window is the single number that decides how much your session can hold, how much it costs, and how sharp it stays. Most people meet it only when Claude Code starts forgetting things or a usage limit lands mid-week. This is what the context window actually is, how big it is on each model, what fills it before you type a word, and how to read and keep it under control.
+
+## What the Claude Code Context Window Is
+
+The context window is the session's working memory: everything Claude Code can see at one moment, measured in tokens. That includes the system prompt, your project's `CLAUDE.md`, the tools and MCP servers you have connected, every file it has read, every tool result, and the full back-and-forth of your conversation. It all shares one fixed budget, and it all competes for the same space.
+
+A [token](https://geotoolbox.ai/blog/what-are-tokens-in-ai) is roughly four characters, or about three-quarters of a word. Code is denser than prose because of punctuation, identifiers, and syntax, so source files eat the window faster than their line count suggests. Reading one large module can cost tens of thousands of tokens on its own.
+
+The mental model that trips people up is treating the window like human memory, something Claude holds in the back of its mind and glances at when needed. It does not work that way. The model has no memory between turns, so Claude Code re-sends the entire window on every single request, then appends your new message. It is not a filing cabinet Claude opens occasionally; it is the whole document it re-reads, start to finish, every time you hit enter. That is what makes everything below matter: the [context window](https://geotoolbox.ai/glossary/context-window) is not just a capacity limit, it is a recurring cost you pay on every turn.
+
+## How Big Is the Context Window? 200K vs 1M
+
+The standard Claude Code context window is **200,000 tokens**. Several current models raise that ceiling to **1 million tokens** on paid plans. Which one you get depends entirely on the model you are running.
+
+<table>
+<thead>
+<tr><th>Model</th><th>Context window in Claude Code</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Claude Sonnet 5</strong></td><td>1M tokens</td><td>Available on Pro, Max, Team, Enterprise</td></tr>
+<tr><td><strong>Fable 5</strong></td><td>1M tokens</td><td>Available on paid plans</td></tr>
+<tr><td><strong>Opus 4.8 / 4.7 / 4.6</strong></td><td>1M tokens</td><td>Pro users must enable usage credits for the 1M window on Opus models</td></tr>
+<tr><td><strong>Sonnet 4.6</strong></td><td>1M tokens</td><td>Needs usage credits on Pro; automatic on usage-based Enterprise</td></tr>
+<tr><td><strong>Other models</strong></td><td>200K tokens</td><td>The standard window on paid plans</td></tr>
+</tbody>
+</table>
+
+The 1M window is available on Pro, Max, Team, and Enterprise, not the free tier, per Anthropic's [context window documentation](https://support.claude.com/en/articles/8606394-how-large-is-the-context-window-on-paid-claude-plans). One caveat worth knowing on Pro: reaching the 1M window on Opus models requires enabling usage credits first. If you run [Sonnet 5](https://geotoolbox.ai/blog/claude-sonnet-5), you get the million-token window without that step.
+
+Two things about that headline number. First, these are the Claude Code sizes; the Claude.ai chat app is different. The [same documentation](https://support.claude.com/en/articles/8606394-how-large-is-the-context-window-on-paid-claude-plans) gives Sonnet 5 a 1M window in chat but the other current models 500K there, so do not carry a chat figure over to your terminal. Second, the number you can actually use is always smaller than the ceiling. By the time a real session is running, a chunk of the window is already spoken for by things you never typed, which is the next section.
+
+## What Fills the Window Before You Type a Word
+
+Open a fresh Claude Code session and the window is already partly full. A stack of components loads automatically, before your first message. The token figures below are typical observed ranges, not fixed constants, since they vary with your setup.
+
+<table>
+<thead>
+<tr><th>What loads automatically</th><th>Approximate tokens</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>System prompt</strong> (Claude Code's own instructions)</td><td>~3,000 to 6,000</td></tr>
+<tr><td><strong>System tools</strong> (read, edit, bash, search, and the rest)</td><td>~10,000 to 20,000</td></tr>
+<tr><td><strong>MCP tool names</strong> (schemas deferred until used)</td><td>~300 to 500</td></tr>
+<tr><td><strong>Project <code>CLAUDE.md</code></strong></td><td>~1,500 to 4,000</td></tr>
+<tr><td><strong>Auto-memory</strong> (notes from past sessions)</td><td>up to ~25KB, roughly 6,000 tokens</td></tr>
+<tr><td><strong>Skill descriptions</strong></td><td>~50 to 200 per skill</td></tr>
+<tr><td><strong>Git status snapshot</strong></td><td>~300</td></tr>
+</tbody>
+</table>
+
+None of that is waste, but it is fixed overhead on every turn, and two sources balloon fast if you are not watching.
+
+### MCP Servers, the Big One
+
+The first is MCP servers. Each connected server advertises its tools, and a single tool definition, name plus description plus parameter schema, can run several hundred tokens. Developer Damian Galarza [measured one MCP tool at roughly 663 tokens](https://www.damiangalarza.com/posts/2025-12-08-understanding-claude-code-context-window/), and the Playwright MCP's 22 tool definitions at about 14,300 tokens, over 7 percent of a 200K window. Anthropic has since softened that hit by deferring the schemas until a tool is actually used, so on supported setups only the tool names load up front and the full definitions arrive on demand. Two catches remain: names still add up across many servers, and where deferral is unavailable (some gateways, older configs) the full definitions load the old way. Either way, servers you never touch are weight you are not using.
+
+### Skills Load Lighter Than MCP
+
+The second is skills. A [skill](https://geotoolbox.ai/blog/how-does-claude-work) only loads its name and description at startup, a couple hundred tokens, and pulls in the full instructions on demand when invoked. That is the same deferral idea applied more aggressively: the Playwright capability that costs 14,300 tokens as a full MCP definition is about 200 tokens as a skill until you actually use it. If a tool is one you reach for occasionally rather than every session, a skill is far cheaper on context. This is why "audit your MCP servers" is the single biggest context cleanup most people have never done.
+
+## How to Read the /context Meter
+
+You do not have to guess at any of this. Run `/context` in a session and Claude Code prints a live map of the window: a filled grid plus a per-category breakdown of exactly what is taking up space.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/claude-code-context-window/context-meter-breakdown.png" alt="An annotated Claude Code /context readout showing the window split into system prompt, system tools, MCP tools, memory files, messages, free space, and the reserved autocompact buffer, each with its token count and percentage." w="2600" h="1520" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">The /context readout breaks the window into categories. The reserved autocompact buffer and free space are the two numbers to watch.</figcaption>
+</figure>
+
+The top line shows your model and usage, something like `101k/200k tokens (51%)`. Below it, each category reports its own tokens and percentage: system prompt, system tools, MCP tools, custom agents, memory files, messages, then free space and a reserved autocompact buffer at the bottom. The value is that it turns a vague "why is this session sluggish" into a specific answer. If MCP tools are showing 26k tokens, you know where to cut. If your `CLAUDE.md` is 4k before you have done anything, that is a fixed tax on every turn worth trimming.
+
+### The Interactive Simulator
+
+Anthropic recently shipped an [interactive simulator](https://code.claude.com/docs/en/context-window) that walks through the same thing visually: what loads at startup, what each file read costs, and when rules and hooks fire as a session grows. It is the fastest way to build an intuition for how quickly the window fills before you spend real tokens learning it the hard way.
+
+One myth to put down: older guides claim Claude Code has no native way to see token usage and that you only notice trouble through behavior. That is out of date. Between `/context`, the `/usage` command (which on paid plans breaks recent usage down by skills, subagents, plugins, and individual MCP servers), and a [configurable status line](https://code.claude.com/docs/en/costs) that shows context usage continuously, the window is fully visible. You just have to look.
+
+## Auto-Compaction: What Happens When the Window Fills
+
+Claude Code does not crash when you approach the limit. It compacts. Auto-compaction summarizes the conversation so far into a shorter representation and continues from that summary, freeing space to keep working. That reserved band at the bottom of the `/context` readout, the autocompact buffer, is the room held back so there is space to run the summarization when it triggers. Anthropic has not published a fixed number, but developers tracking their own `/context` output have [reported the buffer at around 33,000 tokens](https://www.avilevi.co.il/en/blog/manage-claude-code-context-window/), down from the roughly 45,000 shown in earlier readouts, so more of the window is now usable before compaction fires.
+
+### What Survives a Compaction
+
+Compaction is not lossless, and it is worth knowing what survives it. Anthropic's [documentation on what survives compaction](https://code.claude.com/docs/en/context-window) notes that the system prompt, your project-root `CLAUDE.md`, unscoped rules, and auto-memory are re-injected from disk after a compaction, so they persist. Path-scoped rules and nested `CLAUDE.md` files are dropped until their directory is touched again, and invoked skills are re-added but capped at about 5,000 tokens each and 25,000 total, oldest dropped first. In other words, the standing context you set up mostly holds, but anything that depended on being deep in the conversation can quietly vanish.
+
+### /clear, /compact, and /rewind
+
+You have three manual controls, and they are not interchangeable.
+
+<table>
+<thead>
+<tr><th>Command</th><th>What it does</th><th>Reach for it when</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>/clear</strong></td><td>Wipes the conversation entirely, keeps your files and tools</td><td>You are switching to unrelated work</td></tr>
+<tr><td><strong>/compact</strong></td><td>Summarizes the conversation and continues from the summary</td><td>You hit a natural break in the same task</td></tr>
+<tr><td><strong>/rewind</strong></td><td>Restores the conversation or code to an earlier checkpoint</td><td>A path went wrong and you want to back out of it</td></tr>
+</tbody>
+</table>
+
+The trick with `/compact` is to run it before quality drops, not after. Compact at a clean boundary, say once a phase of work is done, and the summary is built from good state. Compact a session that has already gone off the rails and you bake the confusion into the summary. You can also steer it: `/compact Focus on the auth refactor and the failing tests` tells Claude what to keep. Reach for `/clear` between tasks and `/compact` within one.
+
+## Why a Full Window Degrades Your Output
+
+A window that is technically not full can still produce worse output. This is where the context window quietly starts costing you quality on top of tokens.
+
+The reason is how attention works. Models weight some positions more heavily than others, and content in the middle of a long window gets less reliable attention than content at the start or end, the well-documented "lost in the middle" effect. So the coding conventions you set an hour ago drift toward the middle as the session grows and start getting ignored. The symptoms are recognizable: Claude repeats work it already did, renames a function it just settled on, reintroduces a pattern you told it to avoid, or asks a question you already answered. None of that is a bug. It is a noisy window crowding out the signal.
+
+The trap is assuming this only kicks in when the meter is near full. It does not. Degradation is gradual, and on a busy session it can show up while you still have plenty of free space, because what matters is not the percentage used but how much noise sits between the model and the thing it needs to focus on. Treat the `/context` percentage as a rough gauge, not a green light to keep piling on until it fills.
+
+### Why a Bigger Window Isn't the Fix
+
+This is also why a 1M window is not the fix it sounds like. Chroma's [Context Rot study](https://research.trychroma.com/context-rot) tested 18 frontier models, Claude among them, and found every one degrades as input length grows, even on simple retrieval tasks. A bigger window buys you more room before you have to compact. It does not buy immunity from the model getting less reliable the more you cram in. Curating what goes into the window beats maximizing how much fits.
+
+The cost angle compounds here. A bloated session is expensive twice: you pay to re-send that growing window on every turn, and you pay again when auto-compaction spends tokens summarizing it, sometimes summarizing a previous summary. In our experience, the sessions that burn the most tokens are rarely the hardest problems. They are ordinary tasks run in a window nobody cleared, where each turn re-reads a pile of stale context that stopped being useful long ago. Computerphile has a good walkthrough of why re-processing that context is expensive at the hardware level:
+
+<YouTube id="-0HRzXk8vlk" title="Why AI Tokens are so Expensive - Computerphile" />
+
+## Context Window vs Usage Limit
+
+These two get conflated constantly, and the difference matters. The **context window** is per-session working memory, the 200K or 1M budget for one conversation, and `/clear` resets it to empty. Your **usage limit** is a plan-level cap on how much you can consume over time, a weekly or monthly ceiling on Pro or Max. Clearing your context does nothing to your usage limit directly; it just makes each turn cheaper, which means you reach that limit slower.
+
+So "saving tokens" means two different things depending on which one is biting. If you are hitting a usage limit mid-week, the goal is fewer tokens consumed overall. If a single session is degrading, the goal is a leaner window. The habits overlap, but the reason you care is different. For the full set of levers on the spend-and-limit side, model routing, reasoning effort, and prompt discipline, see our companion guide on [reducing Claude Code token costs](https://geotoolbox.ai/blog/reduce-claude-code-token-costs). For how the plans and usage credits themselves work, our [Claude pricing breakdown](https://geotoolbox.ai/blog/claude-pricing) covers the tiers.
+
+## Keeping the Window Lean
+
+Managing the window well is mostly a handful of habits, not a tool. Clearing and compacting deliberately, covered above, is half of it. The other half is controlling what enters the window in the first place.
+
+Point Claude at specific files with `@path` or line ranges instead of asking it to "figure out the codebase," one of the fastest ways to drain the window. Hand noisy jobs like log analysis or codebase exploration to a subagent, which works in its own separate window and returns only a summary. Keep `CLAUDE.md` tight, Anthropic suggests under 200 lines, since it loads on every turn whether it is relevant or not. And run `/mcp` to switch off servers you are not using.
+
+One model-specific wrinkle: extended thinking is billed as output, so those [reasoning](https://geotoolbox.ai/glossary/reasoning-model) tokens count against your budget too. On [Fable 5](https://geotoolbox.ai/blog/fable-5-ban) you cannot turn extended thinking off, only lower the effort, so it takes a bigger bite of the window on simple tasks.
+
+## The Window Is the Lever
+
+The context window is not a background detail. It is the resource that decides both what a session costs and how good its output stays. Watch it with `/context`, keep it lean, and compact deliberately, and most of the "why is Claude Code expensive and getting worse" problem takes care of itself.
+
+The reason a coding agent's context is expensive is the same reason serving AI answers is expensive: models re-process large amounts of context to produce each response, and AI search engines do much the same with your pages when they decide whether to cite you. That is the side we work on at geotoolbox. If you run a site and want to see how AI models read and reference it, our free [AI readiness checker](https://geotoolbox.ai/tools/ai-readiness) is a good place to start.
+
+## Frequently Asked Questions
+
+**What is the Claude Code context window size?**
+The standard context window in Claude Code is 200,000 tokens. Several current models raise it to 1 million tokens on paid plans, including Claude Sonnet 5, Fable 5, and Opus 4.8, 4.7, and 4.6. The usable space is always smaller than the headline number, because the system prompt, tools, memory, and your `CLAUDE.md` occupy part of the window before you type anything.
+
+**Does Claude Code have a 1 million token context window?**
+Yes, on the right model and plan. Sonnet 5, Fable 5, and the Opus 4.x models support a 1M window in Claude Code on Pro, Max, Team, and Enterprise plans. On Pro, reaching the 1M window for Opus models requires enabling usage credits first. It is not available on the free tier.
+
+**What is the difference between /compact and /clear?**
+`/clear` wipes the conversation history entirely while keeping your files and tools, which is what you want when switching to unrelated work. `/compact` summarizes the conversation so far and continues from that summary, which is what you want at a natural break in the same task. The short version: between tasks, clear; inside one task, compact.
+
+**Why does Claude Code get worse in long sessions?**
+As the window fills, model attention weights recent content more heavily and instructions from earlier drift toward the middle, where they get less reliable attention. You see repeated work, contradicted decisions, and ignored rules. Research on context rot shows this happens even with a larger window, so a 1M context delays the problem rather than removing it.
+
+**Is the context window the same as my usage limit?**
+No. The context window is the per-session working-memory budget, and `/clear` resets it. Your usage limit is a plan-level cap on how much you can consume over a week or month. Keeping the window lean makes each turn cheaper, which helps you reach the usage limit slower, but the two are separate things.
+
+**How do I check how much context I am using?**
+Run `/context` in a session for a live breakdown by category, use `/usage` for a plan-limit view of recent usage by skills, subagents, plugins, and MCP servers, or configure the status line to display context usage continuously. Claude Code shows all of this natively.
+
+## Sources
+
+- [Explore the context window](https://code.claude.com/docs/en/context-window) (Anthropic, Claude Code Docs)
+- [Context windows](https://platform.claude.com/docs/en/build-with-claude/context-windows) (Anthropic, Claude Platform Docs)
+- [Manage costs effectively](https://code.claude.com/docs/en/costs) (Anthropic, Claude Code Docs)
+- [How large is the context window on paid Claude plans?](https://support.claude.com/en/articles/8606394-how-large-is-the-context-window-on-paid-claude-plans) (Anthropic)
+- [Understanding the Claude Code context window](https://www.damiangalarza.com/posts/2025-12-08-understanding-claude-code-context-window/) (Damian Galarza)
+- [Managing the Claude Code context window](https://www.avilevi.co.il/en/blog/manage-claude-code-context-window/) (Avi Levi)
+- [Context Rot: How Increasing Input Tokens Impacts LLM Performance](https://research.trychroma.com/context-rot) (Chroma Research)
+- [Why AI Tokens are so Expensive](https://www.youtube.com/watch?v=-0HRzXk8vlk) (Computerphile)

@@ -48,6 +48,7 @@ export const TOPICS: Topic[] = [
       "agentic-ai", "ai-agents", "agent-ready-website", "agentic-browsing",
       "agentic-commerce", "agentic-payments", "what-is-agentic-ai", "x402",
       "ai-browser", "comet", "perplexity-comet",
+      "claude-code", "context-window",
     ],
   },
   {
