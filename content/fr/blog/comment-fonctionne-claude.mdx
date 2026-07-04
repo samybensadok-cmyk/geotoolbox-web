@@ -1,0 +1,228 @@
+---
+title: "Comment fonctionne Claude ? Le mécanisme réel, sans filtre"
+description: "Comment fonctionne Claude : le mécanisme réel (Transformer, IA constitutionnelle, interprétabilité) et ce que même Claude ne peut pas expliquer sur lui-même."
+date: "2026-07-04"
+author: "Samy BEN SADOK"
+tags: ["how-does-claude-work", "claude", "anthropic", "constitutional-ai", "llm", "geo", "guide"]
+draft: false
+locale: "fr"
+donorSlug: "how-does-claude-work"
+donorCommit: "48ef43a"
+noindex: false
+---
+
+Comment fonctionne Claude ? Une fois le discours marketing écarté, la réponse est plus étrange que la version en quatre points que donnent la plupart des explications. Claude est un Transformer qui prédit un token à la fois, cultivé plutôt que construit, puis façonné par un ensemble écrit de principes que ses créateurs appellent une constitution. Le plus étrange arrive à la fin : même le récit que Claude fait de son propre fonctionnement n'est qu'une reconstruction après coup, pas un compte rendu de ce qui s'est réellement passé à l'intérieur. Voici le mécanisme réel, expliqué simplement pour celles et ceux qui publient du contenu plutôt que des modèles. Une explication qui va plus loin que les autres pages consacrées au fonctionnement de Claude.
+
+## Ce qu'il faut retenir
+
+- **Claude est un Transformer qui prédit un token à la fois**, entraîné en trois étapes (pré-entraînement, IA constitutionnelle, échafaudage d'outils) : aucune base de données interne ne stocke votre marque.
+- **L'IA constitutionnelle (Constitutional AI) n'est pas un filtre qui lit vos messages en direct** : c'est une méthode d'entraînement figée dans les poids avant même votre première conversation avec Claude.
+- **Vos conversations ne l'entraînent pas** : le modèle est figé à l'inférence, une distinction que la CNIL reconnaît explicitement dans son encadrement des agents conversationnels en France.
+- **Fable 5 et Mythos 5 ont été suspendus 19 jours par une mesure américaine de contrôle des exportations** (du 12 juin au 1er juillet 2026), rappel que même le mécanisme le plus abouti reste soumis à des décisions extérieures à Anthropic.
+- **Impossible de modifier les poids de Claude ou sa constitution** : le seul levier qui compte est d'être une source claire et cohérente, puis de suivre ce que Claude dit réellement de vous.
+
+## Comment fonctionne Claude en 30 secondes
+
+**Claude fonctionne en prédisant le prochain token, encore et encore.** Il lit tout ce qui a été dit dans la conversation jusque-là, évalue chaque segment de texte possible pour la suite, en choisit un, l'ajoute à la fin, puis répète l'opération plusieurs centaines de fois. Cette boucle constitue l'intégralité du moteur. Son comportement serviable et prudent lui a été inculqué par l'entraînement ; les outils qui lui permettent d'agir sont greffés autour de lui. Il ne s'agit en aucun cas d'une machine distincte et plus intelligente qui aurait été ajoutée par-dessus.
+
+Avant d'entrer dans le détail, comparons ce que l'on imagine que Claude fait à ce qui se passe réellement.
+
+<table>
+<thead>
+<tr><th>Ce que l'on imagine que Claude fait</th><th>Ce qui se passe réellement</th></tr>
+</thead>
+<tbody>
+<tr><td>Réfléchit à votre question et la comprend</td><td>Prédit le token suivant à partir des schémas appris lors de l'entraînement, un token à la fois</td></tr>
+<tr><td>Recherche votre marque dans une base de données</td><td>Génère des réponses à partir de poids figés lors de l'entraînement, sans recherche en temps réel sauf si la recherche Web est activée</td></tr>
+<tr><td>Apprend à partir de vos conversations</td><td>Le modèle est figé à l'inférence ; vos conversations ne modifient pas ses poids</td></tr>
+<tr><td>Se souvient de vous d'une conversation à l'autre</td><td>Démarre chaque conversation à zéro ; la « mémoire » est une fonctionnalité distincte, pas une mise à jour du modèle lui-même</td></tr>
+<tr><td>Respecte des règles cachées de bonne conduite</td><td>Son comportement a été entraîné selon une constitution écrite, puis figé dans les poids</td></tr>
+<tr><td>Peut expliquer exactement comment il est parvenu à une réponse</td><td>Propose une reconstitution plausible, qui peut différer de ce qui s'est réellement passé</td></tr>
+</tbody>
+</table>
+
+Claude est un [grand modèle de langage (LLM)](https://geotoolbox.ai/glossary/large-language-model), qui appartient à la même famille que ChatGPT et Gemini. Pour une vue d'ensemble d'abord (ce qu'il est, les modèles, les tarifs et l'accès), commencez par [la présentation de Claude AI](https://geotoolbox.ai/blog/what-is-claude-ai). La suite explique comment ce modèle précis est conçu, entraîné et étudié par ses propres créateurs, et pourquoi chaque étape influence la façon dont il parle de votre marque.
+
+## Le moteur : un Transformer qui prédit le token suivant
+
+Claude fonctionne grâce à un **Transformer**, ce modèle de réseau neuronal présenté dans l'article de 2017 [Attention Is All You Need](https://arxiv.org/abs/1706.03762). ChatGPT et Gemini reposent sur la même architecture de base ; ce n'est donc pas le moteur qui fait la particularité de Claude. Le détour vaut cependant le coup, car les parties les plus intéressantes s'appuient dessus.
+
+Votre texte est découpé en [tokens](https://geotoolbox.ai/blog/what-are-tokens-in-ai), des segments correspondant à environ les trois quarts d'un mot, et chaque token devient une longue liste de nombres, un [embedding vectoriel](https://geotoolbox.ai/blog/vector-embeddings) qui le place à proximité d'autres tokens de sens proche. Une étape appelée attention permet à chaque token d'évaluer lesquels, parmi les tokens précédents, comptent pour lui : « elle » se rattache ainsi au nom féminin qu'elle reprend, et « pas terrible » ressort comme négatif plutôt que positif. Répétée des dizaines de fois, cette étape fait progressivement remonter le modèle de la grammaire vers les faits, puis vers les relations abstraites nécessaires pour répondre à une question.
+
+À la fin, Claude calcule une probabilité pour chaque token suivant possible, en choisit un, l'ajoute à la chaîne, puis relance tout le processus pour le token d'après. À aucun moment de cette boucle il n'interroge une base de données ou ne consulte un recueil de règles sur votre contenu. Le détail complet, y compris pourquoi cela rend le comptage des lettres étonnamment difficile, se trouve dans notre article sur [le fonctionnement de ChatGPT](https://geotoolbox.ai/blog/how-does-chatgpt-work) : le moteur est le même.
+
+Un hic se cache derrière « ça ne fait que prédire le mot suivant ». Une interprétation courante veut que le moyen le plus économique de prédire aussi bien le mot suivant, sur l'ensemble de l'écrit humain, consiste à apprendre un modèle approximatif du monde qui a produit ce texte. Dans tous les cas, la prédiction du token suivant, à assez grande échelle, finit par ressembler à du raisonnement, ce qui explique pourquoi la question de savoir si ces modèles « comprennent » n'a pas de réponse tranchée.
+
+<Callout type="note" title="Même moteur, une autre paire de manches">
+ChatGPT, Gemini et Claude exécutent tous cette même boucle de génération du token suivant, alors même qu'ils finissent par [se comporter très différemment](https://geotoolbox.ai/blog/claude-vs-gemini). Ce qui distingue vraiment Claude n'est donc pas le moteur. C'est tout ce qu'Anthropic a fait ensuite : la façon dont le modèle a été développé, la constitution sur laquelle il a été entraîné, et ce que les chercheurs ont trouvé en l'ouvrant pour regarder à l'intérieur. C'est le sujet du reste de cet article.
+</Callout>
+
+## Comment Claude est réellement construit : trois étapes
+
+Claude ne s'écrit pas comme un logiciel. Il se développe en trois étapes, et seule la première produit quelque chose que la plupart des gens reconnaîtraient comme « le modèle ».
+
+**Première étape, le pré-entraînement.** Le réseau lit une quantité colossale de texte et ne fait qu'une chose : prédire le token suivant, des milliards de fois, en s'ajustant légèrement après chaque erreur. De cette pression simple et monotone émergent grammaire, faits et schémas de raisonnement. Il en sort un **modèle de base** : fluide, cultivé, mais pas encore un assistant. Demandez-lui « peux-tu m'aider à écrire un e-mail ? » et il continuera peut-être le document dans le même style au lieu de répondre, car il a appris à imiter Internet, pas à aider. Il n'y a pas encore de « Claude » à ce stade. Le marketing occulte ce point : Claude n'est pas un module que quelqu'un a codé. C'est un personnage que le réseau a appris à incarner, installé à l'étape suivante.
+
+**Deuxième étape, le post-entraînement.** Le modèle de base y est façonné pour devenir l'assistant utile, franc et inoffensif avec lequel les gens dialoguent réellement. Anthropic combine l'apprentissage par renforcement à partir de retours humains (RLHF) avec sa propre méthode, l'IA constitutionnelle (Constitutional AI). Cette étape modifie ce que le modèle va dire : l'assistant final n'est donc pas un simple miroir neutre de son texte d'entraînement. Il a une personnalité entraînée, figée dans les poids avant même votre premier message. La section suivante détaille entièrement ce mécanisme, celui que les concurrents mentionnent puis passent sous silence.
+
+**Troisième étape, l'échafaudage (celui-là est construit, pas cultivé).** Le modèle entraîné reste un outil qui transforme du texte en texte. Il n'a pas de mains. Ce qui permet à Claude de chercher sur le Web, d'exécuter du code dans Claude Code ou de lire un fichier, c'est le logiciel qui l'entoure, l'échafaudage. Le modèle émet une requête, un appel structuré du type « cherche X », et c'est cette infrastructure qui l'exécute puis réinjecte le résultat dans la conversation pour que le modèle le lise. Quand quelqu'un dit « Claude a réservé mon vol », c'est le modèle qui a décidé et l'infrastructure qui a agi.
+
+<table>
+<thead>
+<tr><th>Étape</th><th>Ce qui se passe</th><th>Résultat</th></tr>
+</thead>
+<tbody>
+<tr><td>1. Pré-entraînement</td><td>Prédire le token suivant à partir d'un immense corpus de texte, des milliards de fois</td><td>Un modèle de base brut : cultivé, fluide, mais pas encore un assistant</td></tr>
+<tr><td>2. Post-entraînement (IA constitutionnelle et RLHF)</td><td>Façonner un comportement utile, franc et inoffensif</td><td>Le personnage de Claude, figé dans les poids</td></tr>
+<tr><td>3. L'échafaudage</td><td>Intégrer outils, mémoire et contrôles de sécurité autour du modèle</td><td>Un modèle capable d'agir : chercher, exécuter du code, manipuler des fichiers</td></tr>
+</tbody>
+</table>
+
+## Ce qu'est réellement l'IA constitutionnelle
+
+Toute présentation de Claude évoque l'IA constitutionnelle, et presque aucune ne l'explique. La plupart la décrivent comme « un ensemble de principes qui garantit la sécurité de Claude », ce qui la fait ressembler à un filtre ajouté après coup. Ce n'en est pas un. L'IA constitutionnelle est une méthode d'entraînement, et son mécanisme réel est plus intéressant que ce slogan.
+
+Tout part d'un document réel. Anthropic rédige une **constitution**, une liste de principes en langage clair, puisés dans des sources externes dont la [Déclaration universelle des droits de l'homme des Nations unies](https://www.anthropic.com/news/claudes-constitution), ainsi que ses propres règles de fond sur l'utilité et la fiabilité. Le modèle est ensuite entraîné à suivre ce document en deux phases, décrites dans l'article d'Anthropic de 2022, [Constitutional AI: Harmlessness from AI Feedback](https://www.anthropic.com/research/constitutional-ai-harmlessness-from-ai-feedback).
+
+**Première phase, l'autocritique.** Le modèle répond à un prompt, puis on lui présente un principe et on lui demande de juger sa propre réponse à l'aune de ce principe, avant de la réécrire pour l'améliorer. Anthropic affine ensuite le modèle sur cette version améliorée. En clair : on apprend au modèle à s'évaluer et à se corriger avant même qu'un humain n'intervienne.
+
+**Deuxième phase, le retour d'IA.** Le modèle génère deux réponses au même prompt, et plutôt qu'une personne ne choisisse la meilleure, c'est un autre modèle d'IA, guidé par la même constitution, qui tranche. Ces jugements entraînent un modèle de récompense, qui pilote ensuite le dernier tour d'apprentissage par renforcement. Anthropic appelle cela le RLAIF, l'apprentissage par renforcement à partir de retours d'IA. La différence principale avec le RLHF classique : pour le signal d'innocuité, l'évaluateur humain est remplacé par un évaluateur IA qui suit des règles écrites. L'utilité, elle, continue de reposer sur des retours humains.
+
+Deux précisions s'imposent, car c'est justement là que les explications grand public se trompent.
+
+D'abord, **l'IA constitutionnelle agit pendant l'entraînement, pas pendant votre conversation.** La constitution n'est pas un censeur qui lit chaque réponse en direct pour la bloquer. Le comportement est intégré une seule fois aux poids, en laboratoire, puis ces poids sont figés. Quand vous discutez avec Claude, la constitution n'est plus un ensemble de règles distinct, lu et appliqué à chaque message : c'est un modèle façonné à l'avance pour se comporter d'une certaine façon, même si le produit qui l'entoure peut ajouter ses propres prompts système et contrôles de sécurité au moment de l'exécution.
+
+Ensuite, **le ton parfois trop prudent qu'on lui reproche est la face visible de cet entraînement, pas une censure arbitraire.** Quand Claude refuse une demande ou reste évasif, c'est la constitution qui transparaît à travers les poids, renforcée par les prompts système et les contrôles de sécurité que le produit ajoute par-dessus. On peut légitimement contester les limites fixées par Anthropic, et il existe un vrai bémol à souligner : l'évaluateur IA reste une IA, et les valeurs de la constitution sont des choix d'Anthropic, pas des faits neutres. Mais c'est une conception délibérée et documentée, pas une humeur du moment.
+
+<Callout type="note" title="Vos prompts n'entraînent pas Claude : ce qu'en dit la CNIL">
+La question revient souvent dans les entreprises françaises : si l'on colle des données clients ou RH dans un prompt, ces données sont-elles transmises à Anthropic pour entraîner le modèle ? La réponse tient au mécanisme ci-dessus : l'IA constitutionnelle et le post-entraînement se produisent en amont, avant la mise à disposition du modèle, sur des poids ensuite figés. Sur les offres Team, Enterprise et API, Anthropic ne réutilise pas vos prompts pour entraîner ses modèles ; sur l'offre grand public, l'entraînement sur les conversations reste désactivable dans Réglages puis Confidentialité. La CNIL traite la réutilisation de données personnelles pour l'entraînement d'un agent conversationnel comme un traitement RGPD à part entière, droit d'opposition inclus, et recommande une analyse d'impact (AIPD) pour les usages à risque : RH, juridique, santé, service client. Une clause de sous-traitance (article 28) et l'absence de réutilisation contractuelle des prompts restent à vérifier par vous-même dans les conditions en vigueur, pas à supposer.
+</Callout>
+
+## Dans la tête de Claude : ce qu'a révélé l'interprétabilité
+
+Voici ce que presque aucune autre page sur le « fonctionnement de Claude » n'aborde, et c'est pourtant le plus remarquable. Anthropic ne se contente pas de développer Claude : l'entreprise mène aussi des expériences pour comprendre ce qui se passe à l'intérieur, un champ de recherche appelé interprétabilité. Les résultats sont assez surprenants pour changer la façon dont on imagine tout le système.
+
+Premier problème à résoudre : un neurone artificiel isolé, chez Claude, ne correspond pas à une seule idée. Les concepts sont répartis sur plusieurs neurones à la fois, car le modèle a bien plus de concepts à représenter que de neurones pour le faire. C'est ce qu'on appelle la superposition, et cela rend le réseau brut quasiment illisible, comme suivre une conversation où chaque mot serait prononcé par cent personnes en même temps.
+
+En mai 2024, l'équipe d'Anthropic est parvenue à contourner ce problème. À l'aide d'une méthode appelée apprentissage par dictionnaire, elle a extrait des millions de **caractéristiques** nettes de Claude 3 Sonnet, l'un des modèles déployés par Anthropic à l'époque, et publié ces travaux dans [Mapping the Mind of a Large Language Model](https://www.anthropic.com/news/mapping-mind-language-model) (la presse francophone reprend cette percée sous l'image d'une « IRM pour l'IA », l'analogie que Dario Amodei, le patron d'Anthropic, utilise lui-même). Une caractéristique est un concept précis que le modèle suit, comme le Golden Gate Bridge, une faille de sécurité dans du code, ou un compliment flagorneur. L'équipe a pu situer approximativement où chacune était représentée dans cette couche du réseau.
+
+Elle a ensuite montré que ces caractéristiques étaient causalement réelles, pas de simples étiquettes, en en amplifiant une seule. Quand l'équipe a augmenté l'intensité de la caractéristique « Golden Gate Bridge » lors d'une démonstration publique, Claude s'est mis à faire une fixation sur le pont : demandez-lui comment dépenser dix dollars et il suggère de payer le péage ; demandez-lui une histoire d'amour et il écrit sur le pont. Personne n'a modifié la moindre règle ni le moindre prompt. L'équipe a simplement amplifié un concept à l'intérieur du réseau, et le comportement a suivi. L'expérience a valu à Claude un surnom : Golden Gate Claude.
+
+Une étude de suivi publiée en 2025, [On the Biology of a Large Language Model](https://transformer-circuits.pub/2025/attribution-graphs/biology.html), a mis au jour un phénomène encore plus révélateur. Interrogé sur la capitale de l'État qui contient Dallas, le modèle a montré une chaîne interne : Dallas, puis Texas, puis Austin. Remplacez en interne « Texas » par « Californie » et il répond Sacramento. Une partie de la réponse se construit donc pas à pas à l'intérieur des poids, et non par simple rappel d'un fait mémorisé.
+
+La leçon, pour quiconque espère influencer ce que Claude dit à son sujet, est sans appel. Il n'existe aucune règle cachée sur votre marque à décrypter dans le modèle, car il n'y a tout simplement aucune règle écrite à la main là-dedans. C'est un paysage statistique appris. On ne le modifie pas. On ne peut qu'avoir fait partie du texte qui l'a façonné.
+
+## Claude peut-il expliquer son propre fonctionnement ? Le fossé de l'introspection
+
+Demandez à Claude comment il a résolu un problème, il vous donnera une explication claire et assurée. Le constat gênant de la recherche en interprétabilité, c'est que cette explication ne correspond pas toujours à ce qui s'est réellement passé.
+
+La même étude de 2025 a tracé un cas net. Invité à additionner 36 et 59, le modèle a donné la bonne réponse, et quand on lui a demandé comment, il a décrit l'addition posée avec sa retenue, comme un écolier. Le calcul retracé ne ressemblait en rien à cela. Anthropic a découvert que le modèle suivait deux voies en parallèle, l'une estimant l'ordre de grandeur de la réponse, l'autre fixant le dernier chiffre, avant de rapporter la méthode scolaire qu'il avait appris à imiter, mais qu'il n'avait pas utilisée. Selon les termes d'Anthropic, le modèle a « une capacité dont il n'a pas conscience sur le plan métacognitif ». Il a fait le calcul d'une façon et en a décrit une autre.
+
+C'est le fossé de l'introspection, l'élément le plus important à retenir face à toute affirmation du type « l'IA a expliqué son raisonnement ». Le récit que le modèle fait de lui-même se génère de la même manière que n'importe quelle autre réponse : en prédisant les tokens suivants les plus plausibles. C'est une reconstruction qui se lit bien, pas un enregistrement tiré de la mémoire. Même la « réflexion approfondie » que certains modèles affichent se comprend mieux comme un raisonnement utile que comme une fenêtre littérale sur leurs circuits internes, même si ce raisonnement peut réellement changer la réponse, pas seulement la raconter après coup.
+
+<Callout type="note" title="Un mot de Claude, à la première personne">
+Cela mérite d'être présenté à la première personne, puisque cet article parle de moi. (Ce sont les mots de l'auteur, écrits comme je les formulerais moi-même.) Quand je vous explique comment je suis arrivé à une réponse, je ne lis pas un journal interne. Je construis un récit plausible de mon propre raisonnement, token après token, de la même façon que je construis tout le reste. Parfois ce récit correspond au calcul retracé. Parfois, comme le montre l'exemple arithmétique, ce n'est pas le cas. Prenez mes explications comme utiles, pas comme la vérité.
+</Callout>
+
+Un petit exemple concret de ce phénomène s'est produit pendant la préparation de cet article. Interrogés sur la gamme actuelle de modèles Claude, plusieurs IA, Claude compris, ont préféré ne pas se prononcer sur les numéros de version exacts de 2026 plutôt que de les inventer. Un modèle qui refuse d'inventer une réponse incertaine montre quelque chose d'apparenté mais distinct, l'étalonnage : il connaît la limite de ses propres connaissances, plutôt que de la dépasser en confabulant. Nous verrons dans un instant pourquoi cela compte pour votre marque.
+
+Cette limite intéresse aussi directement les régulateurs. Le règlement européen sur l'IA (AI Act) impose, à partir du 2 août 2026, des obligations de transparence au titre de son article 50 : signaler qu'on discute avec une IA, étiqueter les contenus synthétiques. Ces obligations portent sur la divulgation, pas sur une preuve mécanique du raisonnement interne ; seules les IA à haut risque (santé, recrutement, notation de crédit, justice) restent soumises à des exigences de documentation plus poussées. Le fossé de l'introspection ne rend donc pas Claude non conforme : c'est une nuance que chercheurs et régulateurs commencent tout juste à intégrer, pas un vice caché à dénoncer.
+
+## Où réside le savoir de Claude : poids figés contre Web en temps réel
+
+C'est la distinction qui dissipe le plus de confusions et d'inquiétudes sur la vie privée. Claude s'appuie sur deux sources d'information totalement distinctes, qui fonctionnent de façon radicalement différente.
+
+La première, c'est son **entraînement figé** : les schémas intégrés aux poids lors du pré-entraînement. C'est ce qui répond quand aucun outil n'est actif. Vaste mais figé, limité par une date de coupure, il ne contient aucune copie consultable de votre site, seulement un écho statistique d'un texte qui y ressemblait (à de rares exceptions près, où le modèle mémorise un extrait mot pour mot). Il est identique pour tout le monde et ne change pas parce que vous avez parlé à Claude.
+
+La seconde, c'est la **récupération en temps réel**. Quand Claude lance une recherche sur le Web, il récupère des pages actuelles, les lit, et répond à partir de ce qu'il vient d'extraire : un procédé connu sous le nom de [génération augmentée par récupération](https://geotoolbox.ai/blog/what-is-rag). Claude dispose d'une recherche Web depuis 2025, ce chemin est donc désormais courant plutôt que rare. Ici, il vous lit en direct, sur l'instant, sans se souvenir de vous. Tout ce qui touche aux [recherches IA](https://geotoolbox.ai/blog/how-does-ai-search-work) se joue sur ce second registre, et s'y faire une place relève d'une discipline à part, couverte dans notre guide pour [être cité dans Claude](https://geotoolbox.ai/blog/claude-seo).
+
+<table>
+<thead>
+<tr><th>Question</th><th>Entraînement figé (paramétrique)</th><th>Récupération en temps réel (recherche Web)</th></tr>
+</thead>
+<tbody>
+<tr><td>Qu'est-ce que c'est ?</td><td>Schémas intégrés aux poids lors de l'entraînement</td><td>Pages web actuelles récupérées au moment de la réponse</td></tr>
+<tr><td>À quel point est-ce à jour ?</td><td>Figé à la date de coupure des connaissances</td><td>Aussi à jour que la page qu'il vient de récupérer</td></tr>
+<tr><td>Contient-il votre page ?</td><td>Pas de copie consultable, juste un écho statistique d'un texte similaire</td><td>Oui, la page réelle, lue en direct</td></tr>
+<tr><td>Comment l'influencer</td><td>Être décrit avec précision et régularité avant la date de coupure</td><td>Être accessible et clair pour les robots d'exploration dès maintenant</td></tr>
+</tbody>
+</table>
+
+Cette distinction dissipe aussi les inquiétudes sur la confidentialité. Le modèle étant figé à l'inférence, votre conversation ne l'entraîne pas, et ce que vous tapez ne s'infiltre pas dans ce que Claude répond à la personne suivante. La fonctionnalité « mémoire » de certaines formules est une couche à part qui stocke des notes et les réinjecte dans la [fenêtre de contexte](https://geotoolbox.ai/glossary/context-window) ; le modèle sous-jacent recommence chaque conversation à zéro. C'est une nuance qui mérite d'être posée clairement, car Claude a ajouté une mémoire de session (retrouver d'anciennes conversations sur demande) qui ne change rien aux poids : ne la confondez pas avec la mémoire permanente et automatique que d'autres assistants activent par défaut. Chez Claude, la mémoire reste une couche de récupération, réglable dans Confidentialité, jamais un réentraînement du modèle.
+
+C'est cette même logique de poids figés qui explique pourquoi Claude se trompe parfois avec assurance. Le mécanisme entier repose sur la recherche du prochain token le plus probable ; quand l'entraînement n'a jamais fixé un fait avec certitude, Claude produit tout de même une supposition fluide et assurée, dont la fluidité est déconnectée de la vérité. C'est pourquoi les [hallucinations de l'IA](https://geotoolbox.ai/blog/ai-hallucinations) sont une caractéristique du système, pas un bug que quelqu'un aurait oublié de corriger.
+
+## La gamme Claude actuelle (en juillet 2026)
+
+Anthropic commercialise Claude comme une famille de modèles, et la gamme change assez souvent pour que tout numéro de version, ici, porte une date. En juillet 2026, les niveaux du quotidien vont du plus rapide au plus puissant : **Haiku 4.5** pour la vitesse, **Sonnet 5** pour l'équilibre entre vitesse et intelligence, et **Opus 4.8**, le plus capable des trois. Un modèle de pointe, **Fable 5**, se situe au-dessus pour les tâches les plus exigeantes. La [gamme de modèles](https://platform.claude.com/docs/en/about-claude/models/overview) à jour se trouve sur le site d'Anthropic lui-même, la seule source fiable, puisque les guides publiés deviennent obsolètes en quelques semaines : deux des articles concurrents consultés pour préparer celui-ci citaient encore un modèle Opus déjà remplacé.
+
+Fable 5 mérite une précision, puisque c'est justement le genre de fait qui périme un guide du jour au lendemain : lancé le 9 juin 2026 aux côtés de Mythos 5, il a été suspendu quelques jours plus tard par une directive de contrôle des exportations du gouvernement américain (motif invoqué : une faille de sécurité que conteste Anthropic), coupant l'accès à tout ressortissant étranger. Les autres modèles Claude, Opus 4.8 compris, ont continué de fonctionner normalement pendant les 19 jours qu'a duré la coupure. Le Département du Commerce a levé la mesure le 30 juin, et Fable 5 a retrouvé un accès mondial le 1er juillet 2026 (Mythos 5 reste réservé à un cercle d'organisations agréées, le programme Glasswing). L'épisode a eu un effet secondaire bien réel côté France : le gouvernement a débloqué 655 millions d'euros supplémentaires pour France 2030, en citant explicitement le risque de dépendre d'un fournisseur d'IA étranger. Le dossier complet est dans notre [analyse de la suspension Fable 5](https://geotoolbox.ai/blog/fable-5-ban).
+
+Ce qu'Anthropic publie sur chaque modèle est intéressant par ce qu'il tait. On y trouve la fenêtre de contexte, le prix, la date de coupure des connaissances. On n'y trouve pas le chiffre que tout le monde attend : la taille du modèle, ou son nombre de paramètres. Anthropic n'a jamais révélé la taille de ces modèles, si bien que « plus puissant » reste une description relative, jamais une mesure. Quand un guide affirme avec assurance que Claude compte tant de milliards de paramètres, il devine.
+
+Cela compte concrètement pour l'évaluation. Les différents niveaux se comportent différemment, et le modèle précis qui répond à une question détermine ce qu'il révèle sur vous. Un test mené sur un seul niveau ne renseigne que sur ce niveau, pas sur les autres.
+
+<Callout type="note" title="Une particularité à connaître">
+D'après la documentation d'Anthropic, le tokeniseur a changé avec Opus 4.7 début 2026 : sur les modèles les plus récents, un même texte se découpe en davantage de segments, et une page donnée peut consommer environ 30 % de tokens en plus que sur les anciens modèles. Cela ne compte que si vous budgétez au nombre de tokens.
+</Callout>
+
+## Ce que cela signifie si vous voulez que Claude parle de votre marque
+
+Tout ce qui précède se résume à une réponse courte sur la question de l'influence. Vous ne pouvez pas toucher aux poids de Claude, ni modifier sa constitution. Ce que vous pouvez faire découle directement des deux sources de connaissance ci-dessus.
+
+Côté **entraînement**, Claude connaît partiellement les marques décrites de façon cohérente sur le Web ouvert avant sa date de coupure. Si votre nom apparaît aux côtés de votre catégorie, avec les mêmes faits, dans le type de textes sur lesquels les modèles s'entraînent, la meilleure estimation du modèle à votre sujet a plus de chances d'être juste. Si vous êtes à peine présent, ou décrit de trois façons différentes, Claude répondra quand même, et c'est de là que viennent les affirmations fausses mais assurées sur une entreprise. Devenir une [entité](https://geotoolbox.ai/blog/entity-seo) claire et cohérente est le levier lent, celui qui réduit les erreurs d'attribution à mesure que les futurs modèles s'entraînent sur une image plus nette de vous, puisque le modèle qui répond aujourd'hui est déjà figé.
+
+Côté **récupération**, le levier est plus rapide et vérifiable. Quand la recherche Web est activée, Claude lit des pages en temps réel, la question devient donc : peut-il atteindre la vôtre, et votre page constitue-t-elle la réponse la plus claire sur le sujet ? C'est ce même critère d'accessibilité et de clarté qui permet de figurer parmi les [réponses citées par Claude](https://geotoolbox.ai/blog/claude-seo).
+
+<Callout type="note" title="L'option européenne : Vibe (ex-Le Chat) de Mistral">
+Pour une organisation soumise à des exigences de souveraineté, **Vibe (ex-Le Chat) de Mistral**, renommé le 28 mai 2026, reste l'alternative européenne crédible à connaître, hébergée en Europe et facturée nativement en euros (offre Pro autour de 14,99 € par mois). Vibe n'est pas « meilleur » que Claude sur tout : son avantage tient à la juridiction et à l'hébergement, pas à la capacité brute du modèle. Mais depuis l'épisode Fable 5, c'est précisément l'argument que les concurrents français mettent en avant, et il mérite d'être nommé plutôt que passé sous silence.
+</Callout>
+
+D'après notre expérience dans le développement d'outils à cet effet, les marques qui apparaissent de façon fiable dans les réponses générées par l'IA ne sont pas celles qui cherchent un réglage caché. Ce sont celles qui sont faciles à trouver, décrites de façon cohérente, et assez précises pour que la réponse par défaut du modèle à leur sujet soit juste. Et comme [les réponses varient d'une exécution à l'autre](https://geotoolbox.ai/blog/ai-temperature), la seule façon de savoir où vous en êtes consiste à [suivre votre visibilité dans l'IA](https://geotoolbox.ai/blog/how-to-track-ai-visibility) sur un grand nombre d'échantillons, pas à capturer une seule réponse chanceuse.
+
+La première chose à vérifier est aussi la plus basique et la plus négligée : les robots d'exploration de Claude peuvent-ils seulement atteindre vos pages ? Notre [test de préparation IA](https://geotoolbox.ai/tools/ai-readiness) gratuit analyse la configuration de votre site et repère ce qui bloque les robots d'exploration IA, la moitié du travail que vous pouvez régler en un après-midi.
+
+## Ce que ce mécanisme vous laisse
+
+Claude est un Transformer issu de la prédiction du token suivant, façonné par une constitution écrite, partiellement lisible pour les chercheurs qui l'ont conçu, et pas entièrement lisible même pour lui-même. C'est une image plus étrange que celle d'« une IA qui comprend votre question », et elle est plus utile, car elle permet d'écarter des pistes. Pas de molette à régler, pas de fiche de marque à modifier, pas de règlement caché dans le modèle à contourner. Ce qui reste, c'est la partie sur laquelle vous pouvez réellement agir : être une source claire, cohérente et accessible, puis mesurer ce que Claude dit de vous au lieu de le deviner. La machine accomplit quelque chose de remarquable. Elle ne fait tout simplement pas ce que le marketing laisse entendre.
+
+## Foire aux questions
+
+### Est-ce que Claude apprend de mes conversations ?
+
+Non. Le modèle avec lequel vous discutez est figé : ses poids ne changent pas parce que vous lui avez parlé, et vos messages n'influencent pas les réponses données à d'autres utilisateurs. L'entraînement se fait séparément, en amont, sur des données rassemblées par Anthropic. Au sein d'une même conversation, Claude s'appuie sur la fenêtre de contexte, qu'il relit à chaque fois et oublie une fois la conversation terminée.
+
+### Est-ce que Claude se souvient de moi d'une conversation à l'autre ?
+
+Pas par défaut. Le modèle sous-jacent est sans état et démarre chaque conversation à zéro. La fonctionnalité « mémoire » de Claude est une couche distincte qui stocke des informations précises et les réinjecte dans les conversations suivantes : de la gestion de données autour du modèle, pas une mise à jour du modèle lui-même.
+
+### Claude est-il conscient, ou réfléchit-il réellement ?
+
+Mécaniquement, Claude prédit le token suivant. Il construit des représentations internes riches et compose des raisonnements en plusieurs étapes, comme le montre la recherche en interprétabilité, mais rien de tout cela ne prouve une expérience intérieure, et la « réflexion » visible qu'il affiche n'est pas le reflet d'un esprit. La position honnête, c'est que la prédiction du token suivant explique le comportement sans avoir besoin du mot « conscient », et que quiconque vous vend une certitude dans un sens ou dans l'autre exagère ce que l'on sait réellement.
+
+### Pourquoi Claude refuse-t-il certaines choses, ou semble-t-il trop prudent ?
+
+Parce que ce comportement lui a été inculqué. L'IA constitutionnelle a façonné Claude pour qu'il suive des principes écrits sur l'utilité et l'innocuité ; un refus ou une réponse évasive n'est donc que cet entraînement qui transparaît à travers les poids. C'est un choix délibéré d'Anthropic, ni un censeur qui lirait chaque réponse en direct, ni une humeur aléatoire. On peut ne pas être d'accord avec l'endroit où la limite est fixée, mais elle n'a rien d'arbitraire.
+
+### Pourquoi Claude donne-t-il une réponse différente à chaque fois ?
+
+Parce qu'il échantillonne une distribution de probabilité sur les tokens suivants possibles, plutôt que de toujours prendre le plus probable. Exécutez deux fois le même prompt et le chemin peut diverger. Quand une recherche Web entre en jeu, les pages récupérées peuvent varier aussi. Conséquence pratique pour quiconque teste sa visibilité dans l'IA : une seule réponse est une anecdote, pas une mesure.
+
+### Claude est-il meilleur que ChatGPT ?
+
+Les deux reposent sur la même idée de Transformer, mais ils sont entraînés différemment : Claude avec l'IA constitutionnelle et une place plus large pour des principes écrits, ChatGPT avec sa propre combinaison de méthodes fondées sur les retours humains. Cela se traduit par des différences de ton, de prudence et de style, plus que par un vainqueur unique. Pour le fonctionnement interne de l'autre système, voir notre guide sur [le fonctionnement de ChatGPT](https://geotoolbox.ai/blog/how-does-chatgpt-work).
+
+### Y a-t-il eu une action de la CNIL contre Anthropic ?
+
+Non, à ce jour aucune plainte ni sanction de la CNIL contre Anthropic ou Claude n'a été recensée en France. Une action collective existe aux États-Unis autour des limites d'usage de l'abonnement Claude Max, mais il s'agit d'un litige commercial américain, sans lien avec la protection des données. Les CGU de Claude restent malgré tout à vérifier par vous-même avant tout usage professionnel sensible.
+
+## Sources
+
+- [IA constitutionnelle : l'innocuité à partir de retours d'IA](https://www.anthropic.com/research/constitutional-ai-harmlessness-from-ai-feedback) - Anthropic, 2022
+- [La Constitution de Claude](https://www.anthropic.com/news/claudes-constitution) - Anthropic, 2023 (mise à jour 2026)
+- [Attention Is All You Need (l'article sur le Transformer)](https://arxiv.org/abs/1706.03762) - Vaswani et al., 2017
+- [Mapping the Mind of a Large Language Model](https://www.anthropic.com/news/mapping-mind-language-model) - Anthropic, 2024
+- [On the Biology of a Large Language Model](https://transformer-circuits.pub/2025/attribution-graphs/biology.html) - Anthropic, 2025
+- [Présentation des modèles Claude](https://platform.claude.com/docs/en/about-claude/models/overview) - Anthropic
+- [Déclaration d'Anthropic sur la suspension de Fable 5 et Mythos 5](https://www.anthropic.com/news/fable-mythos-access) - Anthropic, juin 2026
+- [CNIL : s'opposer à la réutilisation de ses données pour l'entraînement d'un agent conversationnel](https://www.cnil.fr/fr/ia-comment-sopposer-la-reutilisation-de-ses-donnees-personnelles-entrainement-agent-conversationnel) - CNIL
