@@ -29,7 +29,7 @@ The standard Claude Code context window is **200,000 tokens**. Several current m
 <tr><td><strong>Claude Sonnet 5</strong></td><td>1M tokens</td><td>Available on Pro, Max, Team, Enterprise</td></tr>
 <tr><td><strong>Fable 5</strong></td><td>1M tokens</td><td>Available on paid plans</td></tr>
 <tr><td><strong>Opus 4.8 / 4.7 / 4.6</strong></td><td>1M tokens</td><td>Pro users must enable usage credits for the 1M window on Opus models</td></tr>
-<tr><td><strong>Sonnet 4.6</strong></td><td>1M tokens</td><td>Needs usage credits on Pro; automatic on usage-based Enterprise</td></tr>
+<tr><td><strong>Sonnet 4.6</strong></td><td>1M tokens</td><td>Needs usage credits enabled on all paid plans; automatic only on usage-based Enterprise</td></tr>
 <tr><td><strong>Other models</strong></td><td>200K tokens</td><td>The standard window on paid plans</td></tr>
 </tbody>
 </table>
@@ -86,11 +86,11 @@ One myth to put down: older guides claim Claude Code has no native way to see to
 
 ## Auto-Compaction: What Happens When the Window Fills
 
-Claude Code does not crash when you approach the limit. It compacts. Auto-compaction summarizes the conversation so far into a shorter representation and continues from that summary, freeing space to keep working. That reserved band at the bottom of the `/context` readout, the autocompact buffer, is the room held back so there is space to run the summarization when it triggers. Anthropic has not published a fixed number, but developers tracking their own `/context` output have [reported the buffer at around 33,000 tokens](https://www.avilevi.co.il/en/blog/manage-claude-code-context-window/), down from the roughly 45,000 shown in earlier readouts, so more of the window is now usable before compaction fires.
+Claude Code does not crash when you approach the limit. It compacts. Auto-compaction summarizes the conversation so far into a shorter representation and continues from that summary, freeing space to keep working. That reserved band at the bottom of the `/context` readout, the autocompact buffer, is the room held back so there is space to run the summarization when it triggers. Anthropic has not published a fixed number, but developers tracking their own `/context` output have [reported the buffer at around 33,000 tokens](https://www.avilevi.co.il/en/blog/manage-claude-code-context-window/).
 
 ### What Survives a Compaction
 
-Compaction is not lossless, and it is worth knowing what survives it. Anthropic's [documentation on what survives compaction](https://code.claude.com/docs/en/context-window) notes that the system prompt, your project-root `CLAUDE.md`, unscoped rules, and auto-memory are re-injected from disk after a compaction, so they persist. Path-scoped rules and nested `CLAUDE.md` files are dropped until their directory is touched again, and invoked skills are re-added but capped at about 5,000 tokens each and 25,000 total, oldest dropped first. In other words, the standing context you set up mostly holds, but anything that depended on being deep in the conversation can quietly vanish.
+Compaction is not lossless, and it is worth knowing what survives it. Anthropic's [documentation on what survives compaction](https://code.claude.com/docs/en/context-window) notes that the system prompt stays unchanged and isn't part of the compacted message history in the first place, while your project-root `CLAUDE.md` and unscoped rules persist as standing context. Invoked skills are the one exception that gets re-added after a compaction rather than simply persisting. Path-scoped rules and nested `CLAUDE.md` files are dropped until their directory is touched again, and invoked skills are re-added but capped at about 5,000 tokens each and 25,000 total, oldest dropped first. In other words, the standing context you set up mostly holds, but anything that depended on being deep in the conversation can quietly vanish.
 
 ### /clear, /compact, and /rewind
 
@@ -119,7 +119,7 @@ The trap is assuming this only kicks in when the meter is near full. It does not
 
 ### Why a Bigger Window Isn't the Fix
 
-This is also why a 1M window is not the fix it sounds like. Chroma's [Context Rot study](https://research.trychroma.com/context-rot) tested 18 frontier models, Claude among them, and found every one degrades as input length grows, even on simple retrieval tasks. A bigger window buys you more room before you have to compact. It does not buy immunity from the model getting less reliable the more you cram in. Curating what goes into the window beats maximizing how much fits.
+This is also why a 1M window is not the fix it sounds like. Chroma's [Context Rot study](https://www.trychroma.com/research/context-rot) tested 18 frontier models, Claude among them, and found every one degrades as input length grows, even on simple retrieval tasks. A bigger window buys you more room before you have to compact. It does not buy immunity from the model getting less reliable the more you cram in. Curating what goes into the window beats maximizing how much fits.
 
 The cost angle compounds here. A bloated session is expensive twice: you pay to re-send that growing window on every turn, and you pay again when auto-compaction spends tokens summarizing it, sometimes summarizing a previous summary. In our experience, the sessions that burn the most tokens are rarely the hardest problems. They are ordinary tasks run in a window nobody cleared, where each turn re-reads a pile of stale context that stopped being useful long ago. Computerphile has a good walkthrough of why re-processing that context is expensive at the hardware level:
 
@@ -151,7 +151,7 @@ The reason a coding agent's context is expensive is the same reason serving AI a
 The standard context window in Claude Code is 200,000 tokens. Several current models raise it to 1 million tokens on paid plans, including Claude Sonnet 5, Fable 5, and Opus 4.8, 4.7, and 4.6. The usable space is always smaller than the headline number, because the system prompt, tools, memory, and your `CLAUDE.md` occupy part of the window before you type anything.
 
 **Does Claude Code have a 1 million token context window?**
-Yes, on the right model and plan. Sonnet 5, Fable 5, and the Opus 4.x models support a 1M window in Claude Code on Pro, Max, Team, and Enterprise plans. On Pro, reaching the 1M window for Opus models requires enabling usage credits first. It is not available on the free tier.
+Yes, on the right model and plan. Sonnet 5, Sonnet 4.6, Fable 5, and Opus 4.6-and-later support a 1M window in Claude Code on Pro, Max, Team, and Enterprise plans. Usage credits must be enabled to reach it, except on usage-based Enterprise plans where it's automatic. It is not available on the free tier.
 
 **What is the difference between /compact and /clear?**
 `/clear` wipes the conversation history entirely while keeping your files and tools, which is what you want when switching to unrelated work. `/compact` summarizes the conversation so far and continues from that summary, which is what you want at a natural break in the same task. The short version: between tasks, clear; inside one task, compact.
@@ -173,5 +173,5 @@ Run `/context` in a session for a live breakdown by category, use `/usage` for a
 - [How large is the context window on paid Claude plans?](https://support.claude.com/en/articles/8606394-how-large-is-the-context-window-on-paid-claude-plans) (Anthropic)
 - [Understanding the Claude Code context window](https://www.damiangalarza.com/posts/2025-12-08-understanding-claude-code-context-window/) (Damian Galarza)
 - [Managing the Claude Code context window](https://www.avilevi.co.il/en/blog/manage-claude-code-context-window/) (Avi Levi)
-- [Context Rot: How Increasing Input Tokens Impacts LLM Performance](https://research.trychroma.com/context-rot) (Chroma Research)
+- [Context Rot: How Increasing Input Tokens Impacts LLM Performance](https://www.trychroma.com/research/context-rot) (Chroma Research)
 - [Why AI Tokens are so Expensive](https://www.youtube.com/watch?v=-0HRzXk8vlk) (Computerphile)

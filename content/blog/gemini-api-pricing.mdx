@@ -51,11 +51,11 @@ Here is Gemini 3.5 Flash across all four tiers.
 <tr><td><strong>Standard</strong></td><td>$1.50</td><td>$9.00</td><td>Baseline price, normal latency</td></tr>
 <tr><td><strong>Batch</strong></td><td>$0.75</td><td>$4.50</td><td>50% off, up to 24 hours to return</td></tr>
 <tr><td><strong>Flex</strong></td><td>$0.75</td><td>$4.50</td><td>About 50% off, latency-tolerant, can be queued</td></tr>
-<tr><td><strong>Priority</strong></td><td>$2.70</td><td>$16.20</td><td>Roughly 1.8x Standard, latency guarantees</td></tr>
+<tr><td><strong>Priority</strong></td><td>$2.70</td><td>$16.20</td><td>Roughly 1.8x Standard, non-sheddable traffic</td></tr>
 </tbody>
 </table>
 
-Standard is the default. Batch runs any model at half price if you submit work as a job and can wait up to a day for it, which suits overnight enrichment and bulk generation. Flex is the middle ground: close to Batch pricing for on-demand calls you are willing to let the system queue during busy periods. Priority is the premium lane, about 1.8 times Standard, for production traffic that needs a latency guarantee.
+Standard is the default. Batch runs any model at half price if you submit work as a job and can wait up to a day for it, which suits overnight enrichment and bulk generation. Flex is the middle ground: close to Batch pricing for on-demand calls you are willing to let the system queue during busy periods. Priority is the premium lane, about 1.8 times Standard, for production traffic that needs predictable latency: Google doesn't guarantee a specific response time, but Priority requests are non-sheddable and won't get queued behind Standard traffic during busy periods, the way Flex can.
 
 The practical trap is reading a number without knowing its tier. If an AI Overview tells you Gemini 3.5 Flash costs $2.70 per million input tokens, it is quoting the Priority rate, not the $1.50 headline. Always confirm which tier a quoted price belongs to before you budget against it.
 
@@ -191,7 +191,7 @@ On raw token price, Gemini's Flash models are among the cheapest credible option
 
 Gemini 2.5 Flash at $0.30 input and $2.50 output is a fraction of what the frontier models charge, and the fair fight is Flash against each rival's own cheap tier: GPT-5.4-mini at [OpenAI's published rates](https://developers.openai.com/api/docs/pricing) and Claude Haiku. Even there, Gemini's $0.30 input undercuts both. You can read the full breakdowns in our [ChatGPT API pricing](https://geotoolbox.ai/blog/chatgpt-pricing) and [Claude API pricing](https://geotoolbox.ai/blog/claude-pricing) guides.
 
-There is a subtler wrinkle no table row captures: the 200K cliff erodes Gemini's long-context edge. Gemini 3.1 Pro at $2.00 input undercuts GPT-5.5 by more than half on prompts up to 200,000 tokens. Cross that line and Gemini's input doubles to $4.00 while OpenAI and Anthropic hold their rates flat, so the gap narrows sharply, though even at $4.00 Gemini 3.1 Pro still sits under GPT-5.5's $5.00. Where it can actually flip is against a cheaper-tier rival: Claude Sonnet at a flat $3.00 input undercuts Gemini's post-cliff $4.00. A workload that lives in very long context can erase Gemini's short-context price win, so price the cliff into your own token distribution before you commit.
+There is a subtler wrinkle no table row captures: the 200K cliff erodes Gemini's long-context edge. Gemini 3.1 Pro at $2.00 input undercuts GPT-5.5 by more than half on prompts up to 200,000 tokens. Cross that line and Gemini's input doubles to $4.00 while OpenAI and Anthropic hold their rates flat, so the gap narrows sharply, though even at $4.00 Gemini 3.1 Pro still sits under GPT-5.5's $5.00. Where it can actually flip is against a cheaper-tier rival: Claude Sonnet 5 undercuts Gemini's post-cliff $4.00 at its flat $3.00 input rate (effective September 1, 2026; it runs at an introductory $2.00 before then). A workload that lives in very long context can erase Gemini's short-context price win, so price the cliff into your own token distribution before you commit.
 
 And remember the reasoning-token tax applies to all three. Every provider charges for internal thinking on its reasoning tiers, so a base-rate comparison can flip once you measure how verbose each model is on your actual prompts. Benchmark two or three models on your real workload before you commit. The lowest number in a table is a starting point, not the bill.
 
@@ -207,7 +207,7 @@ The risk is the migration path, because the wrong replacement can multiply your 
 
 The bill-shock stories are real: a retry loop left running overnight, a leaked key mining tokens for hours, a batch job that overshoots. A Google Cloud budget alert will not save you from them, because an alert only notifies; it does not stop spend. By the time the email arrives, the money is gone.
 
-The controls that actually cap spend are more specific. The usage-tier billing caps pause service once your cumulative spend hits the tier limit, so a Tier 1 billing account cannot run past $250 in a cycle. Inside AI Studio you can set per-project spend caps, useful when several projects share one billing account, though [Google warns](https://ai.google.dev/gemini-api/docs/billing) that batch jobs and agent sessions can overshoot a project cap slightly because billing lags real usage by about ten minutes.
+The controls that actually cap spend are more specific. The usage-tier billing caps pause service once your cumulative spend hits the tier limit, so a Tier 1 billing account cannot run past $250 in a cycle. Since March 23, 2026, Google has also rolled out prepay billing: linking a billing account requires prepaying a minimum $10 credit balance, and requests only serve while that balance stays positive, which acts as a de facto hard cap once you stop topping it up. Inside AI Studio you can also set per-project spend caps, useful when several projects share one billing account, though [Google warns](https://ai.google.dev/gemini-api/docs/billing) that batch jobs and agent sessions can overshoot a project cap slightly because billing lags real usage by about ten minutes.
 
 Beyond the platform controls, the operational habits matter more. Watch cost per call, not just total spend, because two identical-looking requests can bill very differently once thinking tokens and context length vary, and averages hide the expensive few. Put a ceiling on retries so a failing loop cannot run away. And guard your API key like a credential, because a stolen key is a direct line to your billing account.
 
@@ -222,7 +222,7 @@ One shift worth noticing: these exact prices are increasingly quoted back to dev
 ## Frequently Asked Questions
 
 **Is the Gemini API free?**
-There is a free tier through Google AI Studio with no credit card, but it is limited to the Flash and Flash-Lite models at roughly a thousand-plus requests a day, and the current Pro model has not been free since April 2026. Two catches matter: free-tier data can be used to train Google's models, and enabling billing removes the free allowance rather than adding to it.
+There is a free tier through Google AI Studio with no credit card, but it is in practice limited to the Flash and Flash-Lite models at roughly a thousand-plus requests a day, and the current Pro model has not been free since April 2026. Two catches matter: free-tier data can be used to train Google's models, and enabling billing removes the free allowance rather than adding to it.
 
 **Which is cheaper, the Gemini API or the ChatGPT API?**
 For high-volume work, Gemini's Flash models usually undercut OpenAI's cheap tier: Gemini 2.5 Flash is $0.30 input against GPT-5.4-mini at $0.75. But reasoning tokens and context length can flip a base-rate comparison, so benchmark both on your real prompts. See our [ChatGPT API pricing](https://geotoolbox.ai/blog/chatgpt-pricing) guide for the full numbers.
@@ -245,5 +245,5 @@ Yes. On the free tier, Google may use your inputs and outputs to improve its mod
 - [Gemini API billing and usage tiers](https://ai.google.dev/gemini-api/docs/billing) - Google (tier caps, spend controls)
 - [Gemini API additional terms](https://ai.google.dev/gemini-api/terms) - Google (free-tier data-use policy)
 - [Gemini API model deprecations](https://ai.google.dev/gemini-api/docs/deprecations) - Google (shutdown and migration dates)
-- [Vertex AI generative AI pricing](https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing) - Google Cloud (rate parity, Provisioned Throughput, caching discounts)
+- [Vertex AI generative AI pricing](https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing) - Google Cloud (rate parity, caching discounts)
 - [OpenAI API pricing](https://developers.openai.com/api/docs/pricing) - OpenAI (comparison rates)

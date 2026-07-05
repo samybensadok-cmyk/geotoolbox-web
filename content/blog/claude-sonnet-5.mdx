@@ -45,7 +45,7 @@ What actually happened: [that leaked checkpoint shipped as Claude Sonnet 4.6](ht
 
 For comparison, Claude Opus 4.8 runs $5 per million input tokens and $25 per million output tokens (see our full [Claude pricing](https://geotoolbox.ai/blog/claude-pricing) guide). Sonnet 5's intro price is roughly 60% cheaper on both ends, and its standard price, which matches Sonnet 4.6's existing rate, is still 40% cheaper than Opus.
 
-The tokenizer changed too, so the price-per-token comparison overstates the savings. Sonnet 5 runs on an updated tokenizer, the same change Anthropic introduced with Opus 4.7, which processes the same input text into roughly 1.0 to 1.35 times more tokens depending on content type. Anthropic priced the introductory rate specifically so the transition lands as "roughly cost-neutral" despite that change. The practical version of that math, what it means for your actual workload, gets its own section further down.
+The tokenizer changed too, so the price-per-token comparison overstates the savings. Sonnet 5 runs on an updated tokenizer, the same change Anthropic introduced with Opus 4.7, which processes the same input text into roughly 1.0 to 1.35 times as many tokens depending on content type. Anthropic priced the introductory rate specifically so the transition lands as "roughly cost-neutral" despite that change. The practical version of that math, what it means for your actual workload, gets its own section further down.
 
 Anthropic also says it has raised rate limits across Chat, Cowork, Claude Code, and the Claude Platform to accommodate the higher token usage that comes with running Sonnet 5 at higher effort levels (if you code with it, our guide to [cutting Claude Code token costs](https://geotoolbox.ai/blog/reduce-claude-code-token-costs) covers how to keep that in check) (a related platform-wide rate-limit restructuring took effect April 26, 2026, ahead of this launch).
 
@@ -59,14 +59,14 @@ Anthropic also says it has raised rate limits across Chat, Cowork, Claude Code, 
 </thead>
 <tbody>
 <tr><td><strong>SWE-bench Pro</strong></td><td>58.1%</td><td>63.2%</td><td>69.2%</td><td>Long-horizon agentic software engineering</td></tr>
-<tr><td><strong>Terminal-Bench 2.1</strong></td><td>67.0%</td><td>80.4%</td><td>Not published</td><td>Command-line tool use</td></tr>
+<tr><td><strong>Terminal-Bench 2.1</strong></td><td>67.0%</td><td>80.4%</td><td>74.6%</td><td>Command-line tool use</td></tr>
 <tr><td><strong>Humanity's Last Exam (with tools)</strong></td><td>46.8%</td><td>57.4%</td><td>57.9%</td><td>Graduate-level multidisciplinary reasoning</td></tr>
 <tr><td><strong>OSWorld-Verified</strong></td><td>78.5%</td><td>81.2%</td><td>83.4%</td><td>Computer use (operating-system tasks)</td></tr>
 <tr><td><strong>GDPval-AA v2</strong></td><td>-</td><td>1,618 pts</td><td>1,615 pts</td><td>Real-world professional knowledge work</td></tr>
 </tbody>
 </table>
 
-SWE-bench Pro is the hardest, most coding-specific test of the five, and it's the clearest Opus win: Opus 4.8 leads 69.2% to 63.2%, and Anthropic is upfront that Opus remains "the model of choice for higher accuracy" on this kind of work. Opus also leads on OSWorld-Verified and edges Humanity's Last Exam. But it doesn't sweep the table, and the popular "Opus wins everything" summary is wrong on two rows. Anthropic didn't publish an Opus 4.8 score on Terminal-Bench 2.1 in the Sonnet 5 comparison at all (that row is shown against other vendors' models, not Opus); Sonnet 5's 80.4% is the top published Claude number there, and where third parties have since run Opus 4.8 on the same harness it lands below Sonnet 5, in the 75-79% range. And on GDPval-AA v2, which scores real-world knowledge tasks rather than coding puzzles, Sonnet 5 numerically edges Opus 4.8, 1,618 to 1,615, a gap close enough to read as a tie. So the honest read is narrower than the headline: Opus leads the pure-coding and computer-use tests, and the two models trade the rest.
+SWE-bench Pro is the hardest, most coding-specific test of the five, and it's the clearest Opus win: Opus 4.8 leads 69.2% to 63.2%, and Anthropic is upfront that Opus remains "the model of choice for higher accuracy" on this kind of work. Opus also leads on OSWorld-Verified and edges Humanity's Last Exam. But it doesn't sweep the table, and the popular "Opus wins everything" summary is wrong on two rows. On Terminal-Bench 2.1, Anthropic's own Opus 4.8 launch post puts it at 74.6% — behind Sonnet 5's 80.4%, making Sonnet 5 the stronger Claude model on command-line tool use. And on GDPval-AA v2, which scores real-world knowledge tasks rather than coding puzzles, Sonnet 5 numerically edges Opus 4.8, 1,618 to 1,615, a gap close enough to read as a tie. So the honest read is narrower than the headline: Opus leads pure coding, Sonnet 5 wins terminal work outright, and the two trade the rest.
 
 Anthropic also updated its grading for Humanity's Last Exam and OSWorld-Verified at this launch, and retroactively re-scored Sonnet 4.6 under the new methodology: its HLE score moved to 46.8% with tools, its OSWorld score to 78.5%. That's why the Sonnet 4.6 numbers above may not match what you remember from Sonnet 4.6's own launch post. This table uses the regraded baseline, the fairer comparison.
 
@@ -118,7 +118,7 @@ At Low or Medium effort, the savings versus Opus 4.8 hold up clearly, and Medium
 
 ## Where You Can Use Claude Sonnet 5 Today
 
-Sonnet 5 is the new default model for Free and Pro plan users, and it's available to Max, Team, and Enterprise users as well. Developers can reach it through the Claude API as `claude-sonnet-5`, and it's live in Claude Code from day one. On the infrastructure side, it's available through the Claude Platform on AWS, Amazon Bedrock, and Microsoft Foundry, with Google Vertex AI support for the full Cyber Verification Program still rolling out.
+Sonnet 5 is the new default model for Free and Pro plan users, and it's available to Max, Team, and Enterprise users as well. Developers can reach it through the Claude API as `claude-sonnet-5`, and it's live in Claude Code from day one. On the infrastructure side, it's available through the Claude Platform on AWS, Amazon Bedrock, Microsoft Foundry, and Google Vertex AI, with only the Cyber Verification Program itself still rolling out on Vertex.
 
 Third-party tools picked it up the same day. [GitHub Copilot made Sonnet 5 generally available](https://github.blog/changelog/2026-06-30-claude-sonnet-5-is-generally-available-for-github-copilot/) at launch across Copilot Pro, Pro+, Max, Business, and Enterprise tiers, with a gradual rollout across VS Code, Visual Studio, the Copilot CLI, JetBrains, and Xcode. Cursor added it the same day too, complete with its own CursorBench numbers.
 
