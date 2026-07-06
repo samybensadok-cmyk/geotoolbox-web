@@ -1,7 +1,11 @@
 import { notFound } from "next/navigation"
-import { setRequestLocale } from "next-intl/server"
+import { setRequestLocale, getMessages } from "next-intl/server"
 import { hasLocale } from "next-intl"
-import { routing } from "@/i18n/routing"
+import { routing, bcp47, type Locale } from "@/i18n/routing"
+import { RootShell } from "@/components/layout/root-shell"
+import { rootMetadata } from "@/lib/root-metadata"
+
+export const metadata = rootMetadata
 
 // Pre-render both locales of the content routes. The nested [slug]
 // generateStaticParams further restrict to slugs that exist per locale.
@@ -9,13 +13,14 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))
 }
 
-// Locale segment for content routes (blog, glossary). Validates the locale,
-// enables static rendering for everything below via setRequestLocale, and
-// passes through. <html>/<body>/chrome stay in the root layout (P0 keeps
-// marketing pages at root); per-locale <html lang> lands with the full
-// marketing migration (spec §10 P3). hreflang — the load-bearing SEO signal —
-// is emitted correctly per page via lib/i18n/siblings.ts regardless.
-export default async function LocaleLayout({
+// ROOT LAYOUT #2 — the per-locale content tree (blog, glossary; EN via
+// `as-needed` at /blog, FR at /fr/blog). It renders its OWN <html> so the
+// lang attribute is correct per locale (en-US vs fr-FR) — the load-bearing SEO
+// signal for indexed /fr/ pages. setRequestLocale(locale) + generateStaticParams
+// keep everything below STATIC (getMessages resolves from the param, not the
+// request). Splitting this from the EN marketing root is what lets the marketing
+// tree be request-free/static while /fr still gets fr-FR.
+export default async function LocaleRootLayout({
   children,
   params,
 }: {
@@ -25,5 +30,15 @@ export default async function LocaleLayout({
   const { locale } = await params
   if (!hasLocale(routing.locales, locale)) notFound()
   setRequestLocale(locale)
-  return children
+  const messages = (await getMessages()) as Record<string, Record<string, string>>
+  return (
+    <RootShell
+      lang={bcp47[locale as Locale] ?? "en-US"}
+      nav={messages.nav}
+      common={messages.common}
+      footer={messages.footer}
+    >
+      {children}
+    </RootShell>
+  )
 }
