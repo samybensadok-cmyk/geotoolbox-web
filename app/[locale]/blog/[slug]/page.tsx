@@ -19,7 +19,6 @@ import { RelatedPosts } from "@/components/blog/related-posts"
 import { InlineCta } from "@/components/blog/inline-cta"
 import { injectInlineCta } from "@/lib/inline-cta"
 import { Avatar } from "@/components/ui/avatar"
-import { NewsletterSignup } from "@/components/newsletter/newsletter-signup"
 
 export async function generateStaticParams() {
   return routing.locales.flatMap((locale) =>
@@ -282,18 +281,6 @@ export default async function BlogPost({
           {author && <AuthorBio author={author} />}
 
           <RelatedPosts posts={relatedPosts} locale={locale} />
-
-          <div className="mx-auto mt-12 max-w-xl">
-            <NewsletterSignup
-              source={`article:${post.slug}`}
-              title={isFr ? "Recevez nos analyses GEO par email" : "Get GEO insights in your inbox"}
-              description={
-                isFr
-                  ? "Un email quand on publie quelque chose qui vaut le coup. Pas de spam, désabonnement en un clic."
-                  : "One email when we publish something worth reading. No spam, unsubscribe anytime."
-              }
-            />
-          </div>
         </div>
       </section>
 
