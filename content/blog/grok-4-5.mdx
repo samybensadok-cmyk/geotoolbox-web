@@ -1,0 +1,152 @@
+---
+title: "Grok 4.5: Specs, Benchmarks, Pricing & the Honest Verdict (2026)"
+description: "Grok 4.5 is xAI's cheaper, faster 'Opus-class' coding model, out July 8, 2026. An honest look at specs, real benchmarks, true cost, EU access, and AI search."
+date: "2026-07-11"
+updated: "2026-07-11"
+author: "Samy BEN SADOK"
+tags: ["grok-4.5", "grok", "xai", "spacexai", "cursor", "llm", "ai-model", "guide"]
+draft: false
+---
+
+Grok 4.5 is xAI's cheaper, faster answer to the frontier: a coding-focused model that Elon Musk calls "Opus-class," shipped on July 8, 2026. The reality is narrower than the headline. It sits a notch below the top models on raw intelligence, but it does frontier-adjacent work for a fraction of the cost, and it is fast. This covers what Grok 4.5 actually is, what it really costs, and why a new AI model matters even if you never write a line of code.
+
+## Is Grok 4.5 Out? What xAI Just Launched
+
+Yes. Grok 4.5 went public on July 8, 2026, released by SpaceXAI, the entity xAI now operates under. It is a model built for coding, agentic tasks, and knowledge work, not a chatbot upgrade, and it shipped as the default model inside xAI's coding agent, Grok Build.
+
+The headline framing came from Elon Musk, who called it an "Opus-class model, but faster, more token-efficient, and lower cost." That claim is doing a lot of work. If you have used [xAI's Grok](https://geotoolbox.ai/blog/what-is-grok) before, the important shift is that 4.5 is aimed at people who ship software and do professional work, not at people asking a chatbot for trivia.
+
+One catch matters up front: Grok 4.5 was not available in the European Union at launch. According to [xAI's announcement](https://x.ai/news/grok-4-5), every EU market was excluded on day one, with availability "expected in mid-July." If you are in the EU, you could not access it through any SpaceXAI product or the API console when it shipped.
+
+## What's New in Grok 4.5
+
+The defining detail is who helped train it. Grok 4.5 was trained alongside Cursor, the AI coding editor, using real developer-session data. [Cursor's launch note](https://cursor.com/blog/grok-4-5) describes it as the first model built for more than software engineering, tuned on long-running, in-codebase agent workflows rather than static code snippets. That is the source of most of its coding strength, and also of one of its credibility questions.
+
+The training run itself was large. xAI says Grok 4.5 was trained across tens of thousands of NVIDIA GB300 GPUs, with reinforcement learning spanning hundreds of thousands of multi-step engineering tasks and heavy data filtering and deduplication. The stated goal was per-token intelligence, getting more out of each token rather than simply generating more of them.
+
+You will see claims that Grok 4.5 runs on a new "V9" foundation with roughly 1.5 trillion parameters, a jump from Grok 4.3's smaller base. Treat those numbers as unconfirmed. They come from secondary coverage and leaks, not from xAI's own model card, which publishes no parameter count or architecture. If parameter counts matter to your decision, note that this one is unverified. For context on why "bigger" does not automatically mean "smarter," a [mixture-of-experts](https://geotoolbox.ai/glossary/mixture-of-experts) design can carry a huge parameter count while only activating a fraction per request.
+
+On the product side, Grok 4.5 is the default model in Grok Build, xAI's terminal coding agent that can run up to eight parallel sub-agents. It sits in the same release cadence that produced [the still-unreleased Grok 5](https://geotoolbox.ai/blog/grok-5): ship narrower, capability-specific models fast rather than wait on one general flagship.
+
+## Grok 4.5 Benchmarks: What the Numbers Show
+
+This is where the marketing and the numbers diverge. xAI's prose says Grok 4.5 exceeds comparable leading models. Its own benchmark chart says something more mixed. Across four of the coding benchmarks xAI published, Claude Fable 5, Anthropic's most capable model, posts the top score on all four, and Grok 4.5 only stays close on one of them.
+
+<table>
+<thead>
+<tr><th>Coding benchmark</th><th>Grok 4.5</th><th>Fable 5 (max)</th><th>GPT-5.5 (xhigh)</th><th>Opus 4.8 (max)</th></tr>
+</thead>
+<tbody>
+<tr><td>DeepSWE 1.0 (pass@1)</td><td>62.0%</td><td><strong>66.1%</strong></td><td>64.31%</td><td>55.75%</td></tr>
+<tr><td>DeepSWE 1.1 (mini-swe-agent)</td><td>53%</td><td><strong>70%</strong></td><td>67%</td><td>59%</td></tr>
+<tr><td>Terminal Bench 2.1</td><td>83.3%</td><td><strong>84.3%</strong></td><td>83.4%</td><td>78.9%</td></tr>
+<tr><td>SWE-Bench Pro (resolve rate)</td><td>64.7%</td><td><strong>80.4%</strong></td><td>58.6%</td><td>69.2%</td></tr>
+</tbody>
+</table>
+
+The picture is competitive, not dominant. Grok 4.5 beats GPT-5.5 on SWE-Bench Pro but trails Opus 4.8 and Fable 5 there, and it is closest to the leader on Terminal Bench 2.1. These are also xAI's own figures ([reported by MarkTechPost](https://www.marktechpost.com/2026/07/08/spacexai-releases-grok-4-5/) from the launch chart), with competitor numbers pulled from their system cards and leaderboards, so treat them as a vendor's best case and verify on your own tasks.
+
+Independent testing lands in the same place. On the [Artificial Analysis Intelligence Index](https://artificialanalysis.ai/models/grok-4-5), Grok 4.5 scores 54, which puts it behind the frontier leaders (Fable 5, GPT-5.5, and Opus 4.8) rather than level with them. The same testing flags a reliability caveat: by Artificial Analysis's measures its hallucination tendency looks higher than its predecessor's, even as its factual knowledge improved. A model that knows more but states wrong answers with more confidence is exactly the failure mode you do not want in legal, financial, or client-facing work, so verify anything high-stakes rather than trusting a confident reply.
+
+<Callout type="note">
+Musk pitched Grok 4.5 as "Opus-class," but his more precise comparison was narrower: "roughly comparable to Opus 4.7, but much faster," referencing the previous Opus generation rather than the current Opus 4.8. That gap between his own two framings tells you most of what you need to know.
+</Callout>
+
+The coding numbers also deserve extra scrutiny for a specific reason: the model was co-trained with Cursor on Cursor's own workflows, and Cursor left its own CursorBench test out of the launch comparison after flagging a training overlap. That does not taint the other benchmarks, but it is a reason to run your own trials before trusting any leaderboard. If you want the fuller side-by-side, our [Grok vs Claude comparison](https://geotoolbox.ai/blog/grok-vs-claude) breaks down where each model actually pulls ahead.
+
+<figure>
+  <Image src="/blog/grok-4-5/grok-4-5-vs-frontier-scorecard.png" alt="Grok 4.5 leans cheaper, faster, and more token-efficient; frontier models lead on benchmarks, accuracy, and EU access." width={1040} height={721} />
+  <figcaption>Where Grok 4.5 leans against the frontier: it wins on cost and efficiency, the top models win on capability and availability.</figcaption>
+</figure>
+
+## Grok 4.5 Pricing: The $2/$6 Headline and the Real Cost
+
+Price is where Grok 4.5 makes its actual case. It costs $2 per million input tokens and $6 per million output tokens, with cached input at $0.50 per million and a 500,000-token context window, per [xAI's model docs](https://docs.x.ai/developers/models/grok-4.5). Against the current frontier, that is more than 60% cheaper than Opus 4.8 and GPT-5.5. One quiet trade-off worth noting: that 500,000-token window is smaller than the multi-million-token windows some earlier Grok variants advertised, so if you were feeding the model very large codebases or documents, 4.5 is a step down on context.
+
+<table>
+<thead>
+<tr><th>Model</th><th>Input / 1M</th><th>Output / 1M</th><th>Context</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Grok 4.5</strong></td><td><strong>$2</strong></td><td><strong>$6</strong></td><td>500K</td></tr>
+<tr><td>Claude Opus 4.8</td><td>$5</td><td>$25</td><td>1M</td></tr>
+<tr><td>GPT-5.5</td><td>$5</td><td>$30</td><td>Unconfirmed</td></tr>
+<tr><td>GPT-5.6 Luna (cheap tier)</td><td>$1</td><td>$6</td><td>Unconfirmed</td></tr>
+</tbody>
+</table>
+
+The headline is real, but it is not your final bill. xAI's built-in API tools (web search, X search, code execution, document search) carry separate per-call fees, so a tool-heavy agent run costs more than the token math alone. Budget from a real workload, not just the headline rate.
+
+For most buyers the comparison that matters is against the model they already pay for. Grok 4.5 is confirmed on OpenRouter at the same $2/$6 and 500K context, [routed through the gateway](https://openrouter.ai/x-ai/grok-4.5) if you do not want to sign up for xAI directly. If you are weighing it against the OpenAI side, the new [GPT-5.6 family](https://geotoolbox.ai/blog/gpt-5-6) undercuts it only at the Luna tier, and against consumer Grok plans, our [Grok pricing breakdown](https://geotoolbox.ai/blog/grok-pricing) covers SuperGrok and the free tier.
+
+## Speed and Token Efficiency: Where Grok 4.5 Actually Wins
+
+If the benchmarks are mixed and the price is a win, efficiency is the knockout. Grok 4.5 is served at roughly 80 tokens per second, quick for a model in this capability tier, and xAI claims about twice the token efficiency of comparable leading models overall, solving tasks in under half the steps.
+
+The efficiency number is the one worth internalizing. On SWE-Bench Pro, Grok 4.5 resolved tasks using about 15,954 output tokens on average, against roughly 67,020 for Opus 4.8, a gap of about 4.2x fewer output tokens per task ([xAI's own figure](https://x.ai/news/grok-4-5)). Output tokens are the expensive half of the bill, so that efficiency stacks on top of the lower per-token rate. The combined effect is an effective cost per coding task that is close to an order of magnitude lower than Opus 4.8 on that benchmark, even though Grok 4.5 is a step behind the top tier on raw capability. That is the whole pitch: not the smartest model, but by some distance the cheapest way to get frontier-adjacent work done, especially across a long [context window](https://geotoolbox.ai/glossary/context-window) where token counts pile up.
+
+## How to Access Grok 4.5
+
+Access is genuinely fragmented, which trips up a lot of people. The model ID is `grok-4.5`, and you can reach it several ways:
+
+- Grok Build, xAI's terminal coding agent, where it is the default model (`x.ai/cli`)
+- Cursor, on all plans
+- The SpaceXAI console and API directly, for your own integrations
+- SuperGrok and X Premium, for chat-style consumer use
+- Gateways like OpenRouter, Vercel, and Cloudflare, if you already route models through one
+
+xAI is offering free Grok 4.5 usage for a limited time in Grok Build and Cursor, which is the cheapest way to try it before committing. The exception, again, is the EU: at launch the model was blocked across every member state with no firm date, and a VPN was the only workaround people reported. If you run an EU team, plan around the mid-July target rather than counting on it.
+
+<Callout type="warning">
+If you handle client or regulated data, check the plan terms before you connect anything. On xAI's free and consumer tiers, conversations may be used to improve the models. Only the Business and Enterprise plans guarantee your data is excluded from training.
+</Callout>
+
+## What Grok 4.5 Means for AI Search and Your Brand
+
+This part matters if you market a brand rather than build software. Grok answers questions using live posts on X and the open web, which means it forms a view of your company and repeats it to anyone who asks. Grok 4.5 does not change that mechanism, but it changes the volume. The query "grok 4.5" alone is already drawing heavy AI-search interest, and a model that is cheaper and faster gets embedded in more products, which means more AI answers get generated, more often, in more places.
+
+That is the shift worth planning around. A cheaper agentic model lowers the cost of every AI answer, so AI search stops being a novelty surface and becomes a distribution channel you either show up in or you do not. The lever is the same one it has always been for [answer engine optimization](https://geotoolbox.ai/blog/aeo-best-practices): write pages that state facts cleanly enough to be lifted into an answer, and earn the kind of third-party mentions that models treat as corroboration.
+
+In our experience, the brands that get [cited by AI](https://geotoolbox.ai/glossary/ai-citation) are rarely the ones with the most content. They are the ones whose key facts are structured, current, and repeated across sources an engine already trusts. If you are not sure whether Grok or any other engine currently mentions you, that is measurable. You can [track your AI share of voice](https://geotoolbox.ai/blog/ai-share-of-voice) the same way you would track rankings.
+
+## Should You Use Grok 4.5? The Verdict
+
+The trade is consistent: give up a little raw capability, get a lot of cost and speed back. That tells you exactly when to reach for it.
+
+It is the right pick for cost-sensitive, tool-heavy agentic and coding work, especially high-volume implementation where the 4.2x token efficiency compounds across thousands of runs. If you are paying frontier prices to have a model grind through routine engineering tasks, Grok 4.5 does most of that work for a fraction of the bill.
+
+It is the wrong pick when accuracy is non-negotiable. For legal, financial, or client-facing output where a confident wrong answer is expensive, the higher hallucination rate is a real liability, and a top-capability model earns its premium. EU teams are also out until availability lands, and anyone who needs the single strongest model on raw reasoning should look at Fable 5, Opus 4.8, or GPT-5.6 instead.
+
+Whichever model you route to, the marketing question is the same: does it mention your brand when someone asks? The models change every few weeks, but AI visibility is now a channel worth measuring. Our free [AI Readiness check](https://geotoolbox.ai/tools/ai-readiness) shows you whether AI engines can actually crawl, read, and cite your site, which is the first thing to fix before you worry about which model won this week.
+
+## Frequently Asked Questions
+
+**Is Grok 4.5 available in Europe?**
+Not at launch. Grok 4.5 shipped on July 8, 2026 with every EU market excluded, and xAI listed availability as "expected in mid-July" without a firm date. Until it lands, a VPN is the only workaround people have reported, and it is not an officially supported one.
+
+**How much does Grok 4.5 actually cost?**
+The API rate is $2 per million input tokens and $6 per million output tokens, with cached input at $0.50. That is the headline, not the whole bill: built-in tools like web and code search carry separate per-call fees, so a tool-heavy run costs more than the token math. For chat use, access comes through SuperGrok or X Premium instead.
+
+**Is Grok 4.5 really "Opus-class"?**
+That is Elon Musk's phrasing, and it overstates the case. Independent testing on the Artificial Analysis Intelligence Index scores it 54, behind frontier leaders like Fable 5, Opus 4.8, and GPT-5.5. Musk's own precise comparison was "roughly comparable to Opus 4.7," the previous generation, not the current Opus 4.8.
+
+**Is Grok 4.5 good for coding?**
+It is competitive. It beats GPT-5.5 on SWE-Bench Pro, but Fable 5 leads every coding benchmark xAI published, and the numbers are xAI's own. Because it was co-trained with Cursor, run your own trials before trusting its coding scores.
+
+**Does Grok 4.5 hallucinate a lot?**
+By Artificial Analysis's reliability measures, its hallucination tendency looks higher than its predecessor's, even as its factual knowledge improved, so it can state a wrong answer with more confidence. Enable web search to ground its responses, and verify anything you cannot afford to get wrong.
+
+**Is Grok 4.5 better than Grok 4.3?**
+For coding and agentic work, yes. Grok 4.5 is the successor xAI tuned specifically for those jobs, and it supersedes Grok 4.3 as the interim flagship while Grok 5 trains. The trade-offs: it lists at a higher per-token rate than 4.3, its context window is smaller than some earlier Grok variants, and its hallucination tendency runs higher, so if you rely on very long-context runs or need maximum factual reliability, test before you switch.
+
+**How do I access Grok 4.5 for free?**
+xAI is offering free Grok 4.5 usage for a limited time inside Grok Build and Cursor, which is the no-commitment way to test it. Beyond that trial, access is paid through the API, SuperGrok, or X Premium.
+
+## Sources
+
+- [Introducing Grok 4.5 - SpaceXAI](https://x.ai/news/grok-4-5)
+- [Grok 4.5 model docs - xAI](https://docs.x.ai/developers/models/grok-4.5)
+- [Grok 4.5 on the Artificial Analysis Intelligence Index](https://artificialanalysis.ai/models/grok-4-5)
+- [Introducing Grok 4.5 - Cursor](https://cursor.com/blog/grok-4-5)
+- [SpaceXAI Releases Grok 4.5 - MarkTechPost](https://www.marktechpost.com/2026/07/08/spacexai-releases-grok-4-5/)
+- [Grok 4.5 on OpenRouter](https://openrouter.ai/x-ai/grok-4.5)
