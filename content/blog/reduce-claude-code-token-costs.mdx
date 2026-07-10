@@ -2,6 +2,7 @@
 title: "How to Reduce Claude Code Token Costs (and Why They Add Up Fast)"
 description: "Claude Code burns tokens fast because it re-reads your whole context on every step. Here is the mechanism, plus the highest-impact ways to cut your token bill."
 date: "2026-07-04"
+updated: "2026-07-10"
 author: "Samy BEN SADOK"
 tags: ["claude-code", "agentic-ai", "claude", "claude-sonnet-5", "anthropic"]
 draft: false
@@ -29,6 +30,12 @@ The scale is not subtle. A 2026 study, [How Do AI Agents Spend Your Money?](http
 Computerphile has a clear walkthrough of why this is so expensive at the hardware level:
 
 <YouTube id="-0HRzXk8vlk" title="Why AI Tokens are so Expensive - Computerphile" />
+
+## The Sonnet 5 Tokenizer Tax
+
+One recent change can raise your bill without you touching anything. [Sonnet 5](https://geotoolbox.ai/blog/claude-sonnet-5) launched on June 30, 2026 and is now the default model in Claude Code, and it ships with a new tokenizer that emits roughly 30 percent more tokens for the same text on average, per Anthropic's [what's new in Sonnet 5](https://platform.claude.com/docs/en/about-claude/models/whats-new-sonnet-5) doc. The inflation is uneven: heavier on English prose, on the order of 40 percent, and lighter on code, closer to 27 percent on Python, with languages like Chinese roughly unchanged. Per-token pricing did not change, so an equivalent request or session simply costs about a third more tokens than the same work did on Sonnet 4.6. The coverage calls it a "tokenizer tax," and the name fits.
+
+You cannot opt out of the ratio, but it raises the stakes on every lever below. If the same task now costs roughly 30 percent more tokens, the context you keep lean and the output you keep short are each worth proportionally more, and the 1M-token window holds a little less of your actual text than it used to, so context discipline starts biting sooner.
 
 ## Your Bill or Your Limit? What "Cheaper" Actually Means
 
@@ -168,4 +175,5 @@ Both, depending on your plan. On a Pro or Max subscription you pay a flat fee an
 - [How Do AI Agents Spend Your Money? Analyzing and Predicting Token Consumption in Agentic Coding Tasks](https://arxiv.org/abs/2604.22750) (arXiv, 2026)
 - [Why AI Tokens are so Expensive](https://www.youtube.com/watch?v=-0HRzXk8vlk) (Computerphile)
 - [Claude API and model pricing](https://platform.claude.com/docs/en/about-claude/pricing) (Anthropic)
+- [What's new in Claude Sonnet 5](https://platform.claude.com/docs/en/about-claude/models/whats-new-sonnet-5) (Anthropic)
 - [How I Cut My Claude Code Token Usage by 60% and Got Better Output](https://dev.to/numbpill3d/how-i-cut-my-claude-code-token-usage-by-60-and-got-better-output-48b0) (dev.to)
