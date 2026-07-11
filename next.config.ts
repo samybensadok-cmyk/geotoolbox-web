@@ -70,6 +70,18 @@ const nextConfig: NextConfig = {
         source: "/assets.php",
         destination: "https://sg-geo-tool.replit.app/assets.php",
       },
+      // W2 distribution: brand-domain canonical URLs for public agent-readiness share pages
+      // + badges (backlink/SEO value accrues to geotoolbox.ai, not the replit.app origin).
+      // The target endpoints are dark behind SG_FEATURE_AR_SHARE until GA, so this is safe to
+      // ship early; it 404s until the flag is on.
+      {
+        source: "/agent-readiness/r/:token",
+        destination: "https://sg-geo-tool.replit.app/index.php?action=ar_share&token=:token",
+      },
+      {
+        source: "/agent-readiness/badge/:token",
+        destination: "https://sg-geo-tool.replit.app/index.php?action=ar_badge&token=:token",
+      },
     ]
   },
 }
