@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEO ROI Calculator (GBP) - Growthack.io</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .seo-roi-calculator {
+            font-family: 'Inter', sans-serif !important;
+            line-height: 1.6 !important;
+            color: #677294 !important;
+        }
+
+        .seo-roi-calculator .container {
+            max-width: 800px !important;
+            margin: 0 auto !important;
+            background-color: #ffffff !important;
+            padding: 30px !important;
+            border-radius: 8px !important;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .seo-roi-calculator h1,
+        .seo-roi-calculator h2 {
+            color: #1E3E62 !important;
+            margin-bottom: 20px !important;
+            font-weight: 600 !important;
+        }
+
+        .seo-roi-calculator .input-group {
+            margin-bottom: 20px !important;
+            position: relative !important;
+        }
+
+        .seo-roi-calculator label {
+            display: block !important;
+            margin-bottom: 5px !important;
+            font-weight: 500 !important;
+            color: #1E3E62 !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+        }
+
+        .seo-roi-calculator input[type="text"],
+        .seo-roi-calculator select {
+            width: 100% !important;
+            padding: 10px !important;
+            border: 1px solid #e0e0e0 !important;
+            border-radius: 4px !important;
+            box-sizing: border-box !important;
+            font-family: 'Inter', sans-serif !important;
+            color: #133b4f !important;
+            background-color: #ffffff !important;
+            font-size: 14px !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .seo-roi-calculator input[type="text"]:focus,
+        .seo-roi-calculator select:focus {
+            border-color: #ff5800 !important;
+            box-shadow: 0 0 0 2px rgba(255, 88, 0, 0.1) !important;
+            outline: none !important;
+        }
+
+        .seo-roi-calculator select {
+            appearance: none !important;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23131313%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E') !important;
+            background-repeat: no-repeat !important;
+            background-position: right 10px top 50% !important;
+            background-size: 12px auto !important;
+            padding-right: 30px !important;
+        }
+
+        .seo-roi-calculator button {
+            background-color: #ff5800 !important;
+            color: #ffffff !important;
+            border: none !important;
+            padding: 12px 20px !important;
+            border-radius: 4px !important;
+            cursor: pointer !important;
+            transition: all 0.3s ease !important;
+            font-family: 'Inter', sans-serif !important;
+            font-weight: 500 !important;
+            font-size: 14px !important;
+        }
+
+        .seo-roi-calculator button:disabled {
+            background-color: #cccccc !important;
+            cursor: not-allowed !important;
+            transform: none !important;
+        }
+
+        .seo-roi-calculator button:not(:disabled):hover {
+            background-color: #e64d00 !important;
+            transform: translateY(-2px) !important;
+        }
+
+        .seo-roi-calculator #results {
+            margin-top: 30px !important;
+            border: 1px solid #e0e0e0 !important;
+            padding: 20px !important;
+            border-radius: 4px !important;
+            background-color: #f9f9f9 !important;
+            display: none;
+        }
+
+        .seo-roi-calculator .result-item {
+            margin-bottom: 15px !important;
+            padding: 10px !important;
+            background-color: #ffffff !important;
+            border-radius: 4px !important;
+            border: 1px solid #e0e0e0 !important;
+            font-size: 14px !important;
+        }
+
+        .seo-roi-calculator .result-item strong {
+            color: #1E3E62 !important;
+            font-weight: 600 !important;
+        }
+
+        .seo-roi-calculator .chart-container {
+            margin-top: 30px !important;
+            height: 400px !important;
+            background-color: #ffffff !important;
+            padding: 20px !important;
+            border-radius: 4px !important;
+            border: 1px solid #e0e0e0 !important;
+        }
+
+        .seo-roi-calculator #errorMessage {
+            color: #ff0000 !important;
+            margin-top: 10px !important;
+            font-weight: 500 !important;
+            padding: 10px !important;
+            border-radius: 4px !important;
+            background-color: rgba(255, 0, 0, 0.1) !important;
+            display: none;
+        }
+
+        .seo-roi-calculator .button-group {
+            display: flex !important;
+            justify-content: flex-start !important;
+            gap: 10px !important;
+            margin-top: 20px !important;
+        }
+
+        .seo-roi-calculator .hidden {
+            display: none !important;
+        }
+
+        .seo-roi-calculator .currency-symbol {
+            position: absolute !important;
+            left: 12px !important;
+            top: 35px !important;
+            color: #133b4f !important;
+            font-size: 14px !important;
+        }
+
+        .seo-roi-calculator .percentage-symbol {
+            position: absolute !important;
+            right: 12px !important;
+            top: 35px !important;
+            color: #133b4f !important;
+            font-size: 14px !important;
+        }
+
+        .seo-roi-calculator .input-with-symbol {
+            padding-left: 25px !important;
+        }
+
+        .seo-roi-calculator .input-with-percentage {
+            padding-right: 25px !important;
+        }
+
+        .seo-roi-calculator .info-tooltip {
+            display: inline-flex !important;
+            align-items: center !important;
+            margin-left: 8px !important;
+            color: #677294 !important;
+            cursor: help !important;
+        }
+
+        .seo-roi-calculator .tooltip-content {
+            position: absolute !important;
+            background-color: #ffffff !important;
+            border: 1px solid #e0e0e0 !important;
+            border-radius: 4px !important;
+            padding: 12px !important;
+            font-size: 12px !important;
+            max-width: 250px !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+            display: none;
+            z-index: 1000 !important;
+            color: #133b4f !important;
+            left: 0 !important;
+            top: 100% !important;
+            margin-top: 5px !important;
+        }
+
+        .seo-roi-calculator .info-tooltip:hover .tooltip-content {
+            display: block !important;
+        }
+
+        .seo-roi-calculator .scenario-group {
+            padding: 12px !important;
+            background-color: #f9f9f9 !important;
+            border-radius: 4px !important;
+            border: 1px solid #e0e0e0 !important;
+            margin-bottom: 20px !important;
+        }
+
+        .seo-roi-calculator .highlight-value {
+            color: #ff5800 !important;
+            font-weight: 600 !important;
+        }
+    </style>
+
+<!-- Growthack brand layer: Inter font + site colour tokens -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  
+  /* ── Framer embed: auto-height & scroll ─────────────────────────── */
+  html {
+    height: auto !important;
+    overflow-y: auto !important;
+  }
+  body {
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-y: auto !important;
+    margin: 0;
+    padding: 0;
+  }
+  /* ──────────────────────────────────────────────────────────────── */
+
+  /* Design tokens extracted from growthack.co.uk Framer source */
+  :root {
+    --gh-font:    'Inter', sans-serif;
+    --gh-navy:    #0c1a2e;
+    --gh-body:    #3d5068;
+    --gh-steel:   #8aabcc;
+    --gh-orange:  #ff5800;
+    --gh-orange-h:#e64d00;
+    --gh-white:   #ffffff;
+    --gh-surface: #f4f7fb;
+    --gh-border:  #dde6f0;
+    --gh-radius:  6px;
+  }
+
+  /* Font – override everything in the tool */
+  .seo-roi-calculator, .seo-roi-calculator *, .seo-roi-calculator *::before, .seo-roi-calculator *::after {
+    font-family: var(--gh-font) !important;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Headings */
+  .seo-roi-calculator h1, .seo-roi-calculator h2, .seo-roi-calculator h3,
+  .seo-roi-calculator h4, .seo-roi-calculator h5, .seo-roi-calculator h6 {
+    color: var(--gh-navy) !important;
+    font-weight: 600 !important;
+    line-height: 1.25;
+  }
+
+  /* Body / paragraph text */
+  .seo-roi-calculator p, .seo-roi-calculator li, .seo-roi-calculator span:not([class*="text-"]) {
+    color: var(--gh-body);
+  }
+
+  /* Labels */
+  .seo-roi-calculator label {
+    color: var(--gh-navy) !important;
+    font-weight: 500 !important;
+  }
+
+  /* Inputs */
+  .seo-roi-calculator input[type="text"],
+  .seo-roi-calculator input[type="url"],
+  .seo-roi-calculator input[type="number"],
+  .seo-roi-calculator input[type="email"],
+  .seo-roi-calculator input[type="date"],
+  .seo-roi-calculator input[type="file"],
+  .seo-roi-calculator select,
+  .seo-roi-calculator textarea {
+    font-family: var(--gh-font) !important;
+    color: var(--gh-navy) !important;
+    border-color: var(--gh-border) !important;
+    border-radius: var(--gh-radius) !important;
+  }
+  .seo-roi-calculator input:focus,
+  .seo-roi-calculator select:focus,
+  .seo-roi-calculator textarea:focus {
+    border-color: var(--gh-orange) !important;
+    box-shadow: 0 0 0 3px rgba(255,88,0,0.12) !important;
+    outline: none !important;
+  }
+
+  /* Stat cards */
+  .seo-roi-calculator .stat-card {
+    background: var(--gh-surface) !important;
+    border: 1px solid var(--gh-border) !important;
+    border-radius: 8px !important;
+  }
+  .seo-roi-calculator .stat-card h3 {
+    color: var(--gh-navy) !important;
+  }
+  .seo-roi-calculator .stat-card p {
+    color: var(--gh-orange) !important;
+  }
+
+  /* Table headers */
+  .seo-roi-calculator th {
+    background: var(--gh-navy) !important;
+    color: var(--gh-white) !important;
+  }
+  .seo-roi-calculator td {
+    color: var(--gh-body);
+  }
+  .seo-roi-calculator tr:nth-child(even) td {
+    background: var(--gh-surface);
+  }
+
+  /* Progress panel */
+  .seo-roi-calculator #progressPanel,
+  .seo-roi-calculator .pp-title {
+    color: var(--gh-navy) !important;
+  }
+
+  /* Chart.js font override via data attribute (not CSS) is handled below */
+</style>
+</head>
+<body>
+    <div class="seo-roi-calculator">
+        <div class="container">
+            <div class="input-group">
+                <label>
+                    Current Monthly Organic Traffic
+                    <span class="info-tooltip">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M12 16v-4" />
+                            <path d="M12 8h.01" />
+                        </svg>
+                        <div class="tooltip-content">
+                            Enter your current monthly organic traffic from Google Analytics or Search Console
+                        </div>
+                    </span>
+                </label>
+                <input type="text" inputmode="decimal" id="currentTraffic" class="input-with-symbol" required>
+                <span class="currency-symbol"></span>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    % Estimated Traffic Increase
+                    <span class="info-tooltip">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M12 16v-4" />
+                            <path d="M12 8h.01" />
+                        </svg>
+                        <div class="tooltip-content">
+                            Expected percentage increase in traffic at peak performance
+                        </div>
+                    </span>
+                </label>
+                <input type="text" inputmode="decimal" id="trafficIncrease" class="input-with-percentage" required>
+                <span class="percentage-symbol">%</span>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    % Average Conversion Rate
+                    <span class="info-tooltip">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M12 16v-4" />
+                            <path d="M12 8h.01" />
+                        </svg>
+                        <div class="tooltip-content">
+                            Percentage of visitors that convert into customers
+                        </div>
+                    </span>
+                </label>
+                <input type="text" inputmode="decimal" id="conversionRate" class="input-with-percentage" required>
+                <span class="percentage-symbol">%</span>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    £ Average Order Value
+                    <span class="info-tooltip">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M12 16v-4" />
+                            <path d="M12 8h.01" />
+                        </svg>
+                        <div class="tooltip-content">
+                            Average revenue generated per conversion
+                        </div>
+                    </span>
+                </label>
+                <input type="text" inputmode="decimal" id="averageOrderValue" class="input-with-symbol" required>
+                <span class="currency-symbol"></span>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    £ Monthly SEO Investment
+                    <span class="info-tooltip">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M12 16v-4" />
+                            <path d="M12 8h.01" />
+                        </svg>
+                        <div class="tooltip-content">
+                            Monthly cost of SEO services or resources
+                        </div>
+                    </span>
+                </label>
+                <input type="text" inputmode="decimal" id="seoCost" class="input-with-symbol" required>
+                <span class="currency-symbol"></span>
+            </div>
+
+            <div class="input-group">
+                <label>
+                    Projection Period (Months)
+                    <span class="info-tooltip">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M12 16v-4" />
+                            <path d="M12 8h.01" />
+                        </svg>
+                        <div class="tooltip-content">
+                            Number of months to project ROI calculations
+                        </div>
+                    </span>
+                </label>
+                <input type="text" inputmode="decimal" id="months" value="24" required>
+            </div>
+
+            <div class="scenario-group">
+                <label>
+                    Growth Scenario
+                    <span class="info-tooltip">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M12 16v-4" />
+                            <path d="M12 8h.01" />
+                        </svg>
+                        <div class="tooltip-content">
+                            Choose a scenario based on your market conditions and competition
+                        </div>
+                    </span>
+                </label>
+                <select id="scenario" onchange="toggleScenario(this.value)">
+                    <option value="realistic">Realistic Growth</option>
+                    <option value="best">Aggressive Growth</option>
+                    <option value="worst">Conservative Growth</option>
+                </select>
+            </div>
+
+            <div class="button-group">
+                <button type="button" id="calculateBtn" onclick="calculateROI()">Calculate ROI</button>
+                <button type="button" id="clearBtn" onclick="clearResults()" class="hidden">Clear Calculator</button>
+            </div>
+
+            <div id="errorMessage"></div>
+
+            <div id="results">
+                <h2>Projected ROI Results</h2>
+                <div id="resultContent"></div>
+            </div>
+
+            <div class="chart-container hidden" id="chartContainer">
+                <canvas id="roiChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <script>
+    let roiChart;
+    let currentScenario = 'realistic';
+
+    // Initialize the calculator
+    document.addEventListener('DOMContentLoaded', function() {
+        setupInputFormatting();
+        validateAllInputs();
+        setupTooltips();
+    });
+
+    function setupInputFormatting() {
+        const numericInputs = document.querySelectorAll('input[type="text"]');
+        numericInputs.forEach(input => {
+            input.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/[^0-9.]/g, '');
+                
+                // Handle decimal points
+                const decimalCount = (value.match(/\./g) || []).length;
+                if (decimalCount > 1) {
+                    value = value.slice(0, value.lastIndexOf('.'));
+                }
+
+                // Format with commas
+                if (value) {
+                    const parts = value.split('.');
+                    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    value = parts.join('.');
+                }
+
+                e.target.value = value;
+                validateAllInputs();
+            });
+
+            // Add focus effects
+            input.addEventListener('focus', function() {
+                this.style.borderColor = '#ff5800';
+                this.style.boxShadow = '0 0 0 2px rgba(255, 88, 0, 0.1)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.style.borderColor = '#e0e0e0';
+                this.style.boxShadow = 'none';
+            });
+        });
+    }
+
+    function validateAllInputs() {
+        const inputs = [
+            'currentTraffic',
+            'trafficIncrease',
+            'conversionRate',
+            'averageOrderValue',
+            'seoCost',
+            'months'
+        ];
+
+        const calculateBtn = document.getElementById('calculateBtn');
+        const allValid = inputs.every(id => {
+            const value = document.getElementById(id).value.replace(/,/g, '');
+            return value && !isNaN(parseFloat(value));
+        });
+
+        calculateBtn.disabled = !allValid;
+    }
+
+    function setupTooltips() {
+        const tooltips = document.querySelectorAll('.info-tooltip');
+
+        const showTooltip = (tooltip, content) => {
+            content.style.display = 'block';
+            // Reset then reposition if it would run off the right edge
+            content.style.left = '0';
+            content.style.right = 'auto';
+            const rect = tooltip.getBoundingClientRect();
+            const contentRect = content.getBoundingClientRect();
+            if (rect.left + contentRect.width > window.innerWidth) {
+                content.style.left = 'auto';
+                content.style.right = '0';
+            }
+        };
+        const hideTooltip = (content) => {
+            content.style.display = 'none';
+        };
+
+        tooltips.forEach(tooltip => {
+            const content = tooltip.querySelector('.tooltip-content');
+            // Make focusable so keyboard + tap can trigger it
+            tooltip.setAttribute('tabindex', '0');
+
+            tooltip.addEventListener('mouseenter', () => showTooltip(tooltip, content));
+            tooltip.addEventListener('mouseleave', () => hideTooltip(content));
+            tooltip.addEventListener('focus', () => showTooltip(tooltip, content));
+            tooltip.addEventListener('blur', () => hideTooltip(content));
+
+            // Tap / click toggles (mobile + touch where hover is unavailable)
+            tooltip.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (content.style.display === 'block') {
+                    hideTooltip(content);
+                } else {
+                    // Close any other open tooltips first
+                    document.querySelectorAll('.tooltip-content').forEach(hideTooltip);
+                    showTooltip(tooltip, content);
+                }
+            });
+        });
+
+        // Tap outside closes any open tooltip
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.tooltip-content').forEach(hideTooltip);
+        });
+    }
+
+    function calculateROI() {
+        const inputs = getFormattedInputs();
+        const errorMessage = document.getElementById('errorMessage');
+
+        const validationError = validateInputs(inputs);
+        if (!validationError) {
+            errorMessage.style.display = 'none';
+            const projections = calculateRealisticProjections(
+                inputs.currentTraffic,
+                inputs.trafficIncrease/100, // Convert percentage to decimal
+                inputs.conversionRate/100,  // Convert percentage to decimal
+                inputs.averageOrderValue,
+                inputs.seoCost,
+                inputs.months
+            );
+            
+            if (projections && projections.length > 0) {
+                displayResults(projections);
+                document.getElementById('chartContainer').classList.remove('hidden');
+                document.getElementById('clearBtn').classList.remove('hidden');
+                updateChart(projections);
+            } else {
+                errorMessage.textContent = 'Error calculating projections. Please check your inputs.';
+                errorMessage.style.display = 'block';
+            }
+        } else {
+            errorMessage.textContent = validationError;
+            errorMessage.style.display = 'block';
+        }
+    }
+
+    function getFormattedInputs() {
+        return {
+            currentTraffic: parseFloat(document.getElementById('currentTraffic').value.replace(/,/g, '')),
+            trafficIncrease: parseFloat(document.getElementById('trafficIncrease').value.replace(/,/g, '')),
+            conversionRate: parseFloat(document.getElementById('conversionRate').value.replace(/,/g, '')),
+            averageOrderValue: parseFloat(document.getElementById('averageOrderValue').value.replace(/,/g, '')),
+            seoCost: parseFloat(document.getElementById('seoCost').value.replace(/,/g, '')),
+            months: parseInt(document.getElementById('months').value.replace(/,/g, ''))
+        };
+    }
+
+    // Returns null when all inputs are valid, or a friendly per-field error string
+    // naming the offending field and its allowed range.
+    function validateInputs(inputs) {
+        const rules = {
+            currentTraffic:    { label: 'Current Monthly Organic Traffic', min: 1,    max: 100000000, unit: ' visits' },
+            trafficIncrease:   { label: '% Estimated Traffic Increase',    min: 1,    max: 500,       unit: '%' },
+            conversionRate:    { label: '% Average Conversion Rate',       min: 0.01, max: 100,       unit: '%' },
+            averageOrderValue: { label: '£ Average Order Value',           min: 0.01, max: 1000000,   unit: '' },
+            seoCost:           { label: '£ Monthly SEO Investment',        min: 1,    max: 1000000,   unit: '' },
+            months:            { label: 'Projection Period (Months)',      min: 1,    max: 60,        unit: '' }
+        };
+
+        for (const [key, rule] of Object.entries(rules)) {
+            const value = inputs[key];
+            if (isNaN(value)) {
+                return `${rule.label}: please enter a valid number.`;
+            }
+            if (value < rule.min || value > rule.max) {
+                return `${rule.label} must be between ${numberWithCommas(rule.min)} and ${numberWithCommas(rule.max)}${rule.unit}.`;
+            }
+        }
+        return null;
+    }
+
+    function calculateRealisticProjections(currentTraffic, trafficIncrease, conversionRate, averageOrderValue, seoCost, months) {
+        let projections = [];
+        let cumulativeCost = 0;
+        let cumulativeRevenue = 0;
+
+        for (let i = 0; i < months; i++) {
+            let monthsSinceStart = i + 1;
+            let growthFactor;
+
+            if (currentScenario === 'best') {
+                if (monthsSinceStart <= 1) {
+                    growthFactor = 0;
+                } else if (monthsSinceStart <= 6) {
+                    growthFactor = (monthsSinceStart - 1) / 5;
+                } else {
+                    growthFactor = Math.min(1, (monthsSinceStart - 6) / 6 + 1);
+                }
+            } else if (currentScenario === 'worst') {
+                if (monthsSinceStart <= 5) {
+                    growthFactor = 0;
+                } else if (monthsSinceStart <= 12) {
+                    growthFactor = (monthsSinceStart - 5) / 7 * 0.5;
+                } else {
+                    growthFactor = Math.min(1, 0.5 + (monthsSinceStart - 12) / 12 * 0.5);
+                }
+            } else { // realistic
+                if (monthsSinceStart <= 3) {
+                    growthFactor = 0;
+                } else if (monthsSinceStart <= 6) {
+                    growthFactor = Math.pow((monthsSinceStart - 3) / 3, 2) * 0.1;
+                } else if (monthsSinceStart <= 12) {
+                    growthFactor = 0.1 + (monthsSinceStart - 6) / 6 * 0.4;
+                } else {
+                    growthFactor = Math.min(1, 0.5 + (monthsSinceStart - 12) / 12 * 0.5);
+                }
+            }
+
+            let monthlyTraffic = currentTraffic * (1 + (trafficIncrease * growthFactor));
+            let additionalTraffic = monthlyTraffic - currentTraffic;
+            let additionalConversions = additionalTraffic * conversionRate;
+            let additionalRevenue = additionalConversions * averageOrderValue;
+
+            cumulativeCost += seoCost;
+            cumulativeRevenue += additionalRevenue;
+
+            projections.push({
+                month: monthsSinceStart,
+                traffic: monthlyTraffic,
+                additionalTraffic: additionalTraffic,
+                additionalConversions: additionalConversions,
+                additionalRevenue: additionalRevenue,
+                cumulativeCost: cumulativeCost,
+                cumulativeRevenue: cumulativeRevenue,
+                roi: ((cumulativeRevenue - cumulativeCost) / cumulativeCost) * 100
+            });
+        }
+
+        return projections;
+    }
+
+    function displayResults(projections) {
+        const resultContent = document.getElementById('resultContent');
+        const lastMonth = projections[projections.length - 1];
+
+        // Breakeven = first month where cumulative revenue catches up to cumulative cost.
+        const breakeven = projections.find(p => p.cumulativeRevenue >= p.cumulativeCost);
+        const breakevenItem = breakeven
+            ? `<div class="result-item">
+                <strong>Estimated Breakeven:</strong>
+                <span class="highlight-value">Month ${breakeven.month}</span>
+            </div>`
+            : `<div class="result-item">
+                <strong>Estimated Breakeven:</strong>
+                <span class="highlight-value">No breakeven within the selected period — consider a longer timeframe</span>
+            </div>`;
+
+        resultContent.innerHTML = breakevenItem + `
+            <div class="result-item">
+                <strong>Final Monthly Traffic:</strong> 
+                <span class="highlight-value">${numberWithCommas(Math.round(lastMonth.traffic))} visitors</span>
+            </div>
+            <div class="result-item">
+                <strong>Additional Monthly Conversions:</strong> 
+                <span class="highlight-value">${numberWithCommas(lastMonth.additionalConversions.toFixed(0))}</span>
+            </div>
+            <div class="result-item">
+                <strong>Additional Monthly Revenue:</strong> 
+                <span class="highlight-value">£${numberWithCommas(lastMonth.additionalRevenue.toFixed(2))}</span>
+            </div>
+            <div class="result-item">
+                <strong>Total SEO Investment:</strong> 
+                <span class="highlight-value">£${numberWithCommas(lastMonth.cumulativeCost.toFixed(2))}</span>
+            </div>
+            <div class="result-item">
+                <strong>Total Additional Revenue:</strong> 
+                <span class="highlight-value">£${numberWithCommas(lastMonth.cumulativeRevenue.toFixed(2))}</span>
+            </div>
+            <div class="result-item">
+                <strong>Return on Investment:</strong> 
+                <span class="highlight-value">${numberWithCommas(lastMonth.roi.toFixed(2))}%</span>
+            </div>
+        `;
+
+        document.getElementById('results').style.display = 'block';
+    }
+
+    function updateChart(projections) {
+        const ctx = document.getElementById('roiChart').getContext('2d');
+
+        if (roiChart) {
+            roiChart.destroy();
+        }
+
+        const labels = projections.map(p => `Month ${p.month}`);
+        const revenueData = projections.map(p => p.cumulativeRevenue);
+        const costData = projections.map(p => p.cumulativeCost);
+
+        roiChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Cumulative Revenue',
+                        data: revenueData,
+                        borderColor: '#FF5800',
+                        backgroundColor: 'rgba(255, 88, 0, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: 'Cumulative SEO Investment',
+                        data: costData,
+                        borderColor: '#133b4f',
+                        backgroundColor: 'rgba(19, 59, 79, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            font: {
+                                family: "'Inter', sans-serif",
+                                size: 12
+                            },
+                            usePointStyle: true,
+                            padding: 20
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: '#ffffff',
+                        titleColor: '#133b4f',
+                        titleFont: {
+                            family: "'Inter', sans-serif",
+                            size: 14,
+                            weight: '600'
+                        },
+                        bodyColor: '#133b4f',
+                        bodyFont: {
+                            family: "'Inter', sans-serif",
+                            size: 13
+                        },
+                        borderColor: '#e0e0e0',
+                        borderWidth: 1,
+                        padding: 12,
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += new Intl.NumberFormat('en-GB', { 
+                                        style: 'currency', 
+                                        currency: 'GBP' 
+                                    }).format(context.parsed.y);
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return '£' + new Intl.NumberFormat('en-GB').format(value);
+                            },
+                            font: {
+                                family: "'Inter', sans-serif",
+                                size: 12
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            font: {
+                                family: "'Inter', sans-serif",
+                                size: 12
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    function clearResults() {
+        document.querySelectorAll('input[type="text"]').forEach(input => {
+            if (input.id !== 'months') {
+                input.value = '';
+            } else {
+                input.value = '24';
+            }
+        });
+        
+        document.getElementById('scenario').value = 'realistic';
+        currentScenario = 'realistic';
+        
+        document.getElementById('results').style.display = 'none';
+        document.getElementById('chartContainer').classList.add('hidden');
+        document.getElementById('clearBtn').classList.add('hidden');
+        document.getElementById('errorMessage').style.display = 'none';
+        document.getElementById('calculateBtn').disabled = true;
+        
+        if (roiChart) {
+            roiChart.destroy();
+            roiChart = null;
+        }
+    }
+
+    function toggleScenario(scenario) {
+        currentScenario = scenario;
+        if (document.getElementById('results').style.display === 'block') {
+            calculateROI();
+        }
+    }
+
+    function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+</script>
+
+<script>
+  /* iFrame Resizer — lets Framer auto-size the embed to content height */
+  (function () {
+    function sendHeight() {
+      var h = Math.max(
+        document.body.scrollHeight,
+        document.documentElement.scrollHeight,
+        document.body.offsetHeight,
+        document.documentElement.offsetHeight
+      );
+      window.parent.postMessage({ type: 'setHeight', height: h }, '*');
+      /* Also support iFrameResizer protocol */
+      if (window.parentIFrame) { window.parentIFrame.size(h); }
+    }
+    /* Send on load */
+    window.addEventListener('load', sendHeight);
+    /* Re-send whenever DOM changes (results appearing, sections expanding) */
+    if (window.ResizeObserver) {
+      new ResizeObserver(sendHeight).observe(document.body);
+    } else {
+      setInterval(sendHeight, 500);
+    }
+  })();
+</script>
+
+</body>
+</html>

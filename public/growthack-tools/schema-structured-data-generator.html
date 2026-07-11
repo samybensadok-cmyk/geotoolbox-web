@@ -1,0 +1,1643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced JSON-LD Schema Generator</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        @media screen and (max-width: 768px) {
+    .container-tool {
+        padding: 15px;
+    }
+
+    .flex.justify-between {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.button-group .btn {
+    flex-grow: 1;
+}
+
+@media (max-width: 768px) {
+    .button-group {
+        flex-direction: column;
+    }
+
+    .button-group .btn {
+        width: 100%;
+    }
+}
+
+   #schemaSelect {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1rem;
+    padding-right: 2rem;
+}
+
+    .schema-section {
+        margin-bottom: 15px;
+    }
+
+    .section-header {
+        padding: 12px;
+    }
+
+    .section-content {
+        padding: 12px;
+    }
+
+    .field-example {
+        font-size: 0.75rem;
+    }
+
+    .json-output {
+        max-height: 250px;
+        font-size: 0.75rem;
+        padding: 10px;
+    }
+
+    .schema-type-tag {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem;
+    }
+}
+        .container-tool {
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin: 0 auto;
+            max-width: 1200px;
+        }
+        
+        .btn {
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            border-color: #FF5800;
+            padding: 0.5rem 1rem;
+        }
+
+        .btn-primary {
+            background-color: #FF5800 !important;
+            color: white !important;
+            border-color: #FF5800 !important;
+            box-shadow: 0 4px 6px rgba(255, 88, 0, 0.2);
+        }
+
+        .btn-primary:hover {
+            background-color: #FF7033 !important;
+            color: white !important;
+            box-shadow: 0 6px 8px rgba(255, 88, 0, 0.3);
+            border-color: #FF5800;
+        }
+
+        .btn-secondary {
+            background-color: #f3f4f6 !important;
+            color: #374151 !important;
+            border: 1px solid #e5e7eb !important;
+        }
+
+        .btn-secondary:hover {
+            background-color: #7b7b93 !important;
+            color: white !important;
+        }
+
+        .btn-danger {
+            background-color: #ef4444 !important;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #dc2626 !important;
+            color: white !important;
+        }
+        .schema-section {
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .section-header {
+            padding: 1rem;
+            background-color: #f9fafb;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .section-content {
+            padding: 1rem;
+            display: none;
+        }
+    
+        .section-content.active {
+            display: block;
+        }
+        
+        .chevron {
+            transition: transform 0.2s;
+        }
+        
+        .chevron.active {
+            transform: rotate(90deg);
+        }
+        
+        .notification {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            animation: fadeOut 3s forwards;
+            z-index: 50;
+        }
+        
+        .array-field {
+            border-left: 2px solid #e5e7eb;
+            padding-left: 1rem;
+            margin-left: 0.5rem;
+        }
+
+        .array-item {
+            position: relative;
+            padding-right: 2rem;
+        }
+
+        .remove-item {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ef4444;
+            cursor: pointer;
+        }
+        
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            70% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        
+        .json-output {
+            background-color: #1a202c;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        
+        input:focus, select:focus {
+            outline: 2px solid #f97316;
+            outline-offset: 2px;
+        }
+
+        .schema-type-tag {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            background-color: #e5e7eb;
+            border-radius: 0.25rem;
+            margin: 0.25rem;
+            cursor: pointer;
+        }
+
+        .schema-type-tag:hover {
+            background-color: #d1d5db;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            margin-left: 0.5rem;
+            color: #6b7280;
+        }
+
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 250px;
+            background-color: #1f2937;
+            color: #fff;
+            text-align: center;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+            white-space: normal;
+            line-height: 1.4;
+        }
+
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .invalid-field {
+            border-color: #ef4444;
+        }
+
+        .validation-message {
+            font-size: 0.875rem;
+            color: #ef4444;
+            margin-top: 0.25rem;
+        }
+        
+        .field-example {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-top: 0.25rem;
+            font-style: italic;
+        }
+
+        .sub-field {
+            margin-left: 1rem;
+            padding-left: 1rem;
+            border-left: 2px solid #e5e7eb;
+        }
+
+        .validation-results {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            display: none;
+        }
+
+        .validation-success {
+            background-color: #dcfce7;
+            border: 1px solid #22c55e;
+            color: #166534;
+        }
+
+        .validation-error {
+            background-color: #fee2e2;
+            border: 1px solid #ef4444;
+            color: #991b1b;
+        }
+    </style>
+
+<!-- Growthack brand layer: Inter font + site colour tokens -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  
+  /* ── Framer embed: auto-height & scroll ─────────────────────────── */
+  html {
+    height: auto !important;
+    overflow-y: auto !important;
+  }
+  body {
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-y: auto !important;
+    margin: 0;
+    padding: 0;
+  }
+  /* ──────────────────────────────────────────────────────────────── */
+
+  /* Design tokens extracted from growthack.co.uk Framer source */
+  :root {
+    --gh-font:    'Inter', sans-serif;
+    --gh-navy:    #0c1a2e;
+    --gh-body:    #3d5068;
+    --gh-steel:   #8aabcc;
+    --gh-orange:  #ff5800;
+    --gh-orange-h:#e64d00;
+    --gh-white:   #ffffff;
+    --gh-surface: #f4f7fb;
+    --gh-border:  #dde6f0;
+    --gh-radius:  6px;
+  }
+
+  /* Font – override everything in the tool */
+  .container-tool, .container-tool *, .container-tool *::before, .container-tool *::after {
+    font-family: var(--gh-font) !important;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Headings */
+  .container-tool h1, .container-tool h2, .container-tool h3,
+  .container-tool h4, .container-tool h5, .container-tool h6 {
+    color: var(--gh-navy) !important;
+    font-weight: 600 !important;
+    line-height: 1.25;
+  }
+
+  /* Body / paragraph text */
+  .container-tool p, .container-tool li, .container-tool span:not([class*="text-"]) {
+    color: var(--gh-body);
+  }
+
+  /* Labels */
+  .container-tool label {
+    color: var(--gh-navy) !important;
+    font-weight: 500 !important;
+  }
+
+  /* Inputs */
+  .container-tool input[type="text"],
+  .container-tool input[type="url"],
+  .container-tool input[type="number"],
+  .container-tool input[type="email"],
+  .container-tool input[type="date"],
+  .container-tool input[type="file"],
+  .container-tool select,
+  .container-tool textarea {
+    font-family: var(--gh-font) !important;
+    color: var(--gh-navy) !important;
+    border-color: var(--gh-border) !important;
+    border-radius: var(--gh-radius) !important;
+  }
+  .container-tool input:focus,
+  .container-tool select:focus,
+  .container-tool textarea:focus {
+    border-color: var(--gh-orange) !important;
+    box-shadow: 0 0 0 3px rgba(255,88,0,0.12) !important;
+    outline: none !important;
+  }
+
+  /* Stat cards */
+  .container-tool .stat-card {
+    background: var(--gh-surface) !important;
+    border: 1px solid var(--gh-border) !important;
+    border-radius: 8px !important;
+  }
+  .container-tool .stat-card h3 {
+    color: var(--gh-navy) !important;
+  }
+  .container-tool .stat-card p {
+    color: var(--gh-orange) !important;
+  }
+
+  /* Table headers */
+  .container-tool th {
+    background: var(--gh-navy) !important;
+    color: var(--gh-white) !important;
+  }
+  .container-tool td {
+    color: var(--gh-body);
+  }
+  .container-tool tr:nth-child(even) td {
+    background: var(--gh-surface);
+  }
+
+  /* Progress panel */
+  .container-tool #progressPanel,
+  .container-tool .pp-title {
+    color: var(--gh-navy) !important;
+  }
+
+  /* Chart.js font override via data attribute (not CSS) is handled below */
+</style>
+</head>
+
+<body class="bg-gray-50">
+    <div class="max-w-4xl mx-auto p-6">
+        <div class="container-tool">
+        <br>
+            <div class="flex justify-between items-center mb-6">
+                <div class="flex gap-2">
+                    <button onclick="importSchema()" 
+                            class="btn btn-secondary">
+                        Import
+                    </button>
+                    <button onclick="exportSchema()" 
+                            class="btn btn-secondary">
+                        Export
+                    </button>
+                    <button onclick="clearAll()" 
+                            class="btn btn-danger">
+                        Clear
+                    </button>
+                </div>
+                <div class="flex items-center gap-2">
+                    <select id="schemaSelect" 
+                            class="px-4 py-2 border border-gray-300 rounded-md focus:border-orange-500">
+                        <option value="">Select Schema Type</option>
+                        <option value="organization">Organization</option>
+                        <option value="product">Product</option>
+                        <option value="article">Article</option>
+                        <option value="localBusiness">Local Business</option>
+                        <option value="event">Event</option>
+                        <option value="website">Website</option>
+                        <option value="person">Person</option>
+                        <option value="faqPage">FAQ Page</option>
+                        <option value="recipe">Recipe</option>
+                        <option value="course">Course</option>
+                    </select>
+                    <button onclick="addSelectedSchema()" 
+                            class="btn btn-primary">
+                        Add
+                    </button>
+                </div>
+            </div>
+
+            <div id="activeSchemas" class="flex flex-wrap gap-2 mb-6"></div>
+            <div id="schemaFields"></div>
+
+            <div class="mt-6">
+                <div class="flex justify-between items-center mb-2">
+                    <h3 class="text-lg font-semibold text-gray-900">Generated JSON-LD</h3>
+                    <div class="flex gap-2">
+                        <button onclick="validateSchema()" 
+                                class="btn btn-secondary">
+                            Validate
+                        </button>
+                        <button onclick="copyToClipboard()" 
+                                class="btn btn-primary">
+                            Copy
+                        </button>
+                    </div>
+                </div>
+                <div id="validationResults" class="validation-results"></div>
+                <pre id="jsonOutput" class="json-output"></pre>
+            </div>
+        </div>
+    </div>
+
+    <input type="file" id="importInput" accept=".json" style="display: none" onchange="handleImport(event)">
+
+<script>
+        // Field validation rules
+const validationRules = {
+    url: {
+        pattern: /^https?:\/\/.+/,
+        message: 'Must be a valid URL starting with http:// or https://'
+    },
+    email: {
+        pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+        message: 'Must be a valid email address'
+    },
+    date: {
+        pattern: /^\d{4}-\d{2}-\d{2}$/,
+        message: 'Must be in YYYY-MM-DD format'
+    },
+    price: {
+        pattern: /^\d+(\.\d{1,2})?$/,
+        message: 'Must be a valid price (e.g., 29.99)'
+    },
+    number: {
+        pattern: /^\d+$/,
+        message: 'Must be a valid number'
+    }
+};
+
+let activeSchemas = new Set();
+let formData = {};
+
+// Escape a value for safe interpolation into an HTML attribute context.
+function escapeAttr(value) {
+    return String(value === null || value === undefined ? '' : value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+}
+
+// Map a schema.org @type back to this tool's internal template key.
+function schemaKeyForType(atType) {
+    return Object.keys(schemaTemplates).find(k => schemaTemplates[k]['@type'] === atType);
+}
+
+// Schema templates
+const schemaTemplates = {
+    organization: {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "",
+        "alternateName": "",
+        "description": "",
+        "url": "",
+        "logo": "",
+        "image": "",
+        "foundingDate": "",
+        "foundingLocation": "",
+        "numberOfEmployees": "",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "",
+            "addressLocality": "",
+            "addressRegion": "",
+            "postalCode": "",
+            "addressCountry": ""
+        },
+        "contactPoint": [{
+            "@type": "ContactPoint",
+            "contactType": "",
+            "telephone": "",
+            "email": "",
+            "availableLanguage": []
+        }],
+        "parentOrganization": {
+            "@type": "Organization",
+            "name": "",
+            "url": "",
+            "description": ""
+        },
+        "subOrganization": [{
+            "@type": "Organization",
+            "name": "",
+            "url": "",
+            "description": ""
+        }],
+        "department": [{
+            "@type": "Organization",
+            "name": "",
+            "description": "",
+            "parentOrganization": {
+                "@type": "Organization",
+                "name": ""
+            }
+        }],
+        "sameAs": [],
+        "areaServed": {
+            "@type": "GeoCircle",
+            "geoMidpoint": {
+                "@type": "GeoCoordinates",
+                "latitude": "",
+                "longitude": ""
+            },
+            "geoRadius": ""
+        }
+    },
+    person: {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "",
+        "description": "",
+        "image": "",
+        "jobTitle": "",
+        "telephone": "",
+        "email": "",
+        "url": "",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "",
+            "addressLocality": "",
+            "addressRegion": "",
+            "postalCode": "",
+            "addressCountry": ""
+        },
+        "sameAs": []
+    },
+    article: {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "",
+        "description": "",
+        "image": "",
+        "datePublished": "",
+        "dateModified": "",
+        "author": {
+            "@type": "Person",
+            "name": "",
+            "url": ""
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "",
+            "logo": {
+                "@type": "ImageObject",
+                "url": ""
+            }
+        }
+    },
+    product: {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": "",
+        "description": "",
+        "image": "",
+        "brand": {
+            "@type": "Brand",
+            "name": ""
+        },
+        "offers": {
+            "@type": "Offer",
+            "price": "",
+            "priceCurrency": "USD",
+            "availability": "https://schema.org/InStock"
+        }
+    },
+    localBusiness: {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "name": "",
+        "description": "",
+        "image": "",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "",
+            "addressLocality": "",
+            "addressRegion": "",
+            "postalCode": "",
+            "addressCountry": ""
+        },
+        "telephone": "",
+        "email": ""
+    },
+    recipe: {
+        "@context": "https://schema.org",
+        "@type": "Recipe",
+        "name": "",
+        "description": "",
+        "image": "",
+        "recipeCategory": "",
+        "recipeCuisine": "",
+        "keywords": [],
+        "author": {
+            "@type": "Person",
+            "name": ""
+        },
+        "prepTime": "",
+        "cookTime": "",
+        "totalTime": "",
+        "recipeYield": "",
+        "recipeIngredient": [],
+        "recipeInstructions": [],
+        "nutrition": {
+            "@type": "NutritionInformation",
+            "calories": "",
+            "fatContent": "",
+            "proteinContent": "",
+            "carbohydrateContent": ""
+        }
+    },
+    course: {
+        "@context": "https://schema.org",
+        "@type": "Course",
+        "name": "",
+        "description": "",
+        "courseCode": "",
+        "timeRequired": "",
+        "provider": {
+            "@type": "Organization",
+            "name": "",
+            "url": ""
+        },
+        "hasCourseInstance": {
+            "@type": "CourseInstance",
+            "courseMode": "",
+            "startDate": "",
+            "endDate": "",
+            "location": {
+                "@type": "Place",
+                "name": ""
+            }
+        },
+        "coursePrerequisites": [],
+        "educationalLevel": "",
+        "educationalCredentialAwarded": ""
+    },
+    faqPage: {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": []
+    },
+    website: {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "",
+        "url": "",
+        "description": "",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "",
+            "query-input": "required name=search_term_string"
+        }
+    },
+    event: {
+        "@context": "https://schema.org",
+        "@type": "Event",
+        "name": "",
+        "description": "",
+        "startDate": "",
+        "endDate": "",
+        "location": {
+            "@type": "Place",
+            "name": "",
+            "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "",
+                "addressLocality": "",
+                "addressRegion": "",
+                "postalCode": "",
+                "addressCountry": ""
+            }
+        }
+    }
+};
+
+function getSchemaSections(schemaType) {
+    const sections = {
+        organization: [
+            {
+                title: 'Basic Information',
+                fields: [
+                    { label: 'Organization Name', id: 'name', required: true,
+                      tooltip: 'Official name of the organization' },
+                    { label: 'Description', id: 'description', required: true,
+                      tooltip: 'Detailed description of the organization' },
+                    { label: 'Alternative Name', id: 'alternateName',
+                      tooltip: 'Alternative or also known as name' },
+                    { label: 'Website URL', id: 'url', type: 'url',
+                      tooltip: 'Official website URL' },
+                    { label: 'Logo URL', id: 'logo', type: 'url',
+                      tooltip: 'URL of the organization logo' },
+                    { label: 'Image URL', id: 'image', type: 'url',
+                      tooltip: 'URL of a representative image' },
+                    { label: 'Founding Date', id: 'foundingDate', type: 'date',
+                      tooltip: 'Date when the organization was founded' },
+                    { label: 'Founding Location', id: 'foundingLocation',
+                      tooltip: 'Location where the organization was founded' },
+                    { label: 'Number of Employees', id: 'numberOfEmployees', type: 'number',
+                      tooltip: 'Total number of employees' }
+                ]
+            },
+            {
+                title: 'Address',
+                fields: [
+                    { label: 'Street Address', id: 'address.streetAddress' },
+                    { label: 'City', id: 'address.addressLocality' },
+                    { label: 'State/Region', id: 'address.addressRegion' },
+                    { label: 'Postal Code', id: 'address.postalCode' },
+                    { label: 'Country', id: 'address.addressCountry' }
+                ]
+            },
+            {
+                title: 'Contact Points',
+                fields: [
+                    { label: 'Contact Type', id: 'contactPoint.0.contactType',
+                      placeholder: 'e.g., Customer Service, Technical Support' },
+                    { label: 'Phone Number', id: 'contactPoint.0.telephone' },
+                    { label: 'Email', id: 'contactPoint.0.email', type: 'email' },
+                    { label: 'Available Languages', id: 'contactPoint.0.availableLanguage', value: [] }
+                ]
+            },
+            {
+                title: 'Additional Information',
+                fields: [
+                    { label: 'Social Media URLs', id: 'sameAs', value: [],
+                      tooltip: 'Links to social media profiles' }
+                ]
+            },
+            {
+                title: 'Area Served',
+                fields: [
+                    { label: 'Latitude', id: 'areaServed.geoMidpoint.latitude', type: 'number' },
+                    { label: 'Longitude', id: 'areaServed.geoMidpoint.longitude', type: 'number' },
+                    { label: 'Radius (km)', id: 'areaServed.geoRadius', type: 'number' }
+                ]
+            }
+        ],
+        recipe: [
+            {
+                title: 'Basic Information',
+                fields: [
+                    { label: 'Recipe Name', id: 'name', required: true },
+                    { label: 'Description', id: 'description', required: true },
+                    { label: 'Image URL', id: 'image', type: 'url' },
+                    { label: 'Recipe Category', id: 'recipeCategory' },
+                    { label: 'Cuisine Type', id: 'recipeCuisine' },
+                    { label: 'Keywords', id: 'keywords', value: [] }
+                ]
+            },
+            {
+                title: 'Times',
+                fields: [
+                    { label: 'Prep Time', id: 'prepTime', placeholder: 'PT30M',
+                      tooltip: 'Duration in ISO 8601 format (e.g., PT30M for 30 minutes)' },
+                    { label: 'Cook Time', id: 'cookTime', placeholder: 'PT1H' },
+                    { label: 'Total Time', id: 'totalTime', placeholder: 'PT1H30M' }
+                ]
+            },
+            {
+                title: 'Recipe Details',
+                fields: [
+                    { label: 'Recipe Yield', id: 'recipeYield', 
+                      tooltip: 'Number of servings or yield' },
+                    { label: 'Ingredients', id: 'recipeIngredient', value: [],
+                      tooltip: 'List of ingredients with amounts' },
+                    { label: 'Instructions', id: 'recipeInstructions', value: [],
+                      tooltip: 'Step-by-step cooking instructions' }
+                ]
+            },
+            {
+                title: 'Nutrition',
+                fields: [
+                    { label: 'Calories', id: 'nutrition.calories' },
+                    { label: 'Fat Content', id: 'nutrition.fatContent' },
+                    { label: 'Protein Content', id: 'nutrition.proteinContent' },
+                    { label: 'Carbohydrate Content', id: 'nutrition.carbohydrateContent' }
+                ]
+            }
+        ],
+        course: [
+            {
+                title: 'Basic Information',
+                fields: [
+                    { label: 'Course Name', id: 'name', required: true },
+                    { label: 'Description', id: 'description', required: true },
+                    { label: 'Course Code', id: 'courseCode' },
+                    { label: 'Time Required', id: 'timeRequired', placeholder: 'PT2H',
+                      tooltip: 'Duration in ISO 8601 format (e.g., PT2H for 2 hours)' }
+                ]
+            },
+            {
+                title: 'Provider Details',
+                fields: [
+                    { label: 'Provider Name', id: 'provider.name', required: true },
+                    { label: 'Provider URL', id: 'provider.url', type: 'url' }
+                ]
+            },
+            {
+                title: 'Course Instance',
+                fields: [
+                    { label: 'Course Mode', id: 'hasCourseInstance.courseMode',
+                      tooltip: 'e.g., online, onsite, hybrid' },
+                    { label: 'Start Date', id: 'hasCourseInstance.startDate', type: 'date' },
+                    { label: 'End Date', id: 'hasCourseInstance.endDate', type: 'date' },
+                    { label: 'Location Name', id: 'hasCourseInstance.location.name' }
+                ]
+            },
+            {
+                title: 'Requirements & Outcomes',
+                fields: [
+                    { label: 'Prerequisites', id: 'coursePrerequisites', value: [] },
+                    { label: 'Educational Level', id: 'educationalLevel' },
+                    { label: 'Credential Awarded', id: 'educationalCredentialAwarded' }
+                ]
+            }
+        ],
+        person: [
+            {
+                title: 'Basic Information',
+                fields: [
+                    { label: 'Full Name', id: 'name', required: true },
+                    { label: 'Description', id: 'description', required: true },
+                    { label: 'Job Title', id: 'jobTitle' },
+                    { label: 'Image URL', id: 'image', type: 'url' }
+                ]
+            },
+            {
+                title: 'Contact Information',
+                fields: [
+                    { label: 'Email', id: 'email', type: 'email' },
+                    { label: 'Telephone', id: 'telephone' },
+                    { label: 'Website URL', id: 'url', type: 'url' },
+                    { label: 'Social Media URLs', id: 'sameAs', value: [] }
+                ]
+            },
+            {
+                title: 'Address',
+                fields: [
+                    { label: 'Street Address', id: 'address.streetAddress' },
+                    { label: 'City', id: 'address.addressLocality' },
+                    { label: 'State/Region', id: 'address.addressRegion' },
+                    { label: 'Postal Code', id: 'address.postalCode' },
+                    { label: 'Country', id: 'address.addressCountry' }
+                ]
+            }
+        ],
+        article: [
+            {
+                title: 'Basic Information',
+                fields: [
+                    { label: 'Headline', id: 'headline', required: true },
+                    { label: 'Description', id: 'description', required: true },
+                    { label: 'Image URL', id: 'image', type: 'url' },
+                    { label: 'Date Published', id: 'datePublished', type: 'date', required: true },
+                    { label: 'Date Modified', id: 'dateModified', type: 'date' }
+                ]
+            },
+            {
+                title: 'Author',
+                fields: [
+                    { label: 'Author Name', id: 'author.name', required: true },
+                    { label: 'Author URL', id: 'author.url', type: 'url' }
+                ]
+            },
+            {
+                title: 'Publisher',
+                fields: [
+                    { label: 'Publisher Name', id: 'publisher.name', required: true },
+                    { label: 'Publisher Logo URL', id: 'publisher.logo.url', type: 'url' }
+                ]
+            }
+        ],
+        website: [
+            {
+                title: 'Basic Information',
+                fields: [
+                    { label: 'Website Name', id: 'name', required: true },
+                    { label: 'Website URL', id: 'url', type: 'url', required: true },
+                    { label: 'Description', id: 'description', required: true }
+                ]
+            },
+            {
+                title: 'Search Action',
+                fields: [
+                    { label: 'Search URL Pattern', id: 'potentialAction.target', type: 'url',
+                      placeholder: 'https://example.com/search?q={search_term_string}' }
+                ]
+            }
+        ],
+        event: [
+            {
+                title: 'Basic Information',
+                fields: [
+                    { label: 'Event Name', id: 'name', required: true },
+                    { label: 'Description', id: 'description', required: true },
+                    { label: 'Start Date', id: 'startDate', type: 'date', required: true },
+                    { label: 'End Date', id: 'endDate', type: 'date' }
+                ]
+            },
+            {
+                title: 'Location',
+                fields: [
+                    { label: 'Venue Name', id: 'location.name' },
+                    { label: 'Street Address', id: 'location.address.streetAddress' },
+                    { label: 'City', id: 'location.address.addressLocality' },
+                    { label: 'State/Region', id: 'location.address.addressRegion' },
+                    { label: 'Postal Code', id: 'location.address.postalCode' },
+                    { label: 'Country', id: 'location.address.addressCountry' }
+                ]
+            }
+        ],
+        localBusiness: [
+            {
+                title: 'Basic Information',
+                fields: [
+                    { label: 'Business Name', id: 'name', required: true },
+                    { label: 'Description', id: 'description', required: true },
+                    { label: 'Image URL', id: 'image', type: 'url' },
+                    { label: 'Telephone', id: 'telephone' },
+                    { label: 'Email', id: 'email', type: 'email' }
+                ]
+            },
+            {
+                title: 'Address',
+                fields: [
+                    { label: 'Street Address', id: 'address.streetAddress', required: true },
+                    { label: 'City', id: 'address.addressLocality', required: true },
+                    { label: 'State/Region', id: 'address.addressRegion' },
+                    { label: 'Postal Code', id: 'address.postalCode' },
+                    { label: 'Country', id: 'address.addressCountry' }
+                ]
+            }
+        ],
+        product: [
+            {
+                title: 'Basic Information',
+                fields: [
+                    { label: 'Product Name', id: 'name', required: true },
+                    { label: 'Description', id: 'description', required: true },
+                    { label: 'Image URL', id: 'image', type: 'url' },
+                    { label: 'Brand Name', id: 'brand.name' }
+                ]
+            },
+            {
+                title: 'Pricing',
+                fields: [
+                    { label: 'Price', id: 'offers.price', type: 'price', required: true },
+                    { label: 'Currency', id: 'offers.priceCurrency', default: 'USD' },
+                    { label: 'Availability', id: 'offers.availability', 
+                      default: 'https://schema.org/InStock' }
+                ]
+            }
+        ],
+        faqPage: [
+            {
+                title: 'FAQ Items',
+                fields: [
+                    {
+                        label: 'Add FAQ Item',
+                        id: 'mainEntity',
+                        value: [],
+                        template: {
+                            question: { label: 'Question', id: 'name', required: true },
+                            answer: { label: 'Answer', id: 'acceptedAnswer.text', required: true }
+                        }
+                    }
+                ]
+            }
+        ]
+    };
+    return sections[schemaType] || [];
+}
+
+// Core Functions
+function validate(value, type) {
+    if (!type || !validationRules[type]) return { valid: true };
+    const rule = validationRules[type];
+    return {
+        valid: rule.pattern.test(value),
+        message: rule.message
+    };
+}
+function addSelectedSchema() {
+    const select = document.getElementById('schemaSelect');
+    const type = select.value;
+    
+    if (!type) {
+        showNotification('Please select a schema type', 'error');
+        return;
+    }
+    
+    activeSchemas.add(type);
+    select.value = '';
+    updateActiveSchemas();
+    updateSchemaFields();
+    showNotification(`Added ${type} schema`, 'success');
+}
+
+function removeSchema(type) {
+    activeSchemas.delete(type);
+    delete formData[type];
+    updateActiveSchemas();
+    updateSchemaFields();
+    generateJSON();
+}
+
+function updateActiveSchemas() {
+    const container = document.getElementById('activeSchemas');
+    container.innerHTML = Array.from(activeSchemas)
+        .map(type => `
+            <div class="schema-type-tag">
+                ${type.charAt(0).toUpperCase() + type.slice(1)}
+                <span onclick="removeSchema('${type}')" 
+                      class="ml-2 text-gray-500 hover:text-gray-700">×</span>
+            </div>
+        `)
+        .join('');
+}
+
+function updateField(schemaType, fieldId, value, type) {
+    if (!formData[schemaType]) formData[schemaType] = {};
+    
+    const validation = validate(value, type);
+    const input = document.getElementById(`${schemaType}-${fieldId}`);
+    const validationDiv = document.getElementById(`${schemaType}-${fieldId}-validation`);
+    
+    if (!validation.valid && value !== '') {
+        input.classList.add('invalid-field');
+        validationDiv.textContent = validation.message;
+        return;
+    } else {
+        input.classList.remove('invalid-field');
+        validationDiv.textContent = '';
+    }
+    
+    setNestedValue(formData[schemaType], fieldId, value);
+    generateJSON();
+}
+
+function createFormSection(title, fields, schemaType) {
+    const section = document.createElement('div');
+    section.className = 'schema-section';
+    
+    const header = document.createElement('div');
+    header.className = 'section-header';
+    header.innerHTML = `
+        <span class="font-medium">${title}</span>
+        <span class="chevron">▶</span>
+    `;
+    
+    const content = document.createElement('div');
+    content.className = 'section-content';
+    
+    fields.forEach(field => {
+        if (field.template) {
+            // Handle complex templates (like FAQ items)
+            const templateContainer = document.createElement('div');
+            templateContainer.className = 'array-field';
+            templateContainer.innerHTML = `
+                <div class="flex justify-between items-center mb-2">
+                    <label class="block text-sm font-medium text-gray-700">
+                        ${field.label}
+                        ${field.required ? '<span class="text-red-500">*</span>' : ''}
+                        ${field.tooltip ? `
+                            <div class="tooltip">
+                                <span>ⓘ</span>
+                                <span class="tooltip-text">${field.tooltip}</span>
+                            </div>
+                        ` : ''}
+                    </label>
+                    <button onclick="addTemplateItem('${schemaType}', '${field.id}')"
+                            class="text-sm text-orange-500 hover:text-orange-600">
+                        Add Item
+                    </button>
+                </div>
+                <div id="${schemaType}-${field.id}-container"></div>
+            `;
+            content.appendChild(templateContainer);
+            updateTemplateField(schemaType, field.id, field.template);
+        } else if (Array.isArray(field.value)) {
+            // Handle array fields
+            const arrayContainer = document.createElement('div');
+            arrayContainer.className = 'array-field';
+            arrayContainer.innerHTML = `
+                <div class="flex justify-between items-center mb-2">
+                    <label class="block text-sm font-medium text-gray-700">
+                        ${field.label}
+                        ${field.required ? '<span class="text-red-500">*</span>' : ''}
+                        ${field.tooltip ? `
+                            <div class="tooltip">
+                                <span>ⓘ</span>
+                                <span class="tooltip-text">${field.tooltip}</span>
+                            </div>
+                        ` : ''}
+                    </label>
+                    <button onclick="addArrayItem('${schemaType}', '${field.id}')"
+                            class="text-sm text-orange-500 hover:text-orange-600">
+                        Add Item
+                    </button>
+                </div>
+                <div id="${schemaType}-${field.id}-container"></div>
+            `;
+            content.appendChild(arrayContainer);
+            updateArrayField(schemaType, field.id);
+        } else {
+            // Handle regular fields
+            const fieldDiv = document.createElement('div');
+            fieldDiv.className = 'mb-4';
+            
+            const tooltip = field.tooltip ? `
+                <div class="tooltip">
+                    <span>ⓘ</span>
+                    <span class="tooltip-text">${field.tooltip}</span>
+                </div>
+            ` : '';
+
+            // Get the current value using the path
+            let currentValue = '';
+            if (formData[schemaType]) {
+                currentValue = field.id.includes('.')
+                    ? getNestedValue(formData[schemaType], field.id) || ''
+                    : formData[schemaType][field.id] || field.default || '';
+            }
+
+            fieldDiv.innerHTML = `
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                    ${field.label}
+                    ${field.required ? '<span class="text-red-500">*</span>' : ''}
+                    ${tooltip}
+                </label>
+                <input type="text" 
+                       class="w-full p-2 border border-gray-300 rounded-md" 
+                       id="${schemaType}-${field.id}"
+                       placeholder="${escapeAttr(field.placeholder || '')}"
+                       value="${escapeAttr(currentValue)}"
+                       onchange="updateField('${schemaType}', '${field.id}', this.value, '${field.type || ''}')"
+                       ${field.required ? 'required' : ''}>
+                <div class="validation-message" id="${schemaType}-${field.id}-validation"></div>
+            `;
+            content.appendChild(fieldDiv);
+        }
+    });
+    
+    header.addEventListener('click', () => {
+        content.classList.toggle('active');
+        header.querySelector('.chevron').classList.toggle('active');
+    });
+    
+    section.appendChild(header);
+    section.appendChild(content);
+    return section;
+}
+
+function updateSchemaFields() {
+    const fieldsContainer = document.getElementById('schemaFields');
+    fieldsContainer.innerHTML = '';
+    
+    activeSchemas.forEach(schemaType => {
+        const sections = getSchemaSections(schemaType);
+        
+        const schemaContainer = document.createElement('div');
+        schemaContainer.className = 'mb-8';
+        schemaContainer.innerHTML = `
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                ${schemaType.charAt(0).toUpperCase() + schemaType.slice(1)} Schema
+            </h3>
+        `;
+        
+        sections.forEach(section => {
+            const sectionElement = createFormSection(section.title, section.fields, schemaType);
+            // Automatically expand the first section
+            if (sections.indexOf(section) === 0) {
+                const content = sectionElement.querySelector('.section-content');
+                const chevron = sectionElement.querySelector('.chevron');
+                content.classList.add('active');
+                chevron.classList.add('active');
+            }
+            schemaContainer.appendChild(sectionElement);
+        });
+        
+        fieldsContainer.appendChild(schemaContainer);
+    });
+    
+    generateJSON();
+}
+
+function addTemplateItem(schemaType, fieldId) {
+    if (!formData[schemaType]) formData[schemaType] = {};
+    if (!formData[schemaType][fieldId]) formData[schemaType][fieldId] = [];
+    
+    // Special handling for FAQ items
+    const newItem = fieldId === 'mainEntity' ? {
+        "@type": "Question",
+        "acceptedAnswer": {
+            "@type": "Answer"
+        }
+    } : {};
+    
+    formData[schemaType][fieldId].push(newItem);
+    const template = getSchemaSections(schemaType)
+        .flatMap(section => section.fields)
+        .find(field => field.id === fieldId)?.template || {};
+        
+    updateTemplateField(schemaType, fieldId, template);
+    generateJSON();
+}
+
+function updateTemplateField(schemaType, fieldId, template) {
+    const container = document.getElementById(`${schemaType}-${fieldId}-container`);
+    if (!container) return;
+
+    const items = formData[schemaType]?.[fieldId] || [];
+    
+    container.innerHTML = items.map((item, index) => {
+        const fields = Object.entries(template).map(([key, field]) => `
+            <div class="mb-2">
+                <label class="block text-sm font-medium text-gray-700">
+                    ${field.label}
+                    ${field.required ? '<span class="text-red-500">*</span>' : ''}
+                </label>
+                <input type="text"
+                       class="w-full p-2 border border-gray-300 rounded-md"
+                       value="${escapeAttr(getNestedValue(item, field.id) || '')}"
+                       onchange="updateTemplateItemField('${schemaType}', '${fieldId}', ${index}, '${field.id}', this.value)">
+            </div>
+        `).join('');
+
+        return `
+            <div class="array-item mb-4 p-4 border border-gray-200 rounded-md">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="font-medium">Item ${index + 1}</span>
+                    <button onclick="removeTemplateItem('${schemaType}', '${fieldId}', ${index})"
+                            class="text-red-500 hover:text-red-700">Remove</button>
+                </div>
+                ${fields}
+            </div>
+        `;
+    }).join('');
+}
+
+function addArrayItem(schemaType, fieldId) {
+    if (!formData[schemaType]) formData[schemaType] = {};
+    if (!formData[schemaType][fieldId]) formData[schemaType][fieldId] = [];
+    
+    formData[schemaType][fieldId].push('');
+    updateArrayField(schemaType, fieldId);
+    generateJSON();
+}
+
+function updateArrayField(schemaType, fieldId) {
+    const container = document.getElementById(`${schemaType}-${fieldId}-container`);
+    if (!container) return;
+    
+    container.innerHTML = (formData[schemaType]?.[fieldId] || [])
+        .map((value, index) => `
+            <div class="array-item mb-2">
+                <input type="text"
+                       class="w-full p-2 border border-gray-300 rounded-md"
+                       value="${escapeAttr(value)}"
+                       onchange="updateArrayItem('${schemaType}', '${fieldId}', ${index}, this.value)">
+                <span class="remove-item" onclick="removeArrayItem('${schemaType}', '${fieldId}', ${index})">×</span>
+            </div>
+        `)
+        .join('');
+}
+
+function updateArrayItem(schemaType, fieldId, index, value) {
+    if (!formData[schemaType]) formData[schemaType] = {};
+    if (!formData[schemaType][fieldId]) formData[schemaType][fieldId] = [];
+    formData[schemaType][fieldId][index] = value;
+    generateJSON();
+}
+
+function removeArrayItem(schemaType, fieldId, index) {
+    formData[schemaType][fieldId].splice(index, 1);
+    updateArrayField(schemaType, fieldId);
+    generateJSON();
+}
+
+// Build one cleaned schema.org object per active schema (root-level @context/@type).
+function buildSchemaObjects() {
+    const schemas = [];
+
+    activeSchemas.forEach(schemaType => {
+        // Start with the template
+        let obj = JSON.parse(JSON.stringify(schemaTemplates[schemaType]));
+
+        // Merge in form data if it exists
+        if (formData[schemaType]) {
+            const data = formData[schemaType];
+            Object.entries(data).forEach(([key, value]) => {
+                if (value && (typeof value === 'string' ? value.trim() : value)) {
+                    if (Array.isArray(value)) {
+                        // Handle array values
+                        if (value.length > 0) {
+                            setNestedValue(obj, key, value);
+                        }
+                    } else {
+                        setNestedValue(obj, key, value);
+                    }
+                }
+            });
+        }
+
+        schemas.push(cleanEmpty(obj));
+    });
+
+    return schemas;
+}
+
+function generateJSON() {
+    const schemas = buildSchemaObjects();
+
+    // Emit valid JSON-LD: a single schema object at root, an array for multiple,
+    // and an empty object when nothing is configured yet.
+    let output;
+    if (schemas.length === 0) {
+        output = {};
+    } else if (schemas.length === 1) {
+        output = schemas[0];
+    } else {
+        output = schemas;
+    }
+
+    const scriptContent = `<script type="application/ld+json">\n${JSON.stringify(output, null, 2)}\n<\/script>`;
+    document.getElementById('jsonOutput').textContent = scriptContent;
+}
+function cleanEmpty(obj) {
+    const clean = JSON.parse(JSON.stringify(obj));
+    Object.keys(clean).forEach(key => {
+        if (clean[key] && typeof clean[key] === 'object') {
+            clean[key] = cleanEmpty(clean[key]);
+            if (Object.keys(clean[key]).length === 0 || 
+                (Array.isArray(clean[key]) && clean[key].length === 0)) {
+                delete clean[key];
+            }
+        } else if (clean[key] === '' || clean[key] === null || clean[key] === undefined) {
+            delete clean[key];
+        }
+    });
+    return clean;
+}
+
+function getNestedValue(obj, path) {
+    return path.split('.').reduce((value, key) => value?.[key], obj);
+}
+
+function setNestedValue(obj, path, value) {
+    const parts = path.split('.');
+    let current = obj;
+    
+    for (let i = 0; i < parts.length - 1; i++) {
+        if (!current[parts[i]]) {
+            current[parts[i]] = {};
+        }
+        current = current[parts[i]];
+    }
+    
+    current[parts[parts.length - 1]] = value;
+    return obj;
+}
+
+async function validateSchema() {
+    const jsonOutput = document.getElementById('jsonOutput');
+    const validationResults = document.getElementById('validationResults');
+    
+    try {
+        const jsonContent = jsonOutput.textContent;
+        const jsonMatch = jsonContent.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
+        
+        if (!jsonMatch) {
+            throw new Error('Invalid schema format');
+        }
+        
+        const parsed = JSON.parse(jsonMatch[1]);
+        // Output is a single object or an array of objects; normalise to an array.
+        const schemas = Array.isArray(parsed) ? parsed : [parsed];
+        const validationErrors = [];
+
+        schemas.forEach(schema => {
+            if (!schema || typeof schema !== 'object' || !schema['@type']) return;
+            const schemaKey = schemaKeyForType(schema['@type']);
+            if (!schemaKey) return;
+
+            const sections = getSchemaSections(schemaKey);
+            const requiredFields = sections
+                .flatMap(section => section.fields)
+                .filter(field => field.required);
+
+            requiredFields.forEach(field => {
+                const fieldPath = field.id.split('.');
+                let value = schema;
+                for (const part of fieldPath) {
+                    value = value?.[part];
+                }
+
+                if (!value) {
+                    validationErrors.push(`Required field "${field.label}" is missing in the ${schema['@type']} schema`);
+                }
+            });
+        });
+
+        validationResults.style.display = 'block';
+
+        if (validationErrors.length === 0) {
+            validationResults.className = 'validation-results validation-success';
+            validationResults.innerHTML = `
+                <p class="font-semibold">✓ Required fields check passed — validate rich-results eligibility with Google</p>
+                <p class="text-sm mt-1">All required fields for the selected type(s) are present. This is a required-field check, not a full schema.org validation — confirm eligibility with the <a href="https://search.google.com/test/rich-results" target="_blank" rel="noopener noreferrer" class="underline font-medium">Google Rich Results Test</a>.</p>
+            `;
+        } else {
+            validationResults.className = 'validation-results validation-error';
+            validationResults.innerHTML = `
+                <p class="font-semibold">⚠ Required fields check failed</p>
+                <ul class="list-disc ml-4 mt-2 text-sm">
+                    ${validationErrors.map(error => `<li>${escapeAttr(error)}</li>`).join('')}
+                </ul>
+                <p class="text-sm mt-2">Once required fields are filled, confirm rich-results eligibility with the <a href="https://search.google.com/test/rich-results" target="_blank" rel="noopener noreferrer" class="underline font-medium">Google Rich Results Test</a>.</p>
+            `;
+        }
+    } catch (error) {
+        validationResults.style.display = 'block';
+        validationResults.className = 'validation-results validation-error';
+        validationResults.innerHTML = `
+            <p class="font-semibold">⚠ Required fields check failed</p>
+            <p class="text-sm mt-1">Error: ${escapeAttr(error.message)}</p>
+        `;
+    }
+}
+
+function clearAll() {
+    if (confirm('Are you sure you want to clear all data? This cannot be undone.')) {
+        activeSchemas.clear();
+        formData = {};
+        updateActiveSchemas();
+        updateSchemaFields();
+        generateJSON();
+        document.getElementById('validationResults').style.display = 'none';
+        showNotification('All data cleared', 'success');
+    }
+}
+
+function copyToClipboard() {
+    const jsonOutput = document.getElementById('jsonOutput');
+    navigator.clipboard.writeText(jsonOutput.textContent)
+        .then(() => {
+            showNotification('Copied to clipboard!', 'success');
+        })
+        .catch(() => {
+            showNotification('Failed to copy', 'error');
+        });
+}
+
+function importSchema() {
+    document.getElementById('importInput').click();
+}
+
+function handleImport(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const content = e.target.result;
+                const jsonMatch = content.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
+                const imported = JSON.parse(jsonMatch ? jsonMatch[1] : content);
+
+                // Normalise to a list of schema objects across formats:
+                //  - new single-object  → { "@context": ..., "@type": ... }
+                //  - new multi (array)  → [ {...}, {...} ]
+                //  - legacy wrapped     → { "product": {...}, "article": {...} }  (unwrap known keys)
+                let schemaList;
+                if (Array.isArray(imported)) {
+                    schemaList = imported;
+                } else if (imported && imported['@type']) {
+                    schemaList = [imported];
+                } else if (imported && typeof imported === 'object') {
+                    schemaList = Object.keys(imported)
+                        .filter(k => schemaTemplates[k])
+                        .map(k => imported[k]);
+                } else {
+                    schemaList = [];
+                }
+
+                activeSchemas.clear();
+                formData = {};
+
+                schemaList.forEach(schemaObj => {
+                    if (!schemaObj || typeof schemaObj !== 'object') return;
+                    const schemaKey = schemaKeyForType(schemaObj['@type']);
+                    if (schemaKey) {
+                        activeSchemas.add(schemaKey);
+                        formData[schemaKey] = schemaObj;
+                    }
+                });
+
+                updateActiveSchemas();
+                updateSchemaFields();
+                generateJSON();
+                showNotification('Schema imported successfully', 'success');
+            } catch (error) {
+                showNotification('Invalid JSON file', 'error');
+            }
+        };
+        reader.readAsText(file);
+    }
+}
+
+function exportSchema() {
+    const output = document.getElementById('jsonOutput').textContent;
+    const blob = new Blob([output], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'schema.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showNotification('Schema exported successfully', 'success');
+}
+
+function showNotification(message, type) {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type === 'success' ? 'bg-green-500' : 'bg-red-500'} text-white`;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+
+</script>
+
+<script>
+  /* iFrame Resizer — lets Framer auto-size the embed to content height */
+  (function () {
+    function sendHeight() {
+      var h = Math.max(
+        document.body.scrollHeight,
+        document.documentElement.scrollHeight,
+        document.body.offsetHeight,
+        document.documentElement.offsetHeight
+      );
+      window.parent.postMessage({ type: 'setHeight', height: h }, '*');
+      /* Also support iFrameResizer protocol */
+      if (window.parentIFrame) { window.parentIFrame.size(h); }
+    }
+    /* Send on load */
+    window.addEventListener('load', sendHeight);
+    /* Re-send whenever DOM changes (results appearing, sections expanding) */
+    if (window.ResizeObserver) {
+      new ResizeObserver(sendHeight).observe(document.body);
+    } else {
+      setInterval(sendHeight, 500);
+    }
+  })();
+</script>
+
+</body>
+</html>

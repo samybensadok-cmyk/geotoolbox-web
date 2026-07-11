@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Matcher Tool for SEO Migrations</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        .url-matcher-tool {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #677294;
+        }
+        .url-matcher-tool .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .url-matcher-tool h2, .url-matcher-tool h3 {
+            color: #1E3E62;
+            margin-bottom: 20px;
+        }
+        .url-matcher-tool input[type="file"],
+        .url-matcher-tool input[type="text"],
+        .url-matcher-tool textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        .url-matcher-tool button {
+            background-color: #ff5800 !important;
+            color: #ffffff !important;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+            line-height: 1.5;
+        }
+        .url-matcher-tool button:hover {
+            background-color: #e64d00 !important;
+            transform: translateY(-2px);
+        }
+        .url-matcher-tool button:disabled {
+            background-color: #cccccc !important;
+            cursor: not-allowed;
+        }
+        .url-matcher-tool #matchedUrls,
+        .url-matcher-tool #statistics,
+        .url-matcher-tool #orphanUrls,
+        .url-matcher-tool #unmatchedUrls {
+            margin-top: 20px;
+            border: 1px solid #e0e0e0;
+            padding: 15px;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+        .url-matcher-tool .scrollable-table {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .url-matcher-tool table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .url-matcher-tool th,
+        .url-matcher-tool td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+            word-break: break-all;
+        }
+        .url-matcher-tool th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        .url-matcher-tool #spinner {
+            display: none;
+            margin-left: 10px;
+            color: #FF5800;
+        }
+        .url-matcher-tool #errorMessage {
+            color: #ff0000;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+        .url-matcher-tool .section {
+            margin-bottom: 30px;
+        }
+        .url-matcher-tool .button-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .url-matcher-tool .stats-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .url-matcher-tool .stat-card {
+            flex: 1;
+            min-width: 200px;
+            background-color: #f0f4f8;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .url-matcher-tool .stat-card h3 {
+            margin-top: 0;
+            color: #1E3E62;
+        }
+        .url-matcher-tool .stat-card p {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FF5800;
+            margin: 10px 0 0;
+        }
+        .url-matcher-tool .hidden {
+            display: none;
+        }
+        .url-matcher-tool .filter-info {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
+
+<!-- Growthack brand layer: Inter font + site colour tokens -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+
+  /* ── Framer embed: auto-height & scroll ─────────────────────────── */
+  html {
+    height: auto !important;
+    overflow-y: auto !important;
+  }
+  body {
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-y: auto !important;
+    margin: 0;
+    padding: 0;
+  }
+  /* ──────────────────────────────────────────────────────────────── */
+
+  /* Design tokens extracted from growthack.co.uk Framer source */
+  :root {
+    --gh-font:    'Inter', sans-serif;
+    --gh-navy:    #0c1a2e;
+    --gh-body:    #3d5068;
+    --gh-steel:   #8aabcc;
+    --gh-orange:  #ff5800;
+    --gh-orange-h:#e64d00;
+    --gh-white:   #ffffff;
+    --gh-surface: #f4f7fb;
+    --gh-border:  #dde6f0;
+    --gh-radius:  6px;
+  }
+
+  /* Font – override everything in the tool */
+  .url-matcher-tool, .url-matcher-tool *, .url-matcher-tool *::before, .url-matcher-tool *::after {
+    font-family: var(--gh-font) !important;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Headings */
+  .url-matcher-tool h1, .url-matcher-tool h2, .url-matcher-tool h3,
+  .url-matcher-tool h4, .url-matcher-tool h5, .url-matcher-tool h6 {
+    color: var(--gh-navy) !important;
+    font-weight: 600 !important;
+    line-height: 1.25;
+  }
+
+  /* Body / paragraph text */
+  .url-matcher-tool p, .url-matcher-tool li, .url-matcher-tool span:not([class*="text-"]) {
+    color: var(--gh-body);
+  }
+
+  /* Labels */
+  .url-matcher-tool label {
+    color: var(--gh-navy) !important;
+    font-weight: 500 !important;
+  }
+
+  /* Inputs */
+  .url-matcher-tool input[type="text"],
+  .url-matcher-tool input[type="url"],
+  .url-matcher-tool input[type="number"],
+  .url-matcher-tool input[type="email"],
+  .url-matcher-tool input[type="date"],
+  .url-matcher-tool input[type="file"],
+  .url-matcher-tool select,
+  .url-matcher-tool textarea {
+    font-family: var(--gh-font) !important;
+    color: var(--gh-navy) !important;
+    border-color: var(--gh-border) !important;
+    border-radius: var(--gh-radius) !important;
+  }
+  .url-matcher-tool input:focus,
+  .url-matcher-tool select:focus,
+  .url-matcher-tool textarea:focus {
+    border-color: var(--gh-orange) !important;
+    box-shadow: 0 0 0 3px rgba(255,88,0,0.12) !important;
+    outline: none !important;
+  }
+
+  /* Stat cards */
+  .url-matcher-tool .stat-card {
+    background: var(--gh-surface) !important;
+    border: 1px solid var(--gh-border) !important;
+    border-radius: 8px !important;
+  }
+  .url-matcher-tool .stat-card h3 {
+    color: var(--gh-navy) !important;
+  }
+  .url-matcher-tool .stat-card p {
+    color: var(--gh-orange) !important;
+  }
+
+  /* Table headers */
+  .url-matcher-tool th {
+    background: var(--gh-navy) !important;
+    color: var(--gh-white) !important;
+  }
+  .url-matcher-tool td {
+    color: var(--gh-body);
+  }
+  .url-matcher-tool tr:nth-child(even) td {
+    background: var(--gh-surface);
+  }
+
+  /* Progress panel */
+  .url-matcher-tool #progressPanel,
+  .url-matcher-tool .pp-title {
+    color: var(--gh-navy) !important;
+  }
+
+  /* Chart.js font override via data attribute (not CSS) is handled below */
+</style>
+<style>
+  /* ── Rebuilt-engine UI additions ── */
+  .url-matcher-tool .mode-toggle {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .url-matcher-tool button.mode-btn {
+    background: var(--gh-white) !important;
+    color: var(--gh-navy) !important;
+    border: 1px solid var(--gh-border) !important;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .url-matcher-tool button.mode-btn:hover {
+    background: var(--gh-surface) !important;
+    transform: none;
+  }
+  .url-matcher-tool button.mode-btn.active {
+    background: var(--gh-navy) !important;
+    color: var(--gh-white) !important;
+    border-color: var(--gh-navy) !important;
+  }
+  .url-matcher-tool .paste-box {
+    min-height: 120px;
+    resize: vertical;
+    font-size: 13px;
+  }
+  .url-matcher-tool .chip {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .url-matcher-tool .chip-high    { background: #e6f6ec; color: #177245; }
+  .url-matcher-tool .chip-medium  { background: #fff4e0; color: #9a6200; }
+  .url-matcher-tool .chip-review  { background: #fdeaea; color: #b3261e; border: 1px dashed #b3261e; }
+  .url-matcher-tool tr.row-review td { background: #fff8f7 !important; }
+  .url-matcher-tool .flag-note { color: #b3261e; font-size: 12px; font-weight: 500; }
+  .url-matcher-tool #parseInfo { font-size: 0.9em; color: var(--gh-body); margin-top: 10px; }
+  .url-matcher-tool .warn-banner {
+    margin-top: 15px;
+    padding: 12px 15px;
+    border: 1px solid #e8c274;
+    border-left: 4px solid #d99a1b;
+    background: #fff8e8;
+    border-radius: 4px;
+    color: #6b4e00;
+    font-size: 0.95em;
+  }
+  .url-matcher-tool .export-options {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 12px 0;
+    font-size: 0.9em;
+    color: var(--gh-body);
+  }
+  .url-matcher-tool .export-options input[type="checkbox"] { width: auto; margin: 0; }
+  .url-matcher-tool .url-list {
+    max-height: 250px;
+    overflow-y: auto;
+    margin: 0;
+    padding-left: 20px;
+    font-size: 13px;
+    word-break: break-all;
+  }
+  .url-matcher-tool .truncate-note { font-size: 0.85em; color: #888; margin-top: 8px; }
+</style>
+</head>
+<body>
+    <div class="url-matcher-tool">
+        <div class="container">
+            <div class="section">
+                <h3>Old Site URLs</h3>
+                <div class="mode-toggle">
+                    <button type="button" class="mode-btn active" data-side="old" data-mode="file">Upload file</button>
+                    <button type="button" class="mode-btn" data-side="old" data-mode="paste">Or paste list</button>
+                </div>
+                <input type="file" id="oldUrlsInput" accept=".csv,.txt">
+                <textarea id="oldUrlsPaste" class="paste-box hidden" placeholder="One URL per line — or paste a CSV / Screaming Frog export, the URL column is detected automatically"></textarea>
+            </div>
+            <div class="section">
+                <h3>New Site URLs</h3>
+                <div class="mode-toggle">
+                    <button type="button" class="mode-btn active" data-side="new" data-mode="file">Upload file</button>
+                    <button type="button" class="mode-btn" data-side="new" data-mode="paste">Or paste list</button>
+                </div>
+                <input type="file" id="newUrlsInput" accept=".csv,.txt">
+                <textarea id="newUrlsPaste" class="paste-box hidden" placeholder="One URL per line — or paste a CSV / Screaming Frog export, the URL column is detected automatically"></textarea>
+            </div>
+            <div class="section">
+                <h3>Filter URLs (Optional)</h3>
+                <input type="text" id="filterInput" placeholder="Enter regex to filter URLs (e.g., blog|\.html$)">
+                <p class="filter-info">Use regular expressions to filter URLs. Examples:</p>
+                <ul class="filter-info">
+                    <li>To exclude URLs containing "blog": <code>blog</code></li>
+                    <li>To exclude URLs ending with ".html" or ".php": <code>\.(html|php)$</code></li>
+                    <li>To exclude URLs containing numbers: <code>\d+</code></li>
+                </ul>
+            </div>
+            <div class="export-options">
+                <input type="checkbox" id="includeReviewRows">
+                <label for="includeReviewRows">Include "needs review" rows in the CSV export</label>
+            </div>
+            <div class="button-group">
+                <button id="matchBtn">Match URLs</button>
+                <button id="downloadBtn" style="display:none;">Download CSV</button>
+                <button id="htaccessBtn" style="display:none;">Download .htaccess</button>
+                <button id="clearBtn" style="display:none;">Clear Results</button>
+                <span id="spinner">Processing...</span>
+            </div>
+            <div id="errorMessage"></div>
+            <div id="parseInfo"></div>
+            <div id="warnBanner" class="warn-banner hidden"></div>
+            <div id="statistics" class="hidden"></div>
+            <div id="matchedUrls" class="hidden"></div>
+            <div id="unmatchedUrls" class="hidden"></div>
+            <div id="orphanUrls" class="hidden"></div>
+        </div>
+    </div>
+
+    <script>
+/* ENGINE-START */
+/*
+ * Redirect-mapping engine — pure functions only, no DOM access.
+ * tests/redirect.test.js extracts this block verbatim (between the
+ * ENGINE-START / ENGINE-END markers) and runs it in Node.
+ *
+ * Score = 0.55 * token-set Jaccard (fuzzy: singular/plural & near-spellings
+ *         of tokens >= 3 chars count as matches; numeric tokens must match
+ *         exactly so SKUs never fuzzy-match)
+ *       + 0.30 * slug similarity (Dice bigram coefficient on the last path
+ *         segments, boosted by exact slug-token containment)
+ *       + 0.15 * depth factor (1 - 0.1 per level of path-depth difference)
+ * Homepage -> homepage is a fixed 1.0; roots never map to non-roots.
+ */
+
+var SCORE_FLOOR = 0.25;
+var INDEX_THRESHOLD = 4000000; /* old x new comparisons before block-indexing */
+var PREFIX_LEN = 3;
+var NUMERIC_RE = /^[0-9]+$/;
+var TOKEN_BIGRAM_CACHE = new Map();
+
+function safeDecode(s) {
+    try { return decodeURIComponent(s); } catch (e) { return s; }
+}
+
+function tokenize(pathStr) {
+    return pathStr.split(/[\/\-_.+]+/).filter(Boolean);
+}
+
+/* Counted (multiset) bigrams — the proper Dice definition. Counts matter:
+ * set-based bigrams score "item-222" vs "item-22" as identical slugs, which
+ * is exactly the SKU mix-up this tool must never make. */
+function bigramCounts(s) {
+    var counts = new Map();
+    for (var i = 0; i < s.length - 1; i++) {
+        var g = s.slice(i, i + 2);
+        counts.set(g, (counts.get(g) || 0) + 1);
+    }
+    return { counts: counts, total: s.length > 1 ? s.length - 1 : 0 };
+}
+
+function tokenBigrams(t) {
+    var cached = TOKEN_BIGRAM_CACHE.get(t);
+    if (cached) return cached;
+    var bg = bigramCounts(t);
+    TOKEN_BIGRAM_CACHE.set(t, bg);
+    return bg;
+}
+
+function diceBigrams(a, b) {
+    if (a.total === 0 || b.total === 0) return 0;
+    var small = a.counts.size <= b.counts.size ? a : b;
+    var large = small === a ? b : a;
+    var inter = 0;
+    for (var entry of small.counts) {
+        var c2 = large.counts.get(entry[0]);
+        if (c2) inter += entry[1] < c2 ? entry[1] : c2;
+    }
+    return (2 * inter) / (a.total + b.total);
+}
+
+/* Normalise one raw URL string into a match record.
+ * Lowercases host + path, percent-decodes safely, strips query/fragment,
+ * strips the trailing slash, keeps the original string for output.
+ * Returns null for unusable lines (non-http schemes, unparseable). */
+function normalizeRecord(raw) {
+    var original = String(raw).trim();
+    if (!original) return null;
+    var u = null;
+    try {
+        u = new URL(original);
+    } catch (e) {
+        try {
+            if (original.charAt(0) === '/') {
+                u = new URL('http://local.invalid' + original);
+            } else {
+                var firstSeg = original.split('/')[0].split('?')[0];
+                u = firstSeg.indexOf('.') !== -1
+                    ? new URL('https://' + original)
+                    : new URL('http://local.invalid/' + original);
+            }
+        } catch (e2) { return null; }
+    }
+    if (u.protocol !== 'http:' && u.protocol !== 'https:') return null;
+    var host = u.hostname === 'local.invalid' ? '' : u.hostname.toLowerCase();
+    var path = safeDecode(u.pathname).toLowerCase().replace(/\/{2,}/g, '/');
+    if (path.charAt(0) !== '/') path = '/' + path;
+    if (path.length > 1 && path.charAt(path.length - 1) === '/') path = path.slice(0, -1);
+    var segments = path.split('/').filter(Boolean);
+    var slug = segments.length ? segments[segments.length - 1] : '';
+    var tokenSet = new Set(tokenize(path));
+    var tokensArr = Array.from(tokenSet);
+    var fuzzyArr = [];
+    for (var i = 0; i < tokensArr.length; i++) {
+        var t = tokensArr[i];
+        if (t.length >= 3 && !NUMERIC_RE.test(t)) fuzzyArr.push(t);
+    }
+    return {
+        original: original,
+        host: host,
+        path: path,
+        depth: segments.length,
+        isRoot: segments.length === 0,
+        slug: slug,
+        tokenSet: tokenSet,
+        tokensArr: tokensArr,
+        fuzzyArr: fuzzyArr,
+        slugTokensArr: Array.from(new Set(tokenize(slug))),
+        slugBigrams: bigramCounts(slug)
+    };
+}
+
+/* Fuzzy similarity between two single tokens. Numeric tokens (SKUs, IDs,
+ * years) never fuzzy-match — they must be exactly equal. */
+function sharedPrefixLen(a, b) {
+    var n = a.length < b.length ? a.length : b.length, i = 0;
+    while (i < n && a.charCodeAt(i) === b.charCodeAt(i)) i++;
+    return i;
+}
+function fuzzyTokenSim(t1, t2) {
+    if (t1.length < 3 || t2.length < 3) return 0;
+    if (NUMERIC_RE.test(t1) || NUMERIC_RE.test(t2)) return 0;
+    if (t1.length > 2 * t2.length || t2.length > 2 * t1.length) return 0;
+    /* Fuzzy equivalence must mean "morphological variant sharing a STEM"
+     * (page/pages, item/items, men/mens) — NOT an arbitrary near-spelling that
+     * happens to share bigrams. Without this, bedding/wedding score 0.833 and a
+     * migration emits a confident WRONG 301 between unrelated categories
+     * (Codex build-QA, 2026-07-11). Require a shared prefix >= 75% of the
+     * shorter token, so the differing part is only a suffix (inflection).
+     * Deliberately conservative: a missed variant degrades to a human-reviewed
+     * "Needs review" row (safe); a false High deploys a bad redirect (not). */
+    var minLen = t1.length < t2.length ? t1.length : t2.length;
+    if (sharedPrefixLen(t1, t2) < Math.max(3, Math.ceil(minLen * 0.75))) return 0;
+    return diceBigrams(tokenBigrams(t1), tokenBigrams(t2));
+}
+
+/* Token-set Jaccard over the full path tokens, where a leftover token pair
+ * with bigram-Dice >= 0.8 (e.g. mens/men, pages/page) counts as matched.
+ * Numeric and short tokens are excluded from fuzzy pairing up front
+ * (record.fuzzyArr), so SKUs/IDs only ever match exactly.
+ *
+ * jBound (optional): when the caller only cares whether the result can
+ * exceed jBound, the O(la*lb) fuzzy pairing is skipped if even matching
+ * every leftover couldn't get there — the exact-only value returned is
+ * below jBound too, so the comparison outcome is identical. */
+function fuzzyJaccard(a, b, jBound) {
+    var aArr = a.tokensArr, bArr = b.tokensArr;
+    if (aArr.length === 0 || bArr.length === 0) return 0;
+    var aSet = a.tokenSet, bSet = b.tokenSet;
+    var matched = 0;
+    var i, j;
+    for (i = 0; i < aArr.length; i++) if (bSet.has(aArr[i])) matched++;
+    if (matched < aArr.length && matched < bArr.length) {
+        var leftoverA = null, leftoverB = null;
+        for (i = 0; i < a.fuzzyArr.length; i++) {
+            if (!bSet.has(a.fuzzyArr[i])) (leftoverA || (leftoverA = [])).push(a.fuzzyArr[i]);
+        }
+        if (leftoverA) {
+            for (j = 0; j < b.fuzzyArr.length; j++) {
+                if (!aSet.has(b.fuzzyArr[j])) (leftoverB || (leftoverB = [])).push(b.fuzzyArr[j]);
+            }
+        }
+        if (leftoverA && leftoverB && jBound !== undefined) {
+            var maxMatched = matched + (leftoverA.length < leftoverB.length ? leftoverA.length : leftoverB.length);
+            if (maxMatched / (aArr.length + bArr.length - maxMatched) <= jBound) {
+                leftoverB = null;
+            }
+        }
+        if (leftoverA && leftoverB) {
+            var usedB = new Array(leftoverB.length).fill(false);
+            for (i = 0; i < leftoverA.length; i++) {
+                var bestJ = -1, bestSim = 0;
+                for (j = 0; j < leftoverB.length; j++) {
+                    if (usedB[j]) continue;
+                    var sim = fuzzyTokenSim(leftoverA[i], leftoverB[j]);
+                    if (sim > bestSim) { bestSim = sim; bestJ = j; }
+                }
+                if (bestSim >= 0.8) { usedB[bestJ] = true; matched++; }
+            }
+        }
+    }
+    var union = aArr.length + bArr.length - matched;
+    return union === 0 ? 0 : matched / union;
+}
+
+/* Slug similarity: Dice bigram coefficient on the raw slug strings, with a
+ * containment boost — "about-us" vs "about" is a strong signal even though
+ * the bigram overlap is partial. */
+function slugSimilarity(a, b) {
+    if (!a.slug || !b.slug) return 0;
+    if (a.slug === b.slug) return 1;
+    var dice = diceBigrams(a.slugBigrams, b.slugBigrams);
+    var small = a.slugTokensArr.length <= b.slugTokensArr.length ? a : b;
+    var large = small === a ? b : a;
+    var shared = 0;
+    for (var i = 0; i < small.slugTokensArr.length; i++) {
+        if (large.slugTokensArr.indexOf(small.slugTokensArr[i]) !== -1) shared++;
+    }
+    var containment = small.slugTokensArr.length === 0 ? 0 : shared / small.slugTokensArr.length;
+    return dice > containment ? dice : containment;
+}
+
+function depthFactor(a, b) {
+    return Math.max(0, 1 - 0.1 * Math.abs(a.depth - b.depth));
+}
+
+function scorePair(a, b) {
+    if (a.isRoot && b.isRoot) return 1;                 /* homepage -> homepage */
+    if (a.isRoot || b.isRoot) return 0;                 /* roots never cross-map */
+    if (a.path === b.path) return 1;                    /* identical path */
+    return 0.55 * fuzzyJaccard(a, b)
+         + 0.30 * slugSimilarity(a, b)
+         + 0.15 * depthFactor(a, b);
+}
+
+function bucketFor(score) {
+    if (score >= 0.8) return 'High';
+    if (score >= 0.6) return 'Medium';
+    if (score >= SCORE_FLOOR) return 'Needs review';
+    return 'Unmatched';
+}
+
+/* Trim, dedupe (exact string), normalise. */
+function prepareRecords(raws) {
+    var seen = new Set();
+    var records = [];
+    var invalid = 0, dupes = 0;
+    for (var i = 0; i < raws.length; i++) {
+        var t = String(raws[i]).trim();
+        if (!t) continue;
+        if (seen.has(t)) { dupes++; continue; }
+        seen.add(t);
+        var rec = normalizeRecord(t);
+        if (rec) records.push(rec); else invalid++;
+    }
+    return { records: records, invalid: invalid, dupes: dupes };
+}
+
+/* Inverted index: 3-char token prefix -> new-record indices. Prefix (not the
+ * whole token) so fuzzy variants (men/mens, moisturiser/moisturizer) land in
+ * the same bucket. */
+function buildIndex(newRecs) {
+    var map = new Map();
+    for (var i = 0; i < newRecs.length; i++) {
+        var arr = newRecs[i].tokensArr;
+        var seen = new Set();
+        for (var t = 0; t < arr.length; t++) {
+            var k = arr[t].slice(0, PREFIX_LEN);
+            if (seen.has(k)) continue;
+            seen.add(k);
+            var bucket = map.get(k);
+            if (!bucket) { bucket = []; map.set(k, bucket); }
+            bucket.push(i);
+        }
+    }
+    return map;
+}
+
+/* Exact normalized-path -> new-record indices. An exact path match (same path,
+ * different host) is the single strongest redirect signal, but in indexed mode
+ * the token-bucket candidate cap could drop it when it sits behind >2000
+ * same-prefix distractors (Codex build-QA, 2026-07-11). This index is always
+ * consulted so an exact-path match is never missed regardless of list size. */
+function buildExactPathIndex(newRecs) {
+    var map = new Map();
+    for (var i = 0; i < newRecs.length; i++) {
+        var p = newRecs[i].path;
+        var b = map.get(p);
+        if (!b) { b = []; map.set(p, b); }
+        b.push(i);
+    }
+    return map;
+}
+
+/* Candidate new-record indices for one old record, rarest token buckets
+ * first (rare tokens are the discriminative ones). Very common tokens
+ * (bucket > 20% of the new list) are skipped unless nothing else produced
+ * candidates; the candidate set is capped so pathological inputs stay fast.
+ * Iteration order is insertion order — deterministic. */
+function candidateIndicesFor(oldRec, index, newCount) {
+    var stopSize = Math.max(50, newCount * 0.2);
+    var buckets = [];
+    var arr = oldRec.tokensArr;
+    var seenK = new Set();
+    var i, j;
+    for (i = 0; i < arr.length; i++) {
+        var k = arr[i].slice(0, PREFIX_LEN);
+        if (seenK.has(k)) continue;
+        seenK.add(k);
+        var b = index.get(k);
+        if (b) buckets.push(b);
+    }
+    buckets.sort(function (x, y) { return x.length - y.length; });
+    var cand = new Set();
+    for (i = 0; i < buckets.length; i++) {
+        var bucket = buckets[i];
+        if (cand.size > 0) {
+            if (bucket.length > stopSize || cand.size >= 1500) break;
+            for (j = 0; j < bucket.length; j++) cand.add(bucket[j]);
+        } else {
+            for (j = 0; j < bucket.length && cand.size < 2000; j++) cand.add(bucket[j]);
+        }
+    }
+    return cand;
+}
+
+/* Core matcher as a generator so the UI can yield to the event loop between
+ * chunks while Node tests drain it synchronously.
+ *
+ * Assignment discipline: every old URL's candidate pairs above the 0.25
+ * floor are computed; because a new URL may accept unlimited old URLs, the
+ * globally-sorted greedy assignment is equivalent to keeping each old URL's
+ * single best pair, then sorting those pairs globally descending — which is
+ * what this does (identical output, O(n) memory instead of O(n*m)).
+ * Assignments to a new URL beyond the first get a collision flag. */
+function* matchGenerator(oldRecs, newRecs) {
+    var useIndex = oldRecs.length * newRecs.length > INDEX_THRESHOLD;
+    var index = useIndex ? buildIndex(newRecs) : null;
+    var exactPathIndex = useIndex ? buildExactPathIndex(newRecs) : null;
+    var rootIdxs = [];
+    var i;
+    for (i = 0; i < newRecs.length; i++) if (newRecs[i].isRoot) rootIdxs.push(i);
+
+    var bestPairs = [];
+    for (var oi = 0; oi < oldRecs.length; oi++) {
+        var o = oldRecs[oi];
+        var candIdxs = null;
+        if (o.isRoot) candIdxs = rootIdxs;
+        else if (index) {
+            candIdxs = candidateIndicesFor(o, index, newRecs.length);
+            /* Always fold in exact-path matches so the candidate cap can't drop
+             * the single strongest signal (Codex build-QA #4). */
+            var exact = exactPathIndex.get(o.path);
+            if (exact) { for (var ex = 0; ex < exact.length; ex++) candIdxs.add(exact[ex]); }
+        }
+        var bestScore = 0, bestNi = -1;
+        var evaluate = function (ni) {
+            var b = newRecs[ni];
+            var s;
+            if (o.isRoot || b.isRoot || o.path === b.path) {
+                s = scorePair(o, b);
+            } else {
+                /* cheap upper bound: even perfect slug + depth can't beat best */
+                var jBound = bestScore > 0.45 ? (bestScore - 0.45) / 0.55 : undefined;
+                var j = 0.55 * fuzzyJaccard(o, b, jBound);
+                if (j + 0.45 <= bestScore) return;
+                s = j + 0.30 * slugSimilarity(o, b) + 0.15 * depthFactor(o, b);
+            }
+            if (s > bestScore) { bestScore = s; bestNi = ni; }
+        };
+        if (candIdxs) {
+            for (var ni of candIdxs) {
+                if (bestScore >= 0.999) break;
+                evaluate(ni);
+            }
+        } else {
+            for (var k = 0; k < newRecs.length; k++) {
+                if (bestScore >= 0.999) break;
+                evaluate(k);
+            }
+        }
+        if (bestNi !== -1 && bestScore >= SCORE_FLOOR) {
+            bestPairs.push({ oi: oi, ni: bestNi, score: bestScore });
+        }
+        if ((oi & 127) === 127) yield { done: oi + 1, total: oldRecs.length };
+    }
+
+    bestPairs.sort(function (p, q) {
+        return q.score - p.score || p.oi - q.oi || p.ni - q.ni;
+    });
+
+    var inbound = new Map();
+    var rows = [];
+    var assignedOld = new Set();
+    for (i = 0; i < bestPairs.length; i++) {
+        var p = bestPairs[i];
+        var count = (inbound.get(p.ni) || 0) + 1;
+        inbound.set(p.ni, count);
+        var flags = [];
+        if (count > 1) flags.push('collision — verify intent');
+        var oRec = oldRecs[p.oi], nRec = newRecs[p.ni];
+        rows.push({
+            oldUrl: oRec.original,
+            newUrl: nRec.original,
+            oldPath: oRec.path,
+            newPath: nRec.path,
+            newHost: nRec.host,
+            score: p.score,
+            bucket: bucketFor(p.score),
+            flags: flags
+        });
+        assignedOld.add(p.oi);
+    }
+
+    var unmatchedOld = [];
+    for (i = 0; i < oldRecs.length; i++) if (!assignedOld.has(i)) unmatchedOld.push(oldRecs[i].original);
+    var orphanNew = [];
+    for (i = 0; i < newRecs.length; i++) if (!inbound.has(i)) orphanNew.push(newRecs[i].original);
+
+    return { rows: rows, unmatchedOld: unmatchedOld, orphanNew: orphanNew, usedIndex: useIndex };
+}
+
+function matchRecords(oldRecs, newRecs) {
+    var gen = matchGenerator(oldRecs, newRecs);
+    for (;;) {
+        var r = gen.next();
+        if (r.done) return r.value;
+    }
+}
+
+function matchRecordsAsync(oldRecs, newRecs, onProgress) {
+    var gen = matchGenerator(oldRecs, newRecs);
+    return new Promise(function (resolve) {
+        function step() {
+            var r = gen.next();
+            if (r.done) { resolve(r.value); return; }
+            if (onProgress) onProgress(r.value.done, r.value.total);
+            setTimeout(step, 0);
+        }
+        step();
+    });
+}
+
+/* Full pipeline for tests: raw string lists in, result out. */
+function computeMatches(oldRaws, newRaws) {
+    var oldPrep = prepareRecords(oldRaws);
+    var newPrep = prepareRecords(newRaws);
+    var result = matchRecords(oldPrep.records, newPrep.records);
+    result.oldInfo = { count: oldPrep.records.length, invalid: oldPrep.invalid, dupes: oldPrep.dupes };
+    result.newInfo = { count: newPrep.records.length, invalid: newPrep.invalid, dupes: newPrep.dupes };
+    return result;
+}
+
+/* ── Input parsing helpers (pure; PapaParse does the CSV tokenising in the
+ *    UI layer and hands rows here) ── */
+
+function looksLikeUrl(s) {
+    if (!s) return false;
+    var t = String(s).trim();
+    if (!t) return false;
+    return /^https?:\/\//i.test(t) || t.charAt(0) === '/'
+        || /^[a-z0-9][a-z0-9.-]*\.[a-z]{2,}(\/|$)/i.test(t);
+}
+
+/* Auto-detect the URL column in a parsed CSV (Screaming Frog "Address"
+ * exports etc.): pick the column with the most URL-looking values; drop the
+ * first row when it reads as a header. */
+function extractUrlsFromRows(rows) {
+    var clean = [];
+    for (var r = 0; r < rows.length; r++) {
+        var row = rows[r];
+        if (!Array.isArray(row)) continue;
+        var hasContent = false;
+        for (var c = 0; c < row.length; c++) {
+            if (String(row[c] == null ? '' : row[c]).trim() !== '') { hasContent = true; break; }
+        }
+        if (hasContent) clean.push(row);
+    }
+    if (!clean.length) return { urls: [], column: -1, hadHeader: false };
+    var width = 0;
+    for (r = 0; r < clean.length; r++) width = Math.max(width, clean[r].length);
+    var sample = clean.slice(0, 50);
+    var bestCol = 0, bestHits = -1;
+    for (c = 0; c < width; c++) {
+        var hits = 0;
+        for (r = 0; r < sample.length; r++) {
+            if (looksLikeUrl(String(sample[r][c] == null ? '' : sample[r][c]))) hits++;
+        }
+        if (hits > bestHits) { bestHits = hits; bestCol = c; }
+    }
+    var first = String(clean[0][bestCol] == null ? '' : clean[0][bestCol]).trim();
+    var belowUrlLike = 0;
+    var belowSample = Math.min(clean.length - 1, 49);
+    for (r = 1; r <= belowSample; r++) {
+        if (looksLikeUrl(String(clean[r][bestCol] == null ? '' : clean[r][bestCol]))) belowUrlLike++;
+    }
+    var hadHeader = !looksLikeUrl(first) && (
+        (belowSample > 0 && belowUrlLike / belowSample >= 0.5) ||
+        /^(url|address|link|loc|location|page)s?$/i.test(first)
+    );
+    var urls = [];
+    for (r = hadHeader ? 1 : 0; r < clean.length; r++) {
+        var v = String(clean[r][bestCol] == null ? '' : clean[r][bestCol]).trim();
+        if (v) urls.push(v);
+    }
+    return { urls: urls, column: bestCol, hadHeader: hadHeader };
+}
+
+/* ── Export builders (pure) ── */
+
+/* CSV rows: High + Medium always; Needs review only when opted in;
+ * unmatched old URLs always included with an empty new_url so the
+ * deliverable accounts for every old URL. */
+function buildCsvData(result, includeNeedsReview) {
+    var fields = ['old_url', 'new_url', 'confidence', 'bucket', 'flags'];
+    var data = [];
+    for (var i = 0; i < result.rows.length; i++) {
+        var row = result.rows[i];
+        if (row.bucket === 'Needs review' && !includeNeedsReview) continue;
+        data.push([row.oldUrl, row.newUrl, row.score.toFixed(3), row.bucket, row.flags.join('; ')]);
+    }
+    for (i = 0; i < result.unmatchedOld.length; i++) {
+        data.push([result.unmatchedOld[i], '', '', 'Unmatched', 'no candidate above ' + SCORE_FLOOR + ' floor']);
+    }
+    return { fields: fields, data: data };
+}
+
+function escapeRegexPath(p) {
+    return p.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/* Apache rules for High + Medium rows only. RedirectMatch with an anchored
+ * pattern (not plain Redirect, which is prefix-based and would make the
+ * homepage rule swallow the whole site). */
+function buildHtaccessLines(result) {
+    var lines = [
+        '# 301 redirect map — generated by the GrowthAck URL Redirect Mapper',
+        '# High + Medium confidence mappings only. Review before deploying.',
+        ''
+    ];
+    var seenPaths = new Set();
+    for (var i = 0; i < result.rows.length; i++) {
+        var row = result.rows[i];
+        if (row.bucket !== 'High' && row.bucket !== 'Medium') continue;
+        if (seenPaths.has(row.oldPath)) continue;
+        seenPaths.add(row.oldPath);
+        var target = row.newHost
+            ? 'https://' + row.newHost + (row.newPath === '/' ? '/' : row.newPath)
+            : row.newPath;
+        var pattern = row.oldPath === '/' ? '^/$' : '^' + escapeRegexPath(row.oldPath) + '/?$';
+        if (row.flags.length) lines.push('# ' + row.flags.join('; '));
+        lines.push('RedirectMatch 301 ' + pattern + ' ' + target);
+    }
+    return lines;
+}
+
+var RedirectEngine = {
+    SCORE_FLOOR: SCORE_FLOOR,
+    INDEX_THRESHOLD: INDEX_THRESHOLD,
+    safeDecode: safeDecode,
+    tokenize: tokenize,
+    bigramCounts: bigramCounts,
+    diceBigrams: diceBigrams,
+    normalizeRecord: normalizeRecord,
+    fuzzyTokenSim: fuzzyTokenSim,
+    fuzzyJaccard: fuzzyJaccard,
+    slugSimilarity: slugSimilarity,
+    depthFactor: depthFactor,
+    scorePair: scorePair,
+    bucketFor: bucketFor,
+    prepareRecords: prepareRecords,
+    buildIndex: buildIndex,
+    candidateIndicesFor: candidateIndicesFor,
+    matchRecords: matchRecords,
+    matchRecordsAsync: matchRecordsAsync,
+    computeMatches: computeMatches,
+    looksLikeUrl: looksLikeUrl,
+    extractUrlsFromRows: extractUrlsFromRows,
+    buildCsvData: buildCsvData,
+    buildHtaccessLines: buildHtaccessLines
+};
+globalThis.RedirectEngine = RedirectEngine;
+/* ENGINE-END */
+    </script>
+
+    <script>
+/* ── UI layer ── */
+const oldUrlsInput = document.getElementById('oldUrlsInput');
+const newUrlsInput = document.getElementById('newUrlsInput');
+const oldUrlsPaste = document.getElementById('oldUrlsPaste');
+const newUrlsPaste = document.getElementById('newUrlsPaste');
+const filterInput = document.getElementById('filterInput');
+const includeReviewRows = document.getElementById('includeReviewRows');
+const matchBtn = document.getElementById('matchBtn');
+const downloadBtn = document.getElementById('downloadBtn');
+const htaccessBtn = document.getElementById('htaccessBtn');
+const clearBtn = document.getElementById('clearBtn');
+const statistics = document.getElementById('statistics');
+const matchedUrls = document.getElementById('matchedUrls');
+const unmatchedUrls = document.getElementById('unmatchedUrls');
+const orphanUrls = document.getElementById('orphanUrls');
+const spinner = document.getElementById('spinner');
+const errorMessage = document.getElementById('errorMessage');
+const parseInfo = document.getElementById('parseInfo');
+const warnBanner = document.getElementById('warnBanner');
+
+const MAX_TABLE_ROWS = 1500;
+const sides = {
+    old: { mode: 'file', file: oldUrlsInput, paste: oldUrlsPaste },
+    new: { mode: 'file', file: newUrlsInput, paste: newUrlsPaste }
+};
+let lastResult = null;
+
+function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+}
+
+document.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const side = sides[btn.dataset.side];
+        side.mode = btn.dataset.mode;
+        document.querySelectorAll(`.mode-btn[data-side="${btn.dataset.side}"]`)
+            .forEach(b => b.classList.toggle('active', b === btn));
+        side.file.classList.toggle('hidden', side.mode !== 'file');
+        side.paste.classList.toggle('hidden', side.mode !== 'paste');
+        updateMatchButtonState();
+    });
+});
+
+function readFileAsync(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = e => resolve(e.target.result);
+        reader.onerror = () => reject(new Error('Error reading the file.'));
+        reader.readAsText(file);
+    });
+}
+
+async function getSideInput(sideName, label) {
+    const side = sides[sideName];
+    if (side.mode === 'paste') {
+        const content = side.paste.value;
+        if (!content.trim()) throw new Error(`Please paste ${label} URLs (or switch to file upload).`);
+        return { content, isCsv: false };
+    }
+    const file = side.file.files[0];
+    if (!file) throw new Error(`Please upload the ${label} URL file (or switch to paste).`);
+    return { content: await readFileAsync(file), isCsv: /\.csv$/i.test(file.name) };
+}
+
+/* CSV files go through PapaParse; txt/paste is line-per-URL unless it is
+ * clearly delimited (pasted spreadsheet columns), then PapaParse too. */
+function parseListContent(content, isCsv) {
+    if (!isCsv) {
+        const lines = content.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+        const delimited = lines.filter(l => /\t/.test(l) || /,/.test(l)).length;
+        if (!lines.length || delimited / lines.length <= 0.5) {
+            return RedirectEngine.extractUrlsFromRows(lines.map(l => [l]));
+        }
+    }
+    const parsed = Papa.parse(content, { skipEmptyLines: true });
+    return RedirectEngine.extractUrlsFromRows(parsed.data);
+}
+
+async function matchUrls() {
+    errorMessage.textContent = '';
+    parseInfo.textContent = '';
+    spinner.textContent = 'Parsing…';
+    spinner.style.display = 'inline';
+    matchBtn.disabled = true;
+
+    try {
+        const oldInput = await getSideInput('old', 'old site');
+        const newInput = await getSideInput('new', 'new site');
+        const oldParsed = parseListContent(oldInput.content, oldInput.isCsv);
+        const newParsed = parseListContent(newInput.content, newInput.isCsv);
+
+        let filterRegex = null;
+        if (filterInput.value.trim()) {
+            try {
+                filterRegex = new RegExp(filterInput.value, 'i');
+            } catch (e) {
+                throw new Error('Invalid regular expression. Please check your filter input.');
+            }
+        }
+        const oldRaw = filterRegex ? oldParsed.urls.filter(u => !filterRegex.test(u)) : oldParsed.urls;
+        const newRaw = filterRegex ? newParsed.urls.filter(u => !filterRegex.test(u)) : newParsed.urls;
+
+        const oldPrep = RedirectEngine.prepareRecords(oldRaw);
+        const newPrep = RedirectEngine.prepareRecords(newRaw);
+        if (!oldPrep.records.length) throw new Error('No valid URLs found in the old site list.');
+        if (!newPrep.records.length) throw new Error('No valid URLs found in the new site list.');
+
+        lastResult = await RedirectEngine.matchRecordsAsync(oldPrep.records, newPrep.records,
+            (done, total) => {
+                spinner.textContent = `Scoring ${done.toLocaleString()} / ${total.toLocaleString()} old URLs…`;
+            });
+        lastResult.oldPrep = oldPrep;
+        lastResult.newPrep = newPrep;
+
+        renderParseInfo(oldPrep, newPrep, oldParsed, newParsed, lastResult);
+        renderStatistics(lastResult);
+        renderMatchedTable(lastResult);
+        renderUrlList(unmatchedUrls, 'Unmatched old URLs', lastResult.unmatchedOld,
+            'No candidate scored above the ' + RedirectEngine.SCORE_FLOOR + ' confidence floor — map these manually.');
+        renderUrlList(orphanUrls, 'Orphan new URLs (no inbound redirect)', lastResult.orphanNew,
+            'These new pages receive no redirect from the old site — check whether legacy equity should point here.');
+        renderWarnBanner(lastResult);
+        showResults();
+    } catch (error) {
+        console.error('Error:', error);
+        showError(error.message);
+    } finally {
+        spinner.style.display = 'none';
+        spinner.textContent = 'Processing...';
+        matchBtn.disabled = false;
+        updateMatchButtonState();
+    }
+}
+
+function renderParseInfo(oldPrep, newPrep, oldParsed, newParsed, result) {
+    const bits = [
+        `Found ${oldPrep.records.length.toLocaleString()} old / ${newPrep.records.length.toLocaleString()} new URLs`
+    ];
+    const skipped = oldPrep.invalid + newPrep.invalid;
+    const dupes = oldPrep.dupes + newPrep.dupes;
+    if (skipped) bits.push(`${skipped} unparseable line${skipped === 1 ? '' : 's'} skipped`);
+    if (dupes) bits.push(`${dupes} duplicate${dupes === 1 ? '' : 's'} removed`);
+    if (oldParsed.hadHeader || newParsed.hadHeader) bits.push('header row detected and skipped');
+    if (oldParsed.column > 0 || newParsed.column > 0) bits.push('URL column auto-detected from CSV');
+    if (result.usedIndex) bits.push('large lists: token block-index used for speed');
+    parseInfo.textContent = bits.join(' · ');
+}
+
+function renderStatistics(result) {
+    const counts = { High: 0, Medium: 0, 'Needs review': 0 };
+    let collisions = 0;
+    result.rows.forEach(r => {
+        counts[r.bucket] = (counts[r.bucket] || 0) + 1;
+        if (r.flags.length) collisions++;
+    });
+    const cards = [
+        ['Old URLs', result.rows.length + result.unmatchedOld.length],
+        ['High confidence', counts.High],
+        ['Medium confidence', counts.Medium],
+        ['Needs review', counts['Needs review']],
+        ['Unmatched', result.unmatchedOld.length],
+        ['Orphan new URLs', result.orphanNew.length]
+    ];
+    statistics.innerHTML = `
+        <h2>Matching Statistics</h2>
+        <div class="stats-container">
+            ${cards.map(([label, n]) => `
+            <div class="stat-card">
+                <h3>${escapeHtml(label)}</h3>
+                <p>${Number(n).toLocaleString()}</p>
+            </div>`).join('')}
+        </div>
+        ${collisions ? `<p class="flag-note">${collisions.toLocaleString()} mapping${collisions === 1 ? '' : 's'} flagged "collision — verify intent" (multiple old URLs pointing at one new URL).</p>` : ''}
+    `;
+}
+
+function chipFor(bucket) {
+    const cls = bucket === 'High' ? 'chip-high' : bucket === 'Medium' ? 'chip-medium' : 'chip-review';
+    return `<span class="chip ${cls}">${escapeHtml(bucket)}</span>`;
+}
+
+function renderMatchedTable(result) {
+    const rows = result.rows.slice(0, MAX_TABLE_ROWS);
+    matchedUrls.innerHTML = `
+        <h2>Matched URLs</h2>
+        <div class="scrollable-table">
+            <table id="matchedUrlsTable">
+                <thead>
+                    <tr>
+                        <th>Old URL</th>
+                        <th>New URL</th>
+                        <th>Confidence</th>
+                        <th>Bucket</th>
+                        <th>Flags</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${rows.map(row => `
+                    <tr class="${row.bucket === 'Needs review' ? 'row-review' : ''}">
+                        <td>${escapeHtml(row.oldUrl)}</td>
+                        <td>${escapeHtml(row.newUrl)}</td>
+                        <td>${(row.score * 100).toFixed(1)}%</td>
+                        <td>${chipFor(row.bucket)}</td>
+                        <td>${row.flags.length ? `<span class="flag-note">${escapeHtml(row.flags.join('; '))}</span>` : ''}</td>
+                    </tr>`).join('')}
+                </tbody>
+            </table>
+        </div>
+        ${result.rows.length > MAX_TABLE_ROWS ? `<p class="truncate-note">Showing the first ${MAX_TABLE_ROWS.toLocaleString()} of ${result.rows.length.toLocaleString()} mappings on screen — the CSV export contains all of them.</p>` : ''}
+    `;
+}
+
+function renderUrlList(container, title, urls, note) {
+    if (!urls.length) {
+        container.classList.add('hidden');
+        container.innerHTML = '';
+        return;
+    }
+    const shown = urls.slice(0, MAX_TABLE_ROWS);
+    container.innerHTML = `
+        <h2>${escapeHtml(title)} (${urls.length.toLocaleString()})</h2>
+        <p class="filter-info">${escapeHtml(note)}</p>
+        <ul class="url-list">
+            ${shown.map(u => `<li>${escapeHtml(u)}</li>`).join('')}
+        </ul>
+        ${urls.length > shown.length ? `<p class="truncate-note">Showing the first ${shown.length.toLocaleString()} of ${urls.length.toLocaleString()}.</p>` : ''}
+    `;
+    container.classList.remove('hidden');
+}
+
+function renderWarnBanner(result) {
+    const total = result.rows.length + result.unmatchedOld.length;
+    const risky = result.rows.filter(r => r.bucket === 'Needs review').length + result.unmatchedOld.length;
+    if (total > 0 && risky / total > 0.3) {
+        warnBanner.textContent = `${risky.toLocaleString()} of ${total.toLocaleString()} old URLs are low-confidence or unmatched — review them manually before deploying any redirects. "Needs review" rows are excluded from the CSV export unless you tick the checkbox above.`;
+        warnBanner.classList.remove('hidden');
+    } else {
+        warnBanner.classList.add('hidden');
+        warnBanner.textContent = '';
+    }
+}
+
+function showError(message) {
+    errorMessage.textContent = message;
+    statistics.classList.add('hidden');
+    matchedUrls.classList.add('hidden');
+    unmatchedUrls.classList.add('hidden');
+    orphanUrls.classList.add('hidden');
+    warnBanner.classList.add('hidden');
+}
+
+function showResults() {
+    statistics.classList.remove('hidden');
+    matchedUrls.classList.remove('hidden');
+    downloadBtn.style.display = 'inline-block';
+    htaccessBtn.style.display = 'inline-block';
+    clearBtn.style.display = 'inline-block';
+}
+
+function downloadBlob(text, filename, mime) {
+    const blob = new Blob([text], { type: mime });
+    const link = document.createElement('a');
+    if (link.download !== undefined) {
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', filename);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }
+}
+
+function downloadCSV() {
+    if (!lastResult) return;
+    const csvData = RedirectEngine.buildCsvData(lastResult, includeReviewRows.checked);
+    const csv = Papa.unparse({ fields: csvData.fields, data: csvData.data });
+    downloadBlob(csv, 'redirect_map.csv', 'text/csv;charset=utf-8;');
+}
+
+function downloadHtaccess() {
+    if (!lastResult) return;
+    const lines = RedirectEngine.buildHtaccessLines(lastResult);
+    downloadBlob(lines.join('\n') + '\n', 'redirects.htaccess', 'text/plain;charset=utf-8;');
+}
+
+function clearResults() {
+    lastResult = null;
+    oldUrlsInput.value = '';
+    newUrlsInput.value = '';
+    oldUrlsPaste.value = '';
+    newUrlsPaste.value = '';
+    filterInput.value = '';
+    statistics.classList.add('hidden');
+    matchedUrls.classList.add('hidden');
+    unmatchedUrls.classList.add('hidden');
+    orphanUrls.classList.add('hidden');
+    warnBanner.classList.add('hidden');
+    downloadBtn.style.display = 'none';
+    htaccessBtn.style.display = 'none';
+    clearBtn.style.display = 'none';
+    errorMessage.textContent = '';
+    parseInfo.textContent = '';
+    updateMatchButtonState();
+}
+
+function sideHasInput(sideName) {
+    const side = sides[sideName];
+    return side.mode === 'paste' ? side.paste.value.trim() !== '' : side.file.files.length > 0;
+}
+
+function updateMatchButtonState() {
+    matchBtn.disabled = !(sideHasInput('old') && sideHasInput('new'));
+}
+
+matchBtn.addEventListener('click', matchUrls);
+downloadBtn.addEventListener('click', downloadCSV);
+htaccessBtn.addEventListener('click', downloadHtaccess);
+clearBtn.addEventListener('click', clearResults);
+oldUrlsInput.addEventListener('change', updateMatchButtonState);
+newUrlsInput.addEventListener('change', updateMatchButtonState);
+oldUrlsPaste.addEventListener('input', updateMatchButtonState);
+newUrlsPaste.addEventListener('input', updateMatchButtonState);
+
+updateMatchButtonState();
+    </script>
+
+<script>
+  /* iFrame Resizer — lets Framer auto-size the embed to content height */
+  (function () {
+    function sendHeight() {
+      var h = Math.max(
+        document.body.scrollHeight,
+        document.documentElement.scrollHeight,
+        document.body.offsetHeight,
+        document.documentElement.offsetHeight
+      );
+      window.parent.postMessage({ type: 'setHeight', height: h }, '*');
+      /* Also support iFrameResizer protocol */
+      if (window.parentIFrame) { window.parentIFrame.size(h); }
+    }
+    /* Send on load */
+    window.addEventListener('load', sendHeight);
+    /* Re-send whenever DOM changes (results appearing, sections expanding) */
+    if (window.ResizeObserver) {
+      new ResizeObserver(sendHeight).observe(document.body);
+    } else {
+      setInterval(sendHeight, 500);
+    }
+  })();
+</script>
+
+</body>
+</html>

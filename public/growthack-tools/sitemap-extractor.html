@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Advanced XML Sitemap URL Extractor - Growthack Digital</title>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    
+    .sitemap-extractor-tool {
+        font-family: 'Inter', sans-serif;
+        line-height: 1.6;
+        color: #677294;
+    }
+    .sitemap-extractor-tool .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .sitemap-extractor-tool h1, .sitemap-extractor-tool h2, .sitemap-extractor-tool h3 {
+        color: #1E3E62;
+        margin-bottom: 20px;
+        font-family: 'Inter', sans-serif;
+    }
+    .sitemap-extractor-tool input[type="text"], 
+    .sitemap-extractor-tool input[type="file"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        box-sizing: border-box;
+        font-family: 'Inter', sans-serif;
+    }
+    .sitemap-extractor-tool button {
+        background-color: #CCCCCC;
+        color: #ffffff !important;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 4px;
+        cursor: not-allowed;
+        transition: background-color 0.3s, transform 0.2s;
+        font-family: 'Inter', sans-serif;
+        font-weight: 500;
+        text-decoration: none;
+        display: inline-block;
+        line-height: 1.5;
+    }
+    .sitemap-extractor-tool button.active {
+        background-color: #ff5800 !important;
+        cursor: pointer !important;
+    }
+    .sitemap-extractor-tool button.active:hover {
+        background-color: #e64d00 !important;
+        transform: translateY(-2px);
+    }
+    .sitemap-extractor-tool #urlList, 
+    .sitemap-extractor-tool #statistics, 
+    .sitemap-extractor-tool #duplicates {
+        margin-top: 20px;
+        border: 1px solid #e0e0e0;
+        padding: 15px;
+        border-radius: 4px;
+        background-color: #f9f9f9;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+        word-break: break-word;
+        hyphens: auto;
+    }
+    .sitemap-extractor-tool .scrollable-table {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    .sitemap-extractor-tool #urlTable,
+    .sitemap-extractor-tool .duplicate-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .sitemap-extractor-tool #urlTable th,
+    .sitemap-extractor-tool #urlTable td,
+    .sitemap-extractor-tool .duplicate-table th,
+    .sitemap-extractor-tool .duplicate-table td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+    }
+    .sitemap-extractor-tool #urlTable th,
+    .sitemap-extractor-tool .duplicate-table th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+    .sitemap-extractor-tool #spinner {
+        display: none;
+        margin-left: 10px;
+        color: #FF5800;
+    }
+    .sitemap-extractor-tool #errorMessage {
+        color: #ff0000;
+        margin-top: 10px;
+        font-weight: 500;
+    }
+    .sitemap-extractor-tool .section {
+        margin-bottom: 30px;
+    }
+    .sitemap-extractor-tool .button-group {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    .sitemap-extractor-tool .stats-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    .sitemap-extractor-tool .stat-card {
+        flex: 1;
+        min-width: 200px;
+        background-color: #f0f4f8;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .sitemap-extractor-tool .stat-card h3 {
+        margin-top: 0;
+        color: #1E3E62;
+    }
+    .sitemap-extractor-tool .stat-card p {
+        font-size: 24px;
+        font-weight: bold;
+        color: #FF5800;
+        margin: 10px 0 0;
+    }
+    .sitemap-extractor-tool .chart-container {
+        width: 100%;
+        max-width: 600px;
+        margin: 20px auto;
+    }
+    .sitemap-extractor-tool .hidden {
+        display: none;
+    }
+    .sitemap-extractor-tool .proxy-status {
+        font-size: 12px;
+        color: #999;
+        margin-top: 4px;
+        font-style: italic;
+    }
+
+    /* ── Progress panel ── */
+    #progressPanel {
+        display: none;
+        margin-top: 20px;
+        margin-bottom: 25px;
+        background: #f0f4f8;
+        border: 1px solid #dce3ec;
+        border-radius: 8px;
+        padding: 18px 20px;
+        font-family: 'Inter', sans-serif;
+    }
+    #progressPanel.visible { display: block; }
+
+    .pp-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+    }
+    .pp-title {
+        font-weight: 600;
+        color: #1E3E62;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .pp-spinner {
+        width: 16px; height: 16px;
+        border: 2px solid #d0d9e6;
+        border-top-color: #FF5800;
+        border-radius: 50%;
+        animation: pp-spin 0.7s linear infinite;
+        flex-shrink: 0;
+    }
+    @keyframes pp-spin { to { transform: rotate(360deg); } }
+
+    .pp-timer {
+        font-size: 13px;
+        font-weight: 600;
+        color: #FF5800;
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* Branded progress bar */
+    .pp-bar-wrap {
+        background: #dce3ec;
+        border-radius: 999px;
+        height: 8px;
+        overflow: hidden;
+        margin-bottom: 10px;
+    }
+    .pp-bar-fill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, #FF5800, #ff8c00);
+        border-radius: 999px;
+        transition: width 0.35s ease;
+    }
+    /* Indeterminate pulse when no % known */
+    .pp-bar-fill.indeterminate {
+        width: 40% !important;
+        animation: pp-pulse 1.4s ease-in-out infinite;
+    }
+    @keyframes pp-pulse {
+        0%   { margin-left: -40%; }
+        100% { margin-left: 100%; }
+    }
+
+    .pp-meta {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        color: #677294;
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+    .pp-meta span { white-space: nowrap; }
+    .pp-meta .accent { color: #FF5800; font-weight: 600; }
+
+    .pp-stages {
+        margin-top: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+    .pp-stage {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        color: #aaa;
+        transition: color 0.3s;
+    }
+    .pp-stage.done   { color: #1E3E62; }
+    .pp-stage.active { color: #FF5800; font-weight: 600; }
+    .pp-stage-dot {
+        width: 8px; height: 8px;
+        border-radius: 50%;
+        background: #dce3ec;
+        flex-shrink: 0;
+        transition: background 0.3s;
+    }
+    .pp-stage.done   .pp-stage-dot { background: #1E3E62; }
+    .pp-stage.active .pp-stage-dot { background: #FF5800; }
+
+    @media (max-width: 600px) {
+        .sitemap-extractor-tool .container {
+            padding: 20px;
+        }
+        .sitemap-extractor-tool .button-group {
+            flex-direction: column;
+            align-items: stretch;
+        }
+    }
+  </style>
+
+<!-- Growthack brand layer: Inter font + site colour tokens -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  
+  /* ── Framer embed: auto-height & scroll ─────────────────────────── */
+  html {
+    height: auto !important;
+    overflow-y: auto !important;
+  }
+  body {
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-y: auto !important;
+    margin: 0;
+    padding: 0;
+  }
+  /* ──────────────────────────────────────────────────────────────── */
+
+  /* Design tokens extracted from growthack.co.uk Framer source */
+  :root {
+    --gh-font:    'Inter', sans-serif;
+    --gh-navy:    #0c1a2e;
+    --gh-body:    #3d5068;
+    --gh-steel:   #8aabcc;
+    --gh-orange:  #ff5800;
+    --gh-orange-h:#e64d00;
+    --gh-white:   #ffffff;
+    --gh-surface: #f4f7fb;
+    --gh-border:  #dde6f0;
+    --gh-radius:  6px;
+  }
+
+  /* Font – override everything in the tool */
+  .sitemap-extractor-tool, .sitemap-extractor-tool *, .sitemap-extractor-tool *::before, .sitemap-extractor-tool *::after {
+    font-family: var(--gh-font) !important;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Headings */
+  .sitemap-extractor-tool h1, .sitemap-extractor-tool h2, .sitemap-extractor-tool h3,
+  .sitemap-extractor-tool h4, .sitemap-extractor-tool h5, .sitemap-extractor-tool h6 {
+    color: var(--gh-navy) !important;
+    font-weight: 600 !important;
+    line-height: 1.25;
+  }
+
+  /* Body / paragraph text */
+  .sitemap-extractor-tool p, .sitemap-extractor-tool li, .sitemap-extractor-tool span:not([class*="text-"]) {
+    color: var(--gh-body);
+  }
+
+  /* Labels */
+  .sitemap-extractor-tool label {
+    color: var(--gh-navy) !important;
+    font-weight: 500 !important;
+  }
+
+  /* Inputs */
+  .sitemap-extractor-tool input[type="text"],
+  .sitemap-extractor-tool input[type="url"],
+  .sitemap-extractor-tool input[type="number"],
+  .sitemap-extractor-tool input[type="email"],
+  .sitemap-extractor-tool input[type="date"],
+  .sitemap-extractor-tool input[type="file"],
+  .sitemap-extractor-tool select,
+  .sitemap-extractor-tool textarea {
+    font-family: var(--gh-font) !important;
+    color: var(--gh-navy) !important;
+    border-color: var(--gh-border) !important;
+    border-radius: var(--gh-radius) !important;
+  }
+  .sitemap-extractor-tool input:focus,
+  .sitemap-extractor-tool select:focus,
+  .sitemap-extractor-tool textarea:focus {
+    border-color: var(--gh-orange) !important;
+    box-shadow: 0 0 0 3px rgba(255,88,0,0.12) !important;
+    outline: none !important;
+  }
+
+  /* Stat cards */
+  .sitemap-extractor-tool .stat-card {
+    background: var(--gh-surface) !important;
+    border: 1px solid var(--gh-border) !important;
+    border-radius: 8px !important;
+  }
+  .sitemap-extractor-tool .stat-card h3 {
+    color: var(--gh-navy) !important;
+  }
+  .sitemap-extractor-tool .stat-card p {
+    color: var(--gh-orange) !important;
+  }
+
+  /* Table headers */
+  .sitemap-extractor-tool th {
+    background: var(--gh-navy) !important;
+    color: var(--gh-white) !important;
+  }
+  .sitemap-extractor-tool td {
+    color: var(--gh-body);
+  }
+  .sitemap-extractor-tool tr:nth-child(even) td {
+    background: var(--gh-surface);
+  }
+
+  /* Progress panel */
+  .sitemap-extractor-tool #progressPanel,
+  .sitemap-extractor-tool .pp-title {
+    color: var(--gh-navy) !important;
+  }
+
+  /* Chart.js font override via data attribute (not CSS) is handled below */
+</style>
+</head>
+<body>
+  <div class="sitemap-extractor-tool">
+    <div class="container">
+      <div class="section">
+        <h3>Option 1: Upload Sitemap File</h3>
+        <input type="file" id="fileInput" accept=".xml,.gz">
+      </div>
+      <div class="section">
+        <h3>Option 2: Enter Sitemap URL</h3>
+        <input type="text" id="urlInput" placeholder="https://example.com/sitemap.xml">
+        <div class="button-group">
+          <button id="fetchBtn" style="display:none;">Extract URLs</button>
+          <button id="copyBtn" style="display:none;">Copy URLs</button>
+          <button id="downloadBtn" style="display:none;">Download URLs as CSV</button>
+          <button id="downloadDuplicatesBtn" style="display:none;">Download Duplicates</button>
+          <button id="clearBtn" style="display:none;">Clear Results</button>
+          <span id="spinner" style="display:none;"></span>
+        </div>
+        <div id="proxyStatus" class="proxy-status"></div>
+      </div>
+
+      <!-- Progress panel -->
+      <div id="progressPanel">
+        <div class="pp-header">
+          <div class="pp-title">
+            <div class="pp-spinner"></div>
+            <span id="ppTitle">Fetching sitemap…</span>
+          </div>
+          <div class="pp-timer" id="ppTimer">0:00</div>
+        </div>
+        <div class="pp-bar-wrap">
+          <div class="pp-bar-fill indeterminate" id="ppBarFill"></div>
+        </div>
+        <div class="pp-meta">
+          <span id="ppSitemaps"></span>
+          <span id="ppUrlsFound"></span>
+        </div>
+        <div class="pp-stages" id="ppStages">
+          <div class="pp-stage" id="stage-connect"><div class="pp-stage-dot"></div>Connecting to sitemap</div>
+          <div class="pp-stage" id="stage-parse"><div class="pp-stage-dot"></div>Parsing XML</div>
+          <div class="pp-stage" id="stage-subs"><div class="pp-stage-dot"></div>Fetching sub-sitemaps</div>
+          <div class="pp-stage" id="stage-analyse"><div class="pp-stage-dot"></div>Analysing URLs</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>Filter URLs (Optional)</h3>
+        <input type="text" id="filterInput" placeholder="Enter keywords to filter URLs">
+      </div>
+      <div id="errorMessage"></div>
+      <div id="statistics" class="hidden"></div>
+      <div class="chart-container hidden"><canvas id="depthChart"></canvas></div>
+      <div class="chart-container hidden"><canvas id="foldersChart"></canvas></div>
+      <div id="urlList" class="hidden"></div>
+      <div id="duplicates" class="hidden"></div>
+    </div>
+  </div>
+
+<script>
+/* ===== Part 1/3: Helpers & Networking ===== */
+(function () {
+  'use strict';
+  window.SitemapTool = window.SitemapTool || {};
+  const T = window.SitemapTool;
+
+  // First-party fetch proxy — Cloudflare Worker on GrowthAck's OWN domain (see build/proxy/).
+  // This is the ONLY server-side dependency in the whole tool, and it's needed solely because
+  // browsers can't fetch a cross-origin sitemap (CORS). It lives entirely on Kevin's Cloudflare,
+  // so nothing here touches our infra. (Upload path below needs no proxy at all.)
+  const GAK_FETCH = 'https://fetch.growthack.io/?url=';
+
+  // Escape user/sitemap-controlled strings before they touch innerHTML.
+  T.escapeHtml = function(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, c => (
+      { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]
+    ));
+  };
+
+  T.sleep = function(ms){ return new Promise(r => setTimeout(r, ms)); };
+
+  T.normalizeUrl = function(raw){
+    try{
+      const u = new URL(String(raw).trim());
+      u.protocol = u.protocol.toLowerCase();
+      u.hostname = u.hostname.replace(/^www\./i, '').toLowerCase();
+      if ((u.protocol === 'http:' && u.port === '80') || (u.protocol === 'https:' && u.port === '443')) u.port = '';
+      const strip = new Set(['utm_source','utm_medium','utm_campaign','utm_term','utm_content','gclid','fbclid','_hsmi','_hsenc']);
+      Array.from(u.searchParams.keys()).forEach(k => { if (strip.has(k.toLowerCase())) u.searchParams.delete(k); });
+      u.pathname = u.pathname.replace(/\/{2,}/g,'/');
+      if (u.pathname !== '/' && u.pathname.endsWith('/')) u.pathname = u.pathname.slice(0, -1);
+      return u.toString();
+    }catch(e){ return String(raw).trim(); }
+  };
+
+  T.getTags = function(xmlDoc, tag){
+    const A = Array.from(xmlDoc.getElementsByTagName(tag));
+    const B = xmlDoc.getElementsByTagNameNS ? Array.from(xmlDoc.getElementsByTagNameNS('*', tag)) : [];
+    const seen = new Set();
+    return [...A, ...B].filter(n => { if (seen.has(n)) return false; seen.add(n); return true; });
+  };
+
+  T.parseXml = function(text){
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(text, 'application/xml');
+    const err = xmlDoc.getElementsByTagName('parseerror')[0] || xmlDoc.getElementsByTagName('parsererror')[0];
+    if (err) throw new Error('Invalid XML: not a valid sitemap file');
+    return xmlDoc;
+  };
+
+  function fileLooksGzip(file){
+    return /\.gz$/i.test(file.name || '') || /gzip|x-gzip|octet-stream/i.test(file.type || '');
+  }
+
+  T.readFileAsync = async function(file){
+    if (fileLooksGzip(file)){
+      const buf = await file.arrayBuffer();
+      return pako.ungzip(new Uint8Array(buf), { to: 'string' });
+    }
+    return await file.text();
+  };
+
+  async function attemptFetch(proxyUrl, originalUrl, timeoutMs){
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const res = await fetch(proxyUrl, {
+        signal: controller.signal,
+        redirect: 'follow',
+        cache: 'no-cache'
+      });
+      clearTimeout(timer);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+      // Handle gzip content
+      const ct = res.headers.get('content-type') || '';
+      const looksGz = /gzip|octet-stream/i.test(ct) || /\.gz(\?|$)/i.test(originalUrl);
+      let text;
+      if (looksGz) {
+        const buf = await res.arrayBuffer();
+        text = pako.ungzip(new Uint8Array(buf), { to: 'string' });
+      } else {
+        text = await res.text();
+      }
+
+      const trimmed = String(text).trim();
+
+      // Reject HTML responses (WAF/interstitial pages)
+      if (/^<!doctype html/i.test(trimmed) || /^<html[\s>]/i.test(trimmed)) {
+        throw new Error('Got HTML response (WAF or bot protection)');
+      }
+
+      // Must parse as valid XML sitemap
+      const xmlDoc = T.parseXml(trimmed);
+      const hasUrlset  = T.getTags(xmlDoc, 'urlset').length > 0;
+      const hasIndex   = T.getTags(xmlDoc, 'sitemapindex').length > 0;
+      if (!hasUrlset && !hasIndex) throw new Error('XML loaded but not a recognised sitemap format');
+
+      return trimmed;
+
+    } catch(e) {
+      clearTimeout(timer);
+      throw e;
+    }
+  }
+
+  // Map a first-party-proxy JSON error code to an honest, user-facing message.
+  T.gakErrorMessage = function(code, status){
+    switch (code) {
+      case 'blocked_target': return "the server won't fetch that address.";
+      case 'bad_url':        return "that doesn't look like a valid sitemap URL.";
+      case 'rate_limited':   return "the fetch service is busy right now — wait a minute and try again.";
+      case 'too_large':      return "the sitemap is too large to fetch (over 8MB).";
+      case 'timeout':        return "the request to the site timed out.";
+      default:
+        if (/^upstream_(\d+)$/.test(code || '')) return `the site returned HTTP ${code.split('_')[1]}.`;
+        return `server said "${code || ('HTTP ' + status)}".`;
+    }
+  };
+
+  // Decode a proxy/direct response body (gzip-aware) into sitemap XML text,
+  // rejecting WAF/interstitial HTML and non-sitemap payloads.
+  T.decodeSitemapResponse = async function(res, originalUrl){
+    const ct = res.headers.get('content-type') || '';
+    const looksGz = /gzip|octet-stream/i.test(ct) || /\.gz(\?|$)/i.test(originalUrl);
+    let text;
+    if (looksGz) {
+      const buf = await res.arrayBuffer();
+      text = pako.ungzip(new Uint8Array(buf), { to: 'string' });
+    } else {
+      text = await res.text();
+    }
+    const trimmed = String(text).trim();
+    if (/^<!doctype html/i.test(trimmed) || /^<html[\s>]/i.test(trimmed)) {
+      throw new Error("the server returned a web page instead of a sitemap (it may be blocking automated requests).");
+    }
+    const xmlDoc = T.parseXml(trimmed);
+    const hasUrlset = T.getTags(xmlDoc, 'urlset').length > 0;
+    const hasIndex  = T.getTags(xmlDoc, 'sitemapindex').length > 0;
+    if (!hasUrlset && !hasIndex) throw new Error("the response wasn't a recognised sitemap format.");
+    return trimmed;
+  };
+
+  // Fetch via the first-party proxy. Surfaces the contract's JSON errors honestly.
+  T.fetchViaGak = async function(url){
+    const endpoint = GAK_FETCH + encodeURIComponent(url);
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 25000);
+    let res;
+    try {
+      res = await fetch(endpoint, { signal: controller.signal, cache: 'no-cache' });
+    } catch(netErr) {
+      clearTimeout(timer);
+      throw new Error("Couldn't fetch — the fetch service didn't respond. You can upload the file instead.");
+    }
+    clearTimeout(timer);
+
+    if (!res.ok) {
+      let detail = `server said HTTP ${res.status}.`;
+      try {
+        const j = await res.json();
+        if (j && j.error) detail = T.gakErrorMessage(j.error, res.status);
+      } catch(_) { /* non-JSON error body */ }
+      throw new Error(`Couldn't fetch — ${detail} You can upload the file instead.`);
+    }
+
+    try {
+      return await T.decodeSitemapResponse(res, url);
+    } catch(decodeErr) {
+      throw new Error(`Couldn't fetch — ${decodeErr.message} You can upload the file instead.`);
+    }
+  };
+
+  // URL-fetch path: try a direct fetch first (permissive-CORS sitemaps),
+  // then fall back to the single first-party proxy. No silent failure.
+  T.fetchWithProxy = async function(url, onStatus) {
+    if (onStatus) onStatus('Fetching…');
+    try {
+      return await attemptFetch(url, url, 8000);
+    } catch(directErr) {
+      // Direct fetch blocked by CORS / WAF — route through the first-party proxy.
+      return await T.fetchViaGak(url);
+    }
+  };
+
+})();
+</script>
+
+<script>
+/* ===== Part 2/3: Core logic ===== */
+(function () {
+  'use strict';
+  const T = window.SitemapTool || (window.SitemapTool = {});
+
+  /* ── Progress Panel controller ── */
+  T.PP = (function(){
+    let _timerInterval = null;
+    let _startTime = 0;
+    let _totalSubs = 0;
+    let _doneSubs = 0;
+    let _urlsFound = 0;
+
+    const panel      = () => document.getElementById('progressPanel');
+    const title      = () => document.getElementById('ppTitle');
+    const timer      = () => document.getElementById('ppTimer');
+    const barFill    = () => document.getElementById('ppBarFill');
+    const metaSubs   = () => document.getElementById('ppSitemaps');
+    const metaUrls   = () => document.getElementById('ppUrlsFound');
+
+    function formatTime(ms){
+      const s = Math.floor(ms / 1000);
+      const m = Math.floor(s / 60);
+      return `${m}:${String(s % 60).padStart(2,'0')}`;
+    }
+
+    function tickTimer(){
+      timer().textContent = formatTime(Date.now() - _startTime);
+    }
+
+    function setStage(id){
+      const stages = ['stage-connect','stage-parse','stage-subs','stage-analyse'];
+      const idx = stages.indexOf(id);
+      stages.forEach((sid, i) => {
+        const el = document.getElementById(sid);
+        if (!el) return;
+        el.classList.remove('active','done');
+        if (i < idx)  el.classList.add('done');
+        if (i === idx) el.classList.add('active');
+      });
+    }
+
+    function setBar(pct){
+      const f = barFill();
+      if (pct === null){
+        f.classList.add('indeterminate');
+        f.style.width = '0%';
+      } else {
+        f.classList.remove('indeterminate');
+        f.style.width = Math.min(100, Math.max(0, pct)) + '%';
+      }
+    }
+
+    return {
+      start(){
+        _startTime = Date.now();
+        _totalSubs = 0; _doneSubs = 0; _urlsFound = 0;
+        panel().classList.add('visible');
+        title().textContent = 'Connecting to sitemap…';
+        timer().textContent = '0:00';
+        metaSubs().textContent = '';
+        metaUrls().textContent = '';
+        setBar(null);
+        setStage('stage-connect');
+        clearInterval(_timerInterval);
+        _timerInterval = setInterval(tickTimer, 500);
+      },
+
+      stageParse(){
+        title().textContent = 'Parsing XML…';
+        setStage('stage-parse');
+      },
+
+      stageSubs(total){
+        _totalSubs = total;
+        title().textContent = `Fetching ${total} sub-sitemap${total !== 1 ? 's' : ''}…`;
+        setStage('stage-subs');
+        setBar(0);
+        metaSubs().innerHTML = `Sub-sitemaps: <span class="accent">0 / ${total}</span>`;
+      },
+
+      updateSubs(done, urlsFound){
+        _doneSubs = done;
+        _urlsFound = urlsFound;
+        const pct = _totalSubs ? (done / _totalSubs) * 100 : 0;
+        setBar(pct);
+        metaSubs().innerHTML = `Sub-sitemaps: <span class="accent">${done} / ${_totalSubs}</span>`;
+        metaUrls().innerHTML = `URLs found: <span class="accent">${urlsFound.toLocaleString()}</span>`;
+      },
+
+      stageAnalyse(urlCount){
+        title().textContent = 'Analysing URLs…';
+        setStage('stage-analyse');
+        setBar(95);
+        metaUrls().innerHTML = `URLs found: <span class="accent">${urlCount.toLocaleString()}</span>`;
+      },
+
+      finish(urlCount, hadError){
+        clearInterval(_timerInterval);
+        tickTimer(); // final time
+        const elapsed = formatTime(Date.now() - _startTime);
+        if (!hadError){
+          title().textContent = `Done — ${urlCount.toLocaleString()} URLs extracted in ${elapsed}`;
+          setBar(100);
+          // Mark all stages done
+          ['stage-connect','stage-parse','stage-subs','stage-analyse'].forEach(sid => {
+            const el = document.getElementById(sid);
+            if (el){ el.classList.remove('active'); el.classList.add('done'); }
+          });
+          // Hide spinner
+          const sp = panel().querySelector('.pp-spinner');
+          if (sp) sp.style.display = 'none';
+        } else {
+          panel().classList.remove('visible');
+        }
+      },
+
+      hide(){
+        clearInterval(_timerInterval);
+        panel().classList.remove('visible');
+      }
+    };
+  })();
+
+  T.findDuplicatesAndNearDuplicates = function(urls){
+    const counts = {};
+    urls.forEach(u => { counts[u] = (counts[u] || 0) + 1; });
+    const exact = Object.entries(counts).filter(([,c]) => c > 1);
+
+    const groups = {};
+    urls.forEach(u => {
+      try{
+        const x = new URL(u);
+        const segs = x.pathname.split('/').filter(Boolean);
+        const tail = segs.slice(-2).join('/').toLowerCase() || '(root)';
+        const keys = [...x.searchParams.keys()].sort().join('&').toLowerCase();
+        const key = keys ? `${tail}?${keys}` : tail;
+        if (!groups[key]) groups[key] = [];
+        groups[key].push(u);
+      }catch(_){}
+    });
+
+    const near = {};
+    Object.entries(groups).forEach(([k, arr]) => {
+      const uniq = Array.from(new Set(arr));
+      if (uniq.length > 1) near[k] = uniq;
+    });
+
+    return { exactDuplicates: exact, nearDuplicates: near };
+  };
+
+  T.createDepthChart = function(depthLevels){
+    try{
+      const el = document.getElementById('depthChart');
+      if (!el) return;
+      const ctx = el.getContext('2d');
+      if (window.depthChart && typeof window.depthChart.destroy === 'function') window.depthChart.destroy();
+      window.depthChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: Object.keys(depthLevels).map(d => d === '0' ? 'Homepage' : `${d} levels`),
+          datasets: [{ label: 'Number of URLs', data: Object.values(depthLevels) }]
+        },
+        options: {
+          responsive: true,
+          plugins: { title: { display: true, text: 'URL Depth Distribution' }, legend: { display: false } },
+          scales: {
+            y: { beginAtZero: true, title: { display: true, text: 'Number of URLs' } },
+            x: { title: { display: true, text: 'Depth Level' } }
+          }
+        }
+      });
+    }catch(e){ console.warn('Depth chart error', e); }
+  };
+
+  T.createFoldersChart = function(folders){
+    try{
+      const el = document.getElementById('foldersChart');
+      if (!el) return;
+      const ctx = el.getContext('2d');
+      if (window.foldersChart && typeof window.foldersChart.destroy === 'function') window.foldersChart.destroy();
+      const sorted = Object.entries(folders).sort((a,b)=>b[1]-a[1]).slice(0,10);
+      window.foldersChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: sorted.map(([f])=>f),
+          datasets: [{ data: sorted.map(([,c])=>c) }]
+        },
+        options: { responsive: true, plugins: { title: { display: true, text: 'Top 10 Folders Distribution' } } }
+      });
+    }catch(e){ console.warn('Folders chart error', e); }
+  };
+
+  // Cap the DOM table on very large sitemaps; the CSV export always has the full list.
+  T.MAX_VISIBLE_ROWS = 2000;
+
+  T.displayUrls = function(urls){
+    const urlList = document.getElementById('urlList');
+    const esc = T.escapeHtml;
+    const lm = T.lastmodMap || {};
+    const shown = urls.slice(0, T.MAX_VISIBLE_ROWS);
+    const capped = urls.length > T.MAX_VISIBLE_ROWS;
+    const rows = shown.map((u,i)=>`<tr><td>${i+1}</td><td>${esc(u)}</td><td>${esc(lm[u] || '')}</td></tr>`).join('');
+    const notice = capped
+      ? `<p class="proxy-status">Showing first ${T.MAX_VISIBLE_ROWS.toLocaleString()} of ${urls.length.toLocaleString()} URLs — download the CSV for the full list.</p>`
+      : '';
+    urlList.innerHTML = `
+      <h2>Extracted URLs (${urls.length.toLocaleString()}):</h2>
+      ${notice}
+      <div class="scrollable-table">
+        <table id="urlTable">
+          <thead><tr><th>#</th><th>URL</th><th>Last Modified</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>`;
+  };
+
+  T.createDuplicateTable = function(dupes){
+    const esc = T.escapeHtml;
+    return `<table class="duplicate-table">
+      <thead><tr><th>URL</th><th>Occurrences</th></tr></thead>
+      <tbody>${dupes.map(([u,c])=>`<tr><td>${esc(u)}</td><td>${esc(c)}</td></tr>`).join('')}</tbody>
+    </table>`;
+  };
+
+  T.createNearDuplicateTable = function(groups){
+    const esc = T.escapeHtml;
+    return `<table class="duplicate-table">
+      <thead><tr><th>Common Ending</th><th>URLs</th></tr></thead>
+      <tbody>${Object.entries(groups).map(([k, arr]) => `
+        <tr><td>${esc(k)}</td><td><ul>${arr.map(u=>`<li>${esc(u)}</li>`).join('')}</ul></td></tr>
+      `).join('')}</tbody>
+    </table>`;
+  };
+
+  T.analyzeUrls = function(urls){
+    T.PP.stageAnalyse(urls.length);
+    const statistics = document.getElementById('statistics');
+    const duplicates = document.getElementById('duplicates');
+    const depthLevels = {};
+    const folders = {};
+
+    urls.forEach(u => {
+      try{
+        const x = new URL(u);
+        const segs = x.pathname.split('/').filter(Boolean);
+        const depth = segs.length;
+        depthLevels[depth] = (depthLevels[depth] || 0) + 1;
+        const top = segs[0] || '(root)';
+        folders[top] = (folders[top] || 0) + 1;
+      }catch(_){
+        folders['(invalid)'] = (folders['(invalid)'] || 0) + 1;
+      }
+    });
+
+    const { exactDuplicates, nearDuplicates } = T.findDuplicatesAndNearDuplicates(urls);
+    const exactDuplicateCount = exactDuplicates.reduce((s,[,c]) => s + (c - 1), 0);
+    const nearDuplicateCount = Object.values(nearDuplicates).reduce((s,arr) => s + (arr.length - 1), 0);
+
+    statistics.innerHTML = `
+      <h2>Sitemap Statistics</h2>
+      <div class="stats-container">
+        <div class="stat-card"><h3>Total URLs</h3><p>${urls.length}</p></div>
+        <div class="stat-card"><h3>Exact Duplicates</h3><p>${exactDuplicateCount}</p></div>
+        <div class="stat-card"><h3>Near Duplicates</h3><p>${nearDuplicateCount}</p></div>
+      </div>`;
+
+    T.createDepthChart(depthLevels);
+    T.createFoldersChart(folders);
+    T.displayUrls(urls);
+
+    const exactHtml = exactDuplicates.length
+      ? `<h2>Exact Duplicate URLs:</h2><div class="scrollable-table">${T.createDuplicateTable(exactDuplicates)}</div>`
+      : '<h2>No exact duplicate URLs found.</h2>';
+    const nearHtml = Object.keys(nearDuplicates).length
+      ? `<h2>Near-Duplicate URLs:</h2><div class="scrollable-table">${T.createNearDuplicateTable(nearDuplicates)}</div>`
+      : '<h2>No near-duplicate URLs found.</h2>';
+
+    duplicates.innerHTML = exactHtml + '<br><br>' + nearHtml;
+    T.showResults();
+  };
+
+  T.processSitemapContent = async function(xmlDoc, state){
+    const urlNodes = T.getTags(xmlDoc, 'url');
+    let newOnes = [];
+
+    if (urlNodes.length){
+      urlNodes.forEach(n => {
+        const loc = T.getTags(n, 'loc')[0];
+        if (loc){
+          const lm = T.getTags(n, 'lastmod')[0];
+          newOnes.push({ loc: loc.textContent.trim(), lastmod: lm ? lm.textContent.trim() : '' });
+        }
+      });
+    } else {
+      T.getTags(xmlDoc, 'loc').forEach(l => newOnes.push({ loc: l.textContent.trim(), lastmod: '' }));
+    }
+
+    const set = state.set;
+    const lm = (T.lastmodMap || (T.lastmodMap = {}));
+    newOnes.forEach(rec => {
+      const u = String(rec.loc).trim();
+      if (!u) return;
+      if (!set.has(u)) { state.extracted.push(u); set.add(u); lm[u] = rec.lastmod || ''; }
+    });
+    state.filtered.length = 0;
+    Array.prototype.push.apply(state.filtered, state.extracted);
+  };
+
+  // Max levels of nested <sitemapindex> to follow (depth 0 = the entry index).
+  T.MAX_INDEX_DEPTH = 3;
+
+  T.processSitemapIndex = async function(xmlDoc, state, onStatus, depth){
+    depth = depth || 0;
+    const sitemapNodes = T.getTags(xmlDoc, 'sitemap');
+    if (!sitemapNodes.length) throw new Error('No sitemaps found in the sitemap index.');
+
+    const urls = sitemapNodes.map(sm => {
+      const loc = T.getTags(sm, 'loc')[0];
+      return loc ? loc.textContent.trim() : null;
+    }).filter(Boolean)
+      // Cycle-guard: never fetch a sitemap file we've already visited.
+      .filter(u => { if (state.seenSitemaps.has(u)) return false; state.seenSitemaps.add(u); return true; });
+
+    if (!urls.length) {
+      if (depth > 0) return; // nested index with nothing new — not fatal
+      throw new Error('No valid sitemap URLs found in the index.');
+    }
+
+    const total = urls.length;
+    if (depth === 0) T.PP.stageSubs(total);
+
+    const CONCURRENCY = 3;
+    let i = 0, done = 0;
+
+    async function worker(){
+      while (i < urls.length){
+        const idx = i++;
+        const u = urls[idx];
+        try{
+          let content = null;
+          try {
+            content = await T.fetchWithProxy(u, onStatus);
+          } catch(fetchErr) {
+            console.warn('Sub-sitemap failed:', u, fetchErr.message);
+          }
+          if (content) {
+            const subDoc = T.parseXml(content);
+            // A sub-sitemap can itself be a <sitemapindex> — recurse (depth-capped).
+            if (T.getTags(subDoc, 'sitemapindex').length > 0) {
+              if (depth + 1 < T.MAX_INDEX_DEPTH) {
+                await T.processSitemapIndex(subDoc, state, onStatus, depth + 1);
+              } else {
+                console.warn('Sitemap-index nesting exceeds depth cap, skipping:', u);
+              }
+            } else {
+              await T.processSitemapContent(subDoc, state);
+            }
+          }
+        }catch(e){
+          console.warn('Sub-sitemap error:', u, e.message);
+        }finally{
+          done++;
+          if (depth === 0) T.PP.updateSubs(done, state.extracted.length);
+        }
+      }
+    }
+
+    await Promise.all(Array.from({ length: Math.min(CONCURRENCY, total) }, () => worker()));
+  };
+
+  T.showResults = function(){
+    ['statistics','urlList','duplicates'].forEach(id => document.getElementById(id).classList.remove('hidden'));
+    document.querySelectorAll('.chart-container').forEach(el => el.classList.remove('hidden'));
+    ['copyBtn','downloadBtn','clearBtn','downloadDuplicatesBtn'].forEach(id => {
+      const btn = document.getElementById(id);
+      btn.style.display = 'inline-block';
+      btn.classList.add('active');
+      btn.disabled = false;
+    });
+  };
+
+  T.showError = function(message){
+    // Strip any internal diagnostic lines (proxy names, CORS details etc.)
+    const clean = message.split('\n')
+      .filter(l => !/^\s*•\s*\[/.test(l) && !/^CORS proxies/i.test(l))
+      .join('\n').trim();
+    document.getElementById('errorMessage').innerHTML = `
+      <div style="background:#fff3f3;padding:15px;border-radius:4px;border-left:4px solid #ff5800;">
+        <strong>Error:</strong> ${(T.escapeHtml ? T.escapeHtml(clean) : clean).replace(/\n/g,'<br>')}
+        <br><br>
+        <small><strong>Tip:</strong> Download the sitemap XML directly in your browser and use the <strong>Upload</strong> option above.</small>
+      </div>`;
+    document.getElementById('spinner').style.display = 'none';
+    ['statistics','urlList','duplicates'].forEach(id => document.getElementById(id).classList.add('hidden'));
+    document.querySelectorAll('.chart-container').forEach(el => el.classList.add('hidden'));
+  };
+
+  T.downloadCSV = function(filtered){
+    const lm = T.lastmodMap || {};
+    const csv = Papa.unparse([['#','URL','Last Modified'], ...filtered.map((u,i)=>[i+1, u, lm[u] || ''])]);
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+    link.download = 'extracted_urls.csv';
+    document.body.appendChild(link); link.click(); document.body.removeChild(link);
+  };
+
+  T.copyUrls = function(filtered){
+    return (filtered || []).join('\n');
+  };
+
+  T.downloadDuplicates = function(filtered){
+    const { exactDuplicates, nearDuplicates } = T.findDuplicatesAndNearDuplicates(filtered);
+    const rows = [['Type','URL','Group/Count']];
+    exactDuplicates.forEach(([u,c]) => rows.push(['Exact', u, String(c)]));
+    Object.entries(nearDuplicates).forEach(([group, arr]) => arr.forEach(u => rows.push(['Near', u, group])));
+    const csv = Papa.unparse(rows);
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+    link.download = 'duplicate_urls.csv';
+    document.body.appendChild(link); link.click(); document.body.removeChild(link);
+  };
+
+})();
+</script>
+
+<script>
+/* ===== Part 3/3: App wiring & event handlers ===== */
+(function () {
+  'use strict';
+  const T = window.SitemapTool || (window.SitemapTool = {});
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const state = { extracted: [], filtered: [], set: new Set(), seenSitemaps: new Set() };
+
+    const fileInput           = document.getElementById('fileInput');
+    const urlInput            = document.getElementById('urlInput');
+    const filterInput         = document.getElementById('filterInput');
+    const fetchBtn            = document.getElementById('fetchBtn');
+    const copyBtn             = document.getElementById('copyBtn');
+    const downloadBtn         = document.getElementById('downloadBtn');
+    const clearBtn            = document.getElementById('clearBtn');
+    const downloadDupsBtn     = document.getElementById('downloadDuplicatesBtn');
+    const spinner             = document.getElementById('spinner');
+    const errorMessage        = document.getElementById('errorMessage');
+    const proxyStatus         = document.getElementById('proxyStatus');
+
+    function updateExtractButton(){
+      const enabled = fileInput.files.length > 0 || urlInput.value.trim() !== '';
+      fetchBtn.style.display = enabled ? 'inline-block' : 'none';
+      fetchBtn.classList.toggle('active', enabled);
+      fetchBtn.disabled = !enabled;
+    }
+
+    function onStatus(msg) {
+      // Show generic progress only — no internal proxy/service names
+      if (msg.startsWith('✓')) {
+        proxyStatus.textContent = ''; // clear on success
+      } else {
+        proxyStatus.textContent = 'Fetching…';
+      }
+    }
+
+    async function fetchSitemap(){
+      errorMessage.textContent = '';
+      proxyStatus.textContent = '';
+      spinner.style.display = 'none';
+      fetchBtn.disabled = true;
+      state.extracted = []; state.filtered = []; state.set = new Set(); state.seenSitemaps = new Set();
+      T.lastmodMap = {};
+
+      T.PP.start();
+
+      let hadError = false;
+      try{
+        let content;
+        if (fileInput.files.length > 0){
+          T.PP.stageParse();
+          content = await T.readFileAsync(fileInput.files[0]);
+        } else if (urlInput.value.trim()){
+          const targetUrl = urlInput.value.trim();
+          // Direct fetch first, then the first-party proxy. Errors surface honestly.
+          content = await T.fetchWithProxy(targetUrl, onStatus);
+          T.PP.stageParse();
+        } else {
+          throw new Error('Please either upload a file or enter a sitemap URL.');
+        }
+
+        const xmlDoc = T.parseXml(content);
+        const isIndex = T.getTags(xmlDoc, 'sitemapindex').length > 0;
+
+        if (isIndex){
+          await T.processSitemapIndex(xmlDoc, state, onStatus);
+        } else {
+          await T.processSitemapContent(xmlDoc, state);
+        }
+
+        if (state.extracted.length === 0) throw new Error('No URLs found in the sitemap.');
+
+        proxyStatus.textContent = '';
+        T.analyzeUrls(state.extracted);
+
+      }catch(err){
+        hadError = true;
+        console.error('Error:', err);
+        T.showError(err.message);
+      }finally{
+        T.PP.finish(state.extracted.length, hadError);
+        fetchBtn.disabled = false;
+        updateExtractButton();
+      }
+    }
+
+    let filterTimer;
+    function filterUrls(){
+      const text = filterInput.value.toLowerCase().trim();
+      clearTimeout(filterTimer);
+      filterTimer = setTimeout(()=>{
+        state.filtered = state.extracted.filter(u => u.toLowerCase().includes(text));
+        T.analyzeUrls(state.filtered);
+      }, 250);
+    }
+
+    function clearResults(){
+      state.extracted = []; state.filtered = []; state.set = new Set(); state.seenSitemaps = new Set();
+      T.lastmodMap = {};
+      fileInput.value = ''; urlInput.value = ''; filterInput.value = '';
+      proxyStatus.textContent = '';
+      ['statistics','urlList','duplicates'].forEach(id => document.getElementById(id).classList.add('hidden'));
+      document.querySelectorAll('.chart-container').forEach(el => el.classList.add('hidden'));
+      ['copyBtn','downloadBtn','clearBtn','downloadDuplicatesBtn'].forEach(id => {
+        const btn = document.getElementById(id);
+        btn.style.display = 'none'; btn.classList.remove('active'); btn.disabled = true;
+      });
+      errorMessage.textContent = '';
+      T.PP.hide();
+      if (window.depthChart?.destroy) { window.depthChart.destroy(); window.depthChart = null; }
+      if (window.foldersChart?.destroy) { window.foldersChart.destroy(); window.foldersChart = null; }
+      updateExtractButton();
+    }
+
+    fileInput.addEventListener('change', () => { urlInput.value = ''; updateExtractButton(); });
+    urlInput.addEventListener('input', () => { fileInput.value = ''; updateExtractButton(); });
+    filterInput.addEventListener('input', filterUrls);
+    fetchBtn.addEventListener('click', e => { e.preventDefault(); if (!fetchBtn.disabled) fetchSitemap(); });
+    copyBtn.addEventListener('click', async e => {
+      e.preventDefault();
+      if (!copyBtn.classList.contains('active')) return;
+      const list = state.filtered.length ? state.filtered : state.extracted;
+      const textOut = T.copyUrls(list);
+      const original = copyBtn.textContent;
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(textOut);
+        } else {
+          const ta = document.createElement('textarea');
+          ta.value = textOut; ta.style.position = 'fixed'; ta.style.opacity = '0';
+          document.body.appendChild(ta); ta.select();
+          document.execCommand('copy'); document.body.removeChild(ta);
+        }
+        copyBtn.textContent = `Copied ${list.length.toLocaleString()} URLs!`;
+      } catch(_) {
+        copyBtn.textContent = 'Copy failed — select manually';
+      }
+      setTimeout(() => { copyBtn.textContent = original; }, 2000);
+    });
+    downloadBtn.addEventListener('click', e => { e.preventDefault(); if (downloadBtn.classList.contains('active')) T.downloadCSV(state.filtered.length ? state.filtered : state.extracted); });
+    clearBtn.addEventListener('click', e => { e.preventDefault(); if (clearBtn.classList.contains('active')) clearResults(); });
+    downloadDupsBtn.addEventListener('click', e => { e.preventDefault(); if (downloadDupsBtn.classList.contains('active')) T.downloadDuplicates(state.filtered.length ? state.filtered : state.extracted); });
+
+    updateExtractButton();
+  });
+})();
+</script>
+
+<script>
+  /* iFrame Resizer — lets Framer auto-size the embed to content height */
+  (function () {
+    function sendHeight() {
+      var h = Math.max(
+        document.body.scrollHeight,
+        document.documentElement.scrollHeight,
+        document.body.offsetHeight,
+        document.documentElement.offsetHeight
+      );
+      window.parent.postMessage({ type: 'setHeight', height: h }, '*');
+      /* Also support iFrameResizer protocol */
+      if (window.parentIFrame) { window.parentIFrame.size(h); }
+    }
+    /* Send on load */
+    window.addEventListener('load', sendHeight);
+    /* Re-send whenever DOM changes (results appearing, sections expanding) */
+    if (window.ResizeObserver) {
+      new ResizeObserver(sendHeight).observe(document.body);
+    } else {
+      setInterval(sendHeight, 500);
+    }
+  })();
+</script>
+
+</body>
+</html>

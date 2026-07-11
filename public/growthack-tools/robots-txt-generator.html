@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Robots.txt Generator - Growthack</title>
+    <meta name="description" content="Create a properly formatted robots.txt file with our free tool. Control search engine and AI crawler access, protect sensitive content, and manage crawler behavior. Download or copy your customized robots.txt file instantly.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
+            background-color: #f8fafc;
+            color: #677294;
+            line-height: 1.6;
+        }
+
+        .robots-generator-tool {
+            padding: 40px 20px;
+            margin: 0 auto;
+            max-width: 1200px;
+        }
+
+        .robots-generator-tool .container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin: 0 auto;
+            max-width: 800px;
+        }
+
+        .robots-generator-tool h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E3E62;
+            margin: 20px 0 16px 0;
+            padding: 0;
+            line-height: 1.3;
+        }
+
+        .robots-generator-tool h3 {
+            font-size: 20px;
+            font-weight: 500;
+            color: #1E3E62;
+            margin: 16px 0 12px 0;
+            padding: 0;
+            line-height: 1.3;
+        }
+
+        .robots-generator-tool .rule {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: grid;
+            grid-template-columns: 2fr 1fr 2fr auto;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .robots-generator-tool select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            background-color: #ffffff;
+            color: #1E3E62;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            line-height: 1.4;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%231E3E62' viewBox='0 0 16 16'%3E%3Cpath d='M8 10L4 6h8l-4 4z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 32px;
+        }
+
+        .robots-generator-tool select:focus {
+            outline: none;
+            border-color: #ff5800;
+            box-shadow: 0 0 0 2px rgba(255, 88, 0, 0.1);
+        }
+
+        .robots-generator-tool input[type="text"],
+        .robots-generator-tool textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            background-color: #ffffff;
+            color: #1E3E62;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            line-height: 1.4;
+            box-sizing: border-box;
+        }
+
+        .robots-generator-tool input[type="text"]:focus,
+        .robots-generator-tool textarea:focus {
+            outline: none;
+            border-color: #ff5800;
+            box-shadow: 0 0 0 2px rgba(255, 88, 0, 0.1);
+        }
+
+        .robots-generator-tool textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .robots-generator-tool button {
+            background-color: #ff5800;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            padding: 12px 24px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .robots-generator-tool button:hover {
+            background-color: #e64d00;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .robots-generator-tool button:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .robots-generator-tool button.remove {
+            background-color: #f3f4f6;
+            color: #dc2626;
+            border: 1px solid #dc2626;
+            padding: 8px 16px;
+        }
+
+        .robots-generator-tool button.remove:hover {
+            background-color: #dc2626;
+            color: #ffffff;
+            border-color: #dc2626;
+        }
+
+        .robots-generator-tool .output {
+            background-color: #1e293b;
+            color: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        .robots-generator-tool .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .robots-generator-tool .tab-container {
+            margin: 20px 0;
+        }
+
+        .robots-generator-tool .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding: 4px;
+            background-color: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .robots-generator-tool .tab-button {
+            background-color: #e2e8f0;
+            color: #1E3E62;
+            border: none;
+            border-radius: 4px;
+            padding: 12px 24px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .robots-generator-tool .tab-button.active {
+            background-color: #ff5800;
+            color: #ffffff;
+            box-shadow: 0 2px 4px rgba(255, 88, 0, 0.2);
+        }
+
+        .robots-generator-tool .tab-button:hover {
+            transform: translateY(-1px);
+            background-color: #f0f4f8;
+        }
+
+        .robots-generator-tool .tab-button.active:hover {
+            background-color: #ff5800;
+        }
+
+        .robots-generator-tool .tab-button.active:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #e64d00;
+        }
+
+        .robots-generator-tool .tab-content {
+            display: none;
+            padding: 20px;
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .robots-generator-tool .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .robots-generator-tool .tab-content.active:before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: 20px;
+            right: 20px;
+            height: 2px;
+            background-color: #ff5800;
+            border-radius: 2px;
+        }
+
+        .robots-generator-tool .validation-message {
+            margin: 5px 0;
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .robots-generator-tool .validation-error {
+            background-color: #fee2e2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .robots-generator-tool .validation-warning {
+            background-color: #fef3c7;
+            color: #d97706;
+            border: 1px solid #fde68a;
+        }
+
+        .robots-generator-tool .validation-success {
+            background-color: #dcfce7;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-5px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .robots-generator-tool {
+                padding: 20px 10px;
+            }
+
+            .robots-generator-tool .container {
+                padding: 20px;
+            }
+
+            .robots-generator-tool .rule {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .robots-generator-tool .button-group {
+                flex-direction: column;
+            }
+
+            .robots-generator-tool button {
+                width: 100%;
+                margin: 5px 0;
+            }
+
+            .robots-generator-tool .tab-buttons {
+                flex-direction: column;
+            }
+
+            .robots-generator-tool .tab-button {
+                width: 100%;
+            }
+        }
+    </style>
+
+<!-- Growthack brand layer: Inter font + site colour tokens -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  
+  /* ── Framer embed: auto-height & scroll ─────────────────────────── */
+  html {
+    height: auto !important;
+    overflow-y: auto !important;
+  }
+  body {
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-y: auto !important;
+    margin: 0;
+    padding: 0;
+  }
+  /* ──────────────────────────────────────────────────────────────── */
+
+  /* Design tokens extracted from growthack.co.uk Framer source */
+  :root {
+    --gh-font:    'Inter', sans-serif;
+    --gh-navy:    #0c1a2e;
+    --gh-body:    #3d5068;
+    --gh-steel:   #8aabcc;
+    --gh-orange:  #ff5800;
+    --gh-orange-h:#e64d00;
+    --gh-white:   #ffffff;
+    --gh-surface: #f4f7fb;
+    --gh-border:  #dde6f0;
+    --gh-radius:  6px;
+  }
+
+  /* Font – override everything in the tool */
+  .robots-generator-tool, .robots-generator-tool *, .robots-generator-tool *::before, .robots-generator-tool *::after {
+    font-family: var(--gh-font) !important;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Headings */
+  .robots-generator-tool h1, .robots-generator-tool h2, .robots-generator-tool h3,
+  .robots-generator-tool h4, .robots-generator-tool h5, .robots-generator-tool h6 {
+    color: var(--gh-navy) !important;
+    font-weight: 600 !important;
+    line-height: 1.25;
+  }
+
+  /* Body / paragraph text */
+  .robots-generator-tool p, .robots-generator-tool li, .robots-generator-tool span:not([class*="text-"]) {
+    color: var(--gh-body);
+  }
+
+  /* Labels */
+  .robots-generator-tool label {
+    color: var(--gh-navy) !important;
+    font-weight: 500 !important;
+  }
+
+  /* Inputs */
+  .robots-generator-tool input[type="text"],
+  .robots-generator-tool input[type="url"],
+  .robots-generator-tool input[type="number"],
+  .robots-generator-tool input[type="email"],
+  .robots-generator-tool input[type="date"],
+  .robots-generator-tool input[type="file"],
+  .robots-generator-tool select,
+  .robots-generator-tool textarea {
+    font-family: var(--gh-font) !important;
+    color: var(--gh-navy) !important;
+    border-color: var(--gh-border) !important;
+    border-radius: var(--gh-radius) !important;
+  }
+  .robots-generator-tool input:focus,
+  .robots-generator-tool select:focus,
+  .robots-generator-tool textarea:focus {
+    border-color: var(--gh-orange) !important;
+    box-shadow: 0 0 0 3px rgba(255,88,0,0.12) !important;
+    outline: none !important;
+  }
+
+  /* Stat cards */
+  .robots-generator-tool .stat-card {
+    background: var(--gh-surface) !important;
+    border: 1px solid var(--gh-border) !important;
+    border-radius: 8px !important;
+  }
+  .robots-generator-tool .stat-card h3 {
+    color: var(--gh-navy) !important;
+  }
+  .robots-generator-tool .stat-card p {
+    color: var(--gh-orange) !important;
+  }
+
+  /* Table headers */
+  .robots-generator-tool th {
+    background: var(--gh-navy) !important;
+    color: var(--gh-white) !important;
+  }
+  .robots-generator-tool td {
+    color: var(--gh-body);
+  }
+  .robots-generator-tool tr:nth-child(even) td {
+    background: var(--gh-surface);
+  }
+
+  /* Progress panel */
+  .robots-generator-tool #progressPanel,
+  .robots-generator-tool .pp-title {
+    color: var(--gh-navy) !important;
+  }
+
+  /* Chart.js font override via data attribute (not CSS) is handled below */
+</style>
+</head>
+<body>
+    <div class="robots-generator-tool">
+        <div class="container">
+            <h2>Robots.txt File Options</h2>
+            <div class="tab-container">
+                <div class="tab-buttons">
+                    <button class="tab-button active" onclick="switchTab('editor')">Rule Editor</button>
+                    <button class="tab-button" onclick="switchTab('pattern')">Pattern Builder</button>
+                    <button class="tab-button" onclick="switchTab('test')">Test Rules</button>
+                </div>
+
+                <!-- Editor Tab -->
+                <div id="editor" class="tab-content active">
+                    <div id="rulesContainer"></div>
+                    <div class="button-group">
+                        <button onclick="addRule()">Add New Rule</button>
+                        <button onclick="addCommonRules()">Add Common Rules</button>
+                    </div>
+                    <div id="validationMessages"></div>
+                </div>
+
+                <!-- Pattern Builder Tab -->
+                <div id="pattern" class="tab-content">
+                    <h3>Pattern Builder</h3>
+                    <div class="input-group">
+                        <select id="patternType" onchange="updatePattern()">
+                            <option value="exact">Exact Match</option>
+                            <option value="startsWith">Starts With</option>
+                            <option value="endsWith">Ends With</option>
+                            <option value="contains">Contains</option>
+                        </select>
+                        <input type="text" id="patternInput" placeholder="Enter pattern" onkeyup="updatePattern()">
+                    </div>
+                    <div class="pattern-preview">
+                        <h4>Pattern Preview</h4>
+                        <div class="output" id="patternPreview"></div>
+                    </div>
+                    <div class="button-group">
+                        <button onclick="addPatternRule()">Add to Rules</button>
+                    </div>
+                </div>
+
+                <!-- Test Tab -->
+                <div id="test" class="tab-content">
+                    <div class="test-section">
+                        <h3>Single URL Test</h3>
+                        <div class="input-group">
+                            <input type="text" id="testUrl" placeholder="Enter URL to test (e.g., https://example.com/page)">
+                            <select id="testUserAgent">
+                                <option value="*">All Robots (*)</option>
+                                <optgroup label="Search Engines">
+                                    <option value="Googlebot">Googlebot</option>
+                                    <option value="Bingbot">Bingbot</option>
+                                </optgroup>
+                                <optgroup label="AI Training Crawlers">
+                                    <option value="GPTBot">GPTBot</option>
+                                    <option value="ClaudeBot">ClaudeBot</option>
+                                    <option value="Google-Extended">Google-Extended</option>
+                                    <option value="Applebot-Extended">Applebot-Extended</option>
+                                    <option value="CCBot">CCBot</option>
+                                    <option value="Bytespider">Bytespider</option>
+                                    <option value="Meta-ExternalAgent">Meta-ExternalAgent</option>
+                                    <option value="cohere-ai">cohere-ai</option>
+                                    <option value="Amazonbot">Amazonbot</option>
+                                </optgroup>
+                                <optgroup label="AI Search / Retrieval">
+                                    <option value="OAI-SearchBot">OAI-SearchBot</option>
+                                    <option value="ChatGPT-User">ChatGPT-User</option>
+                                    <option value="Claude-SearchBot">Claude-SearchBot</option>
+                                    <option value="Claude-User">Claude-User</option>
+                                    <option value="PerplexityBot">PerplexityBot</option>
+                                    <option value="Perplexity-User">Perplexity-User</option>
+                                </optgroup>
+                            </select>
+                            <button onclick="testUrl()">Test Access</button>
+                        </div>
+                        <div id="testResult"></div>
+                    </div>
+
+                    <div class="test-section">
+                        <h3>Bulk URL Testing</h3>
+                        <textarea id="bulkUrls" placeholder="Enter multiple URLs to test (one per line)"></textarea>
+                        <div class="button-group">
+                            <button onclick="bulkTest()">Test All URLs</button>
+                        </div>
+                        <div id="bulkTestResults"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sitemap-section">
+                <h3>Sitemap (optional)</h3>
+                <textarea id="sitemapUrls" placeholder="https://example.com/sitemap.xml&#10;One full URL per line for multiple sitemaps" onkeyup="updateOutput()"></textarea>
+                <div id="sitemapValidation"></div>
+            </div>
+
+            <div class="output-section">
+                <h2>Generated robots.txt</h2>
+                <div class="output" id="output"></div>
+                <div class="button-group">
+                    <button onclick="copyToClipboard()">
+                        <span class="button-icon">📋</span> Copy to Clipboard
+                    </button>
+                    <button onclick="downloadRobotsTxt()">
+                        <span class="button-icon">⬇️</span> Download robots.txt
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional styling for new elements -->
+    <style>
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        .pattern-preview h4 {
+            color: #1E3E62;
+            margin: 0 0 8px 0;
+            font-size: 16px;
+        }
+
+        .test-section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .test-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .button-icon {
+            margin-right: 8px;
+        }
+
+        .output-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .sitemap-section {
+            margin-top: 20px;
+        }
+
+        .sitemap-section textarea {
+            min-height: 60px;
+        }
+    </style>
+<script>
+    let rules = [];
+    
+const robotTypes = {
+    'Universal': 'User-agent: *',
+    'Search Engines': {
+        'Googlebot': 'User-agent: Googlebot',
+        'Bingbot': 'User-agent: Bingbot',
+        'DuckDuckBot': 'User-agent: DuckDuckBot',
+        'Yandex': 'User-agent: Yandex'
+    },
+    'AI Training Crawlers': {
+        'GPTBot (OpenAI)': 'User-agent: GPTBot',
+        'ClaudeBot (Anthropic)': 'User-agent: ClaudeBot',
+        'Google-Extended (Google AI)': 'User-agent: Google-Extended',
+        'Applebot-Extended (Apple)': 'User-agent: Applebot-Extended',
+        'CCBot (Common Crawl)': 'User-agent: CCBot',
+        'Bytespider (ByteDance)': 'User-agent: Bytespider',
+        'Meta-ExternalAgent (Meta)': 'User-agent: Meta-ExternalAgent',
+        'cohere-ai (Cohere)': 'User-agent: cohere-ai',
+        'Amazonbot (Amazon)': 'User-agent: Amazonbot'
+    },
+    'AI Search / Retrieval': {
+        'OAI-SearchBot (ChatGPT Search)': 'User-agent: OAI-SearchBot',
+        'ChatGPT-User (ChatGPT browsing)': 'User-agent: ChatGPT-User',
+        'Claude-SearchBot (Claude Search)': 'User-agent: Claude-SearchBot',
+        'Claude-User (Claude browsing)': 'User-agent: Claude-User',
+        'PerplexityBot (Perplexity)': 'User-agent: PerplexityBot',
+        'Perplexity-User (Perplexity fetch)': 'User-agent: Perplexity-User'
+    },
+    'Social Media': {
+        'Twitterbot': 'User-agent: Twitterbot',
+        'FacebookBot': 'User-agent: facebookexternalhit',
+        'LinkedInBot': 'User-agent: LinkedInBot',
+        'PinterestBot': 'User-agent: Pinterest'
+    }
+};
+
+// Rule Creation and Management
+function createRuleElement(index) {
+    const rule = document.createElement('div');
+    rule.className = 'rule';
+    
+    let userAgentSelect = '<select onchange="updateOutput()" data-index="' + index + '">';
+    for (const [group, items] of Object.entries(robotTypes)) {
+        if (typeof items === 'string') {
+            userAgentSelect += `<option value="${items}">${group}</option>`;
+        } else {
+            userAgentSelect += `<optgroup label="${group}">`;
+            for (const [name, value] of Object.entries(items)) {
+                userAgentSelect += `<option value="${value}">${name}</option>`;
+            }
+            userAgentSelect += '</optgroup>';
+        }
+    }
+    userAgentSelect += '</select>';
+
+    rule.innerHTML = `
+        ${userAgentSelect}
+        <select onchange="updateOutput()" data-index="${index}">
+            <option value="Allow: ">Allow</option>
+            <option value="Disallow: ">Disallow</option>
+            <option value="Crawl-delay: ">Crawl-delay</option>
+        </select>
+        <input type="text" placeholder="/path/ or delay in seconds" onkeyup="updateOutput()" data-index="${index}">
+        <button class="remove" onclick="removeRule(${index})" title="Remove Rule">
+            <span class="button-icon">🗑️</span>
+        </button>
+    `;
+    return rule;
+}
+
+function addRule() {
+    const index = rules.length;
+    rules.push({
+        userAgent: 'User-agent: *',
+        directive: 'Allow: ',
+        path: ''
+    });
+    const ruleElement = createRuleElement(index);
+    document.getElementById('rulesContainer').appendChild(ruleElement);
+    updateOutput();
+    validateRules();
+    showMessage('New rule added', 'success');
+}
+
+function addCommonRules() {
+    const commonRules = [
+        { userAgent: 'User-agent: *', directive: 'Disallow: ', path: '/admin/' },
+        { userAgent: 'User-agent: *', directive: 'Disallow: ', path: '/private/' },
+        { userAgent: 'User-agent: *', directive: 'Disallow: ', path: '/wp-admin/' },
+        { userAgent: 'User-agent: GPTBot', directive: 'Disallow: ', path: '/' },
+        { userAgent: 'User-agent: ClaudeBot', directive: 'Disallow: ', path: '/' },
+        { userAgent: 'User-agent: CCBot', directive: 'Disallow: ', path: '/' }
+    ];
+
+    // Add common rules to the existing rules array
+    rules.push(...commonRules);
+    
+    // Refresh the rules display
+    refreshRules();
+    
+    // Update the output and validate
+    updateOutput();
+    
+    // Show success message
+    showMessage(`Added ${commonRules.length} common rules`, 'success');
+}
+
+function removeRule(index) {
+    rules.splice(index, 1);
+    refreshRules();
+    updateOutput();
+    showMessage('Rule removed', 'success');
+}
+
+function refreshRules() {
+    const container = document.getElementById('rulesContainer');
+    container.innerHTML = '';
+    rules.forEach((rule, index) => {
+        const ruleElement = createRuleElement(index);
+        
+        // Set the values for the newly created rule element
+        const selects = ruleElement.getElementsByTagName('select');
+        const input = ruleElement.getElementsByTagName('input')[0];
+        
+        // Set user agent
+        selects[0].value = rule.userAgent;
+        
+        // Set directive
+        selects[1].value = rule.directive;
+        
+        // Set path
+        input.value = rule.path;
+        
+        container.appendChild(ruleElement);
+    });
+}
+
+// Validation
+function validateRules() {
+    const validationMessages = [];
+    const paths = new Set();
+    let hasLLMProtection = false;
+
+    rules.forEach((rule, index) => {
+        if (rule.directive !== 'Crawl-delay: ') {
+            // Path format validation
+            if (!rule.path.startsWith('/') && rule.path !== '' && !rule.path.startsWith('*')) {
+                validationMessages.push({
+                    type: 'error',
+                    message: `Path "${rule.path}" should start with / or *`
+                });
+            }
+
+            // Invalid characters check
+            if (/[<>"|]/.test(rule.path)) {
+                validationMessages.push({
+                    type: 'error',
+                    message: `Invalid characters found in path "${rule.path}"`
+                });
+            }
+
+            // Duplicate rules check
+            const ruleKey = `${rule.userAgent}-${rule.path}`;
+            if (paths.has(ruleKey)) {
+                validationMessages.push({
+                    type: 'warning',
+                    message: `Duplicate rule found for "${rule.path}" with ${rule.userAgent}`
+                });
+            }
+            paths.add(ruleKey);
+
+            // Check for LLM protection
+            if (rule.userAgent.includes('GPTBot') || rule.userAgent.includes('ClaudeBot') ||
+                rule.userAgent.includes('CCBot')) {
+                hasLLMProtection = true;
+            }
+        } else {
+            // Crawl-delay validation
+            if (isNaN(rule.path)) {
+                validationMessages.push({
+                    type: 'error',
+                    message: 'Crawl-delay value must be a number'
+                });
+            }
+        }
+    });
+
+    // Suggest LLM protection if not present
+    if (!hasLLMProtection) {
+        validationMessages.push({
+            type: 'warning',
+            message: 'Consider adding protection against AI crawlers (GPTBot, ClaudeBot, CCBot)'
+        });
+    }
+
+    displayValidation(validationMessages);
+    return validationMessages.filter(m => m.type === 'error').length === 0;
+}
+
+function displayValidation(messages) {
+    const container = document.getElementById('validationMessages');
+    container.innerHTML = '';
+
+    messages.forEach(msg => {
+        const div = document.createElement('div');
+        div.className = `validation-message validation-${msg.type}`;
+        div.textContent = msg.message;
+        container.appendChild(div);
+    });
+}
+
+// Pattern Builder
+function updatePattern() {
+    const type = document.getElementById('patternType').value;
+    const input = document.getElementById('patternInput').value;
+    let pattern = '';
+
+    switch(type) {
+        case 'exact':
+            pattern = '/' + input.replace(/^\/+/, '');
+            break;
+        case 'startsWith':
+            pattern = '/' + input.replace(/^\/+/, '') + '*';
+            break;
+        case 'endsWith':
+            // robots.txt "ends with" uses the $ end-of-URL anchor: *suffix$
+            pattern = '*' + input.replace(/^\*+/, '').replace(/\$+$/, '') + '$';
+            break;
+        case 'contains':
+            // robots.txt "contains" wraps the term in wildcards: *term*
+            pattern = '*' + input.replace(/^\*+/, '').replace(/\*+$/, '') + '*';
+            break;
+    }
+
+    document.getElementById('patternPreview').textContent = pattern;
+}
+
+function addPatternRule() {
+    const pattern = document.getElementById('patternPreview').textContent;
+    const patternType = document.getElementById('patternType').value;
+    const patternInput = document.getElementById('patternInput').value;
+
+    if (!patternInput) {
+        showMessage('Please enter a pattern', 'error');
+        return;
+    }
+
+    // Add the new pattern rule
+    rules.push({
+        userAgent: 'User-agent: *',
+        directive: 'Disallow: ',
+        path: pattern
+    });
+
+    // Refresh the rules display
+    refreshRules();
+
+    // Update the output
+    updateOutput();
+
+    // Switch back to the editor tab
+    switchTab('editor');
+
+    // Show success message
+    showMessage(`Added ${patternType} pattern rule: ${pattern}`, 'success');
+}
+
+// Testing
+function testUrl() {
+    const url = document.getElementById('testUrl').value;
+    const userAgent = document.getElementById('testUserAgent').value;
+    
+    if (!url) {
+        showMessage('Please enter a URL to test', 'error');
+        return;
+    }
+
+    const result = checkAccess(url, userAgent);
+    const resultDiv = document.getElementById('testResult');
+    resultDiv.className = `validation-message validation-${result.allowed ? 'success' : 'error'}`;
+    resultDiv.textContent = result.message;
+}
+
+function bulkTest() {
+    const urls = document.getElementById('bulkUrls').value.split('\n');
+    const userAgent = document.getElementById('testUserAgent').value;
+    
+    if (!urls[0]) {
+        showMessage('Please enter URLs to test', 'error');
+        return;
+    }
+
+    const results = urls.map(url => {
+        url = url.trim();
+        if (!url) return null;
+        const result = checkAccess(url, userAgent);
+        return { url, result };
+    }).filter(Boolean);
+
+    displayBulkResults(results);
+}
+
+function displayBulkResults(results) {
+    const resultsDiv = document.getElementById('bulkTestResults');
+    resultsDiv.innerHTML = `
+        <h4>Test Results (${results.length} URLs)</h4>
+        ${results.map(({url, result}) => `
+            <div class="validation-message validation-${result.allowed ? 'success' : 'error'}">
+                ${url}: ${result.message}
+            </div>
+        `).join('')}
+    `;
+}
+
+function checkAccess(url, userAgent) {
+    try {
+        const path = new URL(url).pathname;
+
+        // Only Allow/Disallow directives affect access resolution.
+        const directiveRules = rules.filter(r =>
+            r.directive === 'Allow: ' || r.directive === 'Disallow: ');
+
+        // RFC 9309: a crawler obeys the single most-specific matching group.
+        // If a group is named for this user agent, the '*' group is ignored
+        // entirely. UA token matching is case-insensitive.
+        const ua = (userAgent || '').toLowerCase();
+        let group = directiveRules.filter(r =>
+            (r.userAgent.split(': ')[1] || '').toLowerCase() === ua);
+        if (group.length === 0) {
+            group = directiveRules.filter(r =>
+                (r.userAgent.split(': ')[1] || '') === '*');
+        }
+
+        // Longest matching path wins; Allow wins on an equal-length tie.
+        let best = null; // { allowed, len, rule }
+        for (const rule of group) {
+            if (!pathMatches(path, rule.path)) continue;
+            const len = rule.path.length;
+            const isAllow = rule.directive === 'Allow: ';
+            if (best === null ||
+                len > best.len ||
+                (len === best.len && isAllow && !best.allowed)) {
+                best = { allowed: isAllow, len, rule };
+            }
+        }
+
+        const allowed = best ? best.allowed : true;
+        const matchingRule = best ? `${best.rule.directive}${best.rule.path}` : '';
+
+        return {
+            allowed,
+            message: allowed
+                ? `✓ URL is allowed for ${userAgent}` +
+                  (matchingRule ? ` (rule: ${matchingRule})` : ' (no matching rule)')
+                : `✗ URL is blocked for ${userAgent} by rule: ${matchingRule}`
+        };
+    } catch (e) {
+        return {
+            allowed: false,
+            message: '✗ Invalid URL format'
+        };
+    }
+}
+
+// robots.txt path matching: '*' = any sequence, trailing '$' = end-of-URL
+// anchor, otherwise a prefix match. No other special characters.
+function pathMatches(urlPath, rulePath) {
+    if (!rulePath) return false;
+
+    let anchorEnd = false;
+    let p = rulePath;
+    if (p.endsWith('$')) {
+        anchorEnd = true;
+        p = p.slice(0, -1);
+    }
+
+    let re = '';
+    for (const ch of p) {
+        re += ch === '*' ? '.*' : ch.replace(/[.+?^${}()|[\]\\]/g, '\\$&');
+    }
+    const pattern = '^' + re + (anchorEnd ? '$' : '');
+
+    try {
+        return new RegExp(pattern).test(urlPath);
+    } catch (e) {
+        return false;
+    }
+}
+
+// Output Generation
+function updateOutput() {
+    const elements = document.getElementById('rulesContainer').children;
+    rules = [];
+    
+    for (let i = 0; i < elements.length; i++) {
+        const selects = elements[i].getElementsByTagName('select');
+        const input = elements[i].getElementsByTagName('input')[0];
+        
+        rules.push({
+            userAgent: selects[0].value,
+            directive: selects[1].value,
+            path: input.value
+        });
+    }
+
+    let output = '# robots.txt generated ' + new Date().toISOString().split('T')[0] + '\n';
+    output += '# Enhanced with LLM crawler protection\n\n';
+    
+    let currentUserAgent = '';
+    
+    rules.forEach(rule => {
+        if (currentUserAgent !== rule.userAgent) {
+            output += '\n' + rule.userAgent + '\n';
+            currentUserAgent = rule.userAgent;
+        }
+        output += rule.directive + rule.path + '\n';
+    });
+
+    output += emitSitemaps();
+
+    document.getElementById('output').textContent = output;
+    validateRules();
+}
+
+// Sitemap directive: global (not tied to a user-agent group), appended last.
+function emitSitemaps() {
+    const el = document.getElementById('sitemapUrls');
+    if (!el) return '';
+
+    const lines = el.value.split('\n').map(s => s.trim()).filter(Boolean);
+    const valid = [];
+    const invalid = [];
+
+    lines.forEach(line => {
+        (isValidSitemapUrl(line) ? valid : invalid).push(line);
+    });
+
+    const msgContainer = document.getElementById('sitemapValidation');
+    if (msgContainer) {
+        msgContainer.innerHTML = '';
+        invalid.forEach(u => {
+            const div = document.createElement('div');
+            div.className = 'validation-message validation-error';
+            div.textContent = `Invalid sitemap URL (must be a full http(s) URL): ${u}`;
+            msgContainer.appendChild(div);
+        });
+    }
+
+    if (valid.length === 0) return '';
+    return '\n' + valid.map(u => 'Sitemap: ' + u).join('\n') + '\n';
+}
+
+function isValidSitemapUrl(url) {
+    try {
+        const u = new URL(url);
+        return u.protocol === 'http:' || u.protocol === 'https:';
+    } catch (e) {
+        return false;
+    }
+}
+
+// Utility Functions
+function copyToClipboard() {
+    const output = document.getElementById('output');
+    navigator.clipboard.writeText(output.textContent)
+        .then(() => showMessage('Copied to clipboard!', 'success'))
+        .catch(() => showMessage('Failed to copy. Please try manually.', 'error'));
+}
+
+function downloadRobotsTxt() {
+    const content = document.getElementById('output').textContent;
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'robots.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+    showMessage('robots.txt downloaded', 'success');
+}
+
+function showMessage(message, type) {
+    const container = document.getElementById('validationMessages');
+    const div = document.createElement('div');
+    div.className = `validation-message validation-${type}`;
+    div.textContent = message;
+    container.appendChild(div);
+    setTimeout(() => div.remove(), 3000);
+}
+
+// Tab Management
+function switchTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    document.querySelectorAll('.tab-button').forEach(button => {
+        button.classList.remove('active');
+    });
+
+    document.getElementById(tabId).classList.add('active');
+    document.querySelector(`button[onclick="switchTab('${tabId}')"]`).classList.add('active');
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    addRule();
+});
+</script>
+
+<script>
+  /* iFrame Resizer — lets Framer auto-size the embed to content height */
+  (function () {
+    function sendHeight() {
+      var h = Math.max(
+        document.body.scrollHeight,
+        document.documentElement.scrollHeight,
+        document.body.offsetHeight,
+        document.documentElement.offsetHeight
+      );
+      window.parent.postMessage({ type: 'setHeight', height: h }, '*');
+      /* Also support iFrameResizer protocol */
+      if (window.parentIFrame) { window.parentIFrame.size(h); }
+    }
+    /* Send on load */
+    window.addEventListener('load', sendHeight);
+    /* Re-send whenever DOM changes (results appearing, sections expanding) */
+    if (window.ResizeObserver) {
+      new ResizeObserver(sendHeight).observe(document.body);
+    } else {
+      setInterval(sendHeight, 500);
+    }
+  })();
+</script>
+
+</body>
+</html>

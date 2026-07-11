@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Year on Year Growth Calculator</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .yoy-growth-calculator {
+            font-family: 'Inter', sans-serif !important;
+            line-height: 1.6 !important;
+            color: #677294 !important;
+        }
+
+        .yoy-growth-calculator .container {
+            max-width: 800px !important;
+            margin: 0 auto !important;
+            background-color: #ffffff !important;
+            padding: 30px !important;
+            border-radius: 8px !important;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .yoy-growth-calculator h1,
+        .yoy-growth-calculator h2 {
+            color: #1E3E62 !important;
+            margin-bottom: 20px !important;
+        }
+
+        .yoy-growth-calculator .input-group {
+            margin-bottom: 20px !important;
+            position: relative !important;
+        }
+
+        .yoy-growth-calculator label {
+            display: block !important;
+            margin-bottom: 5px !important;
+            font-weight: 500 !important;
+            color: #1E3E62 !important;
+        }
+
+        .yoy-growth-calculator input[type="text"],
+        .yoy-growth-calculator input[type="number"],
+        .yoy-growth-calculator select {
+            width: 100% !important;
+            padding: 10px !important;
+            padding-left: 25px !important;
+            border: 1px solid #e0e0e0 !important;
+            border-radius: 4px !important;
+            box-sizing: border-box !important;
+            font-family: 'Inter', sans-serif !important;
+            color: #133b4f !important;
+            background-color: #ffffff !important;
+            font-size: 14px !important;
+        }
+
+        .yoy-growth-calculator button {
+            background-color: #ff5800 !important;
+            color: #ffffff !important;
+            border: none !important;
+            padding: 12px 20px !important;
+            border-radius: 4px !important;
+            cursor: pointer !important;
+            transition: all 0.3s ease !important;
+            font-family: 'Inter', sans-serif !important;
+            font-weight: 500 !important;
+            font-size: 14px !important;
+        }
+
+        .yoy-growth-calculator button:disabled {
+            background-color: #cccccc !important;
+            cursor: not-allowed !important;
+            transform: none !important;
+        }
+
+        .yoy-growth-calculator button:not(:disabled):hover {
+            background-color: #e64d00 !important;
+            transform: translateY(-2px) !important;
+        }
+
+        .yoy-growth-calculator #results {
+            margin-top: 30px !important;
+            border: 1px solid #e0e0e0 !important;
+            padding: 20px !important;
+            border-radius: 4px !important;
+            background-color: #f9f9f9 !important;
+            display: none;
+        }
+
+        .yoy-growth-calculator .result-item {
+            margin-bottom: 10px !important;
+            font-size: 14px !important;
+        }
+
+        .yoy-growth-calculator .result-item strong {
+            color: #1E3E62 !important;
+        }
+
+        .yoy-growth-calculator .chart-container {
+            margin-top: 30px !important;
+            height: 400px !important;
+            display: none;
+        }
+
+        .yoy-growth-calculator #errorMessage {
+            color: #ff0000 !important;
+            margin-top: 10px !important;
+            font-weight: 500 !important;
+            font-size: 14px !important;
+        }
+
+        .yoy-growth-calculator .button-group {
+            display: flex !important;
+            justify-content: flex-start !important;
+            gap: 10px !important;
+            margin-top: 20px !important;
+        }
+
+        .yoy-growth-calculator .hidden {
+            display: none !important;
+        }
+
+        .yoy-growth-calculator .slider-container {
+            margin-bottom: 20px !important;
+        }
+
+        .yoy-growth-calculator .slider {
+            width: 100% !important;
+            height: 6px !important;
+            background: #e0e0e0 !important;
+            border-radius: 3px !important;
+            outline: none !important;
+            -webkit-appearance: none !important;
+            margin-top: 10px !important;
+        }
+
+        .yoy-growth-calculator .slider::-webkit-slider-thumb {
+            -webkit-appearance: none !important;
+            width: 20px !important;
+            height: 20px !important;
+            background: #ff5800 !important;
+            border-radius: 50% !important;
+            cursor: pointer !important;
+            border: none !important;
+        }
+
+        .yoy-growth-calculator .slider::-moz-range-thumb {
+            width: 20px !important;
+            height: 20px !important;
+            background: #ff5800 !important;
+            border-radius: 50% !important;
+            cursor: pointer !important;
+            border: none !important;
+        }
+
+        .yoy-growth-calculator .currency-symbol {
+            position: absolute !important;
+            left: 12px !important;
+            top: 35px !important;
+            color: #133b4f !important;
+            font-size: 14px !important;
+        }
+
+        .yoy-growth-calculator .toggle-group {
+            margin-bottom: 20px !important;
+            border: 1px solid #e0e0e0 !important;
+            border-radius: 4px !important;
+            display: inline-flex !important;
+            padding: 4px !important;
+            background-color: #f9f9f9 !important;
+        }
+
+        .yoy-growth-calculator .toggle-option {
+            padding: 8px 16px !important;
+            cursor: pointer !important;
+            border-radius: 2px !important;
+            font-size: 14px !important;
+            font-weight: 500 !important;
+            color: #677294 !important;
+            transition: all 0.3s ease !important;
+            border: none !important;
+            background: none !important;
+            font-family: 'Inter', sans-serif !important;
+        }
+
+        .yoy-growth-calculator .toggle-option.active {
+            background-color: #ff5800 !important;
+            color: #ffffff !important;
+        }
+
+        .yoy-growth-calculator .toggle-option:hover:not(.active) {
+            color: #ff5800 !important;
+        }
+
+        .yoy-growth-calculator .info-tooltip {
+            display: inline-flex !important;
+            align-items: center !important;
+            margin-left: 8px !important;
+            color: #677294 !important;
+            cursor: help !important;
+        }
+
+        .yoy-growth-calculator .tooltip-content {
+            position: absolute !important;
+            background-color: #ffffff !important;
+            border: 1px solid #e0e0e0 !important;
+            border-radius: 4px !important;
+            padding: 12px !important;
+            font-size: 12px !important;
+            max-width: 250px !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+            display: none;
+            z-index: 1000 !important;
+            color: #133b4f !important;
+        }
+
+        .yoy-growth-calculator .info-tooltip:hover .tooltip-content {
+            display: block !important;
+        }
+    </style>
+
+<!-- Growthack brand layer: Inter font + site colour tokens -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  
+  /* ── Framer embed: auto-height & scroll ─────────────────────────── */
+  html {
+    height: auto !important;
+    overflow-y: auto !important;
+  }
+  body {
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-y: auto !important;
+    margin: 0;
+    padding: 0;
+  }
+  /* ──────────────────────────────────────────────────────────────── */
+
+  /* Design tokens extracted from growthack.co.uk Framer source */
+  :root {
+    --gh-font:    'Inter', sans-serif;
+    --gh-navy:    #0c1a2e;
+    --gh-body:    #3d5068;
+    --gh-steel:   #8aabcc;
+    --gh-orange:  #ff5800;
+    --gh-orange-h:#e64d00;
+    --gh-white:   #ffffff;
+    --gh-surface: #f4f7fb;
+    --gh-border:  #dde6f0;
+    --gh-radius:  6px;
+  }
+
+  /* Font – override everything in the tool */
+  .yoy-growth-calculator, .yoy-growth-calculator *, .yoy-growth-calculator *::before, .yoy-growth-calculator *::after {
+    font-family: var(--gh-font) !important;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Headings */
+  .yoy-growth-calculator h1, .yoy-growth-calculator h2, .yoy-growth-calculator h3,
+  .yoy-growth-calculator h4, .yoy-growth-calculator h5, .yoy-growth-calculator h6 {
+    color: var(--gh-navy) !important;
+    font-weight: 600 !important;
+    line-height: 1.25;
+  }
+
+  /* Body / paragraph text */
+  .yoy-growth-calculator p, .yoy-growth-calculator li, .yoy-growth-calculator span:not([class*="text-"]) {
+    color: var(--gh-body);
+  }
+
+  /* Labels */
+  .yoy-growth-calculator label {
+    color: var(--gh-navy) !important;
+    font-weight: 500 !important;
+  }
+
+  /* Inputs */
+  .yoy-growth-calculator input[type="text"],
+  .yoy-growth-calculator input[type="url"],
+  .yoy-growth-calculator input[type="number"],
+  .yoy-growth-calculator input[type="email"],
+  .yoy-growth-calculator input[type="date"],
+  .yoy-growth-calculator input[type="file"],
+  .yoy-growth-calculator select,
+  .yoy-growth-calculator textarea {
+    font-family: var(--gh-font) !important;
+    color: var(--gh-navy) !important;
+    border-color: var(--gh-border) !important;
+    border-radius: var(--gh-radius) !important;
+  }
+  .yoy-growth-calculator input:focus,
+  .yoy-growth-calculator select:focus,
+  .yoy-growth-calculator textarea:focus {
+    border-color: var(--gh-orange) !important;
+    box-shadow: 0 0 0 3px rgba(255,88,0,0.12) !important;
+    outline: none !important;
+  }
+
+  /* Stat cards */
+  .yoy-growth-calculator .stat-card {
+    background: var(--gh-surface) !important;
+    border: 1px solid var(--gh-border) !important;
+    border-radius: 8px !important;
+  }
+  .yoy-growth-calculator .stat-card h3 {
+    color: var(--gh-navy) !important;
+  }
+  .yoy-growth-calculator .stat-card p {
+    color: var(--gh-orange) !important;
+  }
+
+  /* Table headers */
+  .yoy-growth-calculator th {
+    background: var(--gh-navy) !important;
+    color: var(--gh-white) !important;
+  }
+  .yoy-growth-calculator td {
+    color: var(--gh-body);
+  }
+  .yoy-growth-calculator tr:nth-child(even) td {
+    background: var(--gh-surface);
+  }
+
+  /* Progress panel */
+  .yoy-growth-calculator #progressPanel,
+  .yoy-growth-calculator .pp-title {
+    color: var(--gh-navy) !important;
+  }
+
+  /* Chart.js font override via data attribute (not CSS) is handled below */
+</style>
+</head>
+<body>
+    <div class="yoy-growth-calculator">
+        <div class="container">
+            <form id="growthForm">
+                <div class="input-group">
+                    <label for="startingAmount">Starting Amount</label>
+                    <span class="currency-symbol">£</span>
+                    <input type="text" id="startingAmount" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="endingAmount">Final Amount</label>
+                    <span class="currency-symbol">£</span>
+                    <input type="text" id="endingAmount" required>
+                </div>
+
+                <div class="input-group">
+                    <label>
+                        Growth Type 
+                        <span class="info-tooltip">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <path d="M12 16v-4" />
+                                <path d="M12 8h.01" />
+                            </svg>
+                            <div class="tooltip-content">
+                                CAGR: Compound Annual Growth Rate - assumes growth is reinvested each year<br><br>
+                                Simple Annualized Rate: total growth divided by the number of years. It's a quick approximation - a true average annual growth rate (AAGR) needs each year's values, not just the start and end.
+                            </div>
+                        </span>
+                    </label>
+                    <div class="toggle-group">
+                        <button type="button" class="toggle-option active" data-type="cagr">Compound Growth (CAGR)</button>
+                        <button type="button" class="toggle-option" data-type="aagr">Simple Annualized Rate</button>
+                    </div>
+                </div>
+
+                <div class="slider-container">
+                    <label for="timeSpan">Time Span: <span id="timeSpanValue">1 year</span></label>
+                    <input type="range" id="timeSpan" class="slider" min="1" max="10" value="1">
+                </div>
+
+                <div class="slider-container">
+                    <label for="inflationRate">Inflation Rate: <span id="inflationValue">2.5%</span></label>
+                    <input type="range" id="inflationRate" class="slider" min="0" max="10" step="0.5" value="2.5">
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" id="calculateBtn" disabled>Calculate Growth</button>
+                    <button type="button" id="clearBtn" class="hidden" onclick="clearResults()">Clear Results</button>
+                </div>
+            </form>
+
+            <div id="errorMessage"></div>
+
+            <div id="results">
+                <h2>Results</h2>
+                <div class="result-item"><strong id="nominalRateLabel">Yearly Growth Rate:</strong> <span id="nominalRate">0%</span></div>
+                <div class="result-item"><strong>Real Growth Rate:</strong> <span id="realRate">0%</span></div>
+                <div class="result-item"><strong>Total Growth:</strong> <span id="totalGrowth">0%</span></div>
+            </div>
+
+            <div id="chartContainer" class="chart-container">
+                <canvas id="growthChart"></canvas>
+            </div>
+        </div>
+    </div>
+<script>
+    let chart;
+    let currentGrowthType = 'cagr';
+
+    function formatNumber(num) {
+        return num.toLocaleString('en-GB', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    }
+
+    function formatWholeNumber(str) {
+        if (!str) return '';
+        // Keep digits and a single decimal point (drop any extra dots).
+        let cleaned = str.replace(/[^\d.]/g, '');
+        const firstDot = cleaned.indexOf('.');
+        if (firstDot !== -1) {
+            cleaned = cleaned.slice(0, firstDot + 1) + cleaned.slice(firstDot + 1).replace(/\./g, '');
+        }
+        const parts = cleaned.split('.');
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        return parts.join('.');
+    }
+
+    function unformatNumber(str) {
+        return parseFloat(str.replace(/,/g, ''));
+    }
+
+    function validateInputs() {
+        const startingAmount = document.getElementById('startingAmount').value;
+        const endingAmount = document.getElementById('endingAmount').value;
+        const calculateBtn = document.getElementById('calculateBtn');
+        
+        if (startingAmount && endingAmount) {
+            calculateBtn.disabled = false;
+        } else {
+            calculateBtn.disabled = true;
+        }
+    }
+
+    // Add toggle functionality
+    document.querySelectorAll('.toggle-option').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelectorAll('.toggle-option').forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            currentGrowthType = this.dataset.type;
+            
+            // Recalculate if results are already showing
+            if (document.getElementById('results').style.display === 'block') {
+                calculateGrowth();
+            }
+        });
+    });
+
+    document.getElementById('startingAmount').addEventListener('input', function(e) {
+        this.value = formatWholeNumber(this.value);
+        validateInputs();
+    });
+
+    document.getElementById('endingAmount').addEventListener('input', function(e) {
+        this.value = formatWholeNumber(this.value);
+        validateInputs();
+    });
+
+    document.getElementById('timeSpan').addEventListener('input', function() {
+        document.getElementById('timeSpanValue').textContent = 
+            this.value + (this.value === '1' ? ' year' : ' years');
+    });
+
+    document.getElementById('inflationRate').addEventListener('input', function() {
+        document.getElementById('inflationValue').textContent = this.value + '%';
+    });
+
+    document.getElementById('growthForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        calculateGrowth();
+    });
+
+    function calculateGrowth() {
+        const startingAmount = unformatNumber(document.getElementById('startingAmount').value);
+        const endingAmount = unformatNumber(document.getElementById('endingAmount').value);
+        const timeSpan = parseFloat(document.getElementById('timeSpan').value);
+        const inflationRate = parseFloat(document.getElementById('inflationRate').value) / 100;
+        
+        const errorElement = document.getElementById('errorMessage');
+        const resultsElement = document.getElementById('results');
+        const chartContainer = document.getElementById('chartContainer');
+        const clearBtn = document.getElementById('clearBtn');
+
+        if (isNaN(startingAmount) || isNaN(endingAmount) || timeSpan <= 0) {
+            errorElement.textContent = 'Please enter valid values for all fields';
+            resultsElement.style.display = 'none';
+            chartContainer.style.display = 'none';
+            clearBtn.classList.add('hidden');
+            return;
+        }
+
+        if (startingAmount <= 0 || endingAmount < 0) {
+            errorElement.textContent = 'Starting amount must be greater than 0, and final amount cannot be negative.';
+            resultsElement.style.display = 'none';
+            chartContainer.style.display = 'none';
+            clearBtn.classList.add('hidden');
+            return;
+        }
+
+        let nominalRate;
+        if (currentGrowthType === 'cagr') {
+            nominalRate = (Math.pow(endingAmount / startingAmount, 1 / timeSpan) - 1) * 100;
+        } else { // Simple Annualized Rate: total growth / years
+            nominalRate = ((endingAmount - startingAmount) / (startingAmount * timeSpan)) * 100;
+        }
+
+        const realRate = ((1 + nominalRate / 100) / (1 + inflationRate) - 1) * 100;
+        const totalGrowth = ((endingAmount - startingAmount) / startingAmount) * 100;
+
+        errorElement.textContent = '';
+        resultsElement.style.display = 'block';
+        chartContainer.style.display = 'block';
+        clearBtn.classList.remove('hidden');
+        
+        document.getElementById('nominalRateLabel').textContent =
+            currentGrowthType === 'cagr' ? 'Yearly Growth Rate (CAGR):' : 'Simple Annualized Rate:';
+        document.getElementById('nominalRate').textContent = nominalRate.toFixed(1) + '%';
+        document.getElementById('realRate').textContent = realRate.toFixed(1) + '%';
+        document.getElementById('totalGrowth').textContent = totalGrowth.toFixed(1) + '%';
+        
+        updateChart(startingAmount, endingAmount, timeSpan, nominalRate, realRate);
+    }
+
+    function updateChart(startingAmount, endingAmount, timeSpan, nominalRate, realRate) {
+        const ctx = document.getElementById('growthChart').getContext('2d');
+        
+        const labels = Array.from({length: timeSpan + 1}, (_, i) => `Year ${i}`);
+        let nominalData, realData;
+
+        if (currentGrowthType === 'cagr') {
+            nominalData = Array.from({length: timeSpan + 1}, (_, i) => 
+                startingAmount * Math.pow(1 + nominalRate / 100, i)
+            );
+            realData = Array.from({length: timeSpan + 1}, (_, i) => 
+                startingAmount * Math.pow(1 + realRate / 100, i)
+            );
+        } else {
+            nominalData = Array.from({length: timeSpan + 1}, (_, i) => 
+                startingAmount * (1 + (nominalRate / 100) * i)
+            );
+            realData = Array.from({length: timeSpan + 1}, (_, i) => 
+                startingAmount * (1 + (realRate / 100) * i)
+            );
+        }
+        
+        if (chart) {
+            chart.destroy();
+        }
+        
+        chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Nominal Growth',
+                        data: nominalData,
+                        borderColor: '#FF5800',
+                        backgroundColor: 'rgba(255, 88, 0, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Real Growth',
+                        data: realData,
+                        borderColor: '#133b4f',
+                        backgroundColor: 'rgba(19, 59, 79, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            font: {
+                                family: "'Inter', sans-serif",
+                                size: 12
+                            },
+                            color: '#133b4f'
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: '#ffffff',
+                        titleColor: '#133b4f',
+                        bodyColor: '#133b4f',
+                        borderColor: '#e0e0e0',
+                        borderWidth: 1,
+                        padding: 12,
+                        bodyFont: {
+                            family: "'Inter', sans-serif"
+                        },
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += '£' + formatNumber(context.parsed.y);
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '£' + formatNumber(value);
+                            },
+                            font: {
+                                family: "'Inter', sans-serif",
+                                size: 12
+                            },
+                            color: '#677294'
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                family: "'Inter', sans-serif",
+                                size: 12
+                            },
+                            color: '#677294'
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    function clearResults() {
+        // Reset form
+        document.getElementById('growthForm').reset();
+        
+        // Reset displays
+        document.getElementById('results').style.display = 'none';
+        document.getElementById('chartContainer').style.display = 'none';
+        document.getElementById('errorMessage').textContent = '';
+        
+        // Hide clear button
+        document.getElementById('clearBtn').classList.add('hidden');
+        
+        // Reset slider displays
+        document.getElementById('timeSpanValue').textContent = '1 year';
+        document.getElementById('inflationValue').textContent = '2.5%';
+        
+        // Disable calculate button
+        document.getElementById('calculateBtn').disabled = true;
+        
+        // Reset growth type
+        document.querySelectorAll('.toggle-option').forEach(btn => {
+            if (btn.dataset.type === 'cagr') {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+        currentGrowthType = 'cagr';
+        
+        // Destroy chart if it exists
+        if (chart) {
+            chart.destroy();
+            chart = null;
+        }
+    }
+
+    // Add input validation for numbers
+    function validateNumberInput(input) {
+        input.addEventListener('keypress', function(e) {
+            if (!/[\d.,]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete') {
+                e.preventDefault();
+            }
+        });
+    }
+
+    validateNumberInput(document.getElementById('startingAmount'));
+    validateNumberInput(document.getElementById('endingAmount'));
+
+    // Initialize the form
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set initial button states
+        document.getElementById('calculateBtn').disabled = true;
+        document.getElementById('clearBtn').classList.add('hidden');
+        
+        // Add focus effects for inputs
+        const inputs = document.querySelectorAll('input[type="text"]');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.style.borderColor = '#ff5800';
+                this.style.boxShadow = '0 0 0 2px rgba(255, 88, 0, 0.1)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.style.borderColor = '#e0e0e0';
+                this.style.boxShadow = 'none';
+            });
+        });
+    });
+</script>
+
+<script>
+  /* iFrame Resizer — lets Framer auto-size the embed to content height */
+  (function () {
+    function sendHeight() {
+      var h = Math.max(
+        document.body.scrollHeight,
+        document.documentElement.scrollHeight,
+        document.body.offsetHeight,
+        document.documentElement.offsetHeight
+      );
+      window.parent.postMessage({ type: 'setHeight', height: h }, '*');
+      /* Also support iFrameResizer protocol */
+      if (window.parentIFrame) { window.parentIFrame.size(h); }
+    }
+    /* Send on load */
+    window.addEventListener('load', sendHeight);
+    /* Re-send whenever DOM changes (results appearing, sections expanding) */
+    if (window.ResizeObserver) {
+      new ResizeObserver(sendHeight).observe(document.body);
+    } else {
+      setInterval(sendHeight, 500);
+    }
+  })();
+</script>
+
+</body>
+</html>

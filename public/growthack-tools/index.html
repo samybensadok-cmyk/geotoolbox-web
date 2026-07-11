@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>GrowthAck Tools — Test Bench</title>
+<style>
+  :root{ --navy:#0c1a2e; --navy2:#12233d; --orange:#ff5800; --line:#22344f; --ink:#e8eef7; --mut:#9fb0c7; }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:var(--navy);color:var(--ink);
+       -webkit-font-smoothing:antialiased;line-height:1.5}
+  .wrap{max-width:1040px;margin:0 auto;padding:48px 22px 80px}
+  header{margin-bottom:8px}
+  .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--orange);font-weight:700}
+  h1{font-size:30px;margin:8px 0 6px;letter-spacing:-.02em}
+  .sub{color:var(--mut);font-size:15px;max-width:640px}
+  .note{margin:22px 0 30px;padding:12px 16px;border:1px solid var(--line);border-radius:10px;background:var(--navy2);
+        color:var(--mut);font-size:13.5px}
+  .note b{color:var(--ink)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+  .card{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:14px;background:var(--navy2);
+        padding:20px;transition:border-color .15s,transform .15s;text-decoration:none;color:inherit}
+  .card:hover{border-color:var(--orange);transform:translateY(-2px)}
+  .card h3{margin:0 0 6px;font-size:16.5px;letter-spacing:-.01em}
+  .card p{margin:0 0 14px;color:var(--mut);font-size:13.5px;flex:1}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+  .tag{font-size:11px;padding:3px 8px;border-radius:999px;background:#16294510;border:1px solid var(--line);color:var(--mut)}
+  .tag.ok{color:#7ee0a8;border-color:#1f4d38}
+  .tag.note{color:#ffcf8a;border-color:#5a4423}
+  .go{display:inline-flex;align-items:center;gap:6px;font-weight:600;font-size:13.5px;color:var(--orange)}
+  footer{margin-top:40px;color:var(--mut);font-size:12.5px;border-top:1px solid var(--line);padding-top:18px}
+  code{background:#0a1524;border:1px solid var(--line);padding:1px 6px;border-radius:5px;font-size:12px;color:var(--ink)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">GrowthAck · Internal Test Bench</div>
+    <h1>Free SEO tools — Phase 1 rebuild</h1>
+    <p class="sub">Six tools, patched and adversarially reviewed (Fable + Codex, 103 passing test assertions). Click any card to try it. This page is hidden and <code>noindex</code> — for testing, not public.</p>
+  </header>
+
+  <div class="note">
+    <b>Testing notes.</b> Five tools run entirely in your browser — nothing to configure. The <b>Sitemap Extractor</b>'s <i>“Enter URL”</i> path needs the first-party fetch proxy (Kevin's Cloudflare Worker at <code>fetch.growthack.io</code>), which isn't deployed yet — so on this host, test it with the <b>Upload</b> option (fully working); URL-fetch will show an honest error until the Worker is live. Lead-capture (the email gate) is Phase 2 and not wired in here.
+  </div>
+
+  <div class="grid">
+    <a class="card" href="./url-redirect-mapping.html">
+      <h3>URL Redirect Mapper</h3>
+      <p>Maps old→new URLs for a site migration. Hybrid token+slug scorer, confidence buckets, collision &amp; orphan flags, CSV + .htaccess export. The flagship.</p>
+      <div class="tags"><span class="tag ok">no backend</span><span class="tag ok">46 tests</span></div>
+      <span class="go">Test it →</span>
+    </a>
+
+    <a class="card" href="./schema-structured-data-generator.html">
+      <h3>JSON-LD Schema Generator</h3>
+      <p>Builds valid schema.org JSON-LD for 10 types. (Fixed: it used to emit 100% invalid markup Google couldn't read.)</p>
+      <div class="tags"><span class="tag ok">no backend</span><span class="tag ok">valid JSON-LD</span></div>
+      <span class="go">Test it →</span>
+    </a>
+
+    <a class="card" href="./robots-txt-generator.html">
+      <h3>Robots.txt Generator</h3>
+      <p>Robots.txt builder with the correct 2026 AI-crawler list (GPTBot, ClaudeBot, PerplexityBot…), Sitemap field, and an RFC-9309 tester.</p>
+      <div class="tags"><span class="tag ok">no backend</span><span class="tag ok">2026 AI bots</span></div>
+      <span class="go">Test it →</span>
+    </a>
+
+    <a class="card" href="./seo-roi-calculator.html">
+      <h3>SEO ROI Calculator</h3>
+      <p>Projects SEO revenue with a realistic lag curve, input bounds, and a breakeven-month readout. (Fixed: used to allow £40M fantasy projections.)</p>
+      <div class="tags"><span class="tag ok">no backend</span><span class="tag ok">breakeven</span></div>
+      <span class="go">Test it →</span>
+    </a>
+
+    <a class="card" href="./sitemap-extractor.html">
+      <h3>Sitemap URL Extractor</h3>
+      <p>Pulls every URL from a sitemap (recurses indexes, dedupes, CSV export). Upload path works here; URL-fetch needs the proxy (see note above).</p>
+      <div class="tags"><span class="tag ok">upload works</span><span class="tag note">URL-fetch needs proxy</span></div>
+      <span class="go">Test it →</span>
+    </a>
+
+    <a class="card" href="./yoy-growth-calculator.html">
+      <h3>YoY Growth Calculator</h3>
+      <p>CAGR + simple annualized rate with honest labels and decimals. (Fixed: “AAGR” math was wrong; Infinity% on a zero baseline.)</p>
+      <div class="tags"><span class="tag ok">no backend</span><span class="tag ok">honest math</span></div>
+      <span class="go">Test it →</span>
+    </a>
+  </div>
+
+  <footer>
+    Phase 1 build · patched + Fable/Codex-reviewed · 2026-07-11. These are GrowthAck-branded white-label tools hosted here only for testing — not a public geotoolbox feature.
+  </footer>
+</div>
+</body>
+</html>
