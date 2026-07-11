@@ -2,7 +2,7 @@
 title: "Embeddings : comment l'IA choisit ce qu'elle cite"
 description: "Les embeddings expliqués pour le SEO : comment les moteurs IA transforment le contenu en vecteurs, choisissent quoi citer et ce qu'on peut vraiment optimiser."
 date: "2026-07-02"
-updated: "2026-07-02"
+updated: "2026-07-11"
 author: "Samy BEN SADOK"
 tags: ["vector-embeddings", "geo", "ai-search", "guide"]
 draft: false
@@ -93,11 +93,11 @@ C'est le schéma de la génération augmentée par la récupération (RAG), et n
 
 Deux conséquences sont sans cesse ignorées.
 
-**Être récupéré n'est pas être cité.** La similarité d'embedding vous fait entrer dans la liste restreinte à l'étape 2. Elle ne décide pas qui est crédité à l'étape 4. Un passage peut être récupéré et jamais cité, doublé au dernier moment par un concurrent plus clair ou faisant davantage autorité. Les embeddings décident qui est en lice, pas qui est cité.
+**Être récupéré n'est pas être cité.** La similarité d'embedding vous fait entrer dans la liste restreinte à l'étape 2. Elle ne décide pas qui est crédité à l'étape 4. Un passage peut être récupéré et jamais cité, doublé au dernier moment par un concurrent plus clair ou faisant davantage autorité. Les embeddings déterminent qui entre en lice ; ils ne disent rien de qui sera finalement cité.
 
 **La recherche vectorielle pure n'est pas le fonctionnement réel des systèmes en production.** Les architectures de recherche en production associent la notation classique par mots-clés (BM25) et la similarité vectorielle, puis fusionnent les résultats. [La documentation d'Azure AI Search de Microsoft](https://learn.microsoft.com/en-us/azure/search/hybrid-search-overview) dit clairement que les requêtes à correspondance exacte (codes produit, jargon spécialisé, noms propres) fonctionnent mieux avec la recherche par mots-clés, et rapporte que « la recherche hybride avec classement sémantique offre des bénéfices significatifs sur la pertinence ». Les mots-clés ne sont donc pas morts : ils restent indispensables à la façon dont la récupération en production est construite.
 
-Alors, ChatGPT utilise-t-il des embeddings ? Oui, de deux façons sans rapport, et les confondre cause la plupart des confusions qu'on voit. En interne, chaque [LLM](https://geotoolbox.ai/glossary/large-language-model) représente les tokens sous forme de vecteurs pendant le traitement ; c'est simplement [la manière dont les Transformers calculent](https://geotoolbox.ai/fr/blog/comment-fonctionne-chatgpt).
+Alors, ChatGPT utilise-t-il des embeddings ? Oui, de deux façons distinctes, et c'est en les confondant que naît l'essentiel de la confusion qu'on observe. En interne, chaque [LLM](https://geotoolbox.ai/glossary/large-language-model) représente les tokens sous forme de vecteurs pendant le traitement ; c'est simplement [la manière dont les Transformers calculent](https://geotoolbox.ai/fr/blog/comment-fonctionne-chatgpt).
 
 À part cela, la récupération décide de ce qui atteint le modèle : OpenAI documente que sa [recherche de fichiers s'appuie sur des bases de données vectorielles](https://developers.openai.com/api/docs/guides/tools-file-search) via une « recherche sémantique et par mots-clés ». Les moteurs ne publient pas les rouages de leur recherche web en direct, mais ce schéma de récupération est là aussi le mécanisme standard pour y réduire le nombre de candidats. Les vecteurs de tokens internes n'ont rien à voir avec votre visibilité. C'est la couche de récupération qui met votre contenu en compétition.
 
@@ -119,7 +119,7 @@ Ce mécanisme donne trois règles pratiques.
 
 **Gardez une terminologie cohérente.** Les embeddings gèrent les synonymes bien mieux que la correspondance par mots-clés ne l'a jamais fait, mais chaque passage se joue encore sur la concentration de son sens. Donner trois noms différents à la même notion sur une page dilue votre signal sémantique plus que nécessaire.
 
-Ces règles ont au moins un petit test public derrière elles. [L'expérience de Chris Green sur la structure de contenu](https://www.chris-green.net/post/content-structure-for-ai-search) a encodé la même information dans trois formats et a trouvé que le format questions-réponses « a systématiquement offert la meilleure pertinence sémantique aux requêtes dans tous les scénarios », la prose dense étant la pire, avec son propre avertissement qu'il s'agit d'une petite simulation et que la similarité vectorielle n'est pas le classement. Testé, restreint, honnêtement étiqueté : exactement le genre de preuve dont ce domaine a besoin.
+Ces règles ont au moins un petit test public derrière elles. [L'expérience de Chris Green sur la structure de contenu](https://www.chris-green.net/post/content-structure-for-ai-search) a encodé la même information dans trois formats et a trouvé que le format questions-réponses « a systématiquement offert la meilleure pertinence sémantique aux requêtes dans tous les scénarios », la prose dense étant la pire, avec son propre avertissement qu'il s'agit d'une petite simulation et que la similarité vectorielle n'est pas le classement. Une expérience testée, aux limites assumées et présentée honnêtement : exactement le type de preuve dont ce domaine a besoin.
 
 Et le contenu long en général ? On vous dira que les pages longues sont « moyennées » et donnent de moins bons résultats en recherche vectorielle. Le mécanisme est plausible selon l'endroit où les passages sont découpés, mais nous n'avons pas vu de preuve publique contrôlée que la longueur de page en soi nuise à la récupération une fois les segments bien formés. Traitez-le comme une hypothèse, pas un fait. La version défendable est plus modeste : structurez votre page longue pour que chaque section puisse être extraite et garder son sens.
 
@@ -141,7 +141,7 @@ Rien de tout cela n'est nouveau. Le mécanisme est nouveau ; l'écriture, elle, 
 
 Un dernier point d'honnêteté. Les modèles d'embedding héritent de tout ce que contiennent leurs données d'entraînement. Le célèbre [article de Bolukbasi (2016)](https://arxiv.org/abs/1607.06520) a montré que des embeddings entraînés sur Google Actualités « présentent des stéréotypes de genre femme/homme à un degré inquiétant ». Le guide OpenAI cité tout au long de cet article ne le mentionne pas une seule fois, mais cela compte quand il s'agit d'accorder une confiance aveugle à ces systèmes : les scores de similarité encodent les biais et les angles morts du texte dont le modèle a appris.
 
-D'expérience, la discipline utile est de mesurer les résultats plutôt que les indicateurs intermédiaires. Vous ne pouvez pas auditer les vecteurs d'un moteur en production, mais vous pouvez vérifier si les moteurs IA vous citent réellement, sur quels prompts, contre quels concurrents. C'est observable et relié à ce que vous voulez vraiment, même si c'est suffisamment bruité pour qu'il faille lire des tendances plutôt que des résultats isolés.
+L'expérience nous a appris à mesurer les résultats plutôt que les indicateurs intermédiaires. Vous ne pouvez pas auditer les vecteurs d'un moteur en production, mais vous pouvez vérifier si les moteurs IA vous citent réellement, sur quels prompts, contre quels concurrents. C'est observable et relié à ce que vous voulez vraiment, même si c'est suffisamment bruité pour qu'il faille lire des tendances plutôt que des résultats isolés.
 
 ## Comment observer les embeddings en action vous-même
 
@@ -154,7 +154,7 @@ Vous n'avez pas à croire tout cela sur parole. Deux expériences peu coûteuses
 3. Lancez le crawl
 4. Lancez l'analyse de crawl
 
-Vous obtenez un score de similarité de 0 à 1 pour chaque page contre son plus proche voisin, plus des filtres qui font remonter les doublons sémantiques et les pages qui dérivent hors sujet. Notez que cela encode des pages entières, utile pour repérer doublons et dérives, même si la récupération en production travaille surtout sur des morceaux plus petits. Voir deux pages que vous croyiez différentes obtenir un score de 0,95 l'une contre l'autre est le moyen le plus rapide d'intégrer ce que ces vecteurs mesurent vraiment.
+Vous obtenez un score de similarité de 0 à 1 pour chaque page contre son plus proche voisin, plus des filtres qui font remonter les doublons sémantiques et les pages qui dérivent hors sujet. Notez que cela encode des pages entières, utile pour repérer doublons et dérives, même si la récupération en production travaille surtout sur des morceaux plus petits. Rien ne fait mieux saisir ce que mesurent réellement ces vecteurs que de voir deux pages que vous pensiez différentes afficher un score de 0,95 l'une par rapport à l'autre.
 
 C'est une pratique courante, pas une nouveauté. [Le guide iPullRank de Mike King](https://ipullrank.com/vector-embeddings-is-all-you-need) recense les usages SEO en production des embeddings générés au crawl, de la mise en correspondance des mots-clés au maillage interne, en passant par la cartographie des redirections et le clustering de contenu, et les SEO font tourner ces workflows depuis bien avant que la recherche IA ne rende les embeddings à la mode.
 
@@ -205,7 +205,7 @@ Les embeddings denses sont ceux dont parle tout cet article : des vecteurs compa
 
 ### Le français est-il désavantagé par les modèles d'embedding ?
 
-En partie, mais moins qu'on ne le croit. Le mécanisme est réel : le français produit plus de tokens que l'anglais (accents, apostrophes, mots composés), et l'anglais reste sur-représenté dans les corpus d'entraînement, même « multilingues ». Les vieux modèles anglocentrés capturent donc mal certaines constructions françaises (la négation « ne… pas », la concordance des temps). Mais les moteurs en production (ChatGPT, Perplexity, Google) tournent sur des modèles multilingues récents bien plus robustes : le `gemini-embedding-001` de Google, par exemple, a dominé le classement MTEB multilingue. La conséquence pratique n'est pas la panique, c'est que la cohérence terminologique et un français explicite et non ambigu comptent encore un peu plus qu'en anglais.
+En partie, mais moins qu'on ne le croit. Le mécanisme est réel : le français produit plus de tokens que l'anglais (accents, apostrophes, mots composés), et l'anglais reste sur-représenté dans les corpus d'entraînement, même « multilingues ». Les vieux modèles anglocentrés capturent donc mal certaines constructions françaises (la négation « ne… pas », la concordance des temps). Mais les moteurs en production (ChatGPT, Perplexity, Google) tournent sur des modèles multilingues récents bien plus robustes : le `gemini-embedding-001` de Google, par exemple, a dominé le classement MTEB multilingue. En pratique, pas de quoi paniquer : la cohérence terminologique et un français explicite, sans ambiguïté, importent tout de même un peu plus qu'en anglais.
 
 ### Perplexity fonctionne-t-il comme la recherche de ChatGPT ?
 
