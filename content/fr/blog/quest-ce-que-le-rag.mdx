@@ -2,6 +2,7 @@
 title: "Qu'est-ce que le RAG (retrieval-augmented generation) ?"
 description: "Le RAG (retrieval-augmented generation) est le moteur de la recherche IA : ce qu'il est, comment il marche, et comment devenir la page qu'il récupère et cite."
 date: "2026-07-03"
+updated: "2026-07-11"
 author: "Samy BEN SADOK"
 tags: ["rag", "geo", "ai-search", "ai-visibility", "guide"]
 draft: false
@@ -67,7 +68,7 @@ Le modèle a d'abord une **date de coupure des connaissances**. Les données d'e
 
 L'atout principal, c'est l'[ancrage](https://geotoolbox.ai/glossary/grounding) (*grounding*). En arrimant les réponses à des sources récupérées, le RAG **réduit les hallucinations**, ces réponses inventées que les modèles produisent avec assurance quand ils travaillent de mémoire. Il rend aussi les réponses vérifiables, puisque le système peut citer les passages utilisés.
 
-Passons à la partie qui fâche, car c'est l'affirmation la plus survendue de toute la catégorie : **le RAG réduit les hallucinations, il ne les élimine pas.** Le modèle peut toujours mal lire une source correcte, assembler des passages contradictoires ou écrire quelque chose d'infondé quand la récupération revient maigre. La qualité de la récupération impose un plafond infranchissable à tout le système : un modèle ne peut pas ancrer une réponse dans un passage que le récupérateur n'a jamais trouvé.
+Passons à la partie qui fâche, car c'est l'affirmation la plus survendue de toute la catégorie : **le RAG réduit les hallucinations, il ne les élimine pas.** Le modèle peut toujours mal lire une source correcte, assembler des passages contradictoires ou écrire quelque chose d'infondé quand la récupération ne remonte pas grand-chose. La qualité de la récupération impose un plafond infranchissable à tout le système : un modèle ne peut pas ancrer une réponse dans un passage que le récupérateur n'a jamais trouvé.
 
 Les chiffres, eux, sont sans appel. Une étude de Stanford, [« Hallucination-Free? Assessing the Reliability of Leading AI Legal Research Tools »](https://reglab.stanford.edu/publications/hallucination-free-assessing-the-reliability-of-leading-ai-legal-research-tools/), a testé des outils commerciaux de recherche juridique qui sont eux-mêmes des systèmes RAG bâtis sur des bibliothèques juridiques soigneusement constituées et faisant autorité. Elle a relevé que Lexis+ AI hallucinait sur plus de 17 % des requêtes, et l'outil de Westlaw sur plus d'un tiers, alors que leur marketing laissait entendre le contraire. Si un RAG conçu exprès pour un corpus juridique « propre » se trompe encore aussi souvent, traitez avec méfiance toute promesse de « zéro hallucination ». Le RAG est un garde-fou solide, et c'est exactement là qu'est sa valeur. Sur les raisons profondes du phénomène, voyez notre analyse des [hallucinations de l'IA](https://geotoolbox.ai/blog/ai-hallucinations).
 
@@ -79,7 +80,7 @@ Quand un décideur dit « on va entraîner ChatGPT sur notre site », il pense p
 
 Le **fine-tuning** modifie le modèle lui-même. Vous lancez un entraînement supplémentaire pour inscrire de nouveaux schémas dans ses poids. Après quoi la connaissance est interne, il n'y a plus d'étape de consultation, et la mettre à jour veut dire réentraîner. Le fine-tuning est l'outil adapté pour apprendre à un modèle un style, un format ou un comportement.
 
-Le **RAG** laisse le modèle intact et lui donne des documents à lire au moment de répondre. La connaissance vit dans un index séparé que vous actualisez quand vous voulez, et le modèle cite ce qu'il a récupéré. Le RAG est l'outil adapté pour les faits qui changent ou que le modèle n'a jamais appris.
+Le **RAG** laisse le modèle intact et lui donne des documents à lire au moment de répondre. La connaissance réside dans un index séparé que vous actualisez quand vous voulez, et le modèle cite ce qu'il a récupéré. Le RAG est l'outil adapté pour les faits qui changent ou que le modèle n'a jamais appris.
 
 <table>
   <thead>
@@ -191,7 +192,7 @@ Et non, ce n'est pas juste du SEO relooké, même si ça s'en rapproche plus que
 
 ## Le RAG est-il mort ? RAG agentique et débat sur le contexte long
 
-Ni les fenêtres de contexte géantes ni le virage vers les agents IA ne tuent la récupération, quoi qu'en disent les gros titres sur la « mort du RAG ». Ce sont les deux raisons qu'on avance d'habitude : des modèles capables d'avaler tout un jeu de documents en une seule requête, et des agents plus autonomes qui font le travail.
+Ni les fenêtres de contexte géantes ni le virage vers les agents IA ne tuent la récupération, quoi qu'en disent les gros titres sur la « mort du RAG ». Ce sont les deux raisons qu'on avance d'habitude : des modèles capables d'avaler tout un jeu de documents en une seule requête, et des agents plus autonomes qui s'en chargent seuls.
 
 Le slogan vise en réalité le RAG **naïf**, la version la plus simple, qui récupère une fois et génère une fois. Ce pipeline de base ne suffit souvent pas pour un travail en plusieurs étapes, et le secteur s'oriente vers le **RAG agentique**, où un agent décide quand récupérer, reformule la requête, récupère à nouveau et vérifie ce qu'il a obtenu avant de répondre. C'est donc plus de récupération, mieux pilotée, pas moins.
 
@@ -207,7 +208,7 @@ Le modèle sous-jacent, non ; mais le mode recherche et navigation de ChatGPT, o
 
 ### Le RAG met-il fin aux hallucinations ?
 
-Il les réduit, il ne les supprime pas. Ancrer les réponses dans des sources récupérées fait baisser le taux de contenu inventé, mais le modèle peut encore mal lire une source ou combler les trous quand la récupération revient faible. Une étude de Stanford a montré que des outils juridiques RAG commerciaux hallucinaient encore sur 17 à 34 % des requêtes : traitez donc avec prudence toute promesse de « zéro hallucination ».
+Il les réduit, il ne les supprime pas. Ancrer les réponses dans des sources récupérées fait baisser le taux de contenu inventé, mais le modèle peut encore mal lire une source ou combler les trous quand la récupération ramène peu de résultats. Une étude de Stanford a montré que des outils juridiques RAG commerciaux hallucinaient encore sur 17 à 34 % des requêtes : traitez donc avec prudence toute promesse de « zéro hallucination ».
 
 ### Quelle différence entre le RAG et une base de données vectorielle ?
 
