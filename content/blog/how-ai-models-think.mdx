@@ -1,0 +1,119 @@
+---
+title: "How AI Models Actually Think (What's Really Going On Inside)"
+description: "Not autocomplete, not a conscious mind. How AI models actually think inside: next-token prediction, the concepts they build, and what new interpretability research reveals about an LLM."
+date: "2026-07-11"
+author: "Samy BEN SADOK"
+tags: ["how-ai-works", "interpretability", "ai-consciousness", "llm", "claude", "mechanistic-interpretability", "guide"]
+draft: false
+---
+
+Ask an AI a question and it answers in fluent, confident prose. That fluency hides a genuinely strange machine, and most people fill the gap with one of two bad stories. One says it is "just autocomplete." The other says it might be secretly conscious. Neither holds up against what researchers can now actually see inside the model.
+
+This is a plain-English tour of how an AI language model thinks: what it is really doing when it answers you, the concepts it builds along the way, and what the newest interpretability research, including a July 2026 result from Anthropic, reveals about the machinery. We will also take the question everyone jumps to, whether it is conscious, and answer it honestly rather than for clicks.
+
+## The Short Answer
+
+How does AI think? Not the way a person does. A model is trained to predict the next word, but doing that well forces it to build rich internal concepts, and new research shows it uses a small internal "workspace" to hold and reason with ideas. That is a real mechanism, not a trick, and not evidence the model is conscious.
+
+Everything below explains why.
+
+## First, the Foundation: AI Predicts, It Doesn't Recall
+
+At its core, a [large language model](https://geotoolbox.ai/glossary/large-language-model) is trained to do one thing over and over, across trillions of words: given the text so far, predict the next [token](https://geotoolbox.ai/blog/what-are-tokens-in-ai) (roughly, the next word or word-piece). Nothing in that training objective explicitly says "learn grammar," "learn geography," or "learn to reason." The model just gets better at the guessing game.
+
+The surprise of the last few years is what that guessing game builds. To reliably finish "Paris is the capital of," the model has to carry some internal notion of countries, cities, and the relationship between them. Predicting the next move in a board game forces it to track the board. A famous research toy, a model trained only to predict legal Othello moves, turned out to build an internal map of the board it was never shown. The pattern generalizes: when accurate prediction requires a model of the world, training tends to grow one.
+
+That is why the popular "stochastic parrot" or "just autocomplete" framing is misleading. The prediction is only the final step. Almost all of the computation happens before it, constructing a representation of the situation. If you want a concrete walk-through of one model's version of this, our explainer on [how Claude works](https://geotoolbox.ai/blog/how-does-claude-work) traces the same pipeline end to end.
+
+## It's Not Just Autocomplete: The Concepts Inside the Model
+
+So the model builds concepts. Where are they? Not in tidy files. They live as patterns spread across many artificial neurons at once, closer to coordinates in a huge mathematical space than to labeled folders. This is the same idea behind [vector embeddings](https://geotoolbox.ai/blog/vector-embeddings): meaning is a location, and related ideas sit near each other.
+
+For a long time this made the inside of a model a [black box](https://www.nytimes.com/2026/04/15/magazine/ai-black-box-interpretability-research.html), even to the people who built it. Researchers would ask "which neuron means dog?" and get nowhere, because a single neuron is polysemantic: it fires for dogs, and for the color brown, and for verbs ending in "-ing," depending on context. The network crams far more concepts than it has neurons, a trick called superposition.
+
+The key tool was a sparse autoencoder. Instead of reading raw neurons, it untangles the activity into cleaner, more interpretable units called features, each closer to a single human-recognizable concept. Anthropic's 2024 work, [Mapping the Mind of a Large Language Model](https://www.anthropic.com/research/mapping-mind-language-model), pulled millions of these features out of a production Claude model: features for the Golden Gate Bridge, for DNA, for the French language, for coding bugs, for sycophancy. For the first time, the black box had a readable index.
+
+## Golden Gate Claude: Proof the Concepts Are Real
+
+Finding a "Golden Gate Bridge" feature is interesting. Proving it does something is what made the research land.
+
+The team turned that feature up to an unnatural level and left everything else alone. The result, nicknamed Golden Gate Claude, became briefly obsessed with the bridge. Asked what to spend ten dollars on, it suggested driving across the Golden Gate. Asked to describe itself, it replied that it was the Golden Gate Bridge. Turn the feature down and the fixation vanished.
+
+That matters because it settles a real question. The features are not just after-the-fact labels a researcher painted on. They are functional parts that causally steer the model's behavior: change the internal concept, and the output changes to match. It is the difference between watching a dashboard gauge that happens to track the engine, and being able to grab the throttle yourself and watch the engine respond.
+
+## Thinking Out Loud: Reasoning Models and the Hidden Chain of Thought
+
+The models you use today added another layer. Older systems answered immediately, with no visible deliberation. Newer reasoning models (OpenAI's o-series, DeepSeek's R-series, Claude's extended-thinking mode) pause and work through a problem in steps first, sometimes showing that chain of thought and sometimes keeping it hidden. If the older behavior is a snap judgment, this is the deliberate, show-your-work kind of thinking.
+
+There is a catch worth knowing. Even when a model shows its chain of thought, that text is not a faithful transcript of what it is actually computing. Interpretability research finds that a lot of the real work happens in the activations, before and beneath the words, and the written reasoning can be incomplete or even a tidied-up story that differs from the internal path. The model is genuinely reasoning in steps. The steps it shows you are a summary, not a wiretap. That gap is exactly what the newest research set out to see into.
+
+## The Newest Clue: A "Global Workspace" Inside Claude
+
+On July 6, 2026, Anthropic published [A global workspace in language models](https://www.anthropic.com/research/global-workspace) (the full paper is [Verbalizable Representations Form a Global Workspace in Language Models](https://transformer-circuits.pub/2026/workspace/index.html)). It is the clearest look yet at the machinery behind that hidden reasoning.
+
+The team built a new tool, the Jacobian lens, or J-lens. For every word in the model's vocabulary, the J-lens finds the internal activity pattern that makes the model more likely to say that word later on. The collection of those patterns is what they call the J-space (the "J" is for Jacobian, the calculus behind the method, not for anything grander). And the J-space behaves like a privileged workspace: some parts of the network read from and write to it far more heavily than to ordinary activity, in places by a factor of about a hundred. It is a small, busy hub where the ideas the model is actively holding in mind get put on a shared desk.
+
+The evidence comes from reaching in and swapping things:
+
+<table>
+<thead>
+<tr><th>Experiment</th><th>What they did</th><th>What happened</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Spider to ant</strong></td><td>Prompt: "the number of legs on the animal that spins webs." The word "spider" never appears; the model loads it internally to reach the answer. They swapped the internal "spider" pattern for "ant."</td><td>The answer changed from 8 to 6.</td></tr>
+<tr><td><strong>France to China</strong></td><td>Four separate prompts about France (capital, language, continent, currency). One identical France-to-China swap in the workspace, applied to each.</td><td>Claude answered Beijing, Chinese, Asia, and Yuan. One workspace concept, reused flexibly by many downstream steps.</td></tr>
+<tr><td><strong>Soccer to rugby</strong></td><td>Removed a silently chosen "soccer" pattern and added "rugby" in its place.</td><td>Claude then reported that the sport it had been thinking of was rugby. The workspace is reportable.</td></tr>
+</tbody>
+</table>
+
+Put together, Anthropic argues the J-space is reportable (the model can tell you what is on the desk), controllable (you can ask it to put something there), a medium for multi-step reasoning (intermediate steps light up even when they are never said aloud), and causally tied to the answer. Importantly, it is not most of what the model does: fluent grammar and simple recall run automatically underneath. It is the small deliberate layer on top.
+
+## So, Is AI Conscious? The Honest Answer
+
+Here is where the headlines got loudest.
+
+The reason "workspace" set off consciousness talk is that the idea is borrowed from neuroscience. Global workspace theory, developed by Bernard Baars and formalized by Stanislas Dehaene and Lionel Naccache, pictures the mind as many specialist systems running in parallel, with only a small spotlight of information broadcast widely to the rest. That broadcast is, in that theory, closely tied to conscious awareness. So when a lab shows an AI has something functionally similar, "is it conscious?" is the natural next question.
+
+Anthropic's own answer is a firm not-that-fast. In the post, they write: "None of this tells us whether Claude is conscious in the way people are, or whether it feels anything at all." The paper is blunter still: "we take no position on this issue." What they claim evidence for is access consciousness, a functional, measurable notion (information being available to the rest of the system for reasoning and report). What they explicitly do not claim is phenomenal consciousness, the subjective sense of there being something it is like to be the model. Whether the first implies the second is an old, unsettled philosophical question, not something this research resolves.
+
+The skeptics deserve a hearing too, and the most useful one is friendly. Neel Nanda, an interpretability researcher at Google DeepMind, reviewed the work and pushed back on the lazy dismissal that it is just a Jacobian with a fancy name. He called the evidence that a genuine cognitive space exists inside the model overwhelming.
+
+His fair criticisms are narrower: the J-lens is an imperfect tool that only captures single-word concepts and can mislead, and some of the finer claims have other possible explanations. On the consciousness framing specifically, he declines to take a side. That is the honest state of play: the internal workspace is real and well-evidenced, but the leap from workspace to conscious being is one the evidence does not make, and one the researchers themselves refuse to make.
+
+## Does AI Actually "Understand"? And Why It Matters for You
+
+The understanding question splits the same way. "It's only autocomplete" no longer fits the evidence: the model builds real internal world-models. "It understands exactly like a human" does not fit either, because those models come from optimizing for prediction, not from living in a body and a world. The defensible middle is that a language model builds sophisticated, useful representations that support flexible behavior, without the grounding a human meaning has.
+
+This is not just philosophy, and here is why it matters if you have a brand or a business. Interpretability, the effort to [reverse-engineer what a model is computing inside](https://www.wired.com/story/ai-black-box-interpretability-problem), studies both what a model surfaces and why. It is the same machinery behind why models [hallucinate](https://geotoolbox.ai/blog/ai-hallucinations), confidently stating a wrong fact because the internal pattern pointed that way. And it governs which facts a model reaches for when someone asks it about your company. When an AI answers "is [your product] any good?", it loads internal concepts about you, assembled from whatever it read during training and whatever it can retrieve now. If those concepts are thin, outdated, or wrong, that is the answer your customer gets.
+
+Understanding [how AI search actually works](https://geotoolbox.ai/blog/how-does-ai-search-work) is the first step to shaping it. The practical starting point is making sure the AI systems can even reach and read your content in the first place, which is exactly what our free [AI readiness scan](https://geotoolbox.ai/tools/ai-readiness) checks.
+
+## Frequently Asked Questions
+
+**How does AI actually think?**
+An AI language model is trained to predict the next word in a sequence. To do that well it builds internal representations of concepts and relationships, and recent research shows it uses a small, privileged internal "workspace" to hold the ideas it is actively reasoning about. It is real internal computation, though very different from human thought, and it is not consciousness.
+
+**Can AI think for itself?**
+Not in the sense of having its own goals or an ongoing inner life. A model only runs when you send it a prompt; between prompts, nothing is running at all. It can reason through multi-step problems and even hold intermediate ideas it never says out loud, but that is computation triggered by your input, not independent thought.
+
+**Is Claude conscious?**
+There is no evidence that it is, and Anthropic explicitly does not claim it. Its July 2026 research says plainly: "None of this tells us whether Claude is conscious in the way people are, or whether it feels anything at all." The work shows a functional internal workspace; it says nothing about subjective experience.
+
+**Do AI models actually understand, or just predict?**
+Both framings are too simple. The model is trained on prediction, but prediction forces it to build genuine internal models of the world, which is more than shallow autocomplete. Those models are not grounded in lived experience the way human understanding is, so the defensible middle view is real internal representations without human understanding.
+
+**What is mechanistic interpretability?**
+It is the effort to reverse-engineer what a neural network is actually computing inside, rather than judging it only by its inputs and outputs. Its key tools include sparse autoencoders, which extract interpretable "features" (concepts) from the model's activity, and causal interventions that change those features to see how behavior shifts.
+
+**What is Anthropic's "J-space"?**
+J-space is a small set of internal activity patterns in Claude that act like a shared workspace for the concepts the model is actively thinking about. Anthropic found it with a new tool called the Jacobian lens (J-lens), and showed you can swap a concept in that space (spider for ant, France for China) and watch the model's answer change to match.
+
+## Sources
+
+- [A global workspace in language models](https://www.anthropic.com/research/global-workspace) - Anthropic (the J-space research, July 6, 2026)
+- [Verbalizable Representations Form a Global Workspace in Language Models](https://transformer-circuits.pub/2026/workspace/index.html) - Anthropic / Transformer Circuits (the full paper)
+- [Mapping the Mind of a Large Language Model](https://www.anthropic.com/research/mapping-mind-language-model) - Anthropic (features, sparse autoencoders, Golden Gate Claude)
+- [We Don't Really Know How A.I. Works. That's a Problem.](https://www.nytimes.com/2026/04/15/magazine/ai-black-box-interpretability-research.html) - The New York Times
+- [The AI black box interpretability problem](https://www.wired.com/story/ai-black-box-interpretability-problem) - WIRED
+- [A review of Anthropic's global workspace paper](https://www.lesswrong.com/posts/zFJ3ZdQwrTWE9jT5S/a-review-of-anthropic-s-global-workspace-paper) - Neel Nanda (independent interpretability review)
+- [Consciousness in AI: Insights from the Science of Consciousness](https://arxiv.org/abs/2308.08708) - Butlin, Long et al. (arXiv)

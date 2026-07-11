@@ -38,6 +38,7 @@ export const TOPICS: Topic[] = [
       "temperature", "ai-temperature", "llm-temperature", "sampling",
       "constitutional-ai", "content-chunking", "query-fan-out", "ai-mode", "google-ai-mode",
       "how-does-chatgpt-work", "how-does-claude-work",
+      "how-ai-works", "interpretability", "ai-consciousness", "mechanistic-interpretability",
     ],
   },
   {
