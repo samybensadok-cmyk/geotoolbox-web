@@ -1,0 +1,196 @@
+---
+title: "DeepSeek Pricing in 2026: Free App, Cheap API, Is It Worth It?"
+description: "DeepSeek pricing, current to July 2026: the free app, V4 Flash and V4 Pro API costs, cache-hit vs cache-miss billing, and how it compares to ChatGPT and Claude."
+date: "2026-07-11"
+updated: "2026-07-11"
+author: "Samy BEN SADOK"
+tags: ["deepseek-pricing", "deepseek", "deepseek-api", "deepseek-v4", "pricing", "ai-pricing"]
+draft: false
+---
+
+The DeepSeek app is free. That is the whole answer for most people who type "DeepSeek pricing" into Google. You pay nothing to chat with it on the web or in the app, and there is no Plus or Pro subscription to upsell you.
+
+The money question only starts when you move to the API. And there the news is good: DeepSeek is close to the cheapest frontier-class pricing you can buy, with V4 Flash at $0.14 per million input tokens and V4 Pro at $0.435 input and $0.87 output as of July 2026. The catch is that many of the pricing guides you will find still quote V4 Pro at $1.74 and $3.48, the old launch price, so buyers build cost models that are four times too high. Below is every current price, reconciled and dated, the two things that move your bill most, and whether it is worth paying for.
+
+## How Much Does DeepSeek Cost? Free App vs Paid API
+
+DeepSeek is sold as two different things, and almost all the confusion comes from mixing them up.
+
+The **consumer product** is the DeepSeek chat app on the web and phone. It is free, has no subscription tier, and is what most searchers want. The **API** is a separate, developer-facing service you pay for per token, used to wire DeepSeek into your own apps, agents, or coding tools. Free chat access does not include free API usage.
+
+<table>
+<thead>
+<tr><th>What you use</th><th>What it costs</th><th>Who it is for</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>DeepSeek app (web + mobile)</strong></td><td>Free, no subscription</td><td>Anyone chatting with DeepSeek directly</td></tr>
+<tr><td><strong>DeepSeek API - V4 Flash</strong></td><td>From $0.14 / $0.28 per 1M tokens</td><td>High-volume apps, chatbots, extraction, most coding</td></tr>
+<tr><td><strong>DeepSeek API - V4 Pro</strong></td><td>$0.435 / $0.87 per 1M tokens</td><td>Hard reasoning, complex code, agentic work</td></tr>
+</tbody>
+</table>
+
+If you just want to use DeepSeek, stop at the free app and skip the rest of this page. If you are building on it, the sections below are where the real cost lives, and it is not the sticker price. For the bigger picture of what the models are and where DeepSeek came from, our guide to [what DeepSeek is](https://geotoolbox.ai/blog/what-is-deepseek) covers the history and the open-weights story in plain terms.
+
+## Is DeepSeek Free? What the App Actually Gives You
+
+Yes. The DeepSeek app is free, with no paid consumer plan at all.
+
+Sign in at chat.deepseek.com or the mobile app and you get the full chat experience, including the V4 model, web search, and file uploads, at no charge. Unlike [ChatGPT Plus](https://geotoolbox.ai/blog/chatgpt-pricing) or [Claude Pro](https://geotoolbox.ai/blog/claude-pricing) at around $20 a month, DeepSeek does not sell a fixed monthly subscription for individual use. The reason is straightforward: the consumer chat is already free, and the API is prepaid per token, so there is nothing to bundle into a monthly plan.
+
+The one limit worth knowing is fair-use throttling. During heavy traffic you may see "Server Busy" messages and slower responses, which is DeepSeek managing load rather than a paywall. There is no per-day message quota the way some rivals cap their free tiers. The other thing to keep in mind: the app is text-only. DeepSeek does not generate images, video, or audio, so if you came looking for a free image generator, this is not it.
+
+## DeepSeek API Pricing: V4 Flash and V4 Pro
+
+If you are building on DeepSeek, you pay per [token](https://geotoolbox.ai/blog/what-are-tokens-in-ai), the chunks of text the model reads and writes, billed separately for input and output. There are two current models, and the lineup is deliberately simple. Here are the rates from [DeepSeek's official API docs](https://api-docs.deepseek.com/quick_start/pricing).
+
+<table>
+<thead>
+<tr><th>Model</th><th>Input, cache miss (per 1M)</th><th>Input, cache hit (per 1M)</th><th>Output (per 1M)</th><th>Context</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>deepseek-v4-flash</strong></td><td>$0.14</td><td>$0.0028</td><td>$0.28</td><td>1M</td></tr>
+<tr><td><strong>deepseek-v4-pro</strong></td><td>$0.435</td><td>$0.003625</td><td>$0.87</td><td>1M</td></tr>
+</tbody>
+</table>
+
+Both models share a one-million-token context window and up to 384K tokens of output, with no separate long-context surcharge, so a huge prompt bills at the same per-token rate as a small one. V4 Flash is the default workhorse: chat, extraction, classification, summarization, and most coding. V4 Pro is the stronger model for hard reasoning, multi-step analysis, and demanding code, and it costs roughly three times Flash on cache-miss input and output.
+
+Two naming details trip people up. First, if you have seen `deepseek-chat` and `deepseek-reasoner` in older tutorials, those are legacy aliases of V4 Flash (non-thinking and thinking mode), and DeepSeek is deprecating both names on July 24, 2026, so new code should call `deepseek-v4-flash` and `deepseek-v4-pro` directly. Second, on the hosted API the `deepseek-reasoner` alias now maps to V4 Flash's thinking mode; R1 was DeepSeek's earlier standalone reasoning model, and the docs point new work to V4 Flash and V4 Pro.
+
+<Callout type="note">
+The cache-hit and cache-miss columns are not a typo. That roughly fifty-fold gap between $0.14 and $0.0028 on Flash is the single most important thing to understand about DeepSeek pricing, and it is why your real bill rarely matches the number you first read. The next two sections cover why.
+</Callout>
+
+## Cache-Hit vs Cache-Miss: Why the Sticker Price Isn't Your Bill
+
+DeepSeek charges two different input prices, and which one you get depends on context caching.
+
+Caching is automatic and on by default. When the beginning of your request matches something DeepSeek processed recently (a reused system prompt, a shared set of instructions, a document you keep sending), those matching tokens bill at the cache-hit rate instead of the full input rate. On V4 Flash that drops input from $0.14 to $0.0028 per million tokens, a 98% reduction. On V4 Pro the cache-hit rate cuts input by roughly 99%, an even bigger discount. There is no separate cache-write charge and no hourly storage fee, so caching is pure savings.
+
+The condition is that cache hits need an exact matching prefix. Put your static content, the system prompt and instructions, at the very start of the request, and your variable content at the end. A small change near the front breaks the match and sends those tokens back to the full cache-miss rate. Caching also works on a best-effort basis, so rather than assuming every repeated prompt hits the cache, track the `prompt_cache_hit_tokens` and `prompt_cache_miss_tokens` fields DeepSeek returns with each response and tune from there.
+
+This is why quoting "DeepSeek Flash is $0.14" is only half true. A workload that reuses a long system prompt across thousands of calls pays far less than that on input; a workload that sends a fresh prompt every time pays the full rate. Your architecture, not the price list, decides which bill you get.
+
+## Why Your DeepSeek Bill Runs Higher Than $0.14
+
+The other surprise is on the output side.
+
+Both V4 models run in thinking mode by default. Before it answers, the model generates internal reasoning tokens, and those tokens bill at the output rate even though they are not part of the final answer. So a request that returns a two-line answer can quietly produce thousands of billed reasoning tokens first. If your bill is higher than the sticker price suggested, thinking mode left on for simple tasks is the most common reason. Turning it off for routine work (classification, extraction, short replies) cuts output tokens directly.
+
+Output is also the expensive side of the ledger. On both models it costs twice the cache-miss input rate, and combined with a 384K maximum output and default thinking, runaway responses are the main way DeepSeek bills get "weird." Cap your output length, ask for concise or structured responses, and reserve the long generations for tasks that genuinely need them. Between disabling thinking where it adds nothing and capping output, most teams cut their DeepSeek spend more than any change to which model they picked.
+
+## What DeepSeek Costs Per Month, in Real Dollars
+
+Per-token rates are hard to feel, so here is what typical workloads actually cost on V4 Flash, the model most production traffic should use.
+
+<table>
+<thead>
+<tr><th>Workload</th><th>Rough monthly cost</th><th>Model</th></tr>
+</thead>
+<tbody>
+<tr><td>Customer support chatbot, ~1,000 conversations</td><td>~$1.90 (under $1 with caching)</td><td>V4 Flash</td></tr>
+<tr><td>Same chatbot on the stronger model</td><td>~$5.90</td><td>V4 Pro</td></tr>
+<tr><td>Summarizing 100 PDFs</td><td>~$0.29</td><td>V4 Flash</td></tr>
+<tr><td>30 articles of content generation</td><td>~$0.04</td><td>V4 Flash</td></tr>
+</tbody>
+</table>
+
+The pattern holds at scale. Light personal use tends to land around $1 to $5 a month, small production apps around $5 to $25, and heavier production workloads in the low hundreds. Those are Flash numbers; moving the same volume to V4 Pro multiplies them by roughly three. New API accounts have often been given a small promotional grant of free tokens to test with, though the amount and expiry change over time, so check your balance on the platform after signing up rather than trusting a fixed figure from a guide.
+
+## How DeepSeek Billing Works, and How to Start
+
+The API runs on a prepaid balance, not a subscription or a monthly invoice. You top up a credit balance, and each call draws it down. There is no seat fee and no auto-renewing plan, so your spend is capped at whatever you loaded.
+
+The gotcha that catches people: if the balance hits zero, requests start failing with a `402 Insufficient Balance` error even though your API key is still valid and the free app keeps working normally. Topping the balance back up clears it immediately, and unused credit does not expire. It is worth setting a low-balance alert if anything production depends on the API.
+
+One thing that makes DeepSeek easy to adopt is that the API is OpenAI-compatible and Anthropic-compatible. In most existing code you point the `base_url` at DeepSeek and swap the key rather than rewriting anything, which is a big part of why teams move workloads onto it to cut costs.
+
+## Is DeepSeek Cheaper Than ChatGPT, Claude, and Gemini?
+
+On the API, yes, and by a wide margin. That price gap is much of why DeepSeek matters commercially.
+
+<table>
+<thead>
+<tr><th>Model</th><th>Input (per 1M)</th><th>Output (per 1M)</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>DeepSeek V4 Flash</strong></td><td>$0.14</td><td>$0.28</td></tr>
+<tr><td><strong>DeepSeek V4 Pro</strong></td><td>$0.435</td><td>$0.87</td></tr>
+<tr><td><a href="https://geotoolbox.ai/blog/grok-pricing">Grok 4.3</a></td><td>$1.25</td><td>$2.50</td></tr>
+<tr><td><a href="https://geotoolbox.ai/blog/gemini-pricing">Gemini 3.1 Pro</a></td><td>~$2.00</td><td>~$12.00</td></tr>
+<tr><td><a href="https://geotoolbox.ai/blog/claude-pricing">Claude Opus 4.8</a></td><td>~$5.00</td><td>~$25.00</td></tr>
+<tr><td><a href="https://geotoolbox.ai/blog/gpt-5-6">GPT-5.6 Sol</a></td><td>~$5.00</td><td>~$30.00</td></tr>
+</tbody>
+</table>
+
+Against a top-tier model like Claude Opus 4.8, V4 Pro is roughly eleven times cheaper on input and nearly thirty times cheaper on output, and V4 Flash widens the gap further. These are flagship tiers, which is the honest frame: each rival also runs a budget model, and a couple dip below DeepSeek Flash on input (Google's Gemini 2.5 Flash-Lite is $0.10), while every Western provider offers a 50% batch discount on bulk jobs that DeepSeek has no answer to. Grok 4.3 in the table is xAI's value model rather than its flagship. Against the top tier of each rival, though, DeepSeek sits in a different bracket entirely.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/deepseek-pricing/deepseek-vs-frontier-output-cost.png" alt="Bar chart drawn to scale comparing API output price per million tokens in July 2026: DeepSeek V4 Flash $0.28 and V4 Pro $0.87 are slivers next to Grok 4.3 at $2.50, Gemini 3.1 Pro at $12, Claude Opus 4.8 at $25, and GPT-5.6 Sol at $30." w="2200" h="1442" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Output tokens per 1M, to scale against a $30 axis. DeepSeek's V4 models barely register next to the Western frontier.</figcaption>
+</figure>
+
+A headline "twenty times cheaper" is not your real savings, though. True cost depends on how much output you generate, whether thinking mode is on, and how often you hit the cache, and DeepSeek's default thinking mode can erode part of the advantage on output-heavy work. It is also worth weighing the non-price factors, covered below, before switching a production system on price alone. For a feature-level view rather than just the token math, our comparison of [Chinese AI models](https://geotoolbox.ai/blog/chinese-ai-models-compared) puts DeepSeek next to its closest rivals.
+
+## The Stale-Price Trap: Ignore the $1.74 Guides
+
+Here is what most DeepSeek pricing guides get wrong.
+
+V4 Pro launched in April 2026 with a list price of $1.74 per million input tokens and $3.48 output. DeepSeek then cut that by about 75%, and as of July 2026 the price sits at $0.435 and $0.87. The problem is that a lot of guides, aggregators, and even calculators still quote the old $1.74 and $3.48. It gets muddier because third-party hosts that resell DeepSeek, listed on marketplaces like [OpenRouter](https://openrouter.ai/deepseek/deepseek-v4-pro), set their own rates, so a figure you find there may not match DeepSeek's own price at all. If you build a budget on those, your cost model is roughly four times too high, which is enough to kill an otherwise sound business case. When you read a DeepSeek price, check the date, and treat any V4 Pro figure near $1.74 as out of date.
+
+Two older details still confuse people. DeepSeek's earlier off-peak discount, the V3-era window that knocked 50 to 75% off during quiet hours, no longer appears on the current pricing, which is flat, with no time-of-day discount to schedule around. And while there has been community chatter about DeepSeek introducing peak-hour pricing tied to the V4 launch, it does not show up in the official USD pricing docs, so treat it as a possibility to watch rather than a rate to plan for. The move that never fails: check the date on any DeepSeek price before you trust it.
+
+## Which DeepSeek Option Should You Actually Use?
+
+Short answer to the title question: for API work, yes, it is worth it wherever text-only output and China hosting are acceptable. The rest is picking the right tier.
+
+**Use the free app** if you want to chat with DeepSeek, run research, or draft text. It costs nothing, needs no subscription, and covers what the large majority of searchers are after.
+
+**Use V4 Flash on the API** for almost everything you build: chatbots, extraction, classification, summarization, and most coding. It is cheap enough that at typical volumes the bill is a rounding error, and DeepSeek positions it as matching Pro on simpler agent tasks.
+
+**Reserve V4 Pro** for the work that genuinely needs it, hard reasoning, complex multi-step analysis, and demanding code, where the quality gain is worth roughly three times the token cost.
+
+**Look elsewhere** when price is not the only constraint. DeepSeek is text-only, so it will not cover image, video, or audio generation. Its models are hosted in China, which matters if you have data-residency, GDPR, or industry compliance requirements, and the pricing docs say nothing about data-processing agreements. For a regulated business, the cheapest token is not automatically the right one.
+
+## Why DeepSeek's Price Matters for Your Brand
+
+DeepSeek being this cheap is exactly why it shows up everywhere. It is the default model builders reach for when they want frontier-ish quality at throwaway cost, which means it is quietly powering the chatbots, agents, and search tools that describe your category to buyers.
+
+The more useful question, then: when someone asks an AI assistant what to buy or who to hire, does it mention you? In our tracking of AI answers, assistants routinely name specific vendors in response to buying questions, and the buyer rarely sees why one brand surfaced and another did not. None of that shows up on a pricing page. Our [Citation Interceptor](https://geotoolbox.ai/features/citation-interceptor) maps which sources the AI engines cite when they answer, so you can find the ones shaping the recommendation and get into them. The method is in our guide to [tracking AI visibility](https://geotoolbox.ai/blog/how-to-track-ai-visibility).
+
+DeepSeek has cut its prices once already this year, so confirm the current figure on the official page before you build a budget, and once you know what it costs, the next question is what it tells people about you.
+
+## Frequently Asked Questions
+
+**Is the DeepSeek app free, or is there a subscription?**
+
+The app is free, and there is no paid consumer subscription. You get the full chat experience, including the V4 model, web search, and file uploads, at no charge on the web and mobile app. The only thing you pay for is the API, which is billed per token for developers building their own software.
+
+**Why is my DeepSeek API bill higher than the advertised price?**
+
+Usually because of thinking mode, which is on by default and bills its reasoning tokens at the output rate, so a short answer can cost far more than it looks. The other reason is caching: the low input price only applies to cache hits, and a prompt that changes every time pays the higher cache-miss rate. Disable thinking for routine tasks and keep your prompt prefixes identical to control both.
+
+**What is cache-hit vs cache-miss pricing?**
+
+DeepSeek charges two input prices. When the start of your request matches content it processed recently, those tokens bill at the cache-hit rate, which is about 98% cheaper on V4 Flash. When the input is new, it bills at the full cache-miss rate. Caching is automatic and free to use, but it only triggers on an exact matching prefix.
+
+**Is DeepSeek really cheaper than OpenAI, Claude, and Gemini?**
+
+On the API, yes, by a large margin: V4 Pro is roughly eleven times cheaper than Claude Opus 4.8 on input and nearly thirty times cheaper on output, and V4 Flash is cheaper still. Your real savings depend on how much output you generate and how often you hit the cache, but on raw token price DeepSeek undercuts every Western flagship, though a few rivals' budget tiers get close on cheap, batchable work.
+
+**What happened to R1, V3, and deepseek-chat?**
+
+V4 Flash and V4 Pro are the current models. The older `deepseek-chat` and `deepseek-reasoner` names are legacy aliases of V4 Flash and are being deprecated on July 24, 2026, so new code should call the V4 model names directly. R1 was the earlier standalone reasoning model, now succeeded by the V4 line's built-in thinking mode, and V3 has likewise been superseded by V4.
+
+**How much does the DeepSeek API cost per month?**
+
+For most workloads on V4 Flash, very little: a support chatbot handling around 1,000 conversations runs about $1.90 a month, and lighter jobs cost pennies. Light personal use lands around $1 to $5 a month, small production apps around $5 to $25, and the same volume on V4 Pro costs roughly three times as much.
+
+## Sources
+
+- [Models & Pricing - DeepSeek API Docs](https://api-docs.deepseek.com/quick_start/pricing)
+- [DeepSeek Platform (API access)](https://platform.deepseek.com/)
+- [Claude plans and pricing - Anthropic](https://claude.com/pricing)
+- [Google AI Pro and Ultra subscriptions - Gemini](https://gemini.google/subscriptions/)
+- [OpenAI API pricing - OpenAI](https://developers.openai.com/api/docs/pricing)
+- [DeepSeek V4 Pro - API pricing and benchmarks - OpenRouter](https://openrouter.ai/deepseek/deepseek-v4-pro)

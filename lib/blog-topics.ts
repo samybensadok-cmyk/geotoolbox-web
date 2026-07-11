@@ -59,7 +59,7 @@ export const TOPICS: Topic[] = [
       "tools", "measurement", "metrics", "rank-tracking", "audit",
       "share-of-voice", "ai-citation", "ai-overviews", "pricing", "review",
       "link building", "link building platforms", "backlinks", "digital pr",
-      "gemini-pricing", "gemini-api", "gemini-api-pricing", "api-pricing", "vertex-ai", "ai-pricing", "copilot-pricing", "chatgpt-pricing", "claude-pricing",
+      "gemini-pricing", "gemini-api", "gemini-api-pricing", "api-pricing", "vertex-ai", "ai-pricing", "copilot-pricing", "chatgpt-pricing", "claude-pricing", "deepseek-pricing",
     ],
   },
   {
