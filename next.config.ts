@@ -11,6 +11,30 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.join(__dirname),
   },
+  async headers() {
+    return [
+      {
+        // Agent-readiness surface on the homepage (RFC 8288 Link relations +
+        // honest content negotiation): / serves markdown when the client sends
+        // Accept: text/markdown (middleware rewrite to /home.md), so caches
+        // MUST key on Accept — without Vary here the edge could serve the
+        // cached HTML variant to an agent or vice versa.
+        source: "/",
+        headers: [
+          { key: "Vary", value: "Accept" },
+          {
+            key: "Link",
+            value:
+              '</llms.txt>; rel="alternate"; type="text/plain"; title="llms.txt", ' +
+              '</llms-full.txt>; rel="alternate"; type="text/plain"; title="llms-full.txt", ' +
+              '</home.md>; rel="alternate"; type="text/markdown", ' +
+              '</sitemap.xml>; rel="sitemap"; type="application/xml", ' +
+              '</feed.xml>; rel="alternate"; type="application/rss+xml"',
+          },
+        ],
+      },
+    ]
+  },
   async redirects() {
     return [
       // NOTE: www.geotoolbox.ai → geotoolbox.ai (308) is handled at the Vercel

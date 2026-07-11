@@ -20,6 +20,19 @@ function markdownRewrite(request: NextRequest, locale: string, section: string, 
 export default function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
+  // Homepage content negotiation: `Accept: text/markdown` on / serves the
+  // markdown twin at /home.md (same contract as articles). Any other request
+  // for / falls through untouched — the homepage must NOT enter next-intl
+  // routing (it renders statically from the (marketing) root layout).
+  if (pathname === "/") {
+    if (request.headers.get("accept")?.includes("text/markdown")) {
+      const res = NextResponse.rewrite(new URL("/home.md", request.url))
+      res.headers.set("Vary", "Accept")
+      return res
+    }
+    return
+  }
+
   const twin = MD_TWIN.exec(pathname)
   if (twin) {
     return markdownRewrite(request, twin[1] ?? "en", twin[2], twin[3])
@@ -54,5 +67,5 @@ export default function middleware(request: NextRequest) {
 // NOTE: the matcher still catches /blog/<slug>/<file>.png, so the file-extension
 // guard above is what actually lets those in-body images through.
 export const config = {
-  matcher: ["/blog/:path*", "/glossary/:path*", "/fr/:path*"],
+  matcher: ["/", "/blog/:path*", "/glossary/:path*", "/fr/:path*"],
 }

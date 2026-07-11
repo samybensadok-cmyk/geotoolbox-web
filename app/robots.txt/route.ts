@@ -47,8 +47,9 @@ export function GET() {
   const body = [
     "# geotoolbox.ai — AI crawlers, fetchers, and agents are explicitly welcome.",
     "# Policy: https://contentsignals.org — search=yes, ai-input=yes, ai-train=yes",
-    "# Markdown versions of articles: append .md to any /blog or /glossary URL,",
-    "# or request with Accept: text/markdown.",
+    "# Markdown versions: append .md to any /blog or /glossary URL (homepage: /home.md),",
+    "# or request the canonical URL with Accept: text/markdown.",
+    "# Index: /llms.txt \u00b7 full content: /llms-full.txt",
     "",
     group(["*"]),
     "",

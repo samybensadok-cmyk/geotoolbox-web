@@ -1,23 +1,11 @@
 import { getPostBySlug, getGlossaryTermBySlug } from "@/lib/content"
 import { siteConfig } from "@/lib/config"
+import { mdxToMarkdown } from "@/lib/markdown"
 
 // Internal target of the middleware markdown rewrites (/blog/<slug>.md and
 // Accept: text/markdown). Serves the article as clean markdown — same URL
 // space stays canonical via the Link header. Direct /md/* crawling is
 // disallowed in robots.txt; agents reach this only through the twins.
-
-function mdxToMarkdown(content: string): string {
-  return content
-    .replace(/^import\s.+$/gm, "")
-    .replace(/^export\s.+$/gm, "")
-    .replace(/\{\/\*[\s\S]*?\*\/\}/g, "") // MDX comments
-    .replace(/<BlogImage\s[^>]*src="([^"]+)"[^>]*alt="([^"]*)"[^>]*\/>/g, "![$2]($1)")
-    .replace(/<BlogImage\s[^>]*alt="([^"]*)"[^>]*src="([^"]+)"[^>]*\/>/g, "![$1]($2)")
-    .replace(/<YouTube\s[^>]*id="([^"]+)"[^>]*\/>/g, "Video: https://www.youtube.com/watch?v=$1")
-    .replace(/<\/?Callout[^>]*>/g, "")
-    .replace(/\n{3,}/g, "\n\n")
-    .trim()
-}
 
 export async function GET(
   _request: Request,

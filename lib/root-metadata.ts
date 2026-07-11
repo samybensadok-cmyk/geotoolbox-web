@@ -17,11 +17,32 @@ export const rootMetadata: Metadata = {
     url: siteConfig.url,
     siteName: siteConfig.name,
     type: "website",
+    // The generated card at app/opengraph-image.tsx. With two root layouts in
+    // route groups, the file-convention image does NOT auto-attach, so both
+    // roots reference it explicitly here.
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "GEO Toolbox: AI Search Analytics",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: siteConfig.name,
     description: siteConfig.description,
+    images: ["/opengraph-image"],
+  },
+  alternates: {
+    types: {
+      "text/plain": [
+        { url: "/llms.txt", title: "llms.txt" },
+        { url: "/llms-full.txt", title: "llms-full.txt" },
+      ],
+      "text/markdown": [{ url: "/home.md", title: "Homepage (markdown)" }],
+    },
   },
   robots: {
     index: true,
