@@ -1,0 +1,163 @@
+---
+title: "The Best Open-Source Tools for Claude Code (2026)"
+description: "The open-source repos that make Claude Code better: MCP servers, subagent frameworks, cost trackers, and hooks, with the security caveats most roundups skip."
+date: "2026-07-11"
+author: "Samy BEN SADOK"
+tags: ["claude-code", "mcp-servers", "open-source", "claude", "developer-tools", "ai-agents"]
+draft: false
+---
+
+Claude Code is good the moment you install it. It gets genuinely powerful when you wrap it in the tooling the community has built around it. Most people run it like early autocomplete (type a request, take the answer, move on) and never touch the layer that turns it into a real engineering environment: memory, live docs, browser control, cost visibility, and reusable workflows.
+
+That layer is open source, mostly free, and installable in an afternoon. The most useful tools cluster into a few jobs: MCP servers that give Claude new capabilities (the official reference set, Context7, GitHub, Playwright), workflow and subagent frameworks (Superpowers, SuperClaude), and cost trackers (ccusage). This is the shortlist worth knowing, grouped by the job each tool does. Every repo here is real and actively maintained, and the star counts are current as of July 2026 (they move fast, so treat them as a rough signal of adoption, not a leaderboard). We also cover how to vet these tools before you hand them access to your machine.
+
+## Enhance, Don't Replace: Two Different Questions
+
+Search for "open-source tools for Claude Code" and you get two different answers tangled together. One is tools that **replace** Claude Code: open-source CLI agents like OpenCode, Aider, and Cline that run the same job on a different (often model-agnostic) engine. The other is tools that **improve** the Claude Code you already use.
+
+This guide is about the second kind. Nothing below is an alternative to Claude Code. Every tool assumes you are running Claude Code and want it to do more, see more, or cost less. If you are shopping for a replacement instead, that is a separate question with a separate answer, and OpenCode is the usual starting point.
+
+## What Makes a Tool Worth Adding
+
+A tool earns a spot in your setup when it clears three bars: it installs in a few minutes, it solves a job you hit repeatedly, and it is maintained (recent commits, real users, an issue tracker that gets answered). Star count is a proxy for the last one, not a reason on its own.
+
+The counter-intuitive part is knowing when to stop. More tools is not better. Every MCP server you connect adds its tools to the list Claude has to choose from on each turn, and past a point that longer menu actively degrades tool-selection accuracy: the model picks the wrong tool, or wastes context deciding. Independent write-ups keep landing on the same advice: install a focused set, start with three or four, and add more only when a real workflow demands it. A lean setup that Claude uses well beats a maximal one it fumbles.
+
+<BlogImage src="/blog/claude-code-open-source-tools/claude-code-tool-stack-by-job.png" alt="The Claude Code tool stack by job: discovery (awesome-claude-code lists), MCP servers (official servers, Context7, GitHub, Playwright, Serena), frameworks and subagents (Superpowers, SuperClaude, wshobson/agents, BMAD), cost and context (ccusage, ccstatusline, Usage-Monitor), and hooks, all layered on top of the Claude Code CLI, with a 'vet first' security note above the stack." w="2400" h="1845" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+
+The rest of this guide walks up that stack, one job at a time.
+
+## Start Here: The Community Indexes
+
+Before installing anything specific, bookmark the two lists the whole ecosystem starts from. They save you from chasing dead repos and let you see what exists by category.
+
+<table>
+<thead>
+<tr><th>Repo</th><th>Stars (Jul 2026)</th><th>What it is</th></tr>
+</thead>
+<tbody>
+<tr><td><strong><a href="https://github.com/hesreallyhim/awesome-claude-code">hesreallyhim/awesome-claude-code</a></strong></td><td>~50k</td><td>The curated index of skills, hooks, slash commands, subagents, MCP servers, and workflows. The map everyone starts from.</td></tr>
+<tr><td><strong><a href="https://github.com/VoltAgent/awesome-claude-code-subagents">VoltAgent/awesome-claude-code-subagents</a></strong></td><td>~23k</td><td>A library of 100+ ready-made subagents (code reviewer, security auditor, architect, debugger) you drop into <code>.claude/agents</code>.</td></tr>
+</tbody>
+</table>
+
+## MCP Servers That Give Claude Code New Senses
+
+MCP servers are usually the highest-leverage layer to add first, because each one hands Claude a capability it otherwise lacks and can call from inside the terminal: reading live docs, driving a browser, querying a database, searching your codebase by meaning instead of filename. Start with the official reference servers, then add the ones that match your work.
+
+<table>
+<thead>
+<tr><th>Repo</th><th>Stars (Jul 2026)</th><th>What it adds</th></tr>
+</thead>
+<tbody>
+<tr><td><strong><a href="https://github.com/modelcontextprotocol/servers">modelcontextprotocol/servers</a></strong></td><td>~88k</td><td>The official reference set: filesystem, git, memory, sequential-thinking, fetch. The canonical place to begin.</td></tr>
+<tr><td><strong><a href="https://github.com/upstash/context7">upstash/context7</a></strong></td><td>~59k</td><td>Live, version-correct documentation on demand, so Claude stops inventing outdated APIs and wrong function signatures.</td></tr>
+<tr><td><strong><a href="https://github.com/microsoft/playwright-mcp">microsoft/playwright-mcp</a></strong></td><td>~35k</td><td>Browser automation. Claude navigates your app, fills forms, takes screenshots, and verifies UI flows end to end.</td></tr>
+<tr><td><strong><a href="https://github.com/github/github-mcp-server">github/github-mcp-server</a></strong></td><td>~31k</td><td>Official GitHub server. Read issues, open and review PRs, search code, inspect Actions. Especially useful when most of your work lives in GitHub.</td></tr>
+<tr><td><strong><a href="https://github.com/oraios/serena">oraios/serena</a></strong></td><td>~26k</td><td>Semantic code retrieval and editing through a language server, so Claude works at the symbol level, not blind text search.</td></tr>
+<tr><td><strong><a href="https://github.com/zilliztech/claude-context">zilliztech/claude-context</a></strong></td><td>~12k</td><td>Indexes your whole repo for semantic search, useful on monorepos and large legacy codebases.</td></tr>
+<tr><td><strong><a href="https://github.com/firecrawl/firecrawl-mcp-server">firecrawl/firecrawl-mcp-server</a></strong></td><td>~7k</td><td>Turns any web page into clean markdown for onboarding Claude to a new framework or feeding a RAG workflow.</td></tr>
+</tbody>
+</table>
+
+Most install in one line. The official servers follow the pattern `claude mcp add filesystem -- npx -y @modelcontextprotocol/server-filesystem /path/to/root`, and the others document their own one-liner. If you only add two, make them the official servers and GitHub.
+
+Two jobs sit just outside that table but come up constantly. For databases, [crystaldba/postgres-mcp](https://github.com/crystaldba/postgres-mcp) lets Claude inspect a schema and run queries against Postgres (use a read-only connection). For live web search rather than scraping, [exa-labs/exa-mcp-server](https://github.com/exa-labs/exa-mcp-server) gives Claude a real search tool. Memory and step-by-step reasoning are worth having too, and both ship inside the official reference set above (the `memory` and `sequential-thinking` servers), so you get them for free with the canonical install.
+
+## Skills, Subagents, and Orchestration Frameworks
+
+The next layer is workflow. Out of the box, Claude Code takes a request and runs. Frameworks give it structure: reusable skills, specialized subagents, and multi-step methods that turn "build this feature" into plan, then test, then implement, then verify.
+
+<table>
+<thead>
+<tr><th>Repo</th><th>Stars (Jul 2026)</th><th>What it does</th></tr>
+</thead>
+<tbody>
+<tr><td><strong><a href="https://github.com/obra/superpowers">obra/superpowers</a></strong></td><td>~250k</td><td>A skills framework and methodology: battle-tested skills for planning, TDD, debugging, and structured execution pipelines.</td></tr>
+<tr><td><strong><a href="https://github.com/ruvnet/ruflo">ruvnet/ruflo</a></strong></td><td>~64k</td><td>Multi-agent orchestration (formerly claude-flow). Coordinates swarms of agents working in parallel.</td></tr>
+<tr><td><strong><a href="https://github.com/bmad-code-org/BMAD-METHOD">bmad-code-org/BMAD-METHOD</a></strong></td><td>~50k</td><td>An artifact-driven agile method: analyst, PM, architect, and developer roles handing work down a defined pipeline.</td></tr>
+<tr><td><strong><a href="https://github.com/wshobson/agents">wshobson/agents</a></strong></td><td>~38k</td><td>A marketplace of agentic plugins that works across Claude Code and other harnesses.</td></tr>
+<tr><td><strong><a href="https://github.com/SuperClaude-Org/SuperClaude_Framework">SuperClaude-Org/SuperClaude_Framework</a></strong></td><td>~24k</td><td>A configuration framework that adds specialized commands and cognitive personas to Claude Code.</td></tr>
+</tbody>
+</table>
+
+These split into camps. Superpowers and SuperClaude sharpen how a single Claude Code session works. Ruflo and BMAD are for multi-agent orchestration, running several agents against one problem. Pick based on whether your bottleneck is the quality of one session or the coordination of many. Avoid running two orchestration frameworks at once: they fight over the same files and conventions.
+
+## Keep Token Costs and Context Under Control
+
+Claude Code's running cost comes from a quiet source: context accumulation. Every file it reads and every tool result stays in the window and gets re-billed on the next turn, so a long session becomes a token furnace you cannot see. The tooling here makes that spend and that context visible before it hurts.
+
+<table>
+<thead>
+<tr><th>Repo</th><th>Stars (Jul 2026)</th><th>What it does</th></tr>
+</thead>
+<tbody>
+<tr><td><strong><a href="https://github.com/ccusage/ccusage">ccusage/ccusage</a></strong></td><td>~17k</td><td>One command (<code>npx ccusage</code>) reads your local logs and reports token use and cost by session, day, and model.</td></tr>
+<tr><td><strong><a href="https://github.com/sirmalloc/ccstatusline">sirmalloc/ccstatusline</a></strong></td><td>~12k</td><td>A customizable status line showing live model, context usage, and cost right in the CLI.</td></tr>
+<tr><td><strong><a href="https://github.com/Maciek-roboblog/Claude-Code-Usage-Monitor">Maciek-roboblog/Claude-Code-Usage-Monitor</a></strong></td><td>~8k</td><td>A real-time monitor with burn-rate predictions and warnings before you hit a limit.</td></tr>
+</tbody>
+</table>
+
+Seeing your context fill up is what lets you act: compact, or start a fresh session, before quality drops. If token spend is your main pain, that is a topic in itself: our guide to [reducing Claude Code's token costs](https://geotoolbox.ai/blog/reduce-claude-code-token-costs) goes deeper, and [how the context window actually works](https://geotoolbox.ai/blog/claude-code-context-window) explains why sessions decay.
+
+Hooks are the other customization layer worth knowing. They let you run your own scripts on Claude Code's events: a linter on every file write, a notification when a long task finishes, or a guard that blocks a risky command before it runs. [disler/claude-code-hooks-mastery](https://github.com/disler/claude-code-hooks-mastery) is the reference to read first, and [carlrannaberg/claudekit](https://github.com/carlrannaberg/claudekit) bundles ready-made hooks and commands you can adopt wholesale.
+
+## Before You Install Anything: Vet Your MCP Servers
+
+This is the part most roundups skip, and it matters more than any single tool. An MCP server is not a passive plugin. It runs with your permissions and can read files, execute commands, and reach the network on Claude's behalf. A malicious or careless one is a security hole you opened yourself.
+
+The risk is not hypothetical. Security researchers found critical flaws in Anthropic's own Git MCP server, [tracked as CVE-2025-68145, CVE-2025-68143, and CVE-2025-68144](https://www.techradar.com/pro/security/anthropics-official-git-mcp-server-had-some-worrying-security-flaws-this-is-what-happened-next): a path-validation bypass, an unrestricted init, and an argument injection. Chained with the Filesystem server, they could reach remote code execution through a prompt injection. Anthropic patched the flaws in December 2025, the details were disclosed in January 2026, and no exploitation in the wild was reported. The lesson stands anyway: even official, well-reviewed servers ship real vulnerabilities. Unvetted community packages are a bigger unknown, and the `--dangerously-skip-permissions` flag, which lets Claude run commands without stopping to ask, turns any bad instruction straight into action. Neither is a reason to avoid the ecosystem, just a reason to treat access as something you grant deliberately.
+
+<Callout type="warning">
+Treat every MCP server as a privileged extension. Install only from trusted, well-maintained vendors. Use read-only credentials wherever possible, scope filesystem and shell access as tightly as you can, and never grant unrestricted shell access to a server you have not read. Reserve `--dangerously-skip-permissions` for throwaway sandboxes, never a machine with anything you would miss.
+</Callout>
+
+## A Sensible Starter Stack
+
+If you are setting up a new machine today, resist the urge to install everything at once. A focused stack you understand beats a sprawling one Claude cannot navigate.
+
+<Callout type="tip">
+Start with five tools, only three of them MCP servers: the <strong>official reference servers</strong> (filesystem, git, memory), the <strong>GitHub server</strong>, and <strong>Context7</strong> for live docs, plus <strong>ccusage</strong> for cost visibility and one workflow framework (<strong>Superpowers</strong> is the safe default). Add a browser or codebase-search server only when a real task needs it.
+</Callout>
+
+## Where This Fits With AI Visibility
+
+Tooling like this makes Claude Code a stronger builder. It is worth flipping that around: once you are wiring agents into your own products, how do the AI engines describe *your* brand when someone asks about your space?
+
+That is the job we work on at geotoolbox. If you are already building with agents, it is worth knowing whether the models can reach your site and what they say about you. You can [check how your brand shows up across the AI engines for free](https://geotoolbox.ai/tools/ai-readiness), and if you want the wider picture, our roundup of [generative engine optimization tools](https://geotoolbox.ai/blog/best-generative-engine-optimization-tools) covers the measurement side. For the model itself, start with [what Claude AI is](https://geotoolbox.ai/blog/what-is-claude-ai).
+
+## Frequently Asked Questions
+
+### What is the difference between a plugin, a skill, an MCP server, and a subagent?
+
+They sit at different layers. A **skill** is a reusable instruction set Claude Code loads for a task. A **subagent** is a separate Claude instance with its own focus (a reviewer, a debugger) that the main session delegates to. An **MCP server** is an external tool Claude can call to reach outside itself: a database, a browser, live docs. **Plugin** is the loose umbrella term for anything you add on top. Most setups mix all four.
+
+### Are these open-source tools free?
+
+The repos listed here are open source and free to run. A few lean on a hosted backend (Context7's server is open source, for instance, but its documentation index is a hosted service), and in every case you still pay for the model usage underneath: Claude Code bills tokens whether or not these tools are installed. Some, like the cost trackers, exist specifically to keep that bill visible.
+
+### Which MCP servers should I install first?
+
+The official reference servers (filesystem, git, memory) and the GitHub server cover most day-to-day work. Add Context7 so Claude checks current docs instead of guessing at function signatures. That set handles a large share of real tasks before you need anything specialized.
+
+### Is it safe to install community MCP servers?
+
+Only with care. An MCP server runs with your permissions, so an untrusted one is a genuine risk, as the Git MCP vulnerabilities showed even for official code. Install from maintained, reputable projects, use read-only credentials, and scope access tightly. When in doubt, read the source before you connect it.
+
+### What is the best open-source alternative to Claude Code?
+
+That is a different question from this guide, which is about tools that enhance Claude Code rather than replace it. If you specifically want an open-source CLI agent instead of Claude Code, OpenCode, Aider, and Cline are the names that come up most, all model-agnostic and free to run against your own API keys.
+
+### How many MCP servers is too many?
+
+There is no hard number, but more is not better. Each connected server adds tools to the menu Claude picks from every turn, and a longer menu lowers its accuracy at choosing the right one. Start with three or four, and add another only when a workflow clearly needs it.
+
+## Sources
+
+- [hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/awesome-claude-code) - the community index of Claude Code skills, hooks, commands, and MCP servers
+- [modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers) - the official reference MCP servers
+- [upstash/context7](https://github.com/upstash/context7), [oraios/serena](https://github.com/oraios/serena), [microsoft/playwright-mcp](https://github.com/microsoft/playwright-mcp), [github/github-mcp-server](https://github.com/github/github-mcp-server) - the most-adopted MCP servers referenced above
+- [obra/superpowers](https://github.com/obra/superpowers), [ruvnet/ruflo](https://github.com/ruvnet/ruflo), [ccusage/ccusage](https://github.com/ccusage/ccusage) - the workflow, orchestration, and cost tools referenced above
+- [The best GitHub repos for Claude Code, June 2026](https://markusstoeger.com/en/masterai/best-claude-code-repos-2026) - Markus Stöger - starter-stack picks and the case against over-installing
+- [Best Claude Code MCP Servers in 2026: Setup and Top 10](https://www.totalum.app/blog/claude-code-mcp-servers-2026) - Totalum - install commands and MCP security rules
+- [Anthropic's official Git MCP server had some worrying security flaws](https://www.techradar.com/pro/security/anthropics-official-git-mcp-server-had-some-worrying-security-flaws-this-is-what-happened-next) - TechRadar, January 2026 - the Git MCP CVEs and fix
