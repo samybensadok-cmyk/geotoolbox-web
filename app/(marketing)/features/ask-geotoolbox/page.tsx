@@ -134,9 +134,9 @@ export default function AskGeoToolBoxPage() {
             <div className="animate-fade-up stagger-2 lg:col-span-6">
               <ScreenshotFrame
                 src="/screenshots/ask-geotoolbox/chat.png"
-                alt="Ask GeoToolBox chat interface showing a user question about a drop in citation rate, with an AI analyst response citing the specific brand report and week-over-week movers data behind the answer."
-                width={2010}
-                height={980}
+                alt="Ask GeoToolBox chat interface showing the question 'Which domains get cited most in my space over the last 30 days?' answered with a ranked table of cited domains (rank, domain, type, citations, citation share) and three bulleted key takeaways, with a trace line showing the domain_report tool call behind the answer."
+                width={1750}
+                height={1360}
                 priority
                 caption="Ask a question in plain language — the analyst answers from your own tracked data and points to the report behind the claim."
               />
