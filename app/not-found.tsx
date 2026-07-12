@@ -1,6 +1,25 @@
 import Link from "next/link"
+import enMessages from "@/messages/en.json"
+import { RootShell } from "@/components/layout/root-shell"
 
+// This is the TRUE top-level not-found.tsx, outside both root layouts
+// ((marketing) and [locale] — see the comment in app/(marketing)/layout.tsx).
+// Neither route group wraps it, so without its own RootShell it renders with
+// Next's bare default <html><body> and NO globals.css import (unstyled 404).
+// It fires for genuinely unmatched top-level segments, so English + the
+// standard site chrome is the right default (same choice (marketing) makes).
 export default function NotFound() {
+  const nav = enMessages.nav as Record<string, string>
+  const common = enMessages.common as Record<string, string>
+  const footer = enMessages.footer as Record<string, string>
+  return (
+    <RootShell lang="en-US" nav={nav} common={common} footer={footer}>
+      <NotFoundContent />
+    </RootShell>
+  )
+}
+
+function NotFoundContent() {
   return (
     <div className="bg-white px-6 pt-20 pb-24 sm:pt-28 sm:pb-32">
       <div className="mx-auto max-w-7xl">
