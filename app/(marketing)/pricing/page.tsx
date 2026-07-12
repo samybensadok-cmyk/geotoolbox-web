@@ -130,36 +130,44 @@ export default function PricingPage() {
           </p>
         </div>
 
-        <div className="mx-auto mt-12 max-w-7xl">
-          <PricingCards />
+        {/* Core features included on every plan (incl. Free) — cards only show
+            per-tier deltas, so the shared baseline needs its own, visible-enough
+            band. Moved ABOVE the cards (was a barely-visible gray strip below them,
+            easy to miss entirely) so visitors see the shared floor before comparing
+            what each tier adds on top of it. */}
+        <div className="mx-auto mt-10 max-w-4xl">
+          <div className="rounded-2xl border border-accent-200 bg-accent-50/50 px-6 py-6 sm:px-10">
+            <p className="text-center font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+              Every plan includes
+            </p>
+            <ul className="mt-4 flex flex-wrap items-center justify-center gap-2">
+              {[
+                "AI visibility tracker",
+                "Share of voice",
+                "GEO Scan",
+                "Query Fan-Out",
+                "Agent Readiness scan",
+                "Content Analyzer",
+                "Competitor Intel",
+                "AI-ready export",
+                "Analytics (GSC + GA4)",
+              ].map((f) => (
+                <li
+                  key={f}
+                  className="flex items-center gap-1.5 rounded-full border border-accent-200 bg-white px-3.5 py-1.5 text-[13px] font-semibold text-gray-800 shadow-sm"
+                >
+                  <svg className="h-3.5 w-3.5 shrink-0 text-accent-600" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.2">
+                    <path d="M3 8.5 6.5 12 13 4.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  {f}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
-        {/* Core features included on every plan (incl. Free) — cards only show
-            per-tier deltas, so the shared baseline needs its own strip */}
-        <div className="mx-auto mt-8 max-w-7xl text-center">
-          <p className="font-mono text-[10px] font-semibold uppercase tracking-widest text-gray-500">
-            Every plan includes
-          </p>
-          <ul className="mt-3 flex flex-wrap items-center justify-center gap-x-2 gap-y-2">
-            {[
-              "AI visibility tracker",
-              "Share of voice",
-              "GEO Scan",
-              "Query Fan-Out",
-              "Agent Readiness scan",
-              "Content Analyzer",
-              "Competitor Intel",
-              "AI-ready export",
-              "Analytics (GSC + GA4)",
-            ].map((f) => (
-              <li
-                key={f}
-                className="rounded-full border border-gray-200 bg-gray-50 px-3.5 py-1.5 text-[13px] font-medium text-gray-700"
-              >
-                {f}
-              </li>
-            ))}
-          </ul>
+        <div className="mx-auto mt-10 max-w-7xl">
+          <PricingCards />
         </div>
 
         <div className="mx-auto mt-6 max-w-7xl">
