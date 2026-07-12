@@ -13,6 +13,8 @@ type Slug =
   | "citation-interceptor"
   | "pr-coverage-tracker"
   | "query-fanout"
+  | "ask-geotoolbox"
+  | "white-label-reports"
 
 const ALL_FEATURES = siteConfig.featureGroups.flatMap((g) => g.features)
 

@@ -51,7 +51,7 @@ export default function OGImage() {
             lineHeight: 1.4,
           }}
         >
-          Eleven tools to measure and own your visibility across eight AI engines.
+          13 tools to measure and own your visibility across eight AI engines.
         </div>
 
         {/* Bottom bar */}

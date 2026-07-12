@@ -453,7 +453,7 @@ export default function AnalyticsPage() {
 
       <FeatureFaq items={faqs} />
 
-      <RelatedFeatures current="analytics" related={["domain-overview", "geo-scan", "content-analyzer"]} />
+      <RelatedFeatures current="analytics" related={["domain-overview", "geo-scan", "content-analyzer", "ask-geotoolbox"]} />
 
       {/* CTA */}
       <section className="bg-gray-950 px-6 py-20 sm:py-24">

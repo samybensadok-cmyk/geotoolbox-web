@@ -85,7 +85,7 @@ export function Hero() {
               See where AI cites you, learn why it doesn&apos;t, and win the citations your competitors are taking.
             </p>
             <p className="stagger-2 mt-3 font-mono text-[12px] text-gray-500">
-              11 tools &middot; 8 engines &middot; from the first scan to the published fix
+              13 tools &middot; 8 engines &middot; from the first scan to the published fix
             </p>
 
             <div className="stagger-2 mt-8 flex flex-wrap items-center gap-3">

@@ -236,7 +236,7 @@ export default function PrCoverageTrackerPage() {
 
       <RelatedFeatures
         current="pr-coverage-tracker"
-        related={["citation-interceptor", "domain-overview", "analytics"]}
+        related={["citation-interceptor", "domain-overview", "analytics", "white-label-reports"]}
       />
 
       {/* Final CTA — Scale & Enterprise */}

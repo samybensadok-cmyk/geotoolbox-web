@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     absolute: "AI Search Visibility Platform — Get Your Brand Cited by AI | GEO Toolbox",
   },
   description:
-    "Eleven tools to measure and own your brand's visibility in AI search. See where ChatGPT, Perplexity, Gemini, Claude, AI Overviews, Copilot, and Grok cite you — and win the citations you're missing. Free plan.",
+    "13 tools to measure and own your brand's visibility in AI search. See where ChatGPT, Perplexity, Gemini, Claude, AI Overviews, Copilot, and Grok cite you — and win the citations you're missing. Free plan.",
   alternates: { canonical: siteConfig.url },
 }
 

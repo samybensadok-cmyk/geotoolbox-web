@@ -347,7 +347,7 @@ export default function CompetitorIntelPage() {
 
       <FeatureFaq items={faqs} />
 
-      <RelatedFeatures current="competitor-intel" related={["domain-overview", "geo-scan", "community"]} />
+      <RelatedFeatures current="competitor-intel" related={["domain-overview", "geo-scan", "community", "ask-geotoolbox"]} />
 
       {/* CTA */}
       <section className="bg-gray-950 px-6 py-20 sm:py-24">

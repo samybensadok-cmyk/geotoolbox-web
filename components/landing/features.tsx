@@ -177,7 +177,7 @@ export function Features() {
             See it. Fix it. Own it.
           </h2>
           <p className="mt-4 text-base text-gray-600">
-            Eleven tools across one workflow — from the first scan to the published fix that wins the citation.
+            13 tools across one workflow — from the first scan to the published fix that wins the citation.
           </p>
         </div>
 
@@ -205,13 +205,13 @@ export function Features() {
           ))}
         </div>
 
-        {/* The full eleven — substantiate the breadth a borderless index, not cards */}
+        {/* The full 13 — substantiate the breadth a borderless index, not cards */}
         <div className="mt-16 grid grid-cols-2 gap-x-8 gap-y-9 border-t border-gray-100 pt-12 sm:grid-cols-4">
           {[
             { stage: "Scan", tools: [["GEO Scan", "geo-scan"], ["Query Fan-Out", "query-fanout"], ["Agent Readiness", "agent-readiness"]] },
             { stage: "Analyze", tools: [["Content Analyzer", "content-analyzer"], ["Content Studio", "content-studio"]] },
-            { stage: "Intelligence", tools: [["Domain Overview", "domain-overview"], ["Competitor Intel", "competitor-intel"], ["Citation Interceptor", "citation-interceptor"], ["Community", "community"]] },
-            { stage: "Report", tools: [["Analytics", "analytics"], ["PR Coverage Tracker", "pr-coverage-tracker"]] },
+            { stage: "Intelligence", tools: [["Domain Overview", "domain-overview"], ["Competitor Intel", "competitor-intel"], ["Citation Interceptor", "citation-interceptor"], ["Community", "community"], ["Ask GeoToolBox", "ask-geotoolbox"]] },
+            { stage: "Report", tools: [["Analytics", "analytics"], ["PR Coverage Tracker", "pr-coverage-tracker"], ["White-Label Reports", "white-label-reports"]] },
           ].map((g) => (
             <div key={g.stage}>
               <p className="font-mono text-[10px] font-semibold uppercase tracking-widest text-accent-700">
@@ -235,9 +235,9 @@ export function Features() {
 
         <div className="mt-12 flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:justify-between">
           <p className="max-w-lg text-[15px] leading-relaxed text-gray-600">
-            Eleven tools across scan, analyze, act, and track.{" "}
+            13 tools across scan, analyze, act, and track.{" "}
             <Link href="/features" className="font-semibold text-accent-700 underline-offset-2 hover:underline">
-              Explore all eleven&nbsp;→
+              Explore all 13&nbsp;→
             </Link>
           </p>
           <Link

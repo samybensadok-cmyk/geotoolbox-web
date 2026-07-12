@@ -78,6 +78,11 @@ const FAQ = [
     answer:
       "No card is required for the free plan. Paid plans bill monthly or annually; annual saves about 17% (roughly two months free) and you can cancel any time.",
   },
+  {
+    question: "What is Ask GeoToolBox, and which plans include it?",
+    answer:
+      "Ask GeoToolBox is an AI analyst chat built into the app — ask it things like \"why did our citation rate drop last week\" or \"which domains cite us but not our competitor,\" and it queries your own tracked visibility data live to answer. It's included on Growth and every plan above it (Scale, Enterprise).",
+  },
 ]
 
 export default function PricingPage() {
@@ -121,7 +126,7 @@ export default function PricingPage() {
             One credit pool. <span className="text-accent-700">Every tool. Any scale.</span>
           </h1>
           <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-            Eleven tools to get your brand cited by AI, on credit-based plans that scale from a single brand to a full agency portfolio. Start free with 1,000 credits, no card required.
+            13 tools to get your brand cited by AI, on credit-based plans that scale from a single brand to a full agency portfolio. Start free with 1,000 credits, no card required.
           </p>
         </div>
 
@@ -238,7 +243,7 @@ export default function PricingPage() {
             <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-400">Enterprise</p>
             <h2 className="mt-2 text-2xl font-bold tracking-tight text-white">For large teams and portfolios</h2>
             <p className="mt-3 text-[15px] leading-relaxed text-gray-300">
-              Custom credit volumes, unlimited brands and prompts, premium frontier models, custom features built for your team, priority API &amp; MCP access, SSO/SAML, a dedicated CSM, white-glove onboarding, and a 4-hour support SLA — on a contract, DPA and security review that fit your procurement needs.
+              Custom credit volumes, unlimited brands and prompts, premium frontier models, custom features built for your team, priority API &amp; MCP access, SSO/SAML, a dedicated CSM, white-glove onboarding, and a 4-hour support SLA — on a contract, DPA and security review that fit your procurement needs. Includes a full audit log, GDPR-compliant data export &amp; erasure tooling, and per-tenant rate limiting for IT and compliance sign-off.
             </p>
           </div>
           <Link

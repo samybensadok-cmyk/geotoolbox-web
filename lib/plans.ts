@@ -110,7 +110,10 @@ export const PLANS: Plan[] = [
       engines: "Pick 3 of 5 engines",
       scans: "Weekly scans",
     },
-    inheritsFrom: "Starter",
+    // null, not "Starter" — Starter (like Free) is filtered out of CARD_TIERS and only
+    // appears as a one-line strip below the cards, so "Everything in Starter, plus:"
+    // would reference a card the visitor never saw. Consultant is the first full card.
+    inheritsFrom: null,
     highlights: [
       "Choose your 3 engines (+ Bing, Grok)",
       "Content Studio — 15 SEO briefs/mo",
@@ -136,6 +139,7 @@ export const PLANS: Plan[] = [
     },
     inheritsFrom: "Consultant",
     highlights: [
+      "Ask GeoToolBox — AI analyst chat over your own data",
       "Choose 5 of all 8 engines (+ Gemini, Claude, AI Mode)",
       "Article writing — 30 articles/mo (5-stage copywriter)",
       "White-label client reports",
@@ -191,6 +195,7 @@ export const PLANS: Plan[] = [
       "Custom features & integrations built for your team",
       "Dedicated CSM + quarterly GEO strategy & QBR",
       "SSO / SAML, security review, DPA & 4-hour SLA",
+      "Audit log, GDPR data export/erasure, per-tenant rate limits",
       "Priority API & MCP access",
       "White-glove onboarding & team training",
       "Custom contract, invoicing, PO & net terms",
@@ -257,6 +262,7 @@ export const COMPARE_GROUPS: CompareGroup[] = [
       { label: "Domain Overview + Opportunities", values: [N, N, Y, Y, Y] },
       { label: "Citation Interceptor", values: [N, N, Y, Y, Y] },
       { label: "Community (Reddit & forum citations)", values: [N, N, Y, Y, Y] },
+      { label: "Ask GeoToolBox (AI analyst chat)", values: [N, N, N, Y, Y] },
       { label: "PR Coverage Tracker", values: [N, N, N, N, Y] },
     ],
   },

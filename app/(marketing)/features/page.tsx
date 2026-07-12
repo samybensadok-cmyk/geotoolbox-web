@@ -7,7 +7,7 @@ import { breadcrumbsSchema, itemListSchema } from "@/lib/seo-schema"
 export const metadata: Metadata = {
   title: "AI SEO & GEO Tools",
   description:
-    "Nine connected tools for generative engine optimization (GEO) and AI search visibility. Scan, analyze, brief, and monitor your brand across ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Google AI Mode, Bing Copilot, and Grok.",
+    "13 connected tools for generative engine optimization (GEO) and AI search visibility. Scan, analyze, brief, and monitor your brand across ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Google AI Mode, Bing Copilot, and Grok.",
   alternates: { canonical: `${siteConfig.url}/features` },
 }
 
@@ -125,6 +125,13 @@ const groups: Group[] = [
         highlights: ["Offsite citation gap", "Evidence grading", "Action worklist"],
         tint: "lilac",
       },
+      {
+        slug: "ask-geotoolbox",
+        name: "Ask GeoToolBox",
+        blurb: "Ask a plain-language question about your AI visibility and get an answer pulled live from your own tracked data — every claim shows which report it came from.",
+        highlights: ["Plain-language Q&A", "Source-grounded answers", "Growth & up"],
+        tint: "mint",
+      },
     ],
   },
   {
@@ -145,6 +152,13 @@ const groups: Group[] = [
         blurb: "Upload the media coverage you earned and see which placements are still live, indexed in Google, and cited by AI engines for your client's prompts. PR ROI for the AI era.",
         highlights: ["Live + indexed checks", "AI-citation attribution", "Scale & Enterprise"],
         tint: "warm",
+      },
+      {
+        slug: "white-label-reports",
+        name: "White-Label Reports",
+        blurb: "A monthly, client-facing AI-visibility report under your own brand — your logo, your colors, your footer, sent automatically or shared with a login-free link.",
+        highlights: ["Your logo & colors", "Automated monthly send", "Growth & up"],
+        tint: "blush",
       },
     ],
   },
@@ -183,7 +197,7 @@ export default function FeaturesPage() {
                 Features
               </p>
               <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-                Eleven tools.
+                13 tools.
                 <br />
                 <span className="text-accent-600">One AI visibility stack.</span>
               </h1>

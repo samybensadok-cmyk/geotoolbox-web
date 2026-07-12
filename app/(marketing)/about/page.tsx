@@ -8,7 +8,7 @@ import { siteConfig } from "@/lib/config"
 export const metadata: Metadata = {
   title: "About",
   description:
-    "GEO Toolbox is the platform to get your brand cited by AI — eleven tools to measure your AI search visibility, find why a page isn't cited, and win the citations you're missing across eight engines.",
+    "GEO Toolbox is the platform to get your brand cited by AI — 13 tools to measure your AI search visibility, find why a page isn't cited, and win the citations you're missing across eight engines.",
   alternates: { canonical: `${siteConfig.url}/about` },
 }
 
@@ -27,7 +27,7 @@ export default function AboutPage() {
             Built for the AI search era.
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-gray-700">
-            GEO Toolbox is the platform to get your brand cited by AI. Eleven tools to measure your visibility across eight engines — ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Google AI Mode, Bing Copilot, and Grok — find why a page isn&apos;t cited, and win the citations your competitors are taking.
+            GEO Toolbox is the platform to get your brand cited by AI. 13 tools to measure your visibility across eight engines — ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Google AI Mode, Bing Copilot, and Grok — find why a page isn&apos;t cited, and win the citations your competitors are taking.
           </p>
         </div>
       </section>

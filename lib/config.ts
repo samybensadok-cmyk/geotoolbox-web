@@ -37,6 +37,7 @@ export const siteConfig = {
         { slug: "competitor-intel", name: "Competitor Intel", desc: "Track rivals over time" },
         { slug: "community", name: "Community", desc: "Reddit + forum citations" },
         { slug: "citation-interceptor", name: "Citation Interceptor", desc: "Where AI cites others, not you" },
+        { slug: "ask-geotoolbox", name: "Ask GeoToolBox", desc: "Chat with an AI analyst over your own data" },
       ],
     },
     {
@@ -44,6 +45,7 @@ export const siteConfig = {
       features: [
         { slug: "analytics", name: "Analytics", desc: "GSC + GA4 for AI attribution" },
         { slug: "pr-coverage-tracker", name: "PR Coverage Tracker", desc: "Prove earned media shows up in AI" },
+        { slug: "white-label-reports", name: "White-Label Reports", desc: "Client-ready reports under your brand" },
       ],
     },
   ],
