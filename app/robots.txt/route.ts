@@ -9,7 +9,19 @@ import { siteConfig } from "@/lib/config"
 // Replaced app/robots.ts (MetadataRoute can't emit Content-Signal lines).
 
 // /md/ = internal rewrite target of the .md twins — crawl the twins, not it.
-const DISALLOWS = ["/app/", "/api/", "/go/", "/md/", "/*_rsc="]
+//
+// 2026-07-13 fix: the PHP app is routed entirely by query string (/app?page=X,
+// never /app/anything), so its URL path is always the bare string "/app" — which
+// "Disallow: /app/" (trailing slash) does NOT match, since robots.txt disallow is
+// a literal path-prefix match and "/app" does not start with "/app/". Result:
+// login, reset-password, and other app-shell pages were fully crawlable and
+// getting indexed (confirmed via GSC: "Crawl allowed? Yes" on /app?page=...).
+// "/app$" (end-anchor) matches the bare path exactly; "/app?" matches any query
+// string on it. Both are needed since neither alone covers both cases. Can't
+// just use "Disallow: /app" (no anchor) either — that would also match
+// /apple-icon (a real route, app/apple-icon.tsx), since it shares the "/app"
+// prefix as a plain string.
+const DISALLOWS = ["/app$", "/app?", "/app/", "/api/", "/go/", "/md/", "/*_rsc="]
 // /*_rsc= = Next.js App Router RSC prefetch URLs. They 200 + canonicalize to
 // the clean URL, but crawlers fetch them as noise. robots blocks crawlers
 // only, so client-side navigation/prefetch is unaffected.
