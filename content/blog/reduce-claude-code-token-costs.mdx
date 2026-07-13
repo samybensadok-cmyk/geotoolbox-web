@@ -150,22 +150,22 @@ The reason agentic coding is expensive is the same reason serving AI answers is 
 
 ## Frequently Asked Questions
 
-**Why does Claude Code use so many tokens?**
+### Why does Claude Code use so many tokens?
 Because the model has no memory between steps, so Claude Code re-sends the entire context, your files, prior messages, and every tool result, on every single turn. Agentic tasks compound this by injecting large file and log outputs that then ride along on all following turns, which is why input tokens dominate the cost by volume.
 
-**What is the difference between /clear and /compact?**
+### What is the difference between /clear and /compact?
 `/clear` wipes the conversation history completely while keeping your files and tools, which is what you want when switching to unrelated work. `/compact` summarizes the conversation so far and continues from that summary, which is what you want at a natural break in the same task. Reach for `/clear` between tasks and `/compact` within one.
 
-**How big should my CLAUDE.md file be?**
+### How big should my CLAUDE.md file be?
 Keep it small, ideally under 200 lines. It loads at session start and stays in context the entire session, so every line adds fixed weight to every task, including the ones it has nothing to do with. Move detailed or specialized workflow instructions into skills, which load only when Claude invokes them.
 
-**Does switching from Opus to Sonnet actually lower my bill?**
+### Does switching from Opus to Sonnet actually lower my bill?
 Yes, for routine work. Opus costs more per token, so running everyday edits, refactors, and tests on Sonnet (or simple helpers on Haiku) cuts cost with no real quality loss. Reserve Opus for planning and hard reasoning. Set your model at the start of a session, since switching mid-session recomputes the cache.
 
-**Do subagents cost more or less?**
+### Do subagents cost more or less?
 It depends on the job. A subagent runs verbose work like log analysis in its own separate context and returns only a short summary, which keeps that noise out of your main thread and can save tokens overall. Spawn many long-running teammates at once, though, and each carries its own context window, so cost scales with the team.
 
-**Is reducing token usage about my bill or my usage limit?**
+### Is reducing token usage about my bill or my usage limit?
 Both, depending on your plan. On a Pro or Max subscription you pay a flat fee and hit a usage limit, so saving tokens means not running out mid-week. On an API key every token is billed, so it is literal money. The same habits help either way.
 
 ## Sources
