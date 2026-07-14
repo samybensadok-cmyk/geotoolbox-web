@@ -46,6 +46,21 @@ export async function GET(
     }
   }
 
+  // Network SubId (e.g. Impact `sharedid`) for per-article attribution in the
+  // network's own reporting — works even when noUtm skips the utm_* block.
+  if (link.subIdParam) {
+    try {
+      const u = new URL(dest)
+      const ref = req.nextUrl.searchParams.get("ref") || "blog"
+      if (!u.searchParams.has(link.subIdParam)) {
+        u.searchParams.set(link.subIdParam, `gtb-${ref}`)
+      }
+      dest = u.toString()
+    } catch {
+      // Malformed URL — keep the raw dest rather than 500.
+    }
+  }
+
   // TODO(click-logging): optionally POST { slug, ref, ts } to the Neon-backed
   // PHP endpoint here for per-post EPC, once an `affiliate_clicks` table exists.
 
