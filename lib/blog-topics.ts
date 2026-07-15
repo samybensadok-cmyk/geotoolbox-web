@@ -75,6 +75,7 @@ export const TOPICS: Topic[] = [
       "copilot", "microsoft-copilot", "copilot-ai", "copilot-seo",
       "copilot-studio", "microsoft-copilot-studio", "copilot-agents",
       "elon-musk", "chinese-ai", "ai-assistant", "ai-news", "open-weights",
+      "mistral", "mistral-ai", "mistral-large", "vibe", "le-chat", "cest-quoi-mistral", "ia-francaise",
       "what-is-claude-ai", "what-is-gemini", "what-is-grok", "what-is-copilot",
       "what-is-deepseek", "what-is-kimi-ai", "what-is-qwen", "what-is-glm-5-2",
     ],
