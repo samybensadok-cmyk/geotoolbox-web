@@ -5,7 +5,7 @@
 // 2026-06-09 rewrite — aligned to the real backend after the per-tier engine
 // model + competitive repricing:
 //  - Per-tier engine model: free=ChatGPT only; starter=3 fixed; consultant=pick
-//    3 of 5; agency=pick 5 of 7; scale/enterprise=all 7.
+//    3 of 5; agency=pick 5 of 8; scale/enterprise=all 8 (AI Mode added as 8th engine).
 //  - Credits right-sized: 1k / 12k / 50k / 150k / 300k / 500k+.
 //  - Starter is single-brand (depth, not breadth). Brands unlimited at Agency+.
 //  - Team seats: 1 on Free/Starter/Consultant, unlimited on Agency+ (live 2026-06-09).
