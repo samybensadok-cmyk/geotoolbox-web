@@ -10,12 +10,12 @@ import { PLANS } from "@/lib/plans"
 export const metadata: Metadata = {
   title: "Pricing — GEO Toolbox",
   description:
-    "Simple, credit-based pricing for AI visibility tracking. Start free with 1,000 credits, no card. Paid plans from $49/mo across all 8 AI engines.",
+    "Simple, credit-based pricing for AI visibility tracking. Start free with 1,000 credits, no card. Paid plans from $39/mo billed annually across all 8 AI engines.",
   alternates: { canonical: "/pricing" },
   openGraph: {
     title: "GEO Toolbox Pricing",
     description:
-      "Track your brand across ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Google AI Mode, Bing Copilot and Grok. Free plan, paid from $49/mo.",
+      "Track your brand across ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Google AI Mode, Bing Copilot and Grok. Free plan, paid from $39/mo billed annually.",
     url: "/pricing",
     type: "website",
   },
@@ -175,9 +175,9 @@ export default function PricingPage() {
             <p className="text-[14px] text-gray-700">
               <span className="font-semibold text-gray-900">Solo or just exploring?</span> Start free with 1,000 credits and no card, or go deep on a single brand with our{" "}
               <Link href={siteConfig.appSignupUrl} prefetch={false} className="font-semibold text-accent-700 underline-offset-2 hover:underline">
-                Starter tier at $49/mo
+                Starter tier at $39/mo billed annually
               </Link>{" "}
-              (3 engines, weekly scans).
+              ($49 monthly; 3 engines, weekly scans).
             </p>
             <Link
               href={siteConfig.appSignupUrl}

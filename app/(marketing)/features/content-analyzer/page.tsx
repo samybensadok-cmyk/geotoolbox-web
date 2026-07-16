@@ -148,7 +148,7 @@ const faqs = [
   {
     question: "What does Content Analyzer cost?",
     answer:
-      "Content Analyzer is included from the Starter plan ($49/mo) up. A free account covers the AI visibility tracker and Agent Readiness so you can start without a card — see the pricing page for current tiers.",
+      "Content Analyzer is included from the Starter plan ($39/mo billed annually, $49 monthly) up. A free account covers the AI visibility tracker and Agent Readiness so you can start without a card — see the pricing page for current tiers.",
   },
 ]
 

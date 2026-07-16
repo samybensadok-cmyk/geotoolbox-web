@@ -56,7 +56,7 @@ export function CTA() {
               </Link>
             </div>
             <p className="mt-1 text-xs text-gray-400">
-              1,000 free credits/month &middot; paid plans from $49/mo
+              1,000 free credits/month &middot; paid plans from $39/mo (annual)
             </p>
           </div>
         </div>
