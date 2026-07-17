@@ -69,7 +69,7 @@ export const TOPICS: Topic[] = [
       "chatgpt", "chatgpt-search", "gemini", "google-gemini", "gemini-ai", "gemini-gems", "gemini-seo", "gemini-omni",
       "claude", "claude-seo", "claude-fable-5", "claude-mythos", "claude-sonnet-5", "sonnet-5",
       "grok", "grok-ai", "grok-5", "grok-5-release-date", "grok-4.5", "grok-imagine", "xai", "spacexai",
-      "perplexity", "deepseek", "deepseek-r1", "kimi-ai", "kimi-k2",
+      "perplexity", "deepseek", "deepseek-r1", "kimi-ai", "kimi-k2", "kimi-k3",
       "inkling", "inkling-ai", "thinking-machines-lab", "mira-murati",
       "moonshot-ai", "qwen", "qwen3", "tongyi-qianwen", "alibaba",
       "glm", "glm-5-2", "zhipu-ai", "z-ai", "openai", "anthropic", "gpt-5-6",
