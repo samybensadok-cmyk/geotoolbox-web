@@ -16,7 +16,7 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema, howToSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
-  title: "AI Citation Tracking: The Sources AI Cites Without You",
+  title: "AI Citation Tracking: What AI Cites, Not You",
   description:
     "AI cites Reddit threads and forums about your category and you're absent. Track the offsite sources AI leans on and get an evidence-graded worklist.",
   openGraph: {

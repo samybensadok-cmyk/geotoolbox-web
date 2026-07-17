@@ -7,7 +7,7 @@ import { itemListSchema } from "@/lib/seo-schema"
 import { tools } from "@/lib/tools"
 
 export const metadata: Metadata = {
-  title: "Free AI SEO Tools: llms.txt, AI Crawler & Readiness",
+  title: "Free AI SEO Tools: llms.txt & AI Crawler",
   description:
     "Five free AI SEO tools, no sign-up: see which AI crawlers your robots.txt blocks, validate llms.txt, score AI readiness, run a real query fan-out.",
   alternates: { canonical: `${siteConfig.url}/tools` },

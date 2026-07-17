@@ -8,7 +8,7 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
-  title: "Reddit AI Citations: The Threads AI Quotes About You",
+  title: "Reddit AI Citations: The Threads AI Quotes",
   description:
     "See which Reddit threads and forums AI engines cite when answering questions in your space, including the ones spreading bad information about your brand.",
   openGraph: {

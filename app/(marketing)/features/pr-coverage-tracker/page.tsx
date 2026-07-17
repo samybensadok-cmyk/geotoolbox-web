@@ -16,7 +16,7 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema, howToSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
-  title: "PR Coverage Tracker: Prove Earned Media Works in AI",
+  title: "PR Coverage Tracker: Prove Earned Media in AI",
   description:
     "Upload your earned media and see which placements are still live, indexed in Google, and cited by AI engines when buyers ask about your client.",
   openGraph: {

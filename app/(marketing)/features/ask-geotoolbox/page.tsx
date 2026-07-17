@@ -15,7 +15,7 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema, howToSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
-  title: "Ask GeoToolBox: AI Analyst Chat for Your Visibility Data",
+  title: "Ask GeoToolBox: AI Analyst Chat for Your Data",
   description:
     "Ask plain-language questions about your AI visibility. Answers come from your own tracked data, with the report behind every number. Growth plans and up.",
   openGraph: {

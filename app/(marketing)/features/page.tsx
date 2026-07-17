@@ -5,7 +5,7 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { breadcrumbsSchema, itemListSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
-  title: "AI Visibility Tools: 13 AI SEO Features in One Stack",
+  title: "AI Visibility Tools: 13 Features in One Stack",
   description:
     "Thirteen connected AI visibility tools and AI SEO tools: scan 8 AI engines, grade pages for citability, track competitors, attribute AI traffic.",
   alternates: { canonical: `${siteConfig.url}/features` },

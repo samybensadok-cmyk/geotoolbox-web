@@ -8,7 +8,7 @@ import { siteConfig } from "@/lib/config"
 import { PLANS } from "@/lib/plans"
 
 export const metadata: Metadata = {
-  title: "GEO Toolbox Pricing: AI Visibility Plans From $39/mo",
+  title: "AI Visibility Tool Pricing: Plans From $39/mo",
   description:
     "One credit pool across 13 AI visibility tools. Start free with 1,000 credits, no card; paid plans from $39/mo billed annually, up to all 8 AI engines.",
   alternates: { canonical: "/pricing" },
