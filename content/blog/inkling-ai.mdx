@@ -1,0 +1,181 @@
+---
+title: "Inkling AI Model: Thinking Machines Lab's First Model, Explained"
+description: "The Inkling AI model is Thinking Machines Lab's first release: a 975B open-weights multimodal AI. What it is, the specs, the real benchmarks, and who it's for."
+date: "2026-07-17"
+author: "Samy BEN SADOK"
+tags: ["inkling", "inkling-ai", "thinking-machines-lab", "mira-murati", "open-weights", "mixture-of-experts", "multimodal-ai", "llm", "guide"]
+draft: false
+---
+
+The Inkling AI model is the first model Thinking Machines Lab has shipped, and it landed on July 15, 2026. If you have seen the headlines about Mira Murati's secretive lab finally releasing a model and want the plain version of what Inkling actually is, what it can do, and whether it matters to you, this is it, current as of July 2026.
+
+Most of the coverage so far is either a spec dump or a launch-day hot take. We will cover the parts they bury: the honest read on how good it really is, the difference between open weights and open source, whether you can run a 975-billion-parameter model at all, and what a new open model means for whether AI tools mention your brand.
+
+## What Is the Inkling AI Model?
+
+**Inkling is Thinking Machines Lab's first model: a 975-billion-parameter open-weights [mixture-of-experts](https://geotoolbox.ai/glossary/mixture-of-experts) model that reasons over text, images, and audio, released on July 15, 2026.** Only 41 billion of those parameters are active for any given token, which is the trick that keeps a model this large affordable to run.
+
+The most important thing to understand up front is what Inkling is not. It is not a finished chatbot you sign into, the way you use ChatGPT or Gemini. It is a base model, released as open weights, meant to be downloaded and fine-tuned into something of your own. Thinking Machines is blunt about this: Inkling is a starting point, not a product.
+
+That framing echoes the split we describe in our explainer on [DeepSeek](https://geotoolbox.ai/blog/what-is-deepseek), another open-weight model that people confuse with a consumer app. There is the model, which is open, and there is the service around it, which is how the company hopes to make money. With Inkling, that service is a fine-tuning platform called Tinker. Keep that distinction in mind and most of the questions about Inkling answer themselves.
+
+## Who Makes Inkling? Thinking Machines Lab and Mira Murati
+
+Inkling comes from Thinking Machines Lab, the startup founded in February 2025 by [Mira Murati](https://www.wired.com/story/thinking-machines-lab-releases-its-first-model-inkling/), OpenAI's former chief technology officer and briefly its CEO. She did not leave alone. The founding team includes John Schulman, an OpenAI cofounder who was central to ChatGPT, and Lilian Weng, a former OpenAI VP who led safety and robotics work. It is, in short, a lab built by the people who built a lot of OpenAI.
+
+The money followed the names. Thinking Machines raised what was reported as the largest seed round in history, valuing the company at roughly $12 billion before it had shipped a single model. There have also been reports, which the company has not confirmed, of a much larger round near $50 billion that stalled earlier in the year, so treat the eye-watering numbers as reported rather than settled.
+
+What the lab had shipped before Inkling was Tinker, its fine-tuning tool, plus some research and a voice-interaction demo. Inkling is the first actual model, arriving almost a year and a half after the company was founded, and the lab has made a point of moving quickly. The culture is deliberately anti-star, favoring team continuity over individual celebrity, which reads as a direct reaction to the environment its founders left. One question the launch does not answer: how a company that gives its flagship away for free, while third parties are free to host the same open weights, eventually pays for the roughly one gigawatt of next-generation Nvidia systems it has committed to. Tinker is the bet, and it is still early.
+
+## Inkling's Specs at a Glance
+
+Underneath the positioning, Inkling is a large and modern model. Here is what the [official model card](https://thinkingmachines.ai/model-card/inkling/) and [launch announcement](https://thinkingmachines.ai/news/introducing-inkling/) lay out.
+
+<table>
+<thead>
+<tr><th>Spec</th><th>Inkling</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Parameters</strong></td><td>975B total / 41B active per token (sparse mixture-of-experts)</td></tr>
+<tr><td><strong>Architecture</strong></td><td>66-layer decoder-only transformer; 256 routed experts (6 active per token) plus 2 shared experts</td></tr>
+<tr><td><strong>Attention</strong></td><td>Interleaved sliding-window and global layers (roughly 5:1)</td></tr>
+<tr><td><strong>Context window</strong></td><td>Up to 1M tokens (64K and 256K options on Tinker)</td></tr>
+<tr><td><strong>Modalities</strong></td><td>Text, image, and audio in; text out only</td></tr>
+<tr><td><strong>Training data</strong></td><td>45 trillion tokens of text, images, audio, and video</td></tr>
+<tr><td><strong>Optimizer</strong></td><td>Muon for large matrix weights, Adam for the rest</td></tr>
+<tr><td><strong>Numerics</strong></td><td>BF16, MXFP8, and NVFP4 support</td></tr>
+<tr><td><strong>License</strong></td><td>Apache 2.0 (open weights on Hugging Face)</td></tr>
+</tbody>
+</table>
+
+A few of these matter more than the rest. The mixture-of-experts design is why a 975B model is even practical: it holds a huge number of parameters but only fires a small slice for each [token](https://geotoolbox.ai/blog/what-are-tokens-in-ai), so it costs far less to run than a dense 975B model would, even if attention, routing, and long context mean the real bill still lands above a true 41B model. The 1-million-token [context window](https://geotoolbox.ai/glossary/context-window) puts it in the same tier as the largest current models. And it is natively multimodal on input, meaning it was trained from the start to read images and audio, not bolted onto a text model afterward. One caveat worth stating plainly: it only outputs text. It reads images and audio, it does not generate them.
+
+## How Good Is Inkling? Benchmarks and the Caveats
+
+Thinking Machines published a full benchmark sheet, run at its highest thinking effort setting. The headline numbers are strong.
+
+<table>
+<thead>
+<tr><th>Benchmark</th><th>Inkling score</th><th>What it measures</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>AIME 2026</strong></td><td>97.1%</td><td>Competition math</td></tr>
+<tr><td><strong>GPQA Diamond</strong></td><td>87.2%</td><td>Graduate-level science reasoning</td></tr>
+<tr><td><strong>SWE-bench Verified</strong></td><td>77.6%</td><td>Real-world software fixes</td></tr>
+<tr><td><strong>Humanity's Last Exam</strong></td><td>29.7% (46.0% with tools)</td><td>Hard expert reasoning</td></tr>
+<tr><td><strong>Terminal Bench 2.1</strong></td><td>63.8%</td><td>Agentic command-line tasks</td></tr>
+<tr><td><strong>VoiceBench</strong></td><td>91.4%</td><td>Spoken-audio understanding</td></tr>
+<tr><td><strong>MMMU Pro</strong></td><td>73.5%</td><td>Multimodal reasoning</td></tr>
+</tbody>
+</table>
+
+This is where the launch coverage tends to go quiet. Thinking Machines says outright that Inkling is **not the strongest overall model available today, open or closed**. That is not modesty for its own sake. The frontier closed models from OpenAI, Anthropic, and Google still lead most leaderboards, and on the independent Artificial Analysis Intelligence Index, Inkling scored 41, which made it the top US open-weights model but still left it behind Chinese open leaders like GLM-5.2. Strong for an open model, not a category winner. One more thing about that benchmark sheet: the numbers are reported at the top thinking-effort setting, so they are a best case. Dial the effort down for speed or cost and the scores come down with it.
+
+Two more asterisks. First, several of these scores were produced on the company's own internal test harnesses rather than fully independent ones, so they will need outside reproduction before anyone should treat them as settled. Second, the impressive efficiency claims, like matching Nvidia's Nemotron 3 Ultra on an agentic terminal benchmark with about a third of the tokens, or a fine-tuned Inkling scoring 84.7% on a Bridgewater financial-reasoning test at a fourteenth of the cost, come from vendor or private evaluations. The results may well hold up. They are just not independently verified yet, and it is worth knowing which numbers are which.
+
+## Is Inkling Open Source? Open Weights vs Open Source
+
+Inkling is being called open source all over the place, and, as usual, the label is only half right. **Inkling is open weights, not open source.** The weights ship under the [Apache 2.0 license](https://huggingface.co/thinkingmachines/Inkling), one of the most permissive there is, so you can download the model, run it, fine-tune it, and ship it commercially with almost no strings. That is genuinely open, and more permissive than some Chinese open models that add attribution clauses.
+
+What you cannot do is rebuild it. Open weights means the finished model files are public. Open source, in the strict sense, would also mean releasing the training data and enough of the recipe to reproduce the model from scratch, and Thinking Machines does not publish its 45-trillion-token dataset. We walk through why that gap matters in our guide to [open weights vs open source](https://geotoolbox.ai/blog/open-weights-vs-open-source), and it applies squarely here: you can use Inkling freely without being able to fully audit how it was made.
+
+There is one more note buried in the technical write-ups. To bootstrap Inkling's early post-training, Thinking Machines generated synthetic data using other labs' open models, including Moonshot AI's [Kimi](https://geotoolbox.ai/blog/what-is-kimi-ai) K2.5. Distillation like this is common across the industry, but it is a fair part of the picture: part of how Inkling got good was learning from models someone else trained first.
+
+## Can You Actually Run Inkling? Hardware and How to Access It
+
+The spec sheets soften this part. "Open weights" does not mean you can run this on your laptop, or even on a single high-end gaming GPU. Inkling is enormous. The full BF16 checkpoint needs at least 2 terabytes of aggregated GPU memory, which the model card puts at 8 Nvidia B300s or 16 H200s. The quantized NVFP4 version drops that to roughly 600GB, which it still lists as 4 B300s or 8 H200s. The download itself runs to nearly 2TB across a hundred-plus files. This is a data-center model.
+
+So for almost everyone, "open" means one of these access routes rather than self-hosting.
+
+<table>
+<thead>
+<tr><th>How to access</th><th>What you get</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Tinker</strong></td><td>Thinking Machines' own platform to fine-tune Inkling on your data and call it via API. Priced per million tokens (a limited-time launch discount lists around $1.87 prefill / $4.68 output at 64K context; the discount is temporary, so check the current Tinker docs). This is the intended path.</td></tr>
+<tr><td><strong>Hugging Face weights</strong></td><td>Download the full open weights and run them on your own cluster. Free license, serious hardware bill.</td></tr>
+<tr><td><strong>Third-party providers</strong></td><td>Together AI, Fireworks, Modal, Databricks, and Baseten host Inkling as an API so you skip the infrastructure.</td></tr>
+<tr><td><strong>Quantized / GGUF</strong></td><td>NVFP4 for Blackwell GPUs, plus a community 1-bit GGUF via Unsloth for teams squeezing it onto smaller setups, at some cost to quality.</td></tr>
+</tbody>
+</table>
+
+The value in owning the weights is control. Because you can [fine-tune](https://geotoolbox.ai/glossary/fine-tuning) Inkling on your own proprietary data and, on Tinker, keep that data yours rather than folding it into someone else's foundation model, a company can build a specialized model without renting it from a closed lab. That is the pitch, and it is a real one for organizations with valuable internal knowledge.
+
+## Inkling vs DeepSeek, Kimi, and the Open-Model Field
+
+Inkling arrives into a field where the best open models have, until now, been Chinese. DeepSeek, Kimi, and Zhipu's GLM set the open-weight bar, and Thinking Machines is pitching Inkling as a serious US entry that claims comparable performance. Here is how it sits against the field.
+
+<table>
+<thead>
+<tr><th>Model</th><th>Maker</th><th>Open weights?</th><th>Strongest at</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Inkling</strong></td><td>Thinking Machines (US)</td><td>Yes (Apache 2.0)</td><td>Multimodal input, 1M context, a customizable base to fine-tune</td></tr>
+<tr><td><strong>DeepSeek</strong></td><td>High-Flyer (China)</td><td>Yes (MIT)</td><td>Reasoning, coding, very low cost</td></tr>
+<tr><td><strong>Kimi</strong></td><td>Moonshot (China)</td><td>Yes (modified MIT)</td><td>Agentic multi-step work, long context</td></tr>
+<tr><td><strong>Llama / GLM</strong></td><td>Meta / Zhipu</td><td>Yes (varies)</td><td>Broad ecosystems, tooling, adoption</td></tr>
+</tbody>
+</table>
+
+What actually sets Inkling apart is not raw benchmark supremacy. It is the combination of native multimodality, the controllable thinking effort that lets you trade tokens for speed, and the fact that it is a broad, balanced base that a well-resourced team can adapt. If you want the current landscape of the open models it is competing with, our roundup of [how the major Chinese models compare](https://geotoolbox.ai/blog/chinese-ai-models-compared) puts them side by side. Inkling's real claim is geographic and strategic as much as technical: a frontier-scale open model from a US lab, for teams that want an alternative to both the closed American models and the Chinese open ones.
+
+## "Resistance to Censorship": What It Actually Means
+
+Some of the launch coverage led with "resistance to censorship," which sounds more dramatic than it is. Thinking Machines frames it under what it calls epistemics: the model should be well-calibrated, follow instructions, and answer politically sensitive questions rather than reflexively refusing them or inheriting a developer's standardized opinions. In plain terms, it is built to be less preachy and less arbitrarily restrictive on contested topics.
+
+What it is not is a jailbroken model. Inkling still has hard refusals for genuinely dangerous requests, weapons, cyber abuse, and the like, and it posts strong safety-benchmark scores. The model card is candid about the trade-off, admitting an occasional tendency to comply with role-play or indirectly framed prompts on harmful topics, and it recommends the usual input and output filtering for high-stakes use. One open question worth flagging: because the model is meant to be fine-tuned, how much third-party fine-tuning weakens those built-in safety controls is, by the lab's own admission, still unresolved.
+
+## Should You Use Inkling?
+
+The plain answer: Inkling makes sense if you have proprietary domain data worth fine-tuning on, you want to own your model rather than rent one from a closed lab, and you have the hardware to back it up. That means Tinker for most teams, or your own cluster if you need the full million-token context Tinker's shorter windows do not cover. For a bank, a hospital system, or an engineering org with deep internal knowledge and the talent to fine-tune, that is a genuinely appealing package.
+
+For everyone else, it is not the tool. If you just want a capable assistant that works out of the box, you do not have a fine-tuning team, or you do not have serious hardware, ChatGPT, Claude, and Gemini remain the better call, and they are more polished besides. Pretending Inkling is something it is not is how people end up disappointed by a model that was never trying to win their use case.
+
+## What Inkling Means for Your AI Visibility
+
+While researching this piece we ran a small test. We asked several AI engines "what is Inkling by Thinking Machines Lab." ChatGPT and Perplexity, both connected to live web search, answered accurately and cited the announcement. Google's Gemini, asked without web search, replied that it had "no confirmed information" about the model, and then confidently described a different company by the same name. Two days after a headline launch, a frontier model running on training data alone was not just blank, it was wrong. That is not a knock on Gemini. Without live retrieval, even a frontier model is blind to anything after its training cutoff, and a two-day-old launch sits squarely in that blind spot.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/inkling-ai/inkling-ai-engine-knowledge-test.png" alt="A test of three AI engines asked 'what is Inkling' two days after launch: ChatGPT and Perplexity with web search answered correctly, while Gemini without web search did not know the model and named the wrong company." w="1100" h="631" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Two days after launch, only the web-connected engines knew Inkling existed.</figcaption>
+</figure>
+
+That gap is the whole game in miniature. AI answers are only as current and accurate as the sources a model can reach at the moment it answers. Every user-facing engine, including the products teams will build on open bases like Inkling, is another place a customer might ask "what is the best tool for X" or "is [your company] any good" and act on the reply. In our experience at geotoolbox, the businesses that show up correctly in those answers are rarely the ones with the prettiest homepage. They are the ones a model can find, fetch, and parse without tripping over contradictions, which is the [foundation of generative engine optimization](https://geotoolbox.ai/glossary/generative-engine-optimization).
+
+The open-model wave does not change that playbook so much as widen the field. There are simply more engines that can mention, or mangle, what you have built, and the durable move is the same as it has always been: make sure they can read you clearly, then check that they do. Our guides on [what GEO is](https://geotoolbox.ai/blog/what-is-geo) and [tracking your AI visibility](https://geotoolbox.ai/blog/how-to-track-ai-visibility) go deeper on both. The first step is the cheapest: run a free [AI Readiness check](https://geotoolbox.ai/tools/ai-readiness) to see whether the AI crawlers can even reach and parse your site before the next model launches and the question gets asked again.
+
+## Frequently Asked Questions
+
+### Is Inkling free?
+
+The weights are free to download and use under the Apache 2.0 license, but running them is not: the full model needs a cluster with at least 2TB of GPU memory. If you use it through Thinking Machines' Tinker platform or a third-party provider instead, you pay per token: a limited-time launch discount puts it near $1.87 per million input tokens at the 64K tier, but that discount is temporary, so check current pricing. So the license is free; the compute is not.
+
+### Is Inkling open source?
+
+Not in the strict sense. Inkling is open weights: the finished model files are public under Apache 2.0, so you can run, fine-tune, and ship it freely. But Thinking Machines does not release its training data or full recipe, so you cannot reproduce or fully audit how it was built. "Open weights" is the accurate term.
+
+### Can you run Inkling on your own computer?
+
+No. Inkling is a 975-billion-parameter model whose full checkpoint needs roughly 2TB of aggregated GPU memory, meaning 8 or more data-center GPUs. A quantized version cuts that to around 600GB, and there is an experimental 1-bit build, but it is still far beyond a single consumer machine. Most people will access it through Tinker or a hosting provider.
+
+### Is Inkling better than ChatGPT or Claude?
+
+On raw capability, no. Thinking Machines itself says Inkling is not built to top the leaderboards, and closed models from OpenAI, Anthropic, and Google still lead most benchmarks. Inkling's advantage is that it is open and customizable: you can fine-tune it on your own data and control it, which the closed models do not allow.
+
+### Who created Inkling?
+
+Thinking Machines Lab, the startup founded in February 2025 by former OpenAI CTO Mira Murati, along with OpenAI cofounder John Schulman and former OpenAI safety VP Lilian Weng. Inkling, released July 15, 2026, is the lab's first model.
+
+### What is Inkling-Small?
+
+Inkling-Small is a preview of a lighter model, 276 billion total parameters with 12 billion active, that Thinking Machines says matches or beats the larger Inkling on several benchmarks thanks to an improved training recipe. As of mid-July 2026 it is only previewed, not fully released. "Small" is relative, though: at 276 billion parameters it is still a data-center-scale model, not something you can run on a single machine.
+
+## Sources
+
+- Introducing Inkling (official announcement) - Thinking Machines Lab, July 2026 - `thinkingmachines.ai/news/introducing-inkling`
+- Inkling model card (official) - Thinking Machines Lab - `thinkingmachines.ai/model-card/inkling`
+- Thinking Machines amps up its bet against one-size-fits-all AI with Inkling - TechCrunch, July 2026 - `techcrunch.com/2026/07/15/thinking-machines-amps-up-its-bet-against-one-size-fits-all-ai-with-its-first-open-model-inkling`
+- Thinking Machines Lab Drops Its First Model - WIRED, July 2026 - `wired.com/story/thinking-machines-lab-releases-its-first-model-inkling`
+- Thinking Machines Lab Unveils Inkling, Its First Open-Weights Multimodal AI Model - Unite.AI, July 2026 - `unite.ai/thinking-machines-lab-unveils-inkling-its-first-open-weights-multimodal-ai-model`
+- thinkingmachines/Inkling model weights - Hugging Face - `huggingface.co/thinkingmachines/Inkling`
+
