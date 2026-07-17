@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { getTranslations, getLocale } from "next-intl/server"
 
 /* ——— Card 1: Scan — 8 engines with pulsing citation dots ——— */
 function ScanVisual() {
@@ -158,26 +159,31 @@ function StatusDot({ cited }: { cited: boolean }) {
 }
 
 /* ——— Section ——— */
-export function Features() {
-  const cards = [
-    { visual: <ScanVisual />, tag: "Scan", title: "See where AI cites you — and where it doesn't", body: "GEO Scan runs one prompt across all eight engines; Query Fan-Out captures the dozens of sub-questions they really ask. Your domain, your competitors, every citation.", span: "md:col-span-2" },
-    { visual: <ScoreVisual />, tag: "Track", title: "One score, week over week", body: "Domain Overview rolls every scan into a single 0–100 visibility score, with GSC + GA4 attribution — so you catch drift before it costs you traffic.", span: "md:col-span-1" },
-    { visual: <AnalyzeVisual />, tag: "Analyze & act", title: "Find why a page isn't cited — then fix it", body: "Content Analyzer grades any URL across 21 citability signals; Content Studio briefs and writes the fix. Turn a Not-found into a citation.", span: "md:col-span-1" },
-    { visual: <IntelVisual />, tag: "Own the gap", title: "Win the prompts competitors are taking", body: "Competitor Intel tracks who's cited instead of you; Citation Interceptor and Community surface the offsite threads AI quotes — so you show up where the answer is formed.", span: "md:col-span-2" },
+export async function Features() {
+  const t = await getTranslations("home.features")
+  const locale = await getLocale()
+  const base = locale === "en" ? "" : `/${locale}`
+  const cardCopy = t.raw("cards") as { tag: string; title: string; body: string }[]
+  const cardMeta = [
+    { visual: <ScanVisual />, span: "md:col-span-2" },
+    { visual: <ScoreVisual />, span: "md:col-span-1" },
+    { visual: <AnalyzeVisual />, span: "md:col-span-1" },
+    { visual: <IntelVisual />, span: "md:col-span-2" },
   ]
+  const cards = cardMeta.map((m, i) => ({ ...m, ...cardCopy[i] }))
 
   return (
     <section id="features" className="bg-accent-50/40 px-6 py-20 sm:py-28">
       <div className="mx-auto max-w-7xl">
         <div className="max-w-2xl">
           <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-            The workflow
+            {t("eyebrow")}
           </p>
           <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.5rem)] font-bold leading-tight tracking-tight text-gray-900">
-            See it. Fix it. Own it.
+            {t("h2")}
           </h2>
           <p className="mt-4 text-base text-gray-600">
-            13 tools across one workflow — from the first scan to the published fix that wins the citation.
+            {t("intro")}
           </p>
         </div>
 
@@ -208,10 +214,10 @@ export function Features() {
         {/* The full 13 — substantiate the breadth a borderless index, not cards */}
         <div className="mt-16 grid grid-cols-2 gap-x-8 gap-y-9 border-t border-gray-100 pt-12 sm:grid-cols-4">
           {[
-            { stage: "Scan", tools: [["GEO Scan", "geo-scan"], ["Query Fan-Out", "query-fanout"], ["Agent Readiness", "agent-readiness"]] },
-            { stage: "Analyze", tools: [["Content Analyzer", "content-analyzer"], ["Content Studio", "content-studio"]] },
-            { stage: "Intelligence", tools: [["Domain Overview", "domain-overview"], ["Competitor Intel", "competitor-intel"], ["Citation Interceptor", "citation-interceptor"], ["Community", "community"], ["Ask GeoToolBox", "ask-geotoolbox"]] },
-            { stage: "Report", tools: [["Analytics", "analytics"], ["PR Coverage Tracker", "pr-coverage-tracker"], ["White-Label Reports", "white-label-reports"]] },
+            { stage: t("stageScan"), tools: [["GEO Scan", "geo-scan"], ["Query Fan-Out", "query-fanout"], ["Agent Readiness", "agent-readiness"]] },
+            { stage: t("stageAnalyze"), tools: [["Content Analyzer", "content-analyzer"], ["Content Studio", "content-studio"]] },
+            { stage: t("stageIntelligence"), tools: [["Domain Overview", "domain-overview"], ["Competitor Intel", "competitor-intel"], ["Citation Interceptor", "citation-interceptor"], ["Community", "community"], ["Ask GeoToolBox", "ask-geotoolbox"]] },
+            { stage: t("stageReport"), tools: [["Analytics", "analytics"], ["PR Coverage Tracker", "pr-coverage-tracker"], ["White-Label Reports", "white-label-reports"]] },
           ].map((g) => (
             <div key={g.stage}>
               <p className="font-mono text-[10px] font-semibold uppercase tracking-widest text-accent-700">
@@ -235,16 +241,16 @@ export function Features() {
 
         <div className="mt-12 flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:justify-between">
           <p className="max-w-lg text-[15px] leading-relaxed text-gray-600">
-            13 tools across scan, analyze, act, and track.{" "}
-            <Link href="/features" className="font-semibold text-accent-700 underline-offset-2 hover:underline">
-              Explore all 13&nbsp;→
+            {t("indexNote")}{" "}
+            <Link href={`${base}/features`} className="font-semibold text-accent-700 underline-offset-2 hover:underline">
+              {t("exploreAll")}&nbsp;→
             </Link>
           </p>
           <Link
             href="/app" prefetch={false}
             className="inline-flex shrink-0 items-center gap-2 rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px]"
           >
-            Run your first scan
+            {t("ctaRun")}
             <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
             </svg>

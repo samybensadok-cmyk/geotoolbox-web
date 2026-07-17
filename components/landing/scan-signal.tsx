@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server"
 import { CitationSignal } from "./citation-signal"
 
 /**
@@ -9,7 +10,8 @@ import { CitationSignal } from "./citation-signal"
  *  - ScanSignal uses surface-ink (cooler, slightly bluer dark) with scanning
  *    energy (accent-300 cyan live data)
  */
-export function ScanSignal() {
+export async function ScanSignal() {
+  const t = await getTranslations("home.scanSignal")
   return (
     <section
       id="live-scan"
@@ -27,14 +29,14 @@ export function ScanSignal() {
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[5fr_7fr] lg:items-end lg:gap-16">
           <div>
             <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-300">
-              The answer
+              {t("eyebrow")}
             </p>
             <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.75rem)] font-bold leading-tight tracking-tight text-white">
-              One prompt. Every AI. Every citation.
+              {t("h2")}
             </h2>
           </div>
           <p className="max-w-xl text-base leading-relaxed text-gray-300">
-            A single prompt runs through eight AI engines in parallel. Green means you were cited. Amber means you were mentioned without a link. Red means you were left out entirely.
+            {t("intro")}
           </p>
         </div>
 
@@ -47,7 +49,7 @@ export function ScanSignal() {
 
         {/* Footer micro-copy — makes it clear this is an illustrative demo, not live customer data */}
         <p className="mt-8 max-w-2xl text-sm leading-relaxed text-gray-400">
-          Demo shown with sample queries and responses. Production scans run against your real domain and return real engine responses in under two minutes.
+          {t("disclaimer")}
         </p>
       </div>
     </section>

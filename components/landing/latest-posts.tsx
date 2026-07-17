@@ -1,9 +1,13 @@
 import { getAllPosts } from "@/lib/content"
 import { formatDate } from "@/lib/utils"
 import Link from "next/link"
+import { getTranslations, getLocale } from "next-intl/server"
 
-export function LatestPosts() {
-  const posts = getAllPosts().slice(0, 3)
+export async function LatestPosts() {
+  const locale = await getLocale()
+  const t = await getTranslations("home.latestPosts")
+  const blogBase = locale === "en" ? "" : `/${locale}`
+  const posts = getAllPosts(locale).slice(0, 3)
   if (posts.length === 0) return null
 
   const [featured, ...secondary] = posts
@@ -16,17 +20,17 @@ export function LatestPosts() {
         <div className="flex items-end justify-between gap-8">
           <div>
             <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-              Research
+              {t("eyebrow")}
             </p>
             <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.75rem)] font-bold leading-tight tracking-tight text-gray-900">
-              From the lab.
+              {t("heading")}
             </h2>
           </div>
           <Link
-            href="/blog"
+            href={`${blogBase}/blog`}
             className="hidden shrink-0 text-sm font-semibold text-gray-700 hover:text-accent-700 transition-colors sm:inline-flex items-center gap-1.5"
           >
-            All posts
+            {t("allPosts")}
             <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
@@ -36,7 +40,7 @@ export function LatestPosts() {
         {hasSecondary ? (
           /* Featured + secondary — asymmetric */
           <div className="mt-14 grid grid-cols-1 gap-10 lg:grid-cols-[7fr_5fr] lg:gap-16">
-            <Link href={`/blog/${featured.slug}`} className="group block">
+            <Link href={`${blogBase}/blog/${featured.slug}`} className="group block">
               <div className="flex items-center gap-3">
                 {featured.tags.slice(0, 1).map((tag) => (
                   <span key={tag} className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
@@ -55,7 +59,7 @@ export function LatestPosts() {
                 {featured.description}
               </p>
               <p className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-accent-700">
-                Read
+                {t("read")}
                 <svg className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
@@ -66,7 +70,7 @@ export function LatestPosts() {
               {secondary.map((post) => (
                 <Link
                   key={post.slug}
-                  href={`/blog/${post.slug}`}
+                  href={`${blogBase}/blog/${post.slug}`}
                   className="group block py-6 first:pt-0 last:pb-0"
                 >
                   <div className="flex items-center gap-3">
@@ -88,10 +92,10 @@ export function LatestPosts() {
                 </Link>
               ))}
               <Link
-                href="/blog"
+                href={`${blogBase}/blog`}
                 className="group block pt-6 text-sm font-semibold text-gray-700 transition-colors hover:text-accent-700 sm:hidden"
               >
-                All posts &rarr;
+                {t("allPosts")} &rarr;
               </Link>
             </div>
           </div>
@@ -99,7 +103,7 @@ export function LatestPosts() {
           /* Single-post fallback — centered editorial card when secondary is empty */
           <div className="mt-14">
             <Link
-              href={`/blog/${featured.slug}`}
+              href={`${blogBase}/blog/${featured.slug}`}
               className="group block rounded-3xl border border-gray-200 bg-gray-50/60 p-8 transition-all hover:border-accent-300 hover:bg-white hover:shadow-[0_20px_40px_-20px_rgba(15,23,42,0.1)] sm:p-12"
             >
               <div className="flex items-center gap-3">
@@ -120,7 +124,7 @@ export function LatestPosts() {
                 {featured.description}
               </p>
               <p className="mt-8 inline-flex items-center gap-1.5 text-sm font-semibold text-accent-700">
-                Read the guide
+                {t("readGuide")}
                 <svg className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
@@ -131,10 +135,10 @@ export function LatestPosts() {
 
         {!hasSecondary && (
           <Link
-            href="/blog"
+            href={`${blogBase}/blog`}
             className="mt-8 inline-flex items-center gap-1.5 text-sm font-semibold text-gray-700 transition-colors hover:text-accent-700 sm:hidden"
           >
-            All posts &rarr;
+            {t("allPosts")} &rarr;
           </Link>
         )}
       </div>

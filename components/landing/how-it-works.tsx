@@ -1,27 +1,13 @@
-export function HowItWorks() {
-  const steps = [
-    {
-      num: "01",
-      verb: "Enter",
-      title: "Your domain",
-      body: "Paste a URL. Add competitors if you want a side-by-side.",
-      output: "geotoolbox.ai + 2 competitors",
-    },
-    {
-      num: "02",
-      verb: "Scan",
-      title: "Eight AI engines in parallel",
-      body: "Same scan you saw above, on your domain. One prompt hits ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Google AI Mode, Bing Copilot, and Grok at the same time.",
-      output: "847 responses analyzed",
-    },
-    {
-      num: "03",
-      verb: "Read",
-      title: "Your visibility report",
-      body: "Score, engine-by-engine breakdown, citability analysis, competitor deltas.",
-      output: "72/100  ·  +8 this week",
-    },
-  ]
+import { getTranslations } from "next-intl/server"
+
+type Step = { verb: string; title: string; body: string; output: string }
+
+export async function HowItWorks() {
+  const t = await getTranslations("home.howItWorks")
+  const steps = (t.raw("steps") as Step[]).map((s, i) => ({
+    ...s,
+    num: String(i + 1).padStart(2, "0"),
+  }))
 
   return (
     <section id="how-it-works" className="scroll-mt-24 bg-white px-6 py-24 sm:py-32">
@@ -30,14 +16,14 @@ export function HowItWorks() {
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[5fr_7fr] lg:items-end lg:gap-16">
           <div>
             <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-              How it works
+              {t("eyebrow")}
             </p>
             <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.75rem)] font-bold leading-tight tracking-tight text-gray-900">
-              From URL to insights in minutes.
+              {t("h2")}
             </h2>
           </div>
           <p className="max-w-xl text-base leading-relaxed text-gray-600">
-            No integrations, no tagging, no waiting. The scan runs in parallel and returns an AI visibility score you can defend to your CMO. One run powers your ChatGPT rank tracker, AI Overviews check, and Perplexity citation monitor.
+            {t("intro")}
           </p>
         </div>
 

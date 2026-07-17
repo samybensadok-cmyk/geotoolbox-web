@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { getTranslations, getLocale } from "next-intl/server"
 import { siteConfig } from "@/lib/config"
 import { HeroMockup } from "./hero-mockup"
 import { EngineMark, type EngineId } from "./engine-marks"
@@ -14,7 +15,10 @@ const HERO_ENGINES: { id: EngineId; label: string }[] = [
   { id: "grok",       label: "Grok" },
 ]
 
-export function Hero() {
+export async function Hero() {
+  const t = await getTranslations("home.hero")
+  const locale = await getLocale()
+  const base = locale === "en" ? "" : `/${locale}`
   return (
     <section className="relative overflow-hidden bg-white px-6 pt-14 pb-16 sm:pt-20 sm:pb-24 lg:pt-24">
       {/* Ambient depth — two low-opacity radial glows layered behind the
@@ -52,7 +56,7 @@ export function Hero() {
           <div className="lg:col-span-6">
             {/* Trust microline — positions the product for audience */}
             <p className="animate-fade-up font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-500">
-              Made by an SEO agency, for SEO teams
+              {t("trust")}
             </p>
 
             <div className="animate-fade-up mt-4">
@@ -61,16 +65,16 @@ export function Hero() {
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-500 opacity-75" />
                   <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent-600" />
                 </span>
-                <span className="font-semibold">Free plan</span>
+                <span className="font-semibold">{t("badgeFree")}</span>
                 <span aria-hidden="true" className="text-accent-400">&middot;</span>
-                <span>1,000 credits/month</span>
+                <span>{t("badgeCredits")}</span>
               </span>
             </div>
 
             <h1 className="stagger-1 mt-6 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-              Get your brand{" "}
+              {t("h1a")}{" "}
               <span className="relative inline-block text-accent-700">
-                cited by AI
+                {t("h1b")}
                 <span
                   aria-hidden="true"
                   className="absolute left-0 right-0 -bottom-0.5 h-[2px]"
@@ -82,10 +86,10 @@ export function Hero() {
             </h1>
 
             <p className="stagger-2 mt-6 max-w-xl text-lg leading-relaxed text-gray-600">
-              See where AI cites you, learn why it doesn&apos;t, and win the citations your competitors are taking.
+              {t("subhead")}
             </p>
             <p className="stagger-2 mt-3 font-mono text-[12px] text-gray-500">
-              13 tools &middot; 8 engines &middot; from the first scan to the published fix
+              {t("proof")}
             </p>
 
             <div className="stagger-2 mt-8 flex flex-wrap items-center gap-3">
@@ -93,18 +97,18 @@ export function Hero() {
                 href={siteConfig.appUrl} prefetch={false}
                 className="rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
               >
-                Try it for free
+                {t("ctaPrimary")}
               </Link>
               <Link
-                href="/#how-it-works"
+                href={`${base}/#how-it-works`}
                 className="rounded-full border border-gray-200 px-6 py-3.5 text-[15px] font-medium text-gray-700 transition-colors duration-200 hover:border-gray-400 hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
               >
-                See how it works
+                {t("ctaSecondary")}
               </Link>
             </div>
 
             <p className="stagger-3 mt-4 text-xs text-gray-600">
-              First scan in under two minutes &middot; no credit card &middot; free plan covers ChatGPT, paid tiers up to all eight engines
+              {t("underCta")}
             </p>
 
             {/* Engines strip — mark + name pairs. Monochrome inline SVG
@@ -112,7 +116,7 @@ export function Hero() {
                 category. Marks use currentColor so they tint with text. */}
             <div className="stagger-3 mt-8 border-t border-gray-100 pt-5">
               <span className="block text-[10px] font-mono font-semibold uppercase tracking-widest text-gray-500 mb-3">
-                Works with
+                {t("worksWith")}
               </span>
               <ul className="flex flex-wrap items-center gap-x-5 gap-y-2.5">
                 {HERO_ENGINES.map((e) => (

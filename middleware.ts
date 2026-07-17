@@ -21,16 +21,16 @@ export default function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   // Homepage content negotiation: `Accept: text/markdown` on / serves the
-  // markdown twin at /home.md (same contract as articles). Any other request
-  // for / falls through untouched — the homepage must NOT enter next-intl
-  // routing (it renders statically from the (marketing) root layout).
+  // markdown twin at /home.md (same contract as articles). Any OTHER request for
+  // / now falls through to next-intl routing below — the home page moved under
+  // app/[locale]/ (to let /fr resolve), so `/` must enter locale routing to be
+  // served as the `en` segment. (It stays STATIC via setRequestLocale there.)
   if (pathname === "/") {
     if (request.headers.get("accept")?.includes("text/markdown")) {
       const res = NextResponse.rewrite(new URL("/home.md", request.url))
       res.headers.set("Vary", "Accept")
       return res
     }
-    return
   }
 
   const twin = MD_TWIN.exec(pathname)
@@ -67,5 +67,10 @@ export default function middleware(request: NextRequest) {
 // NOTE: the matcher still catches /blog/<slug>/<file>.png, so the file-extension
 // guard above is what actually lets those in-body images through.
 export const config = {
-  matcher: ["/", "/blog/:path*", "/glossary/:path*", "/fr/:path*"],
+  // NOTE "/features" is matched EXACTLY (no /:path*) on purpose: the localized
+  // features HUB moved under app/[locale]/features, so /features must enter
+  // next-intl routing to resolve as the en segment. The individual
+  // /features/<slug> pages are still EN-only under (marketing) and must NOT be
+  // matched (locale routing would 404 them). /fr/features is covered by /fr/:path*.
+  matcher: ["/", "/features", "/blog/:path*", "/glossary/:path*", "/fr/:path*"],
 }

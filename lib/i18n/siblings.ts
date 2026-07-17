@@ -63,6 +63,22 @@ export function alternatesFor(
   return { canonical, languages }
 }
 
+// Fixed hreflang map for the localized MARKETING pages (home, features,
+// pricing). Unlike content, these have a 1:1 SAME-PATH relationship across
+// locales (/ ⇄ /fr, /features ⇄ /fr/features), so the sibling set is the full
+// locale list — no donor-slug lookup. `path` is the marketing path WITHOUT the
+// locale prefix ("" for home, "/features", "/pricing"). Keep the caller list in
+// sync with the marketing routes actually mounted under app/[locale]/.
+export function marketingAlternatesFor(path: string, locale: string) {
+  const url = (loc: string) =>
+    `${siteConfig.url}${loc === routing.defaultLocale ? "" : `/${loc}`}${path}`
+  const canonical = url(locale)
+  const languages: Record<string, string> = {}
+  for (const loc of routing.locales) languages[bcp47[loc as Locale]] = url(loc)
+  languages["x-default"] = url(routing.defaultLocale)
+  return { canonical, languages }
+}
+
 // Per-locale internal-link localizer for MDX body links. Given an href, it
 // rewrites an internal /blog/<en-slug> or /glossary/<en-slug> (relative OR
 // absolute geotoolbox.ai/...) to the localized sibling for `locale` when one

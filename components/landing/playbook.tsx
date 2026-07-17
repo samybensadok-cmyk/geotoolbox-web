@@ -1,42 +1,27 @@
 import Link from "next/link"
+import { getTranslations, getLocale } from "next-intl/server"
 
-const faqs = [
-  {
-    q: "How do I see where AI cites my brand?",
-    a: "Run a GEO scan and get a visibility score from 0 to 100, verbatim citation snippets, and a side-by-side competitor read-out across all eight engines. That baseline is where every answer engine optimization (AEO) program starts.",
-  },
-  {
-    q: "Why isn't AI citing my pages?",
-    a: "Grade any URL on two scores, Citability and AI Readability: 21 signals covering schema markup, AI bot access, JavaScript rendering, freshness, and answer-first formatting, each benchmarked against the pages AI actually cites. AI crawlers can't cite what they can't read. The audit maps every signal to a specific fix.",
-  },
-  {
-    q: "What do I change to get cited?",
-    a: "Brief and draft content AI will actually quote. You get a framework-aware outline (pillar, cluster, comparison, or FAQ), an entity checklist, competitor facts coverage, and dual Structure and AI Readiness scoring. Answer-first content, built to earn citations.",
-  },
-  {
-    q: "How do I know my changes are working?",
-    a: "Run a baseline scan, ship your changes, re-scan. GEO Toolbox keeps scan history so you can see the before/after visibility score, new citation snippets you picked up, and which engines moved. Schedule weekly or monthly auto-scans to watch the trend line in Domain Overview. Indexing speed varies by engine, but every scan cycle makes progress observable.",
-  },
-  {
-    q: "What's the difference between GEO, AEO, and LLM SEO?",
-    a: "Three names for the same job: being the source AI engines cite when your customer asks a question. Generative engine optimization (GEO) covers the full workflow across ChatGPT, Perplexity, Claude, Gemini, Google AI Overviews, Google AI Mode, Bing Copilot, and Grok. Answer engine optimization (AEO) focuses on earning citations in answer engines specifically. LLM SEO is the crawler-facing work: robots.txt, schema markup, entity clarity, and bot access. GEO Toolbox covers all three.",
-  },
-]
+type Faq = { q: string; a: string }
 
-const faqJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: faqs.map((f) => ({
-    "@type": "Question",
-    name: f.q,
-    acceptedAnswer: {
-      "@type": "Answer",
-      text: f.a,
-    },
-  })),
-}
+export async function Playbook() {
+  const t = await getTranslations("home.playbook")
+  const locale = await getLocale()
+  const faqs = t.raw("faqs") as Faq[]
+  const guideHref = locale === "fr" ? "/fr/blog/generative-engine-optimization" : "/blog/what-is-geo"
 
-export function Playbook() {
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: f.a,
+      },
+    })),
+  }
+
   return (
     <section className="bg-accent-50/30 px-6 py-24 sm:py-28">
       <script
@@ -48,14 +33,14 @@ export function Playbook() {
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[5fr_7fr] lg:items-end lg:gap-16">
           <div>
             <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-              The playbook
+              {t("eyebrow")}
             </p>
             <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.75rem)] font-bold leading-tight tracking-tight text-gray-900">
-              The five questions AI searchers keep asking.
+              {t("h2")}
             </h2>
           </div>
           <p className="max-w-xl text-base leading-relaxed text-gray-600">
-            Short answers to the things visitors ask about generative engine optimization, AI visibility, LLM SEO, and AI citation tracking. Tap any question to expand.
+            {t("intro")}
           </p>
         </div>
 
@@ -90,10 +75,10 @@ export function Playbook() {
         {/* Single outbound link for readers who want the full guide */}
         <div className="mt-12 border-t border-accent-100 pt-8">
           <Link
-            href="/blog/what-is-geo"
+            href={guideHref}
             className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent-700 hover:text-accent-800"
           >
-            Read the full GEO guide
+            {t("readGuide")}
             <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
             </svg>

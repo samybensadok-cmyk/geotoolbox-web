@@ -1,22 +1,9 @@
-export function Problem() {
-  const tracked = [
-    "Google organic",
-    "Search Console clicks",
-    "GA4 sessions",
-    "Ahrefs rankings",
-    "Bing organic",
-  ]
+import { getTranslations } from "next-intl/server"
 
-  const untracked = [
-    "ChatGPT recommendations",
-    "Perplexity citations",
-    "Gemini answers",
-    "Claude mentions",
-    "Google AI Overviews",
-    "Google AI Mode answers",
-    "Bing Copilot responses",
-    "Grok answers",
-  ]
+export async function Problem() {
+  const t = await getTranslations("home.problem")
+  const tracked = t.raw("tracked") as string[]
+  const untracked = t.raw("untracked") as string[]
 
   return (
     <section className="bg-gray-950 px-6 py-20 sm:py-24">
@@ -24,13 +11,13 @@ export function Problem() {
         {/* Editorial header */}
         <div className="max-w-2xl">
           <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-400">
-            The problem
+            {t("eyebrow")}
           </p>
           <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.75rem)] font-bold leading-tight tracking-tight text-white">
-            AI search is your biggest blind spot.
+            {t("h2")}
           </h2>
           <p className="mt-5 text-base leading-relaxed text-gray-300">
-            Millions of brand queries answered by AI every day. None of it shows up in the tools you use today.
+            {t("intro")}
           </p>
         </div>
 
@@ -40,7 +27,7 @@ export function Problem() {
           <aside className="lg:pt-2">
             <div className="flex items-baseline gap-2">
               <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-gray-400">
-                What you track today
+                {t("trackedLabel")}
               </p>
               <span className="font-mono text-[11px] font-semibold tabular-nums text-gray-400">
                 &middot;{tracked.length}
@@ -57,7 +44,7 @@ export function Problem() {
               ))}
             </ul>
             <p className="mt-6 text-xs italic text-gray-400">
-              Already measured.
+              {t("trackedFoot")}
             </p>
           </aside>
 
@@ -65,13 +52,13 @@ export function Problem() {
           <div>
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
               <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-400">
-                What you miss
+                {t("missLabel")}
               </span>
               <span className="font-mono text-[11px] font-bold tabular-nums text-accent-300">
                 &middot;{untracked.length}
               </span>
               <span className="font-mono text-[10px] font-semibold uppercase tracking-widest text-accent-100/80">
-                &middot; 0 visibility today
+                &middot; {t("missZero")}
               </span>
               <span className="h-px flex-1 bg-accent-800/60" />
             </div>
@@ -99,11 +86,11 @@ export function Problem() {
 
         {/* Bigger editorial pull-quote — now actually reads as a pull quote */}
         <p className="mt-14 max-w-4xl text-[clamp(1.25rem,2.2vw,1.75rem)] font-semibold leading-snug tracking-tight text-gray-300">
-          The fastest-growing search channel is the one you don&apos;t measure.{" "}
+          {t("quote1")}{" "}
           <span className="text-accent-300">
-            AI visibility is already the metric your competitors track.
+            {t("quote2")}
           </span>{" "}
-          <span className="text-white">What about you?</span>
+          <span className="text-white">{t("quote3")}</span>
         </p>
       </div>
     </section>
