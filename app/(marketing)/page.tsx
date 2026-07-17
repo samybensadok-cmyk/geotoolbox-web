@@ -13,10 +13,10 @@ import { siteConfig } from "@/lib/config"
 
 export const metadata: Metadata = {
   title: {
-    absolute: "AI Search Visibility Platform — Get Your Brand Cited by AI | GEO Toolbox",
+    absolute: "AI Visibility Tool: Get Your Brand Cited by AI | GEO Toolbox",
   },
   description:
-    "13 tools to measure and own your brand's visibility in AI search. See where ChatGPT, Perplexity, Gemini, Claude, AI Overviews, Copilot, and Grok cite you — and win the citations you're missing. Free plan.",
+    "AI answers cite a few brands and skip the rest. GEO Toolbox is the AI visibility tool that shows where ChatGPT, Gemini and Perplexity cite you.",
   alternates: { canonical: siteConfig.url },
 }
 

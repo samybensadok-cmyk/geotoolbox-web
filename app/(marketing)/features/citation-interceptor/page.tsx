@@ -16,13 +16,13 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema, howToSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
-  title: "AI Citation Gap — Where AI Cites Others, Not You",
+  title: "AI Citation Tracking: The Sources AI Cites Without You",
   description:
-    "Citation Interceptor shows which Reddit threads, forums, editorial, and competitor pages AI engines cite for your topics — where your brand is absent — and turns it into an evidence-graded worklist of real opportunities. No astroturf.",
+    "AI cites Reddit threads and forums about your category and you're absent. Track the offsite sources AI leans on and get an evidence-graded worklist.",
   openGraph: {
-    title: "AI Citation Gap — Where AI Cites Others, Not You | Citation Interceptor",
+    title: "AI Citation Tracking: The Sources AI Cites Without You | Citation Interceptor",
     description:
-      "See the offsite sources AI engines cite for your topics where your brand is absent — Reddit, forums, editorial, competitors — as an evidence-graded worklist of real opportunities.",
+      "See the offsite sources AI engines cite for your topics where your brand is absent (Reddit, forums, editorial, competitors), as an evidence-graded worklist of real opportunities.",
   },
   alternates: { canonical: `${siteConfig.url}/features/citation-interceptor` },
 }
@@ -61,7 +61,7 @@ const faqs = [
       "For your tracked prompts, it surfaces the offsite sources AI engines cite — Reddit threads, forums, editorial, competitor pages, institutional sites — and flags where your brand is absent from those answers. You get the source families, the share of answers you're missing from, and the real cited URLs behind each.",
   },
   {
-    question: "Is this the “spam Reddit” hack?",
+    question: "Is this the \"spam Reddit\" hack?",
     answer:
       "No — the opposite. It surfaces legitimate participation opportunities (a genuinely useful answer in a thread AI already cites) with explicit evidence grading. It does not generate fake reviews, astroturf, or contact anyone for you. Fake activity is a credibility risk, not a strategy.",
   },
@@ -76,9 +76,9 @@ const faqs = [
       "Community focuses specifically on Reddit and forum citations. Citation Interceptor covers every offsite source family (community/UGC, editorial, competitor, institutional, reference), adds the prioritized opportunity worklist, the evidence grading, and per-source triage. Use them together.",
   },
   {
-    question: "Which AI engines does it cover?",
+    question: "Which AI engines does it cover, and which plans include it?",
     answer:
-      "The same eight GEO Scan covers: ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Google AI Mode, Bing Copilot, and Grok.",
+      "All eight engines: ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Google AI Mode, Bing Copilot, and Grok. Citation Interceptor is included on Consultant plans and up.",
   },
   {
     question: "Can I track what I've actioned?",
@@ -120,17 +120,17 @@ export default function CitationInterceptorPage() {
                 AI cites <span className="text-accent-700">Reddit threads</span>{" "}about your category. You&apos;re not in them.
               </h1>
               <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-                When buyers ask AI about your space, the engines cite a Reddit thread, a forum answer, a
-                competitor&apos;s page — the places opinions actually form. Citation Interceptor finds every
-                offsite source AI cites where your brand is <em>absent</em>, grades the evidence, and hands you a
-                worklist of real opportunities — without a single fake review.
+                AI citation tracking usually means watching your own domain. Citation Interceptor tracks
+                the other side: every offsite source, Reddit threads, forums, editorial, competitor pages,
+                that AI engines cite for your topics where your brand is <em>absent</em>, graded by evidence
+                and handed to you as a worklist. No astroturf, no fake reviews.
               </p>
               <div className="mt-8">
                 <DualCTA
                   primaryLabel="Find your citation gaps"
                   secondaryLabel="See how it works"
                   secondaryHref="#how"
-                  microcopy="Free plan · no credit card"
+                  microcopy="On Consultant plans and up"
                 />
               </div>
             </div>
@@ -240,14 +240,14 @@ export default function CitationInterceptorPage() {
             <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
               Find the citations you&apos;re missing.
             </h2>
-            <p className="mt-2 text-base text-gray-300">Free plan, no credit card. See your gaps in minutes.</p>
+            <p className="mt-2 text-base text-gray-300">Included on Consultant plans and up. See your gaps in minutes.</p>
           </div>
           <Link
             href={siteConfig.appSignupUrl}
             prefetch={false}
             className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]"
           >
-            Try it for free
+            Get started
             <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
             </svg>

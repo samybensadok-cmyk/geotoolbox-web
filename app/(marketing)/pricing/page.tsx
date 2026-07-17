@@ -8,12 +8,12 @@ import { siteConfig } from "@/lib/config"
 import { PLANS } from "@/lib/plans"
 
 export const metadata: Metadata = {
-  title: "Pricing — GEO Toolbox",
+  title: "GEO Toolbox Pricing: AI Visibility Plans From $39/mo",
   description:
-    "Simple, credit-based pricing for AI visibility tracking. Start free with 1,000 credits, no card. Paid plans from $39/mo billed annually across all 8 AI engines.",
+    "One credit pool across 13 AI visibility tools. Start free with 1,000 credits, no card; paid plans from $39/mo billed annually, up to all 8 AI engines.",
   alternates: { canonical: "/pricing" },
   openGraph: {
-    title: "GEO Toolbox Pricing",
+    title: "GEO Toolbox Pricing: AI Visibility Plans From $39/mo",
     description:
       "Track your brand across ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Google AI Mode, Bing Copilot and Grok. Free plan, paid from $39/mo billed annually.",
     url: "/pricing",
@@ -76,7 +76,7 @@ const FAQ = [
   {
     question: "Do I need a credit card to start, and how does annual billing work?",
     answer:
-      "No card is required for the free plan. Paid plans bill monthly or annually; annual saves about 17% (roughly two months free) and you can cancel any time.",
+      "No card is required for the free plan. Paid plans bill monthly or annually; annual billing saves 14 to 20% depending on tier (roughly one to two months free), and you can cancel any time.",
   },
   {
     question: "What is Ask GeoToolBox, and which plans include it?",
@@ -126,7 +126,7 @@ export default function PricingPage() {
             One credit pool. <span className="text-accent-700">Every tool. Any scale.</span>
           </h1>
           <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-            13 tools to get your brand cited by AI, on credit-based plans that scale from a single brand to a full agency portfolio. Start free with 1,000 credits, no card required.
+            13 tools to get your brand cited by AI, on credit-based plans that stretch from a single brand to a full agency portfolio. Start free with 1,000 credits: no card, no trial clock.
           </p>
         </div>
 

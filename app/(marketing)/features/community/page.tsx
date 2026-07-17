@@ -8,11 +8,11 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
-  title: "Community: Reddit and forum citations AI engines quote",
+  title: "Reddit AI Citations: The Threads AI Quotes About You",
   description:
-    "See which Reddit threads and forum discussions ChatGPT, Perplexity, Claude, and Gemini cite when answering queries in your space. Catch misinformation, find subreddits worth engaging, and build a community participation plan, because AI engines lean heavily on third-party mentions to build authority.",
+    "See which Reddit threads and forums AI engines cite when answering questions in your space, including the ones spreading bad information about your brand.",
   openGraph: {
-    title: "Community: Reddit and forum citations AI engines quote",
+    title: "Reddit AI Citations: The Threads AI Quotes About You",
     description:
       "See which Reddit threads and forum discussions AI engines cite when answering queries in your space. Catch misinformation, find subreddits worth engaging, and build a community participation plan.",
   },
@@ -57,9 +57,9 @@ const faqs = [
       "The Reddit and forum threads AI engines cite when answering queries in your topic space. Each thread shows which engines reference it, its sentiment, and whether it introduces a misinformation risk. From there, you can decide where to engage and where to respond.",
   },
   {
-    question: "Why does community content matter for AI citations?",
+    question: "Why does community content matter for AI visibility?",
     answer:
-      "AI engines frequently cite Reddit threads, Quora answers, and forum discussions, especially for experiential or opinion-driven queries. If AI consistently points users at third-party conversations about your category, those threads are shaping buying decisions. Knowing which ones get cited lets you participate strategically.",
+      "AI engines frequently cite Reddit, Quora, and forum threads, especially for experiential or opinion-driven queries where they want real user perspectives. If AI consistently points users at third-party conversations about your category, those threads are shaping buying decisions. Knowing which ones get cited lets you participate where it counts.",
   },
   {
     question: "What is the Misinformation Check?",
@@ -67,14 +67,19 @@ const faqs = [
       "It flags threads where incorrect information about your brand or products is being cited by AI engines. You see the exact thread, the engines pulling from it, and the claim being surfaced, so you can respond, correct, or engage before the bad take compounds.",
   },
   {
-    question: "Does it show which subreddits matter most?",
+    question: "How does the subreddit ranking work?",
     answer:
-      "Yes. The subreddit map ranks communities by how often AI cites content from them for your keywords. That ranking doubles as a community prioritization list, highest-signal subreddits first, so participation effort goes where it actually moves AI visibility.",
+      "Communities are ranked by how often AI engines cite content from them for your tracked keywords. The result doubles as a prioritization list: highest-signal subreddits first, so participation effort goes where it actually moves AI visibility.",
   },
   {
     question: "What's in the Action Plan?",
     answer:
       "Prioritized recommendations: which threads to respond to, which communities to participate in sustainably, and where misinformation needs correction. Each suggestion links directly to the thread so you can act without hunting for context.",
+  },
+  {
+    question: "Do I need a separate setup?",
+    answer:
+      "No separate setup. Community Insights runs on every scan (included on Consultant plans and up). Run a GEO Scan and the community map assembles itself from the citations in the answers.",
   },
 ]
 
@@ -126,7 +131,7 @@ export default function CommunityPage() {
                 The Reddit threads AI quotes back to your customers.
               </h1>
               <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-                AI engines cite forums constantly. See exactly which threads they use in your space, plus the misinformation risks and subreddits worth engaging.
+                AI engines cite forums constantly, especially for 'is it worth it' and 'which one should I buy' questions. Community Insights shows you exactly which Reddit and forum threads they pull from in your space, which ones carry misinformation, and where participating would actually move your visibility.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Link href="/app" prefetch={false} className="rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px]">
@@ -326,10 +331,10 @@ export default function CommunityPage() {
             <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
               Map your community citations.
             </h2>
-            <p className="mt-2 text-base text-gray-300">Free plan. Runs on every scan.</p>
+            <p className="mt-2 text-base text-gray-300">Included on Consultant plans and up. Runs on every scan.</p>
           </div>
           <Link href="/app" prefetch={false} className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]">
-            Try it for free
+            Get started
             <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
             </svg>

@@ -8,11 +8,11 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
-  title: "AI Brand Monitoring Dashboard",
+  title: "AI Brand Monitoring Dashboard for 8 AI Engines",
   description:
-    "Every citation, AI competitor, co-cited domain, and topical authority signal for your domain, aggregated across every scan. AI brand monitoring for ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Google AI Mode, Bing Copilot, and Grok. The dashboard agencies keep open all day.",
+    "Every citation, AI competitor, and co-cited domain for your brand across 8 AI engines, one AI brand monitoring dashboard that rebuilds itself as you scan.",
   openGraph: {
-    title: "AI Brand Monitoring Dashboard",
+    title: "AI Brand Monitoring Dashboard for 8 AI Engines",
     description:
       "Every citation, AI competitor, co-cited domain, and topical authority signal for your domain, aggregated across every scan. AI brand monitoring for eight engines in one dashboard.",
   },
@@ -44,17 +44,17 @@ const faqs = [
   {
     question: "What data does Domain Overview pull together?",
     answer:
-      "Your entire AI visibility footprint in one view: top cited pages, AI competitors, co-cited domains, topical authority, keyword volume, and a prioritized action list. Scan history feeds it automatically; the search APIs layered on top keep the picture current even before you've built up scan depth.",
+      "Your entire AI visibility footprint in one view: top cited pages, AI competitors, co-cited domains, topical authority, the GSC overlay, and a prioritized action list. Scan history feeds it automatically; search APIs layered on top keep the picture current even before you've built up scan depth.",
   },
   {
-    question: "What are co-cited domains?",
+    question: "What exactly are co-cited domains?",
     answer:
-      "Domains that AI engines consistently mention alongside yours when answering questions in your space. These are your peers in the AI knowledge graph. Use them as backlink targets, partnership leads, or signals for where to expand your content.",
+      "Domains that AI engines consistently cite alongside yours when answering questions in your space. Think of them as your peers in the AI knowledge graph, useful as backlink targets, partnership leads, and signals for where to expand content.",
   },
   {
-    question: "Do I need to run scans first before using Domain Overview?",
+    question: "Do I need scan history before Domain Overview is useful?",
     answer:
-      "The overview is richer with scan history, since that's where AI competitors and cited pages come from. But it also pulls fresh data from search APIs independently, so the snapshot is useful even on day one.",
+      "It gets richer with history, since scans are where AI competitors and cited pages come from. But the overview also pulls fresh data from search APIs on its own, so the snapshot works from day one.",
   },
   {
     question: "Can I see which of my pages get cited most?",
@@ -64,12 +64,17 @@ const faqs = [
   {
     question: "What is the Topical Authority section?",
     answer:
-      "It maps the topic clusters where AI engines consider your domain an authority versus where competitors dominate. Built from entity extraction across every cited page, so you can see AI visibility by topic, not just by URL.",
+      "It maps the topic clusters where AI engines consider your domain an authority versus where competitors dominate, built from entity extraction across every cited page. You see AI visibility by topic, not just by URL, including drift over time.",
   },
   {
-    question: "Can I connect Google Search Console to enrich the overview?",
+    question: "Can I connect Google Search Console?",
     answer:
-      "Yes. One-click GSC integration overlays organic traffic data on your AI citation data. You see where AI citations drive real sessions, and where pages get clicks but no citations (or vice versa).",
+      "Yes, in one click. The overview then cross-references AI-cited URLs with actual clicks and impressions, so you can see where citations drive real sessions, and where a page gets AI attention but no organic traffic (or the other way around).",
+  },
+  {
+    question: "Which plans include Domain Overview?",
+    answer:
+      "Domain Overview is included on the Consultant plan and up. It aggregates every scan you run into one dashboard, so the more you track, the more complete the picture.",
   },
 ]
 
@@ -134,10 +139,10 @@ export default function DomainOverviewPage() {
                 Domain Overview
               </p>
               <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-                The command center for your AI visibility.
+                The command center for how AI sees your domain.
               </h1>
               <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-                Every scan, every citation, every competitor, aggregated. The dashboard agencies and brand teams keep open all day to track how AI sees their domain.
+                AI brand monitoring across eight engines: ChatGPT, Gemini, Perplexity, Claude, Copilot, Grok, Google AI Overviews, and AI Mode, rolled into one view. Every citation you've earned, every competitor taking your place, and what to fix this week.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Link href="/app" prefetch={false} className="rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px]">
@@ -217,7 +222,7 @@ export default function DomainOverviewPage() {
             <div>
               <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">What's inside</p>
               <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.5rem)] font-bold leading-tight tracking-tight text-gray-900">
-                Six views of your AI footprint.
+                Six views, one honest picture.
               </h2>
             </div>
             <p className="max-w-xl text-base leading-relaxed text-gray-600">
@@ -317,10 +322,10 @@ export default function DomainOverviewPage() {
             <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
               Open your overview.
             </h2>
-            <p className="mt-2 text-base text-gray-300">Builds on every scan you run. Free plan &middot; 1,000 credits/month included.</p>
+            <p className="mt-2 text-base text-gray-300">Builds on every scan you run. Included on Consultant plans and up.</p>
           </div>
           <Link href="/app" prefetch={false} className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]">
-            Try it for free
+            Get started
             <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
             </svg>

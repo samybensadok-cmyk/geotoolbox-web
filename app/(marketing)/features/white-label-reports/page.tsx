@@ -15,13 +15,13 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema, howToSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
-  title: "White-Label Client Reports — Branded AI Visibility Reporting",
+  title: "White-Label SEO Reports for Agency Clients",
   description:
-    "Put your logo, colors, and footer on a monthly AI-visibility report for every client — emailed automatically and shareable with a login-free link. Available on Growth plans and up.",
+    "Send clients a monthly white-label SEO report under your own logo and colors, with a link they open without logging in. On Growth plans and up.",
   openGraph: {
-    title: "White-Label Client Reports — Branded AI Visibility Reporting | GEO Toolbox",
+    title: "White-Label SEO Reports for Agency Clients | GEO Toolbox",
     description:
-      "A monthly, client-facing AI-visibility report under your own brand — logo, accent color, footer, and an optional switch to hide GeoToolbox entirely.",
+      "A monthly, client-facing AI-visibility report under your own brand: logo, accent color, footer, and an optional switch to hide GEO Toolbox entirely.",
   },
   alternates: { canonical: `${siteConfig.url}/features/white-label-reports` },
 }
@@ -30,7 +30,7 @@ const steps: Step[] = [
   {
     verb: "Brand it",
     title: "Your logo, your colors, your name",
-    body: "Upload your agency logo, set an accent color, add a footer line with your contact details — and flip a switch to hide GeoToolbox from the report entirely if you want it fully unbranded from us.",
+    body: "Upload your agency logo, set an accent color, add a footer line with your contact details — and flip a switch to hide GEO Toolbox from the report entirely if you want it fully unbranded from us.",
   },
   {
     verb: "Automate",
@@ -55,9 +55,9 @@ const comparisonRows = [
 
 const faqs = [
   {
-    question: "What exactly gets white-labeled?",
+    question: "What gets white-labeled in the SEO report?",
     answer:
-      "Your logo, an accent color, and a footer line (contact info, address, whatever you want your client to see). There's also a toggle to hide GeoToolbox branding from the report entirely, so it reads as your agency's own deliverable.",
+      "Your logo, an accent color, and a footer line (contact info, address, whatever you want your client to see). There's also a toggle to hide GEO Toolbox branding from the report entirely, so it reads as your agency's own deliverable.",
   },
   {
     question: "What's actually in the report?",
@@ -121,9 +121,10 @@ export default function WhiteLabelReportsPage() {
                 Your brand on the report. <span className="text-accent-700">Not ours.</span>
               </h1>
               <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-                Every client gets a monthly AI-visibility report with your logo, your colors, and your
-                footer — sent automatically and shareable with a link they can open without logging in.
-                Hide GeoToolbox branding entirely if you want it reading as your own deliverable.
+                Every client gets a monthly white-label SEO report of their AI visibility, with your
+                logo, your colors, and your footer. Sent automatically, shareable with a link they open
+                without logging in, and with a switch to hide GEO Toolbox entirely so it reads as your
+                own deliverable.
               </p>
               <div className="mt-8">
                 <DualCTA
@@ -169,7 +170,7 @@ export default function WhiteLabelReportsPage() {
           },
           {
             title: "Optional full unbranding",
-            body: "The hide-GeoToolbox toggle removes our name from the report entirely, so it reads as a deliverable from your agency, not a screenshot of our product.",
+            body: "The hide-GEO Toolbox toggle removes our name from the report entirely, so it reads as a deliverable from your agency, not a screenshot of our product.",
           },
           {
             title: "No login required for the client",

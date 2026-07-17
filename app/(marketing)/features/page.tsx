@@ -5,9 +5,9 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { breadcrumbsSchema, itemListSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
-  title: "AI SEO & GEO Tools",
+  title: "AI Visibility Tools: 13 AI SEO Features in One Stack",
   description:
-    "13 connected tools for generative engine optimization (GEO) and AI search visibility. Scan, analyze, brief, and monitor your brand across ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Google AI Mode, Bing Copilot, and Grok.",
+    "Thirteen connected AI visibility tools and AI SEO tools: scan 8 AI engines, grade pages for citability, track competitors, attribute AI traffic.",
   alternates: { canonical: `${siteConfig.url}/features` },
 }
 
@@ -203,7 +203,7 @@ export default function FeaturesPage() {
               </h1>
             </div>
             <p className="max-w-xl text-base leading-relaxed text-gray-600">
-              Everything you need to measure and own your presence in AI search: running the first scan, grading your pages, tracking competitors, and attributing AI-driven traffic.
+              Everything between &quot;are we in ChatGPT?&quot; and a shipped fix: run the first scan across eight engines, grade the pages you own, watch the competitors taking your citations, and prove the traffic came back. Each tool feeds the next: run one scan and the rest light up for that domain.
             </p>
           </div>
 

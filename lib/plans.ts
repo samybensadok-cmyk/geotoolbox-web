@@ -19,6 +19,11 @@
 //  - Daily automated scans are NO LONGER included free on Scale/Enterprise —
 //    they're a paid add-on available on those two tiers only. Backend
 //    scan_frequency for scale/enterprise must follow when the add-on ships.
+//
+// 2026-07-17: White-Label Reports + Ask GeoToolBox are now SHIPPED (Growth+).
+//   The 2026-06-09 "vaporware removed … NOT shipped yet" note above is
+//   historical — both are live and reflected in the PLANS highlights +
+//   COMPARE_GROUPS below.
 
 export type PlanId = "free" | "starter" | "consultant" | "agency" | "scale" | "enterprise"
 

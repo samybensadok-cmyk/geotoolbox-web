@@ -16,11 +16,11 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema, howToSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
-  title: "PR Coverage Tracker — Prove Your Earned Media Shows Up in AI",
+  title: "PR Coverage Tracker: Prove Earned Media Works in AI",
   description:
-    "Upload the media coverage you earned for a brand and see which placements are still live, indexed in Google, and cited by AI engines for the brand's prompts. PR ROI for the AI era — on Scale & Enterprise.",
+    "Upload your earned media and see which placements are still live, indexed in Google, and cited by AI engines when buyers ask about your client.",
   openGraph: {
-    title: "PR Coverage Tracker — Prove Your Earned Media Shows Up in AI | GEO Toolbox",
+    title: "PR Coverage Tracker: Prove Earned Media Works in AI | GEO Toolbox",
     description:
       "See which of your earned media placements are still live, indexed in Google, and cited by AI engines for your client's prompts. Built for proving PR ROI in AI search.",
   },
@@ -31,17 +31,17 @@ const steps: Step[] = [
   {
     verb: "Upload",
     title: "The coverage you earned",
-    body: "Paste a list of placement URLs, or drop in a spreadsheet export — URL, publication, date, headline, in any order. Duplicates are merged. Nothing is fetched until you run a check.",
+    body: "Paste a list of placement URLs, or drop in a spreadsheet export: URL, publication, date, headline, in any order. Duplicates get merged. Nothing is fetched until you run a check, and the cost estimate is shown before you do.",
   },
   {
     verb: "Check",
     title: "Live, indexed, and still on-message",
-    body: "Every placement is checked: is it still live (a publisher WAF block is never mistaken for a dead link), is the exact URL indexed in Google, and does it still mention the brand? Runs in the background across hundreds of URLs.",
+    body: "Every placement is verified in the background, hundreds at a time: is the page still live (a publisher WAF block is never mistaken for a dead link), is the exact URL indexed in Google, and does it still mention the brand?",
   },
   {
     verb: "Attribute",
     title: "Which placements AI actually cites",
-    body: "We cross-reference your placements against the sources AI engines cite for the brand's tracked prompts — across all eight engines — so you see exactly which pieces of coverage show up in AI answers, and which media you're not yet tracking.",
+    body: "We cross-reference your placements against the sources AI engines cite for the brand's tracked prompts, across all eight engines, so you see exactly which coverage shows up in AI answers, split into own-site versus third-party media, plus the media AI cites for the brand that you're not tracking yet.",
   },
 ]
 
@@ -59,27 +59,27 @@ const faqs = [
   {
     question: "What does PR Coverage Tracker actually do?",
     answer:
-      "Upload the media coverage you earned for a brand. It checks each placement is still live, indexed in Google, and still mentions the brand — then cross-references your placements against the sources AI engines cite for that brand's tracked prompts. The result: you can see exactly which of your coverage shows up in AI answers, plus any media AI cites that you're not yet tracking.",
+      "Upload the media coverage you earned for a brand. It checks each placement is still live, indexed in Google, and still mentions the brand, then cross-references your placements against the sources AI engines cite for that brand's tracked prompts. You see exactly which coverage shows up in AI answers, plus any media AI cites that you're not yet tracking.",
   },
   {
     question: "How is this different from media monitoring like Meltwater?",
     answer:
-      "Media monitoring tells you a mention happened. PR Coverage Tracker tells you whether that placement is still live, still indexed, still on-message — and, uniquely, whether AI engines cite it when buyers ask about your client. It's built for proving PR ROI in AI search, not just logging mentions.",
+      "Media monitoring tells you a mention happened. PR Coverage Tracker tells you whether that placement is still live, still indexed, still on-message, and whether AI engines cite it when buyers ask about your client. It measures whether the coverage is working, not whether it existed.",
   },
   {
-    question: "Does it claim my coverage “caused” an AI citation?",
+    question: "Does it claim my coverage caused an AI citation?",
     answer:
-      "No. The attribution is co-occurrence: “AI engines cite this publication for your prompts.” We never claim a placement caused a citation — that would be dishonest, and PR teams get asked hard questions. The data is precise about exactly what it proves.",
+      "No. The attribution is co-occurrence: AI engines cite this publication for your prompts. We never claim a placement caused a citation, because that would be dishonest and it wouldn't survive a client's follow-up question. The data is precise about exactly what it proves.",
   },
   {
-    question: "What about paywalled or blocked publishers?",
+    question: "What happens with paywalled or WAF-blocked publishers?",
     answer:
-      "Major outlets often block automated checks with a WAF (a 403). We never report that as a dead link — we flag it as “blocked” and confirm the page still exists by checking Google indexing instead. A real 404 is marked dead; a block is not. That distinction is the difference between an honest report and a false alarm to your client.",
+      "They're flagged 'blocked,' never 'dead,' and confirmed via a Google index check: a site: query in the brand's market verifying the exact URL still appears. A genuine 404 is the only thing marked dead.",
   },
   {
     question: "How does the Google index check work?",
     answer:
-      "For each placement we run a site: query against Google in the brand's market and check whether the exact URL appears in the results. It confirms the page is discoverable — and doubles as proof-of-life for publishers that block our direct check.",
+      "For each placement we run a site: query against Google in the brand's market and check whether the exact URL appears. It confirms the page is discoverable, and doubles as proof-of-life for publishers that block the direct check.",
   },
   {
     question: "Which plans include it?",
@@ -89,7 +89,7 @@ const faqs = [
   {
     question: "How much does a check cost?",
     answer:
-      "It's metered in credits, with a cost estimate shown before you run it and any unprocessed URLs refunded. A full check of a few hundred placements with Google verification is a few dollars' worth of credits — cheap enough to re-run monthly for month-over-month ROI proof.",
+      "It's metered in credits, with a cost estimate shown before you run it and any unprocessed URLs refunded. A full check of a few hundred placements with Google verification is a few dollars' worth of credits, cheap enough to re-run monthly for month-over-month ROI proof.",
   },
 ]
 
@@ -126,9 +126,9 @@ export default function PrCoverageTrackerPage() {
               </h1>
               <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
                 Six months after a campaign, half the links may be dead and you have no idea which placements
-                AI engines actually cite when a buyer asks about your client. PR Coverage Tracker takes the
-                coverage you placed and shows you what&apos;s <em>still live</em>, <em>indexed in Google</em>, and
-                <em> cited by AI</em> — the proof a retainer renewal is built on.
+                AI engines cite when a buyer asks about your client. Upload your coverage list and get the
+                answer: <em>still live</em>, <em>indexed in Google</em>, <em>on-message</em>, and{" "}
+                <em>cited by AI</em>, per placement.
               </p>
               <div className="mt-8">
                 <DualCTA
@@ -159,42 +159,42 @@ export default function PrCoverageTrackerPage() {
       {/* The blind spot */}
       <PainScenarioSection
         eyebrow="The reporting gap"
-        scenario="Your client asks the question every PR retainer eventually faces: &ldquo;What did all this coverage actually do?&rdquo; You can list the placements — but you can&apos;t say which are still live, which Google still indexes, or whether any of them show up when someone asks ChatGPT or Perplexity about the brand."
-        bridge="PR Coverage Tracker turns that pile of placement URLs into a living scorecard: live-or-dead, indexed-or-not, on-message-or-drifted, and cited-by-AI-or-invisible — for every piece of coverage you earned."
+        scenario="Your client asks the question every PR retainer eventually faces: &ldquo;What did all this coverage actually do?&rdquo; You can list the placements. What you can&apos;t say, with a spreadsheet and a link checker, is which are still live, which Google still indexes, whether they still mention the brand, or whether any of them show up when someone asks ChatGPT or Perplexity about the brand."
+        bridge="PR Coverage Tracker turns that pile of placement URLs into a living scorecard: live-or-dead, indexed-or-not, on-message-or-drifted, and cited-by-AI-or-invisible, for every piece of coverage you earned."
       />
 
       {/* How it works (HowTo schema source) */}
       <div id="how">
-        <HowItWorks3Step heading="From a coverage list to AI proof in three steps" steps={steps} />
+        <HowItWorks3Step heading="From spreadsheet to scorecard, step by step" steps={steps} />
       </div>
 
       {/* The wedge — honest measurement */}
       <TrustSecurityBlock
-        heading="Honest measurement, not vanity metrics"
+        heading="Honest measurement, or it's worthless"
         items={[
           {
             title: "A block is not a dead link",
-            body: "When a publisher's WAF blocks our check, we say so — and confirm the page still exists via Google indexing. We never report live coverage as dead. Your client never gets a false alarm.",
+            body: "Major outlets block automated checks with a WAF. We never report that as dead; it's flagged 'blocked' and confirmed via Google indexing instead, because the page still existing is what matters. A real 404 is marked dead. That distinction is the difference between an honest report and a false alarm to your client.",
           },
           {
             title: "Co-occurrence, not causation",
-            body: "We show that AI engines cite a placement for your prompts. We never claim the placement caused the citation. The data stays precise about exactly what it proves.",
+            body: "We show that AI engines cite a placement for your prompts. We never claim the placement caused the citation. That claim would be dishonest, and it wouldn't survive a smart client's follow-up question.",
           },
           {
-            title: "Built on real citations",
-            body: "Attribution reads your live Tracker scans — the actual sources AI engines cited across all eight engines. No scraped guesses, no invented numbers.",
+            title: "Real citations, not scraped guesses",
+            body: "Attribution reads your live Tracker scans, the actual sources AI engines cited across all eight engines. No scraped guesses, no invented numbers.",
           },
           {
             title: "Billable with confidence",
-            body: "Every check is metered transparently, with a cost estimate before it runs and unprocessed URLs refunded — so reselling it to a client is clean.",
+            body: "Every check is metered transparently, with a cost estimate before it runs and unprocessed URLs refunded, so reselling it to a client is clean.",
           },
         ]}
-        note="Own-site versus third-party media is split out, so you can show a client exactly which earned placements — not just their own pages — are doing the work in AI answers."
+        note="Own-site versus third-party media is split out, so you can show a client exactly which earned placements, not just their own pages, are doing the work in AI answers."
       />
 
       {/* Act, don't just monitor */}
       <ActVsMonitorWedge
-        body="Media monitoring tells you a link exists. PR Coverage Tracker tells you whether it still works — live, indexed, mentioning your client, and cited by the AI engines buyers now ask."
+        body="Media monitoring tells you a link exists. PR Coverage Tracker tells you whether it still works: live, indexed, mentioning your client, and cited by the AI engines buyers now ask."
         example="A placement on a major outlet that AI cites for your client's category, graded live and indexed? That's the slide that renews the retainer. A placement that 404'd three months ago? Catch it and replace it before the client does."
         link={{ label: "Pair it with Citation Interceptor for the offsite gaps", href: "/features/citation-interceptor" }}
       />

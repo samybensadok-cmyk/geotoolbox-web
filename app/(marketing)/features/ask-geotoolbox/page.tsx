@@ -15,13 +15,13 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema, howToSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
-  title: "Ask GeoToolBox — AI Analyst Chat for Your AI Visibility Data",
+  title: "Ask GeoToolBox: AI Analyst Chat for Your Visibility Data",
   description:
-    "Ask plain-language questions about your brand's AI search visibility and get answers pulled live from your own tracked data — pointing back to the report each answer came from. Available on Growth plans and up.",
+    "Ask plain-language questions about your AI visibility. Answers come from your own tracked data, with the report behind every number. Growth plans and up.",
   openGraph: {
-    title: "Ask GeoToolBox — AI Analyst Chat for Your AI Visibility Data | GEO Toolbox",
+    title: "Ask GeoToolBox: AI Analyst Chat for Your Visibility Data | GEO Toolbox",
     description:
-      "A built-in AI analyst that answers questions about your brand's citation rate, cited domains, gaps, and week-over-week movers — grounded only in your own tracked data.",
+      "A built-in AI analyst that answers questions about your brand's citation rate, cited domains, gaps, and week-over-week movers, grounded only in your own tracked data.",
   },
   alternates: { canonical: `${siteConfig.url}/features/ask-geotoolbox` },
 }
@@ -99,7 +99,7 @@ export default function AskGeoToolBoxPage() {
               url: `${siteConfig.url}/features/ask-geotoolbox`,
             }),
             howToSchema({
-              name: "How to ask GeoToolBox a question about your AI visibility",
+              name: "How to ask GEO Toolbox a question about your AI visibility",
               steps: steps.map((s) => ({ name: s.title, text: s.body })),
             }),
           ]}
@@ -116,9 +116,9 @@ export default function AskGeoToolBoxPage() {
                 Stop digging through dashboards. <span className="text-accent-700">Just ask.</span>
               </h1>
               <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-                “Why did our citation rate drop last week?” “Which domains cite our competitor but not us?”
-                Ask GeoToolBox answers in plain language, pulling only from your own tracked visibility
-                data — and points back to the report behind its answers.
+                &quot;Why did our citation rate drop last week?&quot; &quot;Which domains cite our competitor
+                but not us?&quot; Ask GeoToolBox answers in plain language, pulling only from your own tracked
+                visibility data, and points back to the report behind every number.
               </p>
               <div className="mt-8">
                 <DualCTA

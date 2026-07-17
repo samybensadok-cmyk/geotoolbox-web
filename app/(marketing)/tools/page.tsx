@@ -7,9 +7,9 @@ import { itemListSchema } from "@/lib/seo-schema"
 import { tools } from "@/lib/tools"
 
 export const metadata: Metadata = {
-  title: "Free GEO & AI SEO Tools",
+  title: "Free AI SEO Tools: llms.txt, AI Crawler & Readiness",
   description:
-    "Free, no-sign-up tools for the agentic web — an AI crawler access checker and a server-side llms.txt checker, validator, and generator.",
+    "Five free AI SEO tools, no sign-up: see which AI crawlers your robots.txt blocks, validate llms.txt, score AI readiness, run a real query fan-out.",
   alternates: { canonical: `${siteConfig.url}/tools` },
 }
 
@@ -26,12 +26,12 @@ export default function ToolsIndexPage() {
         <div className="mx-auto max-w-5xl">
           <Breadcrumbs trail={[{ name: "Home", href: "/" }, { name: "Tools", href: "" }]} />
           <div className="max-w-2xl">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">Free tools</p>
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">Free AI SEO tools</p>
             <h1 className="mt-3 text-[clamp(2rem,4vw,3rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-              Free tools for the agentic web
+              Free AI SEO tools for the agentic web
             </h1>
             <p className="mt-4 text-lg leading-relaxed text-gray-600">
-              No sign-up, nothing metered. Honest tools that tell you what actually matters — and what doesn&apos;t.
+              Five tools, no sign-up, nothing metered. Check whether AI can reach your site, validate the files everyone argues about, and see the real sub-queries engines fire. Honest readings of what matters and what doesn&apos;t.
             </p>
           </div>
         </div>
