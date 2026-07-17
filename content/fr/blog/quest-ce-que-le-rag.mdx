@@ -38,6 +38,11 @@ Un mot sur le terme, car il est instable en français. La traduction retenue par
 
 ## Comment fonctionne le RAG : récupération, enrichissement, génération
 
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/what-is-rag/rag-retrieve-augment-generate.png" alt="Le flux RAG en trois étapes : récupérer les passages pertinents, enrichir le prompt, générer une réponse ancrée dans les sources." w="1100" h="648" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">La boucle RAG : trouver les passages, les coller dans le prompt, rédiger une réponse fondée sur eux.</figcaption>
+</figure>
+
 À chaque question posée, le système RAG exécute trois étapes.
 
 **Récupération.** Le système transforme la question en recherche et va chercher les passages les plus pertinents dans une base de connaissances. Cette base est en général un ensemble de documents découpés en morceaux (le découpage, ou *chunking*) puis convertis en [embeddings](https://geotoolbox.ai/blog/vector-embeddings), des représentations numériques qui permettent à un logiciel de comparer le sens plutôt que de faire correspondre des mots à l'identique. Un modèle d'embedding convertit aussi la question en vecteur, et le récupérateur trouve les passages dont les vecteurs sont les plus proches. C'est de la [recherche sémantique](https://geotoolbox.ai/glossary/semantic-search), souvent combinée à une bonne vieille correspondance par mots-clés pour les termes qui doivent tomber juste.

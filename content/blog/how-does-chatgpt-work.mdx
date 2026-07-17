@@ -9,6 +9,11 @@ draft: false
 
 How does ChatGPT work? Strip away the marketing and the answer is stranger, and simpler, than most explanations admit. It is not thinking. The model underneath has no database it looks your site up in, and much of the time it is not searching the web at all. It is running one operation, a few hundred times per answer: predicting the next token. This is that operation in plain English, written for people who publish content rather than build models, with the part the engineering explainers skip: what each step does, and does not, mean for whether you show up in AI answers.
 
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/how-does-chatgpt-work/chatgpt-next-token-loop.png" alt="ChatGPT's four-step loop: tokenization, embeddings, attention stack, next-token pick." w="1300" h="537" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Every ChatGPT answer is this loop: tokens in, one predicted token out, repeated a few hundred times.</figcaption>
+</figure>
+
 ## How ChatGPT Works in 30 Seconds: It Predicts the Next Token
 
 **ChatGPT works by answering one small question, over and over: given the text so far, what token is likely to come next?** It scores every possible token, picks one (not always the single highest, as we will see), adds it to the end, and asks again. Every answer it writes is that loop running a few hundred times. Inside the base model there is no separate step where it checks what is true or thinks about your question the way a person would. (When ChatGPT runs a web search or a tool, the product wraps those extra steps around the model, more on that later.)

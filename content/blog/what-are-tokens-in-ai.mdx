@@ -40,6 +40,11 @@ If you searched "AI tokens" and landed on coin prices, that is a different meani
 
 ## How Tokenization Works: From Text to Token IDs
 
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/what-are-tokens-in-ai/text-to-token-ids.png" alt="Hello, world! as text versus the four token IDs a model receives." w="1100" h="632" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">The tokenizer turns "Hello, world!" into four integers before the model ever sees it.</figcaption>
+</figure>
+
 Before your text ever reaches the model, a separate program called a **tokenizer** chops it into tokens and replaces each one with a number. "Hello, world!" does not enter the model as words. It enters as a short list of integer IDs, something like [9906, 11, 1917, 0] (those are GPT-4's tokenizer; a newer model assigns different numbers). The model works with the numbers. The model usually receives tokenizer IDs rather than a native character stream; the useful character-level structure is not directly exposed as separate letters.
 
 The splitting follows a method called **subword tokenization**. Frequent words get their own single token. Rare words, brand names, and long compounds get broken into pieces. "Tokenization" might split into "token" and "ization." A made-up product name might shatter into four or five fragments, which is why models sometimes garble an unusual brand name: they are rebuilding it from parts, not recalling it whole. The tokenizer is not reading for meaning, just matching against a fixed vocabulary of known chunks built once, in advance. Images and audio get the same treatment in multimodal models, sliced into patch and audio tokens, so the logic here carries over.

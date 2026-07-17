@@ -49,6 +49,11 @@ ChatGPT, Gemini, and Claude all run this same next-token loop, even though they 
 
 Claude is not written the way software is written. It is grown in three stages, and only the first one produces anything most people would recognize as "the model."
 
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/how-does-claude-work/how-claude-is-built-stages.png" alt="Claude's three build stages: pretraining, post-training, and the tool scaffolding." w="1040" h="469" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Two stages grow the model, and a third — the scaffolding — is ordinary software built around it.</figcaption>
+</figure>
+
 **Stage one: pretraining.** The network reads an enormous amount of text and does one thing, predict the next token, billions of times, nudging itself a hair after each miss. Out of that single dull pressure, grammar, facts, and reasoning patterns precipitate. What comes out is a **base model**: fluent, knowledgeable, and not yet an assistant. Ask it "can you help me write an email?" and it might just continue the document in the same style instead of answering, because it has learned to imitate the internet, not to help. There is no "Claude" in here yet. The marketing obscures this: Claude is not a module someone coded. It is a character the network learned to play, and that character gets installed in the next stage.
 
 **Stage two: post-training.** Here the base model is shaped into the helpful, honest, and harmless assistant people actually talk to. Anthropic uses reinforcement learning from human feedback (RLHF) together with its own method, Constitutional AI, to do it. This stage changes what the model will say, so the finished assistant is not a neutral mirror of its training text. It has a trained character, and that character is frozen into the weights before you send a single message. The next section is entirely about how this works, because it is the step competitors name and then skip.

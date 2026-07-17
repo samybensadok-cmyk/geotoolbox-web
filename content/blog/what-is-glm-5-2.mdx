@@ -32,6 +32,11 @@ It helps to place Zhipu against the other Chinese labs you have probably seen in
 
 ## The Specs: What Actually Changed in 5.2
 
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/what-is-glm-5-2/glm-context-window-jump.png" alt="Bar chart showing GLM 5.2's context window jump from roughly 200K tokens to one million." w="1100" h="509" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">The real upgrade from GLM 5.1 to 5.2: a five-fold jump in how much text the model can hold at once.</figcaption>
+</figure>
+
 **The headline change in GLM 5.2 is not a bigger brain, it is a bigger window.** Zhipu pushed the [context window](https://geotoolbox.ai/glossary/context-window) from roughly 200,000 tokens in GLM 5.1 to a usable one million, and it [describes that capacity](https://z.ai/blog/glm-5.2) as engineering-usable rather than a number on a spec sheet. In plain terms, you can hand the model an entire mid-sized codebase or a long stack of documents at once, around 750,000 words, and it can reason over the whole thing without chunking.
 
 Under the hood, GLM 5.2 is a Mixture-of-Experts model with around 753 billion total parameters, of which only about 40 billion are active for any given [token](https://geotoolbox.ai/blog/what-are-tokens-in-ai), per its [Hugging Face model card](https://huggingface.co/zai-org/GLM-5.2). (Some write-ups cite roughly 744 billion; the count from the published weights is a little higher.) That total is barely changed from GLM 5.1, so the jump is in the context window, not the model's size. The Mixture-of-Experts design is the trick behind the low running cost: it activates only a slice of those parameters per token, so each token takes far less compute than the headline size suggests, even though the full model is still heavy to host. The release also adds two thinking-effort levels, High and Max, so you can trade speed for deeper reasoning when a task needs it.

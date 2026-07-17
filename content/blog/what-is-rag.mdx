@@ -23,6 +23,11 @@ The name describes the sequence exactly: **retrieve** the relevant documents, **
 
 ## How RAG Works: Retrieve, Augment, Generate
 
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/what-is-rag/rag-retrieve-augment-generate.png" alt="Three-step RAG flow: retrieve matching passages, augment the prompt, generate a grounded answer." w="1100" h="648" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">The RAG loop: find the passages, paste them into the prompt, write an answer grounded in them.</figcaption>
+</figure>
+
 A RAG system runs three steps every time someone asks a question.
 
 **Retrieve.** The system turns the user's question into a search and pulls the most relevant passages from a knowledge base. That knowledge base is usually a set of documents that have been split into chunks and converted into [vector embeddings](https://geotoolbox.ai/blog/vector-embeddings), numerical representations that let software compare meaning rather than match exact words. An embedding model converts the user query into a vector too, and the retriever finds the passages whose vectors sit closest to it. This is [semantic search](https://geotoolbox.ai/glossary/semantic-search), often combined with old-fashioned keyword matching for the terms that have to be exact.

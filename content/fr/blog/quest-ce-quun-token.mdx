@@ -55,6 +55,11 @@ Si vous avez cherché « token IA » ou « jeton IA » et que vous êtes tombé 
 
 ## Comment fonctionne la tokenisation : du texte aux identifiants
 
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/what-are-tokens-in-ai/text-to-token-ids.png" alt="« Hello, world! » tel qu'un lecteur le voit face aux quatre identifiants de tokens que reçoit le modèle." w="1100" h="632" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Le tokeniseur transforme « Hello, world! » en quatre entiers avant même que le modèle ne le voie.</figcaption>
+</figure>
+
 Avant même que votre texte n'atteigne le modèle, un programme distinct, le **tokeniseur**, le découpe en tokens et remplace chacun par un nombre. « Hello, world! » n'entre pas dans le modèle sous forme de mots. Il y entre comme une courte liste d'identifiants entiers, quelque chose comme [9906, 11, 1917, 0] (ce sont les identifiants du tokeniseur de GPT-4 ; un modèle plus récent attribue d'autres numéros). Le modèle travaille avec les nombres. Il reçoit le plus souvent des identifiants de tokeniseur plutôt qu'un flux brut de caractères, si bien que la structure au niveau des lettres ne lui est pas directement accessible.
 
 Le découpage suit une méthode dite de **tokenisation en sous-mots**. Les mots fréquents obtiennent leur propre token. Les mots rares, les noms de marque et les longs mots composés sont brisés en morceaux. « Tokenisation » pourrait se scinder en « token » et « isation ». Un nom de produit inventé peut éclater en quatre ou cinq fragments, et c'est pour cela qu'un modèle écorche parfois une marque inhabituelle : il la reconstruit à partir de bouts, il ne la restitue pas d'un bloc. Le tokeniseur ne lit pas pour comprendre, il fait seulement correspondre le texte à un vocabulaire figé de morceaux connus, construit une fois pour toutes, à l'avance. Les images et l'audio subissent le même sort dans les modèles multimodaux, découpés eux aussi en tokens d'image et en tokens audio, donc la logique reste la même.
