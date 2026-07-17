@@ -9,13 +9,13 @@ import { softwareApplicationSchema, howToSchema } from "@/lib/seo-schema"
 import { AiReadinessWidget } from "@/components/tools/ai-readiness-widget"
 
 export const metadata: Metadata = {
-  title: "Free AI-Readiness Score — Is Your Site Ready for AI Agents?",
+  title: "AI Visibility Checker: Free Readiness Score",
   description:
-    "Score any domain on the foundations AI agents need: robots.txt, AI-crawler access, content signals, sitemap and markdown negotiation. 5 free checks from our 28-point Agent Readiness rubric. Server-side, free, honest about what it proves.",
+    "Run a free AI visibility check on any domain: robots.txt, AI crawler access, sitemap, content signals, markdown. Scored like our full 28-check scan.",
   openGraph: {
-    title: "Free AI-Readiness Score — Is Your Site Ready for AI Agents?",
+    title: "AI Visibility Checker: Free 5-Check Readiness Score",
     description:
-      "Score your site on 5 of 28 AI-readiness checks — robots, crawler access, content signals, sitemap, markdown. Free, server-side, honest.",
+      "Score your site on 5 of 28 AI-readiness checks: robots, crawler access, content signals, sitemap, markdown. Free, server-side, honest.",
   },
   alternates: { canonical: `${siteConfig.url}/tools/ai-readiness` },
 }
@@ -24,25 +24,40 @@ const steps: Step[] = [
   {
     verb: "Give",
     title: "A domain or URL",
-    body: "Enter any site. We fetch its robots.txt and sitemap server-side — so it works even on sites that block browser requests.",
+    body: "Enter any site. We fetch its robots.txt and sitemap server-side, so it works even on sites that block browser requests.",
   },
   {
     verb: "Score",
     title: "5 foundational checks",
-    body: "We score robots.txt validity, AI-crawler access, content signals, sitemap, and markdown negotiation — a fixed subset of our 28-check Agent Readiness rubric.",
+    body: "robots.txt validity, AI-crawler access, content signals, sitemap, markdown negotiation. A fixed subset of our 28-check Agent Readiness rubric.",
   },
   {
     verb: "Fix",
     title: "A score + what's holding you back",
-    body: "You get a clear score, a per-check breakdown with the evidence, and a path to the other 23 checks in the full scan.",
+    body: "A clear number, a per-check breakdown with the evidence, and a path to the other 23 checks in the full scan.",
   },
 ]
 
 const faqs = [
   {
-    question: "Does a high AI-Readiness score mean AI will cite me?",
+    question: "Is this an AI visibility checker or a readiness score?",
     answer:
-      "No, and we won't pretend otherwise. This score measures infrastructure — whether AI agents can reach, crawl, and parse your site. That's table stakes: if you fail these, you can be invisible to AI by accident. But actually getting cited depends on your content, authority, and each engine's ranking — none of which a robots.txt or sitemap controls. Think of this as fixing the plumbing, not buying visibility.",
+      "Both, honestly labeled. AI visibility has two layers: whether AI systems can read you, and whether they mention you. This free tool checks and scores the first layer, the infrastructure. Measuring the second layer (mentions, citations, competitors across 8 AI engines) is what the paid AI Visibility Tracker does. If the plumbing fails here, no tracking result will flatter you.",
+  },
+  {
+    question: "Why only 5 of the 28 checks?",
+    answer:
+      "Because these five are what we can verify honestly from a single public request, and they're the foundations that gate the rest. The other 23, rendering as a headless agent, live-fetching as 34 crawlers, structured data, MCP, commerce feeds, visual layout, run in the full Agent Readiness scan, which is also free.",
+  },
+  {
+    question: "My score is high. Why am I still not showing up in AI answers?",
+    answer:
+      "Because infrastructure is table stakes. Once agents can reach you, whether they cite you comes down to content and authority, the same fight as classic SEO moved to a new surface. The score's job is to rule out the self-inflicted failure so you know the rest is a content problem, not a plumbing one.",
+  },
+  {
+    question: "Does a high score mean AI will cite me?",
+    answer:
+      "No, and we won't dress it up. Nothing a robots file or sitemap controls can earn a citation. What a bad score can do is silently cost you every citation you would otherwise have earned. That asymmetry is why this check comes first.",
   },
   {
     question: "What are the 5 free checks?",
@@ -50,19 +65,14 @@ const faqs = [
       "robots.txt valid format, AI bot discoverability (whether your robots.txt blocks AI crawlers), Content-Signal directive, sitemap present + valid XML, and markdown content negotiation. They're a fixed subset of the 28 checks our full Agent Readiness scan runs, chosen because they're the foundational ones we can verify safely and instantly from a single URL.",
   },
   {
-    question: "Why only 5 of 28 checks?",
-    answer:
-      "The other 23 need things a single public request can't do: live-fetching your pages as 34 different AI crawlers, rendering JavaScript like a headless agent, and inspecting structured data, MCP endpoints, commerce feeds, and visual layout. Those run in the full Agent Readiness scan. The 5 here are the foundations — get them right first, because they gate everything else.",
-  },
-  {
     question: "How is the score calculated?",
     answer:
-      "Your headline score is the three core foundations — robots.txt validity, AI-crawler access, and a valid sitemap (30 points). Each is scored exactly the way the full Agent Readiness scan scores it, so your free result is a genuine partial, not a different number. Two further checks — the Content-Signal directive and markdown content negotiation — are shown separately as emerging signals: almost no site implements them yet, so we don't let them drag your score down, but adopting them is cheap future-proofing. We show the points and evidence for every check, core and emerging, so nothing is a black box.",
+      "Your headline score is the three core foundations, robots.txt validity, AI-crawler access, and a valid sitemap (30 points). Each is scored exactly the way the full Agent Readiness scan scores it, so your free result is a genuine partial, not a different number. Two further checks, the Content-Signal directive and markdown content negotiation, are shown separately as emerging signals: almost no site implements them yet, so we don't let them drag your score down, but adopting them is cheap future-proofing. We show the points and evidence for every check, core and emerging, so nothing is a black box.",
   },
   {
     question: "Is it free?",
     answer:
-      "Yes — single-domain scores are completely free and need no sign-up. There's no LLM or paid API behind a check, so there's nothing to meter.",
+      "Yes. Single-domain scores are free with no sign-up, and there's no LLM or paid API behind a check, so nothing is metered.",
   },
 ]
 
@@ -98,11 +108,12 @@ export default function AiReadinessPage() {
           <div className="mx-auto max-w-3xl text-center">
             <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">Free AI-readiness tool</p>
             <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-              Is your site ready for AI agents?
+              Free AI Visibility Checker: Is Your Site Ready for AI?
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
-              Score any domain on the foundations AI agents need — robots, crawler access, content signals, sitemap, markdown.
-              5 free checks from our 28-point readiness rubric. Server-side, no sign-up.
+              Before AI can mention you, it has to reach you. This free AI visibility checker scores any domain on the five
+              foundations AI agents need first: robots.txt validity, AI-crawler access, content signals, sitemap, markdown
+              negotiation. Scored exactly the way our full 28-check Agent Readiness scan scores them. Server-side, no sign-up.
             </p>
           </div>
 
@@ -117,20 +128,20 @@ export default function AiReadinessPage() {
         <div className="mx-auto max-w-3xl">
           <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">Straight answer</p>
           <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-            What this score measures — and what it doesn&apos;t.
+            What this score measures, and what it doesn&apos;t.
           </h2>
           <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-gray-700">
             <p>
               <strong className="text-gray-900">It measures infrastructure, not visibility.</strong> Whether AI agents can
-              reach, crawl, and parse your site. Fail these and you can be invisible to AI by accident — but passing them is
-              the floor, not a guarantee of citations. Anyone selling a &ldquo;readiness score&rdquo; as a ranking shortcut is overstating it.
+              reach, crawl, and parse your site. Fail these and you can be invisible to AI by accident, but passing them is
+              the floor, not a guarantee of citations. Anyone selling a &quot;readiness score&quot; as a ranking shortcut is overstating it.
             </p>
             <p>
               <strong className="text-gray-900">It&apos;s an honest partial.</strong> 5 of our 28 checks. We show you exactly
               which 5, score them the same way the full scan does, and never dress the number up as the complete picture.
             </p>
             <p>
-              <strong className="text-gray-900">It&apos;s the plumbing.</strong> Get these foundations right first — they gate
+              <strong className="text-gray-900">It&apos;s the plumbing.</strong> Get these foundations right first; they gate
               the other 23 checks (rendering, structured data, MCP, commerce, visual) that the full Agent Readiness scan covers.
             </p>
           </div>
@@ -152,7 +163,8 @@ export default function AiReadinessPage() {
             <Link href="/tools/ai-crawler-checker" className="font-semibold text-accent-700 underline-offset-2 hover:underline">AI Crawler Checker</Link>{" "}
             shows which of 34 AI crawlers your robots.txt blocks, line by line. The{" "}
             <Link href="/tools/llms-txt-checker" className="font-semibold text-accent-700 underline-offset-2 hover:underline">llms.txt Checker</Link>{" "}
-            validates and scores your llms.txt. Both are free and server-side.
+            validates and scores your llms.txt. Both are free and server-side. New to the idea? Read{" "}
+            <Link href="/blog/what-is-ai-visibility" className="font-semibold text-accent-700 underline-offset-2 hover:underline">what AI visibility is</Link>.
           </p>
         </div>
       </section>

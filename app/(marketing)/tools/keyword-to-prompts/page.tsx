@@ -9,13 +9,13 @@ import { softwareApplicationSchema, howToSchema } from "@/lib/seo-schema"
 import { KeywordToPromptsWidget } from "@/components/tools/keyword-to-prompts-widget"
 
 export const metadata: Metadata = {
-  title: "Free Keyword → AI Prompts Generator — What to Track in ChatGPT",
+  title: "Keyword to AI Prompts Generator (Free)",
   description:
-    "Turn any keyword into the conversational prompts real people ask ChatGPT, Claude and Perplexity. ~15 prompts across 6 intents, with the brand-surfacing ones flagged so you know which to track. Free, no sign-up.",
+    "Turn any keyword into ~15 conversational AI prompts across 6 intents, with brand-surfacing prompts flagged for tracking. Free, no sign-up.",
   openGraph: {
-    title: "Free Keyword → AI Prompts Generator — What to Track in ChatGPT",
+    title: "Keyword to AI Prompts Generator: Free AI Visibility Tool",
     description:
-      "Paste a keyword, get ~15 AI prompts across 6 intents — and see which ones make AI recommend brands. The honest bridge from SEO keywords to trackable AI prompts. Free.",
+      "Paste a keyword, get ~15 AI prompts across 6 intents, and see which ones make AI recommend brands. The honest bridge from SEO keywords to trackable AI prompts. Free.",
   },
   alternates: { canonical: `${siteConfig.url}/tools/keyword-to-prompts` },
 }
@@ -24,17 +24,17 @@ const steps: Step[] = [
   {
     verb: "Give",
     title: "A keyword or topic",
-    body: "Enter what your customers actually search for — “standing desk”, “best CRM for startups”, “running shoes for flat feet”. Optionally add your brand to keep it out of the unbranded prompts.",
+    body: "Enter what your customers actually search for: \"standing desk\", \"best CRM for startups\", \"running shoes for flat feet\". Optionally add your brand to keep it out of the unbranded prompts.",
   },
   {
     verb: "Generate",
     title: "~15 prompts across 6 intents",
-    body: "We write the conversational questions real people ask AI — recommendation, comparison, how-to, research, validation, transactional — not keyword fragments. Each carries a real persona or constraint.",
+    body: "We write the conversational questions real people ask AI (recommendation, comparison, how-to, research, validation, transactional), not keyword fragments. Each carries a real persona or constraint.",
   },
   {
     verb: "Track",
     title: "The ones that surface brands",
-    body: "Every prompt is flagged: which ones would make an AI answer by recommending named brands? Those are the ones worth tracking — where your visibility is winnable.",
+    body: "Every prompt is flagged: would an AI answer it by recommending named brands? Those are the ones worth tracking, because that's where visibility is winnable.",
   },
 ]
 
@@ -42,27 +42,27 @@ const faqs = [
   {
     question: "What's the difference between a keyword and an AI prompt?",
     answer:
-      "A Google keyword is a fragment — about 2–4 words (“standing desk”). An AI prompt is a full conversational question, roughly 6–17× longer, with a persona and constraints baked in (“What's the best standing desk for a small home office under $300?”). People don't type keywords into ChatGPT — they ask questions. AI-visibility tracking measures whether you show up in the answers to those questions, so you need the prompts, not the keywords. This tool does that translation.",
+      "A keyword is a 2-4 word fragment built for a search box. A prompt is a full question built for a conversation, longer, with a persona and constraints (\"for a small team\", \"under $300\", \"for flat feet\"). AI engines answer prompts, so measuring your AI visibility against keywords measures the wrong thing.",
   },
   {
-    question: "What does “brand-surfacing” mean, and which prompts should I track?",
+    question: "Which of the generated prompts should I track?",
     answer:
-      "A brand-surfacing prompt is one an AI would answer by listing or recommending named brands or products — “best X for Y”, “alternatives to Z”, “which should I use”, “X vs Y”. Those are the prompts where your brand can show up (or get beaten by a competitor), so they're the ones worth tracking. Definitional or how-to prompts (“what is a standing desk”, “how do I set one up”) usually return an explanation with no brands — useful context, but not where visibility is won. We flag the brand-surfacing ones with a star and put the rest in a separate group.",
+      "The flagged ones, the prompts an AI answers by recommending or comparing named brands. Those are the answers you can appear in. Definitional and how-to prompts mostly return brand-free explanations; useful for content planning, not for visibility tracking.",
   },
   {
     question: "How accurate are the intent labels?",
     answer:
-      "The six intent labels (recommendation, comparison, transactional, validation, research, how-to) are inferred by the AI model, so treat them as a strong hint, not gospel. The brand-surfacing flag is different: it's computed by a deterministic rule — does the prompt ask the model to select or compare named options? — so it's consistent every time. The paid AI Visibility Tracker validates intent against real search-intent data and ranks prompts by estimated AI-search demand.",
-  },
-  {
-    question: "Is it free? Do I need to sign up?",
-    answer:
-      "Generating prompts is completely free and needs no sign-up. You only create an account if you want to track the prompts over time — i.e. actually run them through ChatGPT, Claude, Perplexity, Gemini and the rest to see whether your brand is mentioned, in the AI Visibility Tracker.",
+      "The six intent labels are inferred by the AI model, so treat them as a strong hint, not gospel. The brand-surfacing flag is different: a deterministic rule, consistent every time. The paid AI Visibility Tracker validates intent against real search-intent data and ranks prompts by estimated AI-search demand.",
   },
   {
     question: "How is this different from a generic AI prompt generator?",
     answer:
-      "Generic prompt generators just produce text. This is built for GEO (generative engine optimization): it spans the six intents that matter for AI visibility, keeps your own brand out of the unbranded prompts (so tracking stays honest, not self-fulfilling), and — the key part — separates the prompts that surface brands from the ones that don't, so you know exactly which to track. It's the bridge from the SEO keywords you already have to the AI prompts you can actually monitor.",
+      "Generic generators produce text. This one is built for AI visibility: six visibility-relevant intents, your own brand excluded from unbranded prompts so tracking stays honest, and a deterministic brand-surfacing flag that separates trackable prompts from context. It exists to feed a tracker, not to write your prompts for you.",
+  },
+  {
+    question: "Is it free?",
+    answer:
+      "Generating prompts is free, no sign-up. You only create an account if you want to run the prompts through the AI engines over time in the AI Visibility Tracker.",
   },
 ]
 
@@ -96,13 +96,14 @@ export default function KeywordToPromptsPage() {
             ]}
           />
           <div className="mx-auto max-w-3xl text-center">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">Free GEO prompt tool</p>
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">Free AI visibility tool</p>
             <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
               Turn a keyword into the prompts your customers ask AI
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
-              SEO gives you keywords. AI visibility needs prompts — the real questions people ask ChatGPT, Claude and
-              Perplexity. Paste a keyword; get ~15 prompts across 6 intents, with the brand-surfacing ones flagged. Free, no sign-up.
+              SEO gave you keywords. AI visibility runs on prompts, the full conversational questions people actually type
+              into ChatGPT, Claude and Perplexity. Paste one keyword, get ~15 prompts across 6 intents, with the
+              brand-surfacing ones flagged so you know which to track. Free, no sign-up.
             </p>
           </div>
 
@@ -117,17 +118,17 @@ export default function KeywordToPromptsPage() {
         <div className="mx-auto max-w-3xl">
           <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">Straight answer</p>
           <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-            Keywords aren&apos;t prompts — and that gap is why brands go missing in AI.
+            Keywords aren&apos;t prompts, and that gap is why brands go missing in AI.
           </h2>
           <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-gray-700">
             <p>
               <strong className="text-gray-900">A keyword is a fragment; a prompt is a question.</strong> Nobody types
-              &ldquo;standing desk&rdquo; into ChatGPT. They ask &ldquo;what&apos;s the best standing desk for a small home office under $300?&rdquo;
-              — longer, conversational, with context baked in. If you only know your keywords, you don&apos;t know what to track.
+              &quot;standing desk&quot; into ChatGPT. They ask &quot;what&apos;s the best standing desk for a small home office under $300?&quot;
+              Longer, conversational, with context baked in. If you only know your keywords, you don&apos;t know what to track.
             </p>
             <p>
               <strong className="text-gray-900">Not every prompt is worth tracking.</strong> Only some make an AI answer
-              by recommending brands — those are where you can win or lose visibility. We flag them deterministically, so you
+              by recommending brands, and those are where you can win or lose visibility. We flag them deterministically, so you
               spend your tracking on the prompts that actually define your brand&apos;s presence.
             </p>
             <p>
@@ -156,7 +157,8 @@ export default function KeywordToPromptsPage() {
             <Link href="/tools/ai-crawler-checker" className="font-semibold text-accent-700 underline-offset-2 hover:underline">AI Crawler Checker</Link>{" "}
             shows which of 34 AI crawlers your robots.txt blocks, and the{" "}
             <Link href="/tools/llms-txt-checker" className="font-semibold text-accent-700 underline-offset-2 hover:underline">llms.txt Checker</Link>{" "}
-            validates your llms.txt. All free and server-side.
+            validates your llms.txt. All free and server-side. New to the idea? Read{" "}
+            <Link href="/blog/what-is-ai-visibility" className="font-semibold text-accent-700 underline-offset-2 hover:underline">what AI visibility is</Link>.
           </p>
         </div>
       </section>
@@ -171,8 +173,8 @@ export default function KeywordToPromptsPage() {
               These are the prompts. Now see if you&apos;re in the answers.
             </h2>
             <p className="mt-2 max-w-xl text-base text-gray-300">
-              The AI Visibility Tracker runs your prompts through ChatGPT, Claude, Perplexity, Gemini and more — on a schedule —
-              and shows whether your brand is mentioned, cited, or beaten by a competitor.
+              The AI Visibility Tracker runs your flagged prompts through 8 AI engines on a schedule, one of 13 features on
+              the paid platform, and shows whether your brand is mentioned, cited, or beaten by a competitor.
             </p>
           </div>
           <Link

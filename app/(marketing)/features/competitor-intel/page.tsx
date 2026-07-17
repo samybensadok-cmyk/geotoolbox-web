@@ -8,11 +8,11 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
-  title: "AI Competitor Tracking Tool",
+  title: "AI Competitor Analysis Across 8 Engines",
   description:
-    "Track how competitors gain or lose AI citations across ChatGPT, Perplexity, Claude, Gemini, Google AI Overviews, Google AI Mode, Bing Copilot, and Grok. AI share-of-voice, content gap matrix, and real-time threat alerts when a rival starts outranking you in AI answer engines.",
+    "Track how competitors gain or lose AI citations across 8 engines. Share of voice, content gap matrix, and an alert the day a rival starts outranking you.",
   openGraph: {
-    title: "AI Competitor Tracking Tool",
+    title: "AI Competitor Analysis: Track Rivals Across 8 Engines",
     description:
       "Track how competitors gain or lose AI citations across eight engines. AI share-of-voice, content gap matrix, and real-time threat alerts when a rival starts outranking you.",
   },
@@ -62,9 +62,9 @@ const faqs = [
       "By email. When a competitor starts gaining citations on a prompt you used to own, an alert fires with a one-sentence analysis of why, so you can react before the citation share compounds.",
   },
   {
-    question: "How often does the data update?",
+    question: "Is Competitor Intel included on the free plan?",
     answer:
-      "Data refreshes with each new scan you run. More scans across more keywords builds a richer competitive picture; weekly cadence on core keywords is usually enough to catch meaningful movement early.",
+      "Yes. It's available on every tier, including Free. Data refreshes with each scan you run; weekly cadence on core keywords is usually enough to catch meaningful movement early.",
   },
 ]
 
@@ -73,7 +73,7 @@ const sections = [
     num: "01",
     tag: "AI threat alerts",
     title: "Find out the day it matters",
-    body: "Claude-powered analysis runs on every scan. When a competitor starts getting cited for a prompt you used to own, you get an alert with a 1-sentence why.",
+    body: "AI-powered analysis runs on every scan. When a competitor starts getting cited for a prompt you used to own, you get an alert with a 1-sentence why.",
   },
   {
     num: "02",
@@ -132,7 +132,7 @@ export default function CompetitorIntelPage() {
                 Know the day they outrank you.
               </h1>
               <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-                Track how competitors gain or lose AI citations. Content gap matrix, SERP feature ownership, and real-time threat alerts so you find out the moment a rival starts beating you in AI search.
+                AI competitor analysis that runs on real citations, not estimates. Track how rivals gain or lose AI citations across eight engines, see the exact topics they own and you don&apos;t, and get an email the day a competitor starts winning a prompt that used to be yours.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Link href="/app" prefetch={false} className="rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px]">
@@ -239,7 +239,7 @@ export default function CompetitorIntelPage() {
             <div>
               <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">Content gap matrix</p>
               <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.5rem)] font-bold leading-tight tracking-tight text-gray-900">
-                The topics they own. You don't.
+                The topics they own. You don&apos;t.
               </h2>
             </div>
             <p className="max-w-xl text-base leading-relaxed text-gray-600">

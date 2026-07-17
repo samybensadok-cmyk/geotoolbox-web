@@ -8,11 +8,11 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
-  title: "Analytics: GSC + GA4 for AI search tracking",
+  title: "AI Search Analytics: GSC + GA4 Attribution",
   description:
-    "Connect Google Search Console and GA4 for AI search tracking. See AI-driven traffic, cited-vs-clicked pages, and attribute real sessions to your AI visibility, not just impressions. 13 sub-dashboards built for generative engine optimization reporting.",
+    "Connect GSC and GA4 to see which AI citations drive real sessions. AI traffic attribution plus 13 sub-dashboards: quick wins, decay, cannibalization.",
   openGraph: {
-    title: "Analytics: GSC + GA4 for AI search tracking",
+    title: "AI Search Analytics: GSC + GA4 With AI Traffic Attribution",
     description:
       "Connect Google Search Console and GA4 for AI search tracking. See AI-driven traffic, cited-vs-clicked pages, and attribute real sessions to your AI visibility, not just impressions.",
   },
@@ -76,6 +76,11 @@ const faqs = [
     question: "Is my Search Console data stored on your servers?",
     answer:
       "Connection credentials are stored securely. Query data is fetched on-demand from the Google API and cached locally in your browser per property and period for performance. Only OAuth tokens and scan results live server-side.",
+  },
+  {
+    question: "Is Analytics available on the Free plan?",
+    answer:
+      "Yes. Analytics is included on every tier, Free included. No card required to connect and see all 13 views on your own data.",
   },
 ]
 
@@ -241,7 +246,7 @@ export default function AnalyticsPage() {
       <JsonLd data={[
         softwareApplicationSchema({
           name: "Analytics",
-          description: "GSC and GA4 rebuilt around AI citations. Quick wins, content decay, click share, and cannibalization detection across 12 sub-tabs.",
+          description: "GSC and GA4 rebuilt around AI citations. Quick wins, content decay, click share, and cannibalization detection across 13 sub-tabs.",
           url: `${siteConfig.url}/features/analytics`,
         }),
       ]} />
@@ -258,7 +263,7 @@ export default function AnalyticsPage() {
                 AI citations, attributed to real traffic.
               </h1>
               <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-                Connect Search Console and GA4. See AI-driven sessions, cited-vs-clicked pages, and 13 sub-dashboards built for the AI-search era, not a generic GSC rewrapper.
+                Being cited is nice. Being cited by the engines that actually send you sessions is a strategy. Connect Search Console and GA4 to layer your traffic data over your AI citation data: 13 sub-dashboards built for AI search analytics, not another GSC rewrapper. On every plan, including Free.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Link href="/app" prefetch={false} className="rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px]">

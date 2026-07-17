@@ -16,13 +16,13 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema, howToSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
-  title: "AI Visibility Tool for AI Search",
+  title: "AI Visibility Checker: Scan 8 AI Engines",
   description:
-    "See whether ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Google AI Mode, Bing Copilot, and Grok cite you — or your competitors. One prompt, eight engines, a 0–100 visibility score, in minutes.",
+    "Check whether ChatGPT, Perplexity, Gemini, and 5 more AI engines cite you or your competitors. One prompt, eight engines, a 0-100 score, in minutes.",
   openGraph: {
-    title: "AI Visibility Tool for AI Search",
+    title: "AI Visibility Checker: Scan 8 AI Engines in One Pass",
     description:
-      "See whether the eight major AI engines cite you or your competitors. One prompt, eight engines, a 0–100 visibility score, in minutes.",
+      "Check whether the eight major AI engines cite you or your competitors. One prompt, eight engines, a 0-100 score, in minutes.",
   },
   alternates: { canonical: `${siteConfig.url}/features/geo-scan` },
 }
@@ -31,7 +31,7 @@ const steps: Step[] = [
   {
     verb: "Ask",
     title: "Enter a real query",
-    body: "Type the keyword or question your customers would ask an AI — a short keyword or a natural question, both work.",
+    body: "Type the keyword or question your customers would ask an AI: a short keyword or a natural question, both work.",
   },
   {
     verb: "Run",
@@ -58,12 +58,12 @@ const outcomes = [
   {
     tag: "Live search",
     title: "You see what your customers see today",
-    body: "Every engine is queried in real time with live web search — never a six-month-old answer the model memorized.",
+    body: "Every engine is queried in real time with live web search. Never a six-month-old answer the model memorized.",
   },
   {
     tag: "Competitor deltas",
     title: "Know the prompts a rival owns",
-    body: "Add up to four competitor domains and see exactly which prompts they win — before it shows up in your traffic report.",
+    body: "Add up to four competitor domains and see exactly which prompts they win, before it shows up in your traffic report.",
   },
   {
     tag: "8 markets, localized",
@@ -86,7 +86,7 @@ const faqs = [
   {
     question: "What's the difference between cited, mentioned, and recommended?",
     answer:
-      "Cited means your domain is the linked source in the answer — the strongest signal. Recommended means you're named as a top pick. Mentioned means your brand appears without a link — your highest-leverage upgrade. Not found is the gap to close first. GEO Scan labels each engine so you know exactly where you stand.",
+      "Cited means your domain is the linked source in the answer, the strongest signal. Recommended means you're named as a top pick. Mentioned means your brand appears without a link, your highest-leverage upgrade. Not found is the gap to close first. GEO Scan labels each engine so you know exactly where you stand.",
   },
   {
     question: "How does GEO Scan determine if my brand is cited?",
@@ -101,12 +101,12 @@ const faqs = [
   {
     question: "How is this different from traditional rank tracking?",
     answer:
-      "Rank trackers measure blue-link positions on a SERP. GEO Scan measures whether AI-generated answers cite your brand at all. There's no top 10 to climb — just whether your domain is in the response or isn't.",
+      "Rank trackers measure blue-link positions on a SERP. GEO Scan measures whether AI-generated answers cite your brand at all. There's no top 10 to climb: your domain is either in the response or it isn't.",
   },
   {
     question: "Can I compare my domain against competitors in the same scan?",
     answer:
-      "Yes. Add up to four competitor domains and the scan returns side-by-side citation status for each, across all eight engines — which prompts they win, which they lose, and the citations they earn that you don't.",
+      "Yes. Add up to four competitor domains and the scan returns side-by-side citation status for each, across all eight engines: which prompts they win, which they lose, and the citations they earn that you don't.",
   },
   {
     question: "Can I export my scan results?",
@@ -142,16 +142,16 @@ export default function GeoScanPage() {
             {/* Left — message */}
             <div className="animate-fade-up lg:col-span-6">
               <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-                AI Visibility Tool
+                AI Visibility Checker
               </p>
               <h1 className="mt-3 text-[clamp(2rem,4.2vw,3.25rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-                See if AI is <span className="text-accent-700">recommending you</span> — or your competitors.
+                See if AI is <span className="text-accent-700">recommending you</span>, or your competitors.
               </h1>
               <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-                ChatGPT, Perplexity, Gemini, and Google AI Overviews already answer your customers&apos;
-                buying questions. Most brands have no idea whether they&apos;re in the answer or invisible.
-                GEO Scan queries eight engines with one prompt and shows you exactly who gets cited, who
-                gets recommended instead, and a 0–100 visibility score — in minutes, from live search.
+                ChatGPT, Perplexity, and Gemini already answer your customers&apos; buying questions. GEO
+                Scan is an AI visibility checker that queries all eight major engines with one prompt and
+                shows you who gets cited, who gets recommended instead, and a 0–100 score. From live search,
+                in minutes, on every plan including Free.
               </p>
               <div className="mt-8">
                 <DualCTA
@@ -171,7 +171,7 @@ export default function GeoScanPage() {
                 width={1999}
                 height={1602}
                 priority
-                caption="Real GEO Scan — for “how to run google ads for lawyers,” all 7 AI engines cite the brand, which ranks the #1 cited source — above google.com, Reddit, and Clio."
+                caption="Real GEO Scan: for “how to run google ads for lawyers,” all 7 AI engines cite the brand, which ranks the #1 cited source, above google.com, Reddit, and Clio."
               />
             </div>
           </div>
@@ -181,7 +181,7 @@ export default function GeoScanPage() {
       {/* The cost of being invisible */}
       <PainScenarioSection
         eyebrow="The blind spot"
-        scenario="A buyer asks ChatGPT &ldquo;best agency for [your service].&rdquo; It names three companies. None of them are you. You never see the query, never see the lost deal — you just watch a competitor grow and can&apos;t explain why."
+        scenario="A buyer asks ChatGPT &ldquo;best agency for [your service].&rdquo; It names three companies. None of them are you. You never see the query, never see the lost deal. You just watch a competitor grow and can&apos;t explain why."
         bridge="GEO Scan turns that blind spot into a number you can act on: run the prompts your customers actually ask, and see exactly where you&apos;re in the answer and where you&apos;re missing."
       />
 
@@ -196,16 +196,16 @@ export default function GeoScanPage() {
           </h2>
           <p className="mt-4 text-[15px] leading-relaxed text-gray-600">
             Every scan returns a 0–100 AI visibility score, the verbatim answer from each engine, and a
-            clear status for your domain on every one. The score isn&apos;t arbitrary — here&apos;s how to read it:
+            clear status for your domain on every one. The score isn&apos;t arbitrary. Here&apos;s how to read it:
           </p>
           <div className="mt-6">
             <ScoreLegend variant="0-100" />
           </div>
           <dl className="mt-8 divide-y divide-gray-200/70 border-y border-gray-200/70">
             {[
-              ["01", "Cited", "Your domain is the linked source — defend it."],
-              ["02", "Recommended", "Named as a top pick — protect the position."],
-              ["03", "Mentioned", "Named without a link — your highest-leverage upgrade."],
+              ["01", "Cited", "Your domain is the linked source. Defend it."],
+              ["02", "Recommended", "Named as a top pick. Protect the position."],
+              ["03", "Mentioned", "Named without a link. Your highest-leverage upgrade."],
               ["04", "Not found", "The gap to close first."],
             ].map(([num, term, def]) => (
               <div key={term} className="flex items-baseline gap-4 py-4 sm:gap-6">
@@ -221,8 +221,8 @@ export default function GeoScanPage() {
             ))}
           </dl>
           <p className="mt-6 text-[13px] leading-relaxed text-gray-500">
-            In a recent scan, a legal-marketing agency we run GEO for scored 7/7 — cited by every engine —
-            with 63 total citations and the #1 influence rank in the result, ahead of google.com.
+            In a recent scan, a legal-marketing agency we run AI visibility for scored 7/7: cited by every
+            engine, with 63 total citations and the #1 influence rank in the result, ahead of google.com.
           </p>
         </div>
       </section>
@@ -237,8 +237,8 @@ export default function GeoScanPage() {
 
       {/* Act, don't just monitor */}
       <ActVsMonitorWedge
-        body="GEO Scan finds the prompts where you're missing. From there, every Not-found and Mentioned status feeds straight into a fix — so the next scan flips them to Cited."
-        example="See you're absent from ChatGPT for a key prompt? The flagged page routes into Content Analyzer, which tells you the exact signals to fix — blocked crawler, missing schema, thin entity coverage — so the gap closes instead of just being logged."
+        body="GEO Scan finds the prompts where you're missing. From there, every Not-found and Mentioned status feeds straight into a fix, so the next scan flips them to Cited."
+        example="See you're absent from ChatGPT for a key prompt? The flagged page routes into Content Analyzer, which tells you the exact signals to fix, whether that's a blocked crawler, missing schema, or thin entity coverage, so the gap closes instead of just being logged."
         link={{ label: "See how Content Analyzer closes the gap", href: "/features/content-analyzer" }}
       />
 
@@ -256,10 +256,10 @@ export default function GeoScanPage() {
           <SocialProofBlock
             miniCase={{
               result:
-                "A legal-marketing agency we run GEO for ranks its “Google Ads for lawyers” guide page 1 on Google at ~0.3% CTR — yet it's the #1 cited source across all 7 AI engines for that query, ahead of google.com.",
+                "A legal-marketing agency we run AI visibility for ranks its “Google Ads for lawyers” guide page 1 on Google at ~0.3% CTR, yet it's the #1 cited source across all 7 AI engines for that query, ahead of google.com.",
               attribution: "Measured with GEO Scan",
             }}
-            provenanceLine="Every GEO Scan is a live query to each engine — real responses, parsed verbatim, not API-memorized summaries."
+            provenanceLine="Every GEO Scan is a live query to each engine: real responses, parsed verbatim, not API-memorized summaries."
           />
         </div>
       </section>

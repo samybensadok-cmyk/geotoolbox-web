@@ -8,7 +8,7 @@ import { siteConfig } from "@/lib/config"
 export const metadata: Metadata = {
   title: "About",
   description:
-    "GEO Toolbox is the platform to get your brand cited by AI — 13 tools to measure your AI search visibility, find why a page isn't cited, and win the citations you're missing across eight engines.",
+    "GEO Toolbox is the AI visibility platform: 13 features and 5 free tools that measure your AI-search visibility across 8 engines.",
   alternates: { canonical: `${siteConfig.url}/about` },
 }
 
@@ -27,7 +27,7 @@ export default function AboutPage() {
             Built for the AI search era.
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-gray-700">
-            GEO Toolbox is the platform to get your brand cited by AI. 13 tools to measure your visibility across eight engines — ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Google AI Mode, Bing Copilot, and Grok — find why a page isn&apos;t cited, and win the citations your competitors are taking.
+            GEO Toolbox is the AI visibility platform that gets your brand cited by AI. 13 features and five free tools that measure your visibility across eight engines, ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Google AI Mode, Bing Copilot, and Grok, find why a page isn&apos;t cited, and win the citations your competitors are taking.
           </p>
         </div>
       </section>
@@ -37,10 +37,10 @@ export default function AboutPage() {
         <div className="mx-auto max-w-3xl">
           <div className="space-y-6 text-[17px] leading-relaxed text-gray-700">
             <p>
-              AI engines are becoming the default interface between questions and answers. That shift rewrites the rules of visibility: there&apos;s no SERP to scroll, no ten blue links, just a generated response that either cites you or doesn&apos;t. Generative engine optimization (GEO) is the discipline that forms around that new reality — measuring where you stand, then winning the citations you&apos;re missing.
+              AI engines are becoming the default interface between questions and answers. That shift rewrites the rules of visibility: there&apos;s no SERP to scroll, no ten blue links, just a generated response that either cites you or doesn&apos;t. Generative engine optimization (GEO) is the discipline that forms around that new reality: measuring where you stand, then winning the citations you&apos;re missing.
             </p>
             <p>
-              GEO Toolbox exists to make that layer legible, then actionable. Every scan runs a prompt across eight engines, aggregates every domain and URL cited, and returns an AI visibility score from 0 to 100 alongside the raw citations, yours and your competitors&apos;. Eleven connected tools build on that primitive: scanning and query fan-out, agent readiness, content grading and briefing, competitive and community intelligence, offsite citation interception, earned-media tracking, and AI-driven analytics — the full workflow from the first scan to the published fix.
+              GEO Toolbox exists to make that layer legible, then actionable. Every scan runs a prompt across eight engines, aggregates every domain and URL cited, and returns an AI visibility score from 0 to 100 alongside the raw citations, yours and your competitors&apos;. Thirteen connected features build on that primitive: scanning and query fan-out, agent readiness, content grading and briefing, competitive and community intelligence, offsite citation interception, earned-media tracking, and AI-driven analytics, plus five free tools that need no account, taking you through the full workflow from the first scan to the published fix.
             </p>
             <p>
               The tool is built and operated by Samy Ben Sadok, its founder and an SEO and growth strategist with over a decade of experience. It offers a free plan plus paid plans from $39/mo billed annually, supports eight countries, and is used daily by agency teams and in-house SEO professionals tracking how AI cites their brands.

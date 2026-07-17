@@ -9,13 +9,13 @@ import { softwareApplicationSchema, howToSchema } from "@/lib/seo-schema"
 import { QueryFanoutWidget } from "@/components/tools/query-fanout-widget"
 
 export const metadata: Metadata = {
-  title: "Free AI Query Fan-Out Tool (BYOK) — See What AI Really Searches",
+  title: "Query Fan-Out Tool: See AI Sub-Queries",
   description:
-    "Run a real AI query fan-out in your browser with your own Gemini key. See the actual sub-queries Gemini (and optionally Perplexity) fire for a topic, clustered into intents with a cross-engine divergence map. Free, keys never leave your browser.",
+    "Run a real query fan-out on your own Gemini key and see the sub-queries AI fires for your topic, clustered by intent. Free, keys stay in your browser.",
   openGraph: {
-    title: "Free AI Query Fan-Out Tool (BYOK) — See What AI Really Searches",
+    title: "Query Fan-Out Tool: See What AI Really Searches (Free)",
     description:
-      "Bring your own Gemini key and watch an engine fan a topic into its real sub-queries — live, in your browser, with a cross-engine divergence map. Free, no sign-up, keys stay local.",
+      "Bring your own Gemini key and watch an engine fan a topic into its real sub-queries, live, in your browser, with a cross-engine divergence map. Free, no sign-up, keys stay local.",
   },
   alternates: { canonical: `${siteConfig.url}/tools/query-fanout` },
 }
@@ -24,45 +24,45 @@ const steps: Step[] = [
   {
     verb: "Add",
     title: "Your own API key",
-    body: "Paste a free Google AI Studio (Gemini) key — and optionally a Perplexity key for a second engine. The keys stay in your browser: requests go straight to Google and Perplexity, never to a GEO Toolbox server.",
+    body: "Paste a free Google AI Studio (Gemini) key, and optionally a Perplexity key for a second engine. Keys stay in your browser; requests go straight to Google and Perplexity, never to a GEO Toolbox server.",
   },
   {
     verb: "Run",
     title: "A real fan-out, live",
-    body: "Enter a topic. We call each engine directly and read the actual sub-queries it fired while answering — Gemini's grounded searches, Perplexity's related questions. Real engine output, not an LLM guessing.",
+    body: "Enter a topic. We read the actual sub-queries the engine fired while answering: Gemini's grounded searches, Perplexity's related questions. Real engine output, not an LLM guessing.",
   },
   {
     verb: "Read",
     title: "Queries, intents, divergence",
-    body: "See every query tagged Fired or Related, clustered into intents — and, with two engines, the cross-engine divergence map: the intents both engines share versus the whitespace only one explores.",
+    body: "Every query tagged Fired or Related, clustered into intents. With two engines you also get the divergence map: the intents both chase versus the whitespace only one explores.",
   },
 ]
 
 const faqs = [
   {
-    question: "Is it really free, and do you see my API key?",
+    question: "What is query fan-out?",
     answer:
-      "Yes, and no. The demo is completely free and needs no sign-up. Your API key is used entirely in your own browser — every request goes directly from your browser to Google's (and Perplexity's) official endpoint. The key is never sent to, proxied through, logged by, or stored on a GEO Toolbox server. Reload the page and it's gone. You only pay for whatever those engines charge your key, which for a fan-out is a fraction of a cent.",
+      "The step where an AI engine expands your question into multiple narrower sub-queries, searches those, and synthesizes the answer from the results. Google's AI Mode, Gemini, and Perplexity all do it. It matters because citations are won at the sub-query level: answer one sub-question well and you can get cited for a topic you'd never rank for as a head keyword.",
   },
   {
-    question: "Where do I get a Gemini API key?",
+    question: "Do you see or store my API key?",
     answer:
-      "Free, in two minutes, at aistudio.google.com — sign in with a Google account, click “Get API key”, and copy it. Google's free tier is generous enough to run plenty of fan-outs. Paste it into the field above; we never see it.",
+      "No. The key lives in your browser for the session and requests go straight to Google's (and Perplexity's) official endpoints. Nothing is proxied through or logged by our servers, and reloading the page clears it.",
   },
   {
-    question: "Why only Gemini and Perplexity — where are ChatGPT and Grok?",
+    question: "Why only Gemini and Perplexity?",
     answer:
-      "Browser security (CORS) decides this, not us. Google's and Perplexity's APIs allow direct browser calls; OpenAI's does not, so ChatGPT can't run from a free in-browser demo. Grok could, but the demo keeps to the two that give the cleanest fan-out. The full in-app feature runs all four engines (it calls them from our server), plus the parts a browser simply can't do — real search volume, page-coverage checks, and the citation landscape.",
+      "CORS, browser security. Those two APIs allow direct calls from a browser; OpenAI's doesn't, so a genuinely serverless free demo can't include ChatGPT. The in-app version runs four engines from our servers, on our keys, and adds search volume, page-coverage checks, and the citation landscape.",
   },
   {
-    question: "How is the demo different from the paid feature?",
+    question: "Is this the same as the paid AI Query Fan-Out feature?",
     answer:
-      "Same core idea, a slice of the depth. The demo shows the real fan-out and, with two engines, the divergence map. The in-app AI Query Fan-Out adds ChatGPT and Grok, real search volume (honestly labelled), a check of how well a URL you give it already covers each intent, the citation landscape (who AI cites for these queries), and a ranked content worklist — metered per scan on our keys.",
+      "Same core idea, a slice of the depth. The free demo shows the real fan-out and the two-engine divergence map. The in-app feature adds more engines, real search volume, a check of how well a given URL already covers each intent, who AI currently cites for those queries, and a ranked content worklist.",
   },
   {
-    question: "I ran it and got no queries — why?",
+    question: "I ran it and got no queries. Why?",
     answer:
-      "Gemini only fans a topic out when it decides to ground its answer in a web search. Very broad or very personal prompts sometimes get answered from the model directly, with no sub-queries to show. Try a more search-like, commercial topic — “best CRM for startups”, “enterprise password manager”, “running shoes for flat feet” — and you'll see the fan-out.",
+      "Gemini only fans a topic out when it decides to ground its answer in a web search. Very broad or very personal prompts get answered from the model directly, with no sub-queries to show. Try a more commercial, search-like topic and you'll see the fan-out.",
   },
 ]
 
@@ -100,12 +100,12 @@ export default function QueryFanoutToolPage() {
               Free BYOK demo
             </p>
             <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-              Watch AI fan a topic into its real questions.
+              Watch AI fan your topic into its real questions.
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
-              AI engines don&apos;t answer your keyword — they fan it into a spray of sub-questions, then answer those.
-              Bring your own Gemini key and see the real ones, live, with a cross-engine divergence map. Your key never
-              leaves your browser.
+              AI engines don&apos;t search your keyword. They explode it into a spray of sharper sub-queries, search those,
+              and synthesize the answer. This free query fan-out tool shows you the actual sub-queries, live, on your own
+              Gemini key. Your key never touches our servers.
             </p>
           </div>
 
@@ -125,12 +125,12 @@ export default function QueryFanoutToolPage() {
           <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-gray-700">
             <p>
               <strong className="text-gray-900">An engine rarely searches your exact words.</strong> Ask it a question and it
-              quietly expands that into a set of sharper sub-questions, searches those, and synthesises the answer. Those
-              hidden sub-questions — the fan-out — are what actually decide which pages get cited.
+              quietly expands that into a set of sharper sub-questions, searches those, and synthesizes the answer. Those
+              hidden sub-questions, the fan-out, are what actually decide which pages get cited.
             </p>
             <p>
               <strong className="text-gray-900">This shows you the real ones.</strong> Not an LLM imagining what people might
-              ask — the genuine queries Gemini grounded its answer in, pulled live from its own grounding metadata, plus
+              ask, but the genuine queries Gemini grounded its answer in, pulled live from its own grounding metadata, plus
               Perplexity&apos;s related questions if you add a key.
             </p>
             <p>
@@ -157,7 +157,8 @@ export default function QueryFanoutToolPage() {
             <Link href="/tools/ai-readiness" className="font-semibold text-accent-700 underline-offset-2 hover:underline">AI-Readiness Score</Link>{" "}
             grades whether AI agents can reach and parse your site, and the{" "}
             <Link href="/tools/ai-crawler-checker" className="font-semibold text-accent-700 underline-offset-2 hover:underline">AI Crawler Checker</Link>{" "}
-            shows which of 34 AI crawlers your robots.txt blocks.
+            shows which of 34 AI crawlers your robots.txt blocks. New to the idea? Read{" "}
+            <Link href="/blog/what-is-ai-visibility" className="font-semibold text-accent-700 underline-offset-2 hover:underline">what AI visibility is</Link>.
           </p>
         </div>
       </section>
@@ -173,7 +174,7 @@ export default function QueryFanoutToolPage() {
             </h2>
             <p className="mt-2 max-w-xl text-base text-gray-300">
               The in-app AI Query Fan-Out adds ChatGPT and Grok, real search volume, your page&apos;s coverage of each intent,
-              the citation landscape, and a ranked content worklist — on our keys.
+              the citation landscape, and a ranked content worklist, on our keys.
             </p>
           </div>
           <Link

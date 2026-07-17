@@ -9,13 +9,13 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema, howToSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
-  title: "AI Query Fan-Out — See the real questions AI asks about your topic",
+  title: "AI Query Fan-Out: The Real Queries AI Fires",
   description:
-    "AI engines don't answer your keyword — they fan it into a dozen sub-questions, then answer those. Query Fan-Out captures the real queries ChatGPT, Gemini, Perplexity, and Grok fire for a seed topic (validated, never guessed), maps where the engines diverge, and ranks the content that closes each gap.",
+    "Capture the real sub-queries ChatGPT, Gemini, Perplexity, and Grok fire for your topic. Validated, never guessed, with a ranked worklist per gap.",
   openGraph: {
-    title: "AI Query Fan-Out — the real questions AI asks about your topic | GEO Toolbox",
+    title: "AI Query Fan-Out Tool: The Real Queries AI Fires | GEO Toolbox",
     description:
-      "Capture the actual sub-queries ChatGPT, Gemini, Perplexity, and Grok fan out for a topic — validated, not guessed — with a cross-engine divergence map and ranked content actions.",
+      "Capture the actual sub-queries ChatGPT, Gemini, Perplexity, and Grok fan out for a topic, validated, not guessed, with a cross-engine divergence map and ranked content actions.",
   },
   alternates: { canonical: `${siteConfig.url}/features/query-fanout` },
 }
@@ -49,13 +49,13 @@ const steps = [
   },
   {
     verb: "Fan out",
-    title: "Capture the real queries — across four engines",
+    title: "Capture the real queries across four engines",
     body: "We read the actual sub-queries each engine fires while answering: Gemini's grounded searches and Grok's many web-search calls carry the depth, ChatGPT contributes its single search call, and Perplexity surfaces its related questions. Real engine output, not an LLM guessing what people might ask.",
   },
   {
     verb: "Rank",
     title: "Cluster, score, and route to a fix",
-    body: "Queries are clustered into intents, scored by reach and coverage, and turned into a ranked worklist — “write a comparison table answering X,” with the engines that want it and whether you cover it yet.",
+    body: "Queries are clustered into intents, scored by reach and coverage, and turned into a ranked worklist: “write a comparison table answering X,” with the engines that want it and whether you cover it yet.",
   },
 ]
 
@@ -64,7 +64,7 @@ const inside = [
     num: "01",
     tag: "Validated queries",
     title: "The questions AI actually fired",
-    body: "Every query is one an engine really searched, tagged FIRED (a real search call) or RELATED (Perplexity's surfaced follow-ups). No “here's what people probably ask” — the honesty is the product.",
+    body: "Every query is one an engine really searched, tagged FIRED (a real search call) or RELATED (Perplexity's surfaced follow-ups). No “here's what people probably ask”; the honesty is the product.",
   },
   {
     num: "02",
@@ -76,19 +76,19 @@ const inside = [
     num: "03",
     tag: "Real volume",
     title: "Reach, labelled honestly",
-    body: "Each cluster carries true search volume where it exists, parent-term reach for the zero-volume long-tail, and a plain “no volume data” when there's nothing — never an invented number.",
+    body: "Each cluster carries true search volume where it exists, parent-term reach for the zero-volume long-tail, and a plain “no volume data” when there's nothing, never an invented number.",
   },
   {
     num: "04",
     tag: "Page coverage",
     title: "What your URL already answers",
-    body: "Point it at a page and every intent is checked against the live content — evidence-verified against the actual text, so a “covered” is a real substring match, not a hopeful guess. WAF-blocked pages are marked unverifiable, never falsely covered.",
+    body: "Point it at a page and every intent is checked against the live content, evidence-verified against the actual text, so a “covered” is a real substring match, not a hopeful guess. WAF-blocked pages are marked unverifiable, never falsely covered.",
   },
   {
     num: "05",
     tag: "Citation landscape",
     title: "Who AI cites on these queries",
-    body: "The sources each engine cites for the fanned queries — you versus the competitors and publishers winning the answer — pulled from the engines' own answer citations, matched at the registrable-domain level.",
+    body: "The sources each engine cites for the fanned queries: you versus the competitors and publishers winning the answer, pulled from the engines' own answer citations, matched at the registrable-domain level.",
   },
   {
     num: "06",
@@ -113,22 +113,22 @@ const faqs = [
   {
     question: "What does “query fan-out” actually mean?",
     answer:
-      "When you ask an AI engine a question, it rarely answers your exact words. It silently expands your query into a set of more specific sub-questions, searches those, and synthesizes the result. Those hidden sub-questions are the fan-out — and they, not your original keyword, are what decide whether you get cited.",
+      "When you ask an AI engine a question, it rarely answers your exact words. It silently expands your query into a set of more specific sub-questions, searches those, and synthesizes the result. Those hidden sub-questions are the fan-out, and they, not your original keyword, are what decide whether you get cited.",
   },
   {
     question: "How is this different from a prompt or keyword generator?",
     answer:
-      "Keyword tools and “AI prompt” generators ask a model to imagine what people might type. Query Fan-Out reads the queries the engines genuinely fired while answering — Gemini's grounded searches, Grok's web-search calls, ChatGPT's single search call, and Perplexity's related questions. Real engine output beats a plausible guess, especially when you're deciding what to write.",
+      "Keyword tools and “AI prompt” generators ask a model to imagine what people might type. Query Fan-Out reads the queries the engines genuinely fired while answering: Gemini's grounded searches, Grok's web-search calls, ChatGPT's single search call, and Perplexity's related questions. Real engine output beats a plausible guess, especially when you're deciding what to write.",
   },
   {
     question: "Which engines does it read, and are they all equal?",
     answer:
-      "Four: ChatGPT, Gemini, Perplexity, and Grok. We're honest about the differences. Gemini and Grok expose the richest fan-out; Perplexity surfaces related questions (tagged RELATED, not FIRED); ChatGPT's API returns a single search call, so it contributes a baseline rather than depth. Every query shows which engine produced it, so you're never guessing about provenance.",
+      "Four: ChatGPT, Gemini, Perplexity, and Grok, out of the eight engines GEO Toolbox tracks overall. We're honest about the differences. Gemini and Grok expose the richest fan-out; Perplexity surfaces related questions (tagged RELATED, not FIRED); ChatGPT's API returns a single search call, so it contributes a baseline rather than depth. Every query shows which engine produced it, so you're never guessing about provenance.",
   },
   {
     question: "What is the divergence map and why does it matter?",
     answer:
-      "It's the grid of intents against engines, showing which questions multiple engines share and which only one explores. Shared intents are the table stakes you must cover to compete at all. Single-engine “whitespace” intents are uncontested — the cheapest citations to win, because most competitors haven't noticed the engine is asking.",
+      "It's the grid of intents against engines, showing which questions multiple engines share and which only one explores. Shared intents are the table stakes you must cover to compete at all. Single-engine “whitespace” intents are uncontested: the cheapest citations to win, because most competitors haven't noticed the engine is asking.",
   },
   {
     question: "Can I run it on a competitor instead of myself?",
@@ -138,12 +138,12 @@ const faqs = [
   {
     question: "How accurate is the search volume?",
     answer:
-      "As accurate as the data allows, and labelled so you always know which you're looking at. Real exact volume when it exists; parent-term reach for the long-tail queries keyword tools score at zero; and an explicit “no volume data” when there's none. We never fabricate a number to fill a cell.",
+      "As accurate as the data allows, and labelled so you always know which you're looking at. Real exact volume when it exists; parent-term reach for the long-tail queries keyword tools score at zero; and an explicit “no volume data” when there's none. We never invent a number to fill a cell.",
   },
   {
     question: "What does it cost to run?",
     answer:
-      "A full multi-engine scan is metered at 150 credits ($1.50) in the app, with the cost shown before you run it. Or run the demo free using your own API keys — your keys stay in your browser and we never pay for, see, or store them.",
+      "A full multi-engine scan is metered at 150 credits ($1.50) in the app, with the cost shown before you run it, and the feature is available on every plan including Free. Or run the demo free using your own API keys: your keys stay in your browser and we never pay for, see, or store them.",
   },
 ]
 
@@ -181,9 +181,10 @@ export default function QueryFanoutPage() {
                 <span className="block">It answers <span className="text-accent-700">the dozen questions</span> behind it.</span>
               </h1>
               <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-                Every engine quietly fans one topic into a spray of sub-questions, then answers those. Query Fan-Out
-                captures the real ones — across four engines — maps where the engines diverge, and ranks the content
-                that wins each gap. Real engine output, never guessed.
+                Every engine quietly fans one topic into a spray of sub-questions, searches those, and cites
+                whoever covered them best. Query Fan-Out captures the real sub-queries from four engines,
+                validated engine output, never an LLM guessing, then maps where the engines diverge and ranks
+                the content that wins each gap.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Link
@@ -203,7 +204,7 @@ export default function QueryFanoutPage() {
                 </Link>
               </div>
               <p className="mt-4 font-mono text-[12px] text-gray-500">
-                Free with your own API key · full multi-engine scan from 150 credits in-app
+                Free with your own API key · full multi-engine scan in-app on every plan, including Free
               </p>
             </div>
 
@@ -223,7 +224,7 @@ export default function QueryFanoutPage() {
           </p>
           <p className="mt-4 text-[clamp(1.15rem,2vw,1.4rem)] font-medium leading-relaxed tracking-tight text-gray-900">
             You rank for the keyword and still aren&apos;t cited. The reason is invisible in every keyword tool you own:
-            the engine never searched your keyword — it fanned it into ten sharper questions and answered those, citing
+            the engine never searched your keyword. It fanned it into ten sharper questions and answered those, citing
             whoever covered them best.
           </p>
           <p className="mt-5 text-[15px] leading-relaxed text-gray-600">
@@ -278,7 +279,7 @@ export default function QueryFanoutPage() {
                 The divergence map
               </p>
               <h2 className="mt-3 text-[clamp(1.6rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-                Where the engines agree — and where only one is looking.
+                Where the engines agree, and where only one is looking.
               </h2>
               <p className="mt-5 text-[15px] leading-relaxed text-gray-600">
                 Cluster every fanned query into intents, then lay the four engines side by side. The pattern that
@@ -292,7 +293,7 @@ export default function QueryFanoutPage() {
                     </span>
                   </dt>
                   <dd className="text-[14px] leading-relaxed text-gray-600">
-                    <span className="font-semibold text-gray-900">Shared intents</span> — questions multiple engines fan
+                    <span className="font-semibold text-gray-900">Shared intents</span>: questions multiple engines fan
                     out. Table stakes: miss one and you&apos;re invisible on a query the whole market answers.
                   </dd>
                 </div>
@@ -303,7 +304,7 @@ export default function QueryFanoutPage() {
                     </span>
                   </dt>
                   <dd className="text-[14px] leading-relaxed text-gray-600">
-                    <span className="font-semibold text-gray-900">Whitespace</span> — intents only one engine explores.
+                    <span className="font-semibold text-gray-900">Whitespace</span>: intents only one engine explores.
                     Uncontested: the cheapest citations to win, because nobody&apos;s optimizing for a question they
                     can&apos;t see.
                   </dd>
@@ -331,7 +332,7 @@ export default function QueryFanoutPage() {
               </h2>
             </div>
             <p className="max-w-xl text-base leading-relaxed text-gray-600">
-              The fan-out is the start. Each query is enriched into the full picture you need to decide what to write —
+              The fan-out is the start. Each query is enriched into the full picture you need to decide what to write,
               and every number is real or honestly labelled, never invented to fill a column.
             </p>
           </div>
@@ -383,12 +384,13 @@ export default function QueryFanoutPage() {
             Don&apos;t take our word for it. Watch an engine fan out, live.
           </h2>
           <p className="mt-4 text-[15px] leading-relaxed text-gray-700">
-            The free demo runs a real fan-out in your browser using your own API key. Your key never leaves the page —
-            we don&apos;t pay for, proxy, see, or store it. It&apos;s the actual engine output, not a recording.
+            The free demo runs a real fan-out in your browser using your own API key. Your key never leaves the page.
+            We don&apos;t pay for, proxy, see, or store it. It&apos;s the actual engine output, not a recording.
           </p>
           <p className="mt-4 rounded-xl border border-accent-200 bg-white p-4 text-[14px] leading-relaxed text-gray-700">
-            The in-app version adds the engines that can&apos;t be called from a browser, real search volume, page
-            coverage, the citation landscape, and saved history — metered at 150 credits a scan, cost shown up front.
+            The in-app version, available on every plan including Free, adds the engines that can&apos;t be called from a
+            browser, real search volume, page coverage, the citation landscape, and saved history, metered at 150
+            credits a scan, cost shown up front.
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-3">
             <Link

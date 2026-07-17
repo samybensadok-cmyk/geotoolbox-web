@@ -17,11 +17,11 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema, howToSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
-  title: "AI Citability Checker — Grade Any URL A–F | GEO Toolbox Content Analyzer",
+  title: "AI Content Optimization: Grade Any URL",
   description:
-    "Why isn't AI citing your content? Paste any URL and get two grades — Citability and AI Readability — a live check of which AI engines cite the page, an AI crawler / bot-access check (robots.txt for AI bots + JS-render parity), every on-page signal benchmarked against the pages AI does cite, and the exact fixes.",
+    "Why isn't AI citing your page? Get an A-F citability grade, a live per-engine cited/not-cited check, and every signal benchmarked against pages AI cites.",
   openGraph: {
-    title: "AI Citability Checker — Grade Any URL A–F | GEO Toolbox",
+    title: "AI Content Optimization: Grade Any URL's Citability",
     description:
       "Paste a URL. Get a Citability and an AI Readability grade, a live per-engine cited / not-cited check, every signal benchmarked against the pages AI actually cites, and the exact fixes.",
   },
@@ -148,7 +148,7 @@ const faqs = [
   {
     question: "What does Content Analyzer cost?",
     answer:
-      "Content Analyzer is included from the Starter plan ($39/mo billed annually, $49 monthly) up. A free account covers the AI visibility tracker and Agent Readiness so you can start without a card — see the pricing page for current tiers.",
+      "Nothing extra. It's included on every plan, Free included. Create a free account, no card, and grade your first page today.",
   },
 ]
 
@@ -187,10 +187,10 @@ export default function ContentAnalyzerPage() {
                 Why isn&apos;t AI <span className="text-accent-700">citing your content?</span>
               </h1>
               <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-                Your competitor&apos;s page passes the access, structure and authority checks AI engines run
-                before they cite anyone. Yours is failing some of them &mdash; and you can&apos;t see which. Paste any
-                URL and get an A&ndash;F citability grade, a live check of which AI engines cite the page, and
-                the exact fixes.
+                AI content optimization without diagnosis is guesswork. Paste any URL and get two grades:
+                Citability for the writing, AI Readability for the access. Plus a live check of which AI engines
+                cite the page today, and every on-page signal benchmarked against the pages AI actually cites for
+                your keyword. Then the exact fixes. On every plan, including Free.
               </p>
               <div className="mt-8">
                 <DualCTA
@@ -198,7 +198,7 @@ export default function ContentAnalyzerPage() {
                   primaryHref="/app"
                   secondaryLabel="See the signals it checks"
                   secondaryHref="#signals"
-                  microcopy="Live AI-bot fetches + real engine checks · see plans"
+                  microcopy="Live AI-bot fetches + real engine checks, no card required"
                 />
               </div>
               <div className="mt-7">
@@ -358,7 +358,7 @@ export default function ContentAnalyzerPage() {
           <DualCTA
             primaryLabel="Get my citability report"
             primaryHref="/app"
-            microcopy="Live AI-bot fetches + real engine checks · see plans"
+            microcopy="Live AI-bot fetches + real engine checks, no card required"
           />
         </div>
       </section>

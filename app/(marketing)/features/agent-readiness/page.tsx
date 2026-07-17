@@ -14,13 +14,13 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema, howToSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
-  title: "AI Crawler & Agent Readiness Checker",
+  title: "AI Agent Readiness: Can Agents Reach You?",
   description:
-    "Most scanners tell you a file exists. We fetch your site as GPTBot, ClaudeBot, and PerplexityBot — through your real WAF — render it the way an agent does without JavaScript, and back every access and standards check with the request and response we captured. Get a 0–100 score, a readiness level, and the exact fix for each blocker.",
+    "We fetch your site as GPTBot, ClaudeBot, and PerplexityBot through your real WAF, render it without JavaScript, and hand you the exact fix per blocker.",
   openGraph: {
-    title: "AI Crawler & Agent Readiness Checker",
+    title: "AI Agent Readiness: Can AI Agents Reach Your Site?",
     description:
-      "We fetch your site as real AI crawler identities through your WAF, render it without JavaScript, and show the request/response behind every access and standards check — with a 0–100 score, a readiness level, and exact fixes.",
+      "We fetch your site as real AI crawler identities through your WAF, render it without JavaScript, and show the request/response behind every access and standards check, with a 0–100 score, a readiness level, and exact fixes.",
   },
   alternates: { canonical: `${siteConfig.url}/features/agent-readiness` },
 }
@@ -29,12 +29,12 @@ const steps: Step[] = [
   {
     verb: "Give",
     title: "A root URL",
-    body: "Agent Readiness runs infrastructure-level checks, so it starts at your root domain — not a single page. No install, no code.",
+    body: "Agent Readiness runs infrastructure-level checks, so it starts at your root domain, not a single page. No install, no code.",
   },
   {
     verb: "Probe",
     title: "As the real AI crawlers",
-    body: "We request your site as GPTBot, ClaudeBot, PerplexityBot and more — through your live WAF — render it in a headless browser with and without JavaScript, and validate the standards agents rely on.",
+    body: "We request your site as GPTBot, ClaudeBot, PerplexityBot and more, through your live WAF, render it in a headless browser with and without JavaScript, and validate the standards agents rely on.",
   },
   {
     verb: "Fix",
@@ -95,17 +95,17 @@ const outcomes = [
   {
     tag: "Access truth",
     title: "Fetched as the real crawlers",
-    body: "Other tools parse your robots.txt. We actually request your site as GPTBot, OAI-SearchBot, ClaudeBot, PerplexityBot, Googlebot and CCBot — through your live WAF — and report what each one really gets back. A firewall rule that silently drops ClaudeBot shows up here; a robots.txt read never catches it.",
+    body: "Other tools parse your robots.txt. We actually request your site as GPTBot, OAI-SearchBot, ClaudeBot, PerplexityBot, Googlebot and CCBot, through your live WAF, and report what each one really gets back. A firewall rule that silently drops ClaudeBot shows up here; a robots.txt read never catches it.",
   },
   {
     tag: "Evidence receipts",
     title: "Checks that show their work",
-    body: "No black-box score. The access and agentic-standards checks carry the request we sent and the response we got — status, headers, body preview — so you can see exactly why one passed or failed, and hand the receipt straight to a developer.",
+    body: "No black-box score. The access and agentic-standards checks carry the request we sent and the response we got, with status, headers, and body preview, so you can see exactly why one passed or failed, and hand the receipt straight to a developer.",
   },
   {
     tag: "Honest by design",
     title: "We never guess",
-    body: "If a page is JavaScript-only and we can't verify a signal, we say “unverifiable” — we don't score it as a failure. Verified-absent, blocked, and couldn't-check are three different states, each labeled with our confidence. A score you can trust beats a score that flatters you.",
+    body: "If a page is JavaScript-only and we can't verify a signal, we say “unverifiable” instead of scoring it as a failure. Verified-absent, blocked, and couldn't-check are three different states, each labeled with our confidence. A score you can trust beats a score that flatters you.",
   },
   {
     tag: "JS parity",
@@ -115,7 +115,7 @@ const outcomes = [
   {
     tag: "Standards depth",
     title: "The whole agentic stack",
-    body: "Markdown negotiation with Vary, llms.txt validated against the llmstxt.org spec, Content-Signal coherence, RFC 8288 Link headers, structured JSON errors, reachable og:image, plus a panel of emerging protocols (MCP cards, A2A, OpenAPI, x402) — detected, never used to pad your score.",
+    body: "Markdown negotiation with Vary, llms.txt validated against the llmstxt.org spec, Content-Signal coherence, RFC 8288 Link headers, structured JSON errors, reachable og:image, plus a panel of emerging protocols (MCP cards, A2A, OpenAPI, x402), detected, never used to pad your score.",
   },
   {
     tag: "The outcome link",
@@ -128,7 +128,7 @@ const faqs = [
   {
     question: "What is agent readiness?",
     answer:
-      "Agent readiness measures whether AI agents and crawlers can reach, render, and understand your site. Where a page-level audit asks whether one page is citable, agent readiness asks whether an autonomous agent can fetch, see, and parse the site at all. It runs live checks across five pillars — access, discovery, render, structure, and citation — fetching your site as the real AI crawlers, rendering it in a headless browser, and validating the agentic standards, then maps the result to an Agent-Readiness Level.",
+      "Agent readiness measures whether AI agents and crawlers can reach, render, and understand your site. Where a page-level audit asks whether one page is citable, agent readiness asks whether an autonomous agent can fetch, see, and parse the site at all. It runs live checks across five pillars (access, discovery, render, structure, and citation), fetching your site as the real AI crawlers, rendering it in a headless browser, and validating the agentic standards, then maps the result to an Agent-Readiness Level.",
   },
   {
     question: "Will this help me rank in ChatGPT and Perplexity?",
@@ -143,17 +143,17 @@ const faqs = [
   {
     question: "Do you actually fetch my site as GPTBot, or just read robots.txt?",
     answer:
-      "We actually fetch it. Agent Readiness sends live requests using the real crawler user agents — GPTBot, OAI-SearchBot, ClaudeBot, PerplexityBot, Googlebot, CCBot — straight through your WAF, and reports what each one really receives. That catches firewall and edge rules that a robots.txt read can't see. Each of these access checks comes with the request and response we captured, so you can verify it yourself.",
+      "We actually fetch it. Agent Readiness sends live requests using the real crawler user agents (GPTBot, OAI-SearchBot, ClaudeBot, PerplexityBot, Googlebot, CCBot) straight through your WAF, and reports what each one really receives. That catches firewall and edge rules that a robots.txt read can't see. Each of these access checks comes with the request and response we captured, so you can verify it yourself.",
   },
   {
     question: "What's an Agent-Readiness Level?",
     answer:
-      "A level model that sits next to your 0–100 score, so you can see progress. L0 if crawlers are blocked, then L1 Crawlable (bots can reach you), L2 Bot-Aware (you declare per-bot rules), and L3 Agent-Readable (content renders without JS and you serve markdown or a valid llms.txt). A fourth level, Agent-Operable — live capability surfaces like MCP or APIs — is detected in the advanced panel but not yet scored. Each scan names the next thing that raises your level.",
+      "A level model that sits next to your 0–100 score, so you can see progress. L0 if crawlers are blocked, then L1 Crawlable (bots can reach you), L2 Bot-Aware (you declare per-bot rules), and L3 Agent-Readable (content renders without JS and you serve markdown or a valid llms.txt). A fourth level, Agent-Operable (live capability surfaces like MCP or APIs), is detected in the advanced panel but not yet scored. Each scan names the next thing that raises your level.",
   },
   {
     question: "Which AI crawlers does it check?",
     answer:
-      "We check your robots.txt rules against 34 AI crawler user agents — including GPTBot and OAI-SearchBot (OpenAI), ClaudeBot, PerplexityBot, Google-Extended, CCBot, Amazonbot, Bytespider, Applebot, and meta-externalagent — and we send live requests as six of the majors (GPTBot, OAI-SearchBot, ClaudeBot, PerplexityBot, Googlebot, CCBot) to confirm what actually gets through your WAF. For each: allowed or blocked, and the source of any block — robots.txt, a response header, or a firewall rule.",
+      "We check your robots.txt rules against 34 AI crawler user agents, including GPTBot and OAI-SearchBot (OpenAI), ClaudeBot, PerplexityBot, Google-Extended, CCBot, Amazonbot, Bytespider, Applebot, and meta-externalagent, and we send live requests as six of the majors (GPTBot, OAI-SearchBot, ClaudeBot, PerplexityBot, Googlebot, CCBot) to confirm what actually gets through your WAF. For each: allowed or blocked, and the source of any block, whether robots.txt, a response header, or a firewall rule.",
   },
   {
     question: "Does it check JavaScript rendering?",
@@ -163,7 +163,7 @@ const faqs = [
   {
     question: "Can I export the report?",
     answer:
-      "Yes. Every probe produces a report you can download as a PDF — the 34-crawler matrix, the above-fold capture, the JS-parity diff, full hop transcripts, and prioritized fixes. Clean enough to hand to a developer, detailed enough to debug.",
+      "Yes. Every probe produces a report you can download as a PDF: the 34-crawler matrix, the above-fold capture, the JS-parity diff, full hop transcripts, and prioritized fixes. Clean enough to hand to a developer, detailed enough to debug.",
   },
 ]
 
@@ -201,9 +201,9 @@ export default function AgentReadinessPage() {
               </h1>
               <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
                 One forgotten robots.txt line, a firewall rule, or a JS-only page, and GPTBot, ClaudeBot, and
-                PerplexityBot can&apos;t read you — so AI never cites you, and you never see an error. Agent
-                Readiness fetches your site <em>as those real crawlers</em>, through your live WAF, renders it
-                without JavaScript, and shows the request-and-response proof behind every access finding.
+                PerplexityBot silently can&apos;t read you. So AI never cites you, and you never see an error.
+                Agent Readiness fetches your site <em>as those real crawlers</em>, through your live WAF,
+                renders it without JavaScript, and shows the request-and-response proof behind every finding.
               </p>
               <div className="mt-8">
                 <DualCTA
@@ -233,8 +233,8 @@ export default function AgentReadinessPage() {
       {/* The cost of being unreachable */}
       <PainScenarioSection
         eyebrow="The blind spot"
-        scenario="Block GPTBot in a robots.txt rule someone added months ago, or ship a page whose content only appears after JavaScript runs, and AI engines simply can&apos;t read you — no citations, no recommendations, no AI referral traffic. There&apos;s no error to catch; you just never show up in the answer."
-        bridge="Agent Readiness scans the whole access path — the live crawler-access matrix, the headless render, JS parity — so you find the blocks before they quietly cost you citations."
+        scenario="Block GPTBot in a robots.txt rule someone added months ago, or ship a page whose content only appears after JavaScript runs, and AI engines simply can&apos;t read you: no citations, no recommendations, no AI referral traffic. There&apos;s no error to catch; you just never show up in the answer."
+        bridge="Agent Readiness scans the whole access path, from the live crawler-access matrix to the headless render to JS parity, so you find the blocks before they quietly cost you citations."
       />
 
       {/* How it works (HowTo schema source) */}
@@ -249,7 +249,7 @@ export default function AgentReadinessPage() {
               Reach, render, and read.
             </h2>
             <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-gray-600">
-              An agent has to get past your robots and firewall, render the page without a real browser, and pull meaning out of it. Every signal is scored with a confidence label — and anything we can&apos;t verify is marked, never counted against you.
+              An agent has to get past your robots and firewall, render the page without a real browser, and pull meaning out of it. Every signal is scored with a confidence label, and anything we can&apos;t verify is marked, never counted against you.
             </p>
           </div>
           <div className="mt-14 grid grid-cols-1 gap-x-10 gap-y-12 md:grid-cols-3">
@@ -291,7 +291,7 @@ export default function AgentReadinessPage() {
               One number, and the rung you&apos;re on.
             </h2>
             <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-gray-600">
-              Alongside the 0–100 score, every scan places your site on a readiness level — L1 through L3 today, with L4 signals detected in the advanced panel — so you always know the next thing to fix.
+              Alongside the 0–100 score, every scan places your site on a readiness level, L1 through L3 today, with L4 signals detected in the advanced panel, so you always know the next thing to fix.
             </p>
           </div>
           <ol className="mt-12 grid grid-cols-1 gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
@@ -314,7 +314,7 @@ export default function AgentReadinessPage() {
       {/* Act, don't just monitor — the exact fix */}
       <ActVsMonitorWedge
         body="Agent Readiness doesn't just score you. When an access or standards check fails, it comes with the source line (the robots.txt rule, the X-Robots-Tag header, the firewall rule) and the one-line fix."
-        example="See ClaudeBot blocked? The report shows the exact robots.txt line doing it and what to change — so you unblock it and the next scan flips it to allowed."
+        example="See ClaudeBot blocked? The report shows the exact robots.txt line doing it and what to change, so you unblock it and the next scan flips it to allowed."
         link={{ label: "Then grade the page itself with Content Analyzer", href: "/features/content-analyzer" }}
       />
 
@@ -347,7 +347,7 @@ export default function AgentReadinessPage() {
 
       {/* Light proof */}
       <section className="border-t border-gray-100 bg-white px-6 py-12">
-        <SocialProofBlock provenanceLine="Every check runs live against your real URL — a headless Chromium render and a live crawl against 34 AI crawler user agents, not a cached guess." />
+        <SocialProofBlock provenanceLine="Every check runs live against your real URL: a headless Chromium render and a live crawl against 34 AI crawler user agents, not a cached guess." />
       </section>
 
       <FeatureFaq items={faqs} />

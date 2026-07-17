@@ -15,13 +15,13 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema, howToSchema } from "@/lib/seo-schema"
 
 export const metadata: Metadata = {
-  title: "AI Content Brief & Article Writer | GEO Toolbox Content Studio",
+  title: "AI Content Brief & Article Writer",
   description:
-    "Your article is well-written — AI still won't cite it. Content Studio reverse-engineers what ChatGPT, Perplexity and AI Overviews actually extract from the pages they cite, builds a citation-ready brief (strategy, outline, entity targets, AI-extractability checklist), then writes the full draft.",
+    "Well-written isn't the same as citable. Get a brief reverse-engineered from what AI engines actually extract, then the full draft, written against it.",
   openGraph: {
     title: "AI Content Brief & Article Writer | GEO Toolbox Content Studio",
     description:
-      "From a keyword to a citation-ready article: a brief built on what AI engines extract from the pages they cite — strategy, outline, entity targets, an AI-extractability checklist — then the draft, written for you.",
+      "From a keyword to a citation-ready article: a brief built on what AI engines extract from the pages they cite (strategy, outline, entity targets, an AI-extractability checklist), then the draft, written for you.",
   },
   alternates: { canonical: `${siteConfig.url}/features/content-studio` },
 }
@@ -124,7 +124,7 @@ const faqs = [
   {
     question: "What does Content Studio cost?",
     answer:
-      "Content Studio briefs are included from the Consultant plan up; full article writing with the 5-stage copywriter is on the Agency and Scale plans. A free account covers the AI visibility tracker and Agent Readiness so you can start without a card — see the pricing page for current tiers.",
+      "Content Studio briefs are included from the Consultant plan up, which comes with 15 briefs a month, and the full 5-stage article writer is on the Growth and Scale plans. A free account covers the AI visibility tracker and Agent Readiness so you can start without a card. See the pricing page for current tiers.",
   },
 ]
 

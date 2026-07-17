@@ -9,7 +9,7 @@ import { siteConfig } from "@/lib/config"
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Get in touch with the GEO Toolbox team — sales, support, partnerships, or general questions. We reply within one business day.",
+    "A question about AI visibility, the right plan, or a scan that looks off? Send a message. A real person replies within one business day.",
   alternates: { canonical: `${siteConfig.url}/contact` },
   openGraph: {
     title: "Contact GEO Toolbox",
@@ -47,7 +47,7 @@ const CHANNELS = [
   },
   {
     title: "Partnerships",
-    body: <>Agencies, integrations, affiliates, or content collaborations across the GEO/AI-search space.</>,
+    body: <>Agencies, integrations, affiliates, or content collaborations across the AI visibility and AI-search space.</>,
   },
 ]
 
@@ -66,7 +66,7 @@ export default function ContactPage() {
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-gray-700">
             Questions about AI visibility, the right plan, a partnership, or something that&apos;s not behaving? Send a
-            message and a real person replies — usually within one business day.
+            message and a real person replies, usually within one business day.
           </p>
         </div>
       </section>
