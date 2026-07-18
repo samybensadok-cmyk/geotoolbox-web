@@ -3,6 +3,7 @@ import { getAllPosts, getAllGlossaryTerms } from "@/lib/content"
 import { siteConfig } from "@/lib/config"
 import { routing, bcp47 } from "@/i18n/routing"
 import { alternatesFor } from "@/lib/i18n/siblings"
+import { tools } from "@/lib/tools"
 
 // Localized MARKETING routes (mounted under app/[locale]/): one entry per
 // locale, each carrying the reciprocal hreflang set — same 1:1 same-path
@@ -78,7 +79,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.8,
     },
-    ...["keyword-to-prompts", "query-fanout", "ai-readiness", "ai-crawler-checker", "llms-txt-checker"].map((slug) => ({
+    // Derived from the tools registry so a newly added tool can't be live on the
+    // site yet silently missing from the sitemap — which is exactly what this
+    // hardcoded list caused.
+    ...tools.map((t) => t.slug).map((slug) => ({
       url: `${siteConfig.url}/tools/${slug}`,
       lastModified: new Date(),
       changeFrequency: "weekly" as const,

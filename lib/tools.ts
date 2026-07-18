@@ -41,6 +41,12 @@ export const tools: ToolEntry[] = [
     navDesc: "Which of 34 AI crawlers your robots.txt blocks",
   },
   {
+    slug: "sitemap-extractor",
+    name: "Sitemap URL Extractor",
+    desc: "Pull every URL out of any XML sitemap — index files walked to their children, .xml.gz decompressed, the sitemap found from a bare domain. Export CSV, TXT or JSON. Free.",
+    navDesc: "Extract every URL from an XML sitemap",
+  },
+  {
     slug: "llms-txt-checker",
     name: "llms.txt Checker & Generator",
     desc: "Validate any site's llms.txt against the spec, resolve every link, score it 0-100, and generate a clean one. Free.",
