@@ -38,7 +38,7 @@ export default function ToolsIndexPage() {
               Free AI SEO tools for the agentic web
             </h1>
             <p className="mt-4 text-lg leading-relaxed text-gray-600">
-              {TOOL_COUNT} free tools, no sign-up, nothing metered. Check whether AI can reach your site, validate the files everyone argues about, pull every URL out of a sitemap, and see the real sub-queries engines fire. Honest readings of what matters and what doesn&apos;t.
+              {TOOL_COUNT}{" "}free tools, no sign-up, nothing metered. Check whether AI can reach your site, validate the files everyone argues about, pull every URL out of a sitemap, and see the real sub-queries engines fire. Honest readings of what matters and what doesn&apos;t.
             </p>
           </div>
         </div>
