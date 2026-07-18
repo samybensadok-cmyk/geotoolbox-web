@@ -17,15 +17,30 @@
  *   - Path matching: "*" matches any run, "$" anchors the end. Implemented as
  *     Google's linear DP, NOT a regex — a regex with several ".*" segments
  *     backtracks catastrophically, and robots.txt content is attacker-supplied.
- *   - Precedence: LONGEST matching rule wins; Allow beats Disallow on a tie.
+ *   - Precedence: the rule matching the most OCTETS wins; Allow beats Disallow
+ *     on a tie. Measured on the normalized form, not the raw source text.
  *   - An empty Disallow value means "allow everything" and is not a match.
- *   - Percent-encoding is normalized on both sides so a `/café/` rule matches a
- *     `/caf%C3%A9/` URL path.
+ *   - Percent-encoding: raw non-ASCII is encoded and only UNRESERVED escapes are
+ *     decoded, so `/café/` matches `/caf%C3%A9/` while `/private%2Fadmin` stays
+ *     distinct from `/private/admin` and a literal `%2A` is never a wildcard.
+ *   - Rules before the first User-agent line are discarded, not reassigned to
+ *     "*" — inventing a group changes crawl decisions.
+ *
+ * NOTE ON THE `agent` ARGUMENT: callers pass a product TOKEN ("Googlebot"), not
+ * a full HTTP User-Agent header. Matching is by token equality per RFC 9309.
  */
 
 export interface RobotsRule {
   type: "allow" | "disallow"
+  /** As written in the file — used for display and "which rule matched". */
   path: string
+  /**
+   * Normalized to comparable octets. Precedence is "most octets of the rule
+   * path" per RFC 9309, and `path.length` counts UTF-16 units and percent-escape
+   * SPELLING — so two equivalent rules written differently would otherwise get
+   * different priority.
+   */
+  norm: string
 }
 
 export interface RobotsGroup {
@@ -39,14 +54,27 @@ export interface ParsedRobots {
   sitemaps: string[]
   /** Lines we couldn't classify — useful for the tester UI. */
   unknownDirectives: number
+  /** Rules that appeared before any User-agent line and were discarded. */
+  orphanRules: number
 }
 
 /** Defensive ceilings. robots.txt is attacker-supplied whenever a user submits
  *  someone else's domain, so the parser refuses to build pathological inputs. */
 const MAX_RULES_PER_GROUP = 1_000
-/** Google's own parser caps wildcards per pattern; more than this is never real. */
+/** Defensive only — Google's reference parser does NOT cap wildcards, so a
+ *  pattern above this is treated as non-matching and we diverge from Googlebot.
+ *  Kept because the DP is O(pattern x path) and patterns are attacker-supplied;
+ *  the tester surfaces a warning when it fires rather than silently differing. */
 const MAX_WILDCARDS = 8
+export const MATCHER_LIMITS = { MAX_WILDCARDS, MAX_PATTERN_LEN: 1_000, MAX_RULES_TOTAL: 10_000 }
 const MAX_PATTERN_LEN = 1_000
+/** Totals. Without these, group selection scans every group on every isAllowed()
+ *  call, so a file split into tens of thousands of tiny groups made linting
+ *  (which calls isAllowed once per sitemap plus asset probes) quadratic. */
+const MAX_GROUPS = 1_000
+const MAX_AGENTS_TOTAL = 2_000
+const MAX_RULES_TOTAL = 10_000
+const MAX_SITEMAPS = 100
 
 export function parseRobots(text: string): ParsedRobots {
   const groups: RobotsGroup[] = []
@@ -56,6 +84,11 @@ export function parseRobots(text: string): ParsedRobots {
   let current: RobotsGroup | null = null
   // Consecutive user-agent lines share one group; a RULE line closes the header.
   let inAgentBlock = false
+  let agentTotal = 0
+  let ruleTotal = 0
+  /** Rules appearing before any User-agent line. RFC 9309 says a parser must not
+   *  reinterpret them, so they're counted for the linter and then discarded. */
+  let orphanRules = 0
 
   for (const rawLine of text.split(/\r?\n/)) {
     const line = rawLine.replace(/#.*$/, "").trim()
@@ -72,27 +105,34 @@ export function parseRobots(text: string): ParsedRobots {
     switch (field) {
       case "user-agent": {
         if (!inAgentBlock || !current) {
+          if (groups.length >= MAX_GROUPS) break
           current = { agents: [], rules: [] }
           groups.push(current)
           inAgentBlock = true
         }
+        if (agentTotal >= MAX_AGENTS_TOTAL) break
+        agentTotal++
         current.agents.push(value.toLowerCase())
         break
       }
       case "allow":
       case "disallow": {
-        if (!current) {
-          // Rules before any user-agent line are technically invalid; attribute
-          // them to "*" rather than dropping them silently.
-          current = { agents: ["*"], rules: [] }
-          groups.push(current)
-        }
         inAgentBlock = false
+        if (!current) {
+          // RFC 9309: a rule before any User-agent line has no group to belong
+          // to. Attributing it to "*" (the previous behaviour) INVENTS a rule
+          // the file never expressed and changes crawl decisions. Count it so
+          // the linter can report it, then discard.
+          orphanRules++
+          break
+        }
         // An empty Disallow means "nothing is disallowed" — not a match on "".
         if (field === "disallow" && value === "") break
         if (current.rules.length >= MAX_RULES_PER_GROUP) break
+        if (ruleTotal >= MAX_RULES_TOTAL) break
         if (value.length > MAX_PATTERN_LEN) break
-        current.rules.push({ type: field, path: value })
+        ruleTotal++
+        current.rules.push({ type: field, path: value, norm: normalizePath(value) })
         break
       }
       case "crawl-delay": {
@@ -104,6 +144,7 @@ export function parseRobots(text: string): ParsedRobots {
         break
       }
       case "sitemap": {
+        if (sitemaps.length >= MAX_SITEMAPS) break
         if (/^https?:\/\//i.test(value)) sitemaps.push(value)
         break
       }
@@ -116,7 +157,7 @@ export function parseRobots(text: string): ParsedRobots {
     }
   }
 
-  return { groups, sitemaps, unknownDirectives }
+  return { groups, sitemaps, unknownDirectives, orphanRules }
 }
 
 /**
@@ -130,7 +171,6 @@ const AGENT_FALLBACKS: Record<string, string[]> = {
   "googlebot-image": ["googlebot"],
   "googlebot-video": ["googlebot"],
   "googlebot-mobile": ["googlebot"],
-  "storebot-google": ["googlebot"],
   "google-extended": [],
 }
 
@@ -138,32 +178,75 @@ const AGENT_FALLBACKS: Record<string, string[]> = {
  * Merged rule set for `agent`: exact token match, then the documented fallback
  * chain, then "*". ALL groups declaring the winning token are concatenated.
  */
+/** Merged-group cache. Without it, a tester request asking for 100 URLs x 12
+ *  agents re-filtered and re-flatMapped every group 1,200 times — measured at
+ *  2.65s per verdict on a rule-heavy file, i.e. the whole function budget. */
+const GROUP_CACHE = new WeakMap<ParsedRobots, Map<string, RobotsGroup | null>>()
+
 export function groupFor(robots: ParsedRobots, agent: string): RobotsGroup | null {
   const ua = agent.toLowerCase()
+  let perAgent = GROUP_CACHE.get(robots)
+  if (!perAgent) {
+    perAgent = new Map()
+    GROUP_CACHE.set(robots, perAgent)
+  }
+  const hit = perAgent.get(ua)
+  if (hit !== undefined) return hit
+
   const candidates = [ua, ...(AGENT_FALLBACKS[ua] ?? []), "*"]
 
+  let resolved: RobotsGroup | null = null
   for (const token of candidates) {
     const matching = robots.groups.filter((g) => g.agents.includes(token))
     if (matching.length === 0) continue
-    if (matching.length === 1) return matching[0]
-    return {
-      agents: [token],
-      rules: matching.flatMap((g) => g.rules),
-      crawlDelay: matching.find((g) => g.crawlDelay !== undefined)?.crawlDelay,
-    }
+    resolved =
+      matching.length === 1
+        ? matching[0]
+        : {
+            agents: [token],
+            rules: matching.flatMap((g) => g.rules),
+            crawlDelay: matching.find((g) => g.crawlDelay !== undefined)?.crawlDelay,
+          }
+    break
   }
-  return null
+  perAgent.set(ua, resolved)
+  return resolved
 }
 
-/** Percent-decode for comparison so an encoded URL path and a literal rule
- *  (or vice versa) normalize to the same string. Malformed escapes are left
- *  as-is rather than throwing. */
+/**
+ * Normalize a path or rule to comparable percent-encoded octets.
+ *
+ * Decoding BOTH sides (the obvious approach, and what this did first) is wrong:
+ * RFC 9309 keeps percent-encoded reserved octets distinct from their literal
+ * form, so `/private%2Fadmin` must NOT match `/private/admin`. Worse, blanket
+ * decoding turns a literal `%2A` into a wildcard and a trailing `%24` into an
+ * end anchor, silently changing what a rule means.
+ *
+ * So: encode raw non-ASCII to UTF-8 octets (making `/café/` and `/caf%C3%A9/`
+ * comparable, which was the original motivation), decode ONLY unreserved
+ * escapes, and uppercase the rest. `*` and `$` are read from the literal
+ * pattern text and survive untouched, because they are never percent-escapes.
+ */
 function normalizePath(s: string): string {
-  try {
-    return decodeURIComponent(s)
-  } catch {
-    return s
+  // Raw non-ASCII → UTF-8 percent octets.
+  let out = ""
+  for (const ch of s) {
+    if (ch.charCodeAt(0) > 127) {
+      try {
+        out += encodeURIComponent(ch)
+      } catch {
+        out += ch
+      }
+    } else {
+      out += ch
+    }
   }
+  // Decode only unreserved escapes (RFC 3986 §2.3); leave reserved encoded.
+  return out.replace(/%([0-9a-fA-F]{2})/g, (m, hex: string) => {
+    const code = parseInt(hex, 16)
+    const ch = String.fromCharCode(code)
+    return /[A-Za-z0-9\-._~]/.test(ch) ? ch : `%${hex.toUpperCase()}`
+  })
 }
 
 /**
@@ -179,11 +262,11 @@ function normalizePath(s: string): string {
  * a 60-character path, which an attacker could trigger with one hosted
  * robots.txt. This version is microseconds on the same input.
  */
-export function pathMatches(pattern: string, path: string): boolean {
+export function pathMatches(pattern: string, path: string, preNormalized = false): boolean {
   if (pattern === "") return false
 
-  const pat = normalizePath(pattern)
-  const p = normalizePath(path)
+  const pat = preNormalized ? pattern : normalizePath(pattern)
+  const p = preNormalized ? path : normalizePath(path)
 
   // Reject absurd patterns rather than attempt them.
   let wildcards = 0
@@ -245,16 +328,23 @@ export function isAllowed(robots: ParsedRobots, url: string, agent = "*"): Robot
   const group = groupFor(robots, agent)
   if (!group) return { allowed: true }
 
+  // Normalize the request path ONCE, then compare against pre-normalized rules.
+  const normPath = normalizePath(path)
+
   let winner: RobotsRule | undefined
   for (const rule of group.rules) {
-    if (!pathMatches(rule.path, path)) continue
+    const norm = rule.norm ?? normalizePath(rule.path)
+    if (!pathMatches(norm, normPath, true)) continue
     if (!winner) {
       winner = rule
       continue
     }
-    if (rule.path.length > winner.path.length) winner = rule
-    // Exact-length tie: Allow wins.
-    else if (rule.path.length === winner.path.length && rule.type === "allow") winner = rule
+    // RFC 9309 precedence is "most octets of the rule path". Comparing the RAW
+    // path would rank by percent-escape spelling and UTF-16 units instead, so
+    // two equivalent rules written differently could get different priority.
+    const winnerNorm = winner.norm ?? normalizePath(winner.path)
+    if (norm.length > winnerNorm.length) winner = rule
+    else if (norm.length === winnerNorm.length && rule.type === "allow") winner = rule
   }
 
   return { allowed: winner ? winner.type === "allow" : true, rule: winner }

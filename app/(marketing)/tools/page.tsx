@@ -9,7 +9,7 @@ import { tools } from "@/lib/tools"
 export const metadata: Metadata = {
   title: "Free AI SEO Tools: llms.txt & AI Crawler",
   description:
-    "Six free AI SEO tools, no sign-up: see which AI crawlers your robots.txt blocks, validate llms.txt, extract sitemap URLs, score AI readiness, run a query fan-out.",
+    "Eight free AI SEO tools, no sign-up: test and build robots.txt, generate llms.txt, extract sitemap URLs, see which AI crawlers you block, score AI readiness.",
   alternates: { canonical: `${siteConfig.url}/tools` },
 }
 
@@ -31,7 +31,7 @@ export default function ToolsIndexPage() {
               Free AI SEO tools for the agentic web
             </h1>
             <p className="mt-4 text-lg leading-relaxed text-gray-600">
-              Six tools, no sign-up, nothing metered. Check whether AI can reach your site, validate the files everyone argues about, pull every URL out of a sitemap, and see the real sub-queries engines fire. Honest readings of what matters and what doesn&apos;t.
+              Eight tools, no sign-up, nothing metered. Check whether AI can reach your site, validate the files everyone argues about, pull every URL out of a sitemap, and see the real sub-queries engines fire. Honest readings of what matters and what doesn&apos;t.
             </p>
           </div>
         </div>

@@ -198,7 +198,7 @@ const MAX_REDIRECTS = 5
  * The blast radius is limited — this endpoint returns parsed sitemap URLs, not
  * arbitrary response bodies — but it is a known limit, not an oversight.
  */
-async function fetchBody(url: string, signal?: AbortSignal): Promise<FetchedBody> {
+async function fetchBody(url: string, signal?: AbortSignal, maxBytes = LIMITS.maxBytes): Promise<FetchedBody> {
   const ctl = new AbortController()
   const timer = setTimeout(() => ctl.abort(), LIMITS.timeoutMs)
   // Abort the inner fetch if the overall budget runs out.
@@ -224,6 +224,9 @@ async function fetchBody(url: string, signal?: AbortSignal): Promise<FetchedBody
 
       if (res.status >= 300 && res.status < 400) {
         const loc = res.headers.get("location")
+        // Cancel the redirect body — abandoning it holds the socket open, and a
+        // hostile server can keep many of them streaming.
+        await res.body?.cancel().catch(() => {})
         if (!loc) break
         if (hop === MAX_REDIRECTS) throw new Error("Too many redirects.")
         // Resolve relative Location headers against the current URL.
@@ -235,16 +238,16 @@ async function fetchBody(url: string, signal?: AbortSignal): Promise<FetchedBody
 
     if (!res) throw new Error("Fetch failed.")
     const contentType = res.headers.get("content-type") ?? ""
-    const tooBig = `File is larger than the ${LIMITS.maxBytes / 1024 / 1024}MB limit.`
+    const tooBig = `File is larger than the ${Math.round(maxBytes / 1024)}KB limit.`
 
     // Guard on the declared length before reading, when the server provides it.
     const declared = Number(res.headers.get("content-length") ?? "0")
-    if (declared > LIMITS.maxBytes) throw new Error(tooBig)
+    if (declared > maxBytes) throw new Error(tooBig)
 
     // Read incrementally and bail the moment we cross the cap. Buffering the whole
     // body first (res.arrayBuffer()) would let a server with a missing or lying Content-Length
     // stream gigabytes into memory before the check ever ran.
-    const buf = await readCapped(res, LIMITS.maxBytes, tooBig)
+    const buf = await readCapped(res, maxBytes, tooBig)
 
     // .xml.gz is a gzipped FILE. fetch transparently handles Content-Encoding: gzip,
     // but not this — so sniff the gzip magic number (1f 8b) and inflate ourselves.
@@ -253,7 +256,7 @@ async function fetchBody(url: string, signal?: AbortSignal): Promise<FetchedBody
       try {
         // maxOutputLength caps the INFLATED size, which is what stops a gzip bomb:
         // a few KB of .gz can otherwise expand to gigabytes and take the process out.
-        raw = gunzipSync(buf, { maxOutputLength: LIMITS.maxBytes })
+        raw = gunzipSync(buf, { maxOutputLength: maxBytes })
       } catch (e) {
         throw new Error(
           e instanceof RangeError || /maxOutputLength/i.test(String(e))
@@ -550,7 +553,10 @@ function parseText(body: string, source: string): SitemapUrlEntry[] {
 /** Fetch a site's robots.txt through the same guarded path. Returns null when
  *  there isn't one (a 404 means nothing is blocked, which is not an error). */
 export async function fetchRobotsTxt(origin: string): Promise<string | null> {
-  const { text, status } = await fetchBody(`${origin}/robots.txt`)
+  // Google processes at most the first 500KiB of a robots.txt. Using the 50MB
+  // sitemap ceiling here let an attacker-controlled host force us to download
+  // and parse orders of magnitude more than any real file.
+  const { text, status } = await fetchBody(`${origin}/robots.txt`, undefined, 500 * 1024)
   return status === 200 ? text : null
 }
 
@@ -733,10 +739,16 @@ export async function extractSitemap(input: string): Promise<ExtractResult> {
     // truncate an image-heavy site at a fraction of its real page count (a page
     // repeated once per image), while the UI claimed the full 50,000.
     const byLoc = new Map<string, SitemapUrlEntry>()
-    const sourcesPerLoc = new Map<string, Set<string>>()
+    // First source per URL plus a cross-file flag. A Set-per-URL held up to 200
+    // source strings for each of 50,000 URLs (~10M entries) purely to compute
+    // one counter, which could exhaust the instance before any nominal cap hit.
+    const firstSource = new Map<string, string>()
+    const crossFileLocs = new Set<string>()
     let rawCount = 0
+    let duplicateCount = 0
     const sitemaps: ExtractResult["sitemaps"] = []
     const seen = new Set<string>()
+    const queued = new Set<string>()
     let truncated = false
     let hitUrlCap = false
     let hitFileCap = false
@@ -806,6 +818,16 @@ export async function extractSitemap(input: string): Promise<ExtractResult> {
               offSite++
               continue
             }
+            // Bound the frontier at ENQUEUE time. parseIndex can return tens of
+            // thousands of children per file, and checking maxChildSitemaps only
+            // when consuming the frontier let one index allocate hundreds of
+            // thousands of queue entries for a 200-file budget.
+            if (seen.has(child) || queued.has(child)) continue
+            if (seen.size + queued.size >= LIMITS.maxChildSitemaps) {
+              hitFileCap = true
+              break
+            }
+            queued.add(child)
             next.push({ url: child, depth: depth + 1 })
           }
           continue
@@ -823,11 +845,20 @@ export async function extractSitemap(input: string): Promise<ExtractResult> {
 
         for (const e of entries) {
           rawCount++
-          const srcs = sourcesPerLoc.get(e.loc) ?? new Set<string>()
-          srcs.add(e.source)
-          sourcesPerLoc.set(e.loc, srcs)
-          if (byLoc.has(e.loc)) continue
+          const prev = firstSource.get(e.loc)
+          if (prev === undefined) {
+            firstSource.set(e.loc, e.source)
+          } else if (prev !== e.source) {
+            crossFileLocs.add(e.loc)
+          }
+          if (byLoc.has(e.loc)) {
+            duplicateCount++
+            continue
+          }
           if (byLoc.size >= LIMITS.maxUrls) {
+            // Count this as OMITTED, not duplicate: incrementing rawCount above
+            // and deriving duplicates as (rawCount - unique) would report the
+            // first URL past the cap as a removed duplicate.
             truncated = true
             hitUrlCap = true
             break
@@ -865,13 +896,13 @@ export async function extractSitemap(input: string): Promise<ExtractResult> {
     }
 
     const unique = [...byLoc.values()]
-    const duplicatesRemoved = rawCount - unique.length
+    const duplicatesRemoved = duplicateCount
 
     if (duplicatesRemoved > 0) {
       // Distinguish the two very different causes: the same URL listed twice
       // inside one file (usually an image/video sitemap) vs. the same URL in two
       // different files (usually a genuine sitemap bug worth fixing).
-      const crossFile = [...sourcesPerLoc.values()].filter((s) => s.size > 1).length
+      const crossFile = crossFileLocs.size
       warnings.push(
         crossFile > 0
           ? `Collapsed ${duplicatesRemoved.toLocaleString()} duplicate entries into ${unique.length.toLocaleString()} unique URLs — ${crossFile.toLocaleString()} appear in more than one sitemap file, which is usually worth fixing.`

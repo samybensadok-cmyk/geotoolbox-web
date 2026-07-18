@@ -44,8 +44,11 @@ export interface AuditResult {
 }
 
 /** W3C datetime (the sitemaps.org lastmod format): date, or date+time+offset. */
+// The sitemaps.org W3C datetime profile requires SECONDS when a time is given.
+// The shape check alone accepted impossible dates like 2026-99-99, so callers
+// must also confirm Date.parse() succeeds (see below).
 const W3C_DATE =
-  /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}(:\d{2}(\.\d+)?)?(Z|[+-]\d{2}:\d{2}))?$/
+  /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2}))?$/
 
 const CHANGEFREQ = new Set([
   "always",
@@ -99,10 +102,13 @@ export async function auditSitemap(
 
   for (const u of urls) {
     if (u.lastmod) {
-      if (!W3C_DATE.test(u.lastmod)) badLastmod.push(u.loc)
-      else {
-        const t = Date.parse(u.lastmod)
-        if (!Number.isNaN(t) && t > futureCutoff) futureLastmod.push(u.loc)
+      const t = Date.parse(u.lastmod)
+      if (!W3C_DATE.test(u.lastmod) || Number.isNaN(t)) {
+        // Shape OR parseability — "2026-99-99" matches the shape but is not a
+        // real date, and Google ignores a lastmod it can't parse either way.
+        badLastmod.push(u.loc)
+      } else if (t > futureCutoff) {
+        futureLastmod.push(u.loc)
       }
     }
     if (u.priority !== undefined) {

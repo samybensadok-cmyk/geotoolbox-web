@@ -41,6 +41,18 @@ export const tools: ToolEntry[] = [
     navDesc: "Which of 34 AI crawlers your robots.txt blocks",
   },
   {
+    slug: "robots-txt-tester",
+    name: "robots.txt Tester",
+    desc: "Test any URL against a site's robots.txt with Google's real precedence rules — per crawler, with the exact rule that decided each verdict. Replaces the retired Search Console tester. Free.",
+    navDesc: "Test what your robots.txt actually blocks",
+  },
+  {
+    slug: "robots-txt-generator",
+    name: "robots.txt Generator",
+    desc: "Build a robots.txt from WordPress/Shopify presets, declare your sitemap, and decide about AI crawlers with each labelled by what blocking it costs you. Free.",
+    navDesc: "Build a robots.txt with AI crawler controls",
+  },
+  {
     slug: "sitemap-extractor",
     name: "Sitemap URL Extractor",
     desc: "Pull every URL out of any XML sitemap — index files walked to their children, .xml.gz decompressed, the sitemap found from a bare domain. Export CSV, TXT or JSON. Free.",

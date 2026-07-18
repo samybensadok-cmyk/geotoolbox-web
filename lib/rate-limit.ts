@@ -1,15 +1,25 @@
 /**
  * Best-effort in-process rate limiting for the free tool endpoints.
  *
- * Fluid Compute reuses instances, so this catches the common case, but limits
- * are per-instance and this is a courtesy throttle rather than a security
- * control. It matters most on endpoints that make OUTBOUND requests on a
- * caller's behalf — those are the ones that could otherwise be pointed at a
- * third party as an amplifier.
+ * ⚠️ PER-INSTANCE. Fluid Compute scales instances, so the effective limit is
+ * `max × N warm instances` and a distributed caller bypasses it. This is a
+ * courtesy throttle, not a security control. The real fix is a shared TTL-backed
+ * store (Vercel Marketplace KV / Upstash) — see RESUME notes. It matters most on
+ * the endpoints that make OUTBOUND requests on a caller's behalf, since those
+ * are the ones that could be aimed at a third party.
+ *
+ * Implementation is a FIXED-WINDOW COUNTER rather than a timestamp list. The
+ * earlier version appended a timestamp for every request including rejected
+ * ones, then filtered the whole array on each call — so a caller flooding
+ * within one window grew the array without bound and made each check O(n),
+ * i.e. O(n²) total. A counter cannot degrade that way.
  */
 
 interface Bucket {
-  hits: number[]
+  /** Requests counted in the current window. */
+  count: number
+  /** When the current window ends (ms epoch). */
+  resetAt: number
 }
 
 const BUCKETS = new Map<string, Bucket>()
@@ -25,31 +35,28 @@ export interface RateLimitOptions {
 export function rateLimited(ip: string, opts: RateLimitOptions): boolean {
   const now = Date.now()
   const key = `${opts.scope}:${ip}`
-  const bucket = BUCKETS.get(key) ?? { hits: [] }
-  bucket.hits = bucket.hits.filter((t) => now - t < opts.windowMs)
-  bucket.hits.push(now)
-  BUCKETS.set(key, bucket)
 
-  // Bound the map. Sweeping only on overflow keeps the common path O(1); the
-  // previous version scanned the whole map on every request once it was full,
-  // which turned the limiter itself into the bottleneck.
-  if (BUCKETS.size > MAX_KEYS) {
-    for (const [k, v] of BUCKETS) {
-      if (v.hits.every((t) => now - t >= opts.windowMs)) BUCKETS.delete(k)
-      if (BUCKETS.size <= MAX_KEYS) break
-    }
-    // Still full of live entries: drop the oldest insertions rather than grow.
-    if (BUCKETS.size > MAX_KEYS) {
-      const excess = BUCKETS.size - MAX_KEYS
-      let i = 0
+  let bucket = BUCKETS.get(key)
+  if (!bucket || bucket.resetAt <= now) {
+    bucket = { count: 0, resetAt: now + opts.windowMs }
+    // Bound the map. Map preserves insertion order, so the oldest keys are at
+    // the front — evicting from the front is O(evicted) rather than a full scan
+    // of every live entry on each new key.
+    if (BUCKETS.size >= MAX_KEYS) {
+      let toDrop = Math.max(1, Math.floor(MAX_KEYS * 0.1))
       for (const k of BUCKETS.keys()) {
-        if (i++ >= excess) break
         BUCKETS.delete(k)
+        if (--toDrop <= 0) break
       }
     }
+    BUCKETS.set(key, bucket)
   }
 
-  return bucket.hits.length > opts.max
+  // Stop incrementing once over the limit: the verdict can't change within the
+  // window, and an unbounded counter is just a place for a flood to accumulate.
+  if (bucket.count > opts.max) return true
+  bucket.count++
+  return bucket.count > opts.max
 }
 
 /**

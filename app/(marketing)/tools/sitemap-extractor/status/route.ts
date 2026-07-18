@@ -61,6 +61,13 @@ async function checkOne(url: string): Promise<UrlStatus> {
       })
       if (res.status === 405 || res.status === 501) {
         await res.body?.cancel().catch(() => {})
+        // Re-validate before the fallback GET: DNS can change between the two
+        // requests, so a hostname approved for the HEAD is not automatically
+        // approved for this one.
+        const stillSafe = await assertPublicUrl(current)
+        if (stillSafe) {
+          return { url, status: null, hops, error: stillSafe, ms: Date.now() - started }
+        }
         res = await fetch(current, {
           method: "GET",
           redirect: "manual",
