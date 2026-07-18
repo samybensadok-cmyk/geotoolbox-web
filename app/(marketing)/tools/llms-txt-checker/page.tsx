@@ -10,13 +10,13 @@ import { LlmsTxtCheckerWidget } from "@/components/tools/llms-txt-checker-widget
 import { LlmsTxtGenerator } from "@/components/tools/llms-txt-generator"
 
 export const metadata: Metadata = {
-  title: "llms.txt Generator & Checker (Free)",
+  title: "Free llms.txt Checker & Validator",
   description:
-    "Generate a spec-correct llms.txt in minutes, then validate it: every link resolved, a transparent 0-100 score, copy-paste fixes. Free, no sign-up.",
+    "Validate any llms.txt against the spec: every link resolved, a transparent 0-100 score, copy-paste fixes. Free, no sign-up.",
   openGraph: {
-    title: "Free llms.txt Generator & Checker: Validate Your File",
+    title: "Free llms.txt Checker: Validate and Score Your File",
     description:
-      "Validate any llms.txt against the spec, resolve every link, score it, and generate a clean one, free. Honest about what llms.txt actually does.",
+      "Validate any llms.txt against the spec, resolve every link, and score it on a published rubric. Free. Honest about what llms.txt actually does.",
   },
   alternates: { canonical: `${siteConfig.url}/tools/llms-txt-checker` },
 }
@@ -106,7 +106,7 @@ export default function LlmsTxtCheckerPage() {
               Free llms.txt tool
             </p>
             <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-              Free llms.txt Generator &amp; Checker
+              Free llms.txt Checker
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
               Build a spec-correct llms.txt from your site name, summary and links, then check it properly: we fetch any
@@ -187,6 +187,16 @@ export default function LlmsTxtCheckerPage() {
             <p className="mt-4 text-[15px] leading-relaxed text-gray-600">
               Name your site, add a summary, and list your key sections and links. It builds a valid file you can copy or
               download, then check it above. No crawl, no AI, nothing metered.
+            </p>
+            <p className="mt-3 text-[15px] leading-relaxed text-gray-600">
+              Don&apos;t want to type every link?{" "}
+              <Link
+                href="/tools/llms-txt-generator"
+                className="font-semibold text-accent-700 underline-offset-2 hover:underline"
+              >
+                The llms.txt generator builds one from your domain
+              </Link>{" "}
+              — it reads your sitemap and pulls real titles and descriptions automatically.
             </p>
           </div>
           <div className="mt-10">

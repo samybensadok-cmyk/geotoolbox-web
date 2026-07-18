@@ -47,9 +47,15 @@ export const tools: ToolEntry[] = [
     navDesc: "Extract every URL from an XML sitemap",
   },
   {
+    slug: "llms-txt-generator",
+    name: "llms.txt Generator",
+    desc: "Paste a domain and get a spec-correct llms.txt built from your own sitemap — real titles, grouped sections, junk pages left out. Plus llms-full.txt. Free.",
+    navDesc: "Build an llms.txt from your domain",
+  },
+  {
     slug: "llms-txt-checker",
-    name: "llms.txt Checker & Generator",
-    desc: "Validate any site's llms.txt against the spec, resolve every link, score it 0-100, and generate a clean one. Free.",
-    navDesc: "Validate & generate a spec-correct llms.txt",
+    name: "llms.txt Checker",
+    desc: "Validate any site's llms.txt against the spec, resolve every link, and score it 0-100 on a published rubric. Free.",
+    navDesc: "Validate & score an existing llms.txt",
   },
 ]
