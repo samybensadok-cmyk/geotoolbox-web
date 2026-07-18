@@ -1,12 +1,15 @@
 /**
  * Best-effort in-process rate limiting for the free tool endpoints.
  *
- * ⚠️ PER-INSTANCE. Fluid Compute scales instances, so the effective limit is
- * `max × N warm instances` and a distributed caller bypasses it. This is a
- * courtesy throttle, not a security control. The real fix is a shared TTL-backed
- * store (Vercel Marketplace KV / Upstash) — see RESUME notes. It matters most on
- * the endpoints that make OUTBOUND requests on a caller's behalf, since those
- * are the ones that could be aimed at a third party.
+ * PER-INSTANCE by design, and that is now fine: Vercel WAF rate-limit rules sit
+ * in front of these routes as the DISTRIBUTED layer (live in log mode since
+ * 2026-07-18 — see free-tools-SEO/WAF-RATE-LIMIT-RUNBOOK.md). WAF also rejects
+ * before the function invokes, so blocked traffic costs no compute and isn't
+ * billed.
+ *
+ * This stays as the inner backstop: it's cheap, it catches the single-instance
+ * case, and WAF counters are per-region so the outer ceiling is approximate.
+ * Do not treat either layer alone as a security control.
  *
  * Implementation is a FIXED-WINDOW COUNTER rather than a timestamp list. The
  * earlier version appended a timestamp for every request including rejected
