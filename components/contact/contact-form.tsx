@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react"
 
+import { trackEvent } from "@/lib/analytics"
+
 /**
  * Contact form. POSTs to the hardened Replit endpoint (api/contact.php,
  * same-origin via the /api/* rewrite). The backend rate-limits by client IP,
@@ -93,6 +95,10 @@ export function ContactForm() {
       })
       const data: { success?: boolean; error?: string } = await res.json().catch(() => ({}))
       if (data.success) {
+        /* SG_GA4_EVENTS_V1: KEY EVENT. Fired only on a server-confirmed success, so
+           spam caught by the honeypot, validation failures and timeouts never count
+           as leads. `topic` rides along so lead quality can be split by enquiry type. */
+        trackEvent("generate_lead", { method: "contact_form", topic })
         setDone(true)
       } else {
         setErrorMsg(ERROR_COPY[data.error ?? "internal_error"] ?? ERROR_COPY.internal_error)

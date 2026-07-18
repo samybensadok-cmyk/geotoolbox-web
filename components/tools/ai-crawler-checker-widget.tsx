@@ -1,6 +1,8 @@
 "use client"
 
 import { useState } from "react"
+
+import { trackEvent } from "@/lib/analytics"
 import Link from "next/link"
 import { siteConfig } from "@/lib/config"
 
@@ -104,6 +106,9 @@ export function AiCrawlerCheckerWidget() {
       if (!data.success) {
         setErrorMsg(ERROR_COPY[data.error ?? "internal_error"] ?? "Something went wrong. Try again.")
       } else {
+        // SG_GA4_EVENTS_V1: tracked, NOT a key event — free-tool usage is
+        // engagement, not a conversion; counting it would swamp the ROI number.
+        trackEvent("free_tool_used", { tool: "ai_crawler_checker" })
         setResult(data)
       }
     } catch {

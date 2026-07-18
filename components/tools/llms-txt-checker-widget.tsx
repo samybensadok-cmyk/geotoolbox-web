@@ -1,6 +1,8 @@
 "use client"
 
 import { useState } from "react"
+
+import { trackEvent } from "@/lib/analytics"
 import Link from "next/link"
 
 /**
@@ -128,6 +130,9 @@ export function LlmsTxtCheckerWidget() {
       if (!data.success) {
         setErrorMsg(ERROR_COPY[data.error ?? "internal_error"] ?? "Something went wrong. Try again.")
       } else {
+        // SG_GA4_EVENTS_V1: tracked, NOT a key event — free-tool usage is
+        // engagement, not a conversion; counting it would swamp the ROI number.
+        trackEvent("free_tool_used", { tool: "llms_txt_checker" })
         setResult(data)
       }
     } catch {
