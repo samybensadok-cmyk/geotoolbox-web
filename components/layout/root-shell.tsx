@@ -24,12 +24,17 @@ const dmMono = DM_Mono({
 
 export function RootShell({
   lang,
+  locale = "en",
   nav,
   common,
   footer,
   children,
 }: {
   lang: string
+  /** Routing locale ("en" | "fr") — distinct from `lang`, the BCP-47 form
+   *  ("en-US" | "fr-FR"). Chrome links are localized from this so a visitor
+   *  inside /fr doesn't get dropped onto the EN site by the nav. */
+  locale?: string
   nav?: Record<string, string>
   common?: Record<string, string>
   footer?: Record<string, string>
@@ -42,9 +47,9 @@ export function RootShell({
     >
       <body className="min-h-full flex flex-col antialiased">
         <a href="#main-content" className="skip-link">{common?.skipToContent ?? "Skip to main content"}</a>
-        <Header nav={nav} />
+        <Header nav={nav} locale={locale} />
         <main id="main-content" className="flex-1">{children}</main>
-        <Footer nav={nav} footer={footer} />
+        <Footer nav={nav} footer={footer} locale={locale} />
         <ClarityAnalytics />
         <GoogleAnalytics />
       </body>

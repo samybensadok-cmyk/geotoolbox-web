@@ -5,8 +5,14 @@ import { useEffect, useRef, useState } from "react"
 import { siteConfig } from "@/lib/config"
 import { tools } from "@/lib/tools"
 import { cn } from "@/lib/utils"
+import { localizeNavHref } from "@/lib/i18n/nav"
 
-export function Header({ nav }: { nav?: Record<string, string> }) {
+export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; locale?: string }) {
+  // Keeps chrome links inside the visitor's locale. A no-op on `en`, and a
+  // no-op for paths with no localized route (they stay on their EN page rather
+  // than 404ing under /fr) — see lib/i18n/nav.ts.
+  const L = (href: string) => localizeNavHref(href, locale)
+
   const [mobileOpen, setMobileOpen] = useState(false)
   const [featuresOpen, setFeaturesOpen] = useState(false)
   const [mobileFeaturesOpen, setMobileFeaturesOpen] = useState(false)
@@ -62,7 +68,7 @@ export function Header({ nav }: { nav?: Record<string, string> }) {
     <header className="sticky top-0 z-50 w-full border-b border-gray-100 bg-white/90 backdrop-blur-md">
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-6">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 -mx-2 px-2 py-2 rounded-md">
+        <Link href={L("/")} className="flex items-center gap-2 -mx-2 px-2 py-2 rounded-md">
           <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-accent-600">
             <span className="text-xs font-bold text-white leading-none">G</span>
           </div>
@@ -127,7 +133,7 @@ export function Header({ nav }: { nav?: Record<string, string> }) {
                   </div>
                   <div className="mt-5 border-t border-gray-100 pt-4">
                     <Link
-                      href="/features"
+                      href={L("/features")}
                       onClick={() => setFeaturesOpen(false)}
                       className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-accent-700 hover:text-accent-800"
                     >
@@ -188,7 +194,7 @@ export function Header({ nav }: { nav?: Record<string, string> }) {
                   </ul>
                   <div className="mt-3 border-t border-gray-100 pt-3">
                     <Link
-                      href="/tools"
+                      href={L("/tools")}
                       onClick={() => setToolsOpen(false)}
                       className="inline-flex items-center gap-1.5 px-2 text-[13px] font-semibold text-accent-700 hover:text-accent-800"
                     >
@@ -204,21 +210,21 @@ export function Header({ nav }: { nav?: Record<string, string> }) {
           </div>
 
           <Link
-            href="/pricing"
+            href={L("/pricing")}
             className="flex min-h-[40px] items-center rounded-md px-3 text-[13px] font-medium text-gray-700 transition-colors hover:text-gray-900 hover:bg-gray-50"
           >
             {nav?.pricing ?? "Pricing"}
           </Link>
 
           <Link
-            href="/blog"
+            href={L("/blog")}
             className="flex min-h-[40px] items-center rounded-md px-3 text-[13px] font-medium text-gray-700 transition-colors hover:text-gray-900 hover:bg-gray-50"
           >
             {nav?.blog ?? "Blog"}
           </Link>
 
           <Link
-            href="/search"
+            href={L("/search")}
             aria-label={nav?.search ?? "Search"}
             className="flex min-h-[40px] items-center rounded-md px-3 text-gray-600 transition-colors hover:text-gray-900 hover:bg-gray-50"
           >
@@ -304,7 +310,7 @@ export function Header({ nav }: { nav?: Record<string, string> }) {
                   </div>
                 ))}
                 <Link
-                  href="/features"
+                  href={L("/features")}
                   onClick={() => setMobileOpen(false)}
                   className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-accent-700"
                 >
@@ -344,7 +350,7 @@ export function Header({ nav }: { nav?: Record<string, string> }) {
                   </Link>
                 ))}
                 <Link
-                  href="/tools"
+                  href={L("/tools")}
                   onClick={() => setMobileOpen(false)}
                   className="inline-flex items-center gap-1.5 pt-1 text-[13px] font-semibold text-accent-700"
                 >
@@ -354,7 +360,7 @@ export function Header({ nav }: { nav?: Record<string, string> }) {
             )}
 
             <Link
-              href="/pricing"
+              href={L("/pricing")}
               onClick={() => setMobileOpen(false)}
               className="rounded-lg px-2 py-3 text-sm font-medium text-gray-900 hover:bg-gray-50"
             >
@@ -362,7 +368,7 @@ export function Header({ nav }: { nav?: Record<string, string> }) {
             </Link>
 
             <Link
-              href="/blog"
+              href={L("/blog")}
               onClick={() => setMobileOpen(false)}
               className="rounded-lg px-2 py-3 text-sm font-medium text-gray-900 hover:bg-gray-50"
             >
@@ -370,7 +376,7 @@ export function Header({ nav }: { nav?: Record<string, string> }) {
             </Link>
 
             <Link
-              href="/search"
+              href={L("/search")}
               onClick={() => setMobileOpen(false)}
               className="rounded-lg px-2 py-3 text-sm font-medium text-gray-900 hover:bg-gray-50"
             >

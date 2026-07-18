@@ -34,6 +34,7 @@ export default async function LocaleRootLayout({
   return (
     <RootShell
       lang={bcp47[locale as Locale] ?? "en-US"}
+      locale={locale}
       nav={messages.nav}
       common={messages.common}
       footer={messages.footer}
