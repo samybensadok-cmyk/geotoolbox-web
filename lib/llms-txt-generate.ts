@@ -290,12 +290,28 @@ async function pool<T, R>(items: T[], limit: number, fn: (item: T) => Promise<R>
  * Selection + grouping
  * ------------------------------------------------------------------ */
 
-/** Section name from the first path segment, title-cased. */
+/**
+ * Section name from the first MEANINGFUL path segment, title-cased.
+ *
+ * Numeric segments are skipped: date permalinks (/2026/07/slug/, the WordPress
+ * default) would otherwise produce sections literally named "2009", "2010",
+ * "2011" — which is what happened on smashingmagazine.com. When every leading
+ * segment is numeric the page is a dated post, so it groups under "Articles".
+ */
 function sectionOf(url: string): string {
   try {
     const p = new URL(url).pathname.split("/").filter(Boolean)
     if (p.length === 0) return "Overview"
-    const seg = p[0].replace(/[-_]+/g, " ").trim()
+
+    const meaningful = p.find((seg, i) => {
+      if (/^\d+$/.test(seg)) return false
+      // The last segment is the page itself, not a section — unless it's the
+      // only one (a top-level page like /pricing).
+      return i < p.length - 1 || p.length === 1
+    })
+    if (!meaningful) return "Articles"
+
+    const seg = meaningful.replace(/[-_]+/g, " ").trim()
     if (!seg) return "Overview"
     return seg
       .split(" ")
@@ -348,7 +364,17 @@ function selectPages(urls: SitemapUrlEntry[], cap: number): { urls: string[]; lo
       "signup|sign-up|register|auth|admin|wp-admin|wp-json|wp-login|privacy|terms|legal|" +
       "dsgvo|impressum|datenschutz)s?(/|$)" +
       "|/page/\\d+" + // pagination stubs, not /pages/about
-      "|/cookie(-|_)?(policy|notice|settings)",
+      "|/cookie(-|_)?(policy|notice|settings)" +
+      // Transactional dead-ends. Real examples that made it into a generated
+      // file before this: "Thank You", "Invoices", "Receipts", and
+      // "Smashing Email Newsletter Unsubscribe Successful".
+      "|thank(-|_)?you|unsubscribe|subscription-confirmed|check-your-email" +
+      "|/(invoice|receipt|order-confirmation|password-reset|verify-email)s?(/|$)" +
+      // Year/month ARCHIVE STUBS only — /2012/ or /2012/07/ as the whole path.
+      // Must NOT match /2026/07/some-article/: date permalinks are the WordPress
+      // default, and an earlier version of this rule silently deleted every
+      // article on smashingmagazine.com.
+      "|/(19|20)\\d{2}(/\\d{1,2})?/?$",
     "i",
   )
 
@@ -413,7 +439,6 @@ function selectPages(urls: SitemapUrlEntry[], cap: number): { urls: string[]; lo
     }
   }
 
-  // Round-robin across sections so the result reads like an index.
   const bySection = new Map<string, string[]>()
   for (const u of candidates.sort((a, b) => depthOf(a) - depthOf(b) || a.length - b.length)) {
     const s = sectionOf(u)
@@ -422,20 +447,77 @@ function selectPages(urls: SitemapUrlEntry[], cap: number): { urls: string[]; lo
     bySection.set(s, arr)
   }
 
+  /*
+   * Allocate slots by section SIZE, not evenly.
+   *
+   * A flat round-robin looks fair and produces nonsense on real sites: on
+   * smashingmagazine.com it returned 45 sections for 45 links, giving a
+   * one-page "Receipts" section the same weight as /articles/, which has
+   * thousands. Sections named "Thank You", "Invoices" and "2012" made the file
+   * while the actual articles got one slot.
+   *
+   * sqrt weighting favours the big sections without letting the largest one
+   * swallow the file, and singleton sections are pooled into "Other" so a site
+   * with a long tail of one-off pages doesn't fragment into noise.
+   */
+  // Taxonomy sections are DEMOTED, not banned. On an ecommerce site /category/
+  // pages are among the best index entries; on a publisher, /author/ and
+  // /category/ are filler that crowds out the actual writing — Smashing spent 19
+  // of 47 slots on them before this cap. Allowing a couple of each keeps the
+  // ecommerce case working without letting them take over.
+  const TAXONOMY = /^(author|authors|category|categories|topic|topics|tag|tags|archive|archives)$/i
+  const TAXONOMY_CAP = 3
+
+  const ranked = [...bySection.entries()].sort((a, b) => {
+    const at = TAXONOMY.test(a[0]) ? 1 : 0
+    const bt = TAXONOMY.test(b[0]) ? 1 : 0
+    if (at !== bt) return at - bt // non-taxonomy first
+    return b[1].length - a[1].length
+  })
+  const MAX_SECTIONS = 12
+
+  const primary = ranked
+    .slice(0, MAX_SECTIONS)
+    .filter(([, v]) => v.length > 1)
+    .map(([name, v]) => [name, TAXONOMY.test(name) ? v.slice(0, TAXONOMY_CAP) : v] as [string, string[]])
+  const leftovers = [
+    ...ranked.slice(0, MAX_SECTIONS).filter(([, v]) => v.length === 1),
+    ...ranked.slice(MAX_SECTIONS),
+  ].flatMap(([, v]) => v)
+
+  const weights = primary.map(([, v]) => Math.sqrt(v.length))
+  const weightTotal = weights.reduce((a, b) => a + b, 0) || 1
+  // Reserve a slice for the pooled leftovers so a genuinely flat site still
+  // produces something, but never let them dominate.
+  const otherBudget = leftovers.length > 0 ? Math.min(Math.ceil(cap * 0.2), leftovers.length) : 0
+  const primaryBudget = cap - otherBudget
+
   const out: string[] = []
-  let added = true
-  while (out.length < cap && added) {
-    added = false
-    for (const arr of bySection.values()) {
-      if (out.length >= cap) break
-      const next = arr.shift()
-      if (next) {
-        out.push(next)
-        added = true
+  primary.forEach(([, urls], i) => {
+    const share = Math.max(1, Math.round((weights[i] / weightTotal) * primaryBudget))
+    out.push(...urls.slice(0, share))
+  })
+
+  // Top back up round-robin if rounding left us short.
+  if (out.length < primaryBudget) {
+    const pools = primary.map(([, v]) => v.slice())
+    for (const p of pools) p.splice(0, Math.min(p.length, out.length))
+    let added = true
+    while (out.length < primaryBudget && added) {
+      added = false
+      for (const p of pools) {
+        if (out.length >= primaryBudget) break
+        const next = p.shift()
+        if (next && !out.includes(next)) {
+          out.push(next)
+          added = true
+        }
       }
     }
   }
-  return { urls: out, localeSkipped }
+
+  out.push(...leftovers.slice(0, otherBudget))
+  return { urls: out.slice(0, cap), localeSkipped }
 }
 
 /* ------------------------------------------------------------------ *
@@ -460,11 +542,23 @@ function buildLlmsTxt(siteName: string, summary: string | undefined, pages: Page
     lines.push(`> ${mdText(summary)}`, "")
   }
 
-  const bySection = new Map<string, PageMeta[]>()
+  const grouped = new Map<string, PageMeta[]>()
   for (const p of pages) {
-    const arr = bySection.get(p.section) ?? []
+    const arr = grouped.get(p.section) ?? []
     arr.push(p)
-    bySection.set(p.section, arr)
+    grouped.set(p.section, arr)
+  }
+  // Pool one-page sections into "Other". A file with 45 headers over 45 links
+  // is a list wearing a costume — the section structure only means something
+  // when sections actually group.
+  const bySection = new Map<string, PageMeta[]>()
+  const singles: PageMeta[] = []
+  for (const [name, items] of grouped) {
+    if (items.length === 1 && grouped.size > 3) singles.push(...items)
+    else bySection.set(name, items)
+  }
+  if (singles.length > 0) {
+    bySection.set(singles.length === 1 ? (singles[0].section ?? "Other") : "Other", singles)
   }
   // Overview first, then sections by size — biggest sections are usually the
   // ones a reader wants pointed at first.
