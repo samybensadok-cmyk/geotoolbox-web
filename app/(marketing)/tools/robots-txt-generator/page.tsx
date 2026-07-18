@@ -12,7 +12,7 @@ import { RobotsTxtGeneratorWidget } from "@/components/tools/robots-txt-generato
 export const metadata: Metadata = {
   title: "Free robots.txt Generator (AI Crawlers)",
   description:
-    "Build a robots.txt from presets for WordPress, Shopify and more — with per-crawler AI directives for GPTBot, ClaudeBot and PerplexityBot. Free, no sign-up.",
+    "Build a robots.txt from WordPress and Shopify presets, allow-all and disallow-all templates, plus AI crawler rules for GPTBot and ClaudeBot. Free examples.",
   openGraph: {
     title: "Free robots.txt Generator with AI Crawler Controls",
     description:
@@ -48,7 +48,7 @@ const faqs = [
   {
     question: "Should I block GPTBot, ClaudeBot and the rest?",
     answer:
-      "Decide per crawler, because they do different jobs and the labels here reflect that. Training crawlers — GPTBot, ClaudeBot, Google-Extended, CCBot, Bytespider, meta-externalagent, Applebot-Extended — feed model training; blocking them keeps your content out of training data and costs you nothing in visibility. Search and user-request crawlers — OAI-SearchBot, Claude-SearchBot, PerplexityBot, ChatGPT-User, Claude-User — fetch pages to answer questions; blocking those removes you from those answers. The common mistake is blocking a search crawler while meaning to block training. One specific point worth internalizing: blocking GPTBot does NOT remove you from ChatGPT's search results, and blocking Google-Extended does NOT affect Google Search or AI Overviews ranking, though it does also govern Gemini grounding, so it isn't entirely free.",
+      "Decide per crawler, because they do different jobs and the labels here reflect that. Training crawlers — GPTBot, ClaudeBot, Google-Extended, CCBot, Bytespider, meta-externalagent, Applebot-Extended — feed model training; blocking them keeps your content out of training data and won't remove you from any AI answer given today, since those are retrieved live. The cost is slower-burning — future models know less about you natively, which shows when an assistant answers without browsing. Search and user-request crawlers — OAI-SearchBot, Claude-SearchBot, PerplexityBot, ChatGPT-User, Claude-User — fetch pages to answer questions; blocking those removes you from those answers. The common mistake is blocking a search crawler while meaning to block training. One specific point worth internalizing: blocking GPTBot does NOT remove you from ChatGPT's search results, and blocking Google-Extended does NOT affect Google Search or AI Overviews ranking, though it does also govern Gemini grounding, so it isn't entirely free.",
   },
   {
     question: "Why does the WordPress preset allow admin-ajax.php?",
@@ -142,7 +142,9 @@ export default function RobotsTxtGeneratorPage() {
             <p>
               <strong className="text-gray-900">Training crawlers</strong> — GPTBot, ClaudeBot, CCBot —
               collect content to train models. Blocking them keeps you out of training data and costs you nothing in
-              visibility, because they aren&apos;t what answers a user&apos;s question. Google-Extended is the awkward
+              any answer given today, because they aren&apos;t what answers a user&apos;s question — the trade is that
+              future models know less about you natively, which surfaces when an assistant replies without browsing.
+              Google-Extended is the awkward
               middle case: it governs Gemini training <em>and</em> grounding in Gemini Apps, so blocking it can cost
               you grounded Gemini answers even though it never touches Google Search ranking.
             </p>
@@ -209,6 +211,133 @@ Sitemap: https://example.com/sitemap.xml`}
               sitemap extractor
             </Link>{" "}
             finds it from a bare domain.
+          </p>
+        </div>
+      </section>
+
+      {/* Copy-paste examples: the largest informational block around this term, and the
+          thing people actually came for. Each one carries the caveat that matters. */}
+      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
+        <div className="mx-auto max-w-3xl">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">Templates</p>
+          <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
+            robots.txt examples you can copy
+          </h2>
+          <p className="mt-4 text-[15px] leading-relaxed text-gray-700">
+            The generator above builds these for you and validates the result, but if you just want the file, here it
+            is. The caveat under each one is the part that usually gets left out.
+          </p>
+
+          <div className="mt-8 space-y-8">
+            <div>
+              <h3 className="text-[17px] font-semibold tracking-tight text-gray-900">Allow everything</h3>
+              <pre className="mt-3 overflow-x-auto rounded-xl border border-gray-200 bg-gray-950 p-5 font-mono text-[12.5px] leading-relaxed text-gray-200">
+{`User-agent: *
+Disallow:
+
+Sitemap: https://example.com/sitemap.xml`}
+              </pre>
+              <p className="mt-3 text-[14px] leading-relaxed text-gray-600">
+                An <em>empty</em> <code className="rounded bg-gray-100 px-1 text-gray-700">Disallow:</code> means allow
+                everything — the opposite of{" "}
+                <code className="rounded bg-gray-100 px-1 text-gray-700">Disallow: /</code>, which blocks everything.
+                One character between the two. If you have nothing to block, no file at all does the same job; the only
+                reason to publish this one is the Sitemap line.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="text-[17px] font-semibold tracking-tight text-gray-900">Block everything</h3>
+              <pre className="mt-3 overflow-x-auto rounded-xl border border-gray-200 bg-gray-950 p-5 font-mono text-[12.5px] leading-relaxed text-gray-200">
+{`User-agent: *
+Disallow: /`}
+              </pre>
+              <p className="mt-3 text-[14px] leading-relaxed text-gray-600">
+                Correct for a staging site, and dangerous anywhere else — this is the single most expensive line in SEO,
+                usually because it survived a launch. It also does <strong>not</strong> deindex anything: blocked URLs
+                already in the index tend to stay there as bare links, because Google can no longer fetch the page to
+                see a noindex. If the goal is removal, keep the pages crawlable and serve{" "}
+                <code className="rounded bg-gray-100 px-1 text-gray-700">noindex</code> instead. For staging, HTTP auth
+                is the real answer; robots.txt is a request, not a lock.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="text-[17px] font-semibold tracking-tight text-gray-900">WordPress</h3>
+              <pre className="mt-3 overflow-x-auto rounded-xl border border-gray-200 bg-gray-950 p-5 font-mono text-[12.5px] leading-relaxed text-gray-200">
+{`User-agent: *
+Allow: /wp-admin/admin-ajax.php
+Disallow: /wp-admin/
+
+Sitemap: https://example.com/wp-sitemap.xml`}
+              </pre>
+              <p className="mt-3 text-[14px] leading-relaxed text-gray-600">
+                That Allow line is not optional decoration — plenty of themes and plugins route front-end functionality
+                through <code className="rounded bg-gray-100 px-1 text-gray-700">admin-ajax.php</code>, and blocking it
+                can stop Google rendering parts of your pages. Note the sitemap path: WordPress core has published{" "}
+                <code className="rounded bg-gray-100 px-1 text-gray-700">/wp-sitemap.xml</code> since 5.5, but Yoast and
+                Rank Math replace it with{" "}
+                <code className="rounded bg-gray-100 px-1 text-gray-700">/sitemap_index.xml</code> — check which one
+                your site actually serves before pasting.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="text-[17px] font-semibold tracking-tight text-gray-900">Block a single folder</h3>
+              <pre className="mt-3 overflow-x-auto rounded-xl border border-gray-200 bg-gray-950 p-5 font-mono text-[12.5px] leading-relaxed text-gray-200">
+{`User-agent: *
+Disallow: /private/
+Allow: /private/public-page`}
+              </pre>
+              <p className="mt-3 text-[14px] leading-relaxed text-gray-600">
+                Paths are prefixes, so{" "}
+                <code className="rounded bg-gray-100 px-1 text-gray-700">Disallow: /private</code> without the trailing
+                slash would also catch <code className="rounded bg-gray-100 px-1 text-gray-700">/private-beta/</code>.
+                The exception works because the longer path wins regardless of ordering.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="text-[17px] font-semibold tracking-tight text-gray-900">
+                Block AI training, keep AI search
+              </h3>
+              <pre className="mt-3 overflow-x-auto rounded-xl border border-gray-200 bg-gray-950 p-5 font-mono text-[12.5px] leading-relaxed text-gray-200">
+{`User-agent: GPTBot
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: CCBot
+Disallow: /`}
+              </pre>
+              <p className="mt-3 text-[14px] leading-relaxed text-gray-600">
+                This is the distinction almost every &ldquo;block AI bots&rdquo; snippet in circulation gets wrong.
+                These three feed model <em>training</em>. The search crawlers —{" "}
+                <code className="rounded bg-gray-100 px-1 text-gray-700">OAI-SearchBot</code>,{" "}
+                <code className="rounded bg-gray-100 px-1 text-gray-700">Claude-SearchBot</code>,{" "}
+                <code className="rounded bg-gray-100 px-1 text-gray-700">PerplexityBot</code> — are deliberately absent,
+                because blocking those removes you from the answers those assistants give. Copy-paste lists that lump
+                all of them together quietly cost you AI visibility.{" "}
+                <Link
+                  href="/tools/ai-crawler-checker?utm_source=robots-generator"
+                  className="font-semibold text-accent-700 underline-offset-2 hover:underline"
+                >
+                  Check what your current file does
+                </Link>{" "}
+                across 34 of them.
+              </p>
+            </div>
+          </div>
+
+          <p className="mt-8 text-[15px] leading-relaxed text-gray-700">
+            Removing a file is a different question from writing one. On a hosted platform like Shopify or Wix you
+            can&apos;t delete <code className="rounded bg-gray-100 px-1 text-gray-700">/robots.txt</code> — every store
+            gets a generated default. Shopify&apos;s official mechanism for changing it is the{" "}
+            <code className="rounded bg-gray-100 px-1 text-gray-700">robots.txt.liquid</code> theme template, though
+            worth knowing before you start: Shopify classes edits to that file as an unsupported customization, so
+            their support team won&apos;t help you with them. Serving a 404 there wouldn&apos;t be an improvement
+            anyway — a missing robots.txt and one that allows everything mean the same thing to a crawler.
           </p>
         </div>
       </section>

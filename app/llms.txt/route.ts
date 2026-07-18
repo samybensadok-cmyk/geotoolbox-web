@@ -1,5 +1,6 @@
 import { getAllPosts, getAllGlossaryTerms } from "@/lib/content"
 import { siteConfig } from "@/lib/config"
+import { tools as toolRegistry } from "@/lib/tools"
 
 // llms.txt (llmstxt.org) — agentic-web hygiene, generated from the content
 // lib so it never goes stale. Stance (vault ai-citation-evidence-2026 §5a):
@@ -20,13 +21,13 @@ export function GET() {
     g.features.map((f) => `- [${f.name}](${base}/features/${f.slug}): ${f.desc}`)
   )
 
-  const tools = [
-    "- [AI Crawler Access Checker](" + base + "/tools/ai-crawler-checker): Test which of 34 AI crawlers can access any site",
-    "- [AI-Readiness Score](" + base + "/tools/ai-readiness): Free 5-check AI-readiness scan with percentile benchmark",
-    "- [llms.txt Checker](" + base + "/tools/llms-txt-checker): Validate or generate an llms.txt file",
-    "- [Keyword to AI Prompts](" + base + "/tools/keyword-to-prompts): Turn keywords into the prompts people ask AI",
-    "- [Query Fan-Out Preview](" + base + "/tools/query-fanout): The sub-questions AI engines fan a topic out into",
-  ]
+  // Derived from the tools registry rather than hardcoded, so a newly shipped tool
+  // can't be live on the site yet missing from our own llms.txt — which had already
+  // happened for all four of the robots.txt/sitemap/llms.txt generator tools. Same
+  // failure the sitemap route hit; same fix.
+  const tools = toolRegistry.map(
+    (t) => `- [${t.name}](${base}/tools/${t.slug}): ${t.navDesc}`
+  )
 
   const body = [
     `# ${siteConfig.name}`,

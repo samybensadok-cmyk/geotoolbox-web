@@ -17,6 +17,8 @@ relatedArticles:
     label: "Agentic Browsers Are Here: Is Your Site Agent-Ready?"
 ---
 
-A single overly broad rule, such as a catch-all `User-agent: *` disallow meant to stop scrapers, can silently block the AI crawlers you actually want. Check each AI user agent explicitly.
+A single overly broad rule, such as a catch-all `User-agent: *` disallow meant to stop scrapers, can silently block the AI crawlers you actually want. Check each AI user agent explicitly — the free [robots.txt tester](https://geotoolbox.ai/tools/robots-txt-tester) tests a URL per crawler and names the rule that decided it, and the [robots.txt generator](https://geotoolbox.ai/tools/robots-txt-generator) writes the file with each AI crawler labelled by what blocking it costs you.
+
+Worth knowing when you read a file: a crawler obeys exactly one user-agent token — the most specific one naming it — with every group declaring that token merged together. A named `User-agent: GPTBot` group therefore replaces the `User-agent: *` group for that bot rather than adding to it, so rules you assume apply site-wide may not apply to the bots you singled out. Within the group that wins, the longest matching path wins, not the first, so rule order does not matter.
 
 User-initiated fetchers are the exception, and behavior varies by vendor: OpenAI says robots.txt rules may not apply to ChatGPT-User, Perplexity says Perplexity-User generally ignores them, while Anthropic says blocking Claude-User in robots.txt does stop its fetches.

@@ -6,10 +6,17 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { itemListSchema } from "@/lib/seo-schema"
 import { tools } from "@/lib/tools"
 
+// Spelled out from the registry so the count can't drift when a tool is added — used by
+// BOTH the meta description and the on-page subhead, so the two can't desync either.
+// This counts FREE tools only: not the 13 paid platform features in
+// siteConfig.featureGroups, and not the 8 LLM engines a GEO Scan covers. Those three
+// numbers get conflated easily; don't.
+const NUMBER_WORDS = ["Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve"]
+const TOOL_COUNT = NUMBER_WORDS[tools.length] ?? String(tools.length)
+
 export const metadata: Metadata = {
-  title: "Free AI SEO Tools: llms.txt & AI Crawler",
-  description:
-    "Eight free AI SEO tools, no sign-up: test and build robots.txt, generate llms.txt, extract sitemap URLs, see which AI crawlers you block, score AI readiness.",
+  title: "Free AI SEO Tools: robots.txt & llms.txt",
+  description: `${TOOL_COUNT} free AI SEO tools, no sign-up: test and build robots.txt, generate llms.txt, extract and validate sitemaps, and see which AI crawlers you block.`,
   alternates: { canonical: `${siteConfig.url}/tools` },
 }
 
@@ -31,7 +38,7 @@ export default function ToolsIndexPage() {
               Free AI SEO tools for the agentic web
             </h1>
             <p className="mt-4 text-lg leading-relaxed text-gray-600">
-              Eight tools, no sign-up, nothing metered. Check whether AI can reach your site, validate the files everyone argues about, pull every URL out of a sitemap, and see the real sub-queries engines fire. Honest readings of what matters and what doesn&apos;t.
+              {TOOL_COUNT} free tools, no sign-up, nothing metered. Check whether AI can reach your site, validate the files everyone argues about, pull every URL out of a sitemap, and see the real sub-queries engines fire. Honest readings of what matters and what doesn&apos;t.
             </p>
           </div>
         </div>

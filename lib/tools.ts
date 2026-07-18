@@ -42,9 +42,9 @@ export const tools: ToolEntry[] = [
   },
   {
     slug: "robots-txt-tester",
-    name: "robots.txt Tester",
-    desc: "Test any URL against a site's robots.txt with Google's real precedence rules — per crawler, with the exact rule that decided each verdict. Replaces the retired Search Console tester. Free.",
-    navDesc: "Test what your robots.txt actually blocks",
+    name: "robots.txt Tester & Checker",
+    desc: "Check any URL against a site's robots.txt with Google's real precedence rules — per crawler, with the exact rule that decided each verdict. Replaces the retired Search Console tester. Free.",
+    navDesc: "Check what your robots.txt actually blocks",
   },
   {
     slug: "robots-txt-generator",
@@ -54,9 +54,9 @@ export const tools: ToolEntry[] = [
   },
   {
     slug: "sitemap-extractor",
-    name: "Sitemap URL Extractor",
-    desc: "Pull every URL out of any XML sitemap — index files walked to their children, .xml.gz decompressed, the sitemap found from a bare domain. Export CSV, TXT or JSON. Free.",
-    navDesc: "Extract every URL from an XML sitemap",
+    name: "Sitemap URL Extractor & Validator",
+    desc: "Pull every URL out of any XML sitemap — index files walked to their children, .xml.gz decompressed, the sitemap found from a bare domain — then validate it against the spec and check the URLs still resolve. Export CSV, TXT or JSON. Free.",
+    navDesc: "Extract and validate any XML sitemap",
   },
   {
     slug: "llms-txt-generator",

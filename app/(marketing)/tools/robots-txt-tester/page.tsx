@@ -10,11 +10,11 @@ import { RobotsTxtTesterWidget } from "@/components/tools/robots-txt-tester-widg
 
 // Title base ≤46 chars so the "%s | GEO Toolbox" template (+14) lands ≤60.
 export const metadata: Metadata = {
-  title: "robots.txt Tester & Validator (Free)",
+  title: "Free robots.txt Tester & Checker",
   description:
-    "Test any URL against a site's robots.txt with Google's real matching rules. See which rule decided each verdict, per crawler. Free, no sign-up.",
+    "Free robots.txt checker: test any URL against a site's robots.txt with Google's real matching rules, and see which rule decided each verdict.",
   openGraph: {
-    title: "Free robots.txt Tester: See Exactly What's Blocked",
+    title: "Free robots.txt Tester & Checker: What's Blocked",
     description:
       "Google retired its robots.txt tester. This replaces it: real Googlebot precedence rules, per-crawler verdicts, and the exact matching line. Free.",
   },
@@ -46,9 +46,14 @@ const faqs = [
       "It does the same job. Google retired the robots.txt tester in Search Console, but the need didn't go anywhere — you still have to know whether a rule blocks a URL before you publish it. This implements the same matching behaviour Googlebot uses: user-agent tokens matched by equality with the documented fallback chain, all groups for the winning token merged, longest matching rule wins, Allow beats Disallow on an exact-length tie, plus wildcard and $ anchor support and percent-encoding normalization. Search Console still has a robots.txt report showing the fetched file and its status; what it no longer has is the interactive URL tester.",
   },
   {
+    question: "How do I find and read a site's robots.txt?",
+    answer:
+      "It's always at the root of the host: example.com/robots.txt, straight in a browser. A file in a subfolder is ignored, and each subdomain has its own — blog.example.com is not covered by the robots.txt on example.com, which is a common blind spot. Reading it is where it gets slippery, because the file doesn't execute top to bottom the way it looks. Find the group whose User-agent names your crawler (or the * group if none does), remembering that a named group replaces the * group rather than adding to it, then merge every group declaring that same token. Within that set the longest matching path wins, not the first — so order genuinely doesn't matter, contrary to a lot of advice. Rather than doing that by hand, paste the domain above with the URLs you care about and the tool shows you the resolved group and the deciding rule for each one.",
+  },
+  {
     question: "Why does my named crawler ignore the rules in the * group?",
     answer:
-      "Because that's the spec, and it surprises nearly everyone. A crawler follows exactly one group: the most specific one that names it. If your file has a `User-agent: *` group and a `User-agent: Googlebot` group, Googlebot follows the Googlebot group and ignores the * group entirely — the rules are not combined. So adding `User-agent: Googlebot / Disallow: /private/` while your * group blocks /admin/ means Googlebot can now crawl /admin/. This tool shows which group each crawler actually follows so you can see it happening.",
+      "Because that's the spec, and it surprises nearly everyone. A crawler obeys exactly one user-agent token — the most specific one that names it — and every group declaring that token is merged into the set it follows. If your file has a `User-agent: *` group and a `User-agent: Googlebot` group, Googlebot follows the Googlebot rules and ignores the * group entirely — the two are not combined. So adding `User-agent: Googlebot / Disallow: /private/` while your * group blocks /admin/ means Googlebot can now crawl /admin/. This tool shows which group each crawler actually follows so you can see it happening.",
   },
   {
     question: "What does 'longest match wins' mean in practice?",
@@ -63,7 +68,7 @@ const faqs = [
   {
     question: "Should I block GPTBot, ClaudeBot and the other AI crawlers?",
     answer:
-      "It depends which one, and the distinction matters more than the decision. Training crawlers (GPTBot, ClaudeBot, CCBot) feed model training — blocking them keeps your content out of training data and costs you nothing in visibility. Google-Extended is the awkward middle case: it governs Gemini training and Gemini grounding, so blocking it can cost you grounded Gemini answers, though it never affects Google Search or AI Overviews ranking. Search crawlers (OAI-SearchBot, Claude-SearchBot, PerplexityBot) build the indexes those assistants answer from — blocking those removes you from the answers. People routinely block the second kind while meaning to block the first. Our generator labels each crawler by purpose for exactly this reason, and the AI Crawler Checker shows what your current file does across 34 of them.",
+      "It depends which one, and the distinction matters more than the decision. Training crawlers (GPTBot, ClaudeBot, CCBot) feed model training — blocking them keeps your content out of training data and won't remove you from any AI answer given today, since those are retrieved live. What you give up is slower-burning: future model generations know less about you natively, which shows when an assistant answers from memory instead of browsing. Google-Extended is the awkward middle case: it governs Gemini training and Gemini grounding, so blocking it can cost you grounded Gemini answers, though it never affects Google Search or AI Overviews ranking. Search crawlers (OAI-SearchBot, Claude-SearchBot, PerplexityBot) build the indexes those assistants answer from — blocking those removes you from the answers. People routinely block the second kind while meaning to block the first. Our generator labels each crawler by purpose for exactly this reason, and the AI Crawler Checker shows what your current file does across 34 of them.",
   },
   {
     question: "Is a missing robots.txt a problem?",
@@ -84,11 +89,11 @@ export default function RobotsTxtTesterPage() {
         <JsonLd
           data={[
             softwareApplicationSchema({
-              name: "robots.txt Tester & Validator",
+              name: "robots.txt Tester & Checker",
               description:
-                "A free robots.txt tester: fetches any site's robots.txt, tests URLs against it per crawler using Google's real precedence rules, shows the matching rule, and lints the file for costly mistakes.",
+                "A free robots.txt checker and tester: fetches any site's robots.txt, tests URLs against it per crawler using Google's real precedence rules, shows the matching rule, and validates the file for costly mistakes.",
               url: `${siteConfig.url}/tools/robots-txt-tester`,
-              applicationSubCategory: "robots.txt tester and validator",
+              applicationSubCategory: "robots.txt tester and checker",
             }),
             howToSchema({
               name: "How to test whether robots.txt blocks a URL",
@@ -102,7 +107,7 @@ export default function RobotsTxtTesterPage() {
             trail={[
               { name: "Home", href: "/" },
               { name: "Tools", href: "/tools" },
-              { name: "robots.txt Tester", href: "" },
+              { name: "robots.txt Tester & Checker", href: "" },
             ]}
           />
           <div className="mx-auto max-w-3xl text-center">
@@ -110,10 +115,10 @@ export default function RobotsTxtTesterPage() {
               Free robots.txt tool
             </p>
             <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-              Free robots.txt Tester
+              Free robots.txt Tester &amp; Checker
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
-              Google retired the robots.txt tester in Search Console. This does the same job: test any URL against a
+              Google retired the robots.txt tester in Search Console. This does the same job: check any URL against a
               live or draft robots.txt, per crawler, with Google&apos;s real precedence rules — and see the exact line
               that decided each verdict. Free, no sign-up.
             </p>

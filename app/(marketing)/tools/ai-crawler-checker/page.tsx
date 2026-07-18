@@ -83,7 +83,10 @@ export default function AiCrawlerCheckerPage() {
               description:
                 "A free server-side tool that checks any domain's robots.txt against 34 AI crawler user-agents and reports which are allowed or blocked for the homepage, with the exact blocking rule.",
               url: `${siteConfig.url}/tools/ai-crawler-checker`,
-              applicationSubCategory: "AI crawler and robots.txt checker",
+              // Deliberately NOT "robots.txt checker": /tools/robots-txt-tester owns that
+              // term now, and this tool's job is the 34-crawler batch audit, not
+              // single-URL rule resolution. Keeps the two out of each other's way.
+              applicationSubCategory: "AI crawler access checker",
             }),
             howToSchema({
               name: "How to check which AI crawlers your site allows",
