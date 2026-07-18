@@ -72,5 +72,8 @@ export const config = {
   // next-intl routing to resolve as the en segment. The individual
   // /features/<slug> pages are still EN-only under (marketing) and must NOT be
   // matched (locale routing would 404 them). /fr/features is covered by /fr/:path*.
-  matcher: ["/", "/features", "/blog/:path*", "/glossary/:path*", "/fr/:path*"],
+  // "/pricing" is likewise EXACT — it has no EN-only child routes today, but
+  // matching it exactly keeps the rule uniform: a localized marketing page's
+  // base path enters next-intl, nothing below it does.
+  matcher: ["/", "/features", "/pricing", "/blog/:path*", "/glossary/:path*", "/fr/:path*"],
 }

@@ -5,26 +5,71 @@ import { COMPARE_COLUMNS, COMPARE_GROUPS } from "@/lib/plans"
 
 const SIGNUP = "/app/?page=signup"
 const FEATURED = "consultant"
+const BOOK_CALL = "https://calendly.com/samy-bensadok/30min-call"
 
-function Cell({ value }: { value: string | boolean }) {
+// Localized labels for the comparison matrix, merged with COMPARE_GROUPS by
+// index. Included/not-included is ALWAYS the boolean from lib/plans.ts — the
+// catalog only supplies a string where the plan data itself is a string (e.g.
+// "15/mo", "Unlimited", "Priority"), and `null` everywhere else. So a
+// translation can add or drop a checkmark only by editing plans.ts.
+export type ComparisonCopy = {
+  eyebrow: string
+  h2: string
+  choose: string
+  footQuestion: string
+  footLink: string
+  footTail: string
+  cellIncluded: string
+  cellNotIncluded: string
+  groups: { group: string; rows: { label: string; values: (string | null)[] }[] }[]
+}
+
+function Cell({ value, copy }: { value: string | boolean; copy: ComparisonCopy }) {
   if (value === true)
     return (
-      <svg className="mx-auto h-4 w-4 text-accent-600" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.2" aria-label="Included">
+      <svg className="mx-auto h-4 w-4 text-accent-600" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.2" aria-label={copy.cellIncluded}>
         <path d="M3 8.5 6.5 12 13 4.5" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     )
-  if (value === false) return <span className="text-gray-300" aria-label="Not included">—</span>
+  if (value === false) return <span className="text-gray-300" aria-label={copy.cellNotIncluded}>—</span>
   return <span className="text-gray-800">{value}</span>
 }
 
-export function ComparisonTable() {
+export function ComparisonTable({ copy }: { copy: ComparisonCopy }) {
+  // Merge structural truth (plans.ts) with localized labels (catalog). If the
+  // catalog ever falls out of shape, we fall back to the plans.ts value rather
+  // than rendering a hole.
+  const groups = COMPARE_GROUPS.map((g, gi) => {
+    const cg = copy.groups[gi]
+    return {
+      group: cg?.group ?? g.group,
+      rows: g.rows.map((row, ri) => {
+        const cr = cg?.rows[ri]
+        return {
+          label: cr?.label ?? row.label,
+          values: row.values.map((v, vi) => {
+            const override = cr?.values[vi]
+            // A localized override is honored ONLY where plans.ts itself holds a
+            // string. If plans.ts says boolean, the boolean wins unconditionally
+            // — otherwise a catalog string like "Inclus" dropped into a `false`
+            // cell would visibly reverse the cell's commercial meaning (it would
+            // render as text rather than a dash). Guarding on `v` here is what
+            // makes "a translation cannot flip an included/excluded state"
+            // structurally true rather than merely true-if-you-ran-the-linter.
+            return typeof v === "string" && typeof override === "string" ? override : v
+          }),
+        }
+      }),
+    }
+  })
+
   return (
     <section className="border-t border-gray-100 bg-white px-6 py-20 sm:py-24">
       <div className="mx-auto max-w-6xl">
         <div className="mb-10 text-center">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">Compare plans</p>
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">{copy.eyebrow}</p>
           <h2 className="mt-2 text-[clamp(1.5rem,3vw,2.25rem)] font-bold tracking-tight text-gray-900">
-            Every plan, side by side
+            {copy.h2}
           </h2>
         </div>
 
@@ -53,14 +98,14 @@ export function ComparisonTable() {
                           : "border border-gray-300 text-gray-700 hover:border-gray-400"
                       )}
                     >
-                      {col.id === "free" ? "Start free" : "Choose"}
+                      {copy.choose}
                     </Link>
                   </th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {COMPARE_GROUPS.map((g) => (
+              {groups.map((g) => (
                 <Fragment key={g.group}>
                   <tr>
                     <td
@@ -81,7 +126,7 @@ export function ComparisonTable() {
                             COMPARE_COLUMNS[i].id === FEATURED && "bg-accent-50/60"
                           )}
                         >
-                          <Cell value={v} />
+                          <Cell value={v} copy={copy} />
                         </td>
                       ))}
                     </tr>
@@ -92,7 +137,9 @@ export function ComparisonTable() {
           </table>
         </div>
         <p className="mt-6 text-center text-[13px] text-gray-500">
-          Need more than Scale? <Link href="https://calendly.com/samy-bensadok/30min-call" target="_blank" rel="noopener noreferrer" className="font-semibold text-accent-700 hover:text-accent-800">Book a call</Link> about Enterprise — unlimited brands, SSO, and a dedicated CSM.
+          {copy.footQuestion}{" "}
+          <Link href={BOOK_CALL} target="_blank" rel="noopener noreferrer" className="font-semibold text-accent-700 hover:text-accent-800">{copy.footLink}</Link>
+          {copy.footTail}
         </p>
       </div>
     </section>

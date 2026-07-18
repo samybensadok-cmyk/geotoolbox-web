@@ -10,22 +10,57 @@ import { PLANS, type Plan } from "@/lib/plans"
 // pricing reads premium for agencies/large teams rather than cheap.
 const CARD_TIERS = PLANS.filter((p) => p.id !== "starter" && p.id !== "free")
 
-function priceDisplay(plan: Plan, annual: boolean) {
-  if (plan.priceMonthly === null) return { big: "Custom", sub: null, save: null }
-  if (plan.priceMonthly === 0) return { big: "$0", sub: "free forever", save: null }
+// Localized display copy for the cards. EVERY number (price, quota figure) still
+// comes from lib/plans.ts — this only carries the words around them, keyed by
+// plan id, so a translation can never drift a price. Tier names (Free, Starter,
+// Consultant, Growth, Scale, Enterprise) are product identifiers tied to billing
+// and stay English in all locales.
+export type PricingCardsCopy = {
+  billingLabel: string
+  monthly: string
+  annual: string
+  annualBadge: string
+  perMo: string
+  custom: string
+  freeForever: string
+  /** currency template, e.g. "${amount}" (en) or "{amount} $" (fr) */
+  money: string
+  billedYearly: string
+  billedMonthly: string
+  save: string
+  everythingIn: string
+  cta: { getStarted: string; startFree: string; bookCall: string }
+  badge: { mostPopular: string }
+  plans: Record<
+    string,
+    {
+      tagline: string
+      quotas: { credits: string; domains: string; prompts: string; engines: string; scans: string }
+      highlights: string[]
+    }
+  >
+}
+
+const fill = (tpl: string, vars: Record<string, string>) =>
+  tpl.replace(/\{(\w+)\}/g, (m, k) => vars[k] ?? m)
+
+function priceDisplay(plan: Plan, annual: boolean, copy: PricingCardsCopy, locale: string) {
+  const money = (n: number) => fill(copy.money, { amount: n.toLocaleString(locale) })
+  if (plan.priceMonthly === null) return { big: copy.custom, sub: null, save: null }
+  if (plan.priceMonthly === 0) return { big: money(0), sub: copy.freeForever, save: null }
   if (annual && plan.priceYearly) {
     const perMo = Math.round(plan.priceYearly / 12)
     const save = plan.priceMonthly * 12 - plan.priceYearly
     return {
-      big: `$${perMo}`,
-      sub: `billed $${plan.priceYearly.toLocaleString()}/yr`,
-      save: `Save $${save.toLocaleString()}`,
+      big: money(perMo),
+      sub: fill(copy.billedYearly, { total: money(plan.priceYearly) }),
+      save: fill(copy.save, { amount: money(save) }),
     }
   }
-  return { big: `$${plan.priceMonthly}`, sub: "billed monthly", save: null }
+  return { big: money(plan.priceMonthly), sub: copy.billedMonthly, save: null }
 }
 
-export function PricingCards() {
+export function PricingCards({ copy, locale }: { copy: PricingCardsCopy; locale: string }) {
   const [annual, setAnnual] = useState(true)
 
   return (
@@ -34,12 +69,12 @@ export function PricingCards() {
       <div className="flex items-center justify-center">
         <div
           role="radiogroup"
-          aria-label="Billing period"
+          aria-label={copy.billingLabel}
           className="inline-flex items-center gap-1 rounded-full border border-gray-200 bg-gray-50 p-1"
         >
           {([
-            ["Monthly", false],
-            ["Annual", true],
+            [copy.monthly, false],
+            [copy.annual, true],
           ] as const).map(([label, isAnnual]) => (
             <button
               key={label}
@@ -55,9 +90,9 @@ export function PricingCards() {
               )}
             >
               {label}
-              {label === "Annual" && (
+              {isAnnual && (
                 <span className="ml-1.5 rounded-full bg-accent-100 px-1.5 py-0.5 text-[10px] font-semibold text-accent-800">
-                  −17%
+                  {copy.annualBadge}
                 </span>
               )}
             </button>
@@ -68,8 +103,10 @@ export function PricingCards() {
       {/* Cards */}
       <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {CARD_TIERS.map((plan) => {
-          const p = priceDisplay(plan, annual)
+          const p = priceDisplay(plan, annual, copy, locale)
+          const c = copy.plans[plan.id]
           const isExternal = plan.cta.href.startsWith("http")
+          const ctaLabel = isExternal ? copy.cta.bookCall : copy.cta.getStarted
           return (
             <div
               key={plan.id}
@@ -82,7 +119,7 @@ export function PricingCards() {
             >
               {plan.badge && (
                 <span className="absolute -top-3 left-6 inline-flex items-center rounded-full bg-accent-600 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white">
-                  {plan.badge}
+                  {copy.badge.mostPopular}
                 </span>
               )}
 
@@ -91,7 +128,7 @@ export function PricingCards() {
               <div className="mt-3 flex items-baseline gap-1">
                 <span className="text-3xl font-bold tracking-tight text-gray-900">{p.big}</span>
                 {plan.priceMonthly !== null && plan.priceMonthly > 0 && (
-                  <span className="text-sm font-medium text-gray-500">/mo</span>
+                  <span className="text-sm font-medium text-gray-500">{copy.perMo}</span>
                 )}
               </div>
               <div className="mt-1 flex min-h-[20px] items-center gap-2">
@@ -103,7 +140,7 @@ export function PricingCards() {
                 )}
               </div>
 
-              <p className="mt-4 min-h-[40px] text-[13px] leading-snug text-gray-600">{plan.tagline}</p>
+              <p className="mt-4 min-h-[40px] text-[13px] leading-snug text-gray-600">{c.tagline}</p>
 
               <Link
                 href={plan.cta.href}
@@ -116,12 +153,12 @@ export function PricingCards() {
                     : "border border-gray-300 text-gray-900 hover:border-gray-400 hover:bg-gray-50"
                 )}
               >
-                {plan.cta.label}
+                {ctaLabel}
               </Link>
 
               {/* Quota block — same 5 rows, same order, every card */}
               <dl className="mt-6 space-y-2 border-t border-gray-100 pt-5 text-[13px]">
-                {Object.values(plan.quotas).map((q, i) => (
+                {Object.values(c.quotas).map((q, i) => (
                   <div key={i} className="flex items-center gap-2 text-gray-700">
                     <svg className="h-3.5 w-3.5 shrink-0 text-accent-600" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.2">
                       <path d="M3 8.5 6.5 12 13 4.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -135,11 +172,11 @@ export function PricingCards() {
               <div className="mt-5 border-t border-gray-100 pt-5">
                 {plan.inheritsFrom && (
                   <p className="mb-2 text-[12px] font-medium text-gray-500">
-                    Everything in {plan.inheritsFrom}, plus:
+                    {fill(copy.everythingIn, { plan: plan.inheritsFrom })}
                   </p>
                 )}
                 <ul className="space-y-1.5 text-[13px] text-gray-700">
-                  {plan.highlights.map((h) => (
+                  {c.highlights.map((h) => (
                     <li key={h} className="flex items-start gap-2">
                       <span aria-hidden="true" className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-accent-500" />
                       {h}

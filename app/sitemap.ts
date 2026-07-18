@@ -4,14 +4,32 @@ import { siteConfig } from "@/lib/config"
 import { routing, bcp47 } from "@/i18n/routing"
 import { alternatesFor } from "@/lib/i18n/siblings"
 
+// Localized MARKETING routes (mounted under app/[locale]/): one entry per
+// locale, each carrying the reciprocal hreflang set — same 1:1 same-path
+// relationship marketingAlternatesFor() encodes for the page metadata. Keep
+// this list in sync with the routes actually under app/[locale]/.
+function marketingEntries(
+  path: string,
+  opts: { changeFrequency: "weekly" | "monthly"; priority: number },
+) {
+  const url = (loc: string) =>
+    `${siteConfig.url}${loc === routing.defaultLocale ? "" : `/${loc}`}${path}`
+  const languages = Object.fromEntries([
+    ...routing.locales.map((l) => [bcp47[l], url(l)]),
+    ["x-default", url(routing.defaultLocale)],
+  ])
+  return routing.locales.map((locale) => ({
+    url: url(locale),
+    lastModified: new Date(),
+    changeFrequency: opts.changeFrequency,
+    priority: opts.priority,
+    alternates: { languages },
+  }))
+}
+
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
-    {
-      url: siteConfig.url,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 1,
-    },
+    ...marketingEntries("", { changeFrequency: "weekly", priority: 1 }),
     // Blog index per locale, cross-referenced via hreflang alternates.
     ...routing.locales.map((locale) => ({
       url: locale === "en" ? `${siteConfig.url}/blog` : `${siteConfig.url}/${locale}/blog`,
@@ -28,18 +46,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
         ]),
       },
     })),
-    {
-      url: `${siteConfig.url}/features`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
-      url: `${siteConfig.url}/pricing`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
+    ...marketingEntries("/features", { changeFrequency: "weekly", priority: 0.9 }),
+    ...marketingEntries("/pricing", { changeFrequency: "weekly", priority: 0.9 }),
     {
       url: `${siteConfig.url}/about`,
       lastModified: new Date(),
