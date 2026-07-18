@@ -17,8 +17,14 @@ import { routing } from "@/i18n/routing"
  * lib/i18n/siblings.ts, which is server-only. See localizeChromeHref() below.
  *
  * KEEP IN SYNC with the routes under app/[locale]/ and the middleware matcher.
+ *
+ * A route belongs here only once it has REAL localized content. /fr/glossary
+ * resolves (200) but has zero FR terms — it renders an English "Definitions are
+ * on the way" placeholder — so /glossary is deliberately NOT listed: sending a
+ * French visitor to an empty page is worse than sending them to the populated
+ * EN glossary. Add it here the moment content/fr/glossary/ is populated.
  */
-const LOCALIZED_ROOTS = new Set(["/", "/features", "/pricing", "/blog", "/glossary"])
+const LOCALIZED_ROOTS = new Set(["/", "/features", "/pricing", "/blog"])
 
 export function localizeNavHref(href: string, locale: string): string {
   // The default locale has no prefix, so EN output stays byte-identical and
