@@ -2,19 +2,19 @@
 title: "Gemini 3.5 Pro: Release Date, Specs & What's Confirmed (2026)"
 description: "Gemini 3.5 Pro is not out yet. A dated look at what Google confirmed, what's only rumored (2M context, Deep Think, pricing), and what it means for AI search."
 date: "2026-06-28"
-updated: "2026-07-17"
+updated: "2026-07-19"
 author: "Samy BEN SADOK"
 tags: ["gemini-3-5-pro", "gemini", "google-gemini", "gemini-ai", "llm", "guide"]
 draft: false
 ---
 
-Gemini 3.5 Pro is the Google model everyone is waiting for and almost no one can use. As of July 17, 2026 it still has not shipped, Google has published no specs for it, and most of what you will read about its context window, pricing, reasoning, and release date is rumor formatted to look official.
+Gemini 3.5 Pro is the Google model everyone is waiting for and almost no one can use. As of July 19, 2026 it still has not shipped, Google has published no specs for it, and most of what you will read about its context window, pricing, reasoning, and release date is rumor formatted to look official.
 
 This is a dated tracker that separates the two. One disambiguation first: Gemini 3.5 Pro is the unreleased Pro tier, separate from Gemini 3.5 Flash, which is live, and Gemini 3.1 Pro, which it succeeds in the lineup.
 
 ## Is Gemini 3.5 Pro Out Yet?
 
-No. As of July 17, 2026, Gemini 3.5 Pro is still not generally available, and most of what you can read about its specs is guesswork. (Last verified July 17, 2026. When the rollout completes, the API model-list status line covered below is the fastest way to check.)
+No. As of July 19, 2026, Gemini 3.5 Pro is still not generally available, and most of what you can read about its specs is guesswork. (Last verified July 19, 2026. When the rollout completes, the API model-list status line covered below is the fastest way to check.)
 
 Google announced the Gemini 3.5 family at [Google I/O on May 19, 2026](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-5/), but only one model in that family actually shipped: Gemini 3.5 Flash. About Pro, Google said one substantive thing, "It's already being used internally, and we look forward to rolling it out next month." No model card, no specs, no pricing, no firm date. The video side of that same keynote, [Gemini Omni](https://geotoolbox.ai/blog/gemini-omni), did ship.
 
@@ -30,7 +30,7 @@ On timing, the story got worse, not better. On July 16, 2026, Alphabet shares [f
 
 <figure className="not-prose my-8">
   <BlogImage src="/blog/gemini-3-5-pro/gemini-3-5-rollout-status.png" alt="Gemini 3.5 rollout status: Flash generally available, Pro in internal preview, GA reported months behind schedule." w="1300" h="649" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
-  <figcaption className="mt-3 text-center text-sm text-gray-500">Where each Gemini 3.5 model stands as of July 17, 2026: Flash shipped, Pro delayed and still internal-only.</figcaption>
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Where each Gemini 3.5 model stands: Flash shipped, Pro delayed and still internal-only.</figcaption>
 </figure>
 
 ## What Google Has Actually Confirmed
@@ -100,7 +100,7 @@ What you can use right now is Flash, and Google has put it across its main AI su
 - The **Gemini app** and **AI Mode in Search**, where 3.5 Flash is already the default
 - **Google AI Studio** and the **Gemini API**, calling `gemini-3.5-flash`
 
-When Pro does arrive, expect the usual path rather than a flip-the-switch global launch. If it follows the pattern of past Gemini previews, it surfaces first in AI Studio and Vertex AI as an allowlisted preview, often United States first, before reaching the consumer app and broad API access. That is why "it's rolling out" and "I can use it" are weeks to months apart, and why teams with data-residency requirements outside the US should plan for a later usable date than the headline announcement implies. In practice that means watching for `gemini-3.5-pro` to appear in the Vertex AI Model Garden and the AI Studio model picker, and not hardcoding the ID until it lists a stable launch stage.
+When Pro does arrive, expect the usual path rather than a flip-the-switch global launch. If it follows the pattern of past Gemini previews, it surfaces first in AI Studio and Vertex AI as an allowlisted preview, often United States first, before reaching the consumer app and broad API access. That is why "it's rolling out" and "I can use it" are weeks to months apart, and why teams with data-residency requirements outside the US should plan for a later usable date than the headline announcement implies. In practice that means watching for `gemini-3.5-pro` to appear in the Model Garden on Vertex AI, now branded the Gemini Enterprise Agent Platform, and the AI Studio model picker, and not hardcoding the ID until it lists a stable launch stage.
 
 <Callout type="note">
 If your workflow depends on a specific model being callable in production, track the launch stage on the API model page, not the blog announcement. "Generally available" on the model list is the line that matters. A model that is "announced" or even "in preview" can still be pulled, throttled, or region-locked.
@@ -115,6 +115,18 @@ That surface is not niche. At I/O, [Sundar Pichai said AI Overviews has over 2.5
 So the question is not "should I migrate to Gemini 3.5 Pro." It is "when Google's AI summarizes my topic, does it pull from my page." That is a retrieval problem, and it rewards specific habits: state facts in clean, liftable sentences, put the real answer near the top of each section, use question-shaped headings, and keep an FAQ that answers the obvious follow-ups directly.
 
 In our experience scanning sites for AI visibility, which is what geotoolbox does, the pages that get cited are rarely the longest ones. They tend to be the ones that state a fact plainly enough that a model can lift a single sentence without rewriting it. That is the same discipline whether the engine is Flash today or Pro next quarter, and it is the core of [getting cited in AI Overviews](https://geotoolbox.ai/blog/google-ai-overviews-seo) and the wider practice of [Gemini SEO](https://geotoolbox.ai/blog/gemini-seo).
+
+## What People Are Hitting on 3.5 Flash While They Wait
+
+Since Pro does not exist yet, most people reaching for a current-generation Gemini land on 3.5 Flash. It is worth knowing what they have run into, both because it is your practical alternative and because one theme lines up suspiciously well with the reported reason Pro slipped.
+
+**Thinking tokens are the cost story.** They bill at the output rate, and developers report 3.5 Flash spending far more of them than a task warrants. The most carefully instrumented report logged a call with thinking level explicitly set to low that burned 63,853 thought tokens on a trivial prompt and returned zero output, fully billed. That is one very well-evidenced data point rather than a measured average, but the broader complaint recurs across several forum threads.
+
+**Flash is no longer the cheap tier.** At $1.50 in and $9.00 out per million tokens, 3.5 Flash costs exactly three times the Gemini 3 Flash Preview it succeeds ($0.50 / $3.00). If you want cheap, 3.1 Flash-Lite at $0.25 / $1.50 is the tier that now plays that role. One correction on a claim circulating in those threads: 3.5 Flash does not cost more than 3.1 Pro on list price, since 3.1 Pro Preview is $2.00 / $12.00. The argument people are actually making is about effective cost per completed task once thinking verbosity is counted, which is a different and harder-to-verify claim.
+
+**Tool calling regressed.** Three independently filed breakages share the same shape, working on the older model and failing on 3.5 Flash: Google Search grounding combined with custom function declarations fails outright, with the model insisting it has no Search access; streaming with automatic function calling can end with empty content after the tool runs; and a contract change now requires clients to echo back a `thought_signature` from the tool call, returning a hard 400 to hand-rolled agent loops that do not. Google staff acknowledged the first with "looking into this" and no timeline.
+
+That last cluster is the interesting one. Reporting on Pro's delay says Google found structural failures in recursive tool calling and ordered a rebuild. Whatever is happening in Flash's tool handling appears to rhyme with it, which is at least a hint that the delay is about something real rather than schedule slippage.
 
 ## Should You Wait for Gemini 3.5 Pro?
 
@@ -135,7 +147,7 @@ That is what geotoolbox checks. You can [run an AI readiness scan](https://geoto
 ## Frequently Asked Questions
 
 ### Is Gemini 3.5 Pro released yet?
-No. As of July 17, 2026, Gemini 3.5 Pro is still not generally available. Google announced the Gemini 3.5 family at I/O on May 19, 2026, but only Gemini 3.5 Flash shipped. On July 16, 2026, Bloomberg reported the rollout is months behind schedule and Alphabet shares fell about 4% that day; Google says only that it is currently testing Pro and has given no new date.
+No. As of July 19, 2026, Gemini 3.5 Pro is still not generally available. Google announced the Gemini 3.5 family at I/O on May 19, 2026, but only Gemini 3.5 Flash shipped. On July 16, 2026, Bloomberg reported the rollout is months behind schedule and Alphabet shares fell about 4% that day; Google says only that it is currently testing Pro and has given no new date.
 
 ### When will Gemini 3.5 Pro come out?
 Google originally pointed to June 2026, then reporting pointed to a July 17, 2026 target. That date has now passed with no release. On July 16, 2026, Bloomberg reported Pro is months behind schedule, tied to coding performance that fell short of Google's internal bar, with no new date given. Earlier reporting also said Google rebuilt Pro from a new base model rather than the earlier 2.5 Pro one. Expect a limited preview first, not an immediate global launch.

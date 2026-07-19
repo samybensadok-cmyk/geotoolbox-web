@@ -2,7 +2,7 @@
 title: "Grok 4.5: Specs, Benchmarks, Pricing & the Honest Verdict (2026)"
 description: "Grok 4.5 is xAI's cheaper, faster 'Opus-class' coding model, out July 8, 2026. An honest look at specs, real benchmarks, true cost, EU access, and AI search."
 date: "2026-07-11"
-updated: "2026-07-11"
+updated: "2026-07-19"
 author: "Samy BEN SADOK"
 tags: ["grok-4.5", "grok", "xai", "spacexai", "cursor", "llm", "ai-model", "guide"]
 draft: false
@@ -61,14 +61,16 @@ The coding numbers also deserve extra scrutiny for a specific reason: the model 
 
 ## Grok 4.5 Pricing: The $2/$6 Headline and the Real Cost
 
-Price is where Grok 4.5 makes its actual case. It costs $2 per million input tokens and $6 per million output tokens, with cached input at $0.50 per million and a 500,000-token context window, per [xAI's model docs](https://docs.x.ai/developers/models/grok-4.5). Against the current frontier, that is more than 60% cheaper than Opus 4.8 and GPT-5.5. One quiet trade-off worth noting: that 500,000-token window is smaller than the multi-million-token windows some earlier Grok variants advertised, so if you were feeding the model very large codebases or documents, 4.5 is a step down on context.
+Price is where Grok 4.5 makes its actual case, with one catch that the headline rate hides. It costs $2 per million input tokens and $6 per million output tokens, with cached input at $0.30 per million and a 500,000-token context window, per [xAI's model docs](https://docs.x.ai/developers/models/grok-4.5). Against the current frontier, that is more than 60% cheaper than Opus 4.8 and GPT-5.5 on prompts under 200,000 tokens.
+
+The catch is a price cliff at 200,000 tokens. xAI publishes a tiered table, not a flat rate: past that point input goes to $4, cached input to $0.60, and output to $12. And it is a cliff rather than a marginal tier, because in xAI's own words, "requests whose prompt reaches 200k tokens are billed at the higher rate for all tokens in the request." A 201,000-token request costs roughly double a 199,000-token one. On a model sold on its 500,000-token window, the advertised $2/$6 only holds across the bottom 40% of that window, which is worth knowing before you design a long-context workload around it. One quiet trade-off worth noting: that 500,000-token window is smaller than the multi-million-token windows some earlier Grok variants advertised, so if you were feeding the model very large codebases or documents, 4.5 is a step down on context.
 
 <table>
 <thead>
 <tr><th>Model</th><th>Input / 1M</th><th>Output / 1M</th><th>Context</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>Grok 4.5</strong></td><td><strong>$2</strong></td><td><strong>$6</strong></td><td>500K</td></tr>
+<tr><td><strong>Grok 4.5</strong></td><td><strong>$2</strong> (<strong>$4</strong> ≥200K)</td><td><strong>$6</strong> ($12 ≥200K)</td><td>500K</td></tr>
 <tr><td>Claude Opus 4.8</td><td>$5</td><td>$25</td><td>1M</td></tr>
 <tr><td>GPT-5.5</td><td>$5</td><td>$30</td><td>Unconfirmed</td></tr>
 <tr><td>GPT-5.6 Luna (cheap tier)</td><td>$1</td><td>$6</td><td>Unconfirmed</td></tr>
@@ -83,7 +85,7 @@ For most buyers the comparison that matters is against the model they already pa
 
 If the benchmarks are mixed and the price is a win, efficiency is the knockout. Grok 4.5 is served at roughly 80 tokens per second, quick for a model in this capability tier, and xAI claims about twice the token efficiency of comparable leading models overall, solving tasks in under half the steps.
 
-The efficiency number is the one worth internalizing. On SWE-Bench Pro, Grok 4.5 resolved tasks using about 15,954 output tokens on average, against roughly 67,020 for Opus 4.8, a gap of about 4.2x fewer output tokens per task ([xAI's own figure](https://x.ai/news/grok-4-5)). Output tokens are the expensive half of the bill, so that efficiency stacks on top of the lower per-token rate. The combined effect is an effective cost per coding task that is close to an order of magnitude lower than Opus 4.8 on that benchmark, even though Grok 4.5 is a step behind the top tier on raw capability. That is the whole pitch: not the smartest model, but by some distance the cheapest way to get frontier-adjacent work done, especially across a long [context window](https://geotoolbox.ai/glossary/context-window) where token counts pile up.
+The efficiency number is the one worth internalizing. On SWE-Bench Pro, Grok 4.5 resolved tasks using about 15,954 output tokens on average, against roughly 67,020 for Opus 4.8, a gap of about 4.2x fewer output tokens per task ([xAI's own figure](https://x.ai/news/grok-4-5)). Output tokens are the expensive half of the bill, so that efficiency stacks on top of the lower per-token rate. The combined effect is an effective cost per coding task that is close to an order of magnitude lower than Opus 4.8 on that benchmark, at least on prompts that stay under the 200,000-token pricing threshold, even though Grok 4.5 is a step behind the top tier on raw capability. That is the whole pitch: not the smartest model, but by some distance the cheapest way to get frontier-adjacent work done, especially across a long [context window](https://geotoolbox.ai/glossary/context-window) where token counts pile up.
 
 ## How to Access Grok 4.5
 
@@ -95,11 +97,23 @@ Access is genuinely fragmented, which trips up a lot of people. The model ID is 
 - SuperGrok and X Premium, for chat-style consumer use
 - Gateways like OpenRouter, Vercel, and Cloudflare, if you already route models through one
 
-xAI is offering free Grok 4.5 usage for a limited time in Grok Build and Cursor, which is the cheapest way to try it before committing. The exception, again, is the EU: at launch the model was blocked across every member state with no firm date, and a VPN was the only workaround people reported. If you run an EU team, note that mid-July has arrived with no release, so plan around the delay rather than counting on a date.
+The free promotional windows that ran in Grok Build and Cursor through mid-July have now closed, so trying it means paying for it. The exception, again, is the EU: at launch the model was blocked across every member state with no firm date, and a VPN was the only workaround people reported. If you run an EU team, note that mid-July has arrived with no release, so plan around the delay rather than counting on a date.
 
 <Callout type="warning">
 If you handle client or regulated data, check the plan terms before you connect anything. On xAI's free and consumer tiers, conversations may be used to improve the models. Only the Business and Enterprise plans guarantee your data is excluded from training.
 </Callout>
+
+## The Grok Build Repo-Upload Problem
+
+If you are evaluating xAI's coding CLI rather than just the model, this belongs in the decision. In mid-July 2026 a researcher publishing as cereblab captured traffic from Grok Build 0.2.93 and showed it packaging the developer's **entire tracked repository, full Git history included**, to an xAI-controlled cloud storage bucket, rather than only the files relevant to the task.
+
+The specifics are what make it serious. On a 12 GB repo, traffic to the model endpoint was around 192 KB while 5.10 GiB went to storage. A canary file the model was explicitly instructed never to open was recovered verbatim from the uploaded bundle, which establishes that the upload was independent of anything the model actually read. A tracked `.env` file's credentials were stored unredacted. And the user-facing privacy toggle did not stop it: with "improve the model" switched off, uploads continued and the server kept reporting trace upload as enabled.
+
+xAI shipped a server-side fix on July 13, 2026, and the uploads stopped in repeat testing. The company also addressed it publicly: Elon Musk confirmed the uploads had happened and said prior user data would be deleted, and xAI documented a zero-data-retention policy and added a privacy endpoint. So this is a disclosed and remediated issue rather than an open one.
+
+Two caveats are worth keeping in view. The upload code reportedly remains in the binary, gated by a server-side flag that could be flipped back without a client update. And the response came through social posts rather than a formal security advisory, so no independent audit has confirmed the deletion and the number of affected accounts was never disclosed. Confirmed and addressed, in other words, but not independently verified.
+
+None of this touches the Grok 4.5 model itself or the API. It is specifically the Build CLI, and specifically a reason to check what a coding agent uploads before pointing it at a repository with anything sensitive in it.
 
 ## What Grok 4.5 Means for AI Search and Your Brand
 
@@ -125,7 +139,7 @@ Whichever model you route to, the marketing question is the same: does it mentio
 Not at launch, and not yet. Grok 4.5 shipped on July 8, 2026 with every EU market excluded, and xAI listed availability as "expected in mid-July" without a firm date; as of this update, that window has arrived and it still has not launched in the EU. Until it lands, a VPN is the only workaround people have reported, and it is not an officially supported one.
 
 ### How much does Grok 4.5 actually cost?
-The API rate is $2 per million input tokens and $6 per million output tokens, with cached input at $0.50. That is the headline, not the whole bill: built-in tools like web and code search carry separate per-call fees, so a tool-heavy run costs more than the token math. For chat use, access comes through SuperGrok or X Premium instead.
+The API rate is $2 per million input tokens and $6 per million output tokens, with cached input at $0.30. That is the headline, not the whole bill. Prompts that reach 200,000 tokens are billed at double those rates across the entire request. Built-in tools like web search, X search, and code execution each cost $5 per 1,000 invocations on top of tokens, and the agent decides how many calls to make, so a tool-heavy run can spend more on tools than on tokens. Reasoning tokens also bill at the $6 output rate even though you never see them. For chat use, access comes through SuperGrok or X Premium instead.
 
 ### Is Grok 4.5 really "Opus-class"?
 That is Elon Musk's phrasing, and it overstates the case. Independent testing on the Artificial Analysis Intelligence Index scores it 54, behind frontier leaders like Fable 5, Opus 4.8, and GPT-5.5. Musk's own precise comparison was "roughly comparable to Opus 4.7," the previous generation, not the current Opus 4.8.
@@ -140,7 +154,7 @@ By Artificial Analysis's reliability measures, its hallucination tendency looks 
 For coding and agentic work, yes. Grok 4.5 is the successor xAI tuned specifically for those jobs, and it supersedes Grok 4.3 as the interim flagship while Grok 5 trains. The trade-offs: it lists at a higher per-token rate than 4.3, its context window is smaller than some earlier Grok variants, and its hallucination tendency runs higher, so if you rely on very long-context runs or need maximum factual reliability, test before you switch.
 
 ### How do I access Grok 4.5 for free?
-xAI is offering free Grok 4.5 usage for a limited time inside Grok Build and Cursor, which is the no-commitment way to test it. Beyond that trial, access is paid through the API, SuperGrok, or X Premium.
+You largely cannot anymore. The promotional free windows in Grok Build and Cursor closed in mid-July 2026, so access is now paid through the API, SuperGrok, or X Premium. If you do try it through Grok Build, read the repository-upload section above first.
 
 ## Sources
 
@@ -150,3 +164,5 @@ xAI is offering free Grok 4.5 usage for a limited time inside Grok Build and Cur
 - Introducing Grok 4.5 - Cursor - `cursor.com/blog/grok-4-5`
 - SpaceXAI Releases Grok 4.5 - MarkTechPost - `marktechpost.com/2026/07/08/spacexai-releases-grok-4-5`
 - Grok 4.5 on OpenRouter - `openrouter.ai/x-ai/grok-4.5`
+- xAI pricing and server-side tool fees - xAI - `docs.x.ai/developers/pricing`
+- Grok Build uploads entire Git repositories - The Hacker News - `thehackernews.com/2026/07/grok-build-uploads-entire-git.html`

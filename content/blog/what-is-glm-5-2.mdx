@@ -2,7 +2,8 @@
 title: "What Is GLM 5.2? China's Open-Weight AI, and Your Visibility"
 description: "What is GLM 5.2? Zhipu's open-weight AI explained: the specs, honest benchmarks, the China question, pricing, and what it means for your AI visibility."
 date: "2026-06-22"
-updated: "2026-07-14"
+recheckBy: "2026-09-30"  # GLM Coding Plan promotional 1x off-peak rate ends end of Sept 2026
+updated: "2026-07-19"
 author: "Samy BEN SADOK"
 tags: ["what-is-glm-5-2", "glm-5-2", "glm", "zhipu-ai", "z-ai", "open-weights", "chinese-ai", "llm", "guide"]
 draft: false
@@ -45,7 +46,7 @@ One correction worth making, because a few early write-ups got it wrong: GLM 5.2
 
 <table>
 <thead>
-<tr><th>Spec (as of June 2026)</th><th>GLM 5.2</th><th>GLM 5.1</th></tr>
+<tr><th>Spec (as of July 2026)</th><th>GLM 5.2</th><th>GLM 5.1</th></tr>
 </thead>
 <tbody>
 <tr><td><strong>Released</strong></td><td>June 13, 2026</td><td>April 7, 2026</td></tr>
@@ -75,7 +76,7 @@ When the numbers landed, they told a consistent story. On its headline coding be
 
 <table>
 <thead>
-<tr><th>Benchmark (as of June 2026)</th><th>GLM 5.2</th><th>Claude Opus 4.8</th><th>GPT-5.5</th><th>Gemini 3.1 Pro</th></tr>
+<tr><th>Benchmark (as of July 2026)</th><th>GLM 5.2</th><th>Claude Opus 4.8</th><th>GPT-5.5</th><th>Gemini 3.1 Pro</th></tr>
 </thead>
 <tbody>
 <tr><td><strong>SWE-bench Pro</strong> (coding)</td><td>62.1</td><td>69.2</td><td>58.6</td><td>54.2</td></tr>
@@ -103,7 +104,7 @@ The one asterisk is the token appetite from the benchmark section. Because GLM 5
 
 <table>
 <thead>
-<tr><th>How you use it</th><th>Cost (as of June 2026)</th><th>What you get</th></tr>
+<tr><th>How you use it</th><th>Cost (as of July 2026)</th><th>What you get</th></tr>
 </thead>
 <tbody>
 <tr><td><strong>Z.ai chatbot</strong></td><td>Free</td><td>Web chat, no setup, quickest way to try it</td></tr>
@@ -118,6 +119,20 @@ The open weights live on [Hugging Face](https://huggingface.co/zai-org/GLM-5.2) 
 
 That 1.5 TB is also starting to feel less absolute. In July 2026 an open-source engine called [Colibri](https://www.tomshardware.com/tech-industry/artificial-intelligence/colibri-proof-of-concept-gains-frontier-level-1-5-tb-ai-model-novel-approach-runs-on-only-25gb-of-ram-and-shows-promise-for-local-ai-setups) showed GLM 5.2 running on a consumer machine with about 25 GB of RAM, by keeping the model's dense layers in memory and streaming its thousands of routed experts from disk on demand. It is a proof-of-concept, not a usable tool, glacially slow at around a token per second at best, but it points at the direction of travel: the hardware bar for a frontier open-weight model is dropping, which only widens the long tail of tools and services that can quietly run one, and that widening is the part that matters for your brand.
 
+## What Actually Bites When You Deploy It
+
+A month of real use has surfaced friction that the launch benchmarks do not capture. None of it is fatal, but all of it costs somebody a day.
+
+**The 1M-context speed story does not survive llama.cpp.** GLM 5.2's long-context efficiency comes from sparse attention with a shared indexer layer. Stock llama.cpp originally refused to load the converted weights at all because it expected an indexer tensor on every layer; the fix made those tensors optional, with the commit itself noting the indexer is not yet supported. So llama.cpp loads the model and produces coherent output, but falls back to full attention. You get the model without the mechanism that makes its context window affordable, and long-context prefill costs far more than the spec sheet implies. The feature request has been open since four days after launch.
+
+**Tool calling breaks across serving stacks.** On vLLM, setting `tool_choice: required` makes the tool call come back as raw text in `content` instead of `tool_calls`; `auto` works. In Cursor, GLM 5.2 tool calls have been printing as raw XML and terminating the conversation, which Cursor staff confirmed as a GLM-5.2 parsing problem and warned may take some time to fix. This is a repeat of an identical GLM-5.1 issue that Z.ai patched with a chat-template update, so anyone reusing a 5.1-era template or parser config inherits the old failure. The workaround people report is `--chat-template-content-format=string`.
+
+**The shipped chat template defaults reasoning effort to max.** The template resolves anything that is not explicitly `high` to `max`, which means an unset or misspelled value silently picks the most expensive setting, the opposite of the OpenAI and Anthropic convention. That matters because High reportedly delivers roughly 95% of Max's quality at about half the output tokens. The default costs you roughly double for a few percent.
+
+That last point connects to a wider complaint: GLM 5.2 is token-hungry. Users report burning through subscription quota far faster than expected, in one case at around five times the rate of a comparable Claude plan. Treat the direction as well-attested and the magnitude as anecdotal, since other users push back and attribute it to workflow rather than the model.
+
+**The Coding Plan has multipliers the price tag does not mention.** Quota burns at 3x during peak hours (14:00 to 18:00 UTC+8) and 2x off-peak, with a promotion dropping off-peak to 1x through the end of September 2026, so the cheap era has a published expiry. Quotas are weekly on a rolling cycle from your purchase date, not calendar-monthly, and the MCP tool quota is a separate and much smaller allowance that people routinely confuse with the prompt quota. Subscriptions are non-refundable once purchased. And the error you will most likely hit, `1113 Insufficient Balance`, is a catch-all thrown for calling a non-whitelisted model or the wrong endpoint, not necessarily an actual balance problem.
+
 ## GLM 5.2 vs Claude, GPT-5.5, DeepSeek and Kimi
 
 So which should you actually use? For most teams the answer is not one model but a split: a frontier model like [Claude or GPT](https://geotoolbox.ai/blog/claude-vs-chatgpt) for the hardest tenth of the work, and GLM 5.2 for the cheap, high-volume rest. It earns that role honestly, topping the open-weight field and beating GPT-5.5 on coding benchmarks like SWE-bench Pro, while the closed leaders keep their edge on the hardest reasoning.
@@ -131,7 +146,7 @@ So which should you actually use? For most teams the answer is not one model but
 <tr><td><strong>Claude Opus 4.8</strong> (Anthropic)</td><td>Product fronting a closed model</td><td>Hardest reasoning, long documents, writing</td><td>No</td><td>Premium</td></tr>
 <tr><td><strong>GPT-5.5</strong> (OpenAI)</td><td>Product fronting a closed model</td><td>Broad general use, reasoning, ecosystem</td><td>No</td><td>Premium</td></tr>
 <tr><td><strong>DeepSeek V4</strong> (High-Flyer)</td><td>Open-weight model + app</td><td>Reasoning, math, very low cost</td><td>Yes (MIT)</td><td>Very low; self-host free</td></tr>
-<tr><td><strong>Kimi</strong> (Moonshot)</td><td>Open-weight model + app</td><td>Agentic work, long context</td><td>Yes (modified)</td><td>Low; self-host free</td></tr>
+<tr><td><strong>Kimi</strong> (Moonshot)</td><td>Open-weight model + app</td><td>Agentic work, long context</td><td>Yes (modified)</td><td>Low on the K2 line; K3 is priced at the frontier</td></tr>
 </tbody>
 </table>
 
@@ -165,7 +180,7 @@ It depends on how you use it. The hosted Z.ai API routes your prompts to servers
 
 ### Is GLM 5.2 free, and how much does it cost?
 
-The Z.ai chatbot is free to use. The GLM Coding Plan starts at about $10 a month for Lite and runs to about $80 for Max, and the standalone API is roughly $1 per million input tokens and $4 per million output as of June 2026, though that varies by provider. The open weights are free to download and run under the MIT License if you have the hardware, since the full model is over 1.5 TB.
+The Z.ai chatbot is free to use. The GLM Coding Plan starts at about $10 a month for Lite and runs to about $80 for Max, and the standalone API lists at $1.40 per million input tokens and $4.40 per million output on Z.ai as of July 2026, though third-party providers often run cheaper. Note that Coding Plan quota burns at 2x off-peak and 3x during peak hours, with a promotional 1x off-peak rate running through the end of September 2026. The open weights are free to download and run under the MIT License if you have the hardware, since the full model is over 1.5 TB.
 
 ### Is GLM 5.2 better than ChatGPT or Claude?
 

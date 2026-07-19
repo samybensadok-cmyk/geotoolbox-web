@@ -2,7 +2,8 @@
 title: "What Is Kimi K3? Moonshot AI's 2.8T Open Model, Explained"
 description: "What is Kimi K3? Moonshot AI's open-weight model explained: real specs, which benchmarks to trust, pricing, whether you can run it, and K2 vs DeepSeek."
 date: "2026-07-17"
-updated: "2026-07-18"
+recheckBy: "2026-07-27"  # K3 weights publish 2026-07-27: 'weights not out until July 27' + the can-you-run-it section
+updated: "2026-07-19"
 author: "Samy BEN SADOK"
 tags: ["kimi-k3", "kimi-ai", "moonshot-ai", "open-weights", "mixture-of-experts", "chinese-ai", "llm", "guide"]
 draft: false
@@ -85,6 +86,24 @@ Against Moonshot's own history, the jump is stark. That output rate is nearly fo
 
 Whether $15 hurts depends entirely on your workload. Because K3 reasons on every request and can be verbose, a single task often drags a long thinking trace, retried tool calls, and a growing history through the output meter, so heavy output bills are routine rather than rare. On Artificial Analysis's cost-per-task measure K3 runs about $0.94, roughly half the cost of Opus 4.8 at maximum reasoning and close to GPT-5.6 Sol, which is reasonable for frontier-grade work. But if your goal was to save money by going open, note that DeepSeek V4 Pro completes a comparable task for a small fraction of that. Our [DeepSeek pricing breakdown](https://geotoolbox.ai/blog/deepseek-pricing) and [Claude pricing guide](https://geotoolbox.ai/blog/claude-pricing) give the fuller comparison.
 
+### The 1M Context Is Smaller Than It Looks, Twice Over
+
+The headline context window and the one you can actually reach differ for two separate reasons, and neither is on the spec sheet.
+
+The first is a payload ceiling. Moonshot's own issue tracker carries a reproducible `400 total message size 2100954 exceeds limit 2097152` error: a hard 2 MiB cap on total conversation size. In the reporting user's session that worked out to roughly 770,000 tokens, well short of the advertised 1,048,576. So on text-heavy conversations the byte cap bites before the token limit does.
+
+The second is a paywall. On the Kimi coding plans, 1M context is a tier feature rather than a model property. K3 is not supported at all on the entry Andante tier, is capped at 256K on Moderato, and only reaches the full 1M on Allegretto and above. If you are subscribing specifically for the million-token window, check which tier actually grants it before you buy, because the cheapest plan does not give you K3 at all.
+
+### The Subscription Burn Rate Is the Part That Surprised People
+
+Per-token pricing is only half the story, and it is not the half that bit early users hardest. The consistent first-week complaint across Kimi's coding plans is that a single task can consume a startling share of a usage window. One user on the $19 plan ran a task he benchmarks every model against and watched it eat almost his entire five-hour allowance, where the same task on a $20 OpenAI plan finished in minutes and barely registered. Another on the same entry tier hit a loop retrying a Docker step and burned through a five-hour window, which was 20% of his weekly quota, on that one failure. A third, on the $99 Kimi Coding plan, reported quota draining at a pace similar to a $200 Anthropic subscription, and notably he liked the model, rating it above Opus 4.8 on quality.
+
+The mechanism is measurable. Artificial Analysis needed 130 million tokens to run K3 through its Intelligence Index against a 63 million average across the field, roughly double. In Simon Willison's test, a single SVG generation returned 16,658 output tokens of which 13,241 were reasoning, costing 25 cents for one image. Several users independently describe the same trace pattern behind it: paragraphs of "wait, actually" as the model backtracks and second-guesses itself on small details.
+
+This is where the locked `reasoning_effort` setting stops being a footnote. Because "max" is the only accepted value at launch, there is no cheap mode to fall back to. Every request, however trivial, pays full reasoning tokens at the $15 output rate. It also makes K3 slow enough to break evaluation harnesses: one public comparison had to raise a five-minute per-task timeout to thirty, and one task still took around nine minutes. Moonshot and OpenRouter both say more levels are coming, and until they land, budget for the ceiling on every call.
+
+One more thing worth naming: almost nobody can measure their own burn. The plans report usage as an opaque percentage rather than tokens, which is why some users route their coding subscriptions through a gateway purely to get visibility into what they are actually spending.
+
 ## Can You Actually Run Kimi K3?
 
 "Open weights" sounds like you can download K3 and run it yourself. For almost everyone, you cannot. First, the weights were not even out at launch: Moonshot scheduled the public release for July 27, so launch week was API-only.
@@ -95,7 +114,7 @@ So who actually self-hosts K3? Organizations with real GPU infrastructure and a 
 
 ## Kimi K3 vs Kimi K2 vs DeepSeek: Which Should You Use?
 
-The short answer: reach for Kimi K3 only when the job specifically needs what it does best, and keep something cheaper or more reliable for everything else. K3 earns its 3-to-4x premium when you need the full one-million-token context, native vision, or frontier-grade coding and agent performance, and when you can tolerate its speed, which runs a modest 28 to 62 tokens per second with a lot of thinking in between.
+The short answer: reach for Kimi K3 only when the job specifically needs what it does best, and keep something cheaper or more reliable for everything else. K3 earns its 3-to-4x premium when you need the long context (bearing in mind the 2 MiB payload cap and the plan tiering above), native vision, or frontier-grade coding and agent performance, and when you can tolerate its speed, which runs a modest 28 to 62 tokens per second with a lot of thinking in between.
 
 For most day-to-day work the math favors its own siblings. Kimi K2.6 and K2.7 Code are far cheaper, fully open, and already strong on coding, so unless a task hits K3's specific strengths, the older models do it for a fraction of the cost. If you are optimizing purely for price per token, [DeepSeek](https://geotoolbox.ai/blog/what-is-deepseek) V4 is cheaper still. And where the cost of a wrong answer is high, Claude Fable 5 and Opus keep the edge on careful reasoning and verified coding. A fuller side-by-side of the open Chinese models lives in our [Chinese AI models comparison](https://geotoolbox.ai/blog/chinese-ai-models-compared).
 

@@ -2,6 +2,7 @@
 title: "Claude Code Context Window: What It Is and Why It Controls Costs"
 description: "What the Claude Code context window is, how big it gets (200K vs 1M), what fills it, and how to read the /context meter before it degrades your output."
 date: "2026-07-04"
+updated: "2026-07-19"
 author: "Samy BEN SADOK"
 tags: ["claude-code", "context-window", "agentic-ai", "claude", "anthropic"]
 draft: false
@@ -19,53 +20,68 @@ The mental model that trips people up is treating the window like human memory, 
 
 ## How Big Is the Context Window? 200K vs 1M
 
-The standard Claude Code context window is **200,000 tokens**. Several current models raise that ceiling to **1 million tokens** on paid plans. Which one you get depends entirely on the model you are running.
+**1 million tokens is now the normal case, not the exception.** Every current model except Haiku 4.5 is 1M-capable, and Sonnet 5 runs at 1M unconditionally. The 200,000-token window is still the documented default, but in practice it is the floor you land on in specific situations rather than the standard you start from.
 
 <table>
 <thead>
 <tr><th>Model</th><th>Context window in Claude Code</th><th>Notes</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>Claude Sonnet 5</strong></td><td>1M tokens</td><td>Available on Pro, Max, Team, Enterprise</td></tr>
+<tr><td><strong>Claude Sonnet 5</strong> (current Sonnet)</td><td>1M tokens</td><td>Always 1M on the Anthropic API. No 200K variant, no <code>[1m]</code> suffix, no usage credits on any paid plan</td></tr>
+<tr><td><strong>Claude Opus 4.8</strong> (current Opus)</td><td>1M tokens</td><td>Automatic on Max, Team, and Enterprise. Pro must enable usage credits</td></tr>
 <tr><td><strong>Fable 5</strong></td><td>1M tokens</td><td>Available on paid plans</td></tr>
-<tr><td><strong>Opus 4.8 / 4.7 / 4.6</strong></td><td>1M tokens</td><td>Pro users must enable usage credits for the 1M window on Opus models</td></tr>
-<tr><td><strong>Sonnet 4.6</strong></td><td>1M tokens</td><td>Needs usage credits enabled on all paid plans; automatic only on usage-based Enterprise</td></tr>
-<tr><td><strong>Other models</strong></td><td>200K tokens</td><td>The standard window on paid plans</td></tr>
+<tr><td><strong>Haiku 4.5</strong></td><td>200K tokens</td><td>The one current model that does not reach 1M</td></tr>
+<tr><td><strong>Previous-generation</strong> (Opus 4.7 / 4.6, Sonnet 4.6)</td><td>1M tokens</td><td>Opus 4.7 follows the Opus rules above. Sonnet 4.6 is not part of the automatic upgrade and requires usage credits on every subscription plan, including Max</td></tr>
 </tbody>
 </table>
 
-The 1M window is available on Pro, Max, Team, and Enterprise, not the free tier, per Anthropic's [context window documentation](https://support.claude.com/en/articles/8606394-how-large-is-the-context-window-on-paid-claude-plans). One caveat worth knowing on Pro: reaching the 1M window on Opus models requires enabling usage credits first. If you run [Sonnet 5](https://geotoolbox.ai/blog/claude-sonnet-5), you get the million-token window without that step.
+The 1M window is available on Pro, Max, Team, and Enterprise, not the free tier, per Anthropic's [context window documentation](https://support.claude.com/en/articles/8606394-how-large-is-the-context-window-on-paid-claude-plans). The plan split, from Anthropic's [model configuration docs](https://code.claude.com/docs/en/model-config): on Max, Team, and Enterprise, Opus is automatically upgraded to 1M with no configuration at all, including on both Team Standard and Team Premium seats. On Pro, Opus needs usage credits enabled first. If you run [Sonnet 5](https://geotoolbox.ai/blog/claude-sonnet-5), none of that applies, you simply get the million-token window.
+
+Two details that matter for cost. First, **the 1M window uses standard model pricing with no premium for tokens beyond 200K.** Where extended context is included with your subscription, it stays covered by your subscription; where it comes through usage credits, those tokens bill to credits. A bigger window costs more because you are sending more tokens, not because the tokens themselves are priced higher. Second, you can select it explicitly with the `[1m]` suffix:
+
+```
+/model opus[1m]
+/model claude-opus-4-8[1m]
+```
+
+If your account supports the 1M window, it also appears in the `/model` picker; restart the session if you do not see it. `sonnet[1m]` has no effect when `sonnet` already resolves to Sonnet 5, since that model is 1M natively.
+
+You land back on 200K in three cases: running Haiku 4.5, running behind an LLM gateway (where Claude Code cannot verify 1M support), or setting `CLAUDE_CODE_DISABLE_1M_CONTEXT=1`.
 
 Two things about that headline number. First, these are the Claude Code sizes; the Claude.ai chat app is different. The [same documentation](https://support.claude.com/en/articles/8606394-how-large-is-the-context-window-on-paid-claude-plans) gives Sonnet 5 a 1M window in chat but the other current models 500K there, so do not carry a chat figure over to your terminal. Second, the number you can actually use is always smaller than the ceiling. By the time a real session is running, a chunk of the window is already spoken for by things you never typed, which is the next section.
 
 ## What Fills the Window Before You Type a Word
 
-Open a fresh Claude Code session and the window is already partly full. A stack of components loads automatically, before your first message. The token figures below are typical observed ranges, not fixed constants, since they vary with your setup.
+Open a fresh Claude Code session and the window is already partly full. A stack of components loads automatically, before your first message. The figures below are the representative values Anthropic publishes in its own [context window simulator](https://code.claude.com/docs/en/context-window); your setup will vary, particularly on `CLAUDE.md` size and skill count.
 
 <table>
 <thead>
-<tr><th>What loads automatically</th><th>Approximate tokens</th></tr>
+<tr><th>What loads automatically</th><th>Representative tokens</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>System prompt</strong> (Claude Code's own instructions)</td><td>~3,000 to 6,000</td></tr>
-<tr><td><strong>System tools</strong> (read, edit, bash, search, and the rest)</td><td>~10,000 to 20,000</td></tr>
-<tr><td><strong>MCP tool names</strong> (schemas deferred until used)</td><td>~300 to 500</td></tr>
-<tr><td><strong>Project <code>CLAUDE.md</code></strong></td><td>~1,500 to 4,000</td></tr>
-<tr><td><strong>Auto-memory</strong> (notes from past sessions)</td><td>up to ~25KB, roughly 6,000 tokens</td></tr>
-<tr><td><strong>Skill descriptions</strong></td><td>~50 to 200 per skill</td></tr>
-<tr><td><strong>Git status snapshot</strong></td><td>~300</td></tr>
+<tr><td><strong>System prompt</strong> (Claude Code's own instructions and tool definitions)</td><td>4,200</td></tr>
+<tr><td><strong>Project <code>CLAUDE.md</code></strong></td><td>1,800</td></tr>
+<tr><td><strong>Auto-memory</strong> (<code>MEMORY.md</code> from past sessions)</td><td>680</td></tr>
+<tr><td><strong>Skill descriptions</strong></td><td>450</td></tr>
+<tr><td><strong>Personal <code>~/.claude/CLAUDE.md</code></strong></td><td>320</td></tr>
+<tr><td><strong>Environment info</strong></td><td>280</td></tr>
+<tr><td><strong>MCP tool names</strong> (schemas deferred until used)</td><td>120</td></tr>
 </tbody>
 </table>
+
+Two notes on that table. Anthropic folds tool definitions into the system prompt rather than counting them separately, so a single 4,200-token figure covers both. And auto-memory is capped at **the first 200 lines or 25KB of `MEMORY.md`, whichever comes first**, which in practice lands well under a thousand tokens rather than the several thousand the cap might suggest. Git branch, status, and recent commits load as a separate block at the very end of the system prompt.
 
 None of that is waste, but it is fixed overhead on every turn, and two sources balloon fast if you are not watching.
 
 ### MCP Servers, the Big One
 
-The first is MCP servers. Each connected server advertises its tools, and a single tool definition, name plus description plus parameter schema, can run several hundred tokens. Developer Damian Galarza [measured one MCP tool at roughly 663 tokens](https://www.damiangalarza.com/posts/2025-12-08-understanding-claude-code-context-window/), and the Playwright MCP's 22 tool definitions at about 14,300 tokens, over 7 percent of a 200K window. Anthropic has since softened that hit by deferring the schemas until a tool is actually used, so on supported setups only the tool names load up front and the full definitions arrive on demand. Two catches remain: names still add up across many servers, and where deferral is unavailable (some gateways, older configs) the full definitions load the old way. Either way, servers you never touch are weight you are not using.
+The first is MCP servers. Each connected server advertises its tools, and a single tool definition, name plus description plus parameter schema, can run several hundred tokens. Back in December 2025, before deferral existed, developer Damian Galarza [measured one MCP tool at roughly 663 tokens](https://www.damiangalarza.com/posts/2025-12-08-understanding-claude-code-context-window/) and the Playwright MCP's 22 tool definitions at about 14,300 tokens, over 7 percent of a 200K window. That is the problem Anthropic solved: **MCP tool definitions are now deferred by default** and loaded on demand through tool search, so only tool names consume context until Claude actually reaches for a specific tool. Run `/mcp` to see per-server costs.
+
+One documented exception. When `ANTHROPIC_BASE_URL` points at a non-first-party host, MCP tool search is disabled by default; set `ENABLE_TOOL_SEARCH=true` if your proxy forwards `tool_reference` blocks. Outside that case, deferral is simply on. Names still add up across many servers, though, so servers you never touch remain weight you are not using.
 
 ### Skills Load Lighter Than MCP
 
-The second is skills. A [skill](https://geotoolbox.ai/blog/how-does-claude-work) only loads its name and description at startup, a couple hundred tokens, and pulls in the full instructions on demand when invoked. That is the same deferral idea applied more aggressively: the Playwright capability that costs 14,300 tokens as a full MCP definition is about 200 tokens as a skill until you actually use it. If a tool is one you reach for occasionally rather than every session, a skill is far cheaper on context. This is why "audit your MCP servers" is the single biggest context cleanup most people have never done. If you are deciding which servers are worth their weight in the first place, our roundup of [open-source tools for Claude Code](https://geotoolbox.ai/blog/claude-code-open-source-tools) sorts them by the job they do.
+The second is skills. A [skill](https://geotoolbox.ai/blog/how-does-claude-work) only loads its name and description at startup, a couple hundred tokens, and pulls in the full instructions on demand when invoked. That is the same deferral idea applied more aggressively: the Playwright capability that costs 14,300 tokens as a full MCP definition is about 200 tokens as a skill until you actually use it. If a tool is one you reach for occasionally rather than every session, a skill is far cheaper on context. You can go further and keep even the description out: `disable-model-invocation: true` in a skill's frontmatter means nothing loads until you call it explicitly with `/name`, and `skillOverrides` in settings does the same for skills you did not write. This is why "audit your MCP servers" is the single biggest context cleanup most people have never done. If you are deciding which servers are worth their weight in the first place, our roundup of [open-source tools for Claude Code](https://geotoolbox.ai/blog/claude-code-open-source-tools) sorts them by the job they do.
 
 ## How to Read the /context Meter
 
@@ -76,7 +92,7 @@ You do not have to guess at any of this. Run `/context` in a session and Claude 
   <figcaption className="mt-3 text-center text-sm text-gray-500">The /context readout breaks the window into categories. The reserved autocompact buffer and free space are the two numbers to watch.</figcaption>
 </figure>
 
-The top line shows your model and usage, something like `101k/200k tokens (51%)`. Below it, each category reports its own tokens and percentage: system prompt, system tools, MCP tools, custom agents, memory files, messages, then free space and a reserved autocompact buffer at the bottom. The value is that it turns a vague "why is this session sluggish" into a specific answer. If MCP tools are showing 26k tokens, you know where to cut. If your `CLAUDE.md` is 4k before you have done anything, that is a fixed tax on every turn worth trimming.
+The top line shows your model and usage, something like `101k/200k tokens (51%)` — on a current model the denominator will read against the 1M window instead. Below it, each category reports its own tokens and percentage: system prompt, system tools, MCP tools, custom agents, memory files, messages, then free space and a reserved autocompact buffer at the bottom. The value is that it turns a vague "why is this session sluggish" into a specific answer. If MCP tools are showing 26k tokens, you know where to cut. If your `CLAUDE.md` is 4k before you have done anything, that is a fixed tax on every turn worth trimming.
 
 ### The Interactive Simulator
 
@@ -86,11 +102,17 @@ One myth to put down: older guides claim Claude Code has no native way to see to
 
 ## Auto-Compaction: What Happens When the Window Fills
 
-Claude Code does not crash when you approach the limit. It compacts. Auto-compaction summarizes the conversation so far into a shorter representation and continues from that summary, freeing space to keep working. That reserved band at the bottom of the `/context` readout, the autocompact buffer, is the room held back so there is space to run the summarization when it triggers. Anthropic has not published a fixed number, but developers tracking their own `/context` output have [reported the buffer at around 33,000 tokens](https://www.avilevi.co.il/en/blog/manage-claude-code-context-window/).
+Claude Code does not crash when you approach the limit. It compacts, and it does so in two stages: **it clears older tool outputs first, then summarizes the conversation if that is not enough.** Your requests and key code snippets are preserved; detailed instructions from early in the conversation may not be. That reserved band at the bottom of the `/context` readout, the autocompact buffer, is the room held back so there is space to run the summarization when it triggers.
+
+Anthropic does not publish a fixed buffer size, but the trigger is now configurable. `CLAUDE_CODE_AUTO_COMPACT_WINDOW` sets the capacity used for auto-compaction calculations, defaulting to the model's context window, except on Sonnet 5, which auto-compacts at about **967K tokens** by default. `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE` sets the percentage of that window at which compaction fires. On a local Opus 4.8 session, auto-compaction triggers when the conversation reaches the model's context limit rather than at a percentage.
+
+There is one failure mode worth recognizing. If a single file or tool output is so large that the context refills immediately after each summary, Claude Code **stops auto-compacting after a few attempts and shows an error instead of looping**. If you see that, the fix is a smaller input, not a bigger window.
 
 ### What Survives a Compaction
 
-Compaction is not lossless, and it is worth knowing what survives it. Anthropic's [documentation on what survives compaction](https://code.claude.com/docs/en/context-window) notes that the system prompt stays unchanged and isn't part of the compacted message history in the first place, while your project-root `CLAUDE.md` and unscoped rules persist as standing context. Invoked skills are the one exception that gets re-added after a compaction rather than simply persisting. Path-scoped rules and nested `CLAUDE.md` files are dropped until their directory is touched again, and invoked skills are re-added but capped at about 5,000 tokens each and 25,000 total, oldest dropped first. In other words, the standing context you set up mostly holds, but anything that depended on being deep in the conversation can quietly vanish.
+Compaction is not lossless, and it is worth knowing what survives it. Anthropic's [documentation on what survives compaction](https://code.claude.com/docs/en/context-window) notes that the system prompt stays unchanged and isn't part of the compacted message history in the first place, while your project-root `CLAUDE.md`, memory, and MCP tools all reload automatically.
+
+**The skill listing is the one exception.** Everything else reloads; the index of available skill descriptions does not. Only skills you actually invoked are preserved, and those are capped at about 5,000 tokens each and 25,000 total, oldest dropped first. Truncation keeps the start of the file, which is why the most important instructions belong near the top of a `SKILL.md`. Path-scoped rules and nested `CLAUDE.md` files are dropped until their directory is touched again. In other words, the standing context you set up mostly holds, but anything that depended on being deep in the conversation can quietly vanish.
 
 ### /clear, /compact, and /rewind
 
@@ -107,7 +129,7 @@ You have three manual controls, and they are not interchangeable.
 </tbody>
 </table>
 
-The trick with `/compact` is to run it before quality drops, not after. Compact at a clean boundary, say once a phase of work is done, and the summary is built from good state. Compact a session that has already gone off the rails and you bake the confusion into the summary. You can also steer it: `/compact Focus on the auth refactor and the failing tests` tells Claude what to keep. Reach for `/clear` between tasks and `/compact` within one.
+The trick with `/compact` is to run it before quality drops, not after. Compact at a clean boundary, say once a phase of work is done, and the summary is built from good state. Compact a session that has already gone off the rails and you bake the confusion into the summary. You can also steer it: `/compact Focus on the auth refactor and the failing tests` tells Claude what to keep. If you find yourself typing the same steer every time, make it permanent with a `# Compact instructions` section in your project-root `CLAUDE.md`, and every compaction in that project inherits it. Reach for `/clear` between tasks and `/compact` within one.
 
 ## Why a Full Window Degrades Your Output
 
@@ -135,7 +157,11 @@ So "saving tokens" means two different things depending on which one is biting. 
 
 Managing the window well is mostly a handful of habits, not a tool. Clearing and compacting deliberately, covered above, is half of it. The other half is controlling what enters the window in the first place.
 
-Point Claude at specific files with `@path` or line ranges instead of asking it to "figure out the codebase," one of the fastest ways to drain the window. Hand noisy jobs like log analysis or codebase exploration to a subagent, which works in its own separate window and returns only a summary. Keep `CLAUDE.md` tight, Anthropic suggests under 200 lines, since it loads on every turn whether it is relevant or not. And run `/mcp` to switch off servers you are not using.
+Point Claude at specific files with `@path` or line ranges instead of asking it to "figure out the codebase," one of the fastest ways to drain the window. Hand noisy jobs like log analysis or codebase exploration to a subagent, which works in its own separate window and returns only a summary. Keep `CLAUDE.md` tight, Anthropic suggests under 200 lines, and move detailed per-workflow instructions into skills so they load on demand instead of on every turn. And run `/mcp` to switch off servers you are not using. Where a CLI and an MCP server do the same job, the CLI (`gh`, `aws`, `gcloud`) is cheaper on context because it adds no per-tool listing at all.
+
+### Agent Teams Multiply the Bill
+
+One feature deserves its own warning if you are watching spend. Agent teams, disabled by default and enabled with `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`, use **roughly 7x more tokens** than a standard session when teammates run in plan mode. Each teammate is a separate Claude instance maintaining its own context window, and each one loads `CLAUDE.md`, MCP servers, and skills automatically. Anthropic's own mitigations: run teammates on Sonnet, keep teams small, keep spawn prompts focused, and shut teammates down when they are done. It is a real capability, but it is the most expensive button in the product.
 
 One model-specific wrinkle: extended thinking is billed as output, so those [reasoning](https://geotoolbox.ai/glossary/reasoning-model) tokens count against your budget too. On [Fable 5](https://geotoolbox.ai/blog/fable-5-ban) you cannot turn extended thinking off, only lower the effort, so it takes a bigger bite of the window on simple tasks.
 
@@ -148,10 +174,10 @@ The reason a coding agent's context is expensive is the same reason serving AI a
 ## Frequently Asked Questions
 
 ### What is the Claude Code context window size?
-The standard context window in Claude Code is 200,000 tokens. Several current models raise it to 1 million tokens on paid plans, including Claude Sonnet 5, Fable 5, and Opus 4.8, 4.7, and 4.6. The usable space is always smaller than the headline number, because the system prompt, tools, memory, and your `CLAUDE.md` occupy part of the window before you type anything.
+On current models it is 1 million tokens. Sonnet 5 runs at 1M unconditionally, Opus 4.8 and Fable 5 reach 1M on paid plans, and Haiku 4.5 is the one current model still capped at the 200,000-token standard window. The usable space is always smaller than the headline number, because the system prompt, tools, memory, and your `CLAUDE.md` occupy part of the window before you type anything.
 
 ### Does Claude Code have a 1 million token context window?
-Yes, on the right model and plan. Sonnet 5, Sonnet 4.6, Fable 5, and Opus 4.6-and-later support a 1M window in Claude Code on Pro, Max, Team, and Enterprise plans. Usage credits must be enabled to reach it, except on usage-based Enterprise plans where it's automatic. It is not available on the free tier.
+Yes. Sonnet 5 has it on the Anthropic API with no configuration and no usage credits on any paid plan. Opus is automatically upgraded to 1M on Max, Team, and Enterprise; on Pro it requires enabling usage credits first. You can select it explicitly with `/model opus[1m]`. It is not available on the free tier, and the 1M window carries no price premium for tokens beyond 200K.
 
 ### What is the difference between /compact and /clear?
 `/clear` wipes the conversation history entirely while keeping your files and tools, which is what you want when switching to unrelated work. `/compact` summarizes the conversation so far and continues from that summary, which is what you want at a natural break in the same task. The short version: between tasks, clear; inside one task, compact.
@@ -168,10 +194,12 @@ Run `/context` in a session for a live breakdown by category, use `/usage` for a
 ## Sources
 
 - Explore the context window (Anthropic, Claude Code Docs) - `code.claude.com/docs/en/context-window`
+- Model configuration (Anthropic, Claude Code Docs) - `code.claude.com/docs/en/model-config`
+- How Claude Code works (Anthropic, Claude Code Docs) - `code.claude.com/docs/en/how-claude-code-works`
+- Environment variables (Anthropic, Claude Code Docs) - `code.claude.com/docs/en/env-vars`
 - Context windows (Anthropic, Claude Platform Docs) - `platform.claude.com/docs/en/build-with-claude/context-windows`
 - Manage costs effectively (Anthropic, Claude Code Docs) - `code.claude.com/docs/en/costs`
 - How large is the context window on paid Claude plans? (Anthropic) - `support.claude.com/en/articles/8606394-how-large-is-the-context-window-on-paid-claude-plans`
 - Understanding the Claude Code context window (Damian Galarza) - `damiangalarza.com/posts/2025-12-08-understanding-claude-code-context-window`
-- Managing the Claude Code context window (Avi Levi) - `avilevi.co.il/en/blog/manage-claude-code-context-window`
 - Context Rot: How Increasing Input Tokens Impacts LLM Performance (Chroma Research) - `trychroma.com/research/context-rot`
 - Why AI Tokens are so Expensive (Computerphile) - `youtube.com/watch?v=-0HRzXk8vlk`

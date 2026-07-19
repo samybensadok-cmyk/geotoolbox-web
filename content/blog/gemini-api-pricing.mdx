@@ -2,6 +2,8 @@
 title: "Gemini API Pricing in 2026: Every Model, Tier, and Hidden Cost"
 description: "Gemini API pricing 2026: every model's token cost, the four service tiers, the free tier, Vertex vs Developer API, and the hidden costs that inflate your bill."
 date: "2026-07-02"
+recheckBy: "2026-09-01"  # Claude Sonnet 5 introductory $2.00 input rises to $3.00 on 2026-09-01
+updated: "2026-07-19"
 author: "Samy BEN SADOK"
 tags: ["gemini-api-pricing", "gemini-api", "google-gemini", "vertex-ai", "api-pricing", "ai-pricing"]
 draft: false
@@ -129,7 +131,7 @@ Caching comes in two forms, and the difference decides whether it costs you anyt
 
 That storage meter gives explicit caching a break-even. A cached 200K-token context on Pro costs around $0.90 an hour to hold and saves about $0.36 on each cache hit, so it pays for itself at roughly two or three reuses an hour and loses only when a large context sits nearly idle. Lean on implicit caching by default; reach for explicit caching on the big, hot contexts where you want the discount guaranteed, and let cold ones expire.
 
-Stacking the levers is where the big numbers come from. On Vertex AI, [Google advertises](https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing) up to 90% off cached input alongside the 50% batch discount, and a high-reuse batch job can combine both. Two more habits help: route classification and extraction to Flash-Lite instead of Pro, and set thinking budgets so reasoning tokens cannot balloon a simple task.
+Stacking the levers is where the big numbers come from. On Vertex AI, [cached input is priced at 10% of the standard input rate](https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing), a 90% reduction, alongside an advertised 50% batch discount, and a high-reuse batch job can combine both. Two more habits help: route classification and extraction to Flash-Lite instead of Pro, and set thinking budgets so reasoning tokens cannot balloon a simple task.
 
 ## A Worked Example: What a Real Gemini App Actually Costs
 
@@ -166,7 +168,7 @@ You can reach the same Gemini models two ways, and the per-token rates are close
 
 The Gemini Developer API, through Google AI Studio, is the simple path. You get an API key, the free tier lives here, and you can be live in minutes. It is the right choice for most projects, prototypes, and anything that does not need enterprise controls.
 
-Vertex AI serves the identical models through Google Cloud. Its base rates match the [Developer API](https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing) on global endpoints, though data-residency and other non-global endpoints can carry a small regional uplift. What it adds is the machinery large deployments need: SLAs, VPC Service Controls, compliance certifications, and IAM and billing folded into the rest of your Google Cloud account. It is also where new models land first, so [Gemini 3.5 Pro](https://geotoolbox.ai/blog/gemini-3-5-pro) is in limited preview there before it reaches the general Developer API.
+Vertex AI, which Google renamed the Gemini Enterprise Agent Platform in April 2026 and which most people still call Vertex, serves the identical models through Google Cloud. Its base rates match the [Developer API](https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing) on global endpoints, though data-residency and other non-global endpoints can carry a small regional uplift. What it adds is the machinery large deployments need: SLAs, VPC Service Controls, compliance certifications, and IAM and billing folded into the rest of your Google Cloud account. It is also where new models tend to land first, though the unreleased [Gemini 3.5 Pro](https://geotoolbox.ai/blog/gemini-3-5-pro) is not on its published pricing page either.
 
 Vertex's headline advantage for high-volume production is Provisioned Throughput, which reserves guaranteed capacity at a flat hourly rate. A committed reservation earns a double-digit percentage discount, larger on a one-year term than a one-month one, and beats pay-as-you-go once your traffic is high and steady.
 
