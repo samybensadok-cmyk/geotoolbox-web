@@ -48,7 +48,7 @@ export function RootShell({
     >
       <body className="min-h-full flex flex-col antialiased">
         <a href="#main-content" className="skip-link">{common?.skipToContent ?? "Skip to main content"}</a>
-        <PromoBanner />
+        <PromoBanner locale={locale} />
         <Header nav={nav} locale={locale} />
         <main id="main-content" className="flex-1">{children}</main>
         <Footer nav={nav} footer={footer} locale={locale} />
