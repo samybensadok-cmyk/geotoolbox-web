@@ -1,6 +1,7 @@
 import { DM_Sans, DM_Mono } from "next/font/google"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
+import { PromoBanner } from "@/components/layout/promo-banner"
 import { ClarityAnalytics } from "@/components/analytics/clarity"
 import { GoogleAnalytics } from "@/components/analytics/google-analytics"
 import "@/app/globals.css"
@@ -47,6 +48,7 @@ export function RootShell({
     >
       <body className="min-h-full flex flex-col antialiased">
         <a href="#main-content" className="skip-link">{common?.skipToContent ?? "Skip to main content"}</a>
+        <PromoBanner />
         <Header nav={nav} locale={locale} />
         <main id="main-content" className="flex-1">{children}</main>
         <Footer nav={nav} footer={footer} locale={locale} />
