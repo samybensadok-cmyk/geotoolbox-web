@@ -45,7 +45,7 @@ export const TOPICS: Topic[] = [
     slug: "crawlers-agents",
     label: "Crawlers & Agents",
     tags: [
-      "ai-crawlers", "gptbot", "robots-txt", "llms-txt",
+      "ai-crawlers", "gptbot", "robots-txt", "llms-txt", "sitemap", "xml-sitemap", "technical-seo",
       "agentic-ai", "ai-agents", "agent-ready-website", "agentic-browsing",
       "agentic-commerce", "agentic-payments", "what-is-agentic-ai", "x402",
       "ai-browser", "comet", "perplexity-comet",
