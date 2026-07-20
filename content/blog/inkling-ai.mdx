@@ -5,6 +5,7 @@ date: "2026-07-17"
 author: "Samy BEN SADOK"
 tags: ["inkling", "inkling-ai", "thinking-machines-lab", "mira-murati", "open-weights", "mixture-of-experts", "multimodal-ai", "llm", "guide"]
 draft: false
+updated: "2026-07-20"
 ---
 
 The Inkling AI model is the first model Thinking Machines Lab has shipped, and it landed on July 15, 2026. If you have seen the headlines about Mira Murati's secretive lab finally releasing a model and want the plain version of what Inkling actually is, what it can do, and whether it matters to you, this is it, current as of July 2026.
@@ -71,13 +72,17 @@ Thinking Machines published a full benchmark sheet, run at its highest thinking 
 
 This is where the launch coverage tends to go quiet. Thinking Machines says outright that Inkling is **not the strongest overall model available today, open or closed**. That is not modesty for its own sake. The frontier closed models from OpenAI, Anthropic, and Google still lead most leaderboards, and on the independent Artificial Analysis Intelligence Index, Inkling scored 41, which made it the top US open-weights model but still left it behind Chinese open leaders like GLM-5.2. Strong for an open model, not a category winner. One more thing about that benchmark sheet: the numbers are reported at the top thinking-effort setting, so they are a best case. Dial the effort down for speed or cost and the scores come down with it.
 
-Two more asterisks. First, several of these scores were produced on the company's own internal test harnesses rather than fully independent ones, so they will need outside reproduction before anyone should treat them as settled. Second, the impressive efficiency claims, like matching Nvidia's Nemotron 3 Ultra on an agentic terminal benchmark with about a third of the tokens, or a fine-tuned Inkling scoring 84.7% on a Bridgewater financial-reasoning test at a fourteenth of the cost, come from vendor or private evaluations. The results may well hold up. They are just not independently verified yet, and it is worth knowing which numbers are which.
+A couple more asterisks. First, several of these scores were produced on the company's own internal test harnesses rather than fully independent ones, so they will need outside reproduction before anyone should treat them as settled. Second, the impressive efficiency claims, like matching Nvidia's Nemotron 3 Ultra on an agentic terminal benchmark with about a third of the tokens, or a fine-tuned Inkling scoring 84.7% on a Bridgewater financial-reasoning test at a fourteenth of the cost, come from vendor or private evaluations. The results may well hold up. They are just not independently verified yet, and it is worth knowing which numbers are which.
+
+The first outside checks have started to land. [ARC Prize](https://arcprize.org/results/thinky-inkling), which runs its own evaluation rather than taking a lab's word for it, confirmed on July 17 that Inkling is the highest-scoring open-weight model it has tested on ARC-AGI-1 (79.5%) and ARC-AGI-2 (36.5%).
+
+[Sebastian Raschka](https://sebastianraschka.com/blog/2026/inkling-architecture-benchmark-notes.html), an independent machine learning researcher, compared Inkling's published benchmark numbers against GLM-5.2's the day after launch and found a mixed picture. Inkling comes out ahead on instruction-following (IFBench, 79.8% versus 73.3%) and factual accuracy (SimpleQA Verified, 43.9% versus 38.1%). It falls behind on expert reasoning without tools (Humanity's Last Exam, 29.7% versus 40.1%), real-world coding fixes (SWE-Bench Pro Public, 54.3% versus 62.1%), and agentic terminal tasks (Terminal Bench 2.1, 63.8% versus 82.7%). That split result looks more like an honest, broad generalist than a clean sweep in either direction. Raschka's own post cautions that some of those rows mix externally reported figures with the lab's internal-harness numbers, so treat it as a useful outside read rather than a fresh reproduction. ARC Prize's result is closer to what full independence looks like: an evaluation run entirely outside Thinking Machines' control.
 
 ## Is Inkling Open Source? Open Weights vs Open Source
 
 Inkling is being called open source all over the place, and, as usual, the label is only half right. **Inkling is open weights, not open source.** The weights ship under the [Apache 2.0 license](https://huggingface.co/thinkingmachines/Inkling), one of the most permissive there is, so you can download the model, run it, fine-tune it, and ship it commercially with almost no strings. That is genuinely open, and more permissive than some Chinese open models that add attribution clauses.
 
-What you cannot do is rebuild it. Open weights means the finished model files are public. Open source, in the strict sense, would also mean releasing the training data and enough of the recipe to reproduce the model from scratch, and Thinking Machines does not publish its 45-trillion-token dataset. We walk through why that gap matters in our guide to [open weights vs open source](https://geotoolbox.ai/blog/open-weights-vs-open-source), and it applies squarely here: you can use Inkling freely without being able to fully audit how it was made.
+What you cannot do is rebuild it. Open weights means the finished model files are public. Open source, in the strict sense, would also mean releasing the training data and enough of the recipe to reproduce the model from scratch, and Thinking Machines does not publish its 45-trillion-token dataset. Independent commentator [Simon Willison](https://simonwillison.net/2026/Jul/16/inkling/) flagged the same gap from another angle: the model card's training-data section says only that it uses content "in the public domain as well as content that may be subject to intellectual property protection," without naming sources or explaining where that line was drawn. We walk through why that gap matters in our guide to [open weights vs open source](https://geotoolbox.ai/blog/open-weights-vs-open-source), and it applies squarely here: you can use Inkling freely without being able to fully audit how it was made.
 
 There is one more note buried in the technical write-ups. To bootstrap Inkling's early post-training, Thinking Machines generated synthetic data using other labs' open models, including Moonshot AI's [Kimi](https://geotoolbox.ai/blog/what-is-kimi-ai) K2.5. Distillation like this is common across the industry, but it is a fair part of the picture: part of how Inkling got good was learning from models someone else trained first.
 
@@ -103,7 +108,7 @@ The value in owning the weights is control. Because you can [fine-tune](https://
 
 ## Inkling vs DeepSeek, Kimi, and the Open-Model Field
 
-Inkling arrives into a field where the best open models have, until now, been Chinese. DeepSeek, Kimi, and Zhipu's GLM set the open-weight bar, and Moonshot pushed it further a day later with [Kimi K3](https://geotoolbox.ai/blog/what-is-kimi-k3), a 2.8-trillion-parameter model that scored well above Inkling on the same independent index. Thinking Machines is pitching Inkling as a serious US entry that claims comparable performance. Here is how it sits against the field.
+Inkling arrives into a field where the best open models have, until now, been Chinese. DeepSeek, Kimi, and Zhipu's GLM set the open-weight bar, and Moonshot raised it further a day later with [Kimi K3](https://geotoolbox.ai/blog/what-is-kimi-k3), a 2.8-trillion-parameter model that scored well above Inkling on the same independent index, though K3's own weights were not yet public as of this writing, with Moonshot targeting July 27. Thinking Machines is pitching Inkling as a serious US entry that claims comparable performance. Here is how it sits against the field.
 
 <table>
 <thead>
@@ -112,7 +117,7 @@ Inkling arrives into a field where the best open models have, until now, been Ch
 <tbody>
 <tr><td><strong>Inkling</strong></td><td>Thinking Machines (US)</td><td>Yes (Apache 2.0)</td><td>Multimodal input, 1M context, a customizable base to fine-tune</td></tr>
 <tr><td><strong>DeepSeek</strong></td><td>High-Flyer (China)</td><td>Yes (MIT)</td><td>Reasoning, coding, very low cost</td></tr>
-<tr><td><strong>Kimi</strong></td><td>Moonshot (China)</td><td>Yes (modified MIT)</td><td>Agentic multi-step work, long context</td></tr>
+<tr><td><strong>Kimi (K2 line)</strong></td><td>Moonshot (China)</td><td>Yes (modified MIT)</td><td>Agentic multi-step work, long context</td></tr>
 <tr><td><strong>Llama / GLM</strong></td><td>Meta / Zhipu</td><td>Yes (varies)</td><td>Broad ecosystems, tooling, adoption</td></tr>
 </tbody>
 </table>
@@ -133,11 +138,11 @@ For everyone else, it is not the tool. If you just want a capable assistant that
 
 ## What Inkling Means for Your AI Visibility
 
-While researching this piece we ran a small test. We asked several AI engines "what is Inkling by Thinking Machines Lab." ChatGPT and Perplexity, both connected to live web search, answered accurately and cited the announcement. Google's Gemini, asked without web search, replied that it had "no confirmed information" about the model, and then confidently described a different company by the same name. Two days after a headline launch, a frontier model running on training data alone was not just blank, it was wrong. That is not a knock on Gemini. Without live retrieval, even a frontier model is blind to anything after its training cutoff, and a two-day-old launch sits squarely in that blind spot.
+While researching this piece we ran a small test. We asked several AI engines "what is Inkling by Thinking Machines Lab." ChatGPT and Perplexity, both connected to live web search, answered accurately and cited the announcement. Google's Gemini, asked without web search, replied that it had "no confirmed information" about the model, and then confidently described a different company by the same name. Just days after a headline launch, a frontier model running on training data alone was not just blank, it was wrong. That is not a knock on Gemini. Without live retrieval, even a frontier model is blind to anything after its training cutoff, and a brand-new launch sits squarely in that blind spot.
 
 <figure className="not-prose my-8">
   <BlogImage src="/blog/inkling-ai/inkling-ai-engine-knowledge-test.png" alt="A test of three AI engines asked 'what is Inkling' two days after launch: ChatGPT and Perplexity with web search answered correctly, while Gemini without web search did not know the model and named the wrong company." w="1100" h="631" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
-  <figcaption className="mt-3 text-center text-sm text-gray-500">Two days after launch, only the web-connected engines knew Inkling existed.</figcaption>
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Days after launch, only the web-connected engines knew Inkling existed.</figcaption>
 </figure>
 
 That gap is the whole game in miniature. AI answers are only as current and accurate as the sources a model can reach at the moment it answers. Every user-facing engine, including the products teams will build on open bases like Inkling, is another place a customer might ask "what is the best tool for X" or "is [your company] any good" and act on the reply. In our experience at geotoolbox, the businesses that show up correctly in those answers are rarely the ones with the prettiest homepage. They are the ones a model can find, fetch, and parse without tripping over contradictions, which is the [foundation of generative engine optimization](https://geotoolbox.ai/glossary/generative-engine-optimization).
@@ -178,4 +183,7 @@ Inkling-Small is a preview of a lighter model, 276 billion total parameters with
 - Thinking Machines Lab Drops Its First Model - WIRED, July 2026 - `wired.com/story/thinking-machines-lab-releases-its-first-model-inkling`
 - Thinking Machines Lab Unveils Inkling, Its First Open-Weights Multimodal AI Model - Unite.AI, July 2026 - `unite.ai/thinking-machines-lab-unveils-inkling-its-first-open-weights-multimodal-ai-model`
 - thinkingmachines/Inkling model weights - Hugging Face - `huggingface.co/thinkingmachines/Inkling`
+- Inkling - ARC-AGI Results - ARC Prize, July 2026 - `arcprize.org/results/thinky-inkling`
+- Inkling Architecture and Benchmark Notes - Sebastian Raschka, July 2026 - `sebastianraschka.com/blog/2026/inkling-architecture-benchmark-notes.html`
+- Inkling: Our open-weights model (commentary) - Simon Willison, July 2026 - `simonwillison.net/2026/Jul/16/inkling`
 
