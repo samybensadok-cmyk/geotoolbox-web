@@ -1,55 +1,109 @@
-import { StatCounter } from "@/components/features/social-proof"
 import { proofStats } from "@/lib/proof-stats"
 
 /**
- * ProofResults — the hard-numbers proof bar for the Done-For-You service page.
+ * ProofResults — the hard-numbers proof band for the Done-For-You service page.
  * Reads EVERY figure from lib/proof-stats.ts (single source of truth) so a daily
- * bump is one edit and the "as of" stamp never drifts from the numbers above it.
+ * bump is one edit and the "as of" stamp never drifts from the numbers.
  *
- * Leads with the hardest results first (223 in Google's top 3, then the ~10,300
- * AI citations). The Google numbers are real + unique (GSC); the AI-citation
- * number is a sampled, non-unique appearance count from Bing Webmaster Tools —
- * stated plainly in the footnote, never dressed up as ChatGPT/Perplexity data.
+ * Rendered as a dark (gray-950) band for contrast + impact, matching the site's
+ * dark anchor sections (Problem / CTA on the homepage). Big mono numbers, tight
+ * labels, an explicit source line under each stat, no gradient text.
+ *
+ * Provenance is stated plainly: the Google numbers are real + unique (GSC) and
+ * came from about `weeksToResult` weeks of publishing; the AI-citation number is
+ * a sampled, non-unique appearance count from a SEPARATE `windowMonths`-month
+ * Bing Webmaster Tools window — never umbrella'd under the Google timeframe, and
+ * never dressed up as ChatGPT / Perplexity / Google data.
  */
 export function ProofResults() {
-  const { google, aiCitations, asOf } = proofStats
+  const { google, aiCitations, weeksToResult, asOf } = proofStats
   const fmt = (n: number) => n.toLocaleString("en-US")
 
-  const stats: Array<{ value: string; label: string }> = [
-    { value: fmt(google.top3), label: "In Google's top 3" },
-    { value: `~${fmt(aiCitations.total)}`, label: "AI citations (Bing WMT)" },
-    { value: fmt(google.top10), label: "In Google's top 10" },
-    { value: fmt(google.rankedKeywords), label: "Keywords ranked in Google" },
+  const stats: Array<{ value: string; label: string; source: string; tag?: string }> = [
+    { value: fmt(google.rankedKeywords), label: "Keywords ranked in Google", source: "Google Search Console" },
+    { value: fmt(google.top3), label: "In Google's top 3", source: "Google Search Console" },
+    {
+      value: `~${fmt(aiCitations.total)}`,
+      label: "AI-citation appearances",
+      source: `Bing WMT · ${aiCitations.source} · ${aiCitations.windowMonths}-mo sample`,
+      tag: `${aiCitations.windowMonths}-month sample`,
+    },
+    { value: `~${fmt(google.dailyImpressions)}`, label: "Impressions per day", source: "Google Search Console" },
   ]
 
   return (
-    <section className="border-t border-[var(--surface-mint-border)] bg-[var(--surface-mint)] px-6 py-14 sm:py-16">
-      <div className="mx-auto max-w-4xl">
-        <div className="flex flex-col items-center gap-2 text-center">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-            The proof, from my own test domain
-          </p>
-          <p className="max-w-2xl text-[15px] leading-relaxed text-gray-600">
-            One fresh, zero-authority domain — about seven weeks of content publishing behind the Google
-            numbers below. These are the numbers, not a promise — the exact figures, stamped, and updated
-            as they move.
+    <section id="results" className="scroll-mt-24 relative overflow-hidden bg-gray-950 px-6 py-20 sm:py-24">
+      {/* Subtle grid bleed — anchors the dark panel without a gradient blob */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-[0.06]"
+        style={{
+          backgroundImage:
+            "linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)",
+          backgroundSize: "64px 64px",
+        }}
+      />
+
+      <div className="relative mx-auto max-w-7xl">
+        {/* Editorial header — asymmetric, left-aligned. NOTE: the "~N weeks of
+            publishing" claim scopes ONLY to the Google figures; the Bing sample
+            is decoupled in the subhead and tagged per-stat below. */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[5fr_7fr] lg:items-end lg:gap-16">
+          <div>
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-400">
+              The proof, from my own test domain
+            </p>
+            <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
+              One fresh, zero-authority domain.{" "}
+              <span className="text-accent-400">The receipts, by source.</span>
+            </h2>
+          </div>
+          <p className="max-w-xl text-base leading-relaxed text-gray-300">
+            These are the numbers, not a promise — the exact figures, stamped, and updated as they move.
+            The Google figures came from about {weeksToResult} weeks of publishing on a domain that drove
+            near-zero traffic before; the AI-citation count is a separate {aiCitations.windowMonths}-month
+            Bing sample.
           </p>
         </div>
 
-        <div className="mt-10 flex flex-wrap items-start justify-center gap-x-12 gap-y-6">
+        {/* Stat grid — big mono numbers, divider-anchored, source under each.
+            Valid <dl> semantics: each group is <dt> (label) then <dd>s; CSS
+            `order` keeps the number visually first while <dt> precedes <dd> in
+            the DOM. The Bing stat carries its own "N-month sample" tag so it
+            reads separately from the Google figures. */}
+        <dl className="mt-14 grid grid-cols-2 gap-x-8 gap-y-12 lg:grid-cols-4">
           {stats.map((s) => (
-            <StatCounter key={s.label} value={s.value} label={s.label} />
+            <div key={s.label} className="flex flex-col border-l border-white/10 pl-5">
+              <dt className="order-2 mt-3 text-sm font-medium leading-snug text-gray-200">{s.label}</dt>
+              <dd className="order-1 font-mono text-[clamp(2rem,5vw,3.25rem)] font-bold leading-none tracking-tight tabular-nums text-white">
+                {s.value}
+              </dd>
+              <dd className="order-3 mt-2 flex flex-wrap items-center gap-2">
+                <span className="font-mono text-[10px] font-semibold uppercase tracking-widest text-gray-400">
+                  {s.source}
+                </span>
+                {s.tag && (
+                  <span className="rounded-full border border-accent-400/40 px-1.5 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-widest text-accent-400">
+                    {s.tag}
+                  </span>
+                )}
+              </dd>
+            </div>
           ))}
-        </div>
+        </dl>
 
-        <p className="mt-8 text-center text-[13px] font-medium text-gray-500">
-          As of {asOf}. Google figures are from Google Search Console (deduplicated, verifiable in Search Console).
-        </p>
-        <p className="mx-auto mt-2 max-w-2xl text-center text-[13px] leading-relaxed text-gray-500">
-          The ~{fmt(aiCitations.total)} AI-citation figure is a {aiCitations.windowMonths}-month sample from
-          Bing Webmaster Tools&apos; AI Performance report ({aiCitations.source}) — a count of citation
-          appearances, not unique citations, and not attributable to ChatGPT, Perplexity, or Google.
-        </p>
+        {/* Provenance footnotes */}
+        <div className="mt-14 max-w-3xl border-t border-white/10 pt-6">
+          <p className="text-[13px] font-medium text-gray-400">
+            As of {asOf}. Google figures are from Google Search Console — deduplicated and verifiable in
+            Search Console.
+          </p>
+          <p className="mt-2 text-[13px] leading-relaxed text-gray-400">
+            The ~{fmt(aiCitations.total)} AI-citation figure is a {aiCitations.windowMonths}-month sample
+            from Bing Webmaster Tools&apos; AI Performance report ({aiCitations.source}) — a count of citation
+            appearances, not unique citations, and not attributable to ChatGPT, Perplexity, or Google.
+          </p>
+        </div>
       </div>
     </section>
   )

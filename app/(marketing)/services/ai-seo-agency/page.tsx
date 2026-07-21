@@ -2,11 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import Image from "next/image"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
-import { PainScenarioSection } from "@/components/features/pain-scenario"
-import { HowItWorks3Step, type Step } from "@/components/features/how-it-works"
-import { SocialProofBlock } from "@/components/features/social-proof"
 import { FeatureFaq } from "@/components/features/feature-faq"
-import { DualCTA } from "@/components/features/dual-cta"
 import { ProofResults } from "@/components/services/proof-results"
 import { JsonLd } from "@/components/seo/json-ld"
 import { siteConfig } from "@/lib/config"
@@ -14,110 +10,99 @@ import { PRIMARY_AUTHOR } from "@/lib/authors"
 import { proofStats } from "@/lib/proof-stats"
 
 const PAGE_URL = `${siteConfig.url}/services/ai-seo-agency`
-// The free "AI Visibility Check" — the GEO Scan feature page (a real, statically
-// prerendered route in this repo) that funnels into the free in-app scan.
-const FREE_CHECK_HREF = "/features/geo-scan"
+// Every call books an intro/teardown call — no free-tool CTA anywhere on this page.
 const TEARDOWN_HREF = "/contact"
+// The two one-off offers are DIRECT PURCHASES. Placeholder to /contact for now.
+// TODO: wire Stripe checkout for the Report + Sprint one-offs.
+const CHECKOUT = { report: "/contact", sprint: "/contact" }
 
 export const metadata: Metadata = {
   title: "Done-For-You AI SEO & GEO Service",
   description:
-    "I personally rebuild your pages to get cited in ChatGPT, Perplexity and Copilot, and prove it monthly with the tracker I built. One specialist, not an agency.",
+    "I built GEO Toolbox — the platform used to measure AI visibility — and I do your work myself. Priority pages rebuilt to get cited in ChatGPT, Perplexity and Copilot, proved monthly with my own tracker. Not an agency team.",
   openGraph: {
-    title: "Done-For-You AI SEO & GEO, Run By One Specialist",
+    title: "Done-For-You AI SEO & GEO, By The Founder Who Built The Tracker",
     description:
-      "I personally rebuild your pages to get cited in ChatGPT, Perplexity and Copilot — and prove it monthly with the tracker I built. One specialist, four clients.",
+      "I built the platform the industry uses to measure AI visibility — and I personally rebuild your pages to get cited in ChatGPT, Perplexity and Copilot, proved monthly. Not an agency team.",
   },
   alternates: { canonical: PAGE_URL },
 }
 
-const steps: Step[] = [
-  {
-    verb: "Audit",
-    title: "Baseline from the tracker",
-    body: "Week one, I run your prompts through my cross-engine tracker: which questions your buyers ask, which engines cite you, which cite your competitors instead. You start from numbers, not a hunch.",
-  },
-  {
-    verb: "Build",
-    title: "Rebuild pages to be citable",
-    body: "I rewrite your priority pages so an AI engine can lift the answer with your name attached — verifiable claims, clean structure, the sources an engine trusts — while your classic Google rankings hold.",
-  },
-  {
-    verb: "Track",
-    title: "Monthly citation report",
-    body: "Every month you get the raw tracker output: citations gained, which engines, which prompts, the deltas. A log from a measurement tool, not a slide deck. If a month is flat, it says flat.",
-  },
-]
+// Merged "what you get" (outcomes) + "how it runs" (process) — one section so
+// the near-duplicate baseline→rewrite→report copy isn't stamped twice. Each row:
+// the outcome as headline, the process verb as a mono tag, the output as a chip.
+type FlowRow = { num: string; verb: string; title: string; body: string; output: string }
 
-const deliverables = [
+const flow: FlowRow[] = [
   {
-    tag: "Baseline",
+    num: "01",
+    verb: "Audit",
     title: "You see exactly where you stand — before I touch anything.",
-    body: "Week one: a cross-engine baseline from my own tracker — which prompts your buyers use, which engines cite you vs your competitors, the gap in numbers.",
+    body: "Week one: a cross-engine baseline from my own tracker — which prompts your buyers use, which engines cite you versus your competitors, the gap in numbers. You start from data, not a hunch.",
+    output: "cross-engine baseline",
   },
   {
-    tag: "Rewrite",
-    title: "Your content gets rewritten to be quotable, not just rankable.",
-    body: "I rebuild your key pages so an AI engine can lift your answer with your name attached — while your classic Google rankings hold. A floor, not a trade-off.",
+    num: "02",
+    verb: "Build",
+    title: "Your pages get rewritten to be quotable — and you own the questions that end in a purchase.",
+    body: "I rebuild your priority pages so an AI engine can lift your answer with your name attached: verifiable claims, clean structure, the sources an engine trusts. The focus is the comparison and “which should I buy” prompts where the shortlist forms, past the “what is [category]” trivia — while your classic Google rankings hold.",
+    output: "priority pages rebuilt",
   },
   {
-    tag: "Buying-intent",
-    title: "You own the questions that end in a purchase.",
-    body: "Not 'what is [category]' trivia — the comparison and 'which should I buy' prompts where the shortlist forms. Mapped, built, taken one by one.",
-  },
-  {
-    tag: "Reporting",
-    title: "Every month: citations gained, engines, prompts. Tracker logs, not sentiment.",
-    body: "Your report is raw tracker output. If a month is flat, the report says flat. Same numbers, both of us.",
+    num: "03",
+    verb: "Track",
+    title: "Every month: citations gained, engines, prompts — tracker logs, not sentiment.",
+    body: "Your report is the raw tracker output — which engines, which prompts, the deltas. A log from a measurement tool. If a month is flat, it says flat. Same numbers, both of us.",
+    output: "monthly citation log",
   },
 ]
 
 type Tier = {
   name: string
+  pricePrefix?: string
   price: string
   cadence?: string
+  billing: string
   summary: string
   detail: string
   cta: { label: string; href: string }
-  secondaryCta?: { label: string; href: string }
+  kind: "buy" | "call"
+  featured?: boolean
 }
 
 const tiers: Tier[] = [
   {
-    name: "AI Visibility Check",
-    price: "Free",
-    summary: "See where you stand across the AI engines, then talk it through with me.",
-    detail:
-      "Run a free AI visibility check on your own domain, plus a free 20-minute teardown call where I read the result with you and tell you honestly whether this is worth doing.",
-    cta: { label: "Run my free check", href: FREE_CHECK_HREF },
-    secondaryCta: { label: "Book the 20-min teardown", href: TEARDOWN_HREF },
-  },
-  {
-    name: "AI Search Opportunity Map",
-    price: "$1,250",
-    cadence: "fixed",
+    name: "Visibility Report",
+    price: "$750",
+    billing: "One-off",
     summary: "The full baseline: prompts, engines, competitors, and the pages worth building.",
     detail:
-      "A one-off diagnostic that maps the buying-intent prompts in your market, who gets cited today, and the specific pages to build. Credited toward a Sprint or retainer if you start within 14 days.",
-    cta: { label: "Start with the Map", href: TEARDOWN_HREF },
+      "A one-off diagnostic that maps the buying-intent prompts in your market, who gets cited today, and the specific pages to build.",
+    cta: { label: "Start the report", href: CHECKOUT.report },
+    kind: "buy",
   },
   {
     name: "30-Day AI Visibility Sprint",
     price: "$4,000",
-    cadence: "fixed",
+    billing: "One-off",
     summary: "Thirty days of building: fixes shipped, priority pages rebuilt to be cited.",
     detail:
       "Technical fixes, your priority pages rebuilt to be citable, and the citation and source work that gets an engine to quote you. A fixed scope with a fixed price. The Sprint counts as month one if you continue on a retainer within 30 days.",
-    cta: { label: "Book a sprint", href: TEARDOWN_HREF },
+    cta: { label: "Start the sprint", href: CHECKOUT.sprint },
+    kind: "buy",
+    featured: true,
   },
   {
     name: "Ongoing GEO + SEO Growth",
-    price: "$4,000",
-    cadence: "/mo, from",
+    pricePrefix: "From",
+    price: "$3,500",
+    cadence: "/mo",
+    billing: "90-day initial commitment",
     summary: "The compounding version: new pages, new prompts, tracked every month.",
     detail:
-      "Continuous GEO and SEO work — new citable pages, more buying-intent prompts taken one by one, and the monthly tracker report. A 90-day initial commitment, then month to month.",
-    cta: { label: "Talk about ongoing work", href: TEARDOWN_HREF },
+      "Continuous GEO and SEO work — new citable pages, more buying-intent prompts taken one by one, and the monthly tracker report. Then month to month.",
+    cta: { label: "Book a call", href: TEARDOWN_HREF },
+    kind: "call",
   },
 ]
 
@@ -134,11 +119,11 @@ type PastClientResult = {
 // OVERVIEW, organic 5–6. No Ahrefs traffic estimates — positions only.
 const pastClientResults: PastClientResult[] = [
   {
-    label: "Legal client · Google Ads guide",
+    label: "Legal guide · Google Ads for lawyers",
     points: [
-      "Cited by 7 of 7 AI engines — the #1 cited source for “how to run google ads for lawyers,” ranked above google.com itself.",
+      "Cited by 7 of 7 AI engines — the #1 cited source for “how to run google ads for lawyers,” cited ahead of google.com itself.",
       "Featured in Google’s AI Overview for “google ads for lawyers.” Organic position 5–6.",
-      "On page 1 within days of publishing, with no prior topical authority.",
+      "On page 1 within weeks of publishing, with no prior topical authority.",
     ],
     image: {
       src: "/services/track-record/legal-ai-scan.png",
@@ -148,7 +133,7 @@ const pastClientResults: PastClientResult[] = [
     },
   },
   {
-    label: "Crypto client · Google Ads guide",
+    label: "Crypto guide · Crypto Google Ads",
     points: [
       "Cited by 6 of 7 AI engines — the #2 cited source, behind only google.com, for “how to run crypto Google Ads without getting disapproved.”",
       "Ranks a cluster of crypto-ads terms at positions 2–10 (Ahrefs), several surfaced in Google’s AI Overview.",
@@ -162,10 +147,25 @@ const pastClientResults: PastClientResult[] = [
   },
 ]
 
+const problemPoints = [
+  {
+    num: "01",
+    text: "Your Google Search Console shows impressions climbing and clicks flat or falling.",
+  },
+  {
+    num: "02",
+    text: "A buyer asks ChatGPT “best [your category]” and it names three competitors, by name — not you.",
+  },
+  {
+    num: "03",
+    text: "Your classic SEO report has no column for any of it, because rank trackers can’t see inside an AI answer.",
+  },
+]
+
 const faqs = [
   {
     question: "How is this different from regular SEO?",
-    answer: `Regular SEO earns a ranking a human might click. This earns a citation inside the answer the human actually reads — in ChatGPT, Perplexity, Copilot and AI Overviews. The overlap: good GEO work also lifts classic rankings (my test domain put ${proofStats.google.rankedKeywords.toLocaleString("en-US")} keywords into Google while chasing citations). The difference: a normal SEO can't hand you an AI-citation report. I built the tool that produces one.`,
+    answer: `Regular SEO earns a ranking a human might click. This earns a citation inside the answer the human actually reads — in ChatGPT, Perplexity, Copilot and AI Overviews. The overlap: good GEO work also lifts classic rankings (my test domain put ${proofStats.google.rankedKeywords.toLocaleString("en-US")} keywords into Google while chasing citations). The difference: a normal SEO can't hand you an AI-citation report. I built the platform that produces one.`,
   },
   {
     question: "How long until results?",
@@ -185,7 +185,7 @@ const faqs = [
   {
     question: "Why you and not an agency?",
     answer:
-      "The person who ran the 7-week experiment, built the tracker, and wrote this page does the work. At an agency that's three departments, and the person from the sales call is in none of them. Trade-off, stated plainly: I take few clients, so there's sometimes a wait. What you get: senior-only execution in the one channel where your problem lives.",
+      "The person who built GEO Toolbox — the platform the industry uses to measure AI visibility — is the person who does your work. Not a strategist on a sales call handing off to a junior, not three departments: the founder who built the measurement tool, in the code of your pages. Trade-off, stated plainly: I take 4 active clients, so there's sometimes a wait. What you get: founder-level execution in the one channel where your problem lives.",
   },
   {
     question: "Is my industry too niche?",
@@ -194,13 +194,14 @@ const faqs = [
   },
 ]
 
-// Minimal, valid ProfessionalService node (no dedicated helper in lib/seo-schema).
+// Minimal, valid Service node (no dedicated helper in lib/seo-schema). Typed as
+// Service (not ProfessionalService) so serviceType/provider/offers validate cleanly.
 const serviceSchema = {
   "@context": "https://schema.org",
-  "@type": "ProfessionalService",
+  "@type": "Service",
   name: "Done-For-You AI SEO & GEO Service",
   description:
-    "Done-for-you AI visibility and SEO, run personally by Samy Ben Sadok: priority pages rebuilt to be cited in ChatGPT, Perplexity, Copilot and AI Overviews, measured monthly with a cross-engine citation tracker.",
+    "Done-for-you AI visibility and SEO, run personally by Samy Ben Sadok — founder of GEO Toolbox: priority pages rebuilt to be cited in ChatGPT, Perplexity, Copilot and AI Overviews, measured monthly with a cross-engine citation tracker.",
   url: PAGE_URL,
   areaServed: "Worldwide",
   serviceType: ["Generative Engine Optimization", "AI Search Visibility", "SEO"],
@@ -215,8 +216,8 @@ const serviceSchema = {
   offers: [
     {
       "@type": "Offer",
-      name: "AI Search Opportunity Map",
-      price: "1250",
+      name: "Visibility Report",
+      price: "750",
       priceCurrency: "USD",
       description: "One-off diagnostic mapping buying-intent prompts, current citations, and the pages to build.",
     },
@@ -230,10 +231,11 @@ const serviceSchema = {
     {
       "@type": "Offer",
       name: "Ongoing GEO + SEO Growth",
-      description: "Continuous GEO and SEO work with a monthly citation report. From $4,000/mo, 90-day initial commitment.",
+      description: "Continuous GEO and SEO work with a monthly citation report. From $3,500/mo, 90-day initial commitment.",
       priceSpecification: {
         "@type": "UnitPriceSpecification",
-        price: "4000",
+        // Displayed as "from $3,500/mo" — represent as a floor, not an exact price.
+        minPrice: "3500",
         priceCurrency: "USD",
         unitText: "MONTH",
         referenceQuantity: {
@@ -247,13 +249,39 @@ const serviceSchema = {
 }
 
 export default function AiSeoServicePage() {
+  const fmt = (n: number) => n.toLocaleString("en-US")
+
   return (
     <>
       <JsonLd data={serviceSchema} />
 
-      {/* 1 — Hero: self-demo headline + solo-specialist identity card */}
-      <section className="relative overflow-hidden bg-[var(--surface-mint)] px-6 pt-16 pb-16 sm:pt-20 sm:pb-20">
-        <div className="mx-auto max-w-7xl">
+      {/* 1 — Hero: self-demo headline + founder credential + live-scan product card */}
+      <section className="relative overflow-hidden bg-white px-6 pt-10 pb-16 sm:pt-14 sm:pb-24">
+        {/* Ambient depth — two low-opacity radial glows behind a dotted grid */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background: [
+              "radial-gradient(ellipse 640px 440px at 10% 12%, rgba(241, 243, 252, 0.7), transparent 70%)",
+              "radial-gradient(ellipse 720px 520px at 88% 6%, rgba(204, 251, 241, 0.55), transparent 72%)",
+            ].join(","),
+          }}
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 1px 1px, rgb(15 23 42 / 1) 1px, transparent 0)",
+            backgroundSize: "22px 22px",
+            maskImage: "linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.85) 100%)",
+            WebkitMaskImage: "linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.85) 100%)",
+            opacity: 0.05,
+          }}
+        />
+
+        <div className="relative mx-auto max-w-7xl">
           <Breadcrumbs
             trail={[
               { name: "Home", href: "/" },
@@ -262,211 +290,361 @@ export default function AiSeoServicePage() {
             ]}
           />
 
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-14">
-            <div className="animate-fade-up lg:col-span-7">
+          <div className="mt-6 grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center lg:gap-16">
+            {/* Text column */}
+            <div className="animate-fade-up lg:col-span-6">
               <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-                Done-for-you AI visibility &amp; SEO
+                Done-for-you AI visibility
               </p>
-              <h1 className="mt-3 text-[clamp(2rem,4.2vw,3.25rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-                Ask ChatGPT who&apos;s best in your market. If the answer isn&apos;t you,{" "}
-                <span className="text-accent-700">that&apos;s the problem I fix.</span>
-              </h1>
-              <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-                Your buyers ask AI engines who to trust before they ever reach your site. I rebuild your
-                pages to get cited in those answers — and prove it monthly with the tracker I built. One
-                specialist doing the work, not a team you never meet.
-              </p>
-              <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-gray-600">
-                Searching for an &ldquo;AI SEO agency&rdquo;? Here&apos;s what actually moves the needle — run by one
-                specialist, not a team.
-              </p>
-              <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-gray-500">
-                On my own zero-authority test domain — indexed since April but near-zero traffic until I started
-                publishing — about {proofStats.weeksToResult} weeks of content publishing put{" "}
-                {(Math.floor(proofStats.google.rankedKeywords / 1000) * 1000).toLocaleString("en-US")}+ keywords into
-                Google Search Console, {proofStats.google.top3} of them in the top 3. Separately, Bing Webmaster Tools
-                logged 10,000+ AI-citation appearances over a trailing 3-month window (Copilot + partner assistants, a
-                sample). First AI citations landed around week {proofStats.weeksToResult}.
-              </p>
-              <div className="mt-8">
-                <DualCTA
-                  primaryLabel="Run my free AI visibility check"
-                  primaryHref={FREE_CHECK_HREF}
-                  secondaryLabel="Book a 20-min teardown"
-                  secondaryHref={TEARDOWN_HREF}
-                  microcopy="Free check · free 20-min call · no obligation"
-                  align="left"
-                />
-              </div>
-            </div>
 
-            {/* Solo-specialist identity card — reinforces "I personally run this" */}
-            <div className="animate-fade-up stagger-2 lg:col-span-5">
-              <div className="rounded-3xl border border-[var(--surface-mint-border)] bg-white p-7 shadow-[0_20px_60px_-24px_rgba(15,23,42,0.18)]">
-                <div className="flex items-center gap-4">
+              {/* Founder credential pill */}
+              <div className="mt-4">
+                <span className="inline-flex items-center gap-2.5 rounded-full border border-gray-200 bg-white/80 py-1 pl-1 pr-4 shadow-sm backdrop-blur">
                   <Image
                     src={PRIMARY_AUTHOR.avatar ?? "/authors/samy-ben-sadok.jpg"}
                     alt={PRIMARY_AUTHOR.name}
-                    width={64}
-                    height={64}
-                    className="h-16 w-16 rounded-full object-cover"
+                    width={28}
+                    height={28}
+                    className="h-7 w-7 rounded-full object-cover"
                   />
-                  <div>
-                    <p className="text-[15px] font-bold tracking-tight text-gray-900">{PRIMARY_AUTHOR.name}</p>
-                    <p className="text-[13px] text-gray-500">Solo GEO + SEO specialist · Barcelona</p>
-                  </div>
-                </div>
-                <p className="mt-5 text-[14px] leading-relaxed text-gray-600">
-                  I ran the 7-week experiment, built the tracker that measures it, and I&apos;m the one who does
-                  your work. No account manager, no handoff.
-                </p>
-                <div className="mt-5 flex items-center gap-3 rounded-2xl bg-[var(--surface-mint)] px-4 py-3">
-                  <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-                    Capacity
+                  <span className="text-[12px] font-medium text-gray-700">
+                    <span className="font-semibold text-gray-900">Samy Ben Sadok</span>
+                    <span className="mx-1.5 text-gray-300" aria-hidden="true">·</span>
+                    Founder, GEO Toolbox
                   </span>
-                  <span className="text-[14px] font-semibold text-gray-900">I take 4 active clients.</span>
-                </div>
+                </span>
+              </div>
+
+              <h1 className="mt-6 text-[clamp(2rem,4.4vw,3.4rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
+                Ask ChatGPT who&apos;s best in your market — if the answer isn&apos;t you,{" "}
+                <span className="text-accent-700">that&apos;s what I fix.</span>
+              </h1>
+
+              <p className="mt-6 max-w-xl text-lg leading-relaxed text-gray-600">
+                Your buyers ask AI engines who to trust before they ever reach your site. I built GEO
+                Toolbox — the platform used to measure AI visibility — and I personally rebuild your pages
+                to get cited in those answers, then prove it monthly with the tracker I built.
+              </p>
+
+              <div className="mt-8 flex flex-wrap items-center gap-3">
+                <Link
+                  href={TEARDOWN_HREF}
+                  className="inline-flex items-center gap-2 rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
+                >
+                  Book a call
+                  <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </Link>
+                <Link
+                  href="#results"
+                  className="rounded-full border border-gray-200 px-6 py-3.5 text-[15px] font-medium text-gray-700 transition-colors duration-200 hover:border-gray-400 hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
+                >
+                  See the results
+                </Link>
+              </div>
+              <p className="mt-4 text-xs text-gray-500">20-min intro call · no obligation · I take 4 active clients.</p>
+            </div>
+
+            {/* Product card — legal AI-scan in a browser frame. Wrapper is NOT
+                aria-hidden so the meaningful scan image + alt reach AT; only the
+                decorative browser chrome is hidden. */}
+            <div className="animate-fade-up stagger-2 lg:col-span-6">
+              <div className="relative lg:-mr-4 xl:-mr-10">
+                <div
+                  aria-hidden="true"
+                  className="absolute -inset-8 rounded-[3rem] opacity-70"
+                  style={{
+                    background:
+                      "radial-gradient(ellipse 70% 55% at 50% 45%, rgba(94, 234, 212, 0.18), transparent 70%)",
+                    filter: "blur(16px)",
+                  }}
+                />
+                <div aria-hidden="true" className="absolute -bottom-6 left-8 right-8 h-8 rounded-full bg-gray-900/8 blur-xl" />
+                <figure className="relative">
+                  <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-[0_20px_60px_-20px_rgba(15,23,42,0.16)]">
+                    {/* Browser chrome — decorative, hidden from AT */}
+                    <div aria-hidden="true" className="flex items-center gap-2 border-b border-gray-100 bg-gray-50 px-4 py-3">
+                      <span className="h-2.5 w-2.5 rounded-full bg-gray-300" />
+                      <span className="h-2.5 w-2.5 rounded-full bg-gray-300" />
+                      <span className="h-2.5 w-2.5 rounded-full bg-gray-300" />
+                      <span className="ml-3 inline-flex items-center gap-1.5 rounded-md border border-gray-100 bg-white px-2.5 py-1 font-mono text-[11px] text-gray-500">
+                        <svg className="h-3 w-3 text-accent-600" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5">
+                          <rect x="2.5" y="5.5" width="7" height="4.5" rx="1" />
+                          <path d="M4 5.5V4a2 2 0 0 1 4 0v1.5" strokeLinecap="round" />
+                        </svg>
+                        geotoolbox.ai/scan
+                      </span>
+                      <span className="ml-auto inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest text-gray-500 shadow-sm">
+                        Example scan
+                      </span>
+                    </div>
+                    {/* Fixed-aspect crop to the impactful TOP of the scan (the
+                        "7/7 AI SERVICES CITED" score + top cited domains) so it
+                        reads large and legible. Full image lives in the
+                        track-record card below. */}
+                    <div className="relative aspect-[16/10] w-full overflow-hidden bg-gray-50">
+                      <Image
+                        src="/services/track-record/legal-ai-scan.png"
+                        width={1999}
+                        height={1602}
+                        alt="AI citation scan showing a client's page cited by all 7 AI engines as the #1 cited source, ahead of google.com."
+                        fetchPriority="high"
+                        sizes="(min-width: 1024px) min(48vw, 720px), 100vw"
+                        className="h-full w-full object-cover object-top"
+                      />
+                    </div>
+                  </div>
+                  <figcaption className="mt-3 font-mono text-[12px] text-gray-500">
+                    A client&apos;s page cited by all 7 AI engines — example scan.
+                  </figcaption>
+                </figure>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 2 — Proof bar, hardest results first */}
+      {/* 2 — Proof band (dark) */}
       <ProofResults />
 
-      {/* 3 — Problem frame */}
-      <PainScenarioSection
-        eyebrow="What's actually happening"
-        scenario="Your Google Search Console shows impressions climbing and clicks flat or falling. A buyer asks ChatGPT &ldquo;best [your category]&rdquo; and it names three competitors, by name — not you. And your classic SEO report has no column for any of it, because rank trackers can&apos;t see inside an AI answer."
-        bridge="Three symptoms, one cause: the answer your buyer reads is being written by an AI engine that doesn't cite you yet. That's the gap I close — and the one I can actually measure."
-      />
-
-      {/* 4 — Deliverables: 4 outcome pillars */}
-      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
+      {/* 3 — Problem frame: three symptoms, one cause */}
+      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-24">
         <div className="mx-auto max-w-5xl">
           <div className="max-w-2xl">
             <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-              What you actually get
+              What&apos;s actually happening
             </p>
             <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-              Four outcomes, not a list of tasks.
+              Three symptoms. <span className="text-accent-700">One cause.</span>
             </h2>
           </div>
-          <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:gap-12">
-            {deliverables.map((d) => (
-              <div key={d.tag}>
-                <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-                  {d.tag}
+
+          <ol className="mt-10 divide-y divide-gray-200 border-y border-gray-200">
+            {problemPoints.map((p) => (
+              <li key={p.num} className="flex items-start gap-6 py-6 md:gap-10">
+                <span className="font-mono text-2xl font-bold tabular-nums text-accent-700 md:text-3xl">
+                  {p.num}
+                </span>
+                <p className="max-w-2xl pt-1 text-[17px] font-medium leading-snug tracking-tight text-gray-800 md:text-lg">
+                  {p.text}
                 </p>
-                <h3 className="mt-2 text-lg font-semibold leading-snug tracking-tight text-gray-900">{d.title}</h3>
-                <p className="mt-2 text-[15px] leading-relaxed text-gray-600">{d.body}</p>
-              </div>
+              </li>
             ))}
-          </div>
-        </div>
-      </section>
+          </ol>
 
-      {/* 5 — How it works */}
-      <HowItWorks3Step heading="How the work runs: audit, build, track." steps={steps} />
-
-      {/* 6 — Full case study */}
-      <section className="border-t border-[var(--surface-mint-border)] bg-[var(--surface-mint)] px-6 py-16 sm:py-24">
-        <div className="mx-auto max-w-3xl">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-            The case study is my own site
+          <p className="mt-10 max-w-3xl text-[clamp(1.15rem,2vw,1.5rem)] font-semibold leading-snug tracking-tight text-gray-600">
+            One cause: the answer your buyer reads is being written by an AI engine that{" "}
+            <span className="text-accent-700">doesn&apos;t cite you yet.</span> That&apos;s the gap I close —
+            and the one I can actually measure.
           </p>
-          <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-            From a zero-authority domain to page one — and into the AI answers.
-          </h2>
-          <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-gray-600">
-            <p>
-              I didn&apos;t buy an aged domain or a link package. I started geotoolbox.ai from nothing and
-              published, applying the exact method I sell here. About {proofStats.weeksToResult} weeks in, the
-              Google Search Console numbers were {proofStats.google.rankedKeywords.toLocaleString("en-US")} keywords
-              ranked, {proofStats.google.top10.toLocaleString("en-US")} of them in the top 10 and{" "}
-              {proofStats.google.top3} in the top 3, at roughly{" "}
-              {proofStats.google.dailyImpressions.toLocaleString("en-US")} impressions a day. Real, unique, and
-              verifiable in GSC.
-            </p>
-            <p>
-              The part a normal SEO can&apos;t report: over a three-month window, Bing Webmaster Tools&apos; AI
-              Performance report logged about {proofStats.aiCitations.total.toLocaleString("en-US")} AI-citation
-              appearances across Microsoft Copilot and partner assistants; Bing reports about{" "}
-              {proofStats.aiCitations.avgCitedPages} pages cited on average over the window. That figure is a sampled appearance count, not
-              unique citations, and it&apos;s Bing&apos;s data — not ChatGPT&apos;s, Perplexity&apos;s or Google&apos;s.
-            </p>
-            <p>
-              Here&apos;s why it matters commercially: the prompts I get cited for most aren&apos;t trivia. The top AI
-              grounding queries are buying-intent — &ldquo;best tools for Search Generative Experience&rdquo; (around{" "}
-              {proofStats.topGroundingQuery.appearances.toLocaleString("en-US")} appearances in Bing&apos;s AI
-              Performance report), &ldquo;answer engine optimization vs SEO,&rdquo; &ldquo;Copilot vs Gemini.&rdquo; Those
-              are comparison and shortlist questions, the moment a buyer is deciding. That&apos;s the real estate I
-              build for clients.
+        </div>
+      </section>
+
+      {/* 4 — What you get + how it runs, merged: outcome headline + process
+          verb tag + output-chip endpoint. Distinct card/step treatment so the
+          mid-page doesn't read as the same hairline list stamped repeatedly. */}
+      <section className="border-t border-[var(--surface-mint-border)] bg-[var(--surface-mint)] px-6 py-16 sm:py-24">
+        <div className="mx-auto max-w-6xl">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-[5fr_7fr] lg:items-end lg:gap-16">
+            <div>
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+                What you get, and how it runs
+              </p>
+              <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
+                Three outcomes. <span className="text-accent-700">Audit, build, track.</span>
+              </h2>
+            </div>
+            <p className="max-w-xl text-base leading-relaxed text-gray-600">
+              No black box, no list of busywork tasks. Each stage is one outcome you can check, and each one
+              produces an artifact you can hold — a baseline, a rebuilt page, a monthly log — so you always
+              know what the money bought.
             </p>
           </div>
-          <div className="mt-10">
-            <SocialProofBlock
-              miniCase={{
-                result: `A brand-new, zero-authority domain: ${proofStats.google.top3} keywords into Google's top 3 in about ${proofStats.weeksToResult} weeks of publishing, plus ~${proofStats.aiCitations.total.toLocaleString("en-US")} AI-citation appearances in Bing's trailing 3-month report — on buying-intent prompts.`,
-                attribution: `geotoolbox.ai · Google Search Console + Bing WMT AI Performance · as of ${proofStats.asOf}`,
-              }}
-              showEngineGrid={false}
-              provenanceLine="Google figures are unique GSC data. The AI-citation figure is a 3-month sampled appearance count from Bing Webmaster Tools, not unique citations and sourced from Microsoft Copilot and partners — not ChatGPT, Perplexity, or Google."
-            />
+
+          <ol className="mt-14 space-y-4">
+            {flow.map((f) => (
+              <li
+                key={f.num}
+                className="grid grid-cols-1 gap-5 rounded-2xl border border-[var(--surface-mint-border)] bg-white/70 p-6 md:grid-cols-[auto_1fr_auto] md:items-center md:gap-8 md:p-7"
+              >
+                {/* Step number + process verb */}
+                <div className="flex items-center gap-4 md:w-36 md:flex-col md:items-start md:gap-2.5">
+                  <span className="font-mono text-3xl font-bold tabular-nums text-accent-700 md:text-4xl">
+                    {f.num}
+                  </span>
+                  <span className="inline-flex items-center rounded-full bg-accent-50 px-2.5 py-0.5 font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+                    {f.verb}
+                  </span>
+                </div>
+                {/* Outcome headline + detail */}
+                <div className="md:border-l md:border-[var(--surface-mint-border)] md:pl-8">
+                  <h3 className="text-lg font-semibold leading-snug tracking-tight text-gray-900">{f.title}</h3>
+                  <p className="mt-2 max-w-xl text-[15px] leading-relaxed text-gray-600">{f.body}</p>
+                </div>
+                {/* Output endpoint chip */}
+                <div className="md:text-right">
+                  <p className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-3 py-1.5 font-mono text-[12px] text-gray-700">
+                    <svg className="h-3 w-3 text-accent-600" viewBox="0 0 12 12" fill="none">
+                      <path d="M3 6h6m0 0L6 3m3 3L6 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    <span className="truncate">{f.output}</span>
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      {/* 6 — Case study: my own site (designed block with a receipt card) */}
+      <section className="border-t border-[var(--surface-mint-border)] bg-[var(--surface-mint)] px-6 py-16 sm:py-24">
+        <div className="mx-auto max-w-6xl">
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-[7fr_5fr] lg:gap-16">
+            <div>
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+                The case study is my own site
+              </p>
+              <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
+                From a zero-authority domain to page one —{" "}
+                <span className="text-accent-700">and into the AI answers.</span>
+              </h2>
+              <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-gray-600">
+                <p>
+                  I didn&apos;t buy an aged domain or a link package. I started geotoolbox.ai from nothing
+                  and published, applying the exact method I sell here. About {proofStats.weeksToResult}{" "}
+                  weeks in, Google Search Console showed the domain ranking across thousands of keywords,
+                  hundreds of them on page one, at a steady daily impression volume — real, unique, and
+                  verifiable in GSC. The exact figures are in the receipt.
+                </p>
+                <p>
+                  The part a normal SEO can&apos;t report: over a {proofStats.aiCitations.windowMonths}-month
+                  window, Bing Webmaster Tools&apos; AI Performance report logged a large volume of
+                  AI-citation appearances across Microsoft Copilot and partner assistants. That figure — in
+                  the receipt — is a sampled appearance count, not unique citations, and it&apos;s
+                  Bing&apos;s data, not ChatGPT&apos;s, Perplexity&apos;s or Google&apos;s.
+                </p>
+                <p>
+                  Why it matters commercially: the prompts I get cited for most aren&apos;t trivia. The top
+                  grounding queries are buying-intent — &ldquo;best tools for Search Generative
+                  Experience&rdquo; (around {fmt(proofStats.topGroundingQuery.appearances)} appearances in
+                  Bing&apos;s report), &ldquo;answer engine optimization vs SEO,&rdquo; &ldquo;Copilot vs
+                  Gemini.&rdquo; Comparison and shortlist questions — the moment a buyer decides. That&apos;s
+                  the real estate I build for clients.
+                </p>
+              </div>
+            </div>
+
+            {/* Receipt card — the headline figures, single-sourced */}
+            <div className="lg:pt-2">
+              <div className="rounded-2xl border border-[var(--surface-mint-border)] bg-white p-7 shadow-[0_20px_60px_-24px_rgba(15,23,42,0.16)]">
+                <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+                  geotoolbox.ai · the receipt
+                </p>
+                <dl className="mt-6 space-y-5">
+                  <div className="flex items-baseline justify-between gap-4 border-b border-gray-100 pb-5">
+                    <dt className="text-[13px] font-medium text-gray-600">In Google&apos;s top 3</dt>
+                    <dd className="font-mono text-2xl font-bold tabular-nums text-gray-900">
+                      {proofStats.google.top3}
+                    </dd>
+                  </div>
+                  <div className="flex items-baseline justify-between gap-4 border-b border-gray-100 pb-5">
+                    <dt className="text-[13px] font-medium text-gray-600">Keywords ranked in Google</dt>
+                    <dd className="font-mono text-2xl font-bold tabular-nums text-gray-900">
+                      {fmt(proofStats.google.rankedKeywords)}
+                    </dd>
+                  </div>
+                  <div className="flex items-baseline justify-between gap-4 border-b border-gray-100 pb-5">
+                    <dt className="text-[13px] font-medium text-gray-600">Google results, in about</dt>
+                    <dd className="font-mono text-2xl font-bold tabular-nums text-gray-900">
+                      {proofStats.weeksToResult} wks
+                    </dd>
+                  </div>
+                  <div className="flex items-baseline justify-between gap-4">
+                    <dt className="text-[13px] font-medium text-gray-600">
+                      AI-citation appearances
+                      <span className="mt-0.5 block font-mono text-[10px] font-semibold uppercase tracking-widest text-gray-400">
+                        {proofStats.aiCitations.windowMonths}-month Bing sample
+                      </span>
+                    </dt>
+                    <dd className="font-mono text-2xl font-bold tabular-nums text-gray-900">
+                      ~{fmt(proofStats.aiCitations.total)}
+                    </dd>
+                  </div>
+                </dl>
+                <p className="mt-6 border-t border-gray-100 pt-4 text-[12px] leading-relaxed text-gray-500">
+                  Google figures are unique GSC data. The AI-citation figure is a{" "}
+                  {proofStats.aiCitations.windowMonths}-month sampled appearance count from Bing Webmaster
+                  Tools (Microsoft Copilot and partners) — not unique citations, not ChatGPT, Perplexity, or
+                  Google. As of {proofStats.asOf}.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* 6b — Past client results (client projects the operator led before geotoolbox) */}
-      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-5xl">
+      {/* 6b — Past client track record: framed product cards */}
+      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-24">
+        <div className="mx-auto max-w-6xl">
           <div className="max-w-2xl">
             <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
               Before geotoolbox
             </p>
             <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-              What the method did for clients before geotoolbox
+              Two verticals. One method. Same result.
             </h2>
             <p className="mt-4 text-[15px] leading-relaxed text-gray-600">
-              Two client projects I personally led. Public data only — AI-engine citation scans from my own
-              tracker and Ahrefs, no private analytics. This ran on an earlier version of the content system I
-              use now.
+              One client&apos;s site, two guides in two very different verticals — both projects I personally
+              led. Public data only — AI-engine citation scans from my own tracker and Ahrefs, no private
+              analytics. This ran on an earlier version of the content system I use now.
             </p>
           </div>
 
-          <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8">
+          <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2">
             {pastClientResults.map((r) => (
-              <div
+              <figure
                 key={r.label}
-                className="flex flex-col rounded-2xl border border-gray-200 bg-white p-7 transition-all hover:border-gray-300 hover:shadow-[0_12px_24px_-12px_rgba(15,23,42,0.08)]"
+                className="flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)] transition-all hover:border-gray-300 hover:shadow-[0_20px_40px_-20px_rgba(15,23,42,0.14)]"
               >
-                <div className="overflow-hidden rounded-xl border border-gray-200">
-                  <Image
-                    src={r.image.src}
-                    width={r.image.width}
-                    height={r.image.height}
-                    alt={r.image.alt}
-                    loading="lazy"
-                    sizes="(min-width: 768px) 40vw, 100vw"
-                    className="h-auto w-full"
-                  />
+                {/* Browser-framed screenshot — this IS the proof section, so
+                    eager-load and give the image area a light placeholder so no
+                    white void shows while it decodes. */}
+                <div className="border-b border-gray-100">
+                  <div aria-hidden="true" className="flex items-center gap-2 border-b border-gray-100 bg-gray-50 px-4 py-2.5">
+                    <span className="h-2 w-2 rounded-full bg-gray-300" />
+                    <span className="h-2 w-2 rounded-full bg-gray-300" />
+                    <span className="h-2 w-2 rounded-full bg-gray-300" />
+                    <span className="ml-2 font-mono text-[10px] uppercase tracking-widest text-gray-400">
+                      geotoolbox GEO Scan
+                    </span>
+                  </div>
+                  <div className="bg-gray-50">
+                    <Image
+                      src={r.image.src}
+                      width={r.image.width}
+                      height={r.image.height}
+                      alt={r.image.alt}
+                      loading="eager"
+                      sizes="(min-width: 768px) min(46vw, 640px), 100vw"
+                      className="h-auto w-full"
+                    />
+                  </div>
                 </div>
-                <p className="mt-2 text-[12px] text-gray-500">
-                  Live cross-engine scan · geotoolbox GEO Scan
-                </p>
-                <p className="mt-4 font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-                  {r.label}
-                </p>
-                <ul className="mt-4 flex flex-col gap-3">
-                  {r.points.map((point) => (
-                    <li key={point} className="flex gap-2.5 text-[15px] leading-relaxed text-gray-600">
-                      <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-700" />
-                      <span>{point}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                <figcaption className="flex flex-1 flex-col p-7">
+                  <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+                    {r.label}
+                  </p>
+                  <ul className="mt-4 flex flex-col gap-3">
+                    {r.points.map((point) => (
+                      <li key={point} className="flex gap-2.5 text-[15px] leading-relaxed text-gray-600">
+                        <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-700" />
+                        <span>{point}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </figcaption>
+              </figure>
             ))}
           </div>
 
@@ -477,82 +655,110 @@ export default function AiSeoServicePage() {
       </section>
 
       {/* 7 — Offer ladder + risk reversal */}
-      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-24">
+      <section className="border-t border-[var(--surface-mint-border)] bg-[var(--surface-mint)] px-6 py-16 sm:py-24">
         <div className="mx-auto max-w-6xl">
           <div className="max-w-2xl">
             <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
               How to start
             </p>
             <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-              Start free. Scale only when the numbers say to.
+              Start with the diagnostic. <span className="text-accent-700">Scale when the numbers say to.</span>
             </h2>
             <p className="mt-4 text-[15px] leading-relaxed text-gray-600">
-              Every step earns the next. You never commit to a retainer before you&apos;ve seen the opportunity in
-              your own numbers.
+              Two one-off purchases and one ongoing engagement. Start with the Report — you never commit to
+              a retainer before you&apos;ve seen the opportunity in your own numbers.
             </p>
           </div>
 
-          <div className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-12 grid grid-cols-1 items-start gap-5 md:grid-cols-3">
             {tiers.map((t) => (
               <div
                 key={t.name}
-                className="flex flex-col rounded-2xl border border-gray-200 bg-white p-6 transition-all hover:border-gray-300 hover:shadow-[0_12px_24px_-12px_rgba(15,23,42,0.08)]"
+                className={
+                  t.featured
+                    ? "relative flex flex-col rounded-2xl border-2 border-accent-500 bg-white p-7 shadow-[0_24px_50px_-24px_rgba(13,148,136,0.35)] md:-mt-3"
+                    : "relative flex flex-col rounded-2xl border border-gray-200 bg-white p-7 transition-all hover:border-gray-300 hover:shadow-[0_12px_24px_-12px_rgba(15,23,42,0.08)]"
+                }
               >
-                <h3 className="text-[15px] font-bold tracking-tight text-gray-900">{t.name}</h3>
-                <div className="mt-3 flex items-baseline gap-1.5">
-                  <span className="text-2xl font-bold tracking-tight text-gray-900 tabular-nums">{t.price}</span>
+                {t.featured && (
+                  <span className="absolute -top-3 left-7 inline-flex items-center rounded-full bg-accent-700 px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-white shadow-sm">
+                    Most popular
+                  </span>
+                )}
+                <div className="flex items-center justify-between gap-3">
+                  <h3 className="text-[15px] font-bold tracking-tight text-gray-900">{t.name}</h3>
+                  <span
+                    className={
+                      t.kind === "buy"
+                        ? "rounded-full bg-accent-50 px-2.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-widest text-accent-700"
+                        : "rounded-full bg-gray-100 px-2.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-widest text-gray-500"
+                    }
+                  >
+                    {t.kind === "buy" ? "One-off" : "Retainer"}
+                  </span>
+                </div>
+                <div className="mt-4 flex items-baseline gap-1.5">
+                  {t.pricePrefix && (
+                    <span className="text-[13px] font-medium text-gray-500">{t.pricePrefix}</span>
+                  )}
+                  <span className="text-3xl font-bold tracking-tight tabular-nums text-gray-900">{t.price}</span>
                   {t.cadence && <span className="text-[13px] font-medium text-gray-500">{t.cadence}</span>}
                 </div>
-                <p className="mt-3 text-[13px] font-semibold leading-snug text-gray-800">{t.summary}</p>
-                <p className="mt-2 text-[13px] leading-relaxed text-gray-600">{t.detail}</p>
-                <div className="mt-5 flex flex-col gap-2 pt-2">
+                <p className="mt-1 text-[12px] font-medium text-gray-500">{t.billing}</p>
+                <p className="mt-4 text-[13px] font-semibold leading-snug text-gray-800">{t.summary}</p>
+                <p className="mt-2 flex-1 text-[13px] leading-relaxed text-gray-600">{t.detail}</p>
+                <div className="mt-6">
                   <Link
                     href={t.cta.href}
                     prefetch={false}
-                    className="inline-flex items-center justify-center gap-2 rounded-full bg-accent-900 px-5 py-2.5 text-[13px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 active:translate-y-[1px]"
+                    className={
+                      t.kind === "buy"
+                        ? "inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent-900 px-5 py-3 text-[13px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 active:translate-y-[1px]"
+                        : "inline-flex w-full items-center justify-center rounded-full border border-gray-300 px-5 py-3 text-[13px] font-semibold text-gray-800 transition-colors hover:border-gray-400 hover:text-gray-900"
+                    }
                   >
                     {t.cta.label}
+                    {t.kind === "buy" && (
+                      <svg className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    )}
                   </Link>
-                  {t.secondaryCta && (
-                    <Link
-                      href={t.secondaryCta.href}
-                      className="inline-flex items-center justify-center rounded-full border border-gray-200 px-5 py-2.5 text-[13px] font-medium text-gray-700 transition-colors hover:border-gray-400 hover:text-gray-900"
-                    >
-                      {t.secondaryCta.label}
-                    </Link>
-                  )}
                 </div>
               </div>
             ))}
           </div>
 
           <p className="mt-6 text-[13px] font-medium text-gray-500">
-            The Map fee is credited toward a Sprint or retainer if you start within 14 days. I take 4 active clients, so
-            there&apos;s sometimes a short wait.
+            The Report fee is credited toward a Sprint or retainer if you continue within 14 days. I take 4
+            active clients, so there&apos;s sometimes a short wait.
+          </p>
+          <p className="mt-2 text-[13px] leading-relaxed text-gray-500">
+            Fixed price, paid by card once we&apos;ve scoped it — direct Stripe checkout coming shortly.
           </p>
 
           {/* Risk reversal */}
-          <div className="mt-10 grid grid-cols-1 gap-6 rounded-2xl border border-[var(--surface-mint-border)] bg-[var(--surface-mint)] p-7 sm:grid-cols-3">
+          <div className="mt-10 grid grid-cols-1 gap-7 rounded-2xl border border-gray-200 bg-white p-8 sm:grid-cols-3">
             <div>
               <h3 className="text-[14px] font-bold tracking-tight text-gray-900">On-time delivery guarantee</h3>
               <p className="mt-2 text-[13px] leading-relaxed text-gray-600">
-                If I miss a milestone after you&apos;ve given on-time access and feedback, I refund that milestone&apos;s
-                fee. I never guarantee rankings or citations — no honest person can — only that I deliver on time or
-                pay for missing.
+                If I miss a milestone after you&apos;ve given on-time access and feedback, I refund that
+                milestone&apos;s fee. I never guarantee rankings or citations — no honest person can — only
+                that I deliver on time or pay for missing.
               </p>
             </div>
             <div>
               <h3 className="text-[14px] font-bold tracking-tight text-gray-900">You own everything</h3>
               <p className="mt-2 text-[13px] leading-relaxed text-gray-600">
-                Every page, dashboard and dataset is yours. If we stop working together, you keep the work, the
-                tracker baseline, and the pages — nothing is held hostage.
+                Every page, dashboard and dataset is yours. If we stop working together, you keep the work,
+                the tracker baseline, and the pages — nothing is held hostage.
               </p>
             </div>
             <div>
-              <h3 className="text-[14px] font-bold tracking-tight text-gray-900">Start with the Map</h3>
+              <h3 className="text-[14px] font-bold tracking-tight text-gray-900">Start with the Report</h3>
               <p className="mt-2 text-[13px] leading-relaxed text-gray-600">
-                If the opportunity doesn&apos;t justify implementation, you keep the research and owe no retainer. The
-                Map has to earn the sprint before the sprint earns the retainer.
+                If the opportunity doesn&apos;t justify implementation, you keep the research and owe no
+                retainer. The Report has to earn the Sprint before the Sprint earns the retainer.
               </p>
             </div>
           </div>
@@ -563,34 +769,36 @@ export default function AiSeoServicePage() {
       <FeatureFaq items={faqs} heading="The six questions I always get" />
 
       {/* 9 — Final CTA */}
-      <section className="bg-gray-950 px-6 py-20 sm:py-24">
-        <div className="mx-auto flex max-w-5xl flex-col items-start gap-6 md:flex-row md:items-center md:justify-between md:gap-12">
+      <section className="relative overflow-hidden bg-gray-950 px-6 py-20 sm:py-24">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 opacity-[0.06]"
+          style={{
+            backgroundImage:
+              "linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)",
+            backgroundSize: "64px 64px",
+          }}
+        />
+        <div className="relative mx-auto flex max-w-5xl flex-col items-start gap-8 md:flex-row md:items-center md:justify-between md:gap-12">
           <div>
             <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
               The answers are being written right now.
               <br className="hidden sm:block" /> With you or without you.
             </h2>
-            <p className="mt-3 text-base text-gray-300">
-              Book the free 20-minute teardown. I&apos;ll read your AI visibility with you and tell you straight
-              whether this is worth doing.
+            <p className="mt-3 max-w-lg text-base leading-relaxed text-gray-300">
+              Book a call. I&apos;ll read your AI visibility with you and tell you straight whether this is
+              worth doing — founder to founder, no handoff.
             </p>
           </div>
-          <div className="flex shrink-0 flex-col gap-3">
+          <div className="shrink-0">
             <Link
               href={TEARDOWN_HREF}
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 hover:shadow-xl hover:shadow-black/30 active:translate-y-[1px]"
             >
-              Book a 20-min teardown
+              Book a call
               <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-            </Link>
-            <Link
-              href={FREE_CHECK_HREF}
-              prefetch={false}
-              className="inline-flex items-center justify-center rounded-full border border-white/25 px-7 py-3.5 text-[15px] font-medium text-white transition-colors hover:border-white/50"
-            >
-              Run my free check first
             </Link>
           </div>
         </div>

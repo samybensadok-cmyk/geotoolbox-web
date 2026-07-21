@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { usePathname } from "next/navigation"
 import { siteConfig } from "@/lib/config"
 
 const DISMISS_KEY = "promoBannerDismissed:LAUNCH20"
@@ -30,16 +31,21 @@ const COPY = {
 
 export function PromoBanner({ locale = "en" }: { locale?: string }) {
   const [dismissed, setDismissed] = useState(true)
+  const pathname = usePathname()
   const t = locale === "fr" ? COPY.fr : COPY.en
 
   useEffect(() => {
     setDismissed(localStorage.getItem(DISMISS_KEY) === "1")
   }, [])
 
+  // Suppress the sitewide discount banner on service (money) pages — a 20%-off
+  // code above a $4,000 offer creates discount ambiguity.
+  if (pathname?.startsWith("/services")) return null
+
   if (dismissed) return null
 
   return (
-    <div className="flex items-center justify-center gap-3 bg-accent-600 px-4 py-2 text-center text-sm text-white">
+    <div className="flex items-center justify-center gap-3 bg-accent-700 px-4 py-2 text-center text-sm text-white">
       <p>
         {t.message}{" "}
         <a href={siteConfig.appSignupUrl} className="underline underline-offset-2">
