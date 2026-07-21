@@ -24,10 +24,11 @@ export const TOPICS: Topic[] = [
     slug: "comparisons",
     label: "Comparisons",
     tags: [
-      "ai-comparison", "comparison", "agency-vs-software", "chinese-ai-models",
+      "ai-comparison", "comparison", "comparisons", "agency-vs-software", "chinese-ai-models",
       "claude-vs-chatgpt", "claude-vs-gemini", "gemini-vs-chatgpt",
       "grok-vs-chatgpt", "grok-vs-claude", "grok-vs-gemini", "chatgpt-vs-perplexity",
       "microsoft-copilot-vs-chatgpt", "copilot-vs-chatgpt", "copilot-vs-gemini",
+      "semrush-vs-ahrefs", "seo-tools",
     ],
   },
   {
