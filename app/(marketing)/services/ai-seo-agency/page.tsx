@@ -83,7 +83,7 @@ const tiers: Tier[] = [
   },
   {
     name: "30-Day AI Visibility Sprint",
-    price: "$4,000",
+    price: "$4,500",
     billing: "One-off",
     summary: "Thirty days of building: fixes shipped, priority pages rebuilt to be cited.",
     detail:
@@ -224,7 +224,7 @@ const serviceSchema = {
     {
       "@type": "Offer",
       name: "30-Day AI Visibility Sprint",
-      price: "4000",
+      price: "4500",
       priceCurrency: "USD",
       description: "Thirty days of technical fixes and priority pages rebuilt to be citable.",
     },
