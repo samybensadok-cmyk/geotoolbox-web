@@ -14,9 +14,10 @@ import { proofStats } from "@/lib/proof-stats"
 const PAGE_URL = `${siteConfig.url}/services/ai-seo-agency`
 // Every call books an intro/teardown call — no free-tool CTA anywhere on this page.
 const TEARDOWN_HREF = "/contact"
-// The two one-off offers are DIRECT PURCHASES. Placeholder to /contact for now.
-// TODO: wire Stripe checkout for the Report one-off (the only fixed-price direct buy).
-const CHECKOUT = { report: "/contact", sprint: "/contact" }
+// The $750 Report is a direct purchase — wired to the live Stripe checkout
+// endpoint (Vercel rewrites /app/* to the Replit app; the handler 303-redirects
+// to Stripe Checkout). Sprint/retainer stay book-a-call.
+const CHECKOUT = { report: "/app/?action=service_checkout&item=report", sprint: "/contact" }
 
 export const metadata: Metadata = {
   title: "Done-For-You AI SEO & GEO Service",
@@ -83,7 +84,7 @@ const tiers: Tier[] = [
     summary: "The full baseline: prompts, engines, competitors, and the pages worth building.",
     detail:
       "A one-off diagnostic that maps the buying-intent prompts in your market, who gets cited today, and the specific pages to build.",
-    cta: { label: "Start the report", href: CHECKOUT.report },
+    cta: { label: "Buy the Report — $750", href: CHECKOUT.report },
     kind: "buy",
     chip: "One-off",
   },
@@ -726,22 +727,27 @@ export default function AiSeoServicePage() {
                 <p className="mt-4 text-[13px] font-semibold leading-snug text-gray-800">{t.summary}</p>
                 <p className="mt-2 flex-1 text-[13px] leading-relaxed text-gray-600">{t.detail}</p>
                 <div className="mt-6">
-                  <Link
-                    href={t.cta.href}
-                    prefetch={false}
-                    className={
-                      t.kind === "buy"
-                        ? "inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent-900 px-5 py-3 text-[13px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 active:translate-y-[1px]"
-                        : "inline-flex w-full items-center justify-center rounded-full border border-gray-300 px-5 py-3 text-[13px] font-semibold text-gray-800 transition-colors hover:border-gray-400 hover:text-gray-900"
-                    }
-                  >
-                    {t.cta.label}
-                    {t.kind === "buy" && (
+                  {t.kind === "buy" ? (
+                    // Full-page navigation (not next/link) so the browser follows
+                    // the checkout handler's 303 redirect to Stripe.
+                    <a
+                      href={t.cta.href}
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent-900 px-5 py-3 text-[13px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 active:translate-y-[1px]"
+                    >
+                      {t.cta.label}
                       <svg className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
-                    )}
-                  </Link>
+                    </a>
+                  ) : (
+                    <Link
+                      href={t.cta.href}
+                      prefetch={false}
+                      className="inline-flex w-full items-center justify-center rounded-full border border-gray-300 px-5 py-3 text-[13px] font-semibold text-gray-800 transition-colors hover:border-gray-400 hover:text-gray-900"
+                    >
+                      {t.cta.label}
+                    </Link>
+                  )}
                 </div>
               </div>
             ))}
@@ -752,7 +758,7 @@ export default function AiSeoServicePage() {
             active clients, so there&apos;s sometimes a short wait.
           </p>
           <p className="mt-2 text-[13px] leading-relaxed text-gray-500">
-            The $750 Report is a fixed price, payable by card — direct checkout is coming shortly. The Sprint and retainer are scoped to your project on the call. Focused on one surface? See the{" "}
+            The $750 Report is a fixed price, payable by card — buy it above and you&apos;ll go straight to secure checkout. The Sprint and retainer are scoped to your project on the call. Focused on one surface? See the{" "}
             <Link href="/services/generative-engine-optimization" className="font-medium text-accent-700 underline decoration-accent-200 underline-offset-2 hover:decoration-accent-500">
               generative engine optimization
             </Link>{" "}
