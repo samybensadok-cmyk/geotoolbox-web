@@ -217,6 +217,13 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
           </Link>
 
           <Link
+            href={L("/services/ai-seo-agency")}
+            className="flex min-h-[40px] items-center rounded-md px-3 text-[13px] font-medium text-gray-700 transition-colors hover:text-gray-900 hover:bg-gray-50"
+          >
+            {nav?.services ?? "Services"}
+          </Link>
+
+          <Link
             href={L("/blog")}
             className="flex min-h-[40px] items-center rounded-md px-3 text-[13px] font-medium text-gray-700 transition-colors hover:text-gray-900 hover:bg-gray-50"
           >
@@ -365,6 +372,14 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
               className="rounded-lg px-2 py-3 text-sm font-medium text-gray-900 hover:bg-gray-50"
             >
               {nav?.pricing ?? "Pricing"}
+            </Link>
+
+            <Link
+              href={L("/services/ai-seo-agency")}
+              onClick={() => setMobileOpen(false)}
+              className="rounded-lg px-2 py-3 text-sm font-medium text-gray-900 hover:bg-gray-50"
+            >
+              {nav?.services ?? "Services"}
             </Link>
 
             <Link

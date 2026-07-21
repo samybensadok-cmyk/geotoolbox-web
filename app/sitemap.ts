@@ -49,6 +49,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
     ...marketingEntries("/features", { changeFrequency: "weekly", priority: 0.9 }),
     ...marketingEntries("/pricing", { changeFrequency: "weekly", priority: 0.9 }),
+    // EN-only commercial landing under app/(marketing)/services/. Plain single
+    // entry (no hreflang) — same shape as the feature-detail pages below; NOT
+    // marketingEntries(), which would emit /fr/... URLs that 404.
+    {
+      url: `${siteConfig.url}/services/ai-seo-agency`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
     {
       url: `${siteConfig.url}/about`,
       lastModified: new Date(),
