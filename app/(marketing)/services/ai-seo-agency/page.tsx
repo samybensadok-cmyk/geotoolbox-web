@@ -1,7 +1,9 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import Image from "next/image"
+import { Suspense } from "react"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
+import { CheckoutStatusBanner } from "@/components/services/checkout-status-banner"
 import { FeatureFaq } from "@/components/features/feature-faq"
 import { ProofResults } from "@/components/services/proof-results"
 import { JsonLd } from "@/components/seo/json-ld"
@@ -265,6 +267,11 @@ export default function AiSeoServicePage() {
   return (
     <>
       <JsonLd data={serviceSchema} />
+
+      {/* 0 — Stripe Checkout return banner (renders only with ?status=…) */}
+      <Suspense fallback={null}>
+        <CheckoutStatusBanner />
+      </Suspense>
 
       {/* 1 — Hero: self-demo headline + founder credential + live-scan product card */}
       <section className="relative overflow-hidden bg-white px-6 pt-10 pb-16 sm:pt-14 sm:pb-24">
