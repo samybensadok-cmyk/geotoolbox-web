@@ -13,8 +13,13 @@ export function CheckoutStatusBanner() {
   const params = useSearchParams()
   const status = params.get("status")
   const purchase = params.get("purchase")
+  const sessionId = params.get("session_id")
 
   if (status !== "success" && status !== "cancel") return null
+  // Only show "payment received" for a real Stripe redirect — the success_url
+  // carries a cs_-prefixed session_id. Without it (someone hand-typing
+  // ?status=success), render nothing rather than a false confirmation.
+  if (status === "success" && !sessionId?.startsWith("cs_")) return null
 
   const itemLabel =
     purchase === "sprint" ? "30-Day AI Visibility Sprint" : "AI Search Visibility Report"
