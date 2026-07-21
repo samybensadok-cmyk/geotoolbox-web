@@ -9,50 +9,64 @@ import { siteConfig } from "@/lib/config"
 import { PRIMARY_AUTHOR } from "@/lib/authors"
 import { proofStats } from "@/lib/proof-stats"
 
-const PAGE_URL = `${siteConfig.url}/services/ai-seo-agency`
-// Every call books an intro/teardown call — no free-tool CTA anywhere on this page.
-const TEARDOWN_HREF = "/contact"
-// The two one-off offers are DIRECT PURCHASES. Placeholder to /contact for now.
-// TODO: wire Stripe checkout for the Report one-off (the only fixed-price direct buy).
-const CHECKOUT = { report: "/contact", sprint: "/contact" }
+const PAGE_URL = `${siteConfig.url}/services/generative-engine-optimization`
+// Every CTA books a call — no free-tool CTA, no self-serve tier on this page.
+const CALL_HREF = "/contact"
 
 export const metadata: Metadata = {
-  title: "Done-For-You AI SEO & GEO Service",
+  // Base title 38 chars — template suffix "| GEO Toolbox" keeps total ≤60.
+  title: "Generative Engine Optimization Service",
   description:
-    "I built GEO Toolbox — the platform used to measure AI visibility — and I do your work myself. Priority pages rebuilt to get cited in ChatGPT, Perplexity and Copilot, proved monthly with my own tracker. Not an agency team.",
+    "Done-for-you GEO by the founder who built the tracker: your pages rebuilt to be cited inside ChatGPT, Perplexity, Gemini, Copilot and AI Overviews answers — proved monthly with cross-engine citation logs.",
   openGraph: {
-    title: "Done-For-You AI SEO & GEO, By The Founder Who Built The Tracker",
+    title: "Generative Engine Optimization, Done For You By The Founder",
     description:
-      "I built the platform the industry uses to measure AI visibility — and I personally rebuild your pages to get cited in ChatGPT, Perplexity and Copilot, proved monthly. Not an agency team.",
+      "AI engines compose the answer your buyer reads and cite a handful of sources. I rebuild your pages to be one of them — and prove it monthly with the citation tracker I built.",
   },
   alternates: { canonical: PAGE_URL },
 }
 
-// Merged "what you get" (outcomes) + "how it runs" (process) — one section so
-// the near-duplicate baseline→rewrite→report copy isn't stamped twice. Each row:
-// the outcome as headline, the process verb as a mono tag, the output as a chip.
+// What GEO is / isn't — the category-definition rows this page exists to own.
+const definitionRows = [
+  {
+    num: "01",
+    title: "GEO is getting cited inside the composed answer.",
+    body: "When ChatGPT, Perplexity, Gemini, Copilot or Google's AI Overviews write an answer, they pull from a handful of sources and name them. Generative engine optimization is the work of becoming one of those named sources for the prompts your buyers actually ask.",
+  },
+  {
+    num: "02",
+    title: "It is not classic SEO — and it doesn't replace it.",
+    body: "SEO earns a ranking a human might click. GEO earns a citation inside the answer the human reads instead of clicking. The overlap is real — clean structure and verifiable claims lift both — but the scoreboard is different: citations per prompt per engine, not positions.",
+  },
+  {
+    num: "03",
+    title: "It is not AEO either.",
+    body: "Answer engine optimization targets the extracted block — the featured snippet, People Also Ask, the answer slot inside an AI Overview, the voice answer. GEO targets the synthesized answer an AI composes across cited sources. The two jobs meet inside AI Overviews, which both cite sources and extract blocks; I run both, measured separately.",
+  },
+]
+
 type FlowRow = { num: string; verb: string; title: string; body: string; output: string }
 
 const flow: FlowRow[] = [
   {
     num: "01",
     verb: "Audit",
-    title: "You see exactly where you stand — before I touch anything.",
-    body: "Week one: a cross-engine baseline from my own tracker — which prompts your buyers use, which engines cite you versus your competitors, the gap in numbers. You start from data, not a hunch.",
-    output: "cross-engine baseline",
+    title: "A citation baseline across the engines that matter — before I touch anything.",
+    body: "Week one: my tracker queries ChatGPT, Perplexity, Gemini, Copilot and AI Overviews with the prompts your buyers use, and logs who gets cited today — you, or your competitors, by name. You start from a measured gap, not a hunch.",
+    output: "cross-engine citation baseline",
   },
   {
     num: "02",
     verb: "Build",
-    title: "Your pages get rewritten to be quotable — and you own the questions that end in a purchase.",
-    body: "I rebuild your priority pages so an AI engine can lift your answer with your name attached: verifiable claims, clean structure, the sources an engine trusts. The focus is the comparison and “which should I buy” prompts where the shortlist forms, past the “what is [category]” trivia — while your classic Google rankings hold.",
-    output: "priority pages rebuilt",
+    title: "Your priority pages rebuilt so an engine can quote you with your name attached.",
+    body: "Verifiable claims, clean structure, the sources an engine trusts. The focus is the comparison and “which should I buy” prompts where the shortlist forms — the citations that precede a purchase, not trivia mentions — while your classic Google rankings hold.",
+    output: "citable priority pages",
   },
   {
     num: "03",
     verb: "Track",
-    title: "Every month: citations gained, engines, prompts — tracker logs, not sentiment.",
-    body: "Your report is the raw tracker output — which engines, which prompts, the deltas. A log from a measurement tool. If a month is flat, it says flat. Same numbers, both of us.",
+    title: "Monthly citation logs: which engines, which prompts, what changed.",
+    body: "Your report is the raw tracker output — citations gained and lost, per engine, per prompt, with deltas. If a month is flat, the log says flat. Same numbers on my screen and yours.",
     output: "monthly citation log",
   },
 ]
@@ -78,10 +92,10 @@ const tiers: Tier[] = [
     name: "Visibility Report",
     price: "$750",
     billing: "One-off",
-    summary: "The full baseline: prompts, engines, competitors, and the pages worth building.",
+    summary: "The full GEO baseline: prompts, engines, competitors, and the pages worth building.",
     detail:
-      "A one-off diagnostic that maps the buying-intent prompts in your market, who gets cited today, and the specific pages to build.",
-    cta: { label: "Start the report", href: CHECKOUT.report },
+      "A one-off diagnostic that maps the buying-intent prompts in your market, who gets cited today across the AI engines, and the specific pages to build.",
+    cta: { label: "Start the report", href: CALL_HREF },
     kind: "buy",
     chip: "One-off",
   },
@@ -93,7 +107,7 @@ const tiers: Tier[] = [
     summary: "Thirty days of building: fixes shipped, priority pages rebuilt to be cited.",
     detail:
       "Technical fixes, your priority pages rebuilt to be citable, and the citation and source work that gets an engine to quote you. Scope and price depend on your site's size — we set both on the call. The Sprint counts as month one if you continue on a retainer within 30 days.",
-    cta: { label: "Book a call", href: TEARDOWN_HREF },
+    cta: { label: "Book a call", href: CALL_HREF },
     kind: "call",
     chip: "One-off",
     featured: true,
@@ -104,114 +118,55 @@ const tiers: Tier[] = [
     price: "$3,500",
     cadence: "/mo",
     billing: "90-day initial commitment",
-    summary: "The compounding version: new pages, new prompts, tracked every month.",
+    summary: "The compounding version: new citable pages, new prompts, tracked every month.",
     detail:
       "Continuous GEO and SEO work — new citable pages, more buying-intent prompts taken one by one, and the monthly tracker report. Then month to month.",
-    cta: { label: "Book a call", href: TEARDOWN_HREF },
+    cta: { label: "Book a call", href: CALL_HREF },
     kind: "call",
     chip: "Retainer",
   },
 ]
 
-type PastClientResult = {
-  label: string
-  points: string[]
-  image: { src: string; width: number; height: number; alt: string }
-}
-
-// Past CLIENT projects the operator personally led, before geotoolbox — public
-// data only (AI-engine citation scans + Ahrefs). Numbers single-sourced here.
-// Accuracy: "#1 / #2 cited source" and "N of 7 AI engines" come from an AI
-// citation scan (not organic rank); the legal guide is #1 in Google's AI
-// OVERVIEW, organic 5–6. No Ahrefs traffic estimates — positions only.
-const pastClientResults: PastClientResult[] = [
-  {
-    label: "Legal guide · Google Ads for lawyers",
-    points: [
-      "Cited by 7 of 7 AI engines — the #1 cited source for “how to run google ads for lawyers,” cited ahead of google.com itself.",
-      "Featured in Google’s AI Overview for “google ads for lawyers.” Organic position 5–6.",
-      "On page 1 within weeks of publishing, with no prior topical authority.",
-    ],
-    image: {
-      src: "/services/track-record/legal-ai-scan.png",
-      width: 1999,
-      height: 1602,
-      alt: "AI citation scan: the client's Google Ads for lawyers guide cited by all 7 AI engines, the #1 cited source above google.com.",
-    },
-  },
-  {
-    label: "Crypto guide · Crypto Google Ads",
-    points: [
-      "Cited by 6 of 7 AI engines — the #2 cited source, behind only google.com, for “how to run crypto Google Ads without getting disapproved.”",
-      "Ranks a cluster of crypto-ads terms at positions 2–10 (Ahrefs), several surfaced in Google’s AI Overview.",
-    ],
-    image: {
-      src: "/services/track-record/crypto-ai-scan.png",
-      width: 2208,
-      height: 1742,
-      alt: "AI citation scan: the client's crypto Google Ads guide cited by 6 of 7 AI engines, the #2 cited source behind only google.com.",
-    },
-  },
-]
-
-const problemPoints = [
-  {
-    num: "01",
-    text: "Your Google Search Console shows impressions climbing and clicks flat or falling.",
-  },
-  {
-    num: "02",
-    text: "A buyer asks ChatGPT “best [your category]” and it names three competitors, by name — not you.",
-  },
-  {
-    num: "03",
-    text: "Your classic SEO report has no column for any of it, because rank trackers can’t see inside an AI answer.",
-  },
-]
-
 const faqs = [
   {
-    question: "How is this different from regular SEO?",
-    answer: `Regular SEO earns a ranking a human might click. This earns a citation inside the answer the human actually reads — in ChatGPT, Perplexity, Copilot and AI Overviews. The overlap: good GEO work also lifts classic rankings (my test domain put ${proofStats.google.rankedKeywords.toLocaleString("en-US")} keywords into Google while chasing citations). The difference: a normal SEO can't hand you an AI-citation report. I built the platform that produces one.`,
-  },
-  {
-    question: "How long until results?",
+    question: "What exactly is generative engine optimization?",
     answer:
-      "My own zero-authority domain took about 7 weeks to first meaningful citations. Your site has age and authority mine didn't; your market has competition mine didn't — plan on first tracked movement in 4–8 weeks, compounding after. What you get in week one: the baseline. If someone promises AI citations in days, ask to see their tracking.",
+      "The work of getting your pages cited inside the answers AI engines compose — ChatGPT, Perplexity, Gemini, Copilot, Google's AI Overviews. When an engine writes an answer it pulls from a handful of sources and names them; GEO makes you one of those named sources for the prompts your buyers ask. Full definition in the glossary: geotoolbox.ai/glossary/generative-engine-optimization.",
   },
   {
-    question: "How do you measure it?",
+    question: "How is GEO different from SEO?",
+    answer: `SEO earns a ranking a human might click; GEO earns a citation inside the answer the human actually reads. The work overlaps more than the names suggest — my test domain put ${proofStats.google.rankedKeywords.toLocaleString("en-US")} keywords into Google while chasing citations — but the measurement is different: citations per prompt per engine, not positions. A normal SEO report has no column for it.`,
+  },
+  {
+    question: "How is GEO different from AEO?",
+    answer:
+      "AEO targets the extracted block — the featured snippet, People Also Ask, the AI Overview answer slot, the voice answer: one passage lifted verbatim. GEO targets the composed answer an AI writes across several cited sources. If your market's questions get answered by AI chat, GEO is the lever; if they get answered by a snippet, AEO is; AI Overviews reward both. I run them as separate, separately measured services.",
+  },
+  {
+    question: "How do you measure GEO?",
     answer:
       "With the cross-engine tracker I built (geotoolbox.ai). It queries the real engines with the real prompts your buyers use and logs who's cited, where, how often. Your monthly report is its raw output — prompts, engines, citations, deltas. A log, not an estimate.",
   },
   {
-    question: "What if it doesn't work?",
-    answer:
-      "The tracker will say so, the same month I see it — that's the deal with reporting from a measurement tool instead of a slide deck. No long-term lock-in; the baseline is yours to keep. I can't guarantee an LLM's output — anyone who does is lying — but you'll always know exactly what you got for the money.",
+    question: "How long until an engine cites me?",
+    answer: `My own zero-authority domain took about ${proofStats.weeksToResult} weeks to first meaningful citations. Your site has age and authority mine didn't; your market has competition mine didn't — plan on first tracked movement in 4–8 weeks, compounding after. Week one you get the baseline. If someone promises AI citations in days, ask to see their tracking.`,
   },
   {
-    question: "Why you and not an agency?",
+    question: "Why hire the founder instead of a GEO agency?",
     answer:
-      "The person who built GEO Toolbox — the platform the industry uses to measure AI visibility — is the person who does your work. Not a strategist on a sales call handing off to a junior, not three departments: the founder who built the measurement tool, in the code of your pages. Trade-off, stated plainly: I take 4 active clients, so there's sometimes a wait. What you get: founder-level execution in the one channel where your problem lives.",
-  },
-  {
-    question: "Is my industry too niche?",
-    answer:
-      "Niche is the best case. Fewer sources means the engines have fewer candidates to cite; one well-built, verifiable page can own an answer for months. The real qualifier isn't your industry — it's whether your buyers research before they buy.",
+      "The person who built GEO Toolbox — the platform used to measure AI visibility — is the person who does your work. Not a strategist handing off to a junior: the founder who built the measurement tool, in the code of your pages. Trade-off, stated plainly: I take 4 active clients, so there's sometimes a wait.",
   },
 ]
 
-// Minimal, valid Service node (no dedicated helper in lib/seo-schema). Typed as
-// Service (not ProfessionalService) so serviceType/provider/offers validate cleanly.
 const serviceSchema = {
   "@context": "https://schema.org",
   "@type": "Service",
-  name: "Done-For-You AI SEO & GEO Service",
+  name: "Generative Engine Optimization Service",
   description:
-    "Done-for-you AI visibility and SEO, run personally by Samy Ben Sadok — founder of GEO Toolbox: priority pages rebuilt to be cited in ChatGPT, Perplexity, Copilot and AI Overviews, measured monthly with a cross-engine citation tracker.",
+    "Done-for-you generative engine optimization run personally by Samy Ben Sadok, founder of GEO Toolbox: priority pages rebuilt to be cited inside ChatGPT, Perplexity, Gemini, Copilot and AI Overviews answers, measured monthly with a cross-engine citation tracker.",
   url: PAGE_URL,
   areaServed: "Worldwide",
-  serviceType: ["Generative Engine Optimization", "AI Search Visibility", "SEO"],
+  serviceType: ["Generative Engine Optimization", "AI Search Visibility"],
   provider: {
     "@type": "Person",
     "@id": `${siteConfig.url}/author/${PRIMARY_AUTHOR.slug}#person`,
@@ -226,7 +181,7 @@ const serviceSchema = {
       name: "Visibility Report",
       price: "750",
       priceCurrency: "USD",
-      description: "One-off diagnostic mapping buying-intent prompts, current citations, and the pages to build.",
+      description: "One-off diagnostic mapping buying-intent prompts, current AI citations, and the pages to build.",
     },
     {
       "@type": "Offer",
@@ -234,7 +189,6 @@ const serviceSchema = {
       description: "Thirty days of technical fixes and priority pages rebuilt to be citable. From $4,500, scoped to project size.",
       priceSpecification: {
         "@type": "PriceSpecification",
-        // Displayed as "from $4,500" — a floor, scoped on the call.
         minPrice: "4500",
         priceCurrency: "USD",
       },
@@ -245,7 +199,6 @@ const serviceSchema = {
       description: "Continuous GEO and SEO work with a monthly citation report. From $3,500/mo, 90-day initial commitment.",
       priceSpecification: {
         "@type": "UnitPriceSpecification",
-        // Displayed as "from $3,500/mo" — represent as a floor, not an exact price.
         minPrice: "3500",
         priceCurrency: "USD",
         unitText: "MONTH",
@@ -259,16 +212,13 @@ const serviceSchema = {
   ],
 }
 
-export default function AiSeoServicePage() {
-  const fmt = (n: number) => n.toLocaleString("en-US")
-
+export default function GeoServicePage() {
   return (
     <>
       <JsonLd data={serviceSchema} />
 
-      {/* 1 — Hero: self-demo headline + founder credential + live-scan product card */}
+      {/* 1 — Hero: composed-answer framing + founder credential + scan card */}
       <section className="relative overflow-hidden bg-white px-6 pt-10 pb-16 sm:pt-14 sm:pb-24">
-        {/* Ambient depth — two low-opacity radial glows behind a dotted grid */}
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0"
@@ -296,19 +246,17 @@ export default function AiSeoServicePage() {
           <Breadcrumbs
             trail={[
               { name: "Home", href: "/" },
-              { name: "Services", href: "" },
-              { name: "AI SEO & GEO", href: "" },
+              { name: "Services", href: "/services/ai-seo-agency" },
+              { name: "Generative Engine Optimization", href: "" },
             ]}
           />
 
           <div className="mt-6 grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center lg:gap-16">
-            {/* Text column */}
             <div className="animate-fade-up lg:col-span-6">
               <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-                Done-for-you AI visibility
+                Generative engine optimization
               </p>
 
-              {/* Founder credential pill */}
               <div className="mt-4">
                 <span className="inline-flex items-center gap-2.5 rounded-full border border-gray-200 bg-white/80 py-1 pl-1 pr-4 shadow-sm backdrop-blur">
                   <Image
@@ -327,19 +275,20 @@ export default function AiSeoServicePage() {
               </div>
 
               <h1 className="mt-6 text-[clamp(2rem,4.4vw,3.4rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-                Ask ChatGPT who&apos;s best in your market — if the answer isn&apos;t you,{" "}
-                <span className="text-accent-700">that&apos;s what I fix.</span>
+                The AI answer your buyer reads cites a handful of sources.{" "}
+                <span className="text-accent-700">My job is making one of them you.</span>
               </h1>
 
               <p className="mt-6 max-w-xl text-lg leading-relaxed text-gray-600">
-                Your buyers ask AI engines who to trust before they ever reach your site. I built GEO
-                Toolbox — the platform used to measure AI visibility — and I personally rebuild your pages
-                to get cited in those answers, then prove it monthly with the tracker I built.
+                ChatGPT, Perplexity, Gemini, Copilot and AI Overviews compose answers from sources they
+                name. I built GEO Toolbox — the platform used to measure AI visibility — and I personally
+                rebuild your pages to be cited in those answers, then prove it monthly with the tracker I
+                built.
               </p>
 
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Link
-                  href={TEARDOWN_HREF}
+                  href={CALL_HREF}
                   className="inline-flex items-center gap-2 rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
                 >
                   Book a call
@@ -357,9 +306,8 @@ export default function AiSeoServicePage() {
               <p className="mt-4 text-xs text-gray-500">20-min intro call · no obligation · I take 4 active clients.</p>
             </div>
 
-            {/* Product card — legal AI-scan in a browser frame. Wrapper is NOT
-                aria-hidden so the meaningful scan image + alt reach AT; only the
-                decorative browser chrome is hidden. */}
+            {/* Product card — crypto AI-scan in a browser frame. Wrapper not
+                aria-hidden so the scan image + alt reach AT. */}
             <div className="animate-fade-up stagger-2 lg:col-span-6">
               <div className="relative lg:-mr-4 xl:-mr-10">
                 <div
@@ -374,7 +322,6 @@ export default function AiSeoServicePage() {
                 <div aria-hidden="true" className="absolute -bottom-6 left-8 right-8 h-8 rounded-full bg-gray-900/8 blur-xl" />
                 <figure className="relative">
                   <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-[0_20px_60px_-20px_rgba(15,23,42,0.16)]">
-                    {/* Browser chrome — decorative, hidden from AT */}
                     <div aria-hidden="true" className="flex items-center gap-2 border-b border-gray-100 bg-gray-50 px-4 py-3">
                       <span className="h-2.5 w-2.5 rounded-full bg-gray-300" />
                       <span className="h-2.5 w-2.5 rounded-full bg-gray-300" />
@@ -390,16 +337,12 @@ export default function AiSeoServicePage() {
                         Example scan
                       </span>
                     </div>
-                    {/* Fixed-aspect crop to the impactful TOP of the scan (the
-                        "7/7 AI SERVICES CITED" score + top cited domains) so it
-                        reads large and legible. Full image lives in the
-                        track-record card below. */}
                     <div className="relative aspect-[16/10] w-full overflow-hidden bg-gray-50">
                       <Image
-                        src="/services/track-record/legal-ai-scan.png"
-                        width={1999}
-                        height={1602}
-                        alt="AI citation scan showing a client's page cited by all 7 AI engines as the #1 cited source, ahead of google.com."
+                        src="/services/track-record/crypto-ai-scan.png"
+                        width={2208}
+                        height={1742}
+                        alt="AI citation scan showing a client's crypto Google Ads guide cited by 6 of 7 AI engines, the #2 cited source behind only google.com."
                         fetchPriority="high"
                         sizes="(min-width: 1024px) min(48vw, 720px), 100vw"
                         className="h-full w-full object-cover object-top"
@@ -407,7 +350,7 @@ export default function AiSeoServicePage() {
                     </div>
                   </div>
                   <figcaption className="mt-3 font-mono text-[12px] text-gray-500">
-                    A client&apos;s page cited by all 7 AI engines — example scan.
+                    A client&apos;s page cited by 6 of 7 AI engines — example scan.
                   </figcaption>
                 </figure>
               </div>
@@ -416,45 +359,54 @@ export default function AiSeoServicePage() {
         </div>
       </section>
 
-      {/* 2 — Proof band (dark) */}
-      <ProofResults />
-
-      {/* 3 — Problem frame: three symptoms, one cause */}
+      {/* 2 — Category definition: what GEO is, what it isn't */}
       <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-24">
         <div className="mx-auto max-w-5xl">
           <div className="max-w-2xl">
             <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-              What&apos;s actually happening
+              The category, defined honestly
             </p>
             <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-              Three symptoms. <span className="text-accent-700">One cause.</span>
+              What GEO is — <span className="text-accent-700">and what it isn&apos;t.</span>
             </h2>
           </div>
 
           <ol className="mt-10 divide-y divide-gray-200 border-y border-gray-200">
-            {problemPoints.map((p) => (
-              <li key={p.num} className="flex items-start gap-6 py-6 md:gap-10">
+            {definitionRows.map((d) => (
+              <li key={d.num} className="grid grid-cols-1 gap-4 py-7 md:grid-cols-[auto_1fr] md:gap-10">
                 <span className="font-mono text-2xl font-bold tabular-nums text-accent-700 md:text-3xl">
-                  {p.num}
+                  {d.num}
                 </span>
-                <p className="max-w-2xl pt-1 text-[17px] font-medium leading-snug tracking-tight text-gray-800 md:text-lg">
-                  {p.text}
-                </p>
+                <div>
+                  <h3 className="text-lg font-semibold leading-snug tracking-tight text-gray-900">{d.title}</h3>
+                  <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-gray-600">{d.body}</p>
+                </div>
               </li>
             ))}
           </ol>
 
-          <p className="mt-10 max-w-3xl text-[clamp(1.15rem,2vw,1.5rem)] font-semibold leading-snug tracking-tight text-gray-600">
-            One cause: the answer your buyer reads is being written by an AI engine that{" "}
-            <span className="text-accent-700">doesn&apos;t cite you yet.</span> That&apos;s the gap I close —
-            and the one I can actually measure.
+          <p className="mt-8 text-[14px] leading-relaxed text-gray-500">
+            Want the deeper theory first? Read the guides:{" "}
+            <Link href="/blog/what-is-geo" className="font-medium text-accent-700 underline decoration-accent-200 underline-offset-2 hover:decoration-accent-500">
+              what GEO is
+            </Link>
+            ,{" "}
+            <Link href="/blog/geo-vs-aeo-vs-seo" className="font-medium text-accent-700 underline decoration-accent-200 underline-offset-2 hover:decoration-accent-500">
+              GEO vs AEO vs SEO
+            </Link>
+            , or the{" "}
+            <Link href="/glossary/generative-engine-optimization" className="font-medium text-accent-700 underline decoration-accent-200 underline-offset-2 hover:decoration-accent-500">
+              glossary definition
+            </Link>
+            . This page is the done-for-you service.
           </p>
         </div>
       </section>
 
-      {/* 4 — What you get + how it runs, merged: outcome headline + process
-          verb tag + output-chip endpoint. Distinct card/step treatment so the
-          mid-page doesn't read as the same hairline list stamped repeatedly. */}
+      {/* 3 — Proof band (dark) */}
+      <ProofResults />
+
+      {/* 4 — What you get + how it runs */}
       <section className="border-t border-[var(--surface-mint-border)] bg-[var(--surface-mint)] px-6 py-16 sm:py-24">
         <div className="mx-auto max-w-6xl">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-[5fr_7fr] lg:items-end lg:gap-16">
@@ -479,7 +431,6 @@ export default function AiSeoServicePage() {
                 key={f.num}
                 className="grid grid-cols-1 gap-5 rounded-2xl border border-[var(--surface-mint-border)] bg-white/70 p-6 md:grid-cols-[auto_1fr_auto] md:items-center md:gap-8 md:p-7"
               >
-                {/* Step number + process verb */}
                 <div className="flex items-center gap-4 md:w-36 md:flex-col md:items-start md:gap-2.5">
                   <span className="font-mono text-3xl font-bold tabular-nums text-accent-700 md:text-4xl">
                     {f.num}
@@ -488,12 +439,10 @@ export default function AiSeoServicePage() {
                     {f.verb}
                   </span>
                 </div>
-                {/* Outcome headline + detail */}
                 <div className="md:border-l md:border-[var(--surface-mint-border)] md:pl-8">
                   <h3 className="text-lg font-semibold leading-snug tracking-tight text-gray-900">{f.title}</h3>
                   <p className="mt-2 max-w-xl text-[15px] leading-relaxed text-gray-600">{f.body}</p>
                 </div>
-                {/* Output endpoint chip */}
                 <div className="md:text-right">
                   <p className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-3 py-1.5 font-mono text-[12px] text-gray-700">
                     <svg className="h-3 w-3 text-accent-600" viewBox="0 0 12 12" fill="none">
@@ -508,165 +457,8 @@ export default function AiSeoServicePage() {
         </div>
       </section>
 
-      {/* 6 — Case study: my own site (designed block with a receipt card) */}
-      <section className="border-t border-[var(--surface-mint-border)] bg-[var(--surface-mint)] px-6 py-16 sm:py-24">
-        <div className="mx-auto max-w-6xl">
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-[7fr_5fr] lg:gap-16">
-            <div>
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-                The case study is my own site
-              </p>
-              <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-                From a zero-authority domain to page one —{" "}
-                <span className="text-accent-700">and into the AI answers.</span>
-              </h2>
-              <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-gray-600">
-                <p>
-                  I didn&apos;t buy an aged domain or a link package. I started geotoolbox.ai from nothing
-                  and published, applying the exact method I sell here. About {proofStats.weeksToResult}{" "}
-                  weeks in, Google Search Console showed the domain ranking across thousands of keywords,
-                  hundreds of them on page one, at a steady daily impression volume — real, unique, and
-                  verifiable in GSC. The exact figures are in the receipt.
-                </p>
-                <p>
-                  The part a normal SEO can&apos;t report: over a {proofStats.aiCitations.windowMonths}-month
-                  window, Bing Webmaster Tools&apos; AI Performance report logged a large volume of
-                  AI-citation appearances across Microsoft Copilot and partner assistants. That figure — in
-                  the receipt — is a sampled appearance count, not unique citations, and it&apos;s
-                  Bing&apos;s data, not ChatGPT&apos;s, Perplexity&apos;s or Google&apos;s.
-                </p>
-                <p>
-                  Why it matters commercially: the prompts I get cited for most aren&apos;t trivia. The top
-                  grounding queries are buying-intent — &ldquo;best tools for Search Generative
-                  Experience&rdquo; (around {fmt(proofStats.topGroundingQuery.appearances)} appearances in
-                  Bing&apos;s report), &ldquo;answer engine optimization vs SEO,&rdquo; &ldquo;Copilot vs
-                  Gemini.&rdquo; Comparison and shortlist questions — the moment a buyer decides. That&apos;s
-                  the real estate I build for clients.
-                </p>
-              </div>
-            </div>
-
-            {/* Receipt card — the headline figures, single-sourced */}
-            <div className="lg:pt-2">
-              <div className="rounded-2xl border border-[var(--surface-mint-border)] bg-white p-7 shadow-[0_20px_60px_-24px_rgba(15,23,42,0.16)]">
-                <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-                  geotoolbox.ai · the receipt
-                </p>
-                <dl className="mt-6 space-y-5">
-                  <div className="flex items-baseline justify-between gap-4 border-b border-gray-100 pb-5">
-                    <dt className="text-[13px] font-medium text-gray-600">In Google&apos;s top 3</dt>
-                    <dd className="font-mono text-2xl font-bold tabular-nums text-gray-900">
-                      {proofStats.google.top3}
-                    </dd>
-                  </div>
-                  <div className="flex items-baseline justify-between gap-4 border-b border-gray-100 pb-5">
-                    <dt className="text-[13px] font-medium text-gray-600">Keywords ranked in Google</dt>
-                    <dd className="font-mono text-2xl font-bold tabular-nums text-gray-900">
-                      {fmt(proofStats.google.rankedKeywords)}
-                    </dd>
-                  </div>
-                  <div className="flex items-baseline justify-between gap-4 border-b border-gray-100 pb-5">
-                    <dt className="text-[13px] font-medium text-gray-600">Google results, in about</dt>
-                    <dd className="font-mono text-2xl font-bold tabular-nums text-gray-900">
-                      {proofStats.weeksToResult} wks
-                    </dd>
-                  </div>
-                  <div className="flex items-baseline justify-between gap-4">
-                    <dt className="text-[13px] font-medium text-gray-600">
-                      AI-citation appearances
-                      <span className="mt-0.5 block font-mono text-[10px] font-semibold uppercase tracking-widest text-gray-400">
-                        {proofStats.aiCitations.windowMonths}-month Bing sample
-                      </span>
-                    </dt>
-                    <dd className="font-mono text-2xl font-bold tabular-nums text-gray-900">
-                      ~{fmt(proofStats.aiCitations.total)}
-                    </dd>
-                  </div>
-                </dl>
-                <p className="mt-6 border-t border-gray-100 pt-4 text-[12px] leading-relaxed text-gray-500">
-                  Google figures are unique GSC data. The AI-citation figure is a{" "}
-                  {proofStats.aiCitations.windowMonths}-month sampled appearance count from Bing Webmaster
-                  Tools (Microsoft Copilot and partners) — not unique citations, not ChatGPT, Perplexity, or
-                  Google. As of {proofStats.asOf}.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 6b — Past client track record: framed product cards */}
+      {/* 5 — Offer ladder */}
       <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-24">
-        <div className="mx-auto max-w-6xl">
-          <div className="max-w-2xl">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-              Before geotoolbox
-            </p>
-            <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-              Two verticals. One method. Same result.
-            </h2>
-            <p className="mt-4 text-[15px] leading-relaxed text-gray-600">
-              One client&apos;s site, two guides in two very different verticals — both projects I personally
-              led. Public data only — AI-engine citation scans from my own tracker and Ahrefs, no private
-              analytics. This ran on an earlier version of the content system I use now.
-            </p>
-          </div>
-
-          <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2">
-            {pastClientResults.map((r) => (
-              <figure
-                key={r.label}
-                className="flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)] transition-all hover:border-gray-300 hover:shadow-[0_20px_40px_-20px_rgba(15,23,42,0.14)]"
-              >
-                {/* Browser-framed screenshot — this IS the proof section, so
-                    eager-load and give the image area a light placeholder so no
-                    white void shows while it decodes. */}
-                <div className="border-b border-gray-100">
-                  <div aria-hidden="true" className="flex items-center gap-2 border-b border-gray-100 bg-gray-50 px-4 py-2.5">
-                    <span className="h-2 w-2 rounded-full bg-gray-300" />
-                    <span className="h-2 w-2 rounded-full bg-gray-300" />
-                    <span className="h-2 w-2 rounded-full bg-gray-300" />
-                    <span className="ml-2 font-mono text-[10px] uppercase tracking-widest text-gray-400">
-                      geotoolbox GEO Scan
-                    </span>
-                  </div>
-                  <div className="bg-gray-50">
-                    <Image
-                      src={r.image.src}
-                      width={r.image.width}
-                      height={r.image.height}
-                      alt={r.image.alt}
-                      loading="eager"
-                      sizes="(min-width: 768px) min(46vw, 640px), 100vw"
-                      className="h-auto w-full"
-                    />
-                  </div>
-                </div>
-                <figcaption className="flex flex-1 flex-col p-7">
-                  <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-                    {r.label}
-                  </p>
-                  <ul className="mt-4 flex flex-col gap-3">
-                    {r.points.map((point) => (
-                      <li key={point} className="flex gap-2.5 text-[15px] leading-relaxed text-gray-600">
-                        <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-700" />
-                        <span>{point}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </figcaption>
-              </figure>
-            ))}
-          </div>
-
-          <p className="mt-6 text-[13px] font-medium text-gray-500">
-            Figures from public AI-engine citation scans (via my own tracker) and Ahrefs — not client analytics.
-          </p>
-        </div>
-      </section>
-
-      {/* 7 — Offer ladder + risk reversal */}
-      <section className="border-t border-[var(--surface-mint-border)] bg-[var(--surface-mint)] px-6 py-16 sm:py-24">
         <div className="mx-auto max-w-6xl">
           <div className="max-w-2xl">
             <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
@@ -745,18 +537,20 @@ export default function AiSeoServicePage() {
             active clients, so there&apos;s sometimes a short wait.
           </p>
           <p className="mt-2 text-[13px] leading-relaxed text-gray-500">
-            The $750 Report is a fixed price, payable by card — direct checkout is coming shortly. The Sprint and retainer are scoped to your project on the call. Focused on one surface? See the{" "}
-            <Link href="/services/generative-engine-optimization" className="font-medium text-accent-700 underline decoration-accent-200 underline-offset-2 hover:decoration-accent-500">
-              generative engine optimization
+            The $750 Report is a fixed price, payable by card — direct checkout is coming shortly. The
+            Sprint and retainer are scoped to your project on the call. Looking for the umbrella service?
+            See{" "}
+            <Link href="/services/ai-seo-agency" className="font-medium text-accent-700 underline decoration-accent-200 underline-offset-2 hover:decoration-accent-500">
+              done-for-you AI SEO
             </Link>{" "}
-            and{" "}
+            — or{" "}
             <Link href="/services/answer-engine-optimization" className="font-medium text-accent-700 underline decoration-accent-200 underline-offset-2 hover:decoration-accent-500">
               answer engine optimization
             </Link>{" "}
-            services.
+            if your market&apos;s questions end in a snippet, not a composed answer.
           </p>
 
-          {/* Risk reversal */}
+          {/* Risk reversal — same terms as the flagship service page */}
           <div className="mt-10 grid grid-cols-1 gap-7 rounded-2xl border border-gray-200 bg-white p-8 sm:grid-cols-3">
             <div>
               <h3 className="text-[14px] font-bold tracking-tight text-gray-900">On-time delivery guarantee</h3>
@@ -784,10 +578,10 @@ export default function AiSeoServicePage() {
         </div>
       </section>
 
-      {/* 8 — FAQ (also emits FAQPage JSON-LD from the same items) */}
-      <FeatureFaq items={faqs} heading="The six questions I always get" />
+      {/* 6 — FAQ (also emits FAQPage JSON-LD from the same items) */}
+      <FeatureFaq items={faqs} heading="The questions I get about GEO" />
 
-      {/* 9 — Final CTA */}
+      {/* 7 — Final CTA */}
       <section className="relative overflow-hidden bg-gray-950 px-6 py-20 sm:py-24">
         <div
           aria-hidden="true"
@@ -801,17 +595,17 @@ export default function AiSeoServicePage() {
         <div className="relative mx-auto flex max-w-5xl flex-col items-start gap-8 md:flex-row md:items-center md:justify-between md:gap-12">
           <div>
             <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
-              The answers are being written right now.
-              <br className="hidden sm:block" /> With you or without you.
+              Every day, the engines compose answers about your market.
+              <br className="hidden sm:block" /> Someone gets cited. Make it you.
             </h2>
             <p className="mt-3 max-w-lg text-base leading-relaxed text-gray-300">
-              Book a call. I&apos;ll read your AI visibility with you and tell you straight whether this is
-              worth doing — founder to founder, no handoff.
+              Book a call. I&apos;ll read your citation baseline with you and tell you straight whether GEO
+              is worth doing for your market — founder to founder, no handoff.
             </p>
           </div>
           <div className="shrink-0">
             <Link
-              href={TEARDOWN_HREF}
+              href={CALL_HREF}
               className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 hover:shadow-xl hover:shadow-black/30 active:translate-y-[1px]"
             >
               Book a call
