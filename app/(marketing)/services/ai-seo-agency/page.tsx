@@ -13,7 +13,7 @@ const PAGE_URL = `${siteConfig.url}/services/ai-seo-agency`
 // Every call books an intro/teardown call — no free-tool CTA anywhere on this page.
 const TEARDOWN_HREF = "/contact"
 // The two one-off offers are DIRECT PURCHASES. Placeholder to /contact for now.
-// TODO: wire Stripe checkout for the Report + Sprint one-offs.
+// TODO: wire Stripe checkout for the Report one-off (the only fixed-price direct buy).
 const CHECKOUT = { report: "/contact", sprint: "/contact" }
 
 export const metadata: Metadata = {
@@ -83,13 +83,14 @@ const tiers: Tier[] = [
   },
   {
     name: "30-Day AI Visibility Sprint",
+    pricePrefix: "From",
     price: "$4,500",
-    billing: "One-off",
+    billing: "One-off · scoped to project size",
     summary: "Thirty days of building: fixes shipped, priority pages rebuilt to be cited.",
     detail:
-      "Technical fixes, your priority pages rebuilt to be citable, and the citation and source work that gets an engine to quote you. A fixed scope with a fixed price. The Sprint counts as month one if you continue on a retainer within 30 days.",
-    cta: { label: "Start the sprint", href: CHECKOUT.sprint },
-    kind: "buy",
+      "Technical fixes, your priority pages rebuilt to be citable, and the citation and source work that gets an engine to quote you. Scope and price depend on your site's size — we set both on the call. The Sprint counts as month one if you continue on a retainer within 30 days.",
+    cta: { label: "Book a call", href: TEARDOWN_HREF },
+    kind: "call",
     featured: true,
   },
   {
@@ -224,9 +225,13 @@ const serviceSchema = {
     {
       "@type": "Offer",
       name: "30-Day AI Visibility Sprint",
-      price: "4500",
-      priceCurrency: "USD",
-      description: "Thirty days of technical fixes and priority pages rebuilt to be citable.",
+      description: "Thirty days of technical fixes and priority pages rebuilt to be citable. From $4,500, scoped to project size.",
+      priceSpecification: {
+        "@type": "PriceSpecification",
+        // Displayed as "from $4,500" — a floor, scoped on the call.
+        minPrice: "4500",
+        priceCurrency: "USD",
+      },
     },
     {
       "@type": "Offer",
@@ -734,7 +739,7 @@ export default function AiSeoServicePage() {
             active clients, so there&apos;s sometimes a short wait.
           </p>
           <p className="mt-2 text-[13px] leading-relaxed text-gray-500">
-            Fixed price, paid by card once we&apos;ve scoped it — direct Stripe checkout coming shortly.
+            The $750 Report is a fixed price, payable by card — direct checkout is coming shortly. The Sprint and retainer are scoped to your project on the call.
           </p>
 
           {/* Risk reversal */}
