@@ -1,0 +1,265 @@
+---
+title: "The 10 Best Open-Source LLMs in 2026 (Ranked)"
+description: "The best open source LLMs of July 2026, ranked: GLM-5.2, DeepSeek V4, Kimi K3 and more, with licenses, real hardware needs, and every claim dated and verified."
+date: "2026-07-22"
+recheckBy: "2026-07-27"  # Kimi K3 weights land July 27; the K3 entry, FAQ answer, and glance table flip from scheduled to live that day
+author: "Samy BEN SADOK"
+tags: ["best-open-source-llm", "open-source-llm", "open-weights", "ai-comparison", "glm-5-2", "deepseek", "kimi-k3", "qwen", "llama", "gemma", "guide"]
+draft: false
+---
+
+Picking the best open source LLM in 2026 has a specific problem: the answer changes monthly, and most of the rankings you will find were right when they were written and wrong by the time you read them. This one is dated on every claim, current to July 22, 2026, and honest about which numbers come from vendor decks versus verified model cards. Ten models made the cut. Their licenses differ more than their benchmark scores do, and only a handful run on hardware you can actually own.
+
+## The Best Open-Source LLMs in July 2026, at a Glance
+
+The short answer: **GLM-5.2** is the best open-source LLM you can download and run today, **DeepSeek V4** is the best value, and **Kimi K3** is the new frontier flagship, its launch benchmarks already ahead of the open field, with downloadable weights scheduled for July 27, 2026. Expect the #1 slot to be contested the day those weights land. Which one you should use depends on the job, the license terms you can live with, and the hardware you have.
+
+Here is the full field, verified against official model cards and launch documentation on July 22, 2026.
+
+<table>
+<thead>
+<tr><th>Model</th><th>Maker</th><th>Parameters (total / active)</th><th>Context</th><th>License</th><th>Best for</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>GLM-5.2</strong></td><td>Z.ai</td><td>753B / 40B</td><td>1M</td><td>MIT</td><td>Best overall, agentic coding</td></tr>
+<tr><td><strong>DeepSeek V4 Pro / Flash</strong></td><td>DeepSeek</td><td>1.6T / 49B and 284B / 13B</td><td>1M</td><td>MIT</td><td>Value, world knowledge</td></tr>
+<tr><td><strong>Kimi K2.6 / K3</strong></td><td>Moonshot AI</td><td>1T / 32B and 2.8T (K3)</td><td>256K / 1M</td><td>Modified MIT (K2.6); K3 TBD Jul 27</td><td>Agent swarms, frontier scale</td></tr>
+<tr><td><strong>MiniMax M3</strong></td><td>MiniMax</td><td>428B / 23B</td><td>1M</td><td>MiniMax Community</td><td>Multimodal agents</td></tr>
+<tr><td><strong>Qwen3.5 / 3.6 family</strong></td><td>Alibaba</td><td>0.8B to 397B / 17B</td><td>262K+</td><td>Apache 2.0</td><td>License freedom, multilingual</td></tr>
+<tr><td><strong>MiMo-V2.5-Pro</strong></td><td>Xiaomi</td><td>1.02T / 42B</td><td>1M</td><td>MIT</td><td>Token efficiency</td></tr>
+<tr><td><strong>Llama 4 Scout / Maverick</strong></td><td>Meta</td><td>109B / 17B and 400B / 17B</td><td>up to 10M claimed</td><td>Llama 4 Community</td><td>Western default, long context</td></tr>
+<tr><td><strong>Gemma 4</strong></td><td>Google</td><td>E2B to 31B (4 sizes)</td><td>256K (31B)</td><td>Apache 2.0</td><td>Local and edge hardware</td></tr>
+<tr><td><strong>gpt-oss-120b</strong></td><td>OpenAI</td><td>117B / 5.1B</td><td>128K</td><td>Apache 2.0</td><td>Permissive Western reasoning</td></tr>
+<tr><td><strong>Nemotron 3</strong></td><td>NVIDIA</td><td>550B / 55B (Ultra)</td><td>1M</td><td>OpenMDW-1.1</td><td>Closest to truly open</td></tr>
+</tbody>
+</table>
+
+Two things stand out in that table. First, six of the ten entries come from Chinese labs, and they hold most of the top benchmark slots. Second, "open" spans four meaningfully different license families, and the differences bite in production.
+
+One caveat before the rankings: AI engines themselves disagree on the #1 pick. When we ran this exact question through five engines in July 2026 (ChatGPT, Gemini, Perplexity, Claude, and ChatGPT's search mode), four named GLM-5.2 the best overall open model and one ranked DeepSeek V4 Pro first. The gap between them is small enough that your use case, not the leaderboard, should break the tie.
+
+## Open Source vs Open Weight, in One Minute
+
+Almost every model on this list is **open weight**, not open source. The distinction matters more than the marketing suggests.
+
+Open weight means you can download the model parameters, run them on your own hardware, and usually use them commercially. It does not mean you can see the training data or reproduce the model. The [Open Source Initiative's Open Source AI Definition](https://opensource.org/ai/open-source-ai-definition) requires three things: detailed data information, the complete training code, and the parameters, all under open terms. Weights alone do not clear that bar.
+
+By the strict OSI reading, GLM-5.2, DeepSeek V4, and Llama 4 are all open weight. The models that genuinely qualify as open source, like AI2's OLMo or EleutherAI's Pythia, publish training data and recipes but do not top capability leaderboards. NVIDIA's Nemotron 3 comes closest to bridging the two: it ships weights alongside training datasets and recipes, which is why it earns a slot in these rankings despite mid-pack scores.
+
+For the full breakdown of what each label legally means, see our guide to [open weights vs open source](https://geotoolbox.ai/blog/open-weights-vs-open-source). The practical takeaway for this article: every model ranked below either has downloadable <a href="https://geotoolbox.ai/glossary/open-weights">open weights</a> today or, in K3's single case, has them scheduled for July 27, and we flag the license catch on each one.
+
+## How We Ranked These (and How to Read LLM Benchmarks)
+
+Every ranking below rests on official model cards and launch documentation, cross-checked against independent leaderboards that publish their setups, with every claim re-verified the week of July 22, 2026. That last part matters more than it should, and here is why.
+
+**Benchmark numbers are easy to game and easier to misread.** Three traps account for most of the bad comparisons you will see in open-source LLM lists:
+
+**Trap 1: Verified vs Pro.** SWE-bench Verified and SWE-bench Pro are different tests. GLM-5.2 scores 62.1% on [SWE-bench Pro per its official model card](https://huggingface.co/zai-org/GLM-5.2), while several rivals advertise 80%-class scores on the easier Verified set. Put those in one column and GLM-5.2 looks like it lost. It did not; the tests changed.
+
+**Trap 2: single-attempt vs multi-attempt.** Kimi K2 famously reported 65.8% on SWE-bench Verified in one attempt and 71.6% when allowed retries. Both are real numbers. Only one of them is comparable to a single-attempt score from another lab.
+
+**Trap 3: tools on vs tools off.** Humanity's Last Exam scores swing by 10 or more points depending on whether the model can search and run code. GLM-5.2's own card reports HLE at 40.5; leaderboards that allow tools report the same model in the mid-50s. Neither number is wrong, but putting them in one column is.
+
+There is also the blunter problem the r/LocalLLaMA crowd calls benchmaxxing: labs tune models toward the public tests. The pattern shows up as a model that tops SWE-bench yet fumbles your actual repo. Treat every score as a screening filter, then run your own task suite before committing. A model can ace a benchmark format and still fail a slightly reworded version of the same problem.
+
+With those caveats stated, the rankings.
+
+## The Rankings: 10 Best Open-Weight Models Right Now
+
+### 1. GLM-5.2 (Z.ai): Best Overall
+
+**753B total / 40B active MoE, 1M context, MIT license, announced June 13, 2026 with weights on Hugging Face three days later.** GLM-5.2 is the consensus pick for best open model of mid-2026, and the [official model card](https://huggingface.co/zai-org/GLM-5.2) backs it with a 91.2% GPQA Diamond score and the strongest terminal and long-horizon coding results in the open field. The MIT license is as clean as licensing gets: commercial use, modification, redistribution, no thresholds.
+
+The 1M-token context window is the practical centerpiece. Coding agents can hold a mid-sized repository in memory without constant compaction, and Z.ai reports its IndexShare optimization cuts long-context compute by roughly 2.9x at the full window.
+
+**Watch for:** no image input, and self-hosting is a serious project. Even aggressively quantized community builds still weigh hundreds of gigabytes. Most teams will run it through an API provider, not a garage rig. We cover the full specs in [what GLM-5.2 is](https://geotoolbox.ai/blog/what-is-glm-5-2).
+
+### 2. DeepSeek V4 Pro and V4 Flash: Best Value
+
+**1.6T / 49B (Pro) and 284B / 13B (Flash), 1M context, MIT license.** DeepSeek's V4 pair covers both ends of the budget. Pro is the flagship for reasoning and coding; Flash gets surprisingly close when given a larger thinking budget, at a fraction of the serving cost. Both were pre-trained on over 32T tokens and use a compressed-attention design that cuts KV-cache pressure dramatically at long context.
+
+V4 Pro's quietest advantage is factual knowledge: its model card publishes SimpleQA-Verified results that lead the open-model comparisons it reports. Strong reasoners that also know things are rarer than the leaderboards suggest. The company that triggered the original "DeepSeek moment" is still the value benchmark, and [DeepSeek pricing](https://geotoolbox.ai/blog/deepseek-pricing) remains the number every rival gets measured against. Background on the lab and the R1 story is in our [DeepSeek explainer](https://geotoolbox.ai/blog/what-is-deepseek).
+
+**Watch for:** Pro API throughput has been inconsistent since launch while DeepSeek scales serving capacity, so latency can spike.
+
+### 3. Kimi K2.6 and K3 (Moonshot AI): Best for Agents, New Frontier Flagship
+
+**K2.6: ~1T / 32B, 256K context. K3: 2.8T parameters, 1M context, launched July 16, 2026.** K2.6 is the proven workhorse: its model card documents agent swarms of up to 300 sub-agents across 4,000 coordinated steps, built for long autonomous sessions. K3 is the headline: [the largest open-weight model ever released](https://venturebeat.com/technology/chinas-moonshot-ai-releases-kimi-k3-the-largest-open-source-model-ever-rivaling-top-u-s-systems), roughly 75% bigger than DeepSeek V4 Pro, with launch benchmarks trading blows with the top proprietary systems, including a vendor-reported, field-leading 91.2 on BrowseComp.
+
+One date matters here: K3's weights go public on **July 27, 2026**. Until then it is API-and-app only at [$3 per million input tokens and $15 per million output](https://venturebeat.com/technology/chinas-moonshot-ai-releases-kimi-k3-the-largest-open-source-model-ever-rivaling-top-u-s-systems). Our [Kimi K3 breakdown](https://geotoolbox.ai/blog/what-is-kimi-k3) tracks what is verified versus vendor-claimed.
+
+**Watch for:** the license. K2.6 ships under Moonshot's [Modified MIT](https://huggingface.co/moonshotai/Kimi-K2.6/blob/main/LICENSE): products with more than 100 million monthly active users or more than $20 million in monthly revenue must prominently display "Kimi K2.6" in their UI. Trivial for most teams, a real conversation for consumer apps at scale. K3's final license text lands with the weights on July 27, and expect runtime support in llama.cpp and Ollama to trail the weight drop by weeks, as it usually does for new attention designs.
+
+### 4. MiniMax M3: Best Multimodal Agent Model
+
+**428B / 23B MoE, 1M context via MiniMax Sparse Attention.** M3 was trained mixed-modality from the start, so it takes image and video input natively, which most of its open rivals still cannot. MiniMax pitches it on endurance: internal demos show day-scale autonomous runs on tasks where rival models stall early, and the MSA design exists precisely to make those very long sessions affordable.
+
+**Watch for:** the MiniMax Community License carries commercial-use conditions, and the model's reasoning scores rest partly on aggregator leaderboards that weight tests differently than the individual benchmarks do. Read the license and the fine print on both.
+
+### 5. Qwen3.5 and Qwen3.6 (Alibaba): Best License Freedom and Language Coverage
+
+**0.8B to 397B / 17B active, 262K-token context window extendable toward 1M, Apache 2.0.** Qwen is the ecosystem play. One family covers phone-sized 0.8B models up to the 397B Qwen3.5 flagship, all under Apache 2.0, the most permissive license in common use: no attribution thresholds, no user caps, nothing to renegotiate when your product grows.
+
+The flagship reasons across text, images, video, and documents in one framework and covers 200+ languages, which no other open family matches. The generations also turn over fast: the April 2026 **Qwen3.6** wave added a 27B dense model and a 35B-total, 3B-active MoE that punch far above their size, and they, not the Qwen3.5 flagship, are the family's current picks for consumer hardware. Full lineup in our [Qwen guide](https://geotoolbox.ai/blog/what-is-qwen).
+
+**Watch for:** running the flagship at full context demands a serious multi-GPU memory budget. The family's breadth is the point; buy the size you can serve. And a naming note: Alibaba announced a 2.4T-parameter **Qwen3.8** on July 19, 2026, but as of this writing it is a closed API preview with open weights promised and no date, license, or model card published. Until those weights land, Qwen3.5 is the open flagship.
+
+### 6. MiMo-V2.5-Pro (Xiaomi): The Token-Efficiency Dark Horse
+
+**1.02T / 42B MoE, MIT license, trained on 27T tokens.** Xiaomi is the least-discussed lab on this list and arguably the most efficient. MiMo-V2.5-Pro matches frontier open rivals on coding-agent tasks while spending markedly fewer tokens per run in Xiaomi's own evaluations, which compounds into real money across long agentic workloads. Its hybrid attention design holds performance past 512K tokens where its predecessor collapsed outright.
+
+**Watch for:** ecosystem maturity. Tooling, quantized community builds, and provider support all trail the bigger names, so expect more integration work.
+
+### 7. Llama 4 Scout and Maverick (Meta): The Western Default
+
+**109B / 17B and 400B / 17B MoE, multimodal, context windows advertised up to 10M tokens.** Llama remains the infrastructure layer of the open ecosystem: the widest tooling support, the most fine-tunes, the most deployment guides. Scout is the efficiency pick for local development and edge work; Maverick is the production generalist with strong multilingual scores.
+
+**Watch for:** two things. The Llama 4 Community License is not OSI-approved and cuts off free commercial use at 700M monthly active users. And treat the 10M-token context as a marketing ceiling, not a working spec; long-context quality falls off well before advertised limits across the industry, so size your workloads to a far smaller usable window.
+
+### 8. Gemma 4 (Google): Best for Local and Edge Hardware
+
+**Four sizes from Effective-2B to 31B dense, 256K context on the 31B, Apache 2.0.** Gemma 4 is the answer to "what can I actually run?" The family ladders cleanly: phone-class E2B and E4B variants that uniquely accept audio input, a 26B-A4B mixture of experts that activates only a 4B-class slice per token, and a 31B dense flagship whose unquantized bf16 weights fit a single 80GB H100, with quantized builds running on consumer GPUs.
+
+Google also fixed the licensing complaint: where Gemma 3 shipped under custom terms, Gemma 4 is Apache 2.0.
+
+**Watch for:** a 31B dense model does not compete with the trillion-parameter MoE tier on hard reasoning, and the 31B variant drops the audio support the small ones have. This is the local tier, not the frontier tier.
+
+### 9. gpt-oss-120b (OpenAI): The Permissive Western Reasoner
+
+**117B / 5.1B active, 128K context, Apache 2.0.** OpenAI's open-weight release is easy to overlook next to the Chinese giants, and shouldn't be. With only 5.1B active parameters it is one of the cheapest strong reasoners to serve, it was built for reasoning and tool use, and the Apache 2.0 license plus a US-origin lab matters to procurement teams that cannot ship a Chinese model, fair or not. (The safety side of that question has [its own article](https://geotoolbox.ai/blog/chinese-ai-models-compared).)
+
+**Watch for:** it trails the frontier open models badly on broad-knowledge tests, and 128K context is now the smallest window on this list.
+
+### 10. Nemotron 3 (NVIDIA): The Closest Thing to Truly Open
+
+**550B / 55B hybrid Transformer-Mamba (Ultra), 1M context, OpenMDW-1.1 license.** Nemotron earns its slot on transparency rather than peak scores. NVIDIA publishes weights, training datasets, and recipes, the closest any frontier-adjacent lab comes to the OSI's actual open-source bar. For teams that need real visibility into training data, or want to build on a model whose data provenance is documented, it is effectively the only option at this scale.
+
+**Watch for:** benchmark performance sits mid-pack, and the hybrid architecture has thinner community tooling than the standard MoE stacks.
+
+**Near misses.** Three absences are deliberate. Mistral's open line today is the Devstral 2 coding specialists plus [Mistral Large 3](https://huggingface.co/mistralai/Mistral-Large-3-675B-Instruct-2512), a 675B Apache 2.0 generalist that predates this year's frontier wave. Microsoft's Phi-4 family owns the tiny, no-GPU end rather than the flagship fight. And OLMo, covered above, wins on openness rather than capability. All three are worth knowing; none displaces an entry above at its own job.
+
+## Which Open Model for Which Job
+
+<table>
+<thead>
+<tr><th>You need</th><th>Use</th><th>Why</th></tr>
+</thead>
+<tbody>
+<tr><td>Best overall / agentic coding</td><td><strong>GLM-5.2</strong></td><td>Top open scores on long-horizon coding, MIT, 1M context</td></tr>
+<tr><td>Best value per dollar</td><td><strong>DeepSeek V4 Flash</strong></td><td>Near-Pro reasoning at a fraction of the price, MIT</td></tr>
+<tr><td>Agent swarms and long autonomous runs</td><td><strong>Kimi K2.6</strong></td><td>300 sub-agent orchestration across 4,000 coordinated steps</td></tr>
+<tr><td>Multimodal agents (image, video, computer use)</td><td><strong>MiniMax M3</strong></td><td>Native mixed-modality training</td></tr>
+<tr><td>Cleanest license at any size</td><td><strong>Qwen3.5</strong> or <strong>Gemma 4</strong></td><td>Apache 2.0, no thresholds</td></tr>
+<tr><td>A single 24GB consumer GPU</td><td><strong>Gemma 4 26B-A4B</strong> or a mid-size Qwen3.6</td><td>Built for that hardware class</td></tr>
+<tr><td>Frontier scale, newest weights</td><td><strong>Kimi K3</strong> (from July 27)</td><td>2.8T parameters, launch benchmarks near the proprietary top</td></tr>
+<tr><td>Hardest reasoning problems</td><td><strong>DeepSeek V4 Pro</strong> (Think Max) or <strong>GLM-5.2</strong></td><td>Top open reasoning scores; adaptive thinking modes</td></tr>
+<tr><td>Auditable training data</td><td><strong>Nemotron 3</strong></td><td>Data and recipes published, not just weights</td></tr>
+</tbody>
+</table>
+
+And the free-tier answer, since it is one of the most-asked questions: every model above is free to download once weights are public. What costs money is the compute. If "free" means "free to chat with," the hosted apps for Kimi, DeepSeek, and Qwen all have no-cost tiers.
+
+## Can You Actually Run These? The Self-Host Reality Check
+
+Here's the part most rankings skip: for the frontier tier of this list, "downloadable" and "runnable" are different claims.
+
+**The VRAM arithmetic.** A model needs roughly 2GB of memory per billion parameters at FP16, and roughly 0.5GB per billion at 4-bit quantization, plus KV-cache overhead that grows with context length and concurrency (modest for local chat, huge at long contexts). An 8GB GPU tops out around a 7B-8B model at 4-bit. A 24GB card handles the 27B-32B dense class. Nothing consumer-grade touches the trillion-parameter tier.
+
+**The MoE trap.** This is the single most misunderstood fact in self-hosting. A mixture of experts model like Kimi K2.6 activates only 32B parameters per token, but **all 1T parameters must sit in memory**, because any token can route to any expert. Active parameters set your speed and per-token cost. Total parameters set your memory bill. Community builds of K2.6-class models need hundreds of gigabytes of combined RAM and VRAM even at extreme quantization.
+
+**Quantization is the lever, with limits.** Q4_K_M, the standard 4-bit GGUF format, cuts memory roughly 70-75% with only modest quality loss on most dense models. But MoE models degrade less gracefully under aggressive quantization, and reasoning quality tends to fall before chat quality does. If a model's edge is careful multi-step reasoning, test the quant before trusting it.
+
+**The stack.** For prototyping, [Ollama](https://ollama.com/) is the fastest path: one command pulls a pre-quantized build and serves it behind an OpenAI-compatible endpoint. For production concurrency, [vLLM](https://docs.vllm.ai/en/latest/) is the standard, with PagedAttention and continuous batching to keep GPUs saturated; SGLang is its main rival. Whichever you pick, judge the setup on the two numbers users actually feel, time to first token and inter-token latency, not peak throughput.
+
+<table>
+<thead>
+<tr><th>Hardware</th><th>What it runs</th><th>Examples</th></tr>
+</thead>
+<tbody>
+<tr><td>Laptop / 8GB GPU</td><td>2B-8B at 4-bit</td><td>Gemma 4 E2B-E4B, small Qwen3.5/3.6</td></tr>
+<tr><td>24GB consumer GPU</td><td>12B-32B</td><td>Gemma 4 26B-A4B (quantized), Qwen3.6 mid-tier</td></tr>
+<tr><td>128GB Mac Studio / workstation</td><td>~100-300B MoE at 3-bit-class quants</td><td>DeepSeek V4 Flash class, gpt-oss-120b</td></tr>
+<tr><td>Multi-GPU server (300GB+)</td><td>The frontier tier, quantized</td><td>GLM-5.2, Kimi K2.6, DeepSeek V4 Pro</td></tr>
+<tr><td>API only</td><td>Everything, no capex</td><td>All of the above via provider or official APIs</td></tr>
+</tbody>
+</table>
+
+**So what does running one really cost?** For the frontier-tier models, usually more than the API. A single used H100-class GPU runs five figures before power, and the frontier tier needs several. Meanwhile per-token API prices for open models are aggressive: DeepSeek V4 Flash sells for cents per million tokens, and even Kimi K3 launched at $3 per million input. For scale: a workload generating a full million output tokens every day on K3, the priciest model here, runs about $450 a month at its $15-per-million output rate. Self-hosting wins on data privacy (a self-hosted model sends no prompts to anyone's API, which removes the data-residency half of the Chinese-model worry, though license terms and security review still apply), offline operation, and fine-tuning freedom, and at sustained very high volume. It rarely wins on cost alone; our [Kimi API pricing](https://geotoolbox.ai/blog/kimi-api-pricing) breakdown shows how quickly hosted rates undercut owned hardware for typical workloads. Run the math on your actual token volume before buying anything.
+
+## Why Every "Best Open LLM" List Disagrees
+
+Search this topic and you will find current, well-ranked articles confidently recommending three different generations of the same model line as "the latest." One top-ranking guide's newest entry is a model two generations old. That is velocity. The open-weight field now ships a new flagship roughly every four to six weeks, and static listicles rot in months.
+
+The lineage table below is the fix. It names the current flagship per lab, verified July 22, 2026, next to the superseded versions you will still see recommended elsewhere.
+
+<table>
+<thead>
+<tr><th>Lab</th><th>Current flagship (July 22, 2026)</th><th>Superseded, still widely recommended</th></tr>
+</thead>
+<tbody>
+<tr><td>Z.ai (Zhipu)</td><td><strong>GLM-5.2</strong> (June 2026)</td><td>GLM-5.1, GLM-5</td></tr>
+<tr><td>Moonshot AI</td><td><strong>Kimi K3</strong> (July 16; weights July 27) + K2.7-Code (June 2026, coding fork)</td><td>K2.6, K2.5, K2 Thinking, K2</td></tr>
+<tr><td>DeepSeek</td><td><strong>V4 Pro / V4 Flash</strong> (April 2026)</td><td>V3.2, V3-0324, R1</td></tr>
+<tr><td>Alibaba (Qwen)</td><td><strong>Qwen3.6</strong> series (Apr 2026); Qwen3.5-397B stays the flagship by size*</td><td>Qwen3-Coder-480B, Qwen3 VL 235B, Qwen3</td></tr>
+<tr><td>MiniMax</td><td><strong>M3</strong> (June 2026)</td><td>M2.5, M2</td></tr>
+<tr><td>Meta</td><td><strong>Llama 4</strong> (April 2025)</td><td>Llama 3.3, 3.1</td></tr>
+<tr><td>Google</td><td><strong>Gemma 4</strong> (April 2026)</td><td>Gemma 3</td></tr>
+<tr><td>Xiaomi</td><td><strong>MiMo-V2.5-Pro</strong></td><td>MiMo-V2-Pro</td></tr>
+</tbody>
+</table>
+
+*Qwen's naming runs two tracks (open-weight releases and the closed Max API line), which is itself a recurring source of listicle confusion. Case in point: the 2.4T Qwen3.8 announced July 19, 2026 is a closed preview with weights "coming soon", so it does not yet belong in an open-weight ranking.
+
+Two data points explain the churn. [Epoch AI measured](https://epoch.ai/data-insights/open-weights-vs-closed-weights-models) frontier open-weight models trailing the best closed models by an average of about three months as of late 2025; [its May 2026 update](https://epoch.ai/data-insights/open-closed-eci-gap) puts the lag at roughly four months. Separately, [Stanford's AI Index](https://hai.stanford.edu/ai-index/2025-ai-index-report) found the open-versus-closed performance gap on some benchmarks collapsing from 8 to 1.7 percentage points in a single year, and the spread between the globally top-ranked ten models narrowing from 11.9 to 5.4 points. A field that turns over in months makes every month-old ranking partially wrong, including, eventually, this one. That is why every claim here carries a date, the same rule geotoolbox applies to its own engine scans.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/best-open-source-llms/open-weight-release-race-2025-2026.png" alt="Timeline of flagship open-weight LLM releases from January 2025 to July 2026 across DeepSeek, Moonshot AI, Z.ai, MiniMax, Alibaba Qwen, Meta and Google, with Kimi K3 highlighted in July 2026." w="1040" h="541" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Six of these labs shipped a new flagship in the last six months. Dates from official model cards and launch coverage, verified July 22, 2026.</figcaption>
+</figure>
+
+## What the Open-Weight Wave Means for Your AI Visibility
+
+If you work in marketing or SEO, this model race concerns you directly. Every model on this list is also an answer engine that describes brands, recommends products, and cites sources. Open weights accelerate that in a specific way: they get embedded into products silently. When a coding tool, a CRM, or a search feature quietly ships GLM-5.2 or a Qwen fine-tune under the hood, it inherits that model's picture of your brand, and you will never see a referrer string telling you so.
+
+The practical response is the same discipline this article applies to models: verify instead of assume. Check what the engines actually say about your brand, measure which of your pages they cite, and re-check when a new model generation lands, because a version bump swaps out the training data, the retrieval behavior, and often the citation habits in one move. A brand answer that held for Kimi K2.5 is not guaranteed to survive K3.
+
+That monitoring is what geotoolbox is built for. If you want to know whether your site is even readable by the crawlers feeding these models, start with the free [AI readiness check](https://geotoolbox.ai/tools/ai-readiness); it takes a minute and flags the blockers that keep your brand out of AI answers regardless of which model wins the month.
+
+## Frequently Asked Questions
+
+### What is the strongest open-source LLM right now?
+
+As of July 22, 2026, GLM-5.2 is the strongest open-weight model overall, with a 91.2% GPQA Diamond score and leading long-horizon coding results under a clean MIT license. Kimi K3 is larger at 2.8 trillion parameters and benchmarks near the proprietary frontier, but its weights are not downloadable yet (see the last question below).
+
+### Is there a truly open-source LLM?
+
+Yes, but not at the frontier. The OSI bar requires three things published: data information, training code, and parameters. AI2's OLMo and EleutherAI's Pythia clear it; NVIDIA's Nemotron 3 comes closest among large models. The benchmark leaders on this page, DeepSeek included, are open weight, not OSI open source.
+
+### Is there an open-source LLM better than ChatGPT?
+
+On specific coding and agentic benchmarks, yes: GLM-5.2, DeepSeek V4 Pro, and Kimi K3 (weights July 27) match or beat particular proprietary model versions on particular tests. As a product, ChatGPT bundles tools, search, and model routing that no single open model replicates, and the strongest closed models still hold an overall edge. Epoch AI put the average capability lag at about four months in its May 2026 update.
+
+### How much does it cost to run an open-source LLM?
+
+The weights are free; the compute is not. A 7B-12B model runs on a consumer GPU you may already own. The 24GB-GPU class covers models up to roughly 32B. Frontier models like GLM-5.2 or Kimi K2.6 need hundreds of gigabytes of memory, which means a multi-GPU server or a hosted API. For most workloads, per-token API pricing (from cents per million tokens for DeepSeek V4 Flash) is cheaper than owning hardware.
+
+### What is the best open-source LLM for coding?
+
+GLM-5.2 for long-horizon agentic coding, on the strength of its terminal and repository-scale benchmark leads. DeepSeek V4 is the strongest value pick, and Qwen's coder variants offer the best efficiency per active parameter under Apache 2.0. Moonshot's K2.7-Code fork and retry-friendly agent frameworks close much of any remaining gap.
+
+### Can I download Kimi K3 yet?
+
+Not until July 27, 2026, when Moonshot AI has scheduled the public weights release. Until then, K3 is available through the Kimi app and API only. Its 2.8T-parameter size means self-hosting will demand multi-node hardware even at aggressive quantization; expect the practical route to remain hosted access.
+
+## Sources
+
+- China's Moonshot AI releases Kimi K3, the largest open-source model ever - VentureBeat, July 16, 2026 - `venturebeat.com/technology/chinas-moonshot-ai-releases-kimi-k3-the-largest-open-source-model-ever-rivaling-top-u-s-systems`
+- The Open Source AI Definition v1.0 - Open Source Initiative - `opensource.org/ai/open-source-ai-definition`
+- How far behind are open models? - Epoch AI, October 30, 2025 - `epoch.ai/data-insights/open-weights-vs-closed-weights-models`
+- The 2025 AI Index Report - Stanford HAI - `hai.stanford.edu/ai-index/2025-ai-index-report`
+- GLM-5.2 official model card - Z.ai on Hugging Face - `huggingface.co/zai-org/GLM-5.2`
+- Kimi K2.6 Modified MIT license text - Moonshot AI on Hugging Face - `huggingface.co/moonshotai/Kimi-K2.6/blob/main/LICENSE`
+- Mistral Large 3 675B Instruct model card - Mistral AI on Hugging Face - `huggingface.co/mistralai/Mistral-Large-3-675B-Instruct-2512`
+- Open models lag update (ECI gap) - Epoch AI, May 2026 - `epoch.ai/data-insights/open-closed-eci-gap`
+- vLLM documentation - `docs.vllm.ai/en/latest/`
+- Ollama - `ollama.com`
