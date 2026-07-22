@@ -1,0 +1,183 @@
+---
+title: "How to Get Cited by AI: What Actually Works in 2026"
+description: "How to get cited by AI: what actually determines citations in ChatGPT, Perplexity, Gemini and AI Overviews - the evidence, the myths, and a 30-day plan."
+date: "2026-07-22"
+author: "Samy BEN SADOK"
+tags: ["geo", "ai-citations", "ai-visibility", "guide"]
+draft: false
+---
+
+Ask ChatGPT or Perplexity a question in your category and a handful of pages get named as sources. Everyone else is invisible. Figuring out how to get cited by AI is mostly a matter of separating what engines demonstrably reward from a growing pile of folklore. The short version: citations are chosen at the passage level, a reachability check almost everyone skips comes before any content work, every engine picks its sources differently, and measuring your progress takes more than one check. No tricks in here, just the parts with evidence behind them.
+
+## What Counts as an AI Citation
+
+An **AI citation** is a linked reference to your page inside a generated answer: ChatGPT's source chips, Perplexity's numbered footnotes, the link cards beside a Google AI Overview. It is not the same thing as a mention, and the difference decides what you optimize for.
+
+A [brand mention](https://geotoolbox.ai/glossary/brand-mention) names your brand in the answer text. An [AI citation](https://geotoolbox.ai/glossary/ai-citation) links your page as a source. A recommendation goes further and puts you forward as the answer. You can be mentioned without being cited (the engine learned about you from other people's pages) and cited without being mentioned (your data backs someone else's claim). Each combination tells you something different about your [AI visibility](https://geotoolbox.ai/blog/what-is-ai-visibility).
+
+Why chase citations at all? The traffic is small, but it is not ordinary traffic. Semrush's [AI search traffic study](https://www.semrush.com/blog/ai-search-seo-traffic-study/) found the average AI search visitor is worth 4.4 times the average organic search visitor, measured by conversion rate. Someone who clicks a citation has already had the basic question answered and is coming to verify or act. Be clear-eyed about the other side of that coin: most people who read an AI answer never click anything, so a citation's value is part high-intent clicks, part being present in the answer your buyer trusts. The same study projects AI search could send sites more visitors than traditional search for digital-marketing and SEO topics by early 2028, though that is an extrapolation, not a measurement.
+
+## How AI Engines Decide What to Cite
+
+Google ranks pages. AI engines cite statements. That one difference explains most of what follows.
+
+When an assistant answers with sources, it is running some version of retrieval-augmented generation (RAG): fetch relevant documents from a search index, pull the passages that answer the question, synthesize, and attribute. Selection happens at the passage level. The engine does not cite your page because it is good overall. It cites your page because one extractable chunk of it answered one sub-question well.
+
+But there is a gate before any of that. The engine has to decide to search the web at all. If it answers from training data alone, nobody gets cited, no matter how optimized the page is.
+
+That gate is narrower than most guides admit. In our own analysis of 377 prompts run through ChatGPT's API, citations appeared exactly when the web-search flag fired, and how often it fired tracked intent closely: commercial prompts triggered a live search 72.4% of the time, while purely informational prompts triggered one just 2.5% of the time. A couple of caveats: each prompt ran once (answers vary between runs), and this is one engine's API, whose search routing is not necessarily the consumer app's. Treat the numbers as directional. The practical read survives both: **citation optimization pays off first on commercial and comparison prompts**, because those are the prompts that send engines looking for sources.
+
+<figure>
+  <BlogImage src="/blog/how-to-get-cited-by-ai/ai-citation-pipeline.png" alt="Four stages of how an AI answer selects and links its cited sources." w="1300" h="600" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Citations happen at the passage level, and only when the engine searches at all.</figcaption>
+</figure>
+
+## Step Zero: Make Sure AI Can Fetch Your Page
+
+Before content, structure, or schema: can the engines' crawlers physically reach your pages? This is the step most guides skip, and the most common failure nobody notices.
+
+Each provider runs separate bots for separate jobs, and blocking the wrong one costs you citations without touching rankings. OpenAI [documents its crawlers](https://developers.openai.com/api/docs/bots) separately: **OAI-SearchBot** decides whether you appear in ChatGPT search results, **GPTBot** collects training data, and **ChatGPT-User** fetches pages when a user asks about them live. It is easy to get this wrong in either direction: blocking GPTBot does not remove you from ChatGPT search, and blocking OAI-SearchBot quietly removes you from its generated search answers. Google works the other way: AI Overviews and AI Mode ride on regular Googlebot, so you cannot block the AI features without leaving Search itself. And because ChatGPT's search still leans on Bing's index, blended with OpenAI's own crawl, being indexed in Bing is cheap insurance for the largest assistant: confirm it in Bing Webmaster Tools, where IndexNow can speed fresh pages in.
+
+Your CDN can make this decision for you without asking. Cloudflare [now classifies AI crawlers](https://blog.cloudflare.com/content-independence-day-ai-options/) into search, agent, and training bots, and from September 15, 2026, domains newly onboarding to Cloudflare get new defaults: training and agent crawlers blocked on pages that display ads, search crawlers still allowed. Reasonable defaults, but if your firewall rules predate the classification, audit what is actually being blocked rather than assuming.
+
+Two more quiet killers: most AI crawlers do not execute JavaScript, so content that only exists after client-side rendering is invisible to them, and paywalled or login-gated pages are effectively out of the running. Our free [AI crawler checker](https://geotoolbox.ai/tools/ai-crawler-checker) shows which of 34 AI bots your robots.txt allows or blocks; the [Agent Readiness scan](https://geotoolbox.ai/tools/ai-readiness) goes further and live-fetches your pages as each bot to catch WAF rules, 403s, and JavaScript walls. Our guide to [AI crawlers](https://geotoolbox.ai/blog/ai-crawlers) covers the robots.txt specifics.
+
+## Every Engine Pulls from a Different Index
+
+There is no single "AI search" to optimize for. Each assistant grounds its answers in a different index, trusts a different mix of sources, and cites a different number of them. Search Engine Land's [analysis of 8,000 AI citations](https://searchengineland.com/how-to-get-cited-by-ai-seo-insights-from-8000-ai-citations-455284) across 57 queries, run on Rankscale data, put numbers on how differently the engines behave. The percentages below come from that dataset and are a snapshot, not physics: these shares move. The grounding-index column and the Claude row, which SEL did not test, draw on the vendors' own documentation and independent reporting.
+
+<table>
+<thead>
+<tr><th>Engine</th><th>Grounding index</th><th>What it favors</th><th>One move that matters</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>ChatGPT</strong></td><td>Bing plus OpenAI's own crawl</td><td>Authority sources: Wikipedia alone took 27% of its citations in the SEL dataset, news another ~27%, almost no forums</td><td>Get documented in neutral reference material, not just your own blog</td></tr>
+<tr><td><strong>Google AI Overviews / AI Mode</strong></td><td>Google's index</td><td>The broadest mix: blog-style articles ~46%, news ~20%, plus Reddit, YouTube, and LinkedIn; Wikipedia under 1%</td><td>Standard Google SEO still buys the ticket; deep pages beat homepages</td></tr>
+<tr><td><strong>Gemini</strong></td><td>Google's index</td><td>Blogs ~39% and news ~26%, with YouTube as its single most-cited domain</td><td>Video is a citation asset here, not decoration</td></tr>
+<tr><td><strong>Perplexity</strong></td><td>Its own index</td><td>Editorial and expert review sites, recency, and selective community content</td><td>Freshness and niche expert coverage over raw domain authority</td></tr>
+<tr><td><strong>Claude</strong></td><td>Brave Search</td><td>Well-sourced, measured analysis; conservative citation volume</td><td>Google rankings don't carry over directly; Brave visibility is its own job</td></tr>
+</tbody>
+</table>
+
+The engines also disagree about how many brands belong in an answer. In the same dataset, ChatGPT and AI Overviews named roughly 3 to 4 brands per answer while Perplexity averaged around 13. If you are a mid-tier brand, your first appearances will most likely come from Perplexity, whose longer lists leave room for smaller names.
+
+The mix shifts with intent, too. For B2B queries, company sites and vendor blogs earned about 17% of citations in the SEL data; for consumer queries, official company sites dropped under 4% and review sites, YouTube, and communities took over. We keep engine-specific playbooks for each surface: [ChatGPT](https://geotoolbox.ai/blog/seo-for-chatgpt), [Perplexity](https://geotoolbox.ai/blog/perplexity-seo), [Gemini](https://geotoolbox.ai/blog/gemini-seo), and [Google AI Overviews](https://geotoolbox.ai/blog/google-ai-overviews-seo).
+
+## Structure Content so a Machine Can Lift It
+
+Google's official position on optimizing for AI features is blunt: there are "no additional requirements to appear in AI Overviews or AI Mode, nor other special optimizations necessary," per its [AI features documentation](https://developers.google.com/search/docs/appearance/ai-features). Read that carefully. It rules out tricks. It does not rule out clarity, and clarity is what passage-level retrieval rewards.
+
+Because engines cite statements, the unit of optimization is the passage, not the page. The moves that consistently show up in cited content:
+
+### Lead Each Section with the Answer
+
+A direct, self-contained answer in the first sentences of a section survives extraction. An answer that only makes sense after three paragraphs of setup does not.
+
+### Write Sections That Stand Alone
+
+If a chunk needs the surrounding context to be understood, an engine cannot quote it cleanly. Headings that say what the section answers ("Which bots do I allow in robots.txt," not "Key considerations") do half of this work.
+
+### Make Claims with Evidence Attached
+
+Specific numbers with named sources give an engine something checkable to attribute. Vague claims give it nothing to cite.
+
+### Cover the Question's Neighborhood on One Page
+
+Engines fan a prompt out into implied sub-questions and pull passages per sub-question, so a page that answers the follow-ups too gets more chances to be cited. We wrote up the mechanics in our [query fan-out](https://geotoolbox.ai/blog/query-fan-out) guide. One warning: cover the neighborhood on one deep page. Spinning each sub-question into its own thin URL is exactly what Google's scaled-content policies exist to catch.
+
+None of this is exotic. It is the difference between writing to be read and writing to be quoted, and it happens to make pages better for people as well.
+
+## The Myth Pile: llms.txt, Magic Schema, and Recycled Stats
+
+Citation optimization has collected a set of tactics that sound technical, cost real hours, and have no evidence behind them. Three are worth naming.
+
+**llms.txt.** The proposal is a markdown index that tells AI crawlers what matters on your site. The problem: no engine documents it as a citation signal. Google's own documentation says you do not "need to create new machine readable files, AI text files, or markup" for its AI features. We have taken the same position for our own site: skip it until an engine actually commits, and spend the hour on reachability instead.
+
+**Special schema for AI.** The same [Google document](https://developers.google.com/search/docs/appearance/ai-features) is explicit that "there's also no special schema.org structured data that you need to add." Schema is still worth having for what it always did, entity disambiguation and rich results. But treating a markup type as a citation switch does not survive contact with data. In our own 5,234-page citation dataset, HowTo markup was exactly as common on the pages AI engines never cited as on the pages they did - a single-pass reading, but not what you'd expect if it were a citation switch. The honest summary: schema describes your content to machines; it does not make weak content citable.
+
+**Recycled statistics.** A surprising share of generative engine optimization (GEO) advice rests on numbers with no traceable primary source. Percentages like "structured content earns 3x more citations" circulate from blog to blog, each citing the previous one, with no methodology in sight. Before you rebuild your content strategy around a statistic, ask who measured it, on what sample, and when. The studies we cite in this article publish their counts, and where we use our own unpublished data we give you the sample and the single-pass caveat so you can weight it accordingly. That filter eliminates most of the genre.
+
+## Earn the Third-Party Mentions Engines Trust
+
+Here is the uncomfortable part: much of what determines whether AI cites you does not live on your site.
+
+Engines validate brands against the sources they already trust, and for most queries those are third-party surfaces. In the [SEL citation data](https://searchengineland.com/how-to-get-cited-by-ai-seo-insights-from-8000-ai-citations-455284), consumer-intent answers drew on review sites, YouTube, communities, and mainstream press while official company sites took under 4% of citations. Your buyers' assistants are reading about you, mostly not from you.
+
+What that means in practice depends on your market. For B2B, being present in industry publications, comparison articles, and directories is what puts you in the consideration set the engines draw from; in the SEL data that meant niche trade outlets like TechTarget, directories like Clutch, analyst reports from Gartner and Statista, and LinkedIn expert posts. For consumer brands, reviews and community threads carry more weight, and the Google-side engines have a real appetite for user content: Reddit and Quora took 2 to 5% of their citations in the SEL data, against under 0.5% for ChatGPT.
+
+A well-maintained entity footprint (a consistent description of what you are on Wikipedia or Wikidata where warranted, LinkedIn, Crunchbase, review profiles) gives the engines a consistent description to draw on instead of leaving them to improvise your positioning.
+
+What keeps this from sliding into spam: first, participate where you can add something real; engines and communities both punish manufactured advocacy, and seeded threads have a way of becoming the story. And second, the strongest third-party play is still publishing something worth citing: original data, a benchmark, a methodology. Give other sites a reason to reference you, and the engines inherit that judgment.
+
+## Track Whether You're Actually Getting Cited
+
+A single check proves nothing. SparkToro and Gumshoe [had 600 volunteers run prompts 2,961 times](https://sparktoro.com/blog/new-research-ais-are-highly-inconsistent-when-recommending-brands-or-products-marketers-should-take-care-when-tracking-ai-visibility/) across ChatGPT, Claude, and Google's AI, and found under a 1-in-100 chance that ChatGPT or Google's AI returns the same brand list in any two runs of the same prompt. Checking once and concluding you are visible (or invisible) is reading noise. The metric they land on as usable is visibility rate: the share of many runs, across many prompts, where you appear.
+
+<table>
+<thead>
+<tr><th>What to track</th><th>Free method</th><th>Where it falls short</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Citation rate</strong> (your pages linked as sources)</td><td>Run 10-20 buyer prompts in each engine, several times each, and log linked sources per run</td><td>Manual, and personalization can skew what you see</td></tr>
+<tr><td><strong>Mention rate</strong> (your brand named, linked or not)</td><td>Same prompt runs, logging brand names in the answer text</td><td>Misses how you are described unless you record wording</td></tr>
+<tr><td><strong>AI referral traffic</strong></td><td>A GA4 channel group matching chatgpt.com, perplexity.ai, claude.ai, gemini.google.com referrers</td><td>A starter list: app traffic and stripped referrers slip through, and AI Overviews clicks hide inside normal Google traffic</td></tr>
+<tr><td><strong>Citation loss</strong></td><td>Re-run your prompt set monthly and diff which sources appear</td><td>Cited source sets shift between months, so confirm a loss before reacting to it</td></tr>
+</tbody>
+</table>
+
+The free method works and we documented the full protocol, including how many runs you need before trusting a result, in our guide to [tracking brand mentions in AI search](https://geotoolbox.ai/blog/track-brand-mentions-in-ai-search). It stops scaling once you are past a few dozen prompts and more than a couple of engines. That is where geotoolbox's [Citation Interceptor](https://geotoolbox.ai/features/citation-interceptor) takes over: it captures which pages, yours and your competitors', each engine cites for your prompt set, so a lost citation shows up in your next scan instead of going unnoticed. Like any tracker, it samples, so the same run-count discipline applies to its numbers too.
+
+## A 30-Day Plan to Earn Your First Citations
+
+You do not need a quarter-long program to find out whether this works for your site. One month, four moves:
+
+**Week 1: verify reachability.** Test your key pages against each engine's bots, fix robots.txt and CDN rules, and confirm your money pages render without JavaScript. This is an afternoon of work that everything else depends on.
+
+**Week 2: baseline.** Write 10-20 prompts your buyers would really ask, weighted toward commercial and comparison intent. Run each several times per engine and log mentions, citations, and who gets cited instead of you. The competitors' cited pages are your reverse-engineering material.
+
+**Week 3: restructure three pages.** Pick the three pages closest to the prompts where competitors get cited and you do not. Give every section an answer-first opening, headings that state the question, and claims with sourced numbers. Do not create new thin pages; deepen the ones you have.
+
+**Week 4: one asset, two placements.** Publish one piece of original data, even a small one (a survey of your customers, a benchmark from your product's usage), and pitch it to two industry publications or communities where your buyers already look. Then re-run the Week 2 prompt set and compare.
+
+Citations compound slowly, and a month will not make you ChatGPT's favorite source. It will tell you where you stand, clear the blockers you could not see, and put the first evidence-backed passages in front of the engines.
+
+## Frequently Asked Questions
+
+### How long does it take to get cited by AI?
+
+There is no reliable published benchmark, and anyone quoting a precise timeline is guessing. What is knowable: engines with live retrieval (Perplexity, ChatGPT search, AI Overviews) can cite a page once their underlying search engine indexes it, so reachability and indexing set the floor. Indexing only makes you eligible, though: retrieval and selection still decide. Authority-driven citation, being the source engines prefer, builds over months of third-party presence, not days.
+
+### Do you need a Wikipedia page to get cited by AI?
+
+No, and for most businesses pursuing one is wasted effort. Wikipedia dominates ChatGPT's citations for encyclopedic queries, but commercial and comparison prompts draw from review sites, editorial coverage, and vendor content instead. If your brand does not meet Wikipedia's notability bar, put the energy into the sources engines cite for buying questions.
+
+### Do AI citations help your Google rankings?
+
+Not directly; there is no evidence citations feed back into ranking algorithms. The relationship mostly runs the other way: for Google's AI surfaces, ranking well makes citations more likely. The overlap is in the inputs, since the same clarity, evidence, and third-party authority that earn citations also support rankings.
+
+### Which AI assistants actually show citations?
+
+Perplexity attaches sources to virtually every search answer. Google AI Overviews and AI Mode link sources whenever they appear. ChatGPT cites when it searches the web, which depends on the prompt. Gemini and Claude cite when their search grounding fires. If you are choosing where to start measuring, start where citations are most consistent: Perplexity and Google's AI surfaces.
+
+### Is llms.txt worth creating?
+
+No engine documents llms.txt as a citation signal, and Google has said outright that its AI features need no new files, so we skip it on our own site. If you already have one, leaving it up costs you nothing but upkeep; just do not mistake maintaining it for progress.
+
+### What should you do if you lose a citation?
+
+Run the diagnostic in order: confirm the loss is real (re-check the prompt several times), then reachability (did a CDN or robots rule change?), then the replacement (is the page that took your slot fresher or more specific?), then update yours accordingly. Source sets change frequently, which cuts both ways: losses are common, and so are second chances.
+
+## Get Cited, Then Stay Cited
+
+So, how do you get cited by AI? Make your pages fetchable by every engine's bots, write passages a machine can lift whole, back claims with numbers worth quoting, and build the third-party footprint engines check you against. Then measure like the answers are nondeterministic, because they are.
+
+The brands winning citations right now are not running secret tactics. They are the ones who did the unglamorous parts first and then watched the engines closely enough to notice what changed. If you would rather not do the watching by hand, our [Citation Interceptor](https://geotoolbox.ai/features/citation-interceptor) runs your prompt set for you and shows exactly which pages each engine cites, yours and your competitors', so gains and losses turn up in data instead of anecdotes.
+
+## Sources
+
+- How to get cited by AI: SEO insights from 8,000 AI citations - Search Engine Land, 2025 - `searchengineland.com/how-to-get-cited-by-ai-seo-insights-from-8000-ai-citations-455284`
+- AI features and your website - Google Search Central documentation, updated December 2025 - `developers.google.com/search/docs/appearance/ai-features`
+- OpenAI crawlers and bots documentation - OpenAI - `developers.openai.com/api/docs/bots`
+- Your site, your rules: new AI traffic options for all customers - Cloudflare, 2026 - `blog.cloudflare.com/content-independence-day-ai-options/`
+- AIs are highly inconsistent when recommending brands - SparkToro / Gumshoe.ai, 2026 - `sparktoro.com/blog/new-research-ais-are-highly-inconsistent-when-recommending-brands-or-products-marketers-should-take-care-when-tracking-ai-visibility/`
+- Semrush AI search traffic study - Semrush, 2025 - `semrush.com/blog/ai-search-seo-traffic-study/`
