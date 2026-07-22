@@ -8,10 +8,11 @@ import { siteConfig } from "@/lib/config"
  *
  * Most platforms in this category gate pricing behind a demo call; ours is
  * public down to the credit counts. Prices are read from lib/plans.ts (the
- * single source of truth) — only the copy lives in messages. Three entry
- * tiers on the card row; the full ladder lives on /pricing.
+ * single source of truth) — only the copy lives in messages. Three paid
+ * tiers on the card row (Free anchors low and stays off the homepage);
+ * the full ladder lives on /pricing.
  */
-const TEASER_IDS: PlanId[] = ["free", "starter", "consultant"]
+const TEASER_IDS: PlanId[] = ["starter", "consultant", "agency"]
 
 export async function PricingTeaser() {
   const t = await getTranslations("home.pricingTeaser")
