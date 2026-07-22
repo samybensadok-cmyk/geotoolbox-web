@@ -8,7 +8,7 @@ import { getMdxComponents } from "@/components/mdx"
 import { formatDate } from "@/lib/utils"
 import { routing, bcp47, type Locale } from "@/i18n/routing"
 import { alternatesFor, urlFor } from "@/lib/i18n/siblings"
-import { setRequestLocale, getTranslations } from "next-intl/server"
+import { setRequestLocale, getTranslations, getMessages } from "next-intl/server"
 import { frenchTypography, rehypeFrenchTypography } from "@/lib/french-typography"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
 import { JsonLd } from "@/components/seo/json-ld"
@@ -18,6 +18,8 @@ import { AuthorBio } from "@/components/blog/author-bio"
 import { RelatedPosts } from "@/components/blog/related-posts"
 import { InlineCta } from "@/components/blog/inline-cta"
 import { injectInlineCta, isCommercialIntent } from "@/lib/inline-cta"
+import { NewsletterSignup } from "@/components/newsletter/newsletter-signup"
+import { newsletterCopyFrom } from "@/components/newsletter/copy"
 import { Avatar } from "@/components/ui/avatar"
 
 export async function generateStaticParams() {
@@ -110,6 +112,7 @@ export default async function BlogPost({
 
   const t = await getTranslations("blog")
   const tc = await getTranslations("common")
+  const allMessages = await getMessages()
   const isFr = locale === "fr"
   const typo = (s: string) => (isFr ? frenchTypography(s) : s)
   const author = getAuthorByName(post.author)
@@ -279,6 +282,14 @@ export default async function BlogPost({
           </div>
 
           {author && <AuthorBio author={author} />}
+
+          {/* Email capture — double opt-in; source tag = per-article attribution. */}
+          <div className="mt-12">
+            <NewsletterSignup
+              source={`article:${slug}`}
+              copy={newsletterCopyFrom(allMessages.footer as Record<string, string>)}
+            />
+          </div>
 
           <RelatedPosts posts={relatedPosts} locale={locale} />
         </div>

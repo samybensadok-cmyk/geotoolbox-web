@@ -2,6 +2,8 @@ import Link from "next/link"
 import { tools } from "@/lib/tools"
 import { localizeNavHref } from "@/lib/i18n/nav"
 import { makeLocalizer } from "@/lib/i18n/siblings"
+import { NewsletterSignup } from "@/components/newsletter/newsletter-signup"
+import { newsletterCopyFrom } from "@/components/newsletter/copy"
 
 export function Footer({
   nav,
@@ -21,9 +23,20 @@ export function Footer({
   const localizeContent = makeLocalizer(locale)
   const L = (href: string) => localizeContent(localizeNavHref(href, locale))
 
+  const nlCopy = newsletterCopyFrom(footer)
+
   return (
     <footer className="border-t border-gray-100 bg-gray-50 px-6 py-12">
       <div className="mx-auto max-w-6xl">
+        {/* Newsletter band — double opt-in; `source` tags the placement so
+            per-placement conversion is visible in newsletter_subscribers. */}
+        <div className="mb-10 grid gap-5 border-b border-gray-200 pb-10 lg:grid-cols-2 lg:items-center lg:gap-10">
+          <div>
+            <h4 className="text-[15px] font-bold tracking-tight text-gray-900">{nlCopy.title}</h4>
+            <p className="mt-1 text-sm leading-relaxed text-gray-600">{nlCopy.description}</p>
+          </div>
+          <NewsletterSignup source="footer" compact copy={nlCopy} />
+        </div>
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-6">
           {/* Brand */}
           <div>
