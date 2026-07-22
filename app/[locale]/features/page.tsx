@@ -131,8 +131,33 @@ export default async function FeaturesPage({
 
   return (
     <>
-      {/* Hero — plain white with a 7-tint teaser ornament */}
-      <section className="bg-white px-6 pt-20 pb-12 sm:pt-28 sm:pb-16">
+      {/* Hero — dark opening act (homepage/feature-hero language); the tinted
+          pill strip reads as each feature's colored light on the dark ground */}
+      <section className="relative overflow-hidden bg-gray-950 px-6 pt-20 pb-14 sm:pt-24 sm:pb-16">
+        {/* Ambient depth — brand-teal aurora + faint cool glow, as on the homepage hero */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background: [
+              "radial-gradient(ellipse 720px 520px at 85% 8%, rgba(20, 184, 166, 0.14), transparent 70%)",
+              "radial-gradient(ellipse 640px 440px at 8% 30%, rgba(56, 189, 248, 0.05), transparent 70%)",
+            ].join(","),
+          }}
+        />
+        {/* Dotted grid */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 1px 1px, rgb(148 163 184 / 1) 1px, transparent 0)",
+            backgroundSize: "22px 22px",
+            maskImage: "linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.9) 100%)",
+            WebkitMaskImage: "linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.9) 100%)",
+            opacity: 0.07,
+          }}
+        />
         <JsonLd
           data={[
             breadcrumbsSchema([
@@ -149,32 +174,33 @@ export default async function FeaturesPage({
           ]}
         />
 
-        <div className="mx-auto max-w-7xl">
+        <div className="relative mx-auto max-w-7xl">
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-[6fr_6fr] lg:items-end lg:gap-16">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">
+            <div className="animate-fade-up">
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-300">
                 {t("hero.eyebrow")}
               </p>
-              <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
+              <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-white">
                 {t("hero.h1a")}
                 <br />
-                <span className="text-accent-600">{t("hero.h1b")}</span>
+                <span className="text-accent-300">{t("hero.h1b")}</span>
               </h1>
             </div>
-            <p className="max-w-xl text-base leading-relaxed text-gray-600">
+            <p className="stagger-2 max-w-xl text-base leading-relaxed text-gray-300">
               {t("hero.intro")}
             </p>
           </div>
 
-          {/* Atmospheric preview strip — each pill scrolls to its feature. */}
-          <ul className="mt-10 flex flex-wrap items-center gap-2">
+          {/* Atmospheric preview strip — each tinted pill is a colored light on
+              the dark ground; each scrolls to its feature. */}
+          <ul className="stagger-3 mt-10 flex flex-wrap items-center gap-2">
             {allFeatures.map((f) => {
               const tint = tintMap[f.tint]
               return (
                 <li key={f.slug}>
                   <Link
                     href={`#feature-${f.slug}`}
-                    className={`inline-flex items-center gap-2 rounded-full border ${tint.border} ${tint.bg} px-3 py-1.5 text-[12px] font-semibold text-gray-800 transition-shadow duration-200 hover:shadow-[0_4px_12px_-4px_rgba(15,23,42,0.12)] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2`}
+                    className={`inline-flex items-center gap-2 rounded-full border ${tint.border} ${tint.bg} px-3 py-1.5 text-[12px] font-semibold text-gray-800 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_6px_16px_-6px_rgba(0,0,0,0.5)] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950`}
                   >
                     <span className={`h-1.5 w-1.5 rounded-full ${tint.dot}`} aria-hidden="true" />
                     {f.name.replace(" (GSC + GA4)", "")}
