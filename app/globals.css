@@ -282,6 +282,30 @@ button:not(:disabled),
 }
 .animate-device-pulse { animation: device-pulse 2.4s ease-in-out infinite; }
 
+/* ——— Engine rotator: CSS-only word cycle in the hero H1 ——— */
+/* All items stack in the same grid cell ([grid-area:1/1] on the spans); each
+   fades in, holds ~1.3s, fades out. 8 items × 2s slot = 16s loop. Every name
+   stays in the DOM so crawlers and AI read the full engine list. */
+@keyframes engine-cycle {
+  0%    { opacity: 0; transform: translateY(0.45em); }
+  2.2%  { opacity: 1; transform: translateY(0); }
+  12.5% { opacity: 1; transform: translateY(0); }
+  14.7% { opacity: 0; transform: translateY(-0.45em); }
+  100%  { opacity: 0; transform: translateY(-0.45em); }
+}
+.engine-rotator > span {
+  opacity: 0;
+  animation: engine-cycle 16s linear infinite;
+}
+.engine-rotator > span:nth-child(1) { animation-delay: 0s; }
+.engine-rotator > span:nth-child(2) { animation-delay: 2s; }
+.engine-rotator > span:nth-child(3) { animation-delay: 4s; }
+.engine-rotator > span:nth-child(4) { animation-delay: 6s; }
+.engine-rotator > span:nth-child(5) { animation-delay: 8s; }
+.engine-rotator > span:nth-child(6) { animation-delay: 10s; }
+.engine-rotator > span:nth-child(7) { animation-delay: 12s; }
+.engine-rotator > span:nth-child(8) { animation-delay: 14s; }
+
 /* ——— Reduced-motion: honor the OS setting (a11y) ——— */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -292,4 +316,7 @@ button:not(:disabled),
   }
   .animate-fade-up,
   .stagger-1, .stagger-2, .stagger-3, .stagger-4 { opacity: 1 !important; }
+  /* Rotator: freeze on the first engine name instead of cycling. */
+  .engine-rotator > span { animation: none !important; }
+  .engine-rotator > span:first-child { opacity: 1 !important; }
 }

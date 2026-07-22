@@ -64,6 +64,31 @@ export async function CTA() {
             </p>
           </div>
         </div>
+
+        {/* Compare strip — EN only (these deep-dives have no FR twins).
+            Buyers at this stage are comparing vendors; meet them here rather
+            than losing them to a fresh Google search. */}
+        {locale === "en" && (
+          <div className="mt-16 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-gray-800 pt-8">
+            <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-500">
+              Comparing the field?
+            </span>
+            {[
+              ["Profound alternatives", "/blog/profound-alternatives"],
+              ["Peec AI review", "/blog/what-is-peec-ai"],
+              ["Scrunch AI review", "/blog/scrunch-ai-review"],
+              ["Best GEO tools", "/blog/best-generative-engine-optimization-tools"],
+            ].map(([label, href]) => (
+              <Link
+                key={href}
+                href={href}
+                className="text-[13px] font-medium text-gray-400 underline-offset-4 transition-colors hover:text-white hover:underline"
+              >
+                {label}
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   )
