@@ -250,11 +250,11 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
               {nav?.login ?? "Log in"}
             </Link>
             <Link
-              href={siteConfig.appSignupUrl}
+              href={L("/pricing")}
               prefetch={false}
               className="flex min-h-[40px] items-center rounded-full bg-accent-900 px-3.5 text-[13px] font-medium text-white transition-colors hover:bg-accent-800"
             >
-              {nav?.startFree ?? "Start free"}
+              {nav?.startFree ?? "Get started"}
             </Link>
           </div>
         </nav>
@@ -408,12 +408,12 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
                 {nav?.login ?? "Log in"}
               </Link>
               <Link
-                href={siteConfig.appSignupUrl}
+                href={L("/pricing")}
                 prefetch={false}
                 onClick={() => setMobileOpen(false)}
                 className="rounded-full bg-accent-900 py-3 text-center text-sm font-medium text-white"
               >
-                {nav?.startFree ?? "Start free"}
+                {nav?.startFree ?? "Get started"}
               </Link>
             </div>
           </nav>

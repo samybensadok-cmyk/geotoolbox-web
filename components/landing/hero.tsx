@@ -104,7 +104,7 @@ export async function Hero() {
 
             <div className="stagger-2 mt-8 flex flex-wrap items-center gap-3">
               <Link
-                href={siteConfig.appUrl} prefetch={false}
+                href={`${base}/pricing`} prefetch={false}
                 className="rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 hover:shadow-xl hover:shadow-black/40 active:translate-y-[1px] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950"
               >
                 {t("ctaPrimary")}
@@ -116,6 +116,15 @@ export async function Hero() {
                 {t("ctaSecondary")}
               </Link>
             </div>
+            <p className="stagger-2 mt-3 text-[13px] text-gray-400">
+              <Link
+                href={siteConfig.appSignupUrl}
+                prefetch={false}
+                className="underline underline-offset-2 transition-colors hover:text-white"
+              >
+                {t("ctaFreeLink")}
+              </Link>
+            </p>
 
             <p className="stagger-3 mt-4 text-xs text-gray-400">
               {t("underCta")}
