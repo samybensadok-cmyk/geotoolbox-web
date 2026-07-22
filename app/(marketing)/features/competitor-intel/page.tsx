@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { Breadcrumbs } from "@/components/features/breadcrumbs"
+import { FeatureHero } from "@/components/features/feature-hero"
 import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
 import { siteConfig } from "@/lib/config"
@@ -110,8 +110,7 @@ const sections = [
 export default function CompetitorIntelPage() {
   return (
     <>
-      {/* Hero — blush atmosphere (vigilance / threat-feed feel) */}
-      <section className="relative overflow-hidden bg-[var(--surface-blush)] px-6 pt-20 pb-16 sm:pt-24 sm:pb-20">
+      {/* Hero — blush glow (vigilance / threat-feed feel), dark ground */}
       <JsonLd data={[
         softwareApplicationSchema({
           name: "Competitor Intel",
@@ -120,33 +119,21 @@ export default function CompetitorIntelPage() {
         }),
       ]} />
 
-        <div className="mx-auto max-w-7xl">
-          <Breadcrumbs featureName="Competitor Intel" />
-
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center lg:gap-16">
-            <div className="lg:col-span-6">
-              <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">
-                Competitor Intel
-              </p>
-              <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-                Know the day they outrank you.
-              </h1>
-              <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-                AI competitor analysis that runs on real citations, not estimates. Track how rivals gain or lose AI citations across eight engines, see the exact topics they own and you don&apos;t, and get an email the day a competitor starts winning a prompt that used to be yours.
-              </p>
-              <div className="mt-8 flex flex-wrap items-center gap-3">
-                <Link href="/app" prefetch={false} className="rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px]">
-                  Try it for free
-                </Link>
-                <Link href="#inside" className="rounded-full border border-gray-200 px-6 py-3.5 text-[15px] font-medium text-gray-700 hover:border-gray-400 hover:text-gray-900">
-                  What's inside
-                </Link>
-              </div>
-            </div>
-
-            {/* Competitor tracking visual — threat-feed first, SoV rail as compact context */}
-            <div className="lg:col-span-6" aria-hidden="true">
-              <div className="relative rounded-[2rem] border border-gray-200 bg-white p-6 sm:p-7 shadow-[0_20px_60px_-20px_rgba(15,23,42,0.12)]">
+      <FeatureHero
+        featureName="Competitor Intel"
+        hue="blush"
+        eyebrow="Competitor Intel"
+        title="Know the day they outrank you."
+        subhead="AI competitor analysis that runs on real citations, not estimates. Track how rivals gain or lose AI citations across eight engines, see the exact topics they own and you don't, and get an email the day a competitor starts winning a prompt that used to be yours."
+        primaryLabel="Try it for free"
+        primaryHref="/app"
+        secondaryLabel="What's inside"
+        secondaryHref="#inside"
+        microcopy=""
+      >
+        {/* Competitor tracking visual — threat-feed first, SoV rail as compact context */}
+        <div aria-hidden="true">
+          <div className="relative rounded-[2rem] border border-gray-200 bg-white p-6 sm:p-7 shadow-[0_20px_60px_-20px_rgba(15,23,42,0.12)]">
                 {/* Live feed header */}
                 <div className="flex items-center justify-between border-b border-gray-100 pb-3">
                   <div className="flex items-center gap-2">
@@ -226,11 +213,9 @@ export default function CompetitorIntelPage() {
                     })}
                   </div>
                 </div>
-              </div>
-            </div>
           </div>
         </div>
-      </section>
+      </FeatureHero>
 
       {/* Gap matrix section */}
       <section className="border-y border-[var(--surface-blush-border)] bg-[var(--surface-blush)] px-6 py-24 sm:py-28">

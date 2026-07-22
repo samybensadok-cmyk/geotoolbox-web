@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { Breadcrumbs } from "@/components/features/breadcrumbs"
+import { FeatureHero } from "@/components/features/feature-hero"
 import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
 import { ScreenshotFrame } from "@/components/features/screenshot-frame"
@@ -10,7 +10,6 @@ import { HowItWorks3Step, type Step } from "@/components/features/how-it-works"
 import { ActVsMonitorWedge } from "@/components/features/act-vs-monitor"
 import { SocialProofBlock } from "@/components/features/social-proof"
 import { FeatureComparisonTable } from "@/components/features/feature-comparison-table"
-import { DualCTA } from "@/components/features/dual-cta"
 import { siteConfig } from "@/lib/config"
 import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema, howToSchema } from "@/lib/seo-schema"
@@ -118,65 +117,49 @@ const faqs = [
 export default function GeoScanPage() {
   return (
     <>
-      {/* Hero — pain-led, with the real scan result as the proof */}
-      <section className="relative overflow-hidden bg-[var(--surface-mint)] px-6 pt-16 pb-16 sm:pt-20 sm:pb-20">
-        <JsonLd
-          data={[
-            softwareApplicationSchema({
-              name: "GEO Scan",
-              description:
-                "An AI visibility tool that scans ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Google AI Mode, Bing Copilot, and Grok to show whether they cite your brand or your competitors.",
-              url: `${siteConfig.url}/features/geo-scan`,
-            }),
-            howToSchema({
-              name: "How to run a GEO Scan",
-              steps: steps.map((s) => ({ name: s.title, text: s.body })),
-            }),
-          ]}
+      <JsonLd
+        data={[
+          softwareApplicationSchema({
+            name: "GEO Scan",
+            description:
+              "An AI visibility tool that scans ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Google AI Mode, Bing Copilot, and Grok to show whether they cite your brand or your competitors.",
+            url: `${siteConfig.url}/features/geo-scan`,
+          }),
+          howToSchema({
+            name: "How to run a GEO Scan",
+            steps: steps.map((s) => ({ name: s.title, text: s.body })),
+          }),
+        ]}
+      />
+
+      {/* Hero — pain-led, dark opening act; the real scan result is the light source */}
+      <FeatureHero
+        featureName="GEO Scan"
+        hue="teal"
+        eyebrow="AI Visibility Checker"
+        title={
+          <>
+            See if AI is <span className="text-accent-300">recommending you</span>, or your
+            competitors.
+          </>
+        }
+        subhead="ChatGPT, Perplexity, and Gemini already answer your customers' buying questions. GEO Scan is an AI visibility checker that queries all eight major engines with one prompt and shows you who gets cited, who gets recommended instead, and a 0–100 score. From live search, in minutes, on every plan including Free."
+        proof="8 engines · 8 markets · live search, parsed verbatim"
+        primaryLabel="Run a free scan"
+        secondaryLabel="See how it works"
+        secondaryHref="#how"
+        microcopy="Free plan · no credit card · results in minutes"
+      >
+        {/* Real scan result as proof (anonymized, brand kept unnamed) */}
+        <ScreenshotFrame
+          src="/screenshots/geo-scan/ai-citation-lawyers-result.png"
+          alt="GEO Scan result for 'how to run google ads for lawyers': all 7 AI engines cite the brand, ranked the #1 cited source above google.com, with 63 total citations."
+          width={1999}
+          height={1602}
+          priority
+          caption="Real GEO Scan: for “how to run google ads for lawyers,” all 7 AI engines cite the brand, which ranks the #1 cited source, above google.com, Reddit, and Clio."
         />
-
-        <div className="mx-auto max-w-7xl">
-          <Breadcrumbs featureName="GEO Scan" />
-
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-14">
-            {/* Left — message */}
-            <div className="animate-fade-up lg:col-span-6">
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-                AI Visibility Checker
-              </p>
-              <h1 className="mt-3 text-[clamp(2rem,4.2vw,3.25rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-                See if AI is <span className="text-accent-700">recommending you</span>, or your competitors.
-              </h1>
-              <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-                ChatGPT, Perplexity, and Gemini already answer your customers&apos; buying questions. GEO
-                Scan is an AI visibility checker that queries all eight major engines with one prompt and
-                shows you who gets cited, who gets recommended instead, and a 0–100 score. From live search,
-                in minutes, on every plan including Free.
-              </p>
-              <div className="mt-8">
-                <DualCTA
-                  primaryLabel="Run a free scan"
-                  secondaryLabel="See how it works"
-                  secondaryHref="#how"
-                  microcopy="Free plan · no credit card · results in minutes"
-                />
-              </div>
-            </div>
-
-            {/* Right — the real scan result as proof (anonymized, brand kept unnamed) */}
-            <div className="animate-fade-up stagger-2 lg:col-span-6">
-              <ScreenshotFrame
-                src="/screenshots/geo-scan/ai-citation-lawyers-result.png"
-                alt="GEO Scan result for 'how to run google ads for lawyers': all 7 AI engines cite the brand, ranked the #1 cited source above google.com, with 63 total citations."
-                width={1999}
-                height={1602}
-                priority
-                caption="Real GEO Scan: for “how to run google ads for lawyers,” all 7 AI engines cite the brand, which ranks the #1 cited source, above google.com, Reddit, and Clio."
-              />
-            </div>
-          </div>
-        </div>
-      </section>
+      </FeatureHero>
 
       {/* The cost of being invisible */}
       <PainScenarioSection

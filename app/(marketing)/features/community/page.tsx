@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { Breadcrumbs } from "@/components/features/breadcrumbs"
+import { FeatureHero } from "@/components/features/feature-hero"
 import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
 import { siteConfig } from "@/lib/config"
@@ -109,8 +109,6 @@ const outcomes = [
 export default function CommunityPage() {
   return (
     <>
-      {/* Hero — warm social atmosphere */}
-      <section className="border-b border-[var(--surface-peach-border)] bg-[var(--surface-peach)] px-6 pt-20 pb-16 sm:pt-24 sm:pb-20">
       <JsonLd data={[
         softwareApplicationSchema({
           name: "Community Insights",
@@ -119,32 +117,21 @@ export default function CommunityPage() {
         }),
       ]} />
 
-        <div className="mx-auto max-w-7xl">
-          <Breadcrumbs featureName="Community" />
-
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center lg:gap-16">
-            <div className="lg:col-span-6">
-              <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">
-                Community
-              </p>
-              <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-                The Reddit threads AI quotes back to your customers.
-              </h1>
-              <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-                AI engines cite forums constantly, especially for 'is it worth it' and 'which one should I buy' questions. Community Insights shows you exactly which Reddit and forum threads they pull from in your space, which ones carry misinformation, and where participating would actually move your visibility.
-              </p>
-              <div className="mt-8 flex flex-wrap items-center gap-3">
-                <Link href="/app" prefetch={false} className="rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px]">
-                  See your community map
-                </Link>
-                <Link href="#outcomes" className="rounded-full border border-gray-200 px-6 py-3.5 text-[15px] font-medium text-gray-700 hover:border-gray-400 hover:text-gray-900">
-                  What it catches
-                </Link>
-              </div>
-            </div>
-
-            {/* Community visual */}
-            <figure className="m-0 lg:col-span-6" aria-label="Illustrative example with sample data">
+      {/* Hero — warm social atmosphere, migrated to the shared dark FeatureHero */}
+      <FeatureHero
+        featureName="Community"
+        hue="peach"
+        eyebrow="Community"
+        title="The Reddit threads AI quotes back to your customers."
+        subhead="AI engines cite forums constantly, especially for 'is it worth it' and 'which one should I buy' questions. Community Insights shows you exactly which Reddit and forum threads they pull from in your space, which ones carry misinformation, and where participating would actually move your visibility."
+        primaryLabel="See your community map"
+        primaryHref="/app"
+        secondaryLabel="What it catches"
+        secondaryHref="#outcomes"
+        microcopy=""
+      >
+        {/* Community visual */}
+        <figure className="m-0" aria-label="Illustrative example with sample data">
               <span className="sr-only">Example, illustrative data:</span>
               <div className="relative rounded-[2rem] border border-gray-200 bg-white p-6 sm:p-8 shadow-[0_20px_60px_-20px_rgba(15,23,42,0.12)]">
                 <div className="flex items-center justify-between border-b border-gray-100 pb-3">
@@ -188,10 +175,8 @@ export default function CommunityPage() {
                   ))}
                 </ul>
               </div>
-            </figure>
-          </div>
-        </div>
-      </section>
+        </figure>
+      </FeatureHero>
 
       {/* Outcomes — white breather alternating with the peach atmosphere */}
       <section id="outcomes" className="bg-white px-6 py-24 sm:py-28">

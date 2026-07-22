@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { Breadcrumbs } from "@/components/features/breadcrumbs"
+import { FeatureHero } from "@/components/features/feature-hero"
 import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
 import { ScreenshotFrame } from "@/components/features/screenshot-frame"
@@ -8,7 +8,6 @@ import { PainScenarioSection } from "@/components/features/pain-scenario"
 import { HowItWorks3Step, type Step } from "@/components/features/how-it-works"
 import { ActVsMonitorWedge } from "@/components/features/act-vs-monitor"
 import { SocialProofBlock } from "@/components/features/social-proof"
-import { DualCTA } from "@/components/features/dual-cta"
 import { siteConfig } from "@/lib/config"
 import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema, howToSchema } from "@/lib/seo-schema"
@@ -170,65 +169,54 @@ const faqs = [
 export default function AgentReadinessPage() {
   return (
     <>
+      <JsonLd
+        data={[
+          softwareApplicationSchema({
+            name: "Agent Readiness",
+            description:
+              "An AI crawler and agent readiness checker that fetches your site as the real crawler identities (GPTBot, ClaudeBot, PerplexityBot) through your WAF, renders it without JavaScript, validates the agentic standards, and returns a 0–100 score, a readiness level, and request/response receipts on the access and standards checks.",
+            url: `${siteConfig.url}/features/agent-readiness`,
+            applicationSubCategory: "AI agent readiness scanner",
+          }),
+          howToSchema({
+            name: "How to check your site's AI agent readiness",
+            steps: steps.map((s) => ({ name: s.title, text: s.body })),
+          }),
+        ]}
+      />
+
       {/* Hero — pain-led, with a real readiness report as proof */}
-      <section className="relative overflow-hidden bg-[var(--surface-steel)] px-6 pt-16 pb-16 sm:pt-20 sm:pb-20">
-        <JsonLd
-          data={[
-            softwareApplicationSchema({
-              name: "Agent Readiness",
-              description:
-                "An AI crawler and agent readiness checker that fetches your site as the real crawler identities (GPTBot, ClaudeBot, PerplexityBot) through your WAF, renders it without JavaScript, validates the agentic standards, and returns a 0–100 score, a readiness level, and request/response receipts on the access and standards checks.",
-              url: `${siteConfig.url}/features/agent-readiness`,
-              applicationSubCategory: "AI agent readiness scanner",
-            }),
-            howToSchema({
-              name: "How to check your site's AI agent readiness",
-              steps: steps.map((s) => ({ name: s.title, text: s.body })),
-            }),
-          ]}
+      <FeatureHero
+        featureName="Agent Readiness"
+        hue="steel"
+        eyebrow="AI Crawler & Agent Readiness"
+        title={
+          <>
+            See your site the way <span className="text-accent-300">an AI agent does.</span>
+          </>
+        }
+        subhead={
+          <>
+            One forgotten robots.txt line, a firewall rule, or a JS-only page, and GPTBot, ClaudeBot, and
+            PerplexityBot silently can&apos;t read you. So AI never cites you, and you never see an error.
+            Agent Readiness fetches your site <em>as those real crawlers</em>, through your live WAF,
+            renders it without JavaScript, and shows the request-and-response proof behind every finding.
+          </>
+        }
+        primaryLabel="Scan a URL free"
+        secondaryLabel="See what we check"
+        secondaryHref="#layers"
+        microcopy="One root URL is all it takes · results in minutes"
+      >
+        <ScreenshotFrame
+          src="/screenshots/agent-readiness/readiness-scores.png"
+          alt="Agent Readiness report showing an overall 0–100 score and letter grade, a breakdown of blockers, critical issues, quick wins and passing checks, and a 'How AI agents experience your site' view scoring product discovery, navigation, task completion and form handling."
+          width={3270}
+          height={938}
+          priority
+          caption="A real readiness report: one overall score and grade, a blockers / critical / quick-wins / passing breakdown, and how well an agent can do each job on your site."
         />
-
-        <div className="mx-auto max-w-7xl">
-          <Breadcrumbs featureName="Agent Readiness" />
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-14">
-            {/* Left — message */}
-            <div className="animate-fade-up lg:col-span-6">
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-                AI Crawler &amp; Agent Readiness
-              </p>
-              <h1 className="mt-3 text-[clamp(2rem,4.2vw,3.25rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-                See your site the way <span className="text-accent-700">an AI agent does.</span>
-              </h1>
-              <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-                One forgotten robots.txt line, a firewall rule, or a JS-only page, and GPTBot, ClaudeBot, and
-                PerplexityBot silently can&apos;t read you. So AI never cites you, and you never see an error.
-                Agent Readiness fetches your site <em>as those real crawlers</em>, through your live WAF,
-                renders it without JavaScript, and shows the request-and-response proof behind every finding.
-              </p>
-              <div className="mt-8">
-                <DualCTA
-                  primaryLabel="Scan a URL free"
-                  secondaryLabel="See what we check"
-                  secondaryHref="#layers"
-                  microcopy="One root URL is all it takes · results in minutes"
-                />
-              </div>
-            </div>
-
-            {/* Right — a real readiness report as proof */}
-            <div className="animate-fade-up stagger-2 lg:col-span-6">
-              <ScreenshotFrame
-                src="/screenshots/agent-readiness/readiness-scores.png"
-                alt="Agent Readiness report showing an overall 0–100 score and letter grade, a breakdown of blockers, critical issues, quick wins and passing checks, and a 'How AI agents experience your site' view scoring product discovery, navigation, task completion and form handling."
-                width={3270}
-                height={938}
-                priority
-                caption="A real readiness report: one overall score and grade, a blockers / critical / quick-wins / passing breakdown, and how well an agent can do each job on your site."
-              />
-            </div>
-          </div>
-        </div>
-      </section>
+      </FeatureHero>
 
       {/* The cost of being unreachable */}
       <PainScenarioSection

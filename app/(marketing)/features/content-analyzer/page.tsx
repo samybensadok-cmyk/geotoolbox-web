@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { Breadcrumbs } from "@/components/features/breadcrumbs"
+import { FeatureHero } from "@/components/features/feature-hero"
 import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
 import { ScreenshotFrame } from "@/components/features/screenshot-frame"
@@ -157,73 +157,58 @@ const citedEngines = ["chatgpt", "perplexity", "gemini", "claude", "aio", "grok"
 export default function ContentAnalyzerPage() {
   return (
     <>
-      {/* Hero — pain-led, with the real two-score analyzer result as proof */}
-      <section className="relative overflow-hidden bg-[var(--surface-lilac)] px-6 pt-16 pb-16 sm:pt-20 sm:pb-20">
-        <JsonLd
-          data={[
-            softwareApplicationSchema({
-              name: "Content Analyzer",
-              description:
-                "An AI citability checker: grade any URL with a Citability and an AI Readability score, a live per-engine cited / not-cited check, and every on-page signal benchmarked against the pages AI actually cites.",
-              url: `${siteConfig.url}/features/content-analyzer`,
-              applicationSubCategory: "AI citability checker",
-            }),
-            howToSchema({
-              name: "How to check whether AI will cite your page",
-              steps: steps.map((s) => ({ name: s.title, text: s.body })),
-            }),
-          ]}
+      {/* SoftwareApplication + HowTo schema */}
+      <JsonLd
+        data={[
+          softwareApplicationSchema({
+            name: "Content Analyzer",
+            description:
+              "An AI citability checker: grade any URL with a Citability and an AI Readability score, a live per-engine cited / not-cited check, and every on-page signal benchmarked against the pages AI actually cites.",
+            url: `${siteConfig.url}/features/content-analyzer`,
+            applicationSubCategory: "AI citability checker",
+          }),
+          howToSchema({
+            name: "How to check whether AI will cite your page",
+            steps: steps.map((s) => ({ name: s.title, text: s.body })),
+          }),
+        ]}
+      />
+
+      {/* Hero — pain-led, dark opening act; the real two-score analyzer result is the light source */}
+      <FeatureHero
+        featureName="Content Analyzer"
+        hue="lilac"
+        eyebrow="Content Analyzer"
+        title={
+          <>
+            Why isn&apos;t AI <span className="text-accent-300">citing your content?</span>
+          </>
+        }
+        subhead="AI content optimization without diagnosis is guesswork. Paste any URL and get two grades: Citability for the writing, AI Readability for the access. Plus a live check of which AI engines cite the page today, and every on-page signal benchmarked against the pages AI actually cites for your keyword. Then the exact fixes. On every plan, including Free."
+        primaryLabel="Get my citability report"
+        primaryHref="/app"
+        secondaryLabel="See the signals it checks"
+        secondaryHref="#signals"
+        microcopy="Live AI-bot fetches + real engine checks, no card required"
+      >
+        {/* The real two-score analyzer result */}
+        <ScreenshotFrame
+          src="/screenshots/content-analyzer/citability-result.png"
+          alt="A real Content Analyzer result: a Citability Score of A (95/100) and an AI Readability Score of A (90/100), a live per-engine line showing the page cited by Google AI Overview, Perplexity, Claude and Gemini and not cited by Grok and ChatGPT, and three prioritized HIGH-impact actions."
+          width={2108}
+          height={1134}
+          priority
+          caption="A real analysis of a StubGroup guide targeting ‘google ads for lawyers’: two grades, a live per-engine cited / not-cited check across six AI engines, and the prioritized fixes — no fabricated mockup."
         />
-
-        <div className="mx-auto max-w-7xl">
-          <Breadcrumbs featureName="Content Analyzer" />
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-14">
-            {/* Left — message */}
-            <div className="animate-fade-up lg:col-span-6">
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-                Content Analyzer
-              </p>
-              <h1 className="mt-3 text-[clamp(2rem,4.2vw,3.25rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-                Why isn&apos;t AI <span className="text-accent-700">citing your content?</span>
-              </h1>
-              <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-                AI content optimization without diagnosis is guesswork. Paste any URL and get two grades:
-                Citability for the writing, AI Readability for the access. Plus a live check of which AI engines
-                cite the page today, and every on-page signal benchmarked against the pages AI actually cites for
-                your keyword. Then the exact fixes. On every plan, including Free.
-              </p>
-              <div className="mt-8">
-                <DualCTA
-                  primaryLabel="Get my citability report"
-                  primaryHref="/app"
-                  secondaryLabel="See the signals it checks"
-                  secondaryHref="#signals"
-                  microcopy="Live AI-bot fetches + real engine checks, no card required"
-                />
-              </div>
-              <div className="mt-7">
-                <ScoreLegend variant="A-F" />
-              </div>
-              <p className="mt-4 max-w-xl text-[13px] leading-relaxed text-gray-500">
-                Each score is a letter grade backed by a 0&ndash;100 number, benchmarked against the pages AI
-                actually cite for your keyword &mdash; the guide below scores 95 (Citability) and 90 (AI Readability).
-              </p>
-            </div>
-
-            {/* Right — the real two-score analyzer result */}
-            <div className="animate-fade-up stagger-2 lg:col-span-6">
-              <ScreenshotFrame
-                src="/screenshots/content-analyzer/citability-result.png"
-                alt="A real Content Analyzer result: a Citability Score of A (95/100) and an AI Readability Score of A (90/100), a live per-engine line showing the page cited by Google AI Overview, Perplexity, Claude and Gemini and not cited by Grok and ChatGPT, and three prioritized HIGH-impact actions."
-                width={2108}
-                height={1134}
-                priority
-                caption="A real analysis of a StubGroup guide targeting ‘google ads for lawyers’: two grades, a live per-engine cited / not-cited check across six AI engines, and the prioritized fixes — no fabricated mockup."
-              />
-            </div>
-          </div>
+        {/* Score legend + benchmark note — preserved from the original hero left column */}
+        <div className="mt-6">
+          <ScoreLegend variant="A-F" />
+          <p className="mt-4 max-w-xl text-[13px] leading-relaxed text-gray-400">
+            Each score is a letter grade backed by a 0&ndash;100 number, benchmarked against the pages AI
+            actually cite for your keyword &mdash; the guide above scores 95 (Citability) and 90 (AI Readability).
+          </p>
         </div>
-      </section>
+      </FeatureHero>
 
       {/* The cost of being uncited */}
       <PainScenarioSection

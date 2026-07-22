@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { Breadcrumbs } from "@/components/features/breadcrumbs"
+import { FeatureHero } from "@/components/features/feature-hero"
 import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
 import { ScreenshotFrame } from "@/components/features/screenshot-frame"
@@ -10,7 +10,6 @@ import { ActVsMonitorWedge } from "@/components/features/act-vs-monitor"
 import { SocialProofBlock } from "@/components/features/social-proof"
 import { FeatureComparisonTable } from "@/components/features/feature-comparison-table"
 import { TrustSecurityBlock } from "@/components/features/trust-security"
-import { DualCTA } from "@/components/features/dual-cta"
 import { siteConfig } from "@/lib/config"
 import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema, howToSchema } from "@/lib/seo-schema"
@@ -90,65 +89,55 @@ const faqs = [
 export default function CitationInterceptorPage() {
   return (
     <>
-      {/* Hero — pain-led, with the real worklist as proof */}
-      <section className="relative overflow-hidden bg-[var(--surface-lilac)] px-6 pt-16 pb-16 sm:pt-20 sm:pb-20">
-        <JsonLd
-          data={[
-            softwareApplicationSchema({
-              name: "Citation Interceptor",
-              description:
-                "Offsite citation intelligence: shows which Reddit threads, forums, editorial, and competitor pages AI engines cite for your topics where your brand is absent, as an evidence-graded opportunity worklist.",
-              url: `${siteConfig.url}/features/citation-interceptor`,
-            }),
-            howToSchema({
-              name: "How to find your AI citation gaps with Citation Interceptor",
-              steps: steps.map((s) => ({ name: s.title, text: s.body })),
-            }),
-          ]}
+      {/* SoftwareApplication + HowTo schema */}
+      <JsonLd
+        data={[
+          softwareApplicationSchema({
+            name: "Citation Interceptor",
+            description:
+              "Offsite citation intelligence: shows which Reddit threads, forums, editorial, and competitor pages AI engines cite for your topics where your brand is absent, as an evidence-graded opportunity worklist.",
+            url: `${siteConfig.url}/features/citation-interceptor`,
+          }),
+          howToSchema({
+            name: "How to find your AI citation gaps with Citation Interceptor",
+            steps: steps.map((s) => ({ name: s.title, text: s.body })),
+          }),
+        ]}
+      />
+
+      {/* Hero — pain-led, dark opening act; the real worklist is the light source */}
+      <FeatureHero
+        featureName="Citation Interceptor"
+        hue="lilac"
+        eyebrow="AI Citation Gap"
+        title={
+          <>
+            AI cites <span className="text-accent-300">Reddit threads</span>{" "}about your category. You&apos;re not in them.
+          </>
+        }
+        subhead={
+          <>
+            AI citation tracking usually means watching your own domain. Citation Interceptor tracks
+            the other side: every offsite source, Reddit threads, forums, editorial, competitor pages,
+            that AI engines cite for your topics where your brand is <em>absent</em>, graded by evidence
+            and handed to you as a worklist. No astroturf, no fake reviews.
+          </>
+        }
+        primaryLabel="Find your citation gaps"
+        secondaryLabel="See how it works"
+        secondaryHref="#how"
+        microcopy="On Consultant plans and up"
+      >
+        {/* The real worklist (anonymized: host table + evidence grades; no brand named) */}
+        <ScreenshotFrame
+          src="/screenshots/citation-interceptor/citation-worklist.png"
+          alt="Citation Interceptor worklist: offsite sources AI cites where a brand is absent — grouped by family (community, editorial, competitor), each with a brand-absent percentage, an Observed evidence grade, and triage controls."
+          width={1698}
+          height={890}
+          priority
+          caption="The worklist: offsite sources AI cites where the brand is absent — by family, with brand-absent %, evidence grades, and the actual cited threads to review."
         />
-
-        <div className="mx-auto max-w-7xl">
-          <Breadcrumbs featureName="Citation Interceptor" />
-
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-14">
-            {/* Left — message */}
-            <div className="animate-fade-up lg:col-span-6">
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-                AI Citation Gap
-              </p>
-              <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.25rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-                AI cites <span className="text-accent-700">Reddit threads</span>{" "}about your category. You&apos;re not in them.
-              </h1>
-              <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-                AI citation tracking usually means watching your own domain. Citation Interceptor tracks
-                the other side: every offsite source, Reddit threads, forums, editorial, competitor pages,
-                that AI engines cite for your topics where your brand is <em>absent</em>, graded by evidence
-                and handed to you as a worklist. No astroturf, no fake reviews.
-              </p>
-              <div className="mt-8">
-                <DualCTA
-                  primaryLabel="Find your citation gaps"
-                  secondaryLabel="See how it works"
-                  secondaryHref="#how"
-                  microcopy="On Consultant plans and up"
-                />
-              </div>
-            </div>
-
-            {/* Right — the real worklist (anonymized: host table + evidence grades; no brand named) */}
-            <div className="animate-fade-up stagger-2 lg:col-span-6">
-              <ScreenshotFrame
-                src="/screenshots/citation-interceptor/citation-worklist.png"
-                alt="Citation Interceptor worklist: offsite sources AI cites where a brand is absent — grouped by family (community, editorial, competitor), each with a brand-absent percentage, an Observed evidence grade, and triage controls."
-                width={1698}
-                height={890}
-                priority
-                caption="The worklist: offsite sources AI cites where the brand is absent — by family, with brand-absent %, evidence grades, and the actual cited threads to review."
-              />
-            </div>
-          </div>
-        </div>
-      </section>
+      </FeatureHero>
 
       {/* The blind spot */}
       <PainScenarioSection

@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { Breadcrumbs } from "@/components/features/breadcrumbs"
+import { FeatureHero } from "@/components/features/feature-hero"
 import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
 import { siteConfig } from "@/lib/config"
@@ -241,8 +241,6 @@ function Pictogram({ kind, color }: { kind: Viz; color: string }) {
 export default function AnalyticsPage() {
   return (
     <>
-      {/* Hero — cool clinical atmosphere */}
-      <section className="bg-[var(--surface-cool)] px-6 pt-20 pb-16 sm:pt-24 sm:pb-20">
       <JsonLd data={[
         softwareApplicationSchema({
           name: "Analytics",
@@ -251,46 +249,33 @@ export default function AnalyticsPage() {
         }),
       ]} />
 
-        <div className="mx-auto max-w-7xl">
-          <Breadcrumbs featureName="Analytics" />
-
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center lg:gap-16">
-            <div className="lg:col-span-6">
-              <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">
-                Analytics (GSC + GA4)
-              </p>
-              <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-                AI citations, attributed to real traffic.
-              </h1>
-              <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-                Being cited is nice. Being cited by the engines that actually send you sessions is a strategy. Connect Search Console and GA4 to layer your traffic data over your AI citation data: 13 sub-dashboards built for AI search analytics, not another GSC rewrapper. On every plan, including Free.
-              </p>
-              <div className="mt-8 flex flex-wrap items-center gap-3">
-                <Link href="/app" prefetch={false} className="rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px]">
-                  Connect GSC + GA4
-                </Link>
-                <Link href="#dashboards" className="rounded-full border border-gray-200 px-6 py-3.5 text-[15px] font-medium text-gray-700 hover:border-gray-400 hover:text-gray-900">
-                  See all 13 views
-                </Link>
-              </div>
-              <div className="mt-5 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
-                <svg className="mt-0.5 h-4 w-4 shrink-0 text-amber-700" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="8" cy="8" r="6.5" />
-                  <path d="M8 5v3.5M8 11.25v.01" strokeLinecap="round" />
-                </svg>
-                <p className="text-[13px] leading-relaxed text-amber-900">
-                  <span className="font-semibold">Beta access:</span> Google OAuth verification is in progress. Email{" "}
-                  <a href="mailto:samy@geotoolbox.ai" className="font-semibold text-amber-900 underline underline-offset-2 hover:no-underline">
-                    samy@geotoolbox.ai
-                  </a>{" "}
-                  to be added to the test user list.
-                </p>
-              </div>
-            </div>
-
-            {/* AI traffic visual */}
-            <div className="lg:col-span-6">
-              <figure aria-label="Illustrative example with sample data" className="relative m-0 rounded-[2rem] border border-gray-200 bg-white p-6 sm:p-8 shadow-[0_20px_60px_-20px_rgba(15,23,42,0.12)]">
+      {/* Hero — cool clinical atmosphere, migrated to the shared dark FeatureHero */}
+      <FeatureHero
+        featureName="Analytics"
+        hue="cool"
+        eyebrow="Analytics (GSC + GA4)"
+        title="AI citations, attributed to real traffic."
+        subhead="Being cited is nice. Being cited by the engines that actually send you sessions is a strategy. Connect Search Console and GA4 to layer your traffic data over your AI citation data: 13 sub-dashboards built for AI search analytics, not another GSC rewrapper. On every plan, including Free."
+        primaryLabel="Connect GSC + GA4"
+        primaryHref="/app"
+        secondaryLabel="See all 13 views"
+        secondaryHref="#dashboards"
+        microcopy={
+          <>
+            <span className="font-semibold text-gray-300">Beta access:</span> Google OAuth
+            verification is in progress. Email{" "}
+            <a
+              href="mailto:samy@geotoolbox.ai"
+              className="underline underline-offset-2 transition-colors hover:text-white"
+            >
+              samy@geotoolbox.ai
+            </a>{" "}
+            to be added to the test user list.
+          </>
+        }
+      >
+        {/* AI traffic visual */}
+        <figure aria-label="Illustrative example with sample data" className="relative m-0 rounded-[2rem] border border-gray-200 bg-white p-6 sm:p-8 shadow-[0_20px_60px_-20px_rgba(15,23,42,0.12)]">
                 <span className="sr-only">Example, illustrative data:</span>
                 <div className="flex items-center justify-between border-b border-gray-100 pb-3">
                   <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-600">
@@ -324,11 +309,8 @@ export default function AnalyticsPage() {
                     )
                   })}
                 </div>
-              </figure>
-            </div>
-          </div>
-        </div>
-      </section>
+        </figure>
+      </FeatureHero>
 
       {/* 13 sub-dashboards */}
       <section id="dashboards" className="border-t border-gray-100 bg-white px-6 py-24 sm:py-28">

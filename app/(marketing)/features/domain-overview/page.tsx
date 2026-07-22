@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { Breadcrumbs } from "@/components/features/breadcrumbs"
+import { FeatureHero } from "@/components/features/feature-hero"
 import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
 import { siteConfig } from "@/lib/config"
@@ -120,8 +120,6 @@ const sections = [
 export default function DomainOverviewPage() {
   return (
     <>
-      {/* Hero — steel atmosphere (command-center / dashboard feel) */}
-      <section className="relative overflow-hidden bg-[var(--surface-steel)] px-6 pt-20 pb-16 sm:pt-24 sm:pb-20">
       <JsonLd data={[
         softwareApplicationSchema({
           name: "Domain Overview",
@@ -130,90 +128,75 @@ export default function DomainOverviewPage() {
         }),
       ]} />
 
-        <div className="mx-auto max-w-7xl">
-          <Breadcrumbs featureName="Domain Overview" />
-
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center lg:gap-16">
-            <div className="lg:col-span-6">
-              <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">
-                Domain Overview
-              </p>
-              <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-                The command center for how AI sees your domain.
-              </h1>
-              <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-                AI brand monitoring across eight engines: ChatGPT, Gemini, Perplexity, Claude, Copilot, Grok, Google AI Overviews, and AI Mode, rolled into one view. Every citation you've earned, every competitor taking your place, and what to fix this week.
-              </p>
-              <div className="mt-8 flex flex-wrap items-center gap-3">
-                <Link href="/app" prefetch={false} className="rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px]">
-                  See your first overview
-                </Link>
-                <Link href="#whats-inside" className="rounded-full border border-gray-200 px-6 py-3.5 text-[15px] font-medium text-gray-700 hover:border-gray-400 hover:text-gray-900">
-                  What's inside
-                </Link>
+      {/* Hero — steel atmosphere (command-center / dashboard feel) */}
+      <FeatureHero
+        featureName="Domain Overview"
+        hue="steel"
+        eyebrow="Domain Overview"
+        title="The command center for how AI sees your domain."
+        subhead="AI brand monitoring across eight engines: ChatGPT, Gemini, Perplexity, Claude, Copilot, Grok, Google AI Overviews, and AI Mode, rolled into one view. Every citation you've earned, every competitor taking your place, and what to fix this week."
+        primaryLabel="See your first overview"
+        primaryHref="/app"
+        secondaryLabel="What's inside"
+        secondaryHref="#whats-inside"
+        microcopy=""
+      >
+        {/* Dashboard visual — dark command-center treatment */}
+        <div aria-hidden="true" className="relative rounded-[2rem] border border-gray-700/80 ring-1 ring-white/5 bg-[var(--surface-ink)] p-6 shadow-[0_30px_80px_-20px_rgba(11,18,32,0.45)] sm:p-8">
+          {/* Subtle grid overlay */}
+          <div
+            className="pointer-events-none absolute inset-0 rounded-[2rem] opacity-[0.05]"
+            style={{
+              backgroundImage: "linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)",
+              backgroundSize: "32px 32px",
+            }}
+          />
+          <div className="relative">
+            {/* Domain header */}
+            <div className="flex items-center justify-between border-b border-gray-800 pb-4">
+              <div className="flex items-center gap-2.5">
+                <span className="relative inline-flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-400 opacity-75" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-accent-400" />
+                </span>
+                <span className="font-mono text-[13px] font-semibold text-white">geotoolbox.ai</span>
               </div>
+              <span className="font-mono text-[11px] text-gray-500">updated 4m ago</span>
             </div>
 
-            {/* Dashboard visual — dark command-center treatment */}
-            <div className="lg:col-span-6" aria-hidden="true">
-              <div className="relative rounded-[2rem] border border-gray-800 bg-[var(--surface-ink)] p-6 shadow-[0_30px_80px_-20px_rgba(11,18,32,0.45)] sm:p-8">
-                {/* Subtle grid overlay */}
-                <div
-                  className="pointer-events-none absolute inset-0 rounded-[2rem] opacity-[0.05]"
-                  style={{
-                    backgroundImage: "linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)",
-                    backgroundSize: "32px 32px",
-                  }}
-                />
-                <div className="relative">
-                  {/* Domain header */}
-                  <div className="flex items-center justify-between border-b border-gray-800 pb-4">
-                    <div className="flex items-center gap-2.5">
-                      <span className="relative inline-flex h-2 w-2">
-                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-400 opacity-75" />
-                        <span className="relative inline-flex h-2 w-2 rounded-full bg-accent-400" />
-                      </span>
-                      <span className="font-mono text-[13px] font-semibold text-white">geotoolbox.ai</span>
-                    </div>
-                    <span className="font-mono text-[11px] text-gray-500">updated 4m ago</span>
+            {/* Headline stats grid */}
+            <div className="mt-5 grid grid-cols-2 gap-3">
+              {headlineStats.map((s) => (
+                <div key={s.label} className="rounded-xl border border-gray-800 bg-gray-900/40 p-3">
+                  <p className="text-[10px] font-semibold uppercase tracking-widest text-gray-500">{s.label}</p>
+                  <div className="mt-1 flex items-baseline gap-1.5">
+                    <span className="font-mono text-xl font-bold tabular-nums text-white">{s.value}</span>
+                    <span className="font-mono text-[10px] text-gray-500">{s.unit}</span>
                   </div>
-
-                  {/* Headline stats grid */}
-                  <div className="mt-5 grid grid-cols-2 gap-3">
-                    {headlineStats.map((s) => (
-                      <div key={s.label} className="rounded-xl border border-gray-800 bg-gray-900/40 p-3">
-                        <p className="text-[10px] font-semibold uppercase tracking-widest text-gray-500">{s.label}</p>
-                        <div className="mt-1 flex items-baseline gap-1.5">
-                          <span className="font-mono text-xl font-bold tabular-nums text-white">{s.value}</span>
-                          <span className="font-mono text-[10px] text-gray-500">{s.unit}</span>
-                        </div>
-                        <p className={`mt-0.5 font-mono text-[10px] font-semibold ${s.positive ? "text-accent-400" : "text-red-400"}`}>
-                          {s.trend} wk
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Cited pages */}
-                  <div className="mt-5">
-                    <p className="font-mono text-[10px] font-semibold uppercase tracking-widest text-gray-500 mb-2">Top cited pages</p>
-                    <div className="divide-y divide-gray-800">
-                      {citedPages.slice(0, 3).map((p) => (
-                        <div key={p.url} className="flex items-center justify-between py-2">
-                          <span className="truncate font-mono text-[12px] text-gray-300">{p.url}</span>
-                          <span className="font-mono text-[11px] font-semibold text-accent-400 tabular-nums">
-                            {p.cites} cites
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+                  <p className={`mt-0.5 font-mono text-[10px] font-semibold ${s.positive ? "text-accent-400" : "text-red-400"}`}>
+                    {s.trend} wk
+                  </p>
                 </div>
+              ))}
+            </div>
+
+            {/* Cited pages */}
+            <div className="mt-5">
+              <p className="font-mono text-[10px] font-semibold uppercase tracking-widest text-gray-500 mb-2">Top cited pages</p>
+              <div className="divide-y divide-gray-800">
+                {citedPages.slice(0, 3).map((p) => (
+                  <div key={p.url} className="flex items-center justify-between py-2">
+                    <span className="truncate font-mono text-[12px] text-gray-300">{p.url}</span>
+                    <span className="font-mono text-[11px] font-semibold text-accent-400 tabular-nums">
+                      {p.cites} cites
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
         </div>
-      </section>
+      </FeatureHero>
 
       {/* What's inside */}
       <section id="whats-inside" className="border-t border-gray-100 bg-white px-6 py-24 sm:py-28">

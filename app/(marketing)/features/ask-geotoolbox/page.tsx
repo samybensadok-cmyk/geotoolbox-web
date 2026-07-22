@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { Breadcrumbs } from "@/components/features/breadcrumbs"
+import { FeatureHero } from "@/components/features/feature-hero"
 import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
 import { ScreenshotFrame } from "@/components/features/screenshot-frame"
@@ -9,7 +9,6 @@ import { HowItWorks3Step, type Step } from "@/components/features/how-it-works"
 import { ActVsMonitorWedge } from "@/components/features/act-vs-monitor"
 import { FeatureComparisonTable } from "@/components/features/feature-comparison-table"
 import { TrustSecurityBlock } from "@/components/features/trust-security"
-import { DualCTA } from "@/components/features/dual-cta"
 import { siteConfig } from "@/lib/config"
 import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema, howToSchema } from "@/lib/seo-schema"
@@ -89,61 +88,46 @@ const faqs = [
 export default function AskGeoToolBoxPage() {
   return (
     <>
-      <section className="relative overflow-hidden bg-[var(--surface-warm)] px-6 pt-16 pb-16 sm:pt-20 sm:pb-20">
-        <JsonLd
-          data={[
-            softwareApplicationSchema({
-              name: "Ask GeoToolBox",
-              description:
-                "An in-app AI analyst that answers plain-language questions about a brand's AI search visibility using only that account's own tracked data, pointing back to the report behind each answer.",
-              url: `${siteConfig.url}/features/ask-geotoolbox`,
-            }),
-            howToSchema({
-              name: "How to ask GEO Toolbox a question about your AI visibility",
-              steps: steps.map((s) => ({ name: s.title, text: s.body })),
-            }),
-          ]}
+      <JsonLd
+        data={[
+          softwareApplicationSchema({
+            name: "Ask GeoToolBox",
+            description:
+              "An in-app AI analyst that answers plain-language questions about a brand's AI search visibility using only that account's own tracked data, pointing back to the report behind each answer.",
+            url: `${siteConfig.url}/features/ask-geotoolbox`,
+          }),
+          howToSchema({
+            name: "How to ask GEO Toolbox a question about your AI visibility",
+            steps: steps.map((s) => ({ name: s.title, text: s.body })),
+          }),
+        ]}
+      />
+
+      <FeatureHero
+        featureName="Ask GeoToolBox"
+        hue="amber"
+        eyebrow="AI analyst chat"
+        title={
+          <>
+            Stop digging through dashboards. <span className="text-accent-300">Just ask.</span>
+          </>
+        }
+        subhead={`"Why did our citation rate drop last week?" "Which domains cite our competitor but not us?" Ask GeoToolBox answers in plain language, pulling only from your own tracked visibility data, and points back to the report behind every number.`}
+        primaryLabel="See Growth plans"
+        primaryHref="/pricing"
+        secondaryLabel="How it works"
+        secondaryHref="#how"
+        microcopy="On Growth plans and up"
+      >
+        <ScreenshotFrame
+          src="/screenshots/ask-geotoolbox/chat.png"
+          alt="Ask GeoToolBox chat interface showing the question 'Which domains get cited most in my space over the last 30 days?' answered with a ranked table of cited domains (rank, domain, type, citations, citation share) and three bulleted key takeaways, with a trace line showing the domain_report tool call behind the answer."
+          width={1750}
+          height={1360}
+          priority
+          caption="Ask a question in plain language — the analyst answers from your own tracked data and points to the report behind the claim."
         />
-
-        <div className="mx-auto max-w-7xl">
-          <Breadcrumbs featureName="Ask GeoToolBox" />
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-14">
-            <div className="animate-fade-up lg:col-span-6">
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-                AI analyst chat
-              </p>
-              <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-                Stop digging through dashboards. <span className="text-accent-700">Just ask.</span>
-              </h1>
-              <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-                &quot;Why did our citation rate drop last week?&quot; &quot;Which domains cite our competitor
-                but not us?&quot; Ask GeoToolBox answers in plain language, pulling only from your own tracked
-                visibility data, and points back to the report behind every number.
-              </p>
-              <div className="mt-8">
-                <DualCTA
-                  primaryLabel="See Growth plans"
-                  primaryHref="/pricing"
-                  secondaryLabel="How it works"
-                  secondaryHref="#how"
-                  microcopy="On Growth plans and up"
-                />
-              </div>
-            </div>
-
-            <div className="animate-fade-up stagger-2 lg:col-span-6">
-              <ScreenshotFrame
-                src="/screenshots/ask-geotoolbox/chat.png"
-                alt="Ask GeoToolBox chat interface showing the question 'Which domains get cited most in my space over the last 30 days?' answered with a ranked table of cited domains (rank, domain, type, citations, citation share) and three bulleted key takeaways, with a trace line showing the domain_report tool call behind the answer."
-                width={1750}
-                height={1360}
-                priority
-                caption="Ask a question in plain language — the analyst answers from your own tracked data and points to the report behind the claim."
-              />
-            </div>
-          </div>
-        </div>
-      </section>
+      </FeatureHero>
 
       <PainScenarioSection
         eyebrow="The dashboard problem"

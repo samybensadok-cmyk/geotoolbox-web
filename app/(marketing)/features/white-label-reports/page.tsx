@@ -1,15 +1,13 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { Breadcrumbs } from "@/components/features/breadcrumbs"
+import { FeatureHero } from "@/components/features/feature-hero"
 import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
-import { ScreenshotFrame } from "@/components/features/screenshot-frame"
 import { PainScenarioSection } from "@/components/features/pain-scenario"
 import { HowItWorks3Step, type Step } from "@/components/features/how-it-works"
 import { ActVsMonitorWedge } from "@/components/features/act-vs-monitor"
 import { FeatureComparisonTable } from "@/components/features/feature-comparison-table"
 import { TrustSecurityBlock } from "@/components/features/trust-security"
-import { DualCTA } from "@/components/features/dual-cta"
 import { siteConfig } from "@/lib/config"
 import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema, howToSchema } from "@/lib/seo-schema"
@@ -94,62 +92,109 @@ const faqs = [
 export default function WhiteLabelReportsPage() {
   return (
     <>
-      <section className="relative overflow-hidden bg-[var(--surface-warm)] px-6 pt-16 pb-16 sm:pt-20 sm:pb-20">
-        <JsonLd
-          data={[
-            softwareApplicationSchema({
-              name: "White-Label Client Reports",
-              description:
-                "A branded, monthly AI-visibility report for agency clients — the agency's own logo, accent color, and footer, sent automatically and shareable via a login-free link.",
-              url: `${siteConfig.url}/features/white-label-reports`,
-            }),
-            howToSchema({
-              name: "How to send a white-labeled AI visibility report to a client",
-              steps: steps.map((s) => ({ name: s.title, text: s.body })),
-            }),
-          ]}
-        />
+      <JsonLd
+        data={[
+          softwareApplicationSchema({
+            name: "White-Label Client Reports",
+            description:
+              "A branded, monthly AI-visibility report for agency clients — the agency's own logo, accent color, and footer, sent automatically and shareable via a login-free link.",
+            url: `${siteConfig.url}/features/white-label-reports`,
+          }),
+          howToSchema({
+            name: "How to send a white-labeled AI visibility report to a client",
+            steps: steps.map((s) => ({ name: s.title, text: s.body })),
+          }),
+        ]}
+      />
 
-        <div className="mx-auto max-w-7xl">
-          <Breadcrumbs featureName="White-Label Reports" />
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-14">
-            <div className="animate-fade-up lg:col-span-6">
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-                Client reporting
-              </p>
-              <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-                Your brand on the report. <span className="text-accent-700">Not ours.</span>
-              </h1>
-              <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-                Every client gets a monthly white-label SEO report of their AI visibility, with your
-                logo, your colors, and your footer. Sent automatically, shareable with a link they open
-                without logging in, and with a switch to hide GEO Toolbox entirely so it reads as your
-                own deliverable.
-              </p>
-              <div className="mt-8">
-                <DualCTA
-                  primaryLabel="See Growth plans"
-                  primaryHref="/pricing"
-                  secondaryLabel="How it works"
-                  secondaryHref="#how"
-                  microcopy="On Growth plans and up"
-                />
+      <FeatureHero
+        featureName="White-Label Reports"
+        hue="amber"
+        eyebrow="Client reporting"
+        title={
+          <>
+            Your brand on the report. <span className="text-accent-300">Not ours.</span>
+          </>
+        }
+        subhead="Every client gets a monthly white-label SEO report of their AI visibility, with your logo, your colors, and your footer. Sent automatically, shareable with a link they open without logging in, and with a switch to hide GEO Toolbox entirely so it reads as your own deliverable."
+        primaryLabel="See Growth plans"
+        primaryHref="/pricing"
+        secondaryLabel="How it works"
+        secondaryHref="#how"
+        microcopy="On Growth plans and up"
+      >
+        {/* Illustrative report preview — the referenced real screenshot was never
+            captured (public/screenshots/white-label-reports/ is empty and the
+            image 400s in prod), so this JSX card follows the same explicitly
+            illustrative pattern as the analytics/community heroes until a real
+            capture replaces it. */}
+        <figure
+          aria-label="Illustrative example of a white-label report with sample data"
+          className="m-0"
+        >
+          <span className="sr-only">Example, illustrative data:</span>
+          <div className="overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-[0_30px_80px_-28px_rgba(15,23,42,0.30)]">
+            {/* Report masthead — the agency's slots, not ours */}
+            <div className="flex items-center justify-between gap-3 border-b border-gray-100 px-6 py-4">
+              <div className="flex items-center gap-2.5">
+                <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-dashed border-gray-300 font-mono text-[9px] font-semibold uppercase text-gray-400">
+                  Logo
+                </span>
+                <div>
+                  <p className="text-[13px] font-bold text-gray-900">Your Agency</p>
+                  <p className="font-mono text-[10px] text-gray-500">AI Visibility Report · Monthly</p>
+                </div>
               </div>
+              <span className="rounded-full bg-accent-50 px-2.5 py-1 font-mono text-[10px] font-semibold text-accent-700">
+                Your accent color
+              </span>
             </div>
-
-            <div className="animate-fade-up stagger-2 lg:col-span-6">
-              <ScreenshotFrame
-                src="/screenshots/white-label-reports/report-preview.png"
-                alt="White-label client report preview showing the agency's own logo and accent color, with sections for engine-by-engine visibility, top prompts with sentiment, and a competitor share-of-voice comparison."
-                width={2010}
-                height={980}
-                priority
-                caption="The same report data your Tracker shows — your logo, your accent color, your footer, sent monthly and shareable with a login-free link."
-              />
+            {/* Headline stats */}
+            <div className="grid grid-cols-3 divide-x divide-gray-100 border-b border-gray-100 text-center">
+              {[
+                { v: "72", l: "Visibility score" },
+                { v: "148", l: "AI citations" },
+                { v: "31%", l: "Share of voice" },
+              ].map((s) => (
+                <div key={s.l} className="px-2 py-4">
+                  <div className="font-mono text-2xl font-bold tabular-nums text-gray-900">{s.v}</div>
+                  <div className="mt-0.5 font-mono text-[9px] uppercase tracking-widest text-gray-500">{s.l}</div>
+                </div>
+              ))}
+            </div>
+            {/* Engine rows */}
+            <ul className="divide-y divide-gray-100 px-6">
+              {[
+                { e: "ChatGPT", s: "Cited", up: true },
+                { e: "Perplexity", s: "Cited", up: true },
+                { e: "Gemini", s: "Mentioned", up: false },
+              ].map((r) => (
+                <li key={r.e} className="flex items-center justify-between py-2.5">
+                  <span className="font-mono text-[12px] font-medium text-gray-800">{r.e}</span>
+                  <span
+                    className={`rounded-full px-2 py-0.5 font-mono text-[10px] font-semibold ${
+                      r.up ? "bg-accent-50 text-accent-700" : "bg-amber-50 text-amber-800"
+                    }`}
+                  >
+                    {r.s}
+                  </span>
+                </li>
+              ))}
+            </ul>
+            {/* White-label footer — the point of the feature */}
+            <div className="flex items-center justify-between border-t border-gray-100 bg-gray-50 px-6 py-3">
+              <span className="font-mono text-[10px] text-gray-500">Prepared by Your Agency</span>
+              <span className="font-mono text-[10px] text-gray-400 line-through decoration-gray-400">
+                Powered by GEO Toolbox
+              </span>
             </div>
           </div>
-        </div>
-      </section>
+          <figcaption className="mt-3 text-[12px] leading-relaxed text-gray-400">
+            Illustrative preview — your logo, accent color and footer replace ours on every report,
+            with a switch to hide GEO Toolbox entirely.
+          </figcaption>
+        </figure>
+      </FeatureHero>
 
       <PainScenarioSection
         eyebrow="The retainer problem"

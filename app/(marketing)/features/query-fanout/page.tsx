@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { Breadcrumbs } from "@/components/features/breadcrumbs"
+import { FeatureHero } from "@/components/features/feature-hero"
 import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
 import { FeatureComparisonTable } from "@/components/features/feature-comparison-table"
@@ -150,71 +150,43 @@ const faqs = [
 export default function QueryFanoutPage() {
   return (
     <>
-      {/* ——— Hero: asymmetric split, iris surface, custom fan-out instrument ——— */}
-      <section className="relative overflow-hidden bg-[var(--surface-iris)] px-6 pt-16 pb-16 sm:pt-20 sm:pb-24">
-        <JsonLd
-          data={[
-            softwareApplicationSchema({
-              name: "AI Query Fan-Out",
-              description:
-                "Capture the real sub-queries AI engines fan out for a seed topic across ChatGPT, Gemini, Perplexity, and Grok, with a cross-engine divergence map, honest search volume, page coverage, citation landscape, and ranked content actions.",
-              url: `${siteConfig.url}/features/query-fanout`,
-            }),
-            howToSchema({
-              name: "How to capture AI query fan-out with GEO Toolbox",
-              steps: steps.map((s) => ({ name: s.title, text: s.body })),
-            }),
-          ]}
-        />
+      {/* ——— Hero: iris glow, dark ground, custom fan-out instrument ——— */}
+      <JsonLd
+        data={[
+          softwareApplicationSchema({
+            name: "AI Query Fan-Out",
+            description:
+              "Capture the real sub-queries AI engines fan out for a seed topic across ChatGPT, Gemini, Perplexity, and Grok, with a cross-engine divergence map, honest search volume, page coverage, citation landscape, and ranked content actions.",
+            url: `${siteConfig.url}/features/query-fanout`,
+          }),
+          howToSchema({
+            name: "How to capture AI query fan-out with GEO Toolbox",
+            steps: steps.map((s) => ({ name: s.title, text: s.body })),
+          }),
+        ]}
+      />
 
-        <div className="mx-auto max-w-7xl">
-          <Breadcrumbs featureName="Query Fan-Out" />
-
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-14">
-            {/* Left — message */}
-            <div className="animate-fade-up lg:col-span-6 xl:col-span-5">
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-                Query Fan-Out · 4 engines
-              </p>
-              <h1 className="mt-3 text-[clamp(2rem,4.2vw,3.25rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-                AI doesn&apos;t answer your keyword.
-                <span className="block">It answers <span className="text-accent-700">the dozen questions</span> behind it.</span>
-              </h1>
-              <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-                Every engine quietly fans one topic into a spray of sub-questions, searches those, and cites
-                whoever covered them best. Query Fan-Out captures the real sub-queries from four engines,
-                validated engine output, never an LLM guessing, then maps where the engines diverge and ranks
-                the content that wins each gap.
-              </p>
-              <div className="mt-8 flex flex-wrap items-center gap-3">
-                <Link
-                  href="/tools/query-fanout"
-                  className="inline-flex items-center gap-2 rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px]"
-                >
-                  Try the free demo
-                  <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </Link>
-                <Link
-                  href="#how"
-                  className="rounded-full border border-gray-300 px-6 py-3.5 text-[15px] font-medium text-gray-700 transition-colors hover:border-gray-400 hover:text-gray-900"
-                >
-                  How it works
-                </Link>
-              </div>
-              <p className="mt-4 font-mono text-[12px] text-gray-500">
-                Free with your own API key · full multi-engine scan in-app on every plan, including Free
-              </p>
-            </div>
-
-            {/* Right — the signature device */}
-            <div className="animate-fade-up stagger-2 lg:col-span-6 xl:col-span-7">
-              <FanOutDevice />
-            </div>
-          </div>
-        </div>
-      </section>
+      <FeatureHero
+        featureName="Query Fan-Out"
+        hue="iris"
+        eyebrow="Query Fan-Out · 4 engines"
+        title={
+          <>
+            AI doesn&apos;t answer your keyword.
+            <span className="block">
+              It answers <span className="text-accent-300">the dozen questions</span> behind it.
+            </span>
+          </>
+        }
+        subhead="Every engine quietly fans one topic into a spray of sub-questions, searches those, and cites whoever covered them best. Query Fan-Out captures the real sub-queries from four engines, validated engine output, never an LLM guessing, then maps where the engines diverge and ranks the content that wins each gap."
+        primaryLabel="Try the free demo"
+        primaryHref="/tools/query-fanout"
+        secondaryLabel="How it works"
+        secondaryHref="#how"
+        microcopy="Free with your own API key · full multi-engine scan in-app on every plan, including Free"
+      >
+        <FanOutDevice />
+      </FeatureHero>
 
       {/* ——— Pain scenario ——— */}
       <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
@@ -462,7 +434,7 @@ function FanOutDevice() {
   return (
     <figure
       aria-label="Illustrative example of a Query Fan-Out scan with sample data"
-      className="relative m-0 rounded-[2rem] border border-[var(--surface-iris-border)] bg-white p-5 shadow-[0_30px_80px_-28px_rgba(15,23,42,0.30)] sm:p-7"
+      className="relative m-0 rounded-[2rem] border border-gray-200 bg-white p-5 shadow-[0_30px_80px_-28px_rgba(15,23,42,0.30)] sm:p-7"
     >
       <span className="sr-only">Example, illustrative data:</span>
       {/* Header: the seed */}

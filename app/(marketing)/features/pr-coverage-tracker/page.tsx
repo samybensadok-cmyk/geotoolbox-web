@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { Breadcrumbs } from "@/components/features/breadcrumbs"
+import { FeatureHero } from "@/components/features/feature-hero"
 import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
 import { ScreenshotFrame } from "@/components/features/screenshot-frame"
@@ -10,7 +10,6 @@ import { ActVsMonitorWedge } from "@/components/features/act-vs-monitor"
 import { SocialProofBlock } from "@/components/features/social-proof"
 import { FeatureComparisonTable } from "@/components/features/feature-comparison-table"
 import { TrustSecurityBlock } from "@/components/features/trust-security"
-import { DualCTA } from "@/components/features/dual-cta"
 import { siteConfig } from "@/lib/config"
 import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema, howToSchema } from "@/lib/seo-schema"
@@ -96,65 +95,54 @@ const faqs = [
 export default function PrCoverageTrackerPage() {
   return (
     <>
-      {/* Hero — pain-led, with the real coverage table as proof */}
-      <section className="relative overflow-hidden bg-[var(--surface-warm)] px-6 pt-16 pb-16 sm:pt-20 sm:pb-20">
-        <JsonLd
-          data={[
-            softwareApplicationSchema({
-              name: "PR Coverage Tracker",
-              description:
-                "Upload earned media coverage URLs and track which placements are still live, indexed in Google, still mention the brand, and cited by AI engines for the brand's prompts.",
-              url: `${siteConfig.url}/features/pr-coverage-tracker`,
-            }),
-            howToSchema({
-              name: "How to prove your earned media shows up in AI with PR Coverage Tracker",
-              steps: steps.map((s) => ({ name: s.title, text: s.body })),
-            }),
-          ]}
+      <JsonLd
+        data={[
+          softwareApplicationSchema({
+            name: "PR Coverage Tracker",
+            description:
+              "Upload earned media coverage URLs and track which placements are still live, indexed in Google, still mention the brand, and cited by AI engines for the brand's prompts.",
+            url: `${siteConfig.url}/features/pr-coverage-tracker`,
+          }),
+          howToSchema({
+            name: "How to prove your earned media shows up in AI with PR Coverage Tracker",
+            steps: steps.map((s) => ({ name: s.title, text: s.body })),
+          }),
+        ]}
+      />
+
+      {/* Hero — pain-led, dark opening act; the real coverage table is the light source */}
+      <FeatureHero
+        featureName="PR Coverage Tracker"
+        hue="amber"
+        eyebrow="Earned media in AI search"
+        title={
+          <>
+            You earned the coverage. Can you prove it&apos;s <span className="text-accent-300">still working?</span>
+          </>
+        }
+        subhead={
+          <>
+            Six months after a campaign, half the links may be dead and you have no idea which placements
+            AI engines cite when a buyer asks about your client. Upload your coverage list and get the
+            answer: <em>still live</em>, <em>indexed in Google</em>, <em>on-message</em>, and{" "}
+            <em>cited by AI</em>, per placement.
+          </>
+        }
+        primaryLabel="See Scale plans"
+        primaryHref="/pricing"
+        secondaryLabel="How it works"
+        secondaryHref="#how"
+        microcopy="On Scale & Enterprise plans"
+      >
+        <ScreenshotFrame
+          src="/screenshots/pr-coverage-tracker/coverage-table.png"
+          alt="PR Coverage Tracker results: earned media placements with a per-row status — Dead 404, Blocked, Live 200, or Check failed — and a Google index badge (In Google / Not found in Google). A WAF-blocked publisher (ft.com) is confirmed still indexed in Google instead of being marked dead, while a genuine 404 is flagged Dead."
+          width={2010}
+          height={980}
+          priority
+          caption="Every placement checked for liveness and Google indexing. A publisher that blocks our crawler (ft.com — “Blocked”) is verified via Google rather than falsely marked dead; a real 404 (top row) is. AI-citation attribution sits alongside, per brand."
         />
-
-        <div className="mx-auto max-w-7xl">
-          <Breadcrumbs featureName="PR Coverage Tracker" />
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-14">
-            {/* Left — message */}
-            <div className="animate-fade-up lg:col-span-6">
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-                Earned media in AI search
-              </p>
-              <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-                You earned the coverage. Can you prove it&apos;s <span className="text-accent-700">still working?</span>
-              </h1>
-              <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-                Six months after a campaign, half the links may be dead and you have no idea which placements
-                AI engines cite when a buyer asks about your client. Upload your coverage list and get the
-                answer: <em>still live</em>, <em>indexed in Google</em>, <em>on-message</em>, and{" "}
-                <em>cited by AI</em>, per placement.
-              </p>
-              <div className="mt-8">
-                <DualCTA
-                  primaryLabel="See Scale plans"
-                  primaryHref="/pricing"
-                  secondaryLabel="How it works"
-                  secondaryHref="#how"
-                  microcopy="On Scale & Enterprise plans"
-                />
-              </div>
-            </div>
-
-            {/* Right — real coverage table (anonymized: publication hosts + status, no client named) */}
-            <div className="animate-fade-up stagger-2 lg:col-span-6">
-              <ScreenshotFrame
-                src="/screenshots/pr-coverage-tracker/coverage-table.png"
-                alt="PR Coverage Tracker results: earned media placements with a per-row status — Dead 404, Blocked, Live 200, or Check failed — and a Google index badge (In Google / Not found in Google). A WAF-blocked publisher (ft.com) is confirmed still indexed in Google instead of being marked dead, while a genuine 404 is flagged Dead."
-                width={2010}
-                height={980}
-                priority
-                caption="Every placement checked for liveness and Google indexing. A publisher that blocks our crawler (ft.com — “Blocked”) is verified via Google rather than falsely marked dead; a real 404 (top row) is. AI-citation attribution sits alongside, per brand."
-              />
-            </div>
-          </div>
-        </div>
-      </section>
+      </FeatureHero>
 
       {/* The blind spot */}
       <PainScenarioSection

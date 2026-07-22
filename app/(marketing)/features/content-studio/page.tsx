@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { Breadcrumbs } from "@/components/features/breadcrumbs"
+import { FeatureHero } from "@/components/features/feature-hero"
 import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
 import { ScreenshotFrame } from "@/components/features/screenshot-frame"
@@ -133,67 +133,48 @@ const citedEngines = ["chatgpt", "perplexity", "gemini", "claude", "aio", "grok"
 export default function ContentStudioPage() {
   return (
     <>
-      {/* Hero — pain-led, with the real brief as proof */}
-      <section className="relative overflow-hidden bg-[var(--surface-warm)] px-6 pt-16 pb-16 sm:pt-20 sm:pb-20">
-        <JsonLd
-          data={[
-            softwareApplicationSchema({
-              name: "Content Studio",
-              description:
-                "An AI content brief and article writer: it reverse-engineers what AI engines extract from the pages they cite, builds a citation-ready brief (strategy, outline, entity targets, AI-extractability checklist), then writes the full draft.",
-              url: `${siteConfig.url}/features/content-studio`,
-              applicationSubCategory: "AI content brief and writer",
-            }),
-            howToSchema({
-              name: "How to write an article AI will cite",
-              steps: steps.map((s) => ({ name: s.title, text: s.body })),
-            }),
-          ]}
+      <JsonLd
+        data={[
+          softwareApplicationSchema({
+            name: "Content Studio",
+            description:
+              "An AI content brief and article writer: it reverse-engineers what AI engines extract from the pages they cite, builds a citation-ready brief (strategy, outline, entity targets, AI-extractability checklist), then writes the full draft.",
+            url: `${siteConfig.url}/features/content-studio`,
+            applicationSubCategory: "AI content brief and writer",
+          }),
+          howToSchema({
+            name: "How to write an article AI will cite",
+            steps: steps.map((s) => ({ name: s.title, text: s.body })),
+          }),
+        ]}
+      />
+
+      {/* Hero — pain-led, dark opening act; the real brief is the light source */}
+      <FeatureHero
+        featureName="Content Studio"
+        hue="amber"
+        eyebrow="Content Studio"
+        title={
+          <>
+            Your article is well-written. <span className="text-accent-300">AI still won&apos;t cite it.</span>
+          </>
+        }
+        subhead="Content Studio is an AI content brief and article writer. A clean, readable post can be invisible to ChatGPT, Perplexity and Google AI Overviews — because it's missing the entities, facts and structure the engines actually extract. It reverse-engineers what gets cited, builds the brief, and writes the draft against it."
+        primaryLabel="Generate a brief"
+        primaryHref="/app"
+        secondaryLabel="See what's in a brief"
+        secondaryHref="#brief"
+        microcopy="Built on live SERPs + real AI engine responses · see plans"
+      >
+        <ScreenshotFrame
+          src="/screenshots/content-studio/brief-studio.png"
+          alt="A real Content Studio brief for the keyword 'LLM SEO': a tabbed brief (Strategy, Content Framework, AI Extractability Checklist, Recommended Outline, Statistics & Evidence, Entities & Topics, Article), a Write Article button, PDF/DOCX/Markdown export, and a strategy read of the SERP and the pages AI cites."
+          width={2136}
+          height={1090}
+          priority
+          caption="A real brief for ‘LLM SEO’: a strategy read of what AI cites, a framework-aware outline, and — one click away — the written article. Export to PDF, DOCX or Markdown. No fabricated mockup."
         />
-
-        <div className="mx-auto max-w-7xl">
-          <Breadcrumbs featureName="Content Studio" />
-
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-14">
-            {/* Left — message */}
-            <div className="animate-fade-up lg:col-span-6">
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-                Content Studio
-              </p>
-              <h1 className="mt-3 text-[clamp(2rem,4.2vw,3.25rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-                Your article is well-written. <span className="text-accent-700">AI still won&apos;t cite it.</span>
-              </h1>
-              <p className="mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-                Content Studio is an AI content brief and article writer. A clean, readable post can be invisible to
-                ChatGPT, Perplexity and Google AI Overviews &mdash; because it&apos;s missing the entities, facts and
-                structure the engines actually extract. It reverse-engineers what gets cited, builds the brief, and
-                writes the draft against it.
-              </p>
-              <div className="mt-8">
-                <DualCTA
-                  primaryLabel="Generate a brief"
-                  primaryHref="/app"
-                  secondaryLabel="See what's in a brief"
-                  secondaryHref="#brief"
-                  microcopy="Built on live SERPs + real AI engine responses · see plans"
-                />
-              </div>
-            </div>
-
-            {/* Right — the real brief, as proof */}
-            <div className="animate-fade-up stagger-2 lg:col-span-6">
-              <ScreenshotFrame
-                src="/screenshots/content-studio/brief-studio.png"
-                alt="A real Content Studio brief for the keyword 'LLM SEO': a tabbed brief (Strategy, Content Framework, AI Extractability Checklist, Recommended Outline, Statistics & Evidence, Entities & Topics, Article), a Write Article button, PDF/DOCX/Markdown export, and a strategy read of the SERP and the pages AI cites."
-                width={2136}
-                height={1090}
-                priority
-                caption="A real brief for ‘LLM SEO’: a strategy read of what AI cites, a framework-aware outline, and — one click away — the written article. Export to PDF, DOCX or Markdown. No fabricated mockup."
-              />
-            </div>
-          </div>
-        </div>
-      </section>
+      </FeatureHero>
 
       {/* The cost of a well-written, uncited page */}
       <PainScenarioSection
