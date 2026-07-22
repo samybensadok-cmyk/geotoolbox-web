@@ -45,6 +45,8 @@ export function FeatureHero({
   secondaryLabel,
   secondaryHref,
   microcopy = "Free plan · no credit card",
+  base = "",
+  breadcrumbLabels,
   children,
 }: {
   /** breadcrumb leaf (Features > X) */
@@ -62,6 +64,10 @@ export function FeatureHero({
   secondaryLabel?: string
   secondaryHref?: string
   microcopy?: ReactNode
+  /** locale path prefix for the breadcrumb trail ("" for en, "/fr" for fr) */
+  base?: string
+  /** localized breadcrumb names; EN defaults keep EN byte-identical */
+  breadcrumbLabels?: { home?: string; features?: string }
   /** right visual column — a ScreenshotFrame or mockup card (the light source) */
   children?: ReactNode
 }) {
@@ -95,7 +101,7 @@ export function FeatureHero({
       />
 
       <div className="relative mx-auto max-w-7xl">
-        <Breadcrumbs featureName={featureName} tone="dark" />
+        <Breadcrumbs featureName={featureName} tone="dark" base={base} labels={breadcrumbLabels} />
 
         <div
           className={`grid grid-cols-1 items-center gap-12 lg:gap-14 ${

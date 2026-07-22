@@ -167,7 +167,7 @@ export default async function FeaturesPage({
             itemListSchema(
               siteConfig.featureGroups.flatMap((g) => g.features).map((f) => ({
                 name: f.name,
-                url: `/features/${f.slug}`,
+                url: `${base}/features/${f.slug}`,
               })),
               { name: "GEO Toolbox features" },
             ),
@@ -264,7 +264,7 @@ export default async function FeaturesPage({
                   return (
                     <Link
                       key={f.slug}
-                      href={`/features/${f.slug}`}
+                      href={`${base}/features/${f.slug}`}
                       id={`feature-${f.slug}`}
                       className={`group/card scroll-mt-28 block rounded-2xl border ${tint.border} ${tint.bg} p-6 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_16px_32px_-16px_rgba(15,23,42,0.18)] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2 sm:p-7`}
                     >

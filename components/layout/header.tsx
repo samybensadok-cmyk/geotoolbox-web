@@ -116,7 +116,7 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
                           {group.features.map((f) => (
                             <li key={f.slug}>
                               <Link
-                                href={`/features/${f.slug}`}
+                                href={L(`/features/${f.slug}`)}
                                 onClick={() => setFeaturesOpen(false)}
                                 className="group -mx-2 flex flex-col rounded-lg px-2 py-1.5 hover:bg-gray-50"
                               >
@@ -305,7 +305,7 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
                       {group.features.map((f) => (
                         <li key={f.slug}>
                           <Link
-                            href={`/features/${f.slug}`}
+                            href={L(`/features/${f.slug}`)}
                             onClick={() => setMobileOpen(false)}
                             className="block rounded-md py-1.5 text-sm font-medium text-gray-800 hover:text-accent-700"
                           >

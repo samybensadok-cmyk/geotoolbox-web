@@ -1,24 +1,46 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import { setRequestLocale, getTranslations } from "next-intl/server"
+import { routing } from "@/i18n/routing"
 import { FeatureHero } from "@/components/features/feature-hero"
 import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
 import { siteConfig } from "@/lib/config"
 import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema } from "@/lib/seo-schema"
+import { marketingAlternatesFor } from "@/lib/i18n/siblings"
 
-export const metadata: Metadata = {
-  title: "AI Competitor Analysis Across 8 Engines",
-  description:
-    "Track how competitors gain or lose AI citations across 8 engines. Share of voice, content gap matrix, and an alert the day a rival starts outranking you.",
-  openGraph: {
-    title: "AI Competitor Analysis: Track Rivals Across 8 Engines",
-    description:
-      "Track how competitors gain or lose AI citations across eight engines. AI share-of-voice, content gap matrix, and real-time threat alerts when a rival starts outranking you.",
-  },
-  alternates: { canonical: `${siteConfig.url}/features/competitor-intel` },
+// Localized Competitor Intel feature page: en at /features/competitor-intel, fr
+// at /fr/features/competitor-intel. Relocated from
+// app/(marketing)/features/competitor-intel. Display copy lives in the
+// `featurePages.competitor-intel` namespace (shared strings in
+// `featurePages.common`); structural data — hue, sample threat-feed / SoV /
+// gap-matrix mock data, cell booleans — stays here. The product mockups depict
+// the English UI, so their sample data stays English on both locales.
+
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }))
 }
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  const t = await getTranslations({ locale, namespace: "featurePages.competitor-intel.meta" })
+  return {
+    title: { absolute: t("title") },
+    description: t("description"),
+    openGraph: { title: t("ogTitle"), description: t("ogDescription") },
+    alternates: marketingAlternatesFor("/features/competitor-intel", locale),
+  }
+}
+
+type InsideItem = { num: string; tag: string; title: string; body: string }
+type Faq = { question: string; answer: string }
+
+// Sample data for the hero threat-feed + share-of-voice mock (English UI depicted).
 const competitors = [
   { domain: "ahrefs.com", share: 87, delta: "+4", gaps: 3 },
   { domain: "semrush.com", share: 62, delta: "-3", gaps: 5 },
@@ -26,6 +48,7 @@ const competitors = [
   { domain: "searchenginejournal.com", share: 41, delta: "+6", gaps: 2 },
 ]
 
+// Sample data for the mid-page gap-matrix figure (English UI depicted).
 const gapMatrix = [
   { topic: "ai content optimization", you: false, ahrefs: true, semrush: false },
   { topic: "saas content strategy", you: true, ahrefs: true, semrush: true },
@@ -35,99 +58,45 @@ const gapMatrix = [
   { topic: "content freshness signals", you: true, ahrefs: true, semrush: false },
 ]
 
-const faqs = [
-  {
-    question: "What does Competitor Intel track?",
-    answer:
-      "How competitor domains' AI citations change over time, which engines cite them, for which keywords, and how their AI visibility trends compare to yours. It's longitudinal tracking across ChatGPT, Perplexity, Claude, Gemini, Google AI Overviews, Google AI Mode, Bing Copilot, and Grok, not a one-shot snapshot.",
-  },
-  {
-    question: "How many competitors can I track?",
-    answer:
-      "Up to three competitor domains on the current plan, with higher limits planned for upper tiers as they ship. Every tracked competitor gets side-by-side citation tracking across all eight AI engines, aggregated for AI visibility trends.",
-  },
-  {
-    question: "How is this different from the competitor comparison in GEO Scan?",
-    answer:
-      "GEO Scan shows a snapshot for one keyword. Competitor Intel tracks trends across every keyword over time. Scan answers 'who's cited right now?' Intel answers 'who's gaining and losing AI citations month over month?'",
-  },
-  {
-    question: "Can I see which specific pages competitors are getting cited for?",
-    answer:
-      "Yes. The tool surfaces the exact competitor URLs that AI engines reference most frequently, plus which prompts those URLs win. That maps directly to a content gap list: pages you need to publish or rewrite to compete.",
-  },
-  {
-    question: "How are threat alerts delivered?",
-    answer:
-      "By email. When a competitor starts gaining citations on a prompt you used to own, an alert fires with a one-sentence analysis of why, so you can react before the citation share compounds.",
-  },
-  {
-    question: "Is Competitor Intel included on the free plan?",
-    answer:
-      "Yes. It's available on every tier, including Free. Data refreshes with each scan you run; weekly cadence on core keywords is usually enough to catch meaningful movement early.",
-  },
-]
+export default async function CompetitorIntelPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
+  setRequestLocale(locale)
+  const t = await getTranslations("featurePages.competitor-intel")
+  const c = await getTranslations("featurePages.common")
+  const base = locale === routing.defaultLocale ? "" : `/${locale}`
+  const urlBase = `${siteConfig.url}${base}`
 
-const sections = [
-  {
-    num: "01",
-    tag: "AI threat alerts",
-    title: "Find out the day it matters",
-    body: "AI-powered analysis runs on every scan. When a competitor starts getting cited for a prompt you used to own, you get an alert with a 1-sentence why.",
-  },
-  {
-    num: "02",
-    tag: "Share of voice",
-    title: "Who's cited, how often",
-    body: "Aggregated across every scan. Rank competitors by citation count, track share-of-voice week over week, and drill into which engines they own.",
-  },
-  {
-    num: "03",
-    tag: "Content gap matrix",
-    title: "Topics they cover, you don't",
-    body: "Side-by-side matrix of topics across you and up to 3 competitors (more on higher tiers). Gaps on your row are your next-action list.",
-  },
-  {
-    num: "04",
-    tag: "SERP feature ownership",
-    title: "Who wins the rich features",
-    body: "Track ownership of AI Overviews, People Also Ask, featured snippets, and knowledge panels across your keyword set. Movement = opportunity.",
-  },
-  {
-    num: "05",
-    tag: "Sitemap + Ahrefs diff",
-    title: "What they published this week",
-    body: "Crawl their sitemap, diff against last scan, cross-reference Ahrefs. The new URLs most likely to trigger citation loss for you.",
-  },
-  {
-    num: "06",
-    tag: "Co-cited neighbors",
-    title: "The AI citation neighborhood",
-    body: "Who else gets cited alongside your top competitors. Useful for backlink targets, guest post pitches, and mapping the authoritative cluster.",
-  },
-]
+  const insideItems = t.raw("inside.items") as InsideItem[]
+  const faqs = t.raw("faqs") as Faq[]
+  const cardDescriptions = c.raw("cardDescriptions") as Record<string, string>
+  const breadcrumbLabels = { home: c("breadcrumbHome"), features: c("breadcrumbFeatures") }
 
-export default function CompetitorIntelPage() {
   return (
     <>
       {/* Hero — blush glow (vigilance / threat-feed feel), dark ground */}
       <JsonLd data={[
         softwareApplicationSchema({
           name: "Competitor Intel",
-          description: "Track new content published by competitors. Detect new pages, lost rankings, publishing velocity, and AI threat alerts across eight engines.",
-          url: `${siteConfig.url}/features/competitor-intel`,
+          description: t("schema.appDescription"),
+          url: `${urlBase}/features/competitor-intel`,
         }),
       ]} />
 
       <FeatureHero
         featureName="Competitor Intel"
         hue="blush"
-        eyebrow="Competitor Intel"
-        title="Know the day they outrank you."
-        subhead="AI competitor analysis that runs on real citations, not estimates. Track how rivals gain or lose AI citations across eight engines, see the exact topics they own and you don't, and get an email the day a competitor starts winning a prompt that used to be yours."
-        primaryLabel="Try it for free"
+        base={base}
+        breadcrumbLabels={breadcrumbLabels}
+        eyebrow={t("hero.eyebrow")}
+        title={t("hero.title")}
+        subhead={t("hero.subhead")}
+        primaryLabel={t("hero.primaryLabel")}
         primaryHref="/app"
-        secondaryLabel="What's inside"
+        secondaryLabel={t("hero.secondaryLabel")}
         secondaryHref="#inside"
         microcopy=""
       >
@@ -198,16 +167,16 @@ export default function CompetitorIntelPage() {
                     <p className="font-mono text-[10px] text-gray-500">4 / 5 tracked</p>
                   </div>
                   <div className="space-y-2">
-                    {competitors.map((c) => {
-                      const positive = c.delta.startsWith("+")
+                    {competitors.map((comp) => {
+                      const positive = comp.delta.startsWith("+")
                       return (
-                        <div key={c.domain} className="flex items-center gap-3">
-                          <span className="w-44 shrink-0 truncate font-mono text-[12px] font-medium text-gray-800">{c.domain}</span>
+                        <div key={comp.domain} className="flex items-center gap-3">
+                          <span className="w-44 shrink-0 truncate font-mono text-[12px] font-medium text-gray-800">{comp.domain}</span>
                           <div className="h-1 flex-1 overflow-hidden rounded-full bg-gray-100">
-                            <div className="h-full rounded-full bg-accent-700" style={{ width: `${c.share}%` }} />
+                            <div className="h-full rounded-full bg-accent-700" style={{ width: `${comp.share}%` }} />
                           </div>
-                          <span className="w-9 shrink-0 text-right font-mono text-[11px] font-semibold tabular-nums text-accent-700">{c.share}%</span>
-                          <span className={`w-6 shrink-0 text-right font-mono text-[10px] font-semibold ${positive ? "text-accent-700" : "text-red-600"}`}>{c.delta}</span>
+                          <span className="w-9 shrink-0 text-right font-mono text-[11px] font-semibold tabular-nums text-accent-700">{comp.share}%</span>
+                          <span className={`w-6 shrink-0 text-right font-mono text-[10px] font-semibold ${positive ? "text-accent-700" : "text-red-600"}`}>{comp.delta}</span>
                         </div>
                       )
                     })}
@@ -222,13 +191,13 @@ export default function CompetitorIntelPage() {
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-[5fr_7fr] lg:items-end lg:gap-16">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">Content gap matrix</p>
+              <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">{t("gap.eyebrow")}</p>
               <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.5rem)] font-bold leading-tight tracking-tight text-gray-900">
-                The topics they own. You don&apos;t.
+                {t("gap.h2")}
               </h2>
             </div>
             <p className="max-w-xl text-base leading-relaxed text-gray-600">
-              A literal spreadsheet of who gets cited where. Topics across rows, competitors across columns, a check for every site AI currently cites. Every gap on your row is a page you need to publish or rewrite.
+              {t("gap.intro")}
             </p>
           </div>
 
@@ -240,7 +209,7 @@ export default function CompetitorIntelPage() {
                   <path d="M3 7l3 3 5-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </span>
-              Cited in AI responses
+              {t("gap.legendCited")}
             </span>
             <span className="inline-flex items-center gap-2">
               <span className="inline-flex h-5 w-5 items-center justify-center rounded-full border border-gray-300 bg-gray-100">
@@ -248,12 +217,12 @@ export default function CompetitorIntelPage() {
                   <path d="M3 3l6 6M9 3l-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                 </svg>
               </span>
-              Absent &mdash; a gap to close
+              {t("gap.legendAbsent")}
             </span>
           </div>
 
-          <figure aria-label="Illustrative example with sample data" className="mt-6 overflow-hidden rounded-[2rem] border border-gray-200 bg-white">
-            <span className="sr-only">Example, illustrative data:</span>
+          <figure aria-label={t("gap.figureAria")} className="mt-6 overflow-hidden rounded-[2rem] border border-gray-200 bg-white">
+            <span className="sr-only">{t("gap.srPrefix")}</span>
             <div className="overflow-x-auto">
               <table className="w-full min-w-[600px] text-sm">
                 <thead>
@@ -286,13 +255,13 @@ export default function CompetitorIntelPage() {
 
           {/* Inline CTA at point of peak intent */}
           <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
-            <p className="text-[13px] text-gray-500">Example data &mdash; your matrix is generated from your scans.</p>
+            <p className="text-[13px] text-gray-500">{t("gap.exampleNote")}</p>
             <Link
               href="/app"
               prefetch={false}
               className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-accent-700 hover:text-accent-900"
             >
-              Scan your domain to see your gap
+              {t("gap.scanCta")}
               <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
@@ -305,13 +274,13 @@ export default function CompetitorIntelPage() {
       <section id="inside" className="bg-white px-6 py-24 sm:py-28">
         <div className="mx-auto max-w-7xl">
           <div className="max-w-2xl">
-            <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">What's inside</p>
+            <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">{t("inside.eyebrow")}</p>
             <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.5rem)] font-bold leading-tight tracking-tight text-gray-900">
-              Six views of the competitive field.
+              {t("inside.h2")}
             </h2>
           </div>
           <div className="mt-14 grid grid-cols-1 gap-x-8 gap-y-12 md:grid-cols-2 lg:grid-cols-3 lg:gap-x-10">
-            {sections.map((s) => (
+            {insideItems.map((s) => (
               <div key={s.tag} className="relative pl-12">
                 <span
                   aria-hidden="true"
@@ -330,21 +299,27 @@ export default function CompetitorIntelPage() {
         </div>
       </section>
 
-      <FeatureFaq items={faqs} />
+      <FeatureFaq items={faqs} heading={c("faqHeading")} />
 
-      <RelatedFeatures current="competitor-intel" related={["domain-overview", "geo-scan", "community", "ask-geotoolbox"]} />
+      <RelatedFeatures
+        current="competitor-intel"
+        related={["domain-overview", "geo-scan", "community", "ask-geotoolbox"]}
+        base={base}
+        copy={c.raw("related") as { eyebrow: string; heading: string; allFeatures: string; learnMore: string }}
+        descriptions={cardDescriptions}
+      />
 
       {/* CTA */}
       <section className="bg-gray-950 px-6 py-20 sm:py-24">
         <div className="mx-auto max-w-7xl flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between md:gap-12">
           <div>
             <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
-              Track your first competitor.
+              {t("finalCta.h2")}
             </h2>
-            <p className="mt-2 text-base text-gray-300">Free plan, no credit card.</p>
+            <p className="mt-2 text-base text-gray-300">{t("finalCta.sub")}</p>
           </div>
           <Link href="/app" prefetch={false} className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]">
-            Try it for free
+            {t("finalCta.button")}
             <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
             </svg>

@@ -1,42 +1,68 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import { setRequestLocale, getTranslations } from "next-intl/server"
+import { routing } from "@/i18n/routing"
 import { FeatureHero } from "@/components/features/feature-hero"
 import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
 import { siteConfig } from "@/lib/config"
 import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema } from "@/lib/seo-schema"
+import { marketingAlternatesFor } from "@/lib/i18n/siblings"
 
-export const metadata: Metadata = {
-  title: "AI Search Analytics: GSC + GA4 Attribution",
-  description:
-    "Connect GSC and GA4 to see which AI citations drive real sessions. AI traffic attribution plus 13 sub-dashboards: quick wins, decay, cannibalization.",
-  openGraph: {
-    title: "AI Search Analytics: GSC + GA4 With AI Traffic Attribution",
-    description:
-      "Connect Google Search Console and GA4 for AI search tracking. See AI-driven traffic, cited-vs-clicked pages, and attribute real sessions to your AI visibility, not just impressions.",
-  },
-  alternates: { canonical: `${siteConfig.url}/features/analytics` },
+// Localized Analytics feature page: en at /features/analytics, fr at
+// /fr/features/analytics. Relocated from app/(marketing)/features/analytics.
+// ALL display copy lives in the `featurePages.analytics` message namespace
+// (shared strings in `featurePages.common`); structural data — hues, dashboard
+// tags, pictogram kinds, zone styling — stays here. The AI-traffic figure and
+// the 13 dashboard tab names DEPICT the English product UI, so their sample
+// data and tab labels stay English on both locales.
+
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }))
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  const t = await getTranslations({ locale, namespace: "featurePages.analytics.meta" })
+  return {
+    title: { absolute: t("title") },
+    description: t("description"),
+    openGraph: { title: t("ogTitle"), description: t("ogDescription") },
+    alternates: marketingAlternatesFor("/features/analytics", locale),
+  }
 }
 
 type Viz = "bars" | "sparkDown" | "sparkUp" | "gauge" | "rows" | "dots" | "scatter" | "cloud" | "clusters" | "grid" | "compare"
+type Cat = "Core" | "Opportunity" | "Diagnostic" | "Deep dive"
+type Outcome = { tag: string; title: string; body: string }
+type Faq = { question: string; answer: string }
+type Zone = { label: string; subtitle: string }
 
-const subDashboards: { tag: string; desc: string; cat: string; viz: Viz }[] = [
-  { tag: "Overview",       desc: "Headline metrics + weekly trend",      cat: "Core",        viz: "grid" },
-  { tag: "Compare",        desc: "Two periods, side by side",             cat: "Core",        viz: "compare" },
-  { tag: "Quick Wins",     desc: "Ranked pages with fixable issues",      cat: "Opportunity", viz: "gauge" },
-  { tag: "Content Decay",  desc: "Pages losing impressions over time",    cat: "Opportunity", viz: "sparkDown" },
-  { tag: "Click Potential",desc: "High-impression, low-CTR pages",        cat: "Opportunity", viz: "sparkUp" },
-  { tag: "Cannibalization",desc: "Pages competing for same keywords",     cat: "Diagnostic",  viz: "scatter" },
-  { tag: "Health",         desc: "Indexation, coverage, crawl errors",    cat: "Diagnostic",  viz: "dots" },
-  { tag: "Trajectory",     desc: "12-month history per query",            cat: "Diagnostic",  viz: "sparkUp" },
-  { tag: "Pages",          desc: "Every URL, click-share %",              cat: "Deep dive",   viz: "rows" },
-  { tag: "Sections",       desc: "By URL path segment",                   cat: "Deep dive",   viz: "bars" },
-  { tag: "Keywords",       desc: "Query-level view, intent-classified",   cat: "Deep dive",   viz: "rows" },
-  { tag: "Keyword Cloud",  desc: "Visual weight by click share",          cat: "Deep dive",   viz: "cloud" },
-  { tag: "Clusters",       desc: "Semantic grouping of queries",          cat: "Deep dive",   viz: "clusters" },
+// Structural map only — the tab name (product UI, EN) drives the localized
+// description lookup; category + viz drive zone grouping and the pictogram.
+const subDashboards: { tag: string; cat: Cat; viz: Viz }[] = [
+  { tag: "Overview",        cat: "Core",        viz: "grid" },
+  { tag: "Compare",         cat: "Core",        viz: "compare" },
+  { tag: "Quick Wins",      cat: "Opportunity", viz: "gauge" },
+  { tag: "Content Decay",   cat: "Opportunity", viz: "sparkDown" },
+  { tag: "Click Potential", cat: "Opportunity", viz: "sparkUp" },
+  { tag: "Cannibalization", cat: "Diagnostic",  viz: "scatter" },
+  { tag: "Health",          cat: "Diagnostic",  viz: "dots" },
+  { tag: "Trajectory",      cat: "Diagnostic",  viz: "sparkUp" },
+  { tag: "Pages",           cat: "Deep dive",   viz: "rows" },
+  { tag: "Sections",        cat: "Deep dive",   viz: "bars" },
+  { tag: "Keywords",        cat: "Deep dive",   viz: "rows" },
+  { tag: "Keyword Cloud",   cat: "Deep dive",   viz: "cloud" },
+  { tag: "Clusters",        cat: "Deep dive",   viz: "clusters" },
 ]
 
+// Illustrative mockup sample data — depicts the English product UI, so engine
+// names and figures stay English on both locales (same as the FR HeroMockup).
 const aiTraffic = [
   { source: "ChatGPT", sessions: 487, delta: "+23%" },
   { source: "Perplexity", sessions: 342, delta: "+41%" },
@@ -44,67 +70,6 @@ const aiTraffic = [
   { source: "Gemini", sessions: 128, delta: "+8%" },
   { source: "Claude", sessions: 94, delta: "+12%" },
   { source: "Bing Copilot", sessions: 67, delta: "+4%" },
-]
-
-const faqs = [
-  {
-    question: "What does the Analytics tab show?",
-    answer:
-      "Your Google Search Console and GA4 data, layered with AI citation data from GEO Toolbox. You can see whether AI-cited pages actually drive traffic. That's the missing attribution layer in most AI visibility tools.",
-  },
-  {
-    question: "How do I connect Google Search Console?",
-    answer:
-      "One-click OAuth: authorize access, select your property, and your GSC data is live in the dashboard. No API keys, no CSV imports. (Google OAuth verification is still in progress, so email samy@geotoolbox.ai to be added to the test user list for early access.)",
-  },
-  {
-    question: "Does it support Google Analytics 4 (GA4)?",
-    answer:
-      "Yes. GA4 integration shows AI-driven traffic metrics alongside your GSC data, using the same OAuth flow and the same one-screen view.",
-  },
-  {
-    question: "What is AI traffic in the Analytics view?",
-    answer:
-      "Traffic arriving from AI-powered search surfaces like Google AI Overviews, ChatGPT with browsing, Perplexity, and Bing Copilot, segmented from traditional organic traffic. If it's a session that came via an AI citation, you'll see it here.",
-  },
-  {
-    question: "Can I see which keywords bring AI traffic vs. traditional traffic?",
-    answer:
-      "Yes. The view overlays AI citation status on your keyword performance data. You see which queries earn AI citations, which drive organic traffic, and where they overlap. That overlap is where your fastest ROI lives.",
-  },
-  {
-    question: "Is my Search Console data stored on your servers?",
-    answer:
-      "Connection credentials are stored securely. Query data is fetched on-demand from the Google API and cached locally in your browser per property and period for performance. Only OAuth tokens and scan results live server-side.",
-  },
-  {
-    question: "Is Analytics available on the Free plan?",
-    answer:
-      "Yes. Analytics is included on every tier, Free included. No card required to connect and see all 13 views on your own data.",
-  },
-]
-
-const outcomes = [
-  {
-    tag: "AI traffic attribution",
-    title: "Cited AND clicked",
-    body: "Every AI-cited URL cross-referenced with GA4 session data. See which citations actually drive traffic, which don't, and which pages have the inverse problem (clicks without citations).",
-  },
-  {
-    tag: "13 sub-dashboards",
-    title: "Not just another GSC wrapper",
-    body: "Overview, Compare, Quick Wins, Content Decay, Click Potential, Cannibalization, Health, Trajectory, Pages, Sections, Keywords, Clusters. Every view answers a different question.",
-  },
-  {
-    tag: "Intent classification",
-    title: "What queries actually mean",
-    body: "Every query auto-tagged informational, commercial, navigational, or transactional. Filter any view by intent to know whether your AI citations convert or just look good.",
-  },
-  {
-    tag: "Cluster view",
-    title: "Topical authority, measured",
-    body: "Queries grouped by semantic similarity. See which topic clusters you own, which you're losing, and where a handful of related queries share the same underlying opportunity.",
-  },
 ]
 
 /**
@@ -238,14 +203,32 @@ function Pictogram({ kind, color }: { kind: Viz; color: string }) {
   }
 }
 
-export default function AnalyticsPage() {
+export default async function AnalyticsPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
+  setRequestLocale(locale)
+  const t = await getTranslations("featurePages.analytics")
+  const c = await getTranslations("featurePages.common")
+  const base = locale === routing.defaultLocale ? "" : `/${locale}`
+  const urlBase = `${siteConfig.url}${base}`
+
+  const zones = t.raw("dashboards.zones") as Record<Cat, Zone>
+  const dashDescriptions = t.raw("dashboards.descriptions") as Record<string, string>
+  const outcomes = t.raw("outcomes.items") as Outcome[]
+  const faqs = t.raw("faqs") as Faq[]
+  const cardDescriptions = c.raw("cardDescriptions") as Record<string, string>
+  const breadcrumbLabels = { home: c("breadcrumbHome"), features: c("breadcrumbFeatures") }
+
   return (
     <>
       <JsonLd data={[
         softwareApplicationSchema({
           name: "Analytics",
-          description: "GSC and GA4 rebuilt around AI citations. Quick wins, content decay, click share, and cannibalization detection across 13 sub-tabs.",
-          url: `${siteConfig.url}/features/analytics`,
+          description: t("schema.appDescription"),
+          url: `${urlBase}/features/analytics`,
         }),
       ]} />
 
@@ -253,30 +236,32 @@ export default function AnalyticsPage() {
       <FeatureHero
         featureName="Analytics"
         hue="cool"
-        eyebrow="Analytics (GSC + GA4)"
-        title="AI citations, attributed to real traffic."
-        subhead="Being cited is nice. Being cited by the engines that actually send you sessions is a strategy. Connect Search Console and GA4 to layer your traffic data over your AI citation data: 13 sub-dashboards built for AI search analytics, not another GSC rewrapper. On every plan, including Free."
-        primaryLabel="Connect GSC + GA4"
+        base={base}
+        breadcrumbLabels={breadcrumbLabels}
+        eyebrow={t("hero.eyebrow")}
+        title={t("hero.title")}
+        subhead={t("hero.subhead")}
+        primaryLabel={t("hero.primaryLabel")}
         primaryHref="/app"
-        secondaryLabel="See all 13 views"
+        secondaryLabel={t("hero.secondaryLabel")}
         secondaryHref="#dashboards"
         microcopy={
           <>
-            <span className="font-semibold text-gray-300">Beta access:</span> Google OAuth
-            verification is in progress. Email{" "}
+            <span className="font-semibold text-gray-300">{t("hero.microcopyBeta")}</span>{" "}
+            {t("hero.microcopyPre")}{" "}
             <a
               href="mailto:samy@geotoolbox.ai"
               className="underline underline-offset-2 transition-colors hover:text-white"
             >
-              samy@geotoolbox.ai
+              {t("hero.microcopyEmail")}
             </a>{" "}
-            to be added to the test user list.
+            {t("hero.microcopyPost")}
           </>
         }
       >
         {/* AI traffic visual */}
-        <figure aria-label="Illustrative example with sample data" className="relative m-0 rounded-[2rem] border border-gray-200 bg-white p-6 sm:p-8 shadow-[0_20px_60px_-20px_rgba(15,23,42,0.12)]">
-                <span className="sr-only">Example, illustrative data:</span>
+        <figure aria-label={t("hero.figureAriaLabel")} className="relative m-0 rounded-[2rem] border border-gray-200 bg-white p-6 sm:p-8 shadow-[0_20px_60px_-20px_rgba(15,23,42,0.12)]">
+                <span className="sr-only">{t("hero.figureSrOnly")}</span>
                 <div className="flex items-center justify-between border-b border-gray-100 pb-3">
                   <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-600">
                     AI traffic · last 30 days
@@ -291,15 +276,15 @@ export default function AnalyticsPage() {
                   <p className="pb-1 ml-auto text-sm font-semibold text-accent-700">+27%</p>
                 </div>
                 <div className="mt-5 divide-y divide-gray-100">
-                  {aiTraffic.map((t) => {
-                    const pct = Math.round((t.sessions / 1321) * 100)
+                  {aiTraffic.map((row) => {
+                    const pct = Math.round((row.sessions / 1321) * 100)
                     return (
-                      <div key={t.source} className="py-2.5">
+                      <div key={row.source} className="py-2.5">
                         <div className="flex items-center justify-between">
-                          <span className="text-[13px] font-medium text-gray-900">{t.source}</span>
+                          <span className="text-[13px] font-medium text-gray-900">{row.source}</span>
                           <div className="flex items-center gap-3">
-                            <span className="font-mono text-[13px] font-semibold tabular-nums text-gray-900">{t.sessions}</span>
-                            <span className="font-mono text-[11px] font-semibold text-accent-700">{t.delta}</span>
+                            <span className="font-mono text-[13px] font-semibold tabular-nums text-gray-900">{row.sessions}</span>
+                            <span className="font-mono text-[11px] font-semibold text-accent-700">{row.delta}</span>
                           </div>
                         </div>
                         <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-gray-100">
@@ -317,13 +302,13 @@ export default function AnalyticsPage() {
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-[5fr_7fr] lg:items-end lg:gap-16">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">13 sub-dashboards</p>
+              <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">{t("dashboards.eyebrow")}</p>
               <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.5rem)] font-bold leading-tight tracking-tight text-gray-900">
-                Every question has its own view.
+                {t("dashboards.h2")}
               </h2>
             </div>
             <p className="max-w-xl text-base leading-relaxed text-gray-600">
-              Most analytics tools dump GSC into a single dashboard and call it a feature. We split GSC + GA4 into 13 answer-shaped views, grouped by what you're actually trying to figure out.
+              {t("dashboards.intro")}
             </p>
           </div>
 
@@ -347,12 +332,6 @@ export default function AnalyticsPage() {
                 Diagnostic:  "sm:grid-cols-2 lg:grid-cols-3",
                 "Deep dive": "sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5",
               }[cat]
-              const subtitle = {
-                Core:        "Start here. Headline metrics + period comparison.",
-                Opportunity: "Three places to move the needle fastest.",
-                Diagnostic:  "What's broken, what's slipping, what's competing.",
-                "Deep dive": "Per-URL, per-query, per-intent drill-downs.",
-              }[cat]
               return (
                 <div
                   key={cat}
@@ -363,13 +342,13 @@ export default function AnalyticsPage() {
                     <div className="flex items-center gap-2">
                       <span className={`inline-block h-2 w-2 rounded-full ${zone.dot}`} aria-hidden="true" />
                       <p className={`font-mono text-[11px] font-semibold uppercase tracking-widest ${zone.text}`}>
-                        {cat}
+                        {zones[cat].label}
                       </p>
                       <span className="font-mono text-[11px] text-gray-500">
-                        &middot; {items.length} {items.length === 1 ? "view" : "views"}
+                        &middot; {items.length} {items.length === 1 ? t("dashboards.viewSingular") : t("dashboards.viewPlural")}
                       </span>
                     </div>
-                    <span className="text-[13px] text-gray-600">{subtitle}</span>
+                    <span className="text-[13px] text-gray-600">{zones[cat].subtitle}</span>
                   </div>
 
                   {/* Tile grid */}
@@ -385,7 +364,7 @@ export default function AnalyticsPage() {
                               {d.tag}
                             </h3>
                             <p className="mt-1 text-[13px] leading-relaxed text-gray-600">
-                              {d.desc}
+                              {dashDescriptions[d.tag]}
                             </p>
                           </div>
                           <Pictogram kind={d.viz} color={zone.pictoHex} />
@@ -401,14 +380,14 @@ export default function AnalyticsPage() {
           {/* Inline CTA at peak intent — echoes the hero CTA with OAuth context */}
           <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-gray-200 pt-6">
             <p className="text-[13px] text-gray-500">
-              Example views &mdash; yours populate once GSC + GA4 are connected.
+              {t("dashboards.ctaNote")}
             </p>
             <Link
               href="/app"
               prefetch={false}
               className="inline-flex items-center gap-1.5 rounded-sm text-[13px] font-semibold text-accent-700 transition-colors duration-200 hover:text-accent-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
             >
-              Connect Search Console to see these for your site
+              {t("dashboards.ctaLink")}
               <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
@@ -421,9 +400,9 @@ export default function AnalyticsPage() {
       <section className="border-t border-[var(--surface-cool-border)] bg-[var(--surface-cool)] px-6 py-24 sm:py-28">
         <div className="mx-auto max-w-7xl">
           <div className="max-w-2xl">
-            <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">What makes it different</p>
+            <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">{t("outcomes.eyebrow")}</p>
             <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.5rem)] font-bold leading-tight tracking-tight text-gray-900">
-              Analytics built for AI-era search.
+              {t("outcomes.h2")}
             </h2>
           </div>
           <div className="mt-14 grid grid-cols-1 gap-8 md:grid-cols-2 lg:gap-12">
@@ -438,27 +417,33 @@ export default function AnalyticsPage() {
         </div>
       </section>
 
-      <FeatureFaq items={faqs} />
+      <FeatureFaq items={faqs} heading={c("faqHeading")} />
 
-      <RelatedFeatures current="analytics" related={["domain-overview", "geo-scan", "content-analyzer", "ask-geotoolbox"]} />
+      <RelatedFeatures
+        current="analytics"
+        related={["domain-overview", "geo-scan", "content-analyzer", "ask-geotoolbox"]}
+        base={base}
+        copy={c.raw("related") as { eyebrow: string; heading: string; allFeatures: string; learnMore: string }}
+        descriptions={cardDescriptions}
+      />
 
       {/* CTA */}
       <section className="bg-gray-950 px-6 py-20 sm:py-24">
         <div className="mx-auto max-w-7xl flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between md:gap-12">
           <div>
             <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
-              Connect your analytics.
+              {t("finalCta.h2")}
             </h2>
             <p className="mt-2 text-base text-gray-300">
-              Free plan, no credit card. Google OAuth verification in progress; email{" "}
+              {t("finalCta.ctaSubPre")}{" "}
               <a href="mailto:samy@geotoolbox.ai" className="font-semibold text-white underline underline-offset-2 hover:text-accent-400">
-                samy@geotoolbox.ai
+                {t("finalCta.ctaSubEmail")}
               </a>{" "}
-              to be whitelisted.
+              {t("finalCta.ctaSubPost")}
             </p>
           </div>
           <Link href="/app" prefetch={false} className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]">
-            Try it for free
+            {t("finalCta.button")}
             <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
             </svg>

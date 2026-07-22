@@ -24,7 +24,26 @@ import { routing } from "@/i18n/routing"
  * French visitor to an empty page is worse than sending them to the populated
  * EN glossary. Add it here the moment content/fr/glossary/ is populated.
  */
-const LOCALIZED_ROOTS = new Set(["/", "/features", "/pricing", "/blog"])
+const LOCALIZED_ROOTS = new Set([
+  "/",
+  "/features",
+  "/pricing",
+  "/blog",
+  // All 13 feature detail pages migrated under app/[locale]/features (2026-07-22).
+  "/features/geo-scan",
+  "/features/agent-readiness",
+  "/features/query-fanout",
+  "/features/content-analyzer",
+  "/features/content-studio",
+  "/features/domain-overview",
+  "/features/competitor-intel",
+  "/features/community",
+  "/features/citation-interceptor",
+  "/features/ask-geotoolbox",
+  "/features/analytics",
+  "/features/pr-coverage-tracker",
+  "/features/white-label-reports",
+])
 
 export function localizeNavHref(href: string, locale: string): string {
   // The default locale has no prefix, so EN output stays byte-identical and

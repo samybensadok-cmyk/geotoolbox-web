@@ -1,5 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import { setRequestLocale, getTranslations } from "next-intl/server"
+import { routing } from "@/i18n/routing"
 import { FeatureHero } from "@/components/features/feature-hero"
 import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
@@ -7,20 +9,42 @@ import { FeatureComparisonTable } from "@/components/features/feature-comparison
 import { siteConfig } from "@/lib/config"
 import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema, howToSchema } from "@/lib/seo-schema"
+import { marketingAlternatesFor } from "@/lib/i18n/siblings"
 
-export const metadata: Metadata = {
-  title: "AI Query Fan-Out: The Real Queries AI Fires",
-  description:
-    "Capture the real sub-queries ChatGPT, Gemini, Perplexity, and Grok fire for your topic. Validated, never guessed, with a ranked worklist per gap.",
-  openGraph: {
-    title: "AI Query Fan-Out Tool: The Real Queries AI Fires | GEO Toolbox",
-    description:
-      "Capture the actual sub-queries ChatGPT, Gemini, Perplexity, and Grok fan out for a topic, validated, not guessed, with a cross-engine divergence map and ranked content actions.",
-  },
-  alternates: { canonical: `${siteConfig.url}/features/query-fanout` },
+// Localized Query Fan-Out feature page: en at /features/query-fanout, fr at
+// /fr/features/query-fanout. Relocated from app/(marketing)/features/query-fanout.
+// ALL display copy lives in the `featurePages.query-fanout` message namespace
+// (shared strings in `featurePages.common`); structural data — hues, the
+// mockup device sample data (fan-out queries are search queries → English) —
+// stays here. Product and engine names are never translated.
+
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }))
 }
 
-// ——— Example hero-device data (clearly labelled "Example data" in the UI) ———
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  const t = await getTranslations({ locale, namespace: "featurePages.query-fanout.meta" })
+  return {
+    title: { absolute: t("title") },
+    description: t("description"),
+    openGraph: { title: t("ogTitle"), description: t("ogDescription") },
+    alternates: marketingAlternatesFor("/features/query-fanout", locale),
+  }
+}
+
+type Step = { verb: string; title: string; body: string }
+type Inside = { num: string; tag: string; title: string; body: string }
+type Faq = { question: string; answer: string }
+type Cell = boolean | string
+type CompRow = { label: string; cells: Cell[] }
+
+// —— Example hero-device data (clearly labelled "Example data" in the UI).
+// Fan-out queries are literal search queries → English on both locales. ——
 const fanRows: { q: string; engines: string[]; kind: "fired" | "related"; vol: string }[] = [
   { q: "best AI SEO tools compared 2026", engines: ["ChatGPT", "Gemini", "Grok"], kind: "fired", vol: "2.4K/mo" },
   { q: "how to measure AI search visibility", engines: ["Gemini", "Grok"], kind: "fired", vol: "880/mo" },
@@ -28,7 +52,7 @@ const fanRows: { q: string; engines: string[]; kind: "fired" | "related"; vol: s
   { q: "do AI SEO tools actually work", engines: ["Perplexity"], kind: "related", vol: "no volume" },
 ]
 
-// ——— Divergence matrix: intents × engines (filled = that engine fired a query for it) ———
+// —— Divergence matrix: intents × engines (filled = that engine fired a query for it) ——
 type EngineKey = "chatgpt" | "gemini" | "perplexity" | "grok"
 // ChatGPT's API returns a single web-search call per request, so it fires for at
 // most one intent here — Gemini/Grok carry the depth, Perplexity surfaces related.
@@ -41,113 +65,26 @@ const divergence: { intent: string; type: "shared" | "whitespace"; on: Record<En
   { intent: "Free AI visibility checker", type: "whitespace", on: { chatgpt: false, gemini: false, perplexity: false, grok: true } },
 ]
 
-const steps = [
-  {
-    verb: "Seed",
-    title: "One topic or URL",
-    body: "Drop in a seed keyword or a page. Optionally point it at your own URL to score coverage, or a competitor's to see what they already answer.",
-  },
-  {
-    verb: "Fan out",
-    title: "Capture the real queries across four engines",
-    body: "We read the actual sub-queries each engine fires while answering: Gemini's grounded searches and Grok's many web-search calls carry the depth, ChatGPT contributes its single search call, and Perplexity surfaces its related questions. Real engine output, not an LLM guessing what people might ask.",
-  },
-  {
-    verb: "Rank",
-    title: "Cluster, score, and route to a fix",
-    body: "Queries are clustered into intents, scored by reach and coverage, and turned into a ranked worklist: “write a comparison table answering X,” with the engines that want it and whether you cover it yet.",
-  },
-]
+export default async function QueryFanoutPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
+  setRequestLocale(locale)
+  const t = await getTranslations("featurePages.query-fanout")
+  const c = await getTranslations("featurePages.common")
+  const base = locale === routing.defaultLocale ? "" : `/${locale}`
+  const urlBase = `${siteConfig.url}${base}`
 
-const inside = [
-  {
-    num: "01",
-    tag: "Validated queries",
-    title: "The questions AI actually fired",
-    body: "Every query is one an engine really searched, tagged FIRED (a real search call) or RELATED (Perplexity's surfaced follow-ups). No “here's what people probably ask”; the honesty is the product.",
-  },
-  {
-    num: "02",
-    tag: "Divergence map",
-    title: "Where the engines disagree",
-    body: "The signature view: intents shared across multiple engines versus the whitespace only one engine explores. Shared intents are table stakes; single-engine intents are uncontested ground to claim first.",
-  },
-  {
-    num: "03",
-    tag: "Real volume",
-    title: "Reach, labelled honestly",
-    body: "Each cluster carries true search volume where it exists, parent-term reach for the zero-volume long-tail, and a plain “no volume data” when there's nothing, never an invented number.",
-  },
-  {
-    num: "04",
-    tag: "Page coverage",
-    title: "What your URL already answers",
-    body: "Point it at a page and every intent is checked against the live content, evidence-verified against the actual text, so a “covered” is a real substring match, not a hopeful guess. WAF-blocked pages are marked unverifiable, never falsely covered.",
-  },
-  {
-    num: "05",
-    tag: "Citation landscape",
-    title: "Who AI cites on these queries",
-    body: "The sources each engine cites for the fanned queries: you versus the competitors and publishers winning the answer, pulled from the engines' own answer citations, matched at the registrable-domain level.",
-  },
-  {
-    num: "06",
-    tag: "Ranked actions",
-    title: "A worklist, not a word cloud",
-    body: "Every gap becomes a prioritized action: the format to publish, the intent it answers, the engines that want it, and why it ranks where it does. Start at the top and work down.",
-  },
-]
+  const steps = t.raw("how.steps") as Step[]
+  const inside = t.raw("inside.items") as Inside[]
+  const comparisonColumns = t.raw("comparison.columns") as string[]
+  const comparisonRows = t.raw("comparison.rows") as CompRow[]
+  const faqs = t.raw("faqs") as Faq[]
+  const cardDescriptions = c.raw("cardDescriptions") as Record<string, string>
+  const breadcrumbLabels = { home: c("breadcrumbHome"), features: c("breadcrumbFeatures") }
 
-const comparisonRows = [
-  { label: "Surfaces the sub-queries AI actually fans out", cells: [false, "Guessed", true] },
-  { label: "Queries are real engine output, not LLM-imagined", cells: ["Search data", "Guessed", true] },
-  { label: "Covers four AI engines in one run", cells: [false, "1 engine", true] },
-  { label: "Cross-engine divergence map", cells: [false, false, true] },
-  { label: "Real search volume (honestly labelled)", cells: [true, false, true] },
-  { label: "Checks your page's coverage of each intent", cells: [false, false, true] },
-  { label: "Shows who AI cites for the queries", cells: [false, false, true] },
-  { label: "Outputs a ranked content worklist", cells: [false, "Partial", true] },
-]
-
-const faqs = [
-  {
-    question: "What does “query fan-out” actually mean?",
-    answer:
-      "When you ask an AI engine a question, it rarely answers your exact words. It silently expands your query into a set of more specific sub-questions, searches those, and synthesizes the result. Those hidden sub-questions are the fan-out, and they, not your original keyword, are what decide whether you get cited.",
-  },
-  {
-    question: "How is this different from a prompt or keyword generator?",
-    answer:
-      "Keyword tools and “AI prompt” generators ask a model to imagine what people might type. Query Fan-Out reads the queries the engines genuinely fired while answering: Gemini's grounded searches, Grok's web-search calls, ChatGPT's single search call, and Perplexity's related questions. Real engine output beats a plausible guess, especially when you're deciding what to write.",
-  },
-  {
-    question: "Which engines does it read, and are they all equal?",
-    answer:
-      "Four: ChatGPT, Gemini, Perplexity, and Grok, out of the eight engines GEO Toolbox tracks overall. We're honest about the differences. Gemini and Grok expose the richest fan-out; Perplexity surfaces related questions (tagged RELATED, not FIRED); ChatGPT's API returns a single search call, so it contributes a baseline rather than depth. Every query shows which engine produced it, so you're never guessing about provenance.",
-  },
-  {
-    question: "What is the divergence map and why does it matter?",
-    answer:
-      "It's the grid of intents against engines, showing which questions multiple engines share and which only one explores. Shared intents are the table stakes you must cover to compete at all. Single-engine “whitespace” intents are uncontested: the cheapest citations to win, because most competitors haven't noticed the engine is asking.",
-  },
-  {
-    question: "Can I run it on a competitor instead of myself?",
-    answer:
-      "Yes. Seed it with a competitor's brand or point coverage at their URL and you'll see the intents they already answer and the ones they've left open. It doubles as a content-gap map against any domain in your space.",
-  },
-  {
-    question: "How accurate is the search volume?",
-    answer:
-      "As accurate as the data allows, and labelled so you always know which you're looking at. Real exact volume when it exists; parent-term reach for the long-tail queries keyword tools score at zero; and an explicit “no volume data” when there's none. We never invent a number to fill a cell.",
-  },
-  {
-    question: "What does it cost to run?",
-    answer:
-      "A full multi-engine scan is metered at 150 credits ($1.50) in the app, with the cost shown before you run it, and the feature is available on every plan including Free. Or run the demo free using your own API keys: your keys stay in your browser and we never pay for, see, or store them.",
-  },
-]
-
-export default function QueryFanoutPage() {
   return (
     <>
       {/* ——— Hero: iris glow, dark ground, custom fan-out instrument ——— */}
@@ -155,12 +92,11 @@ export default function QueryFanoutPage() {
         data={[
           softwareApplicationSchema({
             name: "AI Query Fan-Out",
-            description:
-              "Capture the real sub-queries AI engines fan out for a seed topic across ChatGPT, Gemini, Perplexity, and Grok, with a cross-engine divergence map, honest search volume, page coverage, citation landscape, and ranked content actions.",
-            url: `${siteConfig.url}/features/query-fanout`,
+            description: t("schema.appDescription"),
+            url: `${urlBase}/features/query-fanout`,
           }),
           howToSchema({
-            name: "How to capture AI query fan-out with GEO Toolbox",
+            name: t("schema.howToName"),
             steps: steps.map((s) => ({ name: s.title, text: s.body })),
           }),
         ]}
@@ -169,39 +105,38 @@ export default function QueryFanoutPage() {
       <FeatureHero
         featureName="Query Fan-Out"
         hue="iris"
-        eyebrow="Query Fan-Out · 4 engines"
+        base={base}
+        breadcrumbLabels={breadcrumbLabels}
+        eyebrow={t("hero.eyebrow")}
         title={
           <>
-            AI doesn&apos;t answer your keyword.
+            {t("hero.h1Line1")}
             <span className="block">
-              It answers <span className="text-accent-300">the dozen questions</span> behind it.
+              {t("hero.h1Line2Lead")}<span className="text-accent-300">{t("hero.h1Accent")}</span>{t("hero.h1Line2Tail")}
             </span>
           </>
         }
-        subhead="Every engine quietly fans one topic into a spray of sub-questions, searches those, and cites whoever covered them best. Query Fan-Out captures the real sub-queries from four engines, validated engine output, never an LLM guessing, then maps where the engines diverge and ranks the content that wins each gap."
-        primaryLabel="Try the free demo"
+        subhead={t("hero.subhead")}
+        primaryLabel={t("hero.primaryLabel")}
         primaryHref="/tools/query-fanout"
-        secondaryLabel="How it works"
+        secondaryLabel={t("hero.secondaryLabel")}
         secondaryHref="#how"
-        microcopy="Free with your own API key · full multi-engine scan in-app on every plan, including Free"
+        microcopy={t("hero.microcopy")}
       >
-        <FanOutDevice />
+        <FanOutDevice ariaLabel={t("device.ariaLabel")} srOnly={t("device.srOnly")} />
       </FeatureHero>
 
       {/* ——— Pain scenario ——— */}
       <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
         <div className="mx-auto max-w-3xl">
           <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-            The hidden layer
+            {t("pain.eyebrow")}
           </p>
           <p className="mt-4 text-[clamp(1.15rem,2vw,1.4rem)] font-medium leading-relaxed tracking-tight text-gray-900">
-            You rank for the keyword and still aren&apos;t cited. The reason is invisible in every keyword tool you own:
-            the engine never searched your keyword. It fanned it into ten sharper questions and answered those, citing
-            whoever covered them best.
+            {t("pain.p1")}
           </p>
           <p className="mt-5 text-[15px] leading-relaxed text-gray-600">
-            Query Fan-Out makes that hidden layer visible. It pulls the real questions out of four engines, shows you
-            which ones they all ask and which only one does, and hands you the exact pages that would close the gap.
+            {t("pain.p2")}
           </p>
         </div>
       </section>
@@ -210,9 +145,9 @@ export default function QueryFanoutPage() {
       <section id="how" className="scroll-mt-20 border-t border-[var(--surface-iris-border)] bg-[var(--surface-iris)] px-6 py-20 sm:py-24">
         <div className="mx-auto max-w-7xl">
           <div className="max-w-2xl">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">How it works</p>
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">{t("how.eyebrow")}</p>
             <h2 className="mt-3 text-[clamp(1.6rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-              From one seed to a ranked worklist.
+              {t("how.h2")}
             </h2>
           </div>
 
@@ -248,14 +183,13 @@ export default function QueryFanoutPage() {
           <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-16">
             <div className="lg:col-span-5">
               <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-                The divergence map
+                {t("divergence.eyebrow")}
               </p>
               <h2 className="mt-3 text-[clamp(1.6rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-                Where the engines agree, and where only one is looking.
+                {t("divergence.h2")}
               </h2>
               <p className="mt-5 text-[15px] leading-relaxed text-gray-600">
-                Cluster every fanned query into intents, then lay the four engines side by side. The pattern that
-                emerges is the whole strategy on one screen.
+                {t("divergence.intro")}
               </p>
               <dl className="mt-8 space-y-5">
                 <div className="flex gap-4">
@@ -265,8 +199,7 @@ export default function QueryFanoutPage() {
                     </span>
                   </dt>
                   <dd className="text-[14px] leading-relaxed text-gray-600">
-                    <span className="font-semibold text-gray-900">Shared intents</span>: questions multiple engines fan
-                    out. Table stakes: miss one and you&apos;re invisible on a query the whole market answers.
+                    <span className="font-semibold text-gray-900">{t("divergence.sharedLabel")}</span>{t("divergence.sharedRest")}
                   </dd>
                 </div>
                 <div className="flex gap-4">
@@ -276,16 +209,18 @@ export default function QueryFanoutPage() {
                     </span>
                   </dt>
                   <dd className="text-[14px] leading-relaxed text-gray-600">
-                    <span className="font-semibold text-gray-900">Whitespace</span>: intents only one engine explores.
-                    Uncontested: the cheapest citations to win, because nobody&apos;s optimizing for a question they
-                    can&apos;t see.
+                    <span className="font-semibold text-gray-900">{t("divergence.whitespaceLabel")}</span>{t("divergence.whitespaceRest")}
                   </dd>
                 </div>
               </dl>
             </div>
 
             <div className="lg:col-span-7">
-              <DivergenceMatrix />
+              <DivergenceMatrix
+                ariaLabel={t("divergence.matrixAria")}
+                caption={t("divergence.matrixCaption")}
+                runYourOwn={t("divergence.matrixRunYourOwn")}
+              />
             </div>
           </div>
         </div>
@@ -297,15 +232,14 @@ export default function QueryFanoutPage() {
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-[5fr_7fr] lg:items-end lg:gap-16">
             <div>
               <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-                What&apos;s in a scan
+                {t("inside.eyebrow")}
               </p>
               <h2 className="mt-3 text-[clamp(1.6rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-                Six layers, one run.
+                {t("inside.h2")}
               </h2>
             </div>
             <p className="max-w-xl text-base leading-relaxed text-gray-600">
-              The fan-out is the start. Each query is enriched into the full picture you need to decide what to write,
-              and every number is real or honestly labelled, never invented to fill a column.
+              {t("inside.intro")}
             </p>
           </div>
 
@@ -331,14 +265,16 @@ export default function QueryFanoutPage() {
       <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
         <div className="mx-auto max-w-7xl">
           <div className="max-w-3xl">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">How it compares</p>
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">{t("comparison.eyebrow")}</p>
             <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-              Validated beats guessed.
+              {t("comparison.h2")}
             </h2>
             <div className="mt-8 rounded-[2rem] border border-gray-200 bg-white p-6 shadow-[0_24px_60px_-30px_rgba(15,23,42,0.16)] sm:p-8">
               <FeatureComparisonTable
-                columns={["Keyword tools", "Prompt generators", "Query Fan-Out"]}
+                columns={comparisonColumns}
                 rows={comparisonRows}
+                yesLabel={c("comparison.yes")}
+                noLabel={c("comparison.no")}
               />
             </div>
           </div>
@@ -350,35 +286,32 @@ export default function QueryFanoutPage() {
         <div className="mx-auto max-w-7xl">
           <div className="max-w-3xl">
           <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-            Run it on your own keys
+            {t("byok.eyebrow")}
           </p>
           <h2 className="mt-3 text-[clamp(1.4rem,2.6vw,2rem)] font-bold leading-tight tracking-tight text-gray-900">
-            Don&apos;t take our word for it. Watch an engine fan out, live.
+            {t("byok.h2")}
           </h2>
           <p className="mt-4 text-[15px] leading-relaxed text-gray-700">
-            The free demo runs a real fan-out in your browser using your own API key. Your key never leaves the page.
-            We don&apos;t pay for, proxy, see, or store it. It&apos;s the actual engine output, not a recording.
+            {t("byok.p1")}
           </p>
           <p className="mt-4 rounded-xl border border-accent-200 bg-white p-4 text-[14px] leading-relaxed text-gray-700">
-            The in-app version, available on every plan including Free, adds the engines that can&apos;t be called from a
-            browser, real search volume, page coverage, the citation landscape, and saved history, metered at 150
-            credits a scan, cost shown up front.
+            {t("byok.p2")}
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-3">
             <Link
               href="/tools/query-fanout"
               className="inline-flex items-center gap-2 rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 active:translate-y-[1px]"
             >
-              Run the free demo
+              {t("byok.demoCta")}
               <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </Link>
             <Link
-              href="/pricing"
+              href={`${base}/pricing`}
               className="inline-flex items-center gap-1.5 text-[14px] font-semibold text-accent-700 hover:text-accent-800"
             >
-              See plans &amp; credits
+              {t("byok.plansCta")}
               <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
@@ -388,19 +321,25 @@ export default function QueryFanoutPage() {
         </div>
       </section>
 
-      <FeatureFaq items={faqs} />
+      <FeatureFaq items={faqs} heading={c("faqHeading")} />
 
-      <RelatedFeatures current="query-fanout" related={["geo-scan", "content-studio", "competitor-intel"]} />
+      <RelatedFeatures
+        current="query-fanout"
+        related={["geo-scan", "content-studio", "competitor-intel"]}
+        base={base}
+        copy={c.raw("related") as { eyebrow: string; heading: string; allFeatures: string; learnMore: string }}
+        descriptions={cardDescriptions}
+      />
 
       {/* ——— Final CTA ——— */}
       <section className="bg-gray-950 px-6 py-20 sm:py-24">
         <div className="mx-auto flex max-w-7xl flex-col items-start gap-6 md:flex-row md:items-center md:justify-between md:gap-12">
           <div>
             <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
-              See the questions you&apos;re not answering.
+              {t("finalCta.h2")}
             </h2>
             <p className="mt-2 text-base text-gray-300">
-              Run a fan-out on your topic and start at the top of the worklist.
+              {t("finalCta.sub")}
             </p>
           </div>
           <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
@@ -408,16 +347,16 @@ export default function QueryFanoutPage() {
               href="/tools/query-fanout"
               className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]"
             >
-              Try the free demo
+              {t("finalCta.demoCta")}
               <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </Link>
             <Link
-              href="/pricing"
+              href={`${base}/pricing`}
               className="text-[14px] font-semibold text-gray-300 transition-colors hover:text-white"
             >
-              See pricing
+              {t("finalCta.pricingCta")}
             </Link>
           </div>
         </div>
@@ -428,15 +367,17 @@ export default function QueryFanoutPage() {
 
 /* ————————————————————————————————————————————————————————————————
    Signature device — the fan-out instrument. Custom-coded, honest
-   ("Example data"), mono tabular numbers, one live pulse dot.
+   ("Example data"), mono tabular numbers, one live pulse dot. Depicts the
+   English product UI, so its visible sample data stays English; only the
+   figure aria-label and sr-only prefix are localized (screen-reader copy).
 ———————————————————————————————————————————————————————————————— */
-function FanOutDevice() {
+function FanOutDevice({ ariaLabel, srOnly }: { ariaLabel: string; srOnly: string }) {
   return (
     <figure
-      aria-label="Illustrative example of a Query Fan-Out scan with sample data"
+      aria-label={ariaLabel}
       className="relative m-0 rounded-[2rem] border border-gray-200 bg-white p-5 shadow-[0_30px_80px_-28px_rgba(15,23,42,0.30)] sm:p-7"
     >
-      <span className="sr-only">Example, illustrative data:</span>
+      <span className="sr-only">{srOnly}</span>
       {/* Header: the seed */}
       <div className="flex items-center justify-between gap-3 border-b border-gray-100 pb-4">
         <div className="flex min-w-0 items-center gap-2.5">
@@ -511,9 +452,20 @@ function FanOutDevice() {
 }
 
 /* ————————————————————————————————————————————————————————————————
-   Divergence matrix — intents × engines presence grid.
+   Divergence matrix — intents × engines presence grid. Depicts the English
+   product UI, so its column headers, legend and sample intents stay English;
+   only the figure aria-label, the sr-only caption, and the CTA link are
+   localized.
 ———————————————————————————————————————————————————————————————— */
-function DivergenceMatrix() {
+function DivergenceMatrix({
+  ariaLabel,
+  caption,
+  runYourOwn,
+}: {
+  ariaLabel: string
+  caption: string
+  runYourOwn: string
+}) {
   const engineKeys: { key: EngineKey; label: string }[] = [
     { key: "chatgpt", label: "ChatGPT" },
     { key: "gemini", label: "Gemini" },
@@ -522,7 +474,7 @@ function DivergenceMatrix() {
   ]
   return (
     <figure
-      aria-label="Illustrative example of the cross-engine divergence map with sample data"
+      aria-label={ariaLabel}
       className="m-0 overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-[0_24px_60px_-28px_rgba(15,23,42,0.18)]"
     >
       <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b border-gray-100 bg-gray-50 px-5 py-3 sm:px-7">
@@ -542,8 +494,7 @@ function DivergenceMatrix() {
       <div className="overflow-x-auto">
         <table className="w-full min-w-[480px] border-collapse text-left">
           <caption className="sr-only">
-            Sample cross-engine divergence: which AI engines fan out a query for each intent. A filled dot is a fired
-            search; a ring is a related question (Perplexity).
+            {caption}
           </caption>
           <thead>
             <tr className="border-b border-gray-100">
@@ -624,7 +575,7 @@ function DivergenceMatrix() {
           href="/tools/query-fanout"
           className="inline-flex items-center gap-1.5 font-mono text-[11px] font-semibold text-accent-700 hover:text-accent-800"
         >
-          Run your own
+          {runYourOwn}
           <svg className="h-3 w-3" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M3 6h6m0 0L6 3m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
           </svg>

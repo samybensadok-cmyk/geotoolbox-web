@@ -14,10 +14,11 @@ export function Footer({
   footer?: Record<string, string>
   locale?: string
 }) {
-  // Two different jobs. localizeNavHref handles section roots (/blog, /pricing…)
-  // and leaves EN-only paths (/about, /tools, /features/<slug>) alone so they
-  // don't 404 under /fr. Content deep links can't be prefixed — FR slugs differ
-  // from EN — so they go through the donor-slug sibling map instead. Footer is
+  // Two different jobs. localizeNavHref handles section roots and the 13
+  // localized /features/<slug> pages (2026-07-22), and leaves EN-only paths
+  // (/about, /tools) alone so they don't 404 under /fr. Content deep links
+  // can't be prefixed — FR slugs differ from EN — so they go through the
+  // donor-slug sibling map instead. Footer is
   // a server component, so it can read that map; the client Header cannot, which
   // is why it only links to section roots.
   const localizeContent = makeLocalizer(locale)
@@ -56,9 +57,9 @@ export function Footer({
           <div>
             <h4 className="text-xs font-semibold text-gray-900 uppercase tracking-wider">{footer?.scanAnalyze ?? "Scan & Analyze"}</h4>
             <ul className="mt-3 space-y-2">
-              <li><Link href="/features/geo-scan" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">GEO Scan</Link></li>
-              <li><Link href="/features/content-analyzer" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Content Analyzer</Link></li>
-              <li><Link href="/features/content-studio" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Content Studio</Link></li>
+              <li><Link href={L("/features/geo-scan")} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">GEO Scan</Link></li>
+              <li><Link href={L("/features/content-analyzer")} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Content Analyzer</Link></li>
+              <li><Link href={L("/features/content-studio")} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Content Studio</Link></li>
             </ul>
           </div>
 
@@ -66,10 +67,10 @@ export function Footer({
           <div>
             <h4 className="text-xs font-semibold text-gray-900 uppercase tracking-wider">{footer?.intelligence ?? "Intelligence"}</h4>
             <ul className="mt-3 space-y-2">
-              <li><Link href="/features/domain-overview" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Domain Overview</Link></li>
-              <li><Link href="/features/competitor-intel" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Competitor Intel</Link></li>
-              <li><Link href="/features/community" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Community</Link></li>
-              <li><Link href="/features/analytics" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Analytics</Link></li>
+              <li><Link href={L("/features/domain-overview")} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Domain Overview</Link></li>
+              <li><Link href={L("/features/competitor-intel")} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Competitor Intel</Link></li>
+              <li><Link href={L("/features/community")} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Community</Link></li>
+              <li><Link href={L("/features/analytics")} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Analytics</Link></li>
               <li><Link href={L("/features")} className="pt-2 inline-block text-sm font-semibold text-gray-900 hover:text-accent-700 transition-colors">{footer?.allFeatures ?? "All features"} →</Link></li>
             </ul>
           </div>

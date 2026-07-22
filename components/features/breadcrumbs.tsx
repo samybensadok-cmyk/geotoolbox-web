@@ -7,18 +7,24 @@ export function Breadcrumbs({
   featureName,
   trail,
   tone = "light",
+  base = "",
+  labels,
 }: {
   featureName?: string
   trail?: Crumb[]
   /** "dark" renders the trail for a gray-950 ground (dark feature heroes) */
   tone?: "light" | "dark"
+  /** locale path prefix for the default trail's hrefs ("" for en, "/fr" for fr) */
+  base?: string
+  /** localized names for the default trail; EN defaults keep EN byte-identical */
+  labels?: { home?: string; features?: string }
 }) {
   // Support both the legacy featureName API (Features > X) and an arbitrary trail
   const crumbs: Crumb[] = trail
     ? trail
     : [
-        { name: "Home", href: "/" },
-        { name: "Features", href: "/features" },
+        { name: labels?.home ?? "Home", href: base || "/" },
+        { name: labels?.features ?? "Features", href: `${base}/features` },
         { name: featureName ?? "", href: "" },
       ]
 

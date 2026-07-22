@@ -1,24 +1,48 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import { setRequestLocale, getTranslations } from "next-intl/server"
+import { routing } from "@/i18n/routing"
 import { FeatureHero } from "@/components/features/feature-hero"
 import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
 import { siteConfig } from "@/lib/config"
 import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema } from "@/lib/seo-schema"
+import { marketingAlternatesFor } from "@/lib/i18n/siblings"
 
-export const metadata: Metadata = {
-  title: "Reddit AI Citations: The Threads AI Quotes",
-  description:
-    "See which Reddit threads and forums AI engines cite when answering questions in your space, including the ones spreading bad information about your brand.",
-  openGraph: {
-    title: "Reddit AI Citations: The Threads AI Quotes About You",
-    description:
-      "See which Reddit threads and forum discussions AI engines cite when answering queries in your space. Catch misinformation, find subreddits worth engaging, and build a community participation plan.",
-  },
-  alternates: { canonical: `${siteConfig.url}/features/community` },
+// Localized Community feature page: en at /features/community, fr at
+// /fr/features/community. Relocated from app/(marketing)/features/community.
+// ALL display copy lives in the `featurePages.community` message namespace
+// (shared strings in `featurePages.common`); structural data — hues, the hero
+// mockup's sample data (thread titles, subreddit names, statuses), subreddit
+// identifiers — stays here in English, since the mockup depicts the English
+// product UI. Product, tier and engine names are never translated.
+
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }))
 }
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  const t = await getTranslations({ locale, namespace: "featurePages.community.meta" })
+  return {
+    title: { absolute: t("title") },
+    description: t("description"),
+    openGraph: { title: t("ogTitle"), description: t("ogDescription") },
+    alternates: marketingAlternatesFor("/features/community", locale),
+  }
+}
+
+type Outcome = { tag: string; title: string; body: string }
+type Pattern = { badge: string; title: string; body: string; actionBody: string }
+type Faq = { question: string; answer: string }
+
+// Sample data for the hero mockup — depicts the English product UI, so thread
+// titles, subreddit names, engine names and statuses stay English on both locales.
 const threads = [
   {
     sub: "r/SEO",
@@ -50,70 +74,31 @@ const threads = [
   },
 ]
 
-const faqs = [
-  {
-    question: "What does Community Insights track?",
-    answer:
-      "The Reddit and forum threads AI engines cite when answering queries in your topic space. Each thread shows which engines reference it, its sentiment, and whether it introduces a misinformation risk. From there, you can decide where to engage and where to respond.",
-  },
-  {
-    question: "Why does community content matter for AI visibility?",
-    answer:
-      "AI engines frequently cite Reddit, Quora, and forum threads, especially for experiential or opinion-driven queries where they want real user perspectives. If AI consistently points users at third-party conversations about your category, those threads are shaping buying decisions. Knowing which ones get cited lets you participate where it counts.",
-  },
-  {
-    question: "What is the Misinformation Check?",
-    answer:
-      "It flags threads where incorrect information about your brand or products is being cited by AI engines. You see the exact thread, the engines pulling from it, and the claim being surfaced, so you can respond, correct, or engage before the bad take compounds.",
-  },
-  {
-    question: "How does the subreddit ranking work?",
-    answer:
-      "Communities are ranked by how often AI engines cite content from them for your tracked keywords. The result doubles as a prioritization list: highest-signal subreddits first, so participation effort goes where it actually moves AI visibility.",
-  },
-  {
-    question: "What's in the Action Plan?",
-    answer:
-      "Prioritized recommendations: which threads to respond to, which communities to participate in sustainably, and where misinformation needs correction. Each suggestion links directly to the thread so you can act without hunting for context.",
-  },
-  {
-    question: "Do I need a separate setup?",
-    answer:
-      "No separate setup. Community Insights runs on every scan (included on Consultant plans and up). Run a GEO Scan and the community map assembles itself from the citations in the answers.",
-  },
-]
+export default async function CommunityPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
+  setRequestLocale(locale)
+  const t = await getTranslations("featurePages.community")
+  const c = await getTranslations("featurePages.common")
+  const base = locale === routing.defaultLocale ? "" : `/${locale}`
+  const urlBase = `${siteConfig.url}${base}`
 
-const outcomes = [
-  {
-    tag: "Thread-level citations",
-    title: "Which forums AI actually reads",
-    body: "Every Reddit and forum URL that AI engines cite in your topic space. Ranked by citation frequency across scans.",
-  },
-  {
-    tag: "Misinformation risk",
-    title: "Find the bad takes first",
-    body: "Threads with negative sentiment about your brand (or category) that AI is amplifying. Flagged so you can respond, correct, or engage before it compounds.",
-  },
-  {
-    tag: "Subreddit map",
-    title: "Where to actually show up",
-    body: "Top subreddits AI cites in your space, ranked by volume. Your organic community participation playbook, starting with the highest-signal communities.",
-  },
-  {
-    tag: "Action plan",
-    title: "Engagement that moves the needle",
-    body: "Specific threads worth a reply, specific subreddits worth sustained participation, specific FAQ-shaped questions AI engines keep answering without citing you.",
-  },
-]
+  const outcomes = t.raw("outcomes.items") as Outcome[]
+  const patterns = t.raw("catches.patterns") as Pattern[]
+  const faqs = t.raw("faqs") as Faq[]
+  const cardDescriptions = c.raw("cardDescriptions") as Record<string, string>
+  const breadcrumbLabels = { home: c("breadcrumbHome"), features: c("breadcrumbFeatures") }
 
-export default function CommunityPage() {
   return (
     <>
       <JsonLd data={[
         softwareApplicationSchema({
           name: "Community Insights",
-          description: "See which Reddit, Quora, and forum threads are already cited by AI engines in your topic area. Build presence where AI is already looking.",
-          url: `${siteConfig.url}/features/community`,
+          description: t("schema.appDescription"),
+          url: `${urlBase}/features/community`,
         }),
       ]} />
 
@@ -121,18 +106,20 @@ export default function CommunityPage() {
       <FeatureHero
         featureName="Community"
         hue="peach"
-        eyebrow="Community"
-        title="The Reddit threads AI quotes back to your customers."
-        subhead="AI engines cite forums constantly, especially for 'is it worth it' and 'which one should I buy' questions. Community Insights shows you exactly which Reddit and forum threads they pull from in your space, which ones carry misinformation, and where participating would actually move your visibility."
-        primaryLabel="See your community map"
+        base={base}
+        breadcrumbLabels={breadcrumbLabels}
+        eyebrow={t("hero.eyebrow")}
+        title={t("hero.title")}
+        subhead={t("hero.subhead")}
+        primaryLabel={t("hero.primaryLabel")}
         primaryHref="/app"
-        secondaryLabel="What it catches"
+        secondaryLabel={t("hero.secondaryLabel")}
         secondaryHref="#outcomes"
         microcopy=""
       >
-        {/* Community visual */}
-        <figure className="m-0" aria-label="Illustrative example with sample data">
-              <span className="sr-only">Example, illustrative data:</span>
+        {/* Community visual — sample data stays English (depicts the product UI) */}
+        <figure className="m-0" aria-label={t("hero.figureAriaLabel")}>
+              <span className="sr-only">{t("hero.srOnly")}</span>
               <div className="relative rounded-[2rem] border border-gray-200 bg-white p-6 sm:p-8 shadow-[0_20px_60px_-20px_rgba(15,23,42,0.12)]">
                 <div className="flex items-center justify-between border-b border-gray-100 pb-3">
                   <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-600">
@@ -143,32 +130,32 @@ export default function CommunityPage() {
                   </span>
                 </div>
                 <ul className="mt-3 divide-y divide-gray-100">
-                  {threads.map((t) => (
-                    <li key={t.title} className="py-3">
+                  {threads.map((thread) => (
+                    <li key={thread.title} className="py-3">
                       <div className="flex items-center gap-2">
-                        <span className="font-mono text-[11px] font-semibold text-accent-700">{t.sub}</span>
-                        {t.risk && (
+                        <span className="font-mono text-[11px] font-semibold text-accent-700">{thread.sub}</span>
+                        {thread.risk && (
                           <span className="rounded-full bg-amber-100 px-1.5 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-widest text-amber-800">
                             Risk
                           </span>
                         )}
                       </div>
-                      <p className="mt-1 text-[13px] font-medium text-gray-900">{t.title}</p>
+                      <p className="mt-1 text-[13px] font-medium text-gray-900">{thread.title}</p>
                       <div className="mt-1.5 flex items-center justify-between text-[11px]">
                         <div className="flex items-center gap-1.5 text-gray-600">
                           <span className="h-1.5 w-1.5 rounded-full bg-accent-700" />
-                          <span>Cited by {t.engines.join(", ")}</span>
+                          <span>Cited by {thread.engines.join(", ")}</span>
                         </div>
                         <span
                           className={`font-mono font-semibold ${
-                            t.sentiment === "Positive"
+                            thread.sentiment === "Positive"
                               ? "text-accent-700"
-                              : t.sentiment === "Negative"
+                              : thread.sentiment === "Negative"
                               ? "text-red-600"
                               : "text-gray-700"
                           }`}
                         >
-                          {t.sentiment}
+                          {thread.sentiment}
                         </span>
                       </div>
                     </li>
@@ -182,9 +169,9 @@ export default function CommunityPage() {
       <section id="outcomes" className="bg-white px-6 py-24 sm:py-28">
         <div className="mx-auto max-w-7xl">
           <div className="max-w-2xl">
-            <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">What you get</p>
+            <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">{t("outcomes.eyebrow")}</p>
             <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.5rem)] font-bold leading-tight tracking-tight text-gray-900">
-              The unruly half of AI citations.
+              {t("outcomes.h2")}
             </h2>
           </div>
           <div className="mt-14 grid grid-cols-1 gap-8 md:grid-cols-2 lg:gap-12">
@@ -204,37 +191,37 @@ export default function CommunityPage() {
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-[5fr_7fr] lg:items-end lg:gap-16">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">What it catches</p>
+              <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">{t("catches.eyebrow")}</p>
               <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.5rem)] font-bold leading-tight tracking-tight text-gray-900">
-                Three patterns you'll see on day one.
+                {t("catches.h2")}
               </h2>
             </div>
             <p className="max-w-xl text-base leading-relaxed text-gray-600">
-              Every scan surfaces community citations grouped by pattern. Here's what the output actually looks like, the shape of threat it catches, and the recommended next move.
+              {t("catches.intro")}
             </p>
           </div>
 
           <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-3">
-            {/* Pattern 1 — Misinformation */}
+            {/* Pattern 1 — Misinformation. Subreddit name stays English (sample data). */}
             <div className="rounded-2xl border border-amber-200 bg-amber-50/60 p-6">
               <div className="flex items-center gap-2">
                 <span className="rounded-full bg-amber-100 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-widest text-amber-800">
-                  Misinformation
+                  {patterns[0].badge}
                 </span>
               </div>
               <p className="mt-4 font-mono text-[12px] text-amber-900">r/TechSEO</p>
               <h3 className="mt-1 text-base font-semibold tracking-tight text-gray-900">
-                &ldquo;Schema markup no longer matters?&rdquo;
+                {patterns[0].title}
               </h3>
               <p className="mt-3 text-[13px] leading-relaxed text-gray-700">
-                Gemini is citing this 2-month-old thread answering a widely-asked query. The top comment is factually wrong.
+                {patterns[0].body}
               </p>
               <div className="mt-4 rounded-lg border border-amber-200 bg-white/70 p-3">
                 <p className="font-mono text-[10px] font-semibold uppercase tracking-widest text-amber-800">
-                  Recommended action
+                  {t("catches.recommendedAction")}
                 </p>
                 <p className="mt-1 text-[13px] text-gray-800">
-                  Post a corrected, cited reply. Monitor re-citation over 30 days.
+                  {patterns[0].actionBody}
                 </p>
               </div>
             </div>
@@ -243,22 +230,22 @@ export default function CommunityPage() {
             <div className="rounded-2xl border border-accent-200 bg-accent-50/40 p-6">
               <div className="flex items-center gap-2">
                 <span className="rounded-full bg-accent-100 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-widest text-accent-800">
-                  Opportunity
+                  {patterns[1].badge}
                 </span>
               </div>
               <p className="mt-4 font-mono text-[12px] text-accent-800">r/marketing</p>
               <h3 className="mt-1 text-base font-semibold tracking-tight text-gray-900">
-                &ldquo;Best AI SEO tools comparison&rdquo;
+                {patterns[1].title}
               </h3>
               <p className="mt-3 text-[13px] leading-relaxed text-gray-700">
-                Cited by 3 engines (ChatGPT, Claude, Perplexity). Positive sentiment. Your product is not mentioned anywhere in the thread.
+                {patterns[1].body}
               </p>
               <div className="mt-4 rounded-lg border border-accent-200 bg-white/70 p-3">
                 <p className="font-mono text-[10px] font-semibold uppercase tracking-widest text-accent-800">
-                  Recommended action
+                  {t("catches.recommendedAction")}
                 </p>
                 <p className="mt-1 text-[13px] text-gray-800">
-                  Thoughtful reply from a team account with concrete comparison details.
+                  {patterns[1].actionBody}
                 </p>
               </div>
             </div>
@@ -267,22 +254,22 @@ export default function CommunityPage() {
             <div className="rounded-2xl border border-gray-200 bg-white p-6">
               <div className="flex items-center gap-2">
                 <span className="rounded-full bg-gray-100 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-widest text-gray-700">
-                  Subreddit focus
+                  {patterns[2].badge}
                 </span>
               </div>
               <p className="mt-4 font-mono text-[12px] text-gray-700">r/SEO · r/bigSEO · r/TechSEO</p>
               <h3 className="mt-1 text-base font-semibold tracking-tight text-gray-900">
-                Your top 3 high-signal communities
+                {patterns[2].title}
               </h3>
               <p className="mt-3 text-[13px] leading-relaxed text-gray-700">
-                AI engines cited content from these subreddits 24 times across your tracked queries. Worth sustained participation, not one-off replies.
+                {patterns[2].body}
               </p>
               <div className="mt-4 rounded-lg border border-gray-200 bg-gray-50 p-3">
                 <p className="font-mono text-[10px] font-semibold uppercase tracking-widest text-gray-600">
-                  Recommended action
+                  {t("catches.recommendedAction")}
                 </p>
                 <p className="mt-1 text-[13px] text-gray-800">
-                  Assign one team member as the recurring contributor. Track citations quarterly.
+                  {patterns[2].actionBody}
                 </p>
               </div>
             </div>
@@ -290,13 +277,13 @@ export default function CommunityPage() {
 
           {/* Inline CTA at peak intent */}
           <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-gray-100 pt-6">
-            <p className="text-[13px] text-gray-500">Example patterns &mdash; yours are generated from your scans.</p>
+            <p className="text-[13px] text-gray-500">{t("catches.ctaNote")}</p>
             <Link
               href="/app"
               prefetch={false}
               className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-accent-700 hover:text-accent-900"
             >
-              Run a scan to see your community map
+              {t("catches.ctaLink")}
               <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
@@ -305,21 +292,27 @@ export default function CommunityPage() {
         </div>
       </section>
 
-      <FeatureFaq items={faqs} />
+      <FeatureFaq items={faqs} heading={c("faqHeading")} />
 
-      <RelatedFeatures current="community" related={["competitor-intel", "domain-overview", "geo-scan"]} />
+      <RelatedFeatures
+        current="community"
+        related={["competitor-intel", "domain-overview", "geo-scan"]}
+        base={base}
+        copy={c.raw("related") as { eyebrow: string; heading: string; allFeatures: string; learnMore: string }}
+        descriptions={cardDescriptions}
+      />
 
       {/* CTA */}
       <section className="bg-gray-950 px-6 py-20 sm:py-24">
         <div className="mx-auto max-w-7xl flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between md:gap-12">
           <div>
             <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
-              Map your community citations.
+              {t("finalCta.h2")}
             </h2>
-            <p className="mt-2 text-base text-gray-300">Included on Consultant plans and up. Runs on every scan.</p>
+            <p className="mt-2 text-base text-gray-300">{t("finalCta.sub")}</p>
           </div>
           <Link href="/app" prefetch={false} className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]">
-            Get started
+            {t("finalCta.button")}
             <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
             </svg>

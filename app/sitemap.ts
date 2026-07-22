@@ -49,6 +49,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
     ...marketingEntries("/features", { changeFrequency: "weekly", priority: 0.9 }),
     ...marketingEntries("/pricing", { changeFrequency: "weekly", priority: 0.9 }),
+    // 13 feature detail pages — localized under app/[locale]/features (2026-07-22).
+    ...[
+      "geo-scan",
+      "agent-readiness",
+      "query-fanout",
+      "content-analyzer",
+      "content-studio",
+      "domain-overview",
+      "competitor-intel",
+      "community",
+      "citation-interceptor",
+      "ask-geotoolbox",
+      "analytics",
+      "pr-coverage-tracker",
+      "white-label-reports",
+    ].flatMap((slug) =>
+      marketingEntries(`/features/${slug}`, { changeFrequency: "monthly", priority: 0.8 }),
+    ),
     // EN-only commercial landing under app/(marketing)/services/. Plain single
     // entry (no hreflang) — same shape as the feature-detail pages below; NOT
     // marketingEntries(), which would emit /fr/... URLs that 404.
@@ -82,12 +100,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.5,
     },
-    ...siteConfig.featureGroups.flatMap((g) => g.features).map((f) => ({
-      url: `${siteConfig.url}/features/${f.slug}`,
-      lastModified: new Date(),
-      changeFrequency: "monthly" as const,
-      priority: 0.8,
-    })),
     {
       url: `${siteConfig.url}/glossary`,
       lastModified: new Date(),

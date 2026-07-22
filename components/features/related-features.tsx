@@ -18,7 +18,22 @@ type Slug =
 
 const ALL_FEATURES = siteConfig.featureGroups.flatMap((g) => g.features)
 
-export function RelatedFeatures({ current, related }: { current: Slug; related: Slug[] }) {
+export function RelatedFeatures({
+  current,
+  related,
+  base = "",
+  copy,
+  descriptions,
+}: {
+  current: Slug
+  related: Slug[]
+  /** locale path prefix for hrefs ("" for en, "/fr" for fr) */
+  base?: string
+  /** localized section copy; EN defaults keep EN byte-identical */
+  copy?: { eyebrow?: string; heading?: string; allFeatures?: string; learnMore?: string }
+  /** per-slug localized card blurbs; falls back to the EN desc from siteConfig */
+  descriptions?: Partial<Record<Slug, string>>
+}) {
   const items = related
     .map((slug) => ALL_FEATURES.find((f) => f.slug === slug))
     .filter((f): f is (typeof ALL_FEATURES)[number] => Boolean(f))
@@ -31,17 +46,17 @@ export function RelatedFeatures({ current, related }: { current: Slug; related: 
         <div className="flex items-end justify-between gap-6">
           <div>
             <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-500">
-              Keep exploring
+              {copy?.eyebrow ?? "Keep exploring"}
             </p>
             <h2 className="mt-2 text-2xl font-bold tracking-tight text-gray-900">
-              Related features
+              {copy?.heading ?? "Related features"}
             </h2>
           </div>
           <Link
-            href="/features"
+            href={`${base}/features`}
             className="hidden shrink-0 text-sm font-semibold text-gray-700 transition-colors hover:text-accent-700 sm:inline-flex items-center gap-1.5"
           >
-            All features
+            {copy?.allFeatures ?? "All features"}
             <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
@@ -52,15 +67,17 @@ export function RelatedFeatures({ current, related }: { current: Slug; related: 
           {items.map((f) => (
             <Link
               key={f.slug}
-              href={`/features/${f.slug}`}
+              href={`${base}/features/${f.slug}`}
               className="group rounded-2xl border border-gray-200 bg-white p-6 transition-all hover:border-gray-300 hover:shadow-[0_12px_24px_-12px_rgba(15,23,42,0.08)]"
             >
               <h3 className="text-lg font-semibold tracking-tight text-gray-900 group-hover:text-accent-700">
                 {f.name}
               </h3>
-              <p className="mt-1.5 text-[14px] leading-relaxed text-gray-600">{f.desc}</p>
+              <p className="mt-1.5 text-[14px] leading-relaxed text-gray-600">
+                {descriptions?.[f.slug as Slug] ?? f.desc}
+              </p>
               <span className="mt-4 inline-flex items-center gap-1 text-[13px] font-semibold text-accent-700">
-                Learn more
+                {copy?.learnMore ?? "Learn more"}
                 <svg className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>

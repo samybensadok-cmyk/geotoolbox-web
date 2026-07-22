@@ -8,12 +8,15 @@ import Link from "next/link"
  */
 
 export function ActVsMonitorWedge({
+  eyebrow,
   headline = "Most AI-visibility tools show you the gap and stop.",
   emphasis = "GEO Toolbox shows you the gap — then hands you the fix.",
   body,
   example,
   link,
 }: {
+  /** localized eyebrow; EN default keeps EN byte-identical */
+  eyebrow?: string
   headline?: string
   emphasis?: string
   body: string
@@ -24,7 +27,7 @@ export function ActVsMonitorWedge({
     <section className="border-t border-gray-100 bg-accent-50/40 px-6 py-16 sm:py-20">
       <div className="mx-auto max-w-3xl">
         <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-          Act, don&apos;t just monitor
+          {eyebrow ?? <>Act, don&apos;t just monitor</>}
         </p>
         <h2 className="mt-3 text-[clamp(1.4rem,2.6vw,2rem)] font-bold leading-tight tracking-tight text-gray-900">
           {headline} <span className="text-accent-700">{emphasis}</span>

@@ -36,12 +36,15 @@ export function SocialProofBlock({
   engines,
   provenanceLine,
   showEngineGrid = true,
+  engineGridLabel,
 }: {
   stats?: Array<{ value?: string | null; label: string }>
   miniCase?: MiniCase
   engines?: EngineId[]
   provenanceLine?: string
   showEngineGrid?: boolean
+  /** localized label for the internal engine grid; EN default preserved when omitted */
+  engineGridLabel?: string
 }) {
   const realStats = stats.filter((s) => !!s.value)
   const hasContent = realStats.length > 0 || !!miniCase || showEngineGrid || !!provenanceLine
@@ -68,7 +71,7 @@ export function SocialProofBlock({
       )}
       {showEngineGrid && (
         <div className="mt-10">
-          <AiEngineLogoGrid engines={engines} />
+          <AiEngineLogoGrid engines={engines} {...(engineGridLabel ? { label: engineGridLabel } : {})} />
         </div>
       )}
       {provenanceLine && (

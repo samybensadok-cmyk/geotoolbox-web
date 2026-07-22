@@ -1,24 +1,46 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import { setRequestLocale, getTranslations } from "next-intl/server"
+import { routing } from "@/i18n/routing"
 import { FeatureHero } from "@/components/features/feature-hero"
 import { RelatedFeatures } from "@/components/features/related-features"
 import { FeatureFaq } from "@/components/features/feature-faq"
 import { siteConfig } from "@/lib/config"
 import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema } from "@/lib/seo-schema"
+import { marketingAlternatesFor } from "@/lib/i18n/siblings"
 
-export const metadata: Metadata = {
-  title: "AI Brand Monitoring Dashboard for 8 AI Engines",
-  description:
-    "Every citation, AI competitor, and co-cited domain for your brand across 8 AI engines, one AI brand monitoring dashboard that rebuilds itself as you scan.",
-  openGraph: {
-    title: "AI Brand Monitoring Dashboard for 8 AI Engines",
-    description:
-      "Every citation, AI competitor, co-cited domain, and topical authority signal for your domain, aggregated across every scan. AI brand monitoring for eight engines in one dashboard.",
-  },
-  alternates: { canonical: `${siteConfig.url}/features/domain-overview` },
+// Localized Domain Overview feature page: en at /features/domain-overview,
+// fr at /fr/features/domain-overview. Relocated from
+// app/(marketing)/features/domain-overview. ALL display copy lives in the
+// `featurePages.domain-overview` message namespace (shared strings in
+// `featurePages.common`); structural data — hues, mockup sample data — stays
+// here. The command-center dashboard mockup depicts the English product UI,
+// so its sample data stays English on both locales.
+
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }))
 }
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  const t = await getTranslations({ locale, namespace: "featurePages.domain-overview.meta" })
+  return {
+    title: { absolute: t("title") },
+    description: t("description"),
+    openGraph: { title: t("ogTitle"), description: t("ogDescription") },
+    alternates: marketingAlternatesFor("/features/domain-overview", locale),
+  }
+}
+
+type Section = { num: string; tag: string; title: string; body: string }
+type Faq = { question: string; answer: string }
+
+// —— English product-UI mockup sample data (stays English on both locales) ——
 const headlineStats = [
   { label: "AI visibility", value: "72", unit: "/100", trend: "+8", positive: true },
   { label: "Cited pages", value: "34", unit: "pages", trend: "+5", positive: true },
@@ -40,91 +62,30 @@ const aiCompetitors = [
   { domain: "searchenginejournal.com", share: 41, delta: "+6" },
 ]
 
-const faqs = [
-  {
-    question: "What data does Domain Overview pull together?",
-    answer:
-      "Your entire AI visibility footprint in one view: top cited pages, AI competitors, co-cited domains, topical authority, the GSC overlay, and a prioritized action list. Scan history feeds it automatically; search APIs layered on top keep the picture current even before you've built up scan depth.",
-  },
-  {
-    question: "What exactly are co-cited domains?",
-    answer:
-      "Domains that AI engines consistently cite alongside yours when answering questions in your space. Think of them as your peers in the AI knowledge graph, useful as backlink targets, partnership leads, and signals for where to expand content.",
-  },
-  {
-    question: "Do I need scan history before Domain Overview is useful?",
-    answer:
-      "It gets richer with history, since scans are where AI competitors and cited pages come from. But the overview also pulls fresh data from search APIs on its own, so the snapshot works from day one.",
-  },
-  {
-    question: "Can I see which of my pages get cited most?",
-    answer:
-      "Yes. The Top Cited Pages section ranks your URLs by how frequently AI engines reference them, with the verbatim snippets they use. If Google Search Console is connected, each page also shows its organic clicks and impressions side-by-side.",
-  },
-  {
-    question: "What is the Topical Authority section?",
-    answer:
-      "It maps the topic clusters where AI engines consider your domain an authority versus where competitors dominate, built from entity extraction across every cited page. You see AI visibility by topic, not just by URL, including drift over time.",
-  },
-  {
-    question: "Can I connect Google Search Console?",
-    answer:
-      "Yes, in one click. The overview then cross-references AI-cited URLs with actual clicks and impressions, so you can see where citations drive real sessions, and where a page gets AI attention but no organic traffic (or the other way around).",
-  },
-  {
-    question: "Which plans include Domain Overview?",
-    answer:
-      "Domain Overview is included on the Consultant plan and up. It aggregates every scan you run into one dashboard, so the more you track, the more complete the picture.",
-  },
-]
+export default async function DomainOverviewPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
+  setRequestLocale(locale)
+  const t = await getTranslations("featurePages.domain-overview")
+  const c = await getTranslations("featurePages.common")
+  const base = locale === routing.defaultLocale ? "" : `/${locale}`
+  const urlBase = `${siteConfig.url}${base}`
 
-const sections = [
-  {
-    num: "01",
-    tag: "Top cited pages",
-    title: "Which URLs AI actually recommends",
-    body: "Ranked by citation count across all engines and scans. Each page shows which engines cite it, verbatim quoted phrases, and inbound AI traffic if GSC is connected.",
-  },
-  {
-    num: "02",
-    tag: "AI competitors",
-    title: "Who shows up when you don't",
-    body: "Aggregated from every prompt you've scanned. Share-of-voice per competitor, week-over-week delta, and which prompts they win that you lose.",
-  },
-  {
-    num: "03",
-    tag: "Co-cited domains",
-    title: "Your AI citation neighborhood",
-    body: "Domains frequently cited alongside yours. Useful for backlink targets, partnership ideas, and understanding what AI considers the authoritative cluster for your topics.",
-  },
-  {
-    num: "04",
-    tag: "Topical authority",
-    title: "What AI thinks you're about",
-    body: "Entity extraction across all cited pages. Shows the topics AI associates with your brand, gaps where you should exist but don't, and drift over time.",
-  },
-  {
-    num: "05",
-    tag: "GSC enhancement",
-    title: "Citations + real traffic",
-    body: "Connect Search Console and the overview cross-references AI-cited URLs with actual clicks and impressions. Spot pages that get AI love but no organic traffic (or vice versa).",
-  },
-  {
-    num: "06",
-    tag: "Recommended actions",
-    title: "What to do this week",
-    body: "Prioritized action list based on the patterns in your data. 'These 3 pages should be cited but aren't. Here's why.' Shows the specific Content Analyzer fixes that matter most.",
-  },
-]
+  const sections = t.raw("sections") as Section[]
+  const faqs = t.raw("faqs") as Faq[]
+  const cardDescriptions = c.raw("cardDescriptions") as Record<string, string>
+  const breadcrumbLabels = { home: c("breadcrumbHome"), features: c("breadcrumbFeatures") }
 
-export default function DomainOverviewPage() {
   return (
     <>
       <JsonLd data={[
         softwareApplicationSchema({
           name: "Domain Overview",
-          description: "Your AI visibility command center. Track citation share, co-cited domains, cited pages, and AI competitors for any domain over time.",
-          url: `${siteConfig.url}/features/domain-overview`,
+          description: t("schema.appDescription"),
+          url: `${urlBase}/features/domain-overview`,
         }),
       ]} />
 
@@ -132,16 +93,19 @@ export default function DomainOverviewPage() {
       <FeatureHero
         featureName="Domain Overview"
         hue="steel"
-        eyebrow="Domain Overview"
-        title="The command center for how AI sees your domain."
-        subhead="AI brand monitoring across eight engines: ChatGPT, Gemini, Perplexity, Claude, Copilot, Grok, Google AI Overviews, and AI Mode, rolled into one view. Every citation you've earned, every competitor taking your place, and what to fix this week."
-        primaryLabel="See your first overview"
+        base={base}
+        breadcrumbLabels={breadcrumbLabels}
+        eyebrow={t("hero.eyebrow")}
+        title={t("hero.title")}
+        subhead={t("hero.subhead")}
+        primaryLabel={t("hero.primaryLabel")}
         primaryHref="/app"
-        secondaryLabel="What's inside"
+        secondaryLabel={t("hero.secondaryLabel")}
         secondaryHref="#whats-inside"
         microcopy=""
       >
-        {/* Dashboard visual — dark command-center treatment */}
+        {/* Dashboard visual — dark command-center treatment. Product UI is
+            English; sample data stays English on both locales. */}
         <div aria-hidden="true" className="relative rounded-[2rem] border border-gray-700/80 ring-1 ring-white/5 bg-[var(--surface-ink)] p-6 shadow-[0_30px_80px_-20px_rgba(11,18,32,0.45)] sm:p-8">
           {/* Subtle grid overlay */}
           <div
@@ -203,13 +167,13 @@ export default function DomainOverviewPage() {
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-[5fr_7fr] lg:items-end lg:gap-16">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">What's inside</p>
+              <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">{t("whatsInside.eyebrow")}</p>
               <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.5rem)] font-bold leading-tight tracking-tight text-gray-900">
-                Six views, one honest picture.
+                {t("whatsInside.h2")}
               </h2>
             </div>
             <p className="max-w-xl text-base leading-relaxed text-gray-600">
-              Every view updates automatically as you scan. No manual refresh, no scheduled cron to remember. The overview rebuilds itself on a 7-day rolling window.
+              {t("whatsInside.intro")}
             </p>
           </div>
 
@@ -238,18 +202,18 @@ export default function DomainOverviewPage() {
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
             <div className="lg:col-span-5">
-              <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">Share-of-voice tracker</p>
+              <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">{t("sov.eyebrow")}</p>
               <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.5rem)] font-bold leading-tight tracking-tight text-gray-900">
-                Track share-of-voice over time.
+                {t("sov.h2")}
               </h2>
               <p className="mt-5 text-base leading-relaxed text-gray-600">
-                Every competitor that shows up in your AI results, ranked by how often they get recommended instead of you. Week-over-week movement makes it obvious the day a new rival starts winning your prompts.
+                {t("sov.body")}
               </p>
             </div>
 
             <div className="lg:col-span-7">
-              <figure aria-label="Illustrative example with sample data" className="m-0 rounded-[2rem] border border-gray-200 bg-white p-6 sm:p-8 shadow-[0_20px_40px_-20px_rgba(15,23,42,0.08)]">
-                <span className="sr-only">Example, illustrative data:</span>
+              <figure aria-label={t("sov.figureAria")} className="m-0 rounded-[2rem] border border-gray-200 bg-white p-6 sm:p-8 shadow-[0_20px_40px_-20px_rgba(15,23,42,0.08)]">
+                <span className="sr-only">{t("sov.figureSrOnly")}</span>
                 <div className="flex items-center justify-between border-b border-gray-100 pb-3">
                   <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-600">
                     Top 4 of 12 · share of voice
@@ -257,32 +221,32 @@ export default function DomainOverviewPage() {
                   <span className="font-mono text-[11px] text-gray-500">30 days</span>
                 </div>
                 <div className="mt-4 divide-y divide-gray-100">
-                  {aiCompetitors.map((c) => {
-                    const positive = c.delta.startsWith("+")
+                  {aiCompetitors.map((comp) => {
+                    const positive = comp.delta.startsWith("+")
                     return (
-                      <div key={c.domain} className="py-4">
+                      <div key={comp.domain} className="py-4">
                         <div className="flex items-center justify-between">
-                          <span className="font-mono text-[13px] font-medium text-gray-900">{c.domain}</span>
+                          <span className="font-mono text-[13px] font-medium text-gray-900">{comp.domain}</span>
                           <div className="flex items-center gap-3">
-                            <span className="font-mono text-sm font-semibold tabular-nums text-accent-700">{c.share}%</span>
-                            <span className={`font-mono text-[11px] font-semibold ${positive ? "text-accent-700" : "text-red-600"}`}>{c.delta}</span>
+                            <span className="font-mono text-sm font-semibold tabular-nums text-accent-700">{comp.share}%</span>
+                            <span className={`font-mono text-[11px] font-semibold ${positive ? "text-accent-700" : "text-red-600"}`}>{comp.delta}</span>
                           </div>
                         </div>
                         <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-gray-100">
-                          <div className="h-full rounded-full bg-accent-700" style={{ width: `${c.share}%` }} />
+                          <div className="h-full rounded-full bg-accent-700" style={{ width: `${comp.share}%` }} />
                         </div>
                       </div>
                     )
                   })}
                 </div>
                 <div className="mt-5 flex items-center justify-between border-t border-gray-100 pt-4">
-                  <span className="text-[13px] text-gray-500">Example data &mdash; your chart updates automatically.</span>
+                  <span className="text-[13px] text-gray-500">{t("sov.figureCaption")}</span>
                   <Link
                     href="/app"
                     prefetch={false}
                     className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-accent-700 hover:text-accent-900"
                   >
-                    Scan your domain to see yours
+                    {t("sov.figureCta")}
                     <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
@@ -294,21 +258,27 @@ export default function DomainOverviewPage() {
         </div>
       </section>
 
-      <FeatureFaq items={faqs} />
+      <FeatureFaq items={faqs} heading={c("faqHeading")} />
 
-      <RelatedFeatures current="domain-overview" related={["geo-scan", "competitor-intel", "analytics", "ask-geotoolbox"]} />
+      <RelatedFeatures
+        current="domain-overview"
+        related={["geo-scan", "competitor-intel", "analytics", "ask-geotoolbox"]}
+        base={base}
+        copy={c.raw("related") as { eyebrow: string; heading: string; allFeatures: string; learnMore: string }}
+        descriptions={cardDescriptions}
+      />
 
       {/* CTA */}
       <section className="bg-gray-950 px-6 py-20 sm:py-24">
         <div className="mx-auto max-w-7xl flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between md:gap-12">
           <div>
             <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
-              Open your overview.
+              {t("finalCta.h2")}
             </h2>
-            <p className="mt-2 text-base text-gray-300">Builds on every scan you run. Included on Consultant plans and up.</p>
+            <p className="mt-2 text-base text-gray-300">{t("finalCta.sub")}</p>
           </div>
           <Link href="/app" prefetch={false} className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]">
-            Get started
+            {t("finalCta.button")}
             <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
             </svg>

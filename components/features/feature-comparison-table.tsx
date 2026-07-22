@@ -15,16 +15,21 @@ export function FeatureComparisonTable({
   rows,
   highlightCol = columns.length - 1,
   caption,
+  yesLabel = "yes",
+  noLabel = "no",
 }: {
   columns: string[]
   rows: Array<{ label: string; cells: Cell[] }>
   highlightCol?: number
   caption?: string
+  /** localized a11y labels for the check/dash cells */
+  yesLabel?: string
+  noLabel?: string
 }) {
   const renderCell = (c: Cell, emphasized: boolean) => {
     if (c === true)
       return (
-        <span className={emphasized ? "text-accent-700" : "text-gray-500"} aria-label="yes">
+        <span className={emphasized ? "text-accent-700" : "text-gray-500"} aria-label={yesLabel}>
           <svg className="mx-auto h-4 w-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M3 8.5 6.5 12 13 4" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
@@ -32,7 +37,7 @@ export function FeatureComparisonTable({
       )
     if (c === false)
       return (
-        <span className="text-gray-400" aria-label="no">
+        <span className="text-gray-400" aria-label={noLabel}>
           <svg className="mx-auto h-3.5 w-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.5">
             <path d="M3.5 8h9" strokeLinecap="round" />
           </svg>

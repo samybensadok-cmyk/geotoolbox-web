@@ -67,13 +67,13 @@ export default function middleware(request: NextRequest) {
 // NOTE: the matcher still catches /blog/<slug>/<file>.png, so the file-extension
 // guard above is what actually lets those in-body images through.
 export const config = {
-  // NOTE "/features" is matched EXACTLY (no /:path*) on purpose: the localized
-  // features HUB moved under app/[locale]/features, so /features must enter
-  // next-intl routing to resolve as the en segment. The individual
-  // /features/<slug> pages are still EN-only under (marketing) and must NOT be
-  // matched (locale routing would 404 them). /fr/features is covered by /fr/:path*.
-  // "/pricing" is likewise EXACT — it has no EN-only child routes today, but
-  // matching it exactly keeps the rule uniform: a localized marketing page's
-  // base path enters next-intl, nothing below it does.
-  matcher: ["/", "/features", "/pricing", "/blog/:path*", "/glossary/:path*", "/fr/:path*"],
+  // NOTE "/features/:path*" (was exact "/features"): as of the FR feature-page
+  // migration, the hub AND all 13 /features/<slug> detail pages live under
+  // app/[locale]/features, so the whole subtree enters next-intl routing.
+  // ⚠️ Every slug must have an app/[locale]/features/<slug>/page.tsx — a
+  // detail page left under (marketing) will 404 the moment it's matched here.
+  // "/pricing" stays EXACT — it has no localized child routes; a localized
+  // marketing page's base path enters next-intl, nothing below it does unless
+  // the children are migrated too.
+  matcher: ["/", "/features/:path*", "/pricing", "/blog/:path*", "/glossary/:path*", "/fr/:path*"],
 }
