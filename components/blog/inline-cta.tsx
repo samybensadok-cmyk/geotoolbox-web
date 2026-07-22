@@ -15,6 +15,11 @@ const variants: Record<string, Record<InlineCtaTarget, Variant>> = {
       button: "Grade a page",
       href: "/features/content-analyzer",
     },
+    signup: {
+      text: "Comparing tools? See it on your own domain first — one scan across all eight engines, free plan, no card.",
+      button: "Start free",
+      href: "/app/?page=signup",
+    },
   },
   fr: {
     "ai-readiness": {
@@ -26,6 +31,11 @@ const variants: Record<string, Record<InlineCtaTarget, Variant>> = {
       text: "Vous voulez cette analyse pour vos propres pages ? L’Analyseur de contenu note chaque URL de A à F sur 21 signaux de citabilité IA.",
       button: "Évaluer une page",
       href: "/features/content-analyzer",
+    },
+    signup: {
+      text: "Vous comparez les outils ? Voyez d’abord le vôtre à l’œuvre : un scan sur les huit moteurs, offre gratuite, sans carte.",
+      button: "Commencer gratuitement",
+      href: "/app/?page=signup",
     },
   },
 }

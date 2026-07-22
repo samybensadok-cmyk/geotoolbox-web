@@ -12,6 +12,9 @@ import { proofStats } from "@/lib/proof-stats"
 const PAGE_URL = `${siteConfig.url}/services/answer-engine-optimization`
 // Every CTA books a call — no free-tool CTA, no self-serve tier on this page.
 const CALL_HREF = "/contact"
+// The $750 Report is a direct purchase — same live Stripe checkout handler
+// as the flagship /services/ai-seo-agency page.
+const CHECKOUT_REPORT = "/app/?action=service_checkout&item=report"
 
 export const metadata: Metadata = {
   // Base title 34 chars — template suffix "| GEO Toolbox" keeps total ≤60.
@@ -95,7 +98,7 @@ const tiers: Tier[] = [
     summary: "The full baseline: the answer slots in your market, who owns them, and the pages worth building.",
     detail:
       "A one-off diagnostic that maps the buying-intent questions in your market, whose text owns each answer slot today, and the specific pages to restructure or build.",
-    cta: { label: "Start the report", href: CALL_HREF },
+    cta: { label: "Buy the Report — $750", href: CHECKOUT_REPORT },
     kind: "buy",
     chip: "One-off",
   },
@@ -516,22 +519,27 @@ export default function AeoServicePage() {
                 <p className="mt-4 text-[13px] font-semibold leading-snug text-gray-800">{t.summary}</p>
                 <p className="mt-2 flex-1 text-[13px] leading-relaxed text-gray-600">{t.detail}</p>
                 <div className="mt-6">
-                  <Link
-                    href={t.cta.href}
-                    prefetch={false}
-                    className={
-                      t.kind === "buy"
-                        ? "inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent-900 px-5 py-3 text-[13px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 active:translate-y-[1px]"
-                        : "inline-flex w-full items-center justify-center rounded-full border border-gray-300 px-5 py-3 text-[13px] font-semibold text-gray-800 transition-colors hover:border-gray-400 hover:text-gray-900"
-                    }
-                  >
-                    {t.cta.label}
-                    {t.kind === "buy" && (
+                  {t.kind === "buy" ? (
+                    // Full-page navigation (not next/link) so the browser follows
+                    // the checkout handler's 303 redirect to Stripe.
+                    <a
+                      href={t.cta.href}
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent-900 px-5 py-3 text-[13px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 active:translate-y-[1px]"
+                    >
+                      {t.cta.label}
                       <svg className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
-                    )}
+                    </a>
+                  ) : (
+                  <Link
+                    href={t.cta.href}
+                    prefetch={false}
+                    className="inline-flex w-full items-center justify-center rounded-full border border-gray-300 px-5 py-3 text-[13px] font-semibold text-gray-800 transition-colors hover:border-gray-400 hover:text-gray-900"
+                  >
+                    {t.cta.label}
                   </Link>
+                  )}
                 </div>
               </div>
             ))}
@@ -542,7 +550,7 @@ export default function AeoServicePage() {
             active clients, so there&apos;s sometimes a short wait.
           </p>
           <p className="mt-2 text-[13px] leading-relaxed text-gray-500">
-            The $750 Report is a fixed price, payable by card — direct checkout is coming shortly. The
+            The $750 Report is a fixed price, payable by card — buy it above and you&apos;ll go straight to secure checkout. The
             Sprint and retainer are scoped to your project on the call. Looking for the umbrella service?
             See{" "}
             <Link href="/services/ai-seo-agency" className="font-medium text-accent-700 underline decoration-accent-200 underline-offset-2 hover:decoration-accent-500">

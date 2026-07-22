@@ -17,7 +17,7 @@ import { getAuthorByName } from "@/lib/authors"
 import { AuthorBio } from "@/components/blog/author-bio"
 import { RelatedPosts } from "@/components/blog/related-posts"
 import { InlineCta } from "@/components/blog/inline-cta"
-import { injectInlineCta } from "@/lib/inline-cta"
+import { injectInlineCta, isCommercialIntent } from "@/lib/inline-cta"
 import { Avatar } from "@/components/ui/avatar"
 
 export async function generateStaticParams() {
@@ -299,16 +299,38 @@ export default async function BlogPost({
                 {t("whatsNextCopy")}
               </p>
             </div>
-            <Link
-              href="/app"
-              prefetch={false}
-              className="inline-flex shrink-0 items-center gap-2 rounded-full bg-accent-900 px-6 py-3 text-[14.5px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
-            >
-              {tc("tryForFree")}
-              <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </Link>
+            <div className="flex shrink-0 flex-col items-start gap-2 sm:items-end">
+              <Link
+                href="/app"
+                prefetch={false}
+                className="inline-flex shrink-0 items-center gap-2 rounded-full bg-accent-900 px-6 py-3 text-[14.5px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
+              >
+                {tc("tryForFree")}
+                <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </Link>
+              {/* Commercial-intent articles: the reader is tool-shopping — give
+                  them the pricing page, and (EN) the done-for-you route too. */}
+              {isCommercialIntent(slug) && (
+                <p className="text-[13px] text-gray-600">
+                  <Link
+                    href={isFr ? "/fr/pricing" : "/pricing"}
+                    className="font-semibold text-accent-700 hover:text-accent-800"
+                  >
+                    {t("seePricing")}
+                  </Link>
+                  {!isFr && (
+                    <>
+                      {" · "}
+                      <Link href="/services/ai-seo-agency" className="font-semibold text-accent-700 hover:text-accent-800">
+                        {t("dfyLink")}
+                      </Link>
+                    </>
+                  )}
+                </p>
+              )}
+            </div>
           </div>
 
           <div className="grid grid-cols-1 gap-5 md:grid-cols-3">

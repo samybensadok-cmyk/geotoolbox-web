@@ -90,6 +90,10 @@ export function Footer({
             <h4 className="text-xs font-semibold text-gray-900 uppercase tracking-wider">{footer?.company ?? "Company"}</h4>
             <ul className="mt-3 space-y-2">
               <li><Link href={L("/pricing")} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">{nav?.pricing ?? "Pricing"}</Link></li>
+              {/* EN-only service pages — no L(), same convention as /features/<slug> */}
+              <li><Link href="/services/ai-seo-agency" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">{footer?.dfyService ?? "Done-for-you AI SEO"}</Link></li>
+              <li><Link href="/services/generative-engine-optimization" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">{footer?.geoService ?? "GEO services"}</Link></li>
+              <li><Link href="/services/answer-engine-optimization" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">{footer?.aeoService ?? "AEO services"}</Link></li>
               <li><Link href={L("/about")} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">{nav?.about ?? "About"}</Link></li>
               <li><Link href={L("/contact")} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">{nav?.contact ?? "Contact"}</Link></li>
               <li><Link href={L("/privacy")} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">{footer?.privacyPolicy ?? "Privacy Policy"}</Link></li>
