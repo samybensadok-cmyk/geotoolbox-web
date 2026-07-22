@@ -1,0 +1,214 @@
+---
+title: "What Are Google AI Overviews? How They Work"
+description: "What Google AI Overviews are, how Gemini builds them with query fan-out, when they appear, how sources get cited, and what they mean for your site's traffic."
+date: "2026-07-22"
+author: "Samy BEN SADOK"
+tags: ["geo", "ai-overviews", "google"]
+draft: false
+---
+
+Google AI Overviews are the AI-written answers that now sit above the blue links on a large share of Google searches. If you have searched for anything question-shaped in the past two years, you have probably seen one, whether you wanted it or not.
+
+## What Are Google AI Overviews?
+
+**AI Overviews (AIOs) are AI-generated summaries that appear at the top of Google search results, synthesizing an answer from multiple web sources and linking to the pages the answer draws on.** They answer the query directly on the results page, usually at the very top and occasionally beneath sponsored results, and they are the most visible of Google's AI search features.
+
+Google [describes them](https://search.google/ways-to-search/ai-overviews/) as "a snapshot of key information about a topic or question with links so you can easily explore more on the web." The framing matters: Google positions the links as the point, publishers tend to see them as the consolation prize.
+
+A typical AI Overview has three parts:
+
+1. **The generated summary.** A few sentences to several paragraphs of AI-written text answering the query, sometimes with bullets, images, or expandable sections.
+2. **Citations.** Link cards and inline references pointing to the web pages Google offers as support for the answer. These are the "ranking positions" of the AI Overview era.
+3. **A handoff to AI Mode.** A "Show more" or follow-up prompt that carries the query into [AI Mode](https://geotoolbox.ai/blog/google-ai-mode-seo), Google's conversational search tab, with the context retained.
+
+An AI Overview is not a chatbot. You cannot argue with it, and it does not remember you between searches. It is a one-shot summary bolted onto the classic results page, which is exactly why it changed SEO instead of replacing it: the ranking systems underneath still decide which pages are even eligible to be cited.
+
+That question, who gets pulled into the answer and who gets left below it, is what [generative engine optimization](https://geotoolbox.ai/blog/what-is-geo) is about, and it is the lens for most of this article.
+
+## From SGE to Today: How AI Overviews Evolved
+
+AI Overviews went from a hidden lab experiment to the default front door of Google search in two product cycles. The [Wikipedia entry on AI Overviews](https://en.wikipedia.org/wiki/AI_Overviews) keeps a running history; the short version:
+
+<table>
+<thead>
+<tr><th>When</th><th>What happened</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>May 2023</strong></td><td>Google announces the Search Generative Experience (SGE) at I/O, an opt-in Search Labs experiment that put generated answers on top of results</td></tr>
+<tr><td><strong>May 14, 2024</strong></td><td>SGE graduates and launches as AI Overviews in the US, no opt-in required</td></tr>
+<tr><td><strong>Late May 2024</strong></td><td>Viral failures force Google to restrict the feature within weeks of launch</td></tr>
+<tr><td><strong>October 2024</strong></td><td>Expansion past 100 countries; ads begin appearing inside AI Overviews in the US</td></tr>
+<tr><td><strong>March 2025</strong></td><td>Gemini 2.0 rolls into AI Overviews; frequency more than doubles across 2025 as trigger thresholds loosen</td></tr>
+<tr><td><strong>May 2025</strong></td><td>Google I/O: AI Overviews reach 200+ countries and territories in 40+ languages; AI Mode launches in the US</td></tr>
+<tr><td><strong>2026</strong></td><td>AI Overviews and AI Mode fold closer together ("Show more" hands off with context); Search Console gets a generative-AI report in June; <a href="https://blog.google/products-and-platforms/products/search/search-io-2026/">AI Mode passes one billion monthly users</a></td></tr>
+</tbody>
+</table>
+
+One telling detail about how fast this moves: Google's own [product page for AI Overviews](https://search.google/ways-to-search/ai-overviews/) still lists availability at "over 120 countries and territories, and 11 languages," while its I/O 2025 announcement said 200+ countries and 40+ languages. Even Google's marketing copy cannot keep up with Google.
+
+You will also still find explainers claiming AI Overviews run on PaLM 2. That was the SGE-era model. Every current Google description points to Gemini, which is what the next section covers.
+
+## How Do AI Overviews Actually Work?
+
+An AI Overview is built in a pipeline: expand the query, retrieve pages, generate a grounded summary, attach citations. Understanding the stages tells you where a site can win or lose a spot in the answer.
+
+<figure>
+  <BlogImage src="/blog/what-are-google-ai-overviews/how-ai-overviews-work.png" alt="Four-stage pipeline showing how Google builds an AI Overview, from query fan-out to citations." w="1120" h="395" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">The four stages between a search and the generated answer: fan-out, retrieval, grounded generation, citation.</figcaption>
+</figure>
+
+**Stage 1: query fan-out.** For complex searches, Google can decompose the query into multiple related sub-queries and run them in parallel. A search like "are AI overviews accurate" quietly becomes questions about error rates, incidents, and Google's fixes. This is [query fan-out](https://geotoolbox.ai/blog/query-fan-out), and it is why a page that answers a whole neighborhood of sub-questions gives retrieval more to grab than a page that answers exactly one.
+
+**Stage 2: retrieval.** The fan-out queries pull candidate pages from Google's regular search index. There is no separate "AI index." If a page is not indexed and eligible for a snippet, it cannot appear in an AI Overview, full stop.
+
+**Stage 3: grounded generation.** A customized version of Gemini writes the summary. Crucially, it is not answering from memory the way a raw chatbot does. Google says AI Overviews are ["built to only show information that is backed up by top web results"](https://blog.google/products-and-platforms/products/search/ai-overviews-update-may-2024/) and are integrated with its core web ranking systems. The industry name for this pattern is retrieval-augmented generation, and it is the same mechanic behind [most AI search engines](https://geotoolbox.ai/blog/how-does-ai-search-work).
+
+**Stage 4: citation.** The generated sentences get linked to the supporting pages, shown as inline references and link cards. Which passages get cited is a selection distinct from ranking, and it gets its own section below.
+
+The grounding is why AI Overviews are more reliable than a bare LLM answer, and the generation is why they still fail in ways a featured snippet never could. A snippet quotes a page verbatim; an AI Overview writes new text, so a bad retrieval or a satirical source becomes a confident wrong answer.
+
+## When and Where Do AI Overviews Appear?
+
+AIOs trigger selectively, and the pattern is consistent across the major studies: question-form, informational, longer, and more complex search queries get them; navigational, local, news, and shopping queries mostly do not. Google's stated rule is that they appear when its systems decide a generated answer would be more useful than a list of links.
+
+How often is "often"? Here is where the numbers get messy, because every published figure measures something different:
+
+<table>
+<thead>
+<tr><th>Study</th><th>Figure</th><th>What it actually measured</th></tr>
+</thead>
+<tbody>
+<tr><td><strong><a href="https://www.pewresearch.org/short-reads/2025/07/22/google-users-are-less-likely-to-click-on-links-when-an-ai-summary-appears-in-the-results/">Pew Research Center</a></strong> (Mar 2025 data)</td><td>18% of searches</td><td>Real behavior: 68,879 searches by 900 US adults; share of visited results pages that showed an AI summary</td></tr>
+<tr><td><strong>Semrush</strong> (Nov 2025)</td><td>15.69% of keywords</td><td>10M+ tracked keywords; the share swung from 6.49% in January 2025 to a 24.61% peak in July before settling</td></tr>
+<tr><td><strong>Ahrefs</strong> (May 2025)</td><td>9.46% of keywords, 12.8%+ of volume</td><td>590M keywords in its index; AIOs concentrate on high-volume queries, so the volume share runs higher than the keyword share</td></tr>
+</tbody>
+</table>
+
+The figures disagree because the studies disagree on unit, sample, and date at once. A random keyword database, a commercially-tracked keyword set, and a panel of real humans sample different slices of search, and the feature itself more than doubled in frequency during 2025 while they measured, which is why even the two keyword-share studies land far apart. The still-bigger headline figures you may have seen, half of all searches and up, generally weight by search volume or come from single-vendor tracked query sets. Read any single "X% of searches have AI Overviews" stat with the methodology attached, or not at all. Our [state of AI search report](https://geotoolbox.ai/blog/state-of-ai-search-2026) tracks these numbers, and their contradictions, across engines.
+
+What the studies agree on is direction and skew. The [Semrush AI Overviews study](https://www.semrush.com/blog/semrush-ai-overviews-study/) found the informational share of AIO-triggering keywords falling as commercial queries jumped from 8.15% to 18.57% and navigational from under 1% to 10.33% in a year: the feature is expanding down the funnel. And [Ahrefs' analysis of 55.8 million AI Overviews](https://ahrefs.com/blog/insights-from-56-million-ai-overviews/), a separate study of the overviews themselves rather than its keyword index, confirmed they lean hard toward informational, longer, higher-volume queries while avoiding branded and local ones.
+
+If your traffic lives on question keywords, assume an AI Overview is or will be sitting on top of you. If you sell things or serve a local area, the exposure is real but smaller.
+
+## How Do AI Overviews Choose and Cite Sources?
+
+Citation is not ranking. The cited sources inside an AI Overview overlap with the top organic results, but the overlap is partial and has been shrinking, which is why "we rank #1 and still aren't in the answer" is now a normal complaint.
+
+Two findings frame it. Grounding in top web results is Google's stated rule, but in practice retrieval reaches well beyond position one. [Ahrefs' 55.8M-overview dataset](https://ahrefs.com/blog/insights-from-56-million-ai-overviews/) shows citation coverage concentrating hard at the top of the web: the 50 most-cited domains take 28.90% of all AIO mentions, led by Reddit, Wikipedia, Quora, YouTube, and NIH.gov. Everyone else splits the rest, passage by passage.
+
+Reddit leading that list has context. Google has been surfacing more forum threads and firsthand perspectives in results since 2023, and it [signed a data deal with Reddit](https://www.tomsguide.com/ai/google-strikes-dollar60m-deal-with-reddit-for-ai-training-data-what-you-need-to-know) in early 2024, reported at about $60 million a year; Google has never said the deal touches citation selection. What the data does show is that the forum-content pullback after the 2024 incidents did not dethrone Reddit as the most-cited domain by mentions.
+
+The selection behaves like a contest between passages, not pages. Ranking asks "which page best deserves this position." Citation asks "which passage best supports this sentence of the answer." A page can win the first contest and lose the second by burying its answer, hedging it, or spreading it across sections. The practical bet: self-contained passages that state a fact, a number, and its context in one liftable block are the easiest material for the generation stage to use.
+
+That is a mechanical, fixable problem, and learning to optimize for it is a different discipline from classic on-page SEO. The tactics, from answer-first formatting to reachability, are covered in our guides to [getting cited in Google AI Overviews](https://geotoolbox.ai/blog/google-ai-overviews-seo) and [getting cited by AI engines generally](https://geotoolbox.ai/blog/how-to-get-cited-by-ai). The one-line summary: you cannot buy your way in, you can only be the clearest source for one specific sentence of the answer.
+
+## Are AI Overviews Accurate?
+
+Mostly, with failures that are rare in percentage terms and memorable in every other way.
+
+The feature's reputation was set in its first two weeks. In late May 2024, screenshots of AI Overviews [recommending glue on pizza](https://www.forbes.com/sites/roberthart/2024/05/31/google-restricts-ai-search-tool-after-nonsensical-answers-told-people-to-eat-rocks-and-put-glue-on-pizza/) and endorsing a rock a day went viral, sourced from a joke Reddit comment and an Onion article the model took literally. Google restricted the feature within days: less weight on forum content, guardrails on health queries, better detection of nonsensical prompts. Worth knowing: fact-checkers found a number of the viral screenshots were fabricated, which says something about the discourse around this feature too.
+
+Google's defense, in [its official post-mortem](https://blog.google/products-and-platforms/products/search/ai-overviews-update-may-2024/), is that many failures came from "data voids" (queries with little serious content to ground on) and that content-policy violations appeared in fewer than 1 in every 7 million unique queries, with accuracy it describes as on par with featured snippets.
+
+Independent spot-checks are less flattering than the 1-in-7-million framing suggests, because "not a policy violation" is a lower bar than "correct." When [WordStream tested AI Overviews on paid-search topics](https://www.wordstream.com/blog/google-ai-overviews) it knows cold, it found errors in roughly 26% of the answers it reviewed. An informal test in a single vertical, so it cannot estimate a platform-wide error rate, but it is consistent with what practitioners see: the summaries are weakest exactly where the underlying web content is thin, contested, or fast-moving.
+
+A subtler failure gets less attention: the answer can be broadly right while the page it cites does not support that specific sentence, so a visible source list is not the same thing as a verified one.
+
+The practical calibration: treat an AI Overview like a well-read stranger's summary. Fine for orientation, not for decisions with stakes, and always one click away from the actual source. That failure mode, a fluent answer grounded in the wrong or misread page, is the search-specific flavor of [AI hallucination](https://geotoolbox.ai/blog/ai-hallucinations).
+
+## What AI Overviews Mean for Websites and Publishers
+
+The traffic impact is the hardest part to dispute: when an AI Overview answers the query, fewer people click anything.
+
+The cleanest behavioral evidence is [Pew Research Center's panel study](https://www.pewresearch.org/short-reads/2025/07/22/google-users-are-less-likely-to-click-on-links-when-an-ai-summary-appears-in-the-results/) of 68,879 real searches: users clicked a traditional result on 8% of searches with an AI summary versus 15% without one, clicked a source link inside the summary on just 1% of them, and ended their session outright more often (26% vs 16%). Once a summary is present, clicking anything at all becomes the exception.
+
+Rank-tracking data says the same thing louder over time. Ahrefs' updated comparison of 300,000 keywords found the top-ranking page's average clickthrough rate is [58% lower](https://ahrefs.com/blog/ai-overviews-reduce-clicks-update/) when an AI Overview is present, based on December 2025 data, up from 34.5% in its April 2025 measurement. The modeled gap widened sharply between the two measurements, eight months apart, and the design is observational, so read it as the size of the correlation, not a proven causal split.
+
+The publisher fight has moved to court. In September 2025, Penske Media, the owner of Rolling Stone, Billboard, and Variety, [sued Google over AI Overviews](https://techcrunch.com/2025/09/14/rolling-stone-owner-penske-media-sues-google-over-ai-summaries/), the first major US news publisher to do so, arguing the summaries repackage its journalism and gut the clicks that fund it. Google's counter is that AI Overviews make search more helpful and "send traffic to a greater diversity of sites." Both things can be partially true, and neither pays a newsroom.
+
+Penske is not fighting alone. Edtech company [Chegg filed its own suit](https://www.cnbc.com/2025/02/24/chegg-sues-google-for-hurting-traffic-as-it-considers-alternatives.html) in early 2025 blaming AI Overviews for its traffic collapse, and a coalition of independent publishers [lodged an EU antitrust complaint](https://searchengineland.com/google-faces-eu-antitrust-complaint-over-ai-overviews-458123) in mid-2025, arguing sites cannot opt out of being summarized without leaving Google Search entirely.
+
+The honest framing for site owners: this is the zero-click search pattern with a citation layer attached (and, on some commercial queries, Google's own ads inside the box), a visibility channel with worse click economics than the one it replaced. Being cited still puts your brand inside an answer surface Google says reaches [over 2.5 billion users a month](https://blog.google/products-and-platforms/products/search/new-controls-website-owners/), still reaches the minority who do click through, and increasingly feeds the same retrieval systems behind AI Mode and other engines.
+
+## Can You Measure Your AI Overview Visibility?
+
+Partly, and the "partly" changed in June 2026, so most advice you will read is out of date in one direction or the other.
+
+For two years the answer was simply no: Google Search Console counted AI Overview appearances inside the standard Performance report, folded into ordinary web results with no way to isolate them. Then in June 2026, Google [introduced generative-AI performance reports](https://developers.google.com/search/blog/2026/06/gen-ai-performance-reports) in Search Console, rolling out gradually. They show impressions for AI Overviews and AI Mode, counted together, broken down by page, country, and device.
+
+An impression there means a URL from your site actually appeared inside an AI feature, per [Google's definition](https://developers.google.com/search/blog/2026/06/gen-ai-performance-reports). What the report still does not show: clicks, clickthrough rate, position, which answer your page appeared in, what that answer said, or who was cited alongside or instead of you. You can see that your pages surfaced somewhere in Google's AI features; you cannot see the answers themselves or the competitors who own the rest of them.
+
+Closing that gap takes direct observation: running your target queries, recording whether an overview fires, and logging which domains it cites over time, since the answers themselves are volatile and personalized. That is scriptable by hand, and it is what [AI Overview tracking tools](https://geotoolbox.ai/blog/ai-overview-tracker) automate.
+
+It is also the gap geotoolbox exists for: the failure mode where an AI Overview cites a competitor above your #1 ranking is invisible in every report Google gives you, so it has to be observed from the outside. The wider playbook, from picking prompts to baselining share of voice, is in our guide to [tracking brand mentions in AI search](https://geotoolbox.ai/blog/track-brand-mentions-in-ai-search).
+
+## AI Overviews vs AI Mode, Featured Snippets, and ChatGPT
+
+"Is this just ChatGPT in Google?" is one of the most common questions about AI Overviews (it shows up in Google's own People Also Ask box), and the answer is no in every row of this table:
+
+<table>
+<thead>
+<tr><th>Surface</th><th>What it is</th><th>Where answers come from</th><th>Conversational?</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>AI Overview</strong></td><td>Generated summary on top of the classic results page</td><td>Gemini grounded in live Google Search retrieval, with citations</td><td>No, one-shot per query</td></tr>
+<tr><td><strong>AI Mode</strong></td><td>Separate conversational search tab</td><td>Same Gemini-plus-Search stack, heavier query fan-out</td><td>Yes, keeps context across turns</td></tr>
+<tr><td><strong>Featured snippet</strong></td><td>Verbatim excerpt box from a single page</td><td>One ranked page, quoted, not generated</td><td>No</td></tr>
+<tr><td><strong>ChatGPT</strong></td><td>Standalone chatbot with optional web search</td><td>Its own model and retrieval, no Google index</td><td>Yes</td></tr>
+</tbody>
+</table>
+
+The line between the first two is thinning. A "Show more" tap in an AI Overview now drops you into AI Mode with your query carried over, and Search Console already reports the two surfaces as one bucket. They remain distinct surfaces with only partially overlapping citations, which is why visibility in one does not guarantee visibility in the other.
+
+The featured snippet comparison matters for a different reason: a snippet lifts your words and attributes a single source, while an AI Overview paraphrases you into a blended answer alongside several other sources. Same real estate, much weaker claim on the click.
+
+## Frequently Asked Questions
+
+### How do you turn off Google AI Overviews?
+
+You mostly cannot. There is no account setting that disables AI Overviews globally; workarounds include Google's "Web" results filter, adding `udm=14` to search URLs, and browser extensions that hide the box. None of them is a full off switch; our guide to [turning off AI Overviews](https://geotoolbox.ai/blog/how-to-turn-off-ai-overviews) covers what each option does and does not do.
+
+### What triggers a Google AI Overview to appear?
+
+Google shows one when its systems judge a generated answer more useful than links alone. In practice that means informational, question-form, longer, and more complex queries trigger them most, while navigational, local, news, and shopping queries usually do not.
+
+### Should you trust what an AI Overview says?
+
+Use it for orientation, verify it for decisions. The text is generated and grounded in retrieved pages, so it is usually right, but independent tests keep finding meaningful error rates on specialist topics, and the sources are one tap away.
+
+### Is an AI Overview the same as ChatGPT?
+
+No. ChatGPT is a standalone conversational model with its own retrieval; an AI Overview is a one-shot summary generated by Gemini from live Google Search results and pinned above the classic listings, with citations to the pages it drew on.
+
+### Why did AI Overviews stop showing for you?
+
+Trigger thresholds shift constantly, and results vary with query phrasing, language, and location. A query that fired an overview last month may return plain results today; that volatility is normal and is one reason tracking them requires repeated sampling.
+
+### Do AI Overviews use your site's content without permission?
+
+If your pages are indexed for Google Search, they are eligible for AI Overviews; there is no AIO-specific opt-out that preserves your rankings, though Google began testing one with UK site owners in June 2026. The blunt instruments cost visibility either way: `noindex` removes the page from Search entirely, while `nosnippet` keeps it indexed but suppresses its snippet and its use in AI features. That trade-off is what publishers are litigating.
+
+## The Answer Box Is the New Front Page
+
+So, what are Google AI Overviews? The generated layer Google now puts between searchers and your site: Gemini summaries grounded in regular search retrieval, triggered disproportionately on informational, longer, higher-volume queries, cited from pages that do not always match the ranking order.
+
+They are not going away, and nothing on the current trajectory reverts the click economics. The lever you have is being the source the answer quotes, and knowing when it quotes someone else instead. If you want to see where your site stands today, run it through geotoolbox's free [AI readiness check](https://geotoolbox.ai/tools/ai-readiness); it takes a minute and checks five reachability foundations that decide whether AI search engines can read your pages at all.
+
+## Sources
+
+- Google AI Overviews: Search anything, effortlessly - Google - `search.google/ways-to-search/ai-overviews`
+- AI Overviews: About last week - Elizabeth Reid, Google, May 2024 - `blog.google/products-and-platforms/products/search/ai-overviews-update-may-2024`
+- Google users are less likely to click on links when an AI summary appears in the results - Pew Research Center, July 2025 - `pewresearch.org/short-reads/2025/07/22/google-users-are-less-likely-to-click-on-links-when-an-ai-summary-appears-in-the-results`
+- Update: AI Overviews Reduce Clicks by 58% - Ahrefs, February 2026 - `ahrefs.com/blog/ai-overviews-reduce-clicks-update`
+- Insights from 56 Million AI Overviews - Ahrefs, May 2025 - `ahrefs.com/blog/insights-from-56-million-ai-overviews`
+- Semrush AI Overviews Study - Semrush, December 2025 - `semrush.com/blog/semrush-ai-overviews-study`
+- Google Restricts AI Search Tool After Nonsensical Answers - Forbes, May 2024 - `forbes.com/sites/roberthart/2024/05/31/google-restricts-ai-search-tool-after-nonsensical-answers-told-people-to-eat-rocks-and-put-glue-on-pizza`
+- Rolling Stone owner Penske Media sues Google over AI summaries - TechCrunch, September 2025 - `techcrunch.com/2025/09/14/rolling-stone-owner-penske-media-sues-google-over-ai-summaries`
+- Chegg sues Google for hurting traffic as it considers alternatives - CNBC, February 2025 - `cnbc.com/2025/02/24/chegg-sues-google-for-hurting-traffic-as-it-considers-alternatives.html`
+- Google faces EU antitrust complaint over AI Overviews - Search Engine Land, July 2025 - `searchengineland.com/google-faces-eu-antitrust-complaint-over-ai-overviews-458123`
+- Google strikes $60m deal with Reddit for AI training data - Tom's Guide, February 2024 - `tomsguide.com/ai/google-strikes-dollar60m-deal-with-reddit-for-ai-training-data-what-you-need-to-know`
+- AI Overviews: Everything You Need to Know - WordStream, April 2026 - `wordstream.com/blog/google-ai-overviews`
+- Introducing Search Generative AI performance reports in Search Console - Google Search Central, June 2026 - `developers.google.com/search/blog/2026/06/gen-ai-performance-reports`
+- Google Search's I/O 2026 updates - Google, May 2026 - `blog.google/products-and-platforms/products/search/search-io-2026`
+- New opportunities, control and insights for website owners - Google, June 2026 - `blog.google/products-and-platforms/products/search/new-controls-website-owners`
+- AI Overviews - Wikipedia - `en.wikipedia.org/wiki/AI_Overviews`
