@@ -156,7 +156,8 @@ export default async function PricingPage({
           <div className="flex flex-col items-center justify-between gap-3 rounded-2xl border border-gray-200 bg-gray-50 px-6 py-4 sm:flex-row">
             <p className="text-[14px] text-gray-700">
               <span className="font-semibold text-gray-900">{t("strip.strong")}</span>{t("strip.lead")}
-              <Link href={siteConfig.appSignupUrl} prefetch={false} className="font-semibold text-accent-700 underline-offset-2 hover:underline">
+              {/* Starter deep link (SG_SIGNUP_V2): signup pre-selects the plan */}
+              <Link href={`${siteConfig.appSignupUrl}&plan=starter&interval=annual`} prefetch={false} className="font-semibold text-accent-700 underline-offset-2 hover:underline">
                 {t("strip.link")}
               </Link>
               {t("strip.tail")}

@@ -107,6 +107,12 @@ export function PricingCards({ copy, locale }: { copy: PricingCardsCopy; locale:
           const c = copy.plans[plan.id]
           const isExternal = plan.cta.href.startsWith("http")
           const ctaLabel = isExternal ? copy.cta.bookCall : copy.cta.getStarted
+          // Plan-aware signup deep link (SG_SIGNUP_V2): the signup page reads
+          // ?plan=&interval=, shows a plan chip, and nudges the upgrade after
+          // the first scan. Billing toggle state rides along.
+          const ctaHref = isExternal
+            ? plan.cta.href
+            : `${plan.cta.href}&plan=${plan.id}&interval=${annual ? "annual" : "monthly"}`
           return (
             <div
               key={plan.id}
@@ -143,7 +149,7 @@ export function PricingCards({ copy, locale }: { copy: PricingCardsCopy; locale:
               <p className="mt-4 min-h-[40px] text-[13px] leading-snug text-gray-600">{c.tagline}</p>
 
               <Link
-                href={plan.cta.href}
+                href={ctaHref}
                 prefetch={false}
                 {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                 className={cn(
