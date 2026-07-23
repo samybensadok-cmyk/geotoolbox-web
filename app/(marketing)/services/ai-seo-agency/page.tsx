@@ -14,11 +14,11 @@ import { proofStats } from "@/lib/proof-stats"
 
 const PAGE_URL = `${siteConfig.url}/services/ai-seo-agency`
 // Every call books an intro/teardown call — no free-tool CTA anywhere on this page.
-const TEARDOWN_HREF = "/contact"
+const TEARDOWN_HREF = "https://calendly.com/samy-bensadok/30min-call"
 // The $750 Report is a direct purchase — wired to the live Stripe checkout
 // endpoint (Vercel rewrites /app/* to the Replit app; the handler 303-redirects
 // to Stripe Checkout). Sprint/retainer stay book-a-call.
-const CHECKOUT = { report: "/app/?action=service_checkout&item=report", sprint: "/contact" }
+const CHECKOUT = { report: "/app/?action=service_checkout&item=report", sprint: "https://calendly.com/samy-bensadok/30min-call" }
 
 export const metadata: Metadata = {
   title: "Done-For-You AI SEO & GEO Service",

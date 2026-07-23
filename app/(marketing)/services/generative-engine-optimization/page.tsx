@@ -12,7 +12,7 @@ import { proofStats } from "@/lib/proof-stats"
 
 const PAGE_URL = `${siteConfig.url}/services/generative-engine-optimization`
 // Every CTA books a call — no free-tool CTA, no self-serve tier on this page.
-const CALL_HREF = "/contact"
+const CALL_HREF = "https://calendly.com/samy-bensadok/30min-call"
 // The $750 Report is a direct purchase — same live Stripe checkout handler
 // as the flagship /services/ai-seo-agency page.
 const CHECKOUT_REPORT = "/app/?action=service_checkout&item=report"
