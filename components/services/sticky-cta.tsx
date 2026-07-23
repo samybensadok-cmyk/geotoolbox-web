@@ -51,6 +51,7 @@ export function StickyServiceCta({
           </Link>
           <Link
             href={callHref}
+            {...(callHref.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
             className="inline-flex items-center gap-1.5 rounded-full bg-accent-900 px-5 py-2 text-[13px] font-semibold text-white transition-colors hover:bg-accent-800"
           >
             Book a call

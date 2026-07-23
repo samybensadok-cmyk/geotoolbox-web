@@ -11,7 +11,7 @@ import { proofStats } from "@/lib/proof-stats"
  *
  * Provenance is stated plainly: the Google numbers are real + unique (GSC) and
  * came from about `weeksToResult` weeks of publishing; the AI-citation number is
- * a sampled, non-unique appearance count from a SEPARATE `windowMonths`-month
+ * a sampled, non-unique appearance count from a SEPARATE `windowDays`-day
  * Bing Webmaster Tools window — never umbrella'd under the Google timeframe, and
  * never dressed up as ChatGPT / Perplexity / Google data.
  */
@@ -21,12 +21,12 @@ export function ProofResults() {
 
   const stats: Array<{ value: string; label: string; source: string; tag?: string }> = [
     { value: fmt(google.rankedKeywords), label: "Keywords ranked in Google", source: "Google Search Console" },
-    { value: fmt(google.top3), label: "In Google's top 3", source: "Google Search Console" },
+    { value: fmt(google.top10), label: "On Google's first page (top 10)", source: "Google Search Console" },
     {
       value: `~${fmt(aiCitations.total)}`,
       label: "AI-citation appearances",
-      source: `Bing WMT · ${aiCitations.source} · ${aiCitations.windowMonths}-mo sample`,
-      tag: `${aiCitations.windowMonths}-month sample`,
+      source: `Bing WMT · ${aiCitations.source} · ${aiCitations.windowDays}-day sample`,
+      tag: `${aiCitations.windowDays}-day sample`,
     },
     { value: `~${fmt(google.dailyImpressions)}`, label: "Impressions per day", source: "Google Search Console" },
   ]
@@ -61,7 +61,7 @@ export function ProofResults() {
           <p className="max-w-xl text-base leading-relaxed text-gray-300">
             These are the numbers, not a promise — the exact figures, stamped, and updated as they move.
             The Google figures came from about {weeksToResult} weeks of publishing on a domain that drove
-            near-zero traffic before; the AI-citation count is a separate {aiCitations.windowMonths}-month
+            near-zero traffic before; the AI-citation count is a separate {aiCitations.windowDays}-day
             Bing sample.
           </p>
         </div>
@@ -69,7 +69,7 @@ export function ProofResults() {
         {/* Stat grid — big mono numbers, divider-anchored, source under each.
             Valid <dl> semantics: each group is <dt> (label) then <dd>s; CSS
             `order` keeps the number visually first while <dt> precedes <dd> in
-            the DOM. The Bing stat carries its own "N-month sample" tag so it
+            the DOM. The Bing stat carries its own "N-day sample" tag so it
             reads separately from the Google figures. */}
         <dl className="mt-14 grid grid-cols-2 gap-x-8 gap-y-12 lg:grid-cols-4">
           {stats.map((s) => (
@@ -99,7 +99,7 @@ export function ProofResults() {
             Search Console.
           </p>
           <p className="mt-2 text-[13px] leading-relaxed text-gray-400">
-            The ~{fmt(aiCitations.total)} AI-citation figure is a {aiCitations.windowMonths}-month sample
+            The ~{fmt(aiCitations.total)} AI-citation figure is a {aiCitations.windowDays}-day sample
             from Bing Webmaster Tools&apos; AI Performance report ({aiCitations.source}) — a count of citation
             appearances, not unique citations, and not attributable to ChatGPT, Perplexity, or Google.
           </p>

@@ -293,6 +293,8 @@ export default function GeoServicePage() {
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Link
                   href={CALL_HREF}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
                 >
                   Book a call
@@ -590,6 +592,8 @@ export default function GeoServicePage() {
                   <Link
                     href={t.cta.href}
                     prefetch={false}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="inline-flex w-full items-center justify-center rounded-full border border-gray-300 px-5 py-3 text-[13px] font-semibold text-gray-800 transition-colors hover:border-gray-400 hover:text-gray-900"
                   >
                     {t.cta.label}
@@ -674,6 +678,8 @@ export default function GeoServicePage() {
           <div className="shrink-0">
             <Link
               href={CALL_HREF}
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 hover:shadow-xl hover:shadow-black/30 active:translate-y-[1px]"
             >
               Book a call

@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og"
 import { proofStats } from "@/lib/proof-stats"
 
-export const alt = "Done-for-you AI SEO & GEO, run by one specialist"
+export const alt = "Done-for-you AI SEO & GEO, by the founder who built the tracker"
 export const size = { width: 1200, height: 630 }
 export const contentType = "image/png"
 
@@ -10,7 +10,7 @@ export default function OGImage() {
   const fmt = (n: number) => n.toLocaleString("en-US")
 
   const stats = [
-    { value: String(google.top3), label: "In Google's top 3" },
+    { value: fmt(google.top10), label: "On Google's first page" },
     { value: `~${fmt(aiCitations.total)}`, label: "AI citations (Bing WMT)" },
     { value: fmt(google.rankedKeywords), label: "Keywords in Google" },
     { value: `${weeksToResult} wks`, label: "From zero" },
@@ -44,7 +44,7 @@ export default function OGImage() {
             If AI doesn&apos;t recommend you, that&apos;s the problem I fix.
           </div>
           <div style={{ fontSize: 20, color: "#4b5563", marginTop: 20, lineHeight: 1.4 }}>
-            One specialist. Your pages rebuilt to get cited. Measured monthly.
+            Founder-led. Your pages rebuilt to get cited. Measured monthly.
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: "auto", fontSize: 15, color: "#6b7280" }}>

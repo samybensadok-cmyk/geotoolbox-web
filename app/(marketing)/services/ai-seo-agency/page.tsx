@@ -349,6 +349,8 @@ export default function AiSeoServicePage() {
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Link
                   href={TEARDOWN_HREF}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
                 >
                   Book a call
@@ -550,10 +552,11 @@ export default function AiSeoServicePage() {
                 <p>
                   I started geotoolbox.ai from nothing — no aged domain, no link package. About{" "}
                   {proofStats.weeksToResult} weeks in, Google Search Console showed it ranking across
-                  thousands of keywords, hundreds on page one (real, unique, verifiable in GSC). And the part
-                  a normal SEO can&apos;t report: over a {proofStats.aiCitations.windowMonths}-month window,
-                  Bing&apos;s AI Performance report logged a large volume of AI-citation appearances across
-                  Copilot and partners — a sampled count, Bing&apos;s data, in the receipt.
+                  thousands of keywords, {fmt(proofStats.google.top10)} of them on page one (real,
+                  unique, verifiable in GSC). And the part a normal SEO can&apos;t report: over a trailing{" "}
+                  {proofStats.aiCitations.windowDays}-day window, Bing&apos;s AI Performance report logged a
+                  large volume of AI-citation appearances across Copilot and partners — a sampled count,
+                  Bing&apos;s data, in the receipt.
                 </p>
                 <p>
                   Why it matters commercially: the prompts we get cited for most aren&apos;t trivia — they&apos;re
@@ -591,7 +594,7 @@ export default function AiSeoServicePage() {
                     <dt className="text-[13px] font-medium text-gray-600">
                       AI-citation appearances
                       <span className="mt-0.5 block font-mono text-[10px] font-semibold uppercase tracking-widest text-gray-400">
-                        {proofStats.aiCitations.windowMonths}-month Bing sample
+                        {proofStats.aiCitations.windowDays}-day Bing sample
                       </span>
                     </dt>
                     <dd className="font-mono text-2xl font-bold tabular-nums text-gray-900">
@@ -601,7 +604,7 @@ export default function AiSeoServicePage() {
                 </dl>
                 <p className="mt-6 border-t border-gray-100 pt-4 text-[12px] leading-relaxed text-gray-500">
                   Google figures are unique GSC data. The AI-citation figure is a{" "}
-                  {proofStats.aiCitations.windowMonths}-month sampled appearance count from Bing Webmaster
+                  {proofStats.aiCitations.windowDays}-day sampled appearance count from Bing Webmaster
                   Tools (Microsoft Copilot and partners) — not unique citations, not ChatGPT, Perplexity, or
                   Google. As of {proofStats.asOf}.
                 </p>
@@ -796,6 +799,8 @@ export default function AiSeoServicePage() {
                     <Link
                       href={t.cta.href}
                       prefetch={false}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="inline-flex w-full items-center justify-center rounded-full border border-gray-300 px-5 py-3 text-[13px] font-semibold text-gray-800 transition-colors hover:border-gray-400 hover:text-gray-900"
                     >
                       {t.cta.label}
@@ -878,6 +883,8 @@ export default function AiSeoServicePage() {
           <div className="shrink-0">
             <Link
               href={TEARDOWN_HREF}
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 hover:shadow-xl hover:shadow-black/30 active:translate-y-[1px]"
             >
               Book a call
