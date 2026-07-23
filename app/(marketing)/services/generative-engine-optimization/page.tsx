@@ -619,7 +619,12 @@ export default function GeoServicePage() {
             <Link href="/services/answer-engine-optimization" className="font-medium text-accent-700 underline decoration-accent-200 underline-offset-2 hover:decoration-accent-500">
               answer engine optimization
             </Link>{" "}
-            if your market&apos;s questions end in a snippet, not a composed answer.
+            if your market&apos;s questions end in a snippet, not a composed answer. For custom AI agents and
+            tooling, see{" "}
+            <Link href="/services/ai-automation-agency" className="font-medium text-accent-700 underline decoration-accent-200 underline-offset-2 hover:decoration-accent-500">
+              AI automation &amp; agent development
+            </Link>
+            .
           </p>
 
           {/* Risk reversal — same terms as the flagship service page */}

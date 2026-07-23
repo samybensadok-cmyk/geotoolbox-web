@@ -53,3 +53,8 @@ export const proofStats = {
 } as const
 
 export type ProofStats = typeof proofStats
+
+// Published content counts — counted on disk (content/blog, content/fr/blog,
+// content/glossary). Shared by /services/ai-automation-agency (page + OG image)
+// so the figures can't drift between surfaces. Re-count when bumping.
+export const contentCounts = { en: 115, fr: 49, glossary: 57, asOf: "23 Jul 2026" } as const

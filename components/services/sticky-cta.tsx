@@ -17,9 +17,15 @@ import { useEffect, useState } from "react"
 export function StickyServiceCta({
   callHref = "/contact",
   pricingHref = "#pricing",
+  message,
+  pricingLabel = "See pricing",
 }: {
   callHref?: string
   pricingHref?: string
+  // Optional copy overrides for pages whose claims differ from the flagship
+  // (e.g. the no-price automation page). Defaults preserve the original copy.
+  message?: React.ReactNode
+  pricingLabel?: string
 }) {
   const [shown, setShown] = useState(false)
 
@@ -40,14 +46,18 @@ export function StickyServiceCta({
     >
       <div className="mx-auto mb-3 flex max-w-2xl items-center justify-between gap-3 rounded-full border border-gray-200 bg-white/95 px-4 py-2.5 shadow-[0_10px_40px_-12px_rgba(15,23,42,0.28)] backdrop-blur sm:px-5">
         <p className="hidden text-[13px] font-medium text-gray-700 sm:block">
-          We take <span className="font-semibold text-gray-900">4 clients</span> at a time — book an intro call.
+          {message ?? (
+            <>
+              We take <span className="font-semibold text-gray-900">4 clients</span> at a time — book an intro call.
+            </>
+          )}
         </p>
         <div className="flex w-full items-center justify-between gap-2 sm:w-auto sm:justify-end">
           <Link
             href={pricingHref}
             className="rounded-full px-3.5 py-2 text-[13px] font-semibold text-gray-700 transition-colors hover:text-gray-900"
           >
-            See pricing
+            {pricingLabel}
           </Link>
           <Link
             href={callHref}

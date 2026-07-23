@@ -824,7 +824,11 @@ export default function AiSeoServicePage() {
             <Link href="/services/answer-engine-optimization" className="font-medium text-accent-700 underline decoration-accent-200 underline-offset-2 hover:decoration-accent-500">
               answer engine optimization
             </Link>{" "}
-            services.
+            services. Need custom AI systems built rather than visibility work? See{" "}
+            <Link href="/services/ai-automation-agency" className="font-medium text-accent-700 underline decoration-accent-200 underline-offset-2 hover:decoration-accent-500">
+              AI automation &amp; agent development
+            </Link>
+            .
           </p>
 
           {/* Risk reversal */}
