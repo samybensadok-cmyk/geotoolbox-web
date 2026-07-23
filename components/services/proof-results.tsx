@@ -51,7 +51,7 @@ export function ProofResults() {
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[5fr_7fr] lg:items-end lg:gap-16">
           <div>
             <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-400">
-              The proof, from my own test domain
+              The proof, from our own test domain
             </p>
             <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
               One fresh, zero-authority domain.{" "}

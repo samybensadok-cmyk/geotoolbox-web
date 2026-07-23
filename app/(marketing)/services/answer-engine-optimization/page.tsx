@@ -4,6 +4,7 @@ import Image from "next/image"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
 import { FeatureFaq } from "@/components/features/feature-faq"
 import { ProofResults } from "@/components/services/proof-results"
+import { StickyServiceCta } from "@/components/services/sticky-cta"
 import { JsonLd } from "@/components/seo/json-ld"
 import { siteConfig } from "@/lib/config"
 import { PRIMARY_AUTHOR } from "@/lib/authors"
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Answer Engine Optimization, Done For You By The Founder",
     description:
-      "When your buyer asks the question, one block of text gets picked as the answer. I restructure your pages to make that block yours — and report the answer-slot presence monthly.",
+      "When your buyer asks the question, one block of text gets picked as the answer. We restructure your pages to make that block yours — and report the answer-slot presence monthly.",
   },
   alternates: { canonical: PAGE_URL },
 }
@@ -44,7 +45,7 @@ const definitionRows = [
   {
     num: "03",
     title: "It is not GEO either.",
-    body: "Generative engine optimization targets the composed answer an AI writes across several cited sources — ChatGPT, Perplexity, Gemini, Copilot. AEO targets the single extracted block. The two jobs meet inside AI Overviews, which both cite sources and extract blocks; I run both, measured separately.",
+    body: "Generative engine optimization targets the composed answer an AI writes across several cited sources — ChatGPT, Perplexity, Gemini, Copilot. AEO targets the single extracted block. The two jobs meet inside AI Overviews, which both cite sources and extract blocks; we run both, measured separately.",
   },
 ]
 
@@ -69,7 +70,7 @@ const flow: FlowRow[] = [
     num: "03",
     verb: "Track",
     title: "Monthly slot reports: which questions, which surfaces, what changed.",
-    body: "AI Overview presence from my own tracker; snippet and People Also Ask slots from standard SERP tracking. Slots won, slots lost, per question, with deltas. If a month is flat, the report says flat. Same numbers, both of us.",
+    body: "AI Overview presence from our own tracker; snippet and People Also Ask slots from standard SERP tracking. Slots won, slots lost, per question, with deltas. If a month is flat, the report says flat. Same numbers, both of us.",
     output: "monthly slot report",
   },
 ]
@@ -139,12 +140,12 @@ const faqs = [
   {
     question: "How is AEO different from SEO?",
     answer:
-      "SEO competes for ten ranked links a human might click; AEO competes for the single answer slot above them. You usually need page-one relevance before an engine will extract you — so the work overlaps — but the scoreboard is different: answer-slot presence per question. A client guide of mine sat at organic position 5–6 while featured in Google's AI Overview — the slot, not the rank, is what the buyer reads.",
+      "SEO competes for ten ranked links a human might click; AEO competes for the single answer slot above them. You usually need page-one relevance before an engine will extract you — so the work overlaps — but the scoreboard is different: answer-slot presence per question. A client guide we worked on sat at organic position 5–6 while featured in Google's AI Overview — the slot, not the rank, is what the buyer reads.",
   },
   {
     question: "How is AEO different from GEO?",
     answer:
-      "GEO targets the composed answer an AI writes across several cited sources — ChatGPT, Perplexity, Gemini, Copilot. AEO targets the single block an engine lifts verbatim — snippets, People Also Ask, the AI Overview answer slot, voice. If your market's questions get a one-passage answer, AEO is the lever; if they get a synthesized multi-source answer, GEO is; AI Overviews reward both. I run them as separate, separately measured services.",
+      "GEO targets the composed answer an AI writes across several cited sources — ChatGPT, Perplexity, Gemini, Copilot. AEO targets the single block an engine lifts verbatim — snippets, People Also Ask, the AI Overview answer slot, voice. If your market's questions get a one-passage answer, AEO is the lever; if they get a synthesized multi-source answer, GEO is; AI Overviews reward both. We run them as separate, separately measured services.",
   },
   {
     question: "How do you measure AEO?",
@@ -153,12 +154,12 @@ const faqs = [
   },
   {
     question: "How long until I win answer slots?",
-    answer: `Slots turn over faster than rankings — a page that already ranks can win a snippet with a restructure — but nothing honest happens in days. Plan on first tracked movement in 4–8 weeks; my own zero-authority test domain took about ${proofStats.weeksToResult} weeks to meaningful visibility, and an established site moves faster. Week one you get the baseline.`,
+    answer: `Slots turn over faster than rankings — a page that already ranks can win a snippet with a restructure — but nothing honest happens in days. Plan on first tracked movement in 4–8 weeks; our own zero-authority test domain took about ${proofStats.weeksToResult} weeks to meaningful visibility, and an established site moves faster. Week one you get the baseline.`,
   },
   {
     question: "Why hire the founder instead of an agency?",
     answer:
-      "The person who built GEO Toolbox — the platform used to measure AI visibility — is the person who does your work. Not a strategist handing off to a junior: the founder who built the measurement tool, in the code of your pages. Trade-off, stated plainly: I take 4 active clients, so there's sometimes a wait.",
+      "I built GEO Toolbox — the platform used to measure AI visibility — and I lead the work on your account, with a small team alongside me. Not a strategist handing off to a junior: the founder who built the measurement tool, in the code of your pages. Trade-off, stated plainly: we take 4 active clients at a time, so there's sometimes a wait.",
   },
 ]
 
@@ -167,7 +168,7 @@ const serviceSchema = {
   "@type": "Service",
   name: "Answer Engine Optimization Service",
   description:
-    "Done-for-you answer engine optimization run personally by Samy Ben Sadok, founder of GEO Toolbox: priority pages restructured to win featured snippets, People Also Ask, AI Overview answer slots and voice answers, with answer-slot presence reported monthly.",
+    "Done-for-you answer engine optimization from a small founder-led team led by Samy Ben Sadok, founder of GEO Toolbox: priority pages restructured to win featured snippets, People Also Ask, AI Overview answer slots and voice answers, with answer-slot presence reported monthly.",
   url: PAGE_URL,
   areaServed: "Worldwide",
   serviceType: ["Answer Engine Optimization", "AI Search Visibility"],
@@ -280,13 +281,13 @@ export default function AeoServicePage() {
 
               <h1 className="mt-6 text-[clamp(2rem,4.4vw,3.4rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
                 When your buyer asks the question, one block of text gets picked as the answer.{" "}
-                <span className="text-accent-700">I make that block yours.</span>
+                <span className="text-accent-700">We make that block yours.</span>
               </h1>
 
               <p className="mt-6 max-w-xl text-lg leading-relaxed text-gray-600">
                 Featured snippets, People Also Ask, AI Overview answer slots, voice answers — one extracted
-                passage wins each question. I built GEO Toolbox — the platform used to measure AI visibility — and I
-                personally restructure your pages to win those slots, then report the presence monthly.
+                passage wins each question. I built GEO Toolbox — the platform used to measure AI visibility — and my
+                team and I restructure your pages to win those slots, then report the presence monthly.
               </p>
 
               <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -306,7 +307,23 @@ export default function AeoServicePage() {
                   See the results
                 </Link>
               </div>
-              <p className="mt-4 text-xs text-gray-500">20-min intro call · no obligation · I take 4 active clients.</p>
+              <p className="mt-4 text-xs text-gray-500">20-min intro call · no obligation · we take 4 active clients at a time.</p>
+
+              {/* Risk-reversal cue surfaced at the hero CTA, not just in pricing. */}
+              <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2">
+                {[
+                  "On-time or we refund the milestone",
+                  "You own every page & dataset",
+                  "Reporting is raw slot data, no spin",
+                ].map((point) => (
+                  <li key={point} className="flex items-center gap-1.5 text-[12px] font-medium text-gray-600">
+                    <svg className="h-3.5 w-3.5 shrink-0 text-accent-600" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M3.5 8.5l3 3 6-6.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    {point}
+                  </li>
+                ))}
+              </ul>
             </div>
 
             {/* Product card — legal AI-scan in a browser frame. Wrapper not
@@ -466,7 +483,7 @@ export default function AeoServicePage() {
       </section>
 
       {/* 5 — Offer ladder */}
-      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-24">
+      <section id="pricing" className="scroll-mt-20 border-t border-gray-100 bg-white px-6 py-16 sm:py-24">
         <div className="mx-auto max-w-6xl">
           <div className="max-w-2xl">
             <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
@@ -479,6 +496,49 @@ export default function AeoServicePage() {
               Two one-off purchases and one ongoing engagement. Start with the Report — you never commit to
               a retainer before you&apos;ve seen the opportunity in your own numbers.
             </p>
+          </div>
+
+          {/* Fit-filter — qualifies before the price so book-a-call slots go to
+              real prospects, not tyre-kickers. */}
+          <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="rounded-2xl border border-accent-200 bg-white/70 p-6">
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+                This is for you if
+              </p>
+              <ul className="mt-4 space-y-2.5 text-[14px] leading-snug text-gray-700">
+                {[
+                  "Your buyers research before they buy — a considered, higher-value purchase.",
+                  "You have a real site with something true and specific to say.",
+                  "You want proof from a tracker, not a monthly vibe check.",
+                ].map((t) => (
+                  <li key={t} className="flex gap-2.5">
+                    <svg className="mt-1 h-3.5 w-3.5 shrink-0 text-accent-600" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M3.5 8.5l3 3 6-6.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    <span>{t}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="rounded-2xl border border-gray-200 bg-white/70 p-6">
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-500">
+                This isn&apos;t for you if
+              </p>
+              <ul className="mt-4 space-y-2.5 text-[14px] leading-snug text-gray-600">
+                {[
+                  "You need leads this week — answer slots take weeks to win, not days.",
+                  "You sell pure impulse buys nobody researches first.",
+                  "You can't ship changes to your pages, or won't.",
+                ].map((t) => (
+                  <li key={t} className="flex gap-2.5">
+                    <svg className="mt-1 h-3.5 w-3.5 shrink-0 text-gray-400" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M4 4l8 8m0-8l-8 8" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    <span>{t}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
           <div className="mt-12 grid grid-cols-1 items-start gap-5 md:grid-cols-3">
@@ -546,8 +606,8 @@ export default function AeoServicePage() {
           </div>
 
           <p className="mt-6 text-[13px] font-medium text-gray-500">
-            The Report fee is credited toward a Sprint or retainer if you continue within 14 days. I take 4
-            active clients, so there&apos;s sometimes a short wait.
+            The Report fee is credited toward a Sprint or retainer if you continue within 14 days. We take 4
+            active clients at a time, so there&apos;s sometimes a short wait.
           </p>
           <p className="mt-2 text-[13px] leading-relaxed text-gray-500">
             The $750 Report is a fixed price, payable by card — buy it above and you&apos;ll go straight to secure checkout. The
@@ -568,9 +628,9 @@ export default function AeoServicePage() {
             <div>
               <h3 className="text-[14px] font-bold tracking-tight text-gray-900">On-time delivery guarantee</h3>
               <p className="mt-2 text-[13px] leading-relaxed text-gray-600">
-                If I miss a milestone after you&apos;ve given on-time access and feedback, I refund that
-                milestone&apos;s fee. I never guarantee rankings or citations — no honest person can — only
-                that I deliver on time or pay for missing.
+                If we miss a milestone after you&apos;ve given on-time access and feedback, we refund that
+                milestone&apos;s fee. We never guarantee rankings or citations — no honest person can — only
+                that we deliver on time or pay for missing.
               </p>
             </div>
             <div>
@@ -592,7 +652,7 @@ export default function AeoServicePage() {
       </section>
 
       {/* 6 — FAQ (also emits FAQPage JSON-LD from the same items) */}
-      <FeatureFaq items={faqs} heading="The questions I get about AEO" />
+      <FeatureFaq items={faqs} heading="The questions we get about AEO" />
 
       {/* 7 — Final CTA */}
       <section className="relative overflow-hidden bg-gray-950 px-6 py-20 sm:py-24">
@@ -629,6 +689,8 @@ export default function AeoServicePage() {
           </div>
         </div>
       </section>
+
+      <StickyServiceCta callHref={CALL_HREF} pricingHref="#pricing" />
     </>
   )
 }

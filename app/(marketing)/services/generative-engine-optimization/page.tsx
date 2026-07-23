@@ -4,6 +4,7 @@ import Image from "next/image"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
 import { FeatureFaq } from "@/components/features/feature-faq"
 import { ProofResults } from "@/components/services/proof-results"
+import { StickyServiceCta } from "@/components/services/sticky-cta"
 import { JsonLd } from "@/components/seo/json-ld"
 import { siteConfig } from "@/lib/config"
 import { PRIMARY_AUTHOR } from "@/lib/authors"
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Generative Engine Optimization, Done For You By The Founder",
     description:
-      "AI engines compose the answer your buyer reads and cite a handful of sources. I rebuild your pages to be one of them — and prove it monthly with the citation tracker I built.",
+      "AI engines compose the answer your buyer reads and cite a handful of sources. My team and I rebuild your pages to be one of them — and prove it monthly with the citation tracker I built.",
   },
   alternates: { canonical: PAGE_URL },
 }
@@ -44,7 +45,7 @@ const definitionRows = [
   {
     num: "03",
     title: "It is not AEO either.",
-    body: "Answer engine optimization targets the extracted block — the featured snippet, People Also Ask, the answer slot inside an AI Overview, the voice answer. GEO targets the synthesized answer an AI composes across cited sources. The two jobs meet inside AI Overviews, which both cite sources and extract blocks; I run both, measured separately.",
+    body: "Answer engine optimization targets the extracted block — the featured snippet, People Also Ask, the answer slot inside an AI Overview, the voice answer. GEO targets the synthesized answer an AI composes across cited sources. The two jobs meet inside AI Overviews, which both cite sources and extract blocks; we run both, measured separately.",
   },
 ]
 
@@ -54,8 +55,8 @@ const flow: FlowRow[] = [
   {
     num: "01",
     verb: "Audit",
-    title: "A citation baseline across the engines that matter — before I touch anything.",
-    body: "Week one: my tracker queries ChatGPT, Perplexity, Gemini, Copilot and AI Overviews with the prompts your buyers use, and logs who gets cited today — you, or your competitors, by name. You start from a measured gap, not a hunch.",
+    title: "A citation baseline across the engines that matter — before we touch anything.",
+    body: "Week one: our tracker queries ChatGPT, Perplexity, Gemini, Copilot and AI Overviews with the prompts your buyers use, and logs who gets cited today — you, or your competitors, by name. You start from a measured gap, not a hunch.",
     output: "cross-engine citation baseline",
   },
   {
@@ -69,7 +70,7 @@ const flow: FlowRow[] = [
     num: "03",
     verb: "Track",
     title: "Monthly citation logs: which engines, which prompts, what changed.",
-    body: "Your report is the raw tracker output — citations gained and lost, per engine, per prompt, with deltas. If a month is flat, the log says flat. Same numbers on my screen and yours.",
+    body: "Your report is the raw tracker output — citations gained and lost, per engine, per prompt, with deltas. If a month is flat, the log says flat. Same numbers on our screen and yours.",
     output: "monthly citation log",
   },
 ]
@@ -138,12 +139,12 @@ const faqs = [
   },
   {
     question: "How is GEO different from SEO?",
-    answer: `SEO earns a ranking a human might click; GEO earns a citation inside the answer the human actually reads. The work overlaps more than the names suggest — my test domain put ${proofStats.google.rankedKeywords.toLocaleString("en-US")} keywords into Google while chasing citations — but the measurement is different: citations per prompt per engine, not positions. A normal SEO report has no column for it.`,
+    answer: `SEO earns a ranking a human might click; GEO earns a citation inside the answer the human actually reads. The work overlaps more than the names suggest — our test domain put ${proofStats.google.rankedKeywords.toLocaleString("en-US")} keywords into Google while chasing citations — but the measurement is different: citations per prompt per engine, not positions. A normal SEO report has no column for it.`,
   },
   {
     question: "How is GEO different from AEO?",
     answer:
-      "AEO targets the extracted block — the featured snippet, People Also Ask, the AI Overview answer slot, the voice answer: one passage lifted verbatim. GEO targets the composed answer an AI writes across several cited sources. If your market's questions get answered by AI chat, GEO is the lever; if they get answered by a snippet, AEO is; AI Overviews reward both. I run them as separate, separately measured services.",
+      "AEO targets the extracted block — the featured snippet, People Also Ask, the AI Overview answer slot, the voice answer: one passage lifted verbatim. GEO targets the composed answer an AI writes across several cited sources. If your market's questions get answered by AI chat, GEO is the lever; if they get answered by a snippet, AEO is; AI Overviews reward both. We run them as separate, separately measured services.",
   },
   {
     question: "How do you measure GEO?",
@@ -152,12 +153,12 @@ const faqs = [
   },
   {
     question: "How long until an engine cites me?",
-    answer: `My own zero-authority domain took about ${proofStats.weeksToResult} weeks to first meaningful citations. Your site has age and authority mine didn't; your market has competition mine didn't — plan on first tracked movement in 4–8 weeks, compounding after. Week one you get the baseline. If someone promises AI citations in days, ask to see their tracking.`,
+    answer: `Our own zero-authority domain took about ${proofStats.weeksToResult} weeks to first meaningful citations. Your site has age and authority ours didn't; your market has competition ours didn't — plan on first tracked movement in 4–8 weeks, compounding after. Week one you get the baseline. If someone promises AI citations in days, ask to see their tracking.`,
   },
   {
     question: "Why hire the founder instead of a GEO agency?",
     answer:
-      "The person who built GEO Toolbox — the platform used to measure AI visibility — is the person who does your work. Not a strategist handing off to a junior: the founder who built the measurement tool, in the code of your pages. Trade-off, stated plainly: I take 4 active clients, so there's sometimes a wait.",
+      "I built GEO Toolbox — the platform used to measure AI visibility — and I lead the work on your account, with a small team alongside me. Not a strategist handing off to a junior: the founder who built the measurement tool, in the code of your pages. Trade-off, stated plainly: we take 4 active clients at a time, so there's sometimes a wait.",
   },
 ]
 
@@ -166,7 +167,7 @@ const serviceSchema = {
   "@type": "Service",
   name: "Generative Engine Optimization Service",
   description:
-    "Done-for-you generative engine optimization run personally by Samy Ben Sadok, founder of GEO Toolbox: priority pages rebuilt to be cited inside ChatGPT, Perplexity, Gemini, Copilot and AI Overviews answers, measured monthly with a cross-engine citation tracker.",
+    "Done-for-you generative engine optimization from a small founder-led team led by Samy Ben Sadok, founder of GEO Toolbox: priority pages rebuilt to be cited inside ChatGPT, Perplexity, Gemini, Copilot and AI Overviews answers, measured monthly with a cross-engine citation tracker.",
   url: PAGE_URL,
   areaServed: "Worldwide",
   serviceType: ["Generative Engine Optimization", "AI Search Visibility"],
@@ -279,12 +280,12 @@ export default function GeoServicePage() {
 
               <h1 className="mt-6 text-[clamp(2rem,4.4vw,3.4rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
                 The AI answer your buyer reads cites a handful of sources.{" "}
-                <span className="text-accent-700">My job is making one of them you.</span>
+                <span className="text-accent-700">Our job is making one of them you.</span>
               </h1>
 
               <p className="mt-6 max-w-xl text-lg leading-relaxed text-gray-600">
                 ChatGPT, Perplexity, Gemini, Copilot and AI Overviews compose answers from sources they
-                name. I built GEO Toolbox — the platform used to measure AI visibility — and I personally
+                name. I built GEO Toolbox — the platform used to measure AI visibility — and my team and I
                 rebuild your pages to be cited in those answers, then prove it monthly with the tracker I
                 built.
               </p>
@@ -306,7 +307,23 @@ export default function GeoServicePage() {
                   See the results
                 </Link>
               </div>
-              <p className="mt-4 text-xs text-gray-500">20-min intro call · no obligation · I take 4 active clients.</p>
+              <p className="mt-4 text-xs text-gray-500">20-min intro call · no obligation · we take 4 active clients at a time.</p>
+
+              {/* Risk-reversal cue surfaced at the hero CTA, not just in pricing. */}
+              <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2">
+                {[
+                  "On-time or we refund the milestone",
+                  "You own every page & dataset",
+                  "Reporting is raw tracker output",
+                ].map((point) => (
+                  <li key={point} className="flex items-center gap-1.5 text-[12px] font-medium text-gray-600">
+                    <svg className="h-3.5 w-3.5 shrink-0 text-accent-600" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M3.5 8.5l3 3 6-6.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    {point}
+                  </li>
+                ))}
+              </ul>
             </div>
 
             {/* Product card — crypto AI-scan in a browser frame. Wrapper not
@@ -461,7 +478,7 @@ export default function GeoServicePage() {
       </section>
 
       {/* 5 — Offer ladder */}
-      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-24">
+      <section id="pricing" className="scroll-mt-20 border-t border-gray-100 bg-white px-6 py-16 sm:py-24">
         <div className="mx-auto max-w-6xl">
           <div className="max-w-2xl">
             <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
@@ -474,6 +491,49 @@ export default function GeoServicePage() {
               Two one-off purchases and one ongoing engagement. Start with the Report — you never commit to
               a retainer before you&apos;ve seen the opportunity in your own numbers.
             </p>
+          </div>
+
+          {/* Fit-filter — qualifies before the price so book-a-call slots go to
+              real prospects, not tyre-kickers. */}
+          <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="rounded-2xl border border-accent-200 bg-white/70 p-6">
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+                This is for you if
+              </p>
+              <ul className="mt-4 space-y-2.5 text-[14px] leading-snug text-gray-700">
+                {[
+                  "Your buyers research before they buy — a considered, higher-value purchase.",
+                  "You have a real site with something true and specific to say.",
+                  "You want proof from a tracker, not a monthly vibe check.",
+                ].map((t) => (
+                  <li key={t} className="flex gap-2.5">
+                    <svg className="mt-1 h-3.5 w-3.5 shrink-0 text-accent-600" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M3.5 8.5l3 3 6-6.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    <span>{t}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="rounded-2xl border border-gray-200 bg-white/70 p-6">
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-500">
+                This isn&apos;t for you if
+              </p>
+              <ul className="mt-4 space-y-2.5 text-[14px] leading-snug text-gray-600">
+                {[
+                  "You need leads this week — GEO compounds over months, not days.",
+                  "You sell pure impulse buys nobody researches first.",
+                  "You can't ship changes to your pages, or won't.",
+                ].map((t) => (
+                  <li key={t} className="flex gap-2.5">
+                    <svg className="mt-1 h-3.5 w-3.5 shrink-0 text-gray-400" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M4 4l8 8m0-8l-8 8" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    <span>{t}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
           <div className="mt-12 grid grid-cols-1 items-start gap-5 md:grid-cols-3">
@@ -541,8 +601,8 @@ export default function GeoServicePage() {
           </div>
 
           <p className="mt-6 text-[13px] font-medium text-gray-500">
-            The Report fee is credited toward a Sprint or retainer if you continue within 14 days. I take 4
-            active clients, so there&apos;s sometimes a short wait.
+            The Report fee is credited toward a Sprint or retainer if you continue within 14 days. We take 4
+            active clients at a time, so there&apos;s sometimes a short wait.
           </p>
           <p className="mt-2 text-[13px] leading-relaxed text-gray-500">
             The $750 Report is a fixed price, payable by card — buy it above and you&apos;ll go straight to secure checkout. The
@@ -563,9 +623,9 @@ export default function GeoServicePage() {
             <div>
               <h3 className="text-[14px] font-bold tracking-tight text-gray-900">On-time delivery guarantee</h3>
               <p className="mt-2 text-[13px] leading-relaxed text-gray-600">
-                If I miss a milestone after you&apos;ve given on-time access and feedback, I refund that
-                milestone&apos;s fee. I never guarantee rankings or citations — no honest person can — only
-                that I deliver on time or pay for missing.
+                If we miss a milestone after you&apos;ve given on-time access and feedback, we refund that
+                milestone&apos;s fee. We never guarantee rankings or citations — no honest person can — only
+                that we deliver on time or pay for missing.
               </p>
             </div>
             <div>
@@ -587,7 +647,7 @@ export default function GeoServicePage() {
       </section>
 
       {/* 6 — FAQ (also emits FAQPage JSON-LD from the same items) */}
-      <FeatureFaq items={faqs} heading="The questions I get about GEO" />
+      <FeatureFaq items={faqs} heading="The questions we get about GEO" />
 
       {/* 7 — Final CTA */}
       <section className="relative overflow-hidden bg-gray-950 px-6 py-20 sm:py-24">
@@ -624,6 +684,8 @@ export default function GeoServicePage() {
           </div>
         </div>
       </section>
+
+      <StickyServiceCta callHref={CALL_HREF} pricingHref="#pricing" />
     </>
   )
 }
