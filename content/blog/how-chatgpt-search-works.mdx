@@ -1,0 +1,147 @@
+---
+title: "How ChatGPT Search Works"
+description: "The model doesn't browse the web. A retrieval tool fetches live pages, and it answers with citations. How ChatGPT Search works and which index it uses."
+date: "2026-07-23"
+author: "Samy BEN SADOK"
+tags: ["chatgpt-search", "chatgpt", "rag", "ai-search", "guide"]
+draft: false
+---
+
+Ask ChatGPT about today's news and it answers with live links. Ask it the same question with search off and it either shrugs or makes something up. Same chatbot, completely different behavior. The difference is a feature called ChatGPT Search, and almost everything people get wrong about it comes from one misunderstanding of how it actually works.
+
+So here is the mechanism, start to finish: when it searches, which index it pulls from, when it decides to search at all, and why its answers differ from a Google results page.
+
+## The Model Doesn't Browse. A Tool Does.
+
+The language model at the center of ChatGPT cannot open a web page. It generates text, one token at a time, from patterns it learned in training. That is the whole job. It has no browser, no network connection, no way to fetch a URL on its own. For the full picture of what the model itself does, see [how ChatGPT works](https://geotoolbox.ai/blog/how-does-chatgpt-work).
+
+So when ChatGPT "searches," something else does the searching. A separate retrieval tool runs the query, pulls back web pages, and drops their text into the model's context, the same place your prompt goes. The model then reads that text as if you had pasted it in yourself, and writes an answer that cites the sources. Put another way: large language models generate text, they do not browse, so the browsing is delegated to a tool and the model only ever sees the text that tool hands back.
+
+This pattern has a name: retrieval-augmented generation, or [RAG](https://geotoolbox.ai/blog/what-is-rag). It is the single fact that explains every quirk in the rest of this article. The model only knows what the tool handed it. If the tool retrieves the wrong page, or a thin snippet, or nothing at all, the answer degrades, and the model rarely tells you that happened.
+
+## How a ChatGPT Search Runs, Step by Step
+
+A single search is a short pipeline. OpenAI has not published a full spec, so this is the widely-understood behavior, pieced together from its documentation and independent testing. Roughly:
+
+1. **Decide whether to search.** An internal classifier looks at your prompt and judges whether it needs fresh information. A question about a breaking event or a current price triggers a search. A timeless question ("what is photosynthesis") gets answered straight from training. You can also force a search yourself with the search tool, the globe icon, or by starting a message with a slash command.
+2. **Rewrite the query.** Your prompt is not sent to a search engine verbatim. The system rewrites it into one or more optimized queries, sometimes several at once, a technique called [query fan-out](https://geotoolbox.ai/blog/query-fan-out). What you typed and what it actually searched for are often different, which is why the results can surprise you.
+3. **Retrieve from an index.** Those queries run against a web index and come back as a ranked list, the familiar page of blue links. At this stage the tool sees only metadata for each result: an internal ID, the title, the URL, a short snippet, and a last-updated date. No body text yet.
+4. **Read the promising pages in chunks.** For results worth opening, the tool fetches the page and reads it in pieces rather than all at once. Dan Petrovic's [reverse-engineering of the process](https://dejan.ai/blog/how-gpt-sees-the-web/) describes a "sliding window" that jumps around the document, strips out design and scripts, and pulls short passages of plain text. It does not load the whole page, and the exact chunk sizes are not something OpenAI has published, so treat the specifics as observed rather than official.
+5. **Synthesize and cite.** Finally the model combines those passages with its own trained knowledge and writes a conversational answer, attaching inline citations to the pages it leaned on.
+
+The takeaway from step 4 matters for anyone publishing on the web: if consumer search behaves like Petrovic's tests, the tool pulls fragments rather than whole pages, and the earliest windows are what capture the top of your content. It rarely holds a full article in view at once.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/how-chatgpt-search-works/chatgpt-search-retrieval-pipeline.png" alt="A five-step flow diagram of how ChatGPT search works: the model decides whether to search or answer from training memory, rewrites the prompt into fan-out queries, retrieves ranked links from a Bing and OpenAI index using metadata only, reads short chunks of the top pages with a sliding window, then synthesizes one answer with inline citations." w="2600" h="1026" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">ChatGPT Search is retrieval-augmented generation: a separate tool searches and reads, then the model writes the cited answer.</figcaption>
+</figure>
+
+## Which Search Index Does ChatGPT Use? Bing, OpenAI's Own, or Both
+
+Short answer: a hybrid, and OpenAI has not published the recipe. ChatGPT pulls from a Bing-class third-party index and from OpenAI's own web crawl. Both sources are confirmed; how they are weighted is not. What Google is not, on the evidence available, is a disclosed index partner, though it turns out to matter at the edges.
+
+Two pieces of infrastructure sit behind that. OpenAI's [own crawler documentation](https://developers.openai.com/api/docs/bots) lists three separate bots, and only one of the [AI crawlers](https://geotoolbox.ai/blog/ai-crawlers) feeds search:
+
+<table>
+<thead>
+<tr><th>Crawler</th><th>What it does</th><th>Feeds ChatGPT Search?</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>OAI-SearchBot</strong></td><td>Crawls the web to surface sites in ChatGPT's search features</td><td>Yes. Block it and your content won't be cited in Search answers, though the URL can still show as a plain link</td></tr>
+<tr><td><strong>GPTBot</strong></td><td>Collects content that may be used to train the models</td><td>No. It trains the models; it does not control Search eligibility</td></tr>
+<tr><td><strong>ChatGPT-User</strong></td><td>Makes user-initiated page visits for some ChatGPT questions and actions</td><td>No. Not the automatic Search crawler, and not used to decide what appears in Search</td></tr>
+</tbody>
+</table>
+
+The Microsoft partnership means Bing's index has been a primary source from early on, and the fact that OAI-SearchBot exists at all is consistent with OpenAI also building its own cache or index rather than renting one outright.
+
+So where does Google come in? Not as a partner, but analysts keep catching it at the edges. Lily Ray [noted](https://www.linkedin.com/posts/lily-ray-44755615_it-seems-like-chatgpt-was-heavily-reliant-activity-7483170448348868608-CZBz) that ChatGPT looked "heavily reliant on Google's search results" until recently, and now appears to be "leaning on Bing results more heavily again, while building its own cache/index." Aleyda Solis [documented](https://www.searchenginejournal.com/chatgpt-appears-to-use-google-search-as-a-fallback/552089/) ChatGPT returning a snippet that matched Google's result for a page Bing had not indexed, which reads like a Google fallback when Bing comes up short. So the honest picture is fluid: Bing-class retrieval plus a growing OpenAI index as the primary sources, Google surfacing as an occasional fallback, and the exact mix undisclosed.
+
+The infrastructure data backs the "building its own index" part. A Botify and Nectiv [analysis of about 7 billion log files](https://www.botify.com/blog/openai-tripled-web-crawl) found OpenAI's crawl tripled after August 2025, with OAI-SearchBot activity rising 3.5x, enough that its search crawler now logs slightly more requests than its training crawler.
+
+## When ChatGPT Searches vs Answers From Memory
+
+Not every question triggers a search, and this is the source of most complaints about accuracy. The classifier from step one makes the call: current or fast-moving topics get retrieval, timeless ones get answered from training data.
+
+That matters because training data has a cutoff. Ask about something that happened after the model's cutoff and, if the classifier decides not to search, you get a confident guess instead of a fact. The catch is that ChatGPT does not clearly flag which mode produced an answer. A wrong "fact" that a user blames on ChatGPT Search was often never a search at all, just the model answering from stale memory.
+
+The fix is to remove the guesswork. If freshness matters, force the search rather than hoping the classifier does. Turn on the search tool, or watch for the "Searching the web" status and the source links that only appear when retrieval actually ran. For heavier questions, Deep Research runs the same retrieval loop many times over, reading dozens of pages before it answers, which is slower but far more thorough than a single search.
+
+## ChatGPT Search vs Google: What's Actually Different
+
+They are built for different jobs. Google hands you a ranked list of links and lets you do the reading and judging. ChatGPT Search does the reading for you and hands back one synthesized answer with citations. Everything else follows from that split. For how this plays out across engines, see our breakdown of [how AI search works](https://geotoolbox.ai/blog/how-does-ai-search-work).
+
+<table>
+<thead>
+<tr><th>Dimension</th><th>ChatGPT Search</th><th>Google Search</th></tr>
+</thead>
+<tbody>
+<tr><td>Output</td><td>One written answer with a few inline citations</td><td>A ranked list of links you scan yourself</td></tr>
+<tr><td>Sources read</td><td>A handful of pages, chosen for you</td><td>Thousands ranked; you pick which to open</td></tr>
+<tr><td>Follow-ups</td><td>Conversational, keeps context</td><td>Each search starts fresh</td></tr>
+<tr><td>Personalization</td><td>Rough location and memory; less location-tuned</td><td>Personalized and location-aware</td></tr>
+<tr><td>Best for</td><td>Synthesis, comparisons, "explain this"</td><td>Navigational, local, and transactional queries</td></tr>
+</tbody>
+</table>
+
+Because it reads only a few pages, ChatGPT Search is strong when you want a synthesized take and weak when you want breadth or a specific site. It leans on rough, IP-level location rather than the tuned local results Google gives you, so "best coffee near me" is still a job Google does better. And the raw scale gap is real: in the same Botify dataset, Google's crawlers logged roughly 18.2 billion crawl events in the final month measured, against 887 million from OpenAI's two crawlers combined, more than 20 to 1. That is crawl activity, not searches, but it is a reminder that ChatGPT Search, growing fast as it is, remains a small slice of how the web gets crawled and read. Perplexity takes yet another approach to the same problem, which we cover in [ChatGPT vs Perplexity](https://geotoolbox.ai/blog/chatgpt-vs-perplexity).
+
+## Is ChatGPT Search Free? Do You Need to Log In?
+
+Yes, it is free, and no, you do not need an account. Access opened up in stages. OpenAI launched ChatGPT Search on October 31, 2024 for Plus and Team subscribers. It reached logged-in free users in December 2024, and by February 2025 OpenAI dropped the login requirement entirely, so you can search from a signed-out session.
+
+Paid plans do not change what the feature is; they raise the ceiling, with higher usage limits and access to Deep Research. If you have seen the claim that ChatGPT Search is paid-only, it is out of date. The retrieval mechanism is identical whether you pay or not.
+
+## Can You Trust It? Where ChatGPT Search Gets Things Wrong
+
+The citations look authoritative. They are not always accurate. A Columbia Journalism Review study that [tested eight AI search engines](https://www.cjr.org/tow_center/we-compared-eight-ai-search-engines-theyre-all-bad-at-citing-news.php) across 1,600 queries found they identified the source of a quote incorrectly more than 60% of the time. ChatGPT Search was wrong in 134 of its 200 tests (67%), giving a partly or fully incorrect source and rarely flagging any uncertainty.
+
+The mechanism explains why. The tool screens results on metadata alone, then reads winners in disconnected chunks, then the model writes fluent prose around whatever it pulled. A citation is generated to look right, not guaranteed to be right. There is also a reachability trap: when OAI-SearchBot cannot reach the original page, ChatGPT may cite a scraper or aggregator that copied the content instead of the source itself. We go deeper on this in [how ChatGPT cites sources](https://geotoolbox.ai/blog/chatgpt-citations).
+
+The practical rule: a plausible-looking link is not verification. For anything that matters, click through and confirm the source actually says what the answer claims.
+
+## What This Means If You Want ChatGPT to Find You
+
+Before any content tactic, one prerequisite decides everything: OAI-SearchBot has to be able to reach and read your pages. If it is blocked in robots.txt, or your content only renders after JavaScript the crawler will not run, you are not eligible to be cited, no matter how good the writing is. And because the tool reads in chunks from the top, a clear answer in your first few paragraphs beats the same answer buried under an introduction.
+
+That reachability layer is the most common gap we see when we scan sites for AI visibility: the owner blocked or broke a crawler without meaning to, and it is invisible until you check the logs. Note that this is a different job from getting cited once you are reachable, which involves reputation, structure, and freshness. We keep the two separate on purpose, and the get-cited playbook lives in our guide to [SEO for ChatGPT](https://geotoolbox.ai/blog/seo-for-chatgpt).
+
+If you are not sure whether ChatGPT's crawler can even see your site, that is the first thing worth checking. Our [AI crawler checker](https://geotoolbox.ai/tools/ai-crawler-checker) tests whether OAI-SearchBot and the other AI bots are allowed to reach your pages, so you can fix the plumbing before you worry about the content.
+
+## Frequently Asked Questions
+
+### Can I use ChatGPT for search?
+
+Yes. ChatGPT often searches automatically when a question needs current information, and you can force it any time with the search tool or globe icon. It returns a written answer with links rather than a list of results.
+
+### Is ChatGPT Search free?
+
+Yes. It is free and, since February 2025, works without an account. Paid plans raise your usage limits and add Deep Research, but the core search feature is the same on the free tier.
+
+### Does ChatGPT use Bing or Google?
+
+Mostly Bing, plus OpenAI's own crawler, OAI-SearchBot. Google is not a disclosed index partner, though analysts have caught ChatGPT falling back to Google results when Bing lacks a page. OpenAI has not said how the sources are weighted.
+
+### Is ChatGPT Search better than Google?
+
+They do different jobs. ChatGPT is better for synthesis, explanations, and follow-up questions. Google is better for navigational, local, and transactional searches where you want to pick from many sources yourself.
+
+### How do I turn on search in ChatGPT?
+
+Click the globe or search icon before sending your message, or start typing with the search tool selected. In many cases ChatGPT triggers a search on its own and shows a "Searching the web" status while it does.
+
+### Can other people see my ChatGPT searches?
+
+Not by default. A search sits in your own chat history, or your session if you are signed out, and is not posted anywhere public. A couple of caveats: you can choose to share a chat, and to actually run the search your query (rewritten) and a rough location are sent to the search provider.
+
+## Sources
+
+- Introducing ChatGPT search - OpenAI, October 2024 - `openai.com/index/introducing-chatgpt-search/`
+- Overview of OpenAI Crawlers (OAI-SearchBot, GPTBot, ChatGPT-User) - OpenAI - `developers.openai.com/api/docs/bots`
+- OpenAI Has Tripled Their Crawl of the Web: 7B+ Log Files Analyzed - Botify and Nectiv, April 2026 - `botify.com/blog/openai-tripled-web-crawl`
+- ChatGPT is leaning on Bing again while building its own index - Lily Ray, LinkedIn, 2026 - `linkedin.com/posts/lily-ray-44755615_it-seems-like-chatgpt-was-heavily-reliant-activity-7483170448348868608-CZBz`
+- ChatGPT Appears to Use Google Search as a Fallback - Aleyda Solis, Search Engine Journal, July 2025 - `searchenginejournal.com/chatgpt-appears-to-use-google-search-as-a-fallback/552089/`
+- How GPT Sees the Web (sliding-window retrieval research) - Dan Petrovic, DEJAN - `dejan.ai/blog/how-gpt-sees-the-web/`
+- AI Search Has a Citation Problem - Columbia Journalism Review, Tow Center, March 2025 - `cjr.org/tow_center/we-compared-eight-ai-search-engines-theyre-all-bad-at-citing-news.php`
+- ChatGPT Search - OpenAI Help Center - `help.openai.com/articles/9237897-chatgpt-search`
+
