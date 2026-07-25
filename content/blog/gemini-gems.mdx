@@ -2,6 +2,7 @@
 title: "Gemini Gems: What They Are and How to Build One (2026)"
 description: "Gemini Gems are reusable custom versions of Google Gemini. What they are, how to build one, what knowledge files really do, and how they compare to custom GPTs."
 date: "2026-06-25"
+updated: "2026-07-25"
 author: "Samy BEN SADOK"
 tags: ["gemini-gems", "google-gemini", "gemini-ai", "gemini", "llm", "guide"]
 draft: false
@@ -20,7 +21,7 @@ A Gem is a customized configuration of Gemini: a name, a set of standing instruc
 
 The honest framing matters here, because the marketing oversells it. A Gem is not a smarter model or a fine-tuned AI trained on your data. It is a saved prompt with a few extras bolted on. That is genuinely useful for anything you do repeatedly, but it will not make Gemini fundamentally better at a task it already struggles with. It removes the re-setup tax, not the model's limits.
 
-Under the hood, a Gem runs on whatever [Gemini](https://geotoolbox.ai/blog/what-is-gemini) model your plan gives you. There is no separate "Gem model." When Google updates the model on your plan, your Gems use it automatically, because the Gem is a configuration layer sitting on top of the [large language model](https://geotoolbox.ai/glossary/large-language-model), not a model itself. Paid plans simply give you access to more capable models for it to run on.
+Under the hood, a Gem runs on whatever [Gemini](https://geotoolbox.ai/blog/what-is-gemini) model your plan gives you, which in 2026 means the Gemini 3 family (a fast Flash model on the free tier, a more capable Pro model on paid plans). There is no separate "Gem model." When Google updates the model on your plan, your Gems use it automatically, because the Gem is a configuration layer sitting on top of the [large language model](https://geotoolbox.ai/glossary/large-language-model), not a model itself. Paid plans simply give you access to more capable models for it to run on.
 
 Three pieces make up every Gem:
 
@@ -56,8 +57,9 @@ Building your first Gem takes about two minutes.
 3. Give it a **name** that describes the job, so you can find it later.
 4. Write the **instructions**. This is the part that matters most, and we break down how to write good ones in the next section.
 5. Add **knowledge files** if the Gem needs to reference specific documents, like a style guide or a product sheet.
-6. Use the **preview panel** on the right to test it with a real prompt before you commit.
-7. Click **"Save"**.
+6. Optionally pick a **default tool** so every chat with the Gem opens in Deep Research, Canvas, or image mode instead of a plain chat (covered in its own section below).
+7. Use the **preview panel** on the right to test it with a real prompt before you commit.
+8. Click **"Save"**.
 
 Two things trip people up here. First, the preview panel is not the same as saving. You can test a Gem all day in preview, but if you close the tab without clicking **"Save"**, it is gone. If a Gem you "made" has vanished, this is usually why.
 
@@ -96,6 +98,14 @@ A few practical realities Google does and does not document:
 - **Google Docs and Sheets stay live.** [Docs and Sheets you add from Drive](https://workspaceupdates.googleblog.com/2024/11/upload-google-docs-and-other-file-types-to-gems.html) reflect their latest version, so updating the doc updates what the Gem knows. Other uploaded files are static snapshots by comparison.
 - **For large document sets, use the right tool.** If you are trying to load dozens or hundreds of documents, a Gem is the wrong container. Google's NotebookLM is built for large source libraries and grounded answers across them, which is a different job from a reusable Gem.
 
+## Give a Gem a Default Tool
+
+Beyond the three core pieces, a Gem can also open in a specific tool instead of a plain chat. The Gem editor has a **default tool** dropdown that sets what every new chat with that Gem starts in: no default tool (regular chat), Create image, Canvas, Deep Research, Create music, or Guided Learning. A [step-by-step 2026 walkthrough](https://www.ai-toolbox.co/gemini-management-and-productivity/how-to-use-gemini-gems-create-custom-2026) shows where to find it. Set it once and you stop choosing the mode by hand every time.
+
+This is the one extra that changes what the Gem does, not just what it says. A research Gem set to Deep Research opens straight into a planned, cited report; a drafting Gem set to Canvas opens the editing surface. It is the closest a Gem comes to behaving like a workflow rather than a saved prompt.
+
+You can automate a repeat task with **Scheduled Actions**, a Gemini feature (launched in 2025) that runs a saved prompt on a daily, weekly, or monthly schedule and returns the result in your Gemini chat, [per Google](https://blog.google/products-and-platforms/products/gemini/scheduled-actions-gemini-app/). It runs a standalone prompt rather than a Gem itself, but you can paste a Gem's instructions into that prompt to get the same recurring output, like a weekly brand-answer check. One caveat: Scheduled Actions is a paid feature (Gemini Pro or Ultra, plus some Workspace plans), capped at around 10 active actions, so unlike Gems themselves it is not part of the free tier.
+
 ## Premade Gems Worth Copying
 
 Google ships five built-in Gems, and the fastest way to learn the feature is to copy one and read how its instructions are written. The five, [per Google's own blog](https://blog.google/products-and-platforms/products/gemini/google-gems-tips/), are:
@@ -123,7 +133,7 @@ If you already use ChatGPT's custom GPTs, Gems will feel familiar, with some rea
 <tr><td><strong>Knowledge files</strong></td><td>Up to 10, with live Google Drive sync</td><td>Up to 20, static uploads</td></tr>
 <tr><td><strong>External API actions</strong></td><td>No (connects to Google apps only)</td><td>Yes, via Actions</td></tr>
 <tr><td><strong>Public marketplace</strong></td><td>No</td><td>Yes, the GPT Store</td></tr>
-<tr><td><strong>Image generation</strong></td><td>Not a per-Gem setting (the Gemini app makes images)</td><td>Yes, built in</td></tr>
+<tr><td><strong>Image generation</strong></td><td>Via a default-tool setting (open every chat in Create image mode)</td><td>Yes, built in</td></tr>
 <tr><td><strong>Sharing</strong></td><td>Yes, Drive-style link and roles</td><td>Yes, link or store listing</td></tr>
 <tr><td><strong>Free tier</strong></td><td>Yes</td><td>Yes, with limits</td></tr>
 </tbody>
@@ -141,7 +151,7 @@ The other recurring problem is the Gem that will not save, the "sorry, we can't 
 
 ## Build a Gem to Watch How AI Describes Your Brand
 
-One of the most useful marketing Gems is not a copywriter but a brand-answer checker. Build a Gem whose standing instructions describe your brand, your main competitors, and the questions your buyers ask AI tools. Run those questions once with no knowledge attached, to see what the model says about you on its own, then attach your real product facts and run them again. The gap between the two answers is exactly where AI is getting your brand wrong.
+One of the most useful marketing Gems is not a copywriter but a brand-answer checker. Build a Gem whose standing instructions describe your brand, your main competitors, and the questions your buyers ask AI tools. Run those questions once with no knowledge attached, to see what the model says about you on its own, then attach your real product facts and run them again. The gap between the two answers is exactly where AI is getting your brand wrong. Set that Gem's default tool to Deep Research, and every run comes back as a sourced report you can compare over time.
 
 In our experience, this matters because [AI search](https://geotoolbox.ai/blog/how-does-ai-search-work) now answers a growing share of brand questions before anyone reaches your site, and what the model says about you is frequently stale or wrong. A checker Gem gives you a fast, repeatable way to spot those gaps without rebuilding the prompt each time. Closing them is a separate job: an [optimize-for-AI-search playbook](https://geotoolbox.ai/blog/how-to-optimize-for-ai-search) improves the source material the engines draw on, so the answer they generate next time lands closer to the truth.
 
@@ -163,6 +173,10 @@ You can attach up to 10 knowledge files per Gem, each up to 100 MB, per Google's
 
 Yes, since September 2025. Sharing works like a Google Drive file: add people by email or share a link with viewer or editor access. Sharing can be blocked if the Gem uses non-shareable knowledge files or if a Workspace admin has disabled it for your organization.
 
+### Can a Gemini Gem use tools like Deep Research or Canvas?
+
+Yes. Each Gem has a default tool setting, so you can make every chat with that Gem open directly in Deep Research, Canvas, image creation, music, or Guided Learning instead of a plain conversation. A drafting Gem set to Canvas, for example, opens the editing surface every time instead of a standard chat.
+
 ### Do Gemini Gems use a different AI model?
 
 No. A Gem is just saved configuration, not a separate model, so it runs on whatever Gemini model your plan includes and upgrades automatically when Google ships a newer one. Paid plans let you run a Gem on a more capable model for harder tasks.
@@ -182,3 +196,5 @@ The bigger point for marketers is that a Gem is only as accurate as the facts yo
 - Build custom experts with Gems (Google Gemini) - `gemini.google/overview/gems`
 - Tips for creating custom Gems (Gemini Apps Help) - `support.google.com/gemini/answer/15235603`
 - Upload and analyze files in Gemini Apps (Gemini Apps Help) - `support.google.com/gemini/answer/14903178`
+- How to use Gemini Gems: build custom AI assistants (2026) - `ai-toolbox.co/gemini-management-and-productivity/how-to-use-gemini-gems-create-custom-2026`
+- Gemini app launches scheduled actions to help you stay productive (Google) - `blog.google/products-and-platforms/products/gemini/scheduled-actions-gemini-app`
