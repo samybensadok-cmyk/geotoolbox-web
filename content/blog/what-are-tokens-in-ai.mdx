@@ -2,6 +2,7 @@
 title: "What Are Tokens in AI? Why ChatGPT Miscounts Strawberry"
 description: "What are tokens in AI? The chunks models read instead of words, why they make ChatGPT miscount letters, and what tokenization means for AI visibility."
 date: "2026-06-12"
+updated: "2026-07-25"
 author: "Samy BEN SADOK"
 tags: ["tokens", "tokenization", "ai-search", "geo", "guide"]
 draft: false
@@ -63,7 +64,7 @@ Tokens are not the whole story, to be fair. Ask a model to spell "strawberry" an
 
 Arithmetic breaks for a related reason. Long numbers get chopped into tokens at arbitrary points, so "1234567" might split into pieces that do not line up for digit-by-digit math. That is part of why models have fumbled questions like whether 9.11 is bigger than 9.9. And there is only a fixed amount of computation per token, nothing like the open-ended loop you would use to carry digits through a long sum.
 
-Newer models look better at this, but be precise about why. A common workaround is to spell the word out or separate the letters, making the character-level task easier for the model. It is a workaround, not a fix at the tokenizer level. As of late 2025, [reports were still catching GPT-5.2 miscounting](https://dataconomy.com/2025/12/15/gpt-5-2-still-counts-two-rs-in-strawberry/) some variants. This is the same family of gap behind other [AI hallucinations](https://geotoolbox.ai/blog/ai-hallucinations): the model confidently reports something its architecture did not actually let it check.
+Newer models look better at this, but be precise about why. A common workaround is to spell the word out or separate the letters, making the character-level task easier for the model. It is a workaround, not a fix at the tokenizer level. As of late 2025, [reports were still catching GPT-5.2 miscounting](https://dataconomy.com/2025/12/15/gpt-5-2-still-counts-two-rs-in-strawberry/) some variants. By mid-2026 the newest flagships usually pass the famous "strawberry" test, largely because that exact case is now familiar to them. They can stumble on less familiar, misspelled, or invented words, since subword tokenization keeps the letters out of direct reach. This is the same family of gap behind other [AI hallucinations](https://geotoolbox.ai/blog/ai-hallucinations): the model confidently reports something its architecture did not actually let it check.
 
 The same blind spot explains a pain every writer has hit: ask for 1,000 words and you often get 700, with the model insisting it delivered 1,000. It generates token by token with no running word counter, so it cannot track its own length any better than it can count R's. Treat anything character-level or count-based the same way, from reversing a string to solving Wordle, and lean on models for meaning rather than spelling.
 
@@ -97,7 +98,7 @@ This is also where tokens meet AI search. When ChatGPT or a Google AI Overview a
 
 When a company builds on an AI model through its API, it pays by the token, usually quoted as a price per million tokens. Two details surprise people. First, **output tokens cost more than input tokens**, often several times more, because generating text one token at a time is the expensive part. Reading your prompt is cheap. Writing the answer is not.
 
-Second, a chat does not bill only your latest message. To answer turn five, the model re-reads turns one through four, so the whole conversation so far rides along and is charged again, which is why a long back-and-forth gets more expensive with every reply. Providers now discount repeated text through prompt caching, but the structure stands: the history travels with every turn. Hidden inputs add up the same way, from the system prompt to any internal reasoning tokens a model burns before its visible answer.
+Second, a chat does not bill only your latest message. To answer turn five, the model re-reads turns one through four, so the whole conversation so far rides along and is charged again, which is why a long back-and-forth gets more expensive with every reply. It is also why an agent that [reloads its whole context on every step](https://geotoolbox.ai/blog/reduce-claude-code-token-costs) can run up a bill fast. Providers now discount repeated text through prompt caching, but the structure stands: the history travels with every turn. Hidden inputs add up the same way, from the system prompt to any internal reasoning tokens a model burns before its visible answer.
 
 There is one real cost lever here, and it is worth naming precisely so it does not get misapplied. Trimming filler out of prompts and instructions can cut API spend, with [one security firm putting the savings around 10 to 30%](https://www.pivotpointsecurity.com/ai-tokens-how-they-impact-usage-costs/). That is a genuine practice, but it lives entirely on the application-building side. It is about the prompts a developer sends, not the web copy you publish. Hold that distinction, because the SEO world routinely blurs it.
 

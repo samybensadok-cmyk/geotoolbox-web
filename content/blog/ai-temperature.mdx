@@ -2,6 +2,7 @@
 title: "What Is Temperature in AI? Why You Get Different Answers"
 description: "What is temperature in AI? The real mechanism behind why ChatGPT and other LLMs give a different answer every time, and what that variance means for your brand."
 date: "2026-06-21"
+updated: "2026-07-25"
 author: "Samy BEN SADOK"
 tags: ["ai-temperature", "llm-temperature", "temperature", "sampling", "geo", "ai-visibility", "guide"]
 draft: false
@@ -18,7 +19,7 @@ The same question, asked twice, can get you two different answers. Ask an AI ass
 
 **Temperature is a number that controls how random a model's word choices are.** Set it low and the model plays it safe; set it high and it takes more chances. That is the whole idea. According to [IBM's definition](https://www.ibm.com/think/topics/llm-temperature), temperature controls the randomness of the text an LLM generates. What it does not do is make the model more accurate or more knowledgeable. It only changes how much of a gamble each word is.
 
-The mechanism is worth seeing once, because the rest of this article rests on it. A language model does not look up a stored answer. At every step it predicts the [next token](https://geotoolbox.ai/blog/what-are-tokens-in-ai), and what it actually produces is a long list of raw scores, one for each possible next token. Those scores are called logits, and a function called softmax turns them into a clean probability distribution that adds up to 100%.
+The mechanism is worth seeing once, because the rest of this article rests on it. A language model does not look up a stored answer. At every step it predicts the [next token](https://geotoolbox.ai/blog/what-are-tokens-in-ai), and what it actually produces is a long list of raw scores, one for each possible next token. Those scores are called logits, and a function called softmax turns them into a clean probability distribution where all the odds add up to 1.
 
 Temperature is applied right before the model picks. A low temperature sharpens the distribution, so the top choice towers over the rest and the model almost always takes it. A high temperature flattens the distribution, so less likely words get a real chance. Then the model rolls the dice and samples one token from whatever distribution it was left with.
 
@@ -36,7 +37,7 @@ Different providers put that dial on different scales, so a "high" temperature i
 </table>
 
 <Callout type="note" title="The scales are not the same">
-Most developer APIs accept the temperature parameter from 0 to 2 (OpenAI, Google Gemini) or 0 to 1 (Anthropic), usually defaulting to around 1.0. Consumer chat apps like ChatGPT do not expose this dial at all, which matters later.
+On models that expose it, most developer APIs accept temperature from 0 to 2 (OpenAI, Google Gemini) or 0 to 1 (Anthropic), usually defaulting to around 1.0. That "on models that expose it" is doing real work: on OpenAI's reasoning models, the o-series and GPT-5 in its reasoning modes, the dial is off-limits and the API rejects a temperature you try to set, and consumer chat apps like ChatGPT never exposed it at all. Both matter later.
 </Callout>
 
 One honest caveat before you treat temperature as a creativity slider: it is constantly described as exactly that, but the research is not so tidy. A [2024 arXiv study](https://arxiv.org/abs/2405.00492) testing whether temperature really is the creativity parameter found only a weak link between temperature and genuine novelty, and a stronger link between high temperature and output simply becoming less coherent. Temperature widens the range of what a model might say. It does not deepen the quality of the ideas.
@@ -80,6 +81,8 @@ That sets up the part that actually matters for brands. If you cannot get a host
 ## Why You Cannot Know ChatGPT's Temperature
 
 **Any confident claim about "ChatGPT's temperature" is a guess.** Consumer chat products do not publish their decoding settings, and they change them without announcement. From the outside the exact number is unknowable, so treat precise statements about it with suspicion.
+
+It has actually gotten harder to pin down, not easier. On OpenAI's [reasoning models](https://geotoolbox.ai/blog/how-ai-models-think), the o-series and GPT-5 running in its reasoning modes, the temperature control is off the table: send your own value to the API and the request comes back with an error. The usual explanation is that a sampling dial would destabilize the long multi-step reasoning these models run. Google is tightening the same screws on its newest Gemini models, deprecating the setting on the latest Flash releases and telling developers to leave it at the default elsewhere. So on many of the exact models people mean when they say "ChatGPT," the setting is not just hidden from the outside, it is not yours to set at all.
 
 More to the point, inside a real product the temperature dial is rarely the main reason answers move. A modern assistant is [not just a model with a setting](https://geotoolbox.ai/blog/how-does-chatgpt-work); it is a stack. The same visible prompt can be routed to a different model version, wrapped in a system prompt that was quietly updated overnight, shaped by memory of your earlier chats, or grounded in a different set of freshly retrieved web pages. Any one of those moves the answer more than the sampling dial does.
 
@@ -129,7 +132,7 @@ In our experience running AI-visibility scans, this is the norm, not the excepti
 
 ## How to Measure It Honestly: Sample the Distribution
 
-**You cannot change the dice, but you can do two things that turn AI visibility from a guessing game into a measurement.**
+**You cannot change the dice, but you can do two things that turn [AI visibility](https://geotoolbox.ai/blog/what-is-ai-visibility) from a guessing game into a measurement.**
 
 First, stop reading single answers and start measuring the distribution. The right unit is a presence rate across many samples, per engine, tracked over time. "Present in 7 of the last 10 scans, up from 4 of 10 a month ago" is a real signal. "I asked once and we showed up" is not. The same logic extends to your competitors and to which source the AI cites for you: one run is an anecdote, the rate is the data.
 
@@ -163,10 +166,13 @@ What you can change is how you read the output. Stop treating a single AI answer
 Because the model builds each answer by sampling from a probability distribution over possible next words, not by looking up a stored response. When the top candidates are close in probability, a different one can win on the next run, and that early difference cascades through the rest of the answer. In one study, ChatGPT gave consistent results to an identical prompt only about 73% of the time.
 
 ### I set the temperature to 0, so why is the output still different?
-On a hosted model like ChatGPT or Claude, temperature 0 is still not perfectly deterministic. The main reason is that your request shares a batch with other people's, and the batch size changes with server load, which shifts the order of the underlying floating-point math just enough to flip near-tied tokens. Setting 0 is still the right move when you want the most repeatable output you can get, like extraction or fixed-format tasks; just do not expect bit-for-bit identical results from a hosted API. Reliable determinism is realistic mainly when you run an open-weights model yourself with fixed settings and a single batch.
+On a hosted model like ChatGPT or Claude, temperature 0 is still not perfectly deterministic. The main reason is that your request shares a batch with other people's, and the batch size changes with server load, which shifts the order of the underlying floating-point math just enough to flip near-tied tokens. Setting 0 is still the right move when you want the most repeatable output you can get, like extraction or fixed-format tasks; just do not expect bit-for-bit identical results from a hosted API. One practical caveat some developers report: because temperature 0 sticks so hard to the single most likely path, a structured-output call that fails to parse tends to fail the same way on every retry, so a low non-zero value like 0.2 is sometimes better when you want retries to actually vary. Reliable determinism is realistic mainly when you run an open-weights model yourself with fixed settings and a single batch.
 
 ### What temperature should I use?
 For anything that needs to be accurate and repeatable, like code, data extraction, or factual answers, stay low, around 0 to 0.3. For everyday writing and summaries, a middle setting of 0.4 to 0.7 balances consistency and variety. For brainstorming or creative drafts, go higher, 0.8 and up. Most APIs default to about 1.0. This only applies when you call the API directly; consumer chat apps pick the setting for you.
+
+### Can you set the temperature on GPT-5 or the o-series models?
+It depends on whether the model is reasoning. On OpenAI's o-series and on GPT-5 running in a reasoning mode, temperature and top-p are not available: send your own value and the API returns an error instead of applying it. The non-reasoning variants are the exception, so the GPT-5 chat model and GPT-5.1 or 5.2 with reasoning effort set to none still accept temperature, as do the older GPT-4-class chat models (0 to 2). The practical takeaway holds either way: on the reasoning models these products increasingly run on, you cannot assume a specific temperature is behind a given answer.
 
 ### What is the difference between temperature and top-p?
 Temperature reshapes how steep the probability curve is, making the top choice more or less dominant. Top-p, or nucleus sampling, instead keeps only the smallest set of top tokens whose probabilities add up to a threshold and samples from that set. Both control randomness, which is why providers usually recommend adjusting one or the other rather than both at once.
