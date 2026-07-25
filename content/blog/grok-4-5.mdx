@@ -2,7 +2,7 @@
 title: "Grok 4.5: Specs, Benchmarks, Pricing & the Honest Verdict (2026)"
 description: "Grok 4.5 is xAI's cheaper, faster 'Opus-class' coding model, out July 8, 2026. An honest look at specs, real benchmarks, true cost, EU access, and AI search."
 date: "2026-07-11"
-updated: "2026-07-20"
+updated: "2026-07-25"
 author: "Samy BEN SADOK"
 tags: ["grok-4.5", "grok", "xai", "spacexai", "cursor", "llm", "ai-model", "guide"]
 draft: false
@@ -46,10 +46,10 @@ This is where the marketing and the numbers diverge. xAI's prose says Grok 4.5 e
 
 The picture is competitive, not dominant. Grok 4.5 beats GPT-5.5 on SWE-Bench Pro but trails Opus 4.8 and Fable 5 there, and it is closest to the leader on Terminal Bench 2.1. These are also xAI's own figures ([reported by MarkTechPost](https://www.marktechpost.com/2026/07/08/spacexai-releases-grok-4-5/) from the launch chart), with competitor numbers pulled from their system cards and leaderboards, so treat them as a vendor's best case and verify on your own tasks.
 
-Independent testing lands in the same place. On the [Artificial Analysis Intelligence Index](https://artificialanalysis.ai/models/grok-4-5), Grok 4.5 scores 54, which puts it behind the frontier leaders (Fable 5, GPT-5.5, and Opus 4.8) rather than level with them. The same testing flags a reliability caveat: by Artificial Analysis's measures its hallucination tendency looks higher than its predecessor's, even as its factual knowledge improved. A model that knows more but states wrong answers with more confidence is exactly the failure mode you do not want in legal, financial, or client-facing work, so verify anything high-stakes rather than trusting a confident reply.
+Independent testing lands in the same place. On the [Artificial Analysis Intelligence Index](https://artificialanalysis.ai/models/grok-4-5), Grok 4.5 scores 54, which puts it behind the frontier leaders at the time of testing (Fable 5, GPT-5.5, and Opus 4.8) rather than level with them. The same testing flags a reliability caveat: by Artificial Analysis's measures its hallucination tendency looks higher than its predecessor's, even as its factual knowledge improved. A model that knows more but states wrong answers with more confidence is exactly the failure mode you do not want in legal, financial, or client-facing work, so verify anything high-stakes rather than trusting a confident reply.
 
 <Callout type="note">
-Musk pitched Grok 4.5 as "Opus-class," but his more precise comparison was narrower: "roughly comparable to Opus 4.7, but much faster," referencing the previous Opus generation rather than the current Opus 4.8. That gap between his own two framings tells you most of what you need to know.
+Musk pitched Grok 4.5 as "Opus-class," but his more precise comparison was narrower: "roughly comparable to Opus 4.7, but much faster," referencing the previous Opus generation rather than the then-current Opus 4.8 (Anthropic has since moved the tier on again to [Opus 5](https://geotoolbox.ai/blog/claude-opus-5)). That gap between his own two framings tells you most of what you need to know.
 </Callout>
 
 The coding numbers also deserve extra scrutiny for a specific reason: the model was co-trained with Cursor on Cursor's own workflows, and Cursor left its own CursorBench test out of the launch comparison after flagging a training overlap. That does not taint the other benchmarks, but it is a reason to run your own trials before trusting any leaderboard. If you want the fuller side-by-side, our [Grok vs Claude comparison](https://geotoolbox.ai/blog/grok-vs-claude) breaks down where each model actually pulls ahead.
@@ -61,7 +61,7 @@ The coding numbers also deserve extra scrutiny for a specific reason: the model 
 
 ## Grok 4.5 Pricing: The $2/$6 Headline and the Real Cost
 
-Price is where Grok 4.5 makes its actual case, with one catch that the headline rate hides. It costs $2 per million input tokens and $6 per million output tokens, with cached input at $0.30 per million and a 500,000-token context window, per [xAI's model docs](https://docs.x.ai/developers/models/grok-4.5). Against the current frontier, that is more than 60% cheaper than Opus 4.8 and GPT-5.5 on prompts under 200,000 tokens.
+Price is where Grok 4.5 makes its actual case, with one catch that the headline rate hides. It costs $2 per million input tokens and $6 per million output tokens, with cached input at $0.30 per million and a 500,000-token context window, per [xAI's model docs](https://docs.x.ai/developers/models/grok-4.5). Against the current frontier, that is more than 60% cheaper than the Opus tier and GPT-5.5 on prompts under 200,000 tokens.
 
 The catch is a price cliff at 200,000 tokens. xAI publishes a tiered table, not a flat rate: past that point input goes to $4, cached input to $0.60, and output to $12. And it is a cliff rather than a marginal tier, because in xAI's own words, "requests whose prompt reaches 200k tokens are billed at the higher rate for all tokens in the request." A 201,000-token request costs roughly double a 199,000-token one. On a model sold on its 500,000-token window, the advertised $2/$6 only holds across the bottom 40% of that window, which is worth knowing before you design a long-context workload around it. One quiet trade-off worth noting: that 500,000-token window is smaller than the multi-million-token windows some earlier Grok variants advertised, so if you were feeding the model very large codebases or documents, 4.5 is a step down on context.
 
@@ -71,7 +71,7 @@ The catch is a price cliff at 200,000 tokens. xAI publishes a tiered table, not 
 </thead>
 <tbody>
 <tr><td><strong>Grok 4.5</strong></td><td><strong>$2</strong> (<strong>$4</strong> ≥200K)</td><td><strong>$6</strong> ($12 ≥200K)</td><td>500K</td></tr>
-<tr><td>Claude Opus 4.8</td><td>$5</td><td>$25</td><td>1M</td></tr>
+<tr><td>Claude Opus 5</td><td>$5</td><td>$25</td><td>1M</td></tr>
 <tr><td>GPT-5.5</td><td>$5</td><td>$30</td><td>Unconfirmed</td></tr>
 <tr><td>GPT-5.6 Luna (cheap tier)</td><td>$1</td><td>$6</td><td>Unconfirmed</td></tr>
 </tbody>
@@ -129,7 +129,7 @@ The trade is consistent: give up a little raw capability, get a lot of cost and 
 
 It is the right pick for cost-sensitive, tool-heavy agentic and coding work, especially high-volume implementation where the 4.2x token efficiency compounds across thousands of runs. If you are paying frontier prices to have a model grind through routine engineering tasks, Grok 4.5 does most of that work for a fraction of the bill.
 
-It is the wrong pick when accuracy is non-negotiable. For legal, financial, or client-facing output where a confident wrong answer is expensive, the higher hallucination rate is a real liability, and a top-capability model earns its premium. Anyone who needs the single strongest model on raw reasoning should look at Fable 5, Opus 4.8, or GPT-5.6 instead.
+It is the wrong pick when accuracy is non-negotiable. For legal, financial, or client-facing output where a confident wrong answer is expensive, the higher hallucination rate is a real liability, and a top-capability model earns its premium. Anyone who needs the single strongest model on raw reasoning should look at Fable 5, Opus 5, or GPT-5.6 instead.
 
 Whichever model you route to, the marketing question is the same: does it mention your brand when someone asks? The models change every few weeks, but AI visibility is now a channel worth measuring. Our free [AI Readiness check](https://geotoolbox.ai/tools/ai-readiness) shows you whether AI engines can actually crawl, read, and cite your site, which is the first thing to fix before you worry about which model won this week.
 
@@ -142,7 +142,7 @@ Not at launch, but yes now. Grok 4.5 shipped on July 8, 2026 with every EU marke
 The API rate is $2 per million input tokens and $6 per million output tokens, with cached input at $0.30. That is the headline, not the whole bill. Prompts that reach 200,000 tokens are billed at double those rates across the entire request. Built-in tools like web search, X search, and code execution each cost $5 per 1,000 invocations on top of tokens, and the agent decides how many calls to make, so a tool-heavy run can spend more on tools than on tokens. Reasoning tokens also bill at the $6 output rate even though you never see them. For chat use, access comes through SuperGrok or X Premium instead.
 
 ### Is Grok 4.5 really "Opus-class"?
-That is Elon Musk's phrasing, and it overstates the case. Independent testing on the Artificial Analysis Intelligence Index scores it 54, behind frontier leaders like Fable 5, Opus 4.8, and GPT-5.5. Musk's own precise comparison was "roughly comparable to Opus 4.7," the previous generation, not the current Opus 4.8.
+That is Elon Musk's phrasing, and it overstates the case. Independent testing on the Artificial Analysis Intelligence Index scores it 54, behind frontier leaders like Fable 5, Opus 4.8, and GPT-5.5. Musk's own precise comparison was "roughly comparable to Opus 4.7," a generation behind the Opus 4.8 that was current at launch — and Anthropic has since shipped Opus 5.
 
 ### Is Grok 4.5 good for coding?
 It is competitive. It beats GPT-5.5 on SWE-Bench Pro, but Fable 5 leads every coding benchmark xAI published, and the numbers are xAI's own. Because it was co-trained with Cursor, run your own trials before trusting its coding scores.

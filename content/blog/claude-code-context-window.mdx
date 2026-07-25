@@ -2,7 +2,7 @@
 title: "Claude Code Context Window: What It Is and Why It Controls Costs"
 description: "What the Claude Code context window is, how big it gets (200K vs 1M), what fills it, and how to read the /context meter before it degrades your output."
 date: "2026-07-04"
-updated: "2026-07-20"
+updated: "2026-07-25"
 author: "Samy BEN SADOK"
 tags: ["claude-code", "context-window", "agentic-ai", "claude", "anthropic"]
 draft: false
@@ -28,10 +28,10 @@ The mental model that trips people up is treating the window like human memory, 
 </thead>
 <tbody>
 <tr><td><strong>Claude Sonnet 5</strong> (current Sonnet)</td><td>1M tokens</td><td>Always 1M on the Anthropic API. No 200K variant, no <code>[1m]</code> suffix, no usage credits on any paid plan</td></tr>
-<tr><td><strong>Claude Opus 4.8</strong> (current Opus)</td><td>1M tokens</td><td>Automatic on Max, Team, and Enterprise. Pro must enable usage credits</td></tr>
+<tr><td><strong>Claude Opus 5</strong> (current Opus)</td><td>1M tokens</td><td>Automatic on Max, Team, and Enterprise. Pro must enable usage credits</td></tr>
 <tr><td><strong>Fable 5</strong></td><td>1M tokens</td><td>Max/Team Premium (Pro via usage credits)</td></tr>
 <tr><td><strong>Haiku 4.5</strong></td><td>200K tokens</td><td>The one current model that does not reach 1M</td></tr>
-<tr><td><strong>Previous-generation</strong> (Opus 4.7 / 4.6, Sonnet 4.6)</td><td>1M tokens</td><td>Opus 4.7 follows the Opus rules above. Sonnet 4.6 is not part of the automatic upgrade and requires usage credits on every subscription plan, including Max</td></tr>
+<tr><td><strong>Legacy</strong> (Opus 4.8 / 4.7 / 4.6, Sonnet 4.6)</td><td>1M tokens</td><td>Opus 4.8 and 4.7 follow the Opus rules above. Sonnet 4.6 is not part of the automatic upgrade and requires usage credits on every subscription plan, including Max</td></tr>
 </tbody>
 </table>
 
@@ -41,14 +41,14 @@ Two details that matter for cost. First, **the 1M window uses standard model pri
 
 ```
 /model opus[1m]
-/model claude-opus-4-8[1m]
+/model claude-opus-5[1m]
 ```
 
 If your account supports the 1M window, it also appears in the `/model` picker; restart the session if you do not see it. `sonnet[1m]` has no effect when `sonnet` already resolves to Sonnet 5, since that model is 1M natively.
 
 You land back on 200K in three cases: running Haiku 4.5, running behind an LLM gateway (where Claude Code cannot verify 1M support), or setting `CLAUDE_CODE_DISABLE_1M_CONTEXT=1`.
 
-Two things about that headline number. First, these are the Claude Code sizes; the Claude.ai chat app is different. The [same documentation](https://support.claude.com/en/articles/8606394-how-large-is-the-context-window-on-paid-claude-plans) gives Sonnet 5 a 1M window in chat but the other current models 500K there, so do not carry a chat figure over to your terminal. Second, the number you can actually use is always smaller than the ceiling. By the time a real session is running, a chunk of the window is already spoken for by things you never typed, which is the next section.
+Two things about that headline number. First, these are the Claude Code sizes; the Claude.ai chat app is different. The [same documentation](https://support.claude.com/en/articles/8606394-how-large-is-the-context-window-on-paid-claude-plans) now gives both Opus 5 and Sonnet 5 a 1M window in chat on any paid plan, while older model versions are held to 500K there, so do not carry a chat figure over to your terminal without checking which model it refers to. Second, the number you can actually use is always smaller than the ceiling. By the time a real session is running, a chunk of the window is already spoken for by things you never typed, which is the next section.
 
 ## What Fills the Window Before You Type a Word
 
@@ -104,7 +104,7 @@ One myth to put down: older guides claim Claude Code has no native way to see to
 
 Claude Code does not crash when you approach the limit. It compacts, and it does so in two stages: **it clears older tool outputs first, then summarizes the conversation if that is not enough.** Your requests and key code snippets are preserved; detailed instructions from early in the conversation may not be. That reserved band at the bottom of the `/context` readout, the autocompact buffer, is the room held back so there is space to run the summarization when it triggers.
 
-Anthropic does not publish a fixed buffer size, but the trigger is now configurable. `CLAUDE_CODE_AUTO_COMPACT_WINDOW` sets the capacity used for auto-compaction calculations, defaulting to the model's context window, except on Sonnet 5, which auto-compacts at about **967K tokens** by default. `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE` sets the percentage of that window at which compaction fires. On a local Opus 4.8 session, auto-compaction triggers when the conversation reaches the model's context limit rather than at a percentage.
+Anthropic does not publish a fixed buffer size, but the trigger is now configurable. `CLAUDE_CODE_AUTO_COMPACT_WINDOW` sets the capacity used for auto-compaction calculations, defaulting to the model's context window, except on Sonnet 5, which auto-compacts at about **967K tokens** by default. `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE` sets the percentage of that window at which compaction fires. On a local Opus session, auto-compaction triggers when the conversation reaches the model's context limit rather than at a percentage.
 
 There is one failure mode worth recognizing. If a single file or tool output is so large that the context refills immediately after each summary, Claude Code **stops auto-compacting after a few attempts and shows an error instead of looping**. If you see that, the fix is a smaller input, not a bigger window.
 
@@ -174,7 +174,7 @@ The reason a coding agent's context is expensive is the same reason serving AI a
 ## Frequently Asked Questions
 
 ### What is the Claude Code context window size?
-On current models it is 1 million tokens. Sonnet 5 runs at 1M unconditionally, Opus 4.8 and Fable 5 reach 1M on paid plans, and Haiku 4.5 is the one current model still capped at the 200,000-token standard window. The usable space is always smaller than the headline number, because the system prompt, tools, memory, and your `CLAUDE.md` occupy part of the window before you type anything.
+On current models it is 1 million tokens. Sonnet 5 runs at 1M unconditionally, Opus 5 and Fable 5 reach 1M on paid plans, and Haiku 4.5 is the one current model still capped at the 200,000-token standard window. The usable space is always smaller than the headline number, because the system prompt, tools, memory, and your `CLAUDE.md` occupy part of the window before you type anything.
 
 ### Does Claude Code have a 1 million token context window?
 Yes. Sonnet 5 has it on the Anthropic API with no configuration and no usage credits on any paid plan. Opus is automatically upgraded to 1M on Max, Team, and Enterprise; on Pro it requires enabling usage credits first. You can select it explicitly with `/model opus[1m]`. It is not available on the free tier, and the 1M window carries no price premium for tokens beyond 200K.
