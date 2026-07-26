@@ -26,16 +26,19 @@
  */
 
 export const proofStats = {
-  asOf: "23 Jul 2026",
+  asOf: "26 Jul 2026",
   // Google Search Console — verifiable, unique. Fresh zero-authority domain
   // (indexed since April 2026, near-zero traffic until publishing began);
   // about 7 weeks of active content publishing produced these Google figures.
-  google: { rankedKeywords: 5384, top10: 1908, top3: 250, dailyImpressions: 9400 },
+  // NOTE: `dailyImpressions` is a Google + Bing BLENDED daily figure — do NOT
+  // recompute it from GSC alone (GSC-only is materially lower). Bump only from
+  // the combined dashboard.
+  google: { rankedKeywords: 6416, top10: 2274, top3: 332, dailyImpressions: 9400 },
   // Bing Webmaster Tools "AI Performance" — Microsoft Copilot + partner AI assistants.
   // NOTE: total citation APPEARANCES over a trailing 30 days, a SAMPLE, NOT unique citations.
   aiCitations: {
-    total: 11500,
-    avgCitedPages: 23,
+    total: 13400,
+    avgCitedPages: 24,
     windowDays: 30,
     source: "Microsoft Copilot and partners",
     sampled: true,
@@ -57,4 +60,4 @@ export type ProofStats = typeof proofStats
 // Published content counts — counted on disk (content/blog, content/fr/blog,
 // content/glossary). Shared by /services/ai-automation-agency (page + OG image)
 // so the figures can't drift between surfaces. Re-count when bumping.
-export const contentCounts = { en: 115, fr: 49, glossary: 57, asOf: "23 Jul 2026" } as const
+export const contentCounts = { en: 120, fr: 50, glossary: 57, asOf: "26 Jul 2026" } as const

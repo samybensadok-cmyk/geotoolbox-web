@@ -28,7 +28,7 @@ export function ProofResults() {
       source: `Bing WMT · ${aiCitations.source} · ${aiCitations.windowDays}-day sample`,
       tag: `${aiCitations.windowDays}-day sample`,
     },
-    { value: `~${fmt(google.dailyImpressions)}`, label: "Impressions per day", source: "Google Search Console" },
+    { value: `~${fmt(google.dailyImpressions)}`, label: "Impressions per day", source: "Google + Bing (combined)", tag: "combined" },
   ]
 
   return (
@@ -95,8 +95,9 @@ export function ProofResults() {
         {/* Provenance footnotes */}
         <div className="mt-14 max-w-3xl border-t border-white/10 pt-6">
           <p className="text-[13px] font-medium text-gray-400">
-            As of {asOf}. Google figures are from Google Search Console — deduplicated and verifiable in
-            Search Console.
+            As of {asOf}. The keyword and first-page figures are from Google Search Console —
+            deduplicated and verifiable in Search Console. Impressions per day is a combined Google
+            Search Console + Bing Webmaster Tools daily figure.
           </p>
           <p className="mt-2 text-[13px] leading-relaxed text-gray-400">
             The ~{fmt(aiCitations.total)} AI-citation figure is a {aiCitations.windowDays}-day sample
