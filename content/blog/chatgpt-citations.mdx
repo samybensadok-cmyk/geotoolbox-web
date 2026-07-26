@@ -2,7 +2,7 @@
 title: "How ChatGPT Cites Sources (and Why It Gets Them Wrong)"
 description: "How ChatGPT cites sources: what a citation is, how it decides what to cite, why so many citations are wrong, and how to track which sources it shows you."
 date: "2026-06-09"
-updated: "2026-07-22"
+updated: "2026-07-26"
 author: "Samy BEN SADOK"
 tags: ["chatgpt", "ai-citation", "geo", "ai-visibility", "chatgpt-search"]
 draft: false
@@ -56,9 +56,11 @@ When you ask one question, ChatGPT does not run one search. It expands your prom
 
 ## The Reddit Paradox: Read but Not Credited
 
-ChatGPT retrieves/pulls Reddit constantly and almost never credits it. In the same analysis, [67.8% of all non-cited URLs came from Reddit](https://ahrefs.com/blog/why-chatgpt-cites-pages/), even though Reddit's own citation rate was just 1.93%. Those URLs were not necessarily opened — Reddit and YouTube arrive via a separate API feed — but the model mines Reddit threads for context, opinions, and phrasing, then writes the answer and cites a cleaner-looking source instead.
+ChatGPT pulls Reddit constantly and almost never credits it. In the same analysis, [67.8% of all non-cited URLs came from Reddit](https://ahrefs.com/blog/why-chatgpt-cites-pages/), even though Reddit's own citation rate was just 1.93%. Independent network-traffic analysis backs the same pattern. When Suganthan Mohanadasan [read ChatGPT's own network traffic](https://suganthan.com/blog/how-chatgpt-picks-sources/) across a few dozen searches on one logged-in Pro account in June 2026, Reddit was fetched 278 times and cited just 11, while YouTube was fetched 201 times and cited not once.
 
-This is the gap most people miss: retrieval is not citation. Your page can be pulled into the candidate pool, shape the wording of the answer, and never appear in the Sources panel. Being read is not the same as being cited, and the panel quietly undercounts what actually influenced the response.
+His read on YouTube's zero is mechanical: a fetched YouTube page hands back metadata, not the video transcript, so there is little for a citation to bind to; a fetched Reddit thread, by contrast, arrives as full readable text the model can quote. The model mines those Reddit threads for context, opinions, and phrasing, then writes the answer and cites a cleaner-looking source instead.
+
+This is the gap most people miss: retrieval is not citation. Suganthan's traffic analysis splits it into three states worth naming. **Fetched** means ChatGPT's retrieval tool pulled your page into the model's working context. **Cited** means a numbered footnote pins your page to one specific claim, the link you can see. **Mentioned** means your brand name turns up in the answer while a different page gets the citation. That is narrower than a plain brand mention, where you can be both named and cited. The states come apart constantly: a page can be fetched and never cited, so it can shape the wording of an answer while never surfacing in the Sources panel. That hidden layer is exactly what the panel undercounts.
 
 Why does it swap in a different source? The model leans toward a citation that looks authoritative and self-contained (a clean article over a sprawling forum thread), even when the thread is where the substance came from. So a Reddit discussion can shape the answer while a tidy blog post takes the visible credit.
 
@@ -144,7 +146,7 @@ That is also where the manual method runs out. Tracking dozens of prompts across
 
 ## What This Means If You Want to Be Cited
 
-If the goal is to be the page ChatGPT cites, the mechanics above point to three things, and none of them is a new trick. Be in the index it searches, which means allowing [OAI-SearchBot](https://geotoolbox.ai/blog/ai-crawlers) through your robots.txt and firewall — that is the crawler that gates ChatGPT Search inclusion. GPTBot controls training data opt-out, not search. Be the clearest, most quotable source on the question, because the model favors pages it can lift a clean answer from. And give it the signals it rewards.
+If the goal is to be the page ChatGPT cites, the mechanics above point to three things, and none of them is a new trick. Be in the index it searches, which means allowing [OAI-SearchBot](https://geotoolbox.ai/blog/ai-crawlers) through your robots.txt and firewall — that is the crawler that gates ChatGPT Search inclusion. GPTBot controls training data opt-out, not search. Be the clearest, most quotable source on the question, because the model favors pages it can lift a clean answer from. That rewards one strong page per claim over a pile of thin ones: in Suganthan's single-account capture, the pipeline appeared to keep just one page per domain, so near-duplicates would mostly compete against each other rather than widen your footprint. And give it the signals it rewards.
 
 The field is also more open than the big-domain headlines suggest. In Profound's February 2026 analysis of roughly 730,000 US ChatGPT conversations, the ten most-cited domains captured only about 12% of all citations, with Wikipedia first at just 5%. Trackers built on other windows and methods put the top domains higher (the 5W audit above has Wikipedia and Reddit alone over 25% combined), but every large study agrees on the shape: most of ChatGPT's citations go to a long tail of ordinary sites that were the cleanest, best-corroborated answer to a specific question.
 
@@ -195,4 +197,5 @@ That is the other meaning of "ChatGPT citations" and a separate question from th
 - Profound - How ChatGPT Sources the Web (~730,000-conversation study, February 2026) - `tryprofound.com/blog/chatgpt-citation-sources`
 - Search Engine Journal - GPT-5.5 Update Changes How ChatGPT Cites Sources (SISTRIX data, June 2026) - `searchenginejournal.com/chatgpt-citations-changed-after-gpt-5-5-sistrix-data-shows/577694`
 - Semrush - The Most-Cited Domains in AI: A 3-Month Study (July-October 2025) - `semrush.com/blog/most-cited-domains-ai`
+- Suganthan Mohanadasan - How ChatGPT Actually Picks Sources (network-traffic analysis, June 2026) - `suganthan.com/blog/how-chatgpt-picks-sources`
 - University of Arizona Libraries - ChatGPT and citations - `ask.library.arizona.edu/faq/387173`
