@@ -2,7 +2,7 @@
 title: "AI Crawlers: The List of AI Bots & How to Control Them"
 description: "AI crawlers fetch your pages for ChatGPT, Claude, Perplexity, and Google. The list of every major AI bot, what each does, and how to control it in robots.txt."
 date: "2026-06-07"
-updated: "2026-07-10"
+updated: "2026-07-26"
 author: "Samy BEN SADOK"
 tags: ["ai-crawlers", "robots-txt", "geo", "ai-visibility", "guide"]
 draft: false
@@ -14,7 +14,7 @@ AI crawlers are the bots that fetch your pages for AI companies, and there are n
 
 <figure className="not-prose my-8">
   <BlogImage src="/blog/ai-crawlers/three-jobs-ai-crawlers.png" alt="AI crawlers grouped by their three jobs: training, search, and user fetch." w="1100" h="608" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
-  <figcaption className="mt-3 text-center text-sm text-gray-500">Training, search, and user-fetch bots do different jobs — and blocking each costs you something different.</figcaption>
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Training, search, and user-fetch bots do different jobs, and blocking each costs you something different.</figcaption>
 </figure>
 
 An [AI crawler](https://geotoolbox.ai/glossary/ai-crawler) is a bot that fetches your pages on behalf of an AI company. The label covers a lot of different machines doing three very different jobs, and that difference is the whole game.
@@ -60,7 +60,7 @@ Here is the current roster of AI crawlers worth knowing, with the job each one d
 
 That is the set that matters for most sites, but it is not the whole field. Newer entrants like MistralAI-User, DeepSeek, [xAI's Grok](https://geotoolbox.ai/blog/what-is-grok), and cohere-ai are crawling too, and the names change often: bots launch, rename, and split into separate training and search agents. The community-maintained [ai.robots.txt list on GitHub](https://github.com/ai-robots-txt/ai.robots.txt) tracks 150+ AI user agents and generates ready-to-use robots.txt and server configs, and [Known Agents](https://knownagents.com/agents) (formerly Dark Visitors) keeps a similar live directory. Treat any static list, including this one, as a snapshot.
 
-A few numbers put the traffic in perspective, though the share shifts fast enough that any snapshot dates quickly, so check a live tracker before quoting it. In [Cloudflare's May 2026 crawler data](https://www.digitalapplied.com/blog/ai-crawler-bot-traffic-statistics-2026-data-reference), Googlebot was the single largest AI-adjacent bot at 27.26 percent of requests, followed by GPTBot at 11.48 percent and ClaudeBot at 9.73 percent, a reversal from April 2026, when ClaudeBot led at 11.69 percent against GPTBot's 9.84 percent. These bots are now a real share of who visits your site. Bots in total now outnumber people: in early June 2026, [Cloudflare reported](https://www.tomshardware.com/tech-industry/artificial-intelligence/bots-have-now-passed-human-traffic-online-cloudflare-boss-laments-says-agentic-traffic-wasnt-expected-to-eclipse-real-people-until-next-year) that automated traffic of all kinds passed human traffic for the first time in its data, at 57.5 percent of web requests.
+A few numbers put the traffic in perspective, though the share shifts fast enough that any snapshot dates quickly, so check a live tracker before quoting it. In [Cloudflare's May 2026 crawler data](https://www.digitalapplied.com/blog/ai-crawler-bot-traffic-statistics-2026-data-reference), Googlebot was the single largest AI-adjacent bot at 27.26 percent of requests, followed by GPTBot at 11.48 percent and ClaudeBot at 9.73 percent, a reversal from April 2026, when ClaudeBot led at 11.69 percent against GPTBot's 9.84 percent. These bots are now a real share of who visits your site. The single-site picture is telling: SEO consultant Suganthan Mohanadasan counted [8,060 AI-crawler requests in one week](https://suganthan.com/blog/how-to-make-website-agent-ready) from at least eight organizations in his own server logs, against 1,421 across the previous 44 days. Bots in total now outnumber people: in early June 2026, [Cloudflare reported](https://www.tomshardware.com/tech-industry/artificial-intelligence/bots-have-now-passed-human-traffic-online-cloudflare-boss-laments-says-agentic-traffic-wasnt-expected-to-eclipse-real-people-until-next-year) that automated traffic of all kinds passed human traffic for the first time in its data, at 57.5 percent of web requests.
 
 ## OpenAI: GPTBot, OAI-SearchBot, and ChatGPT-User
 
@@ -90,7 +90,7 @@ The rest of the field divides along the same lines. [CCBot](https://geotoolbox.a
 
 Start with what you are actually trading. Blocking training crawlers protects your content from model training and cuts bandwidth, and some sites have reported real savings from it. Blocking search and citation crawlers does something very different: it makes you invisible in the AI answers that increasingly stand in for a search click.
 
-The economics help clarify the call. Training crawlers take more than they return: in [Cloudflare's crawl-to-referral data](https://blog.cloudflare.com/crawlers-click-ai-bots-training/) for July 2025, Anthropic's bots crawled roughly 38,000 pages for every visitor they referred, OpenAI's about 1,100, and Google's about 5. The search and citation bots are the ones that actually route a reader to you. If a bot takes your content to train a model and never sends anyone, blocking it is an easy call. Blocking the bot that puts you in the answer is much harder, because that traffic is the point.
+The economics help clarify the call. Training crawlers take more than they return: in [Cloudflare's crawl-to-referral data](https://blog.cloudflare.com/crawlers-click-ai-bots-training/) for July 2025, Anthropic's bots crawled roughly 38,000 pages for every visitor they referred, OpenAI's about 1,100, and Google's about 5. A single site's logs bear this out: [Suganthan Mohanadasan measured](https://suganthan.com/blog/how-to-make-website-agent-ready) OpenAI's crawlers at 43 percent of AI crawl volume but just 3 human referrals in a week. The search and citation bots are the ones that actually route a reader to you. If a bot takes your content to train a model and never sends anyone, blocking it is an easy call. Blocking the bot that puts you in the answer is much harder, because that traffic is the point.
 
 That leaves three workable strategies:
 
@@ -135,7 +135,7 @@ To block every AI crawler instead, add a Disallow block for each search and user
 
 Rather than hand-editing, our free [robots.txt generator](https://geotoolbox.ai/tools/robots-txt-generator) builds this file with each AI crawler labelled by the job it does, so you can see what blocking any given one actually costs before you commit to it. Once the file is live, the free [robots.txt tester](https://geotoolbox.ai/tools/robots-txt-tester) checks a specific URL against it per crawler and names the exact rule that decided the verdict. That second step catches something this snippet format hides: if your file also has a `User-agent: *` group, a named group like `GPTBot` above **replaces** it for that crawler rather than adding to it, so any path you thought was blocked site-wide is not blocked for the bots you named.
 
-Two cautions before you trust that file. First, robots.txt is a [voluntary standard](https://www.rfc-editor.org/rfc/rfc9309.html): well-behaved bots obey it, but it is a request, not a wall. some bots ignore it outright, and user-triggered fetchers like ChatGPT-User and Perplexity-User are built to. Second, changes take time to register; a robots.txt edit is not instant, and a crawler may keep running on its old rules for up to a day.
+Two cautions before you trust that file. First, robots.txt is a [voluntary standard](https://www.rfc-editor.org/rfc/rfc9309.html): well-behaved bots obey it, but it is a request, not a wall. Some bots ignore it outright, and user-triggered fetchers like ChatGPT-User and Perplexity-User are built to. Second, changes take time to register; a robots.txt edit is not instant, and a crawler may keep running on its old rules for up to a day.
 
 So treat robots.txt as necessary but not sufficient. When you need an actual block rather than a polite request, escalate:
 
@@ -208,3 +208,4 @@ That last step is the one most checklists skip. Before you spend time on content
 - Robots Exclusion Protocol (RFC 9309) - IETF - `rfc-editor.org/rfc/rfc9309.html`
 - ai.robots.txt - community-maintained AI crawler list - `github.com/ai-robots-txt/ai.robots.txt`
 - Known Agents (formerly Dark Visitors) - live AI agent and crawler directory - `knownagents.com/agents`
+- How to Make Your Website Agent-Ready (single-site AI-crawler traffic logs) - Suganthan Mohanadasan - `suganthan.com/blog/how-to-make-website-agent-ready`
