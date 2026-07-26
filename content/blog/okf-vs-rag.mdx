@@ -1,0 +1,222 @@
+---
+title: "OKF vs RAG: Does Google's Open Knowledge Format Replace RAG?"
+description: "Google's Open Knowledge Format (OKF) is being called a RAG killer. It isn't. What OKF v0.2 actually does, where it beats RAG, and how the two work together."
+date: "2026-07-26"
+author: "Samy BEN SADOK"
+tags: ["okf-vs-rag", "okf", "open-knowledge-format", "rag", "knowledge-graph", "ai-agents", "geo"]
+draft: false
+---
+
+Search for "OKF vs RAG" and you get two stories. One says Google just killed RAG. The other says the two have nothing to do with each other. Both are wrong.
+
+The Open Knowledge Format (OKF) and retrieval-augmented generation (RAG) solve different problems at different layers. The useful question is not which one wins but where each belongs, including the part almost every explainer still skips: what changed in OKF v0.2.
+
+There is a fitting demonstration of why curated knowledge matters. Ask an AI model with no web access what OKF is: in a test we ran, Gemini invented a wrong definition while Claude said it did not know. OKF launched in mid-2026, after both models' training cutoffs, so only a model wired to live retrieval gets it right. Which is, more or less, the whole argument for writing your knowledge down where machines can read it.
+
+<figure>
+  <BlogImage src="/blog/okf-vs-rag/okf-rag-hybrid-architecture.png" alt="OKF plus RAG hybrid architecture: a router sends curated known-knowns to OKF and the unstructured long tail to RAG, feeding one grounded answer." w="1100" h="603" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">One agent, two knowledge layers: OKF owns the curated core, RAG keeps the long tail.</figcaption>
+</figure>
+
+## What Is the Open Knowledge Format (OKF)?
+
+**The Open Knowledge Format (OKF) is an open, vendor-neutral specification from Google Cloud for handing curated knowledge to AI agents as plain Markdown files.** [Google Cloud introduced it](https://cloud.google.com/blog/products/data-analytics/how-the-open-knowledge-format-can-improve-data-sharing) on June 12, 2026 as a way to package the facts an organization already knows and trusts, so an agent can read them directly instead of re-deriving them from raw documents every time.
+
+The format itself is deliberately boring, which is the point. An OKF bundle is a directory tree of Markdown files, one concept per file, each carrying a small block of YAML frontmatter. A concept can be a metric definition, a database schema, a business rule, an API, or a policy. Files link to each other with ordinary Markdown links, so a cross-linked bundle reads as a lightweight [knowledge graph](https://geotoolbox.ai/glossary/knowledge-graph) an agent can walk, not a pile of disconnected pages.
+
+Per the [OKF specification](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md), the only always-required field is `type`. A concept carrying nothing but `type` is already valid. Recommended fields (`title`, `description`, `resource`, `tags`) add context, and two reserved filenames do the structural work: `index.md` lists a directory for progressive disclosure, and `log.md` records history.
+
+The idea is not new. It formalizes the "LLM wiki" pattern [Andrej Karpathy floated in April 2026](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f): a persistent set of Markdown files an agent maintains, compiled once and kept current rather than reconstructed on every query. OKF gives that pattern a shared contract so any agent or vendor can read the same bundle.
+
+Two caveats. OKF ships inside Google Cloud's Knowledge Catalog under the Apache 2.0 license, but the repository carries a plain "not an official Google product" disclaimer. And it is early: Google published three sample bundles (GA4 e-commerce, Stack Overflow, and Bitcoin datasets) to seed adoption, but the ecosystem around it is weeks old.
+
+## What Is RAG, and Where Does It Break Down?
+
+[Retrieval-augmented generation (RAG)](https://geotoolbox.ai/blog/what-is-rag) is the standard way to connect a language model to knowledge it was not trained on. You ingest a large corpus, split each document into chunks, embed those chunks as vectors, and at query time retrieve the ones that sit closest to the question before the model writes its answer. For a big, messy, fast-changing corpus, this works well and it is not going anywhere.
+
+The trouble starts when RAG is asked to serve knowledge that is small, stable, and used constantly, like how your company defines an active user. The bare RAG pattern does not store that definition as a canonical fact. It re-derives it from chunks at query time, and that re-derivation has four recurring failure modes.
+
+The first is [chunking](https://geotoolbox.ai/blog/content-chunking). Splitting a document into fixed windows cuts across logical boundaries, so a chunk read in isolation can look irrelevant even when it holds the answer. The second is that [vector similarity](https://geotoolbox.ai/blog/vector-embeddings) rewards text that looks relevant, not text that is correct. A passage sitting near your query in embedding space can still be the wrong one, and on a precise technical fact "near enough" is wrong.
+
+The third is that these failures are silent. RAG rarely errors out. It returns a fluent, plausible, subtly wrong answer, which is the most expensive kind on a high-stakes fact. The fourth is structure: in a plain vector setup, the model receives a bag of chunks with no stated relationships between them, so any connection between two facts has to be inferred rather than read. (Graph and hierarchical RAG variants add some of this back, at the cost of more machinery.)
+
+None of this makes RAG bad. It makes RAG the wrong tool for the slice of knowledge that is already curated and needs to be exactly right every time. That slice is the gap OKF is built for.
+
+## OKF vs RAG: The Core Difference
+
+The cleanest way to hold the two in your head: RAG is a retrieval pattern, and OKF is a knowledge format. They operate at different layers, which is exactly why "OKF vs RAG" is the wrong framing for most decisions. One decides how an agent finds information; the other decides how that information is written down in the first place.
+
+RAG treats knowledge as a large body of text to be searched at query time. OKF treats a defined set of concepts as durable facts to be read on demand. Where RAG reconstructs meaning from whichever chunks rank highest, an OKF bundle hands the agent a concept someone already got right, with its relationships to other concepts stated rather than inferred.
+
+<table>
+<thead>
+<tr><th>&nbsp;</th><th>OKF (Open Knowledge Format)</th><th>RAG (Retrieval-Augmented Generation)</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Knowledge type</strong></td><td>Curated known-knowns you can name</td><td>Large, unstructured, "it's in here somewhere"</td></tr>
+<tr><td><strong>How the agent gets it</strong></td><td>Reads a concept file directly</td><td>Retrieves and reranks chunks at query time</td></tr>
+<tr><td><strong>Structure</strong></td><td>Explicit graph via Markdown links</td><td>A bag of chunks, relationships inferred</td></tr>
+<tr><td><strong>Provenance &amp; trust</strong></td><td>Standardized fields (<a href="https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md"><code>sources</code>, <code>verified</code></a>)</td><td>Per-implementation metadata, not standardized</td></tr>
+<tr><td><strong>Freshness</strong></td><td>Declared with <code>stale_after</code></td><td>Depends on re-indexing the corpus</td></tr>
+<tr><td><strong>Best for</strong></td><td>Stable, high-stakes facts</td><td>Long-tail, exploratory search</td></tr>
+</tbody>
+</table>
+
+Read the provenance and freshness rows again. That is where OKF v0.2 standardizes something [retrieval](https://geotoolbox.ai/glossary/retrieval-augmented-generation) leaves to each implementation.
+
+## The v0.2 Trust Layer: What OKF Standardizes That RAG Doesn't
+
+The version that matters is 0.2. It adds what amounts to a trust layer to the spec, and it is the reason the versus framing keeps missing the point. Almost every OKF-vs-RAG explainer online still describes v0.1 and skips this entirely.
+
+RAG can tell you what a passage says. The bare pattern does not standardize who wrote it, whether anyone checked it, or whether it is still true. Individual RAG systems can bolt those on as chunk metadata, but every team invents its own schema. OKF v0.2 writes them into the frontmatter as a shared contract, through the optional field families below.
+
+<table>
+<thead>
+<tr><th>Family</th><th>Key fields</th><th>What it answers</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Provenance</strong></td><td><code>sources</code>, <code>usage_count</code></td><td>Where did this come from, and how much is it relied on?</td></tr>
+<tr><td><strong>Trust</strong></td><td><code>generated</code>, <code>verified</code></td><td>Who produced it, and who confirmed it?</td></tr>
+<tr><td><strong>Lifecycle</strong></td><td><code>status</code>, <code>stale_after</code></td><td>Is it current, and when should it expire?</td></tr>
+<tr><td><strong>Attestation</strong></td><td><code>runtime</code>, <code>computation</code>, <code>attester</code></td><td>Was this value actually computed, and by what?</td></tr>
+</tbody>
+</table>
+
+The `verified` field is the centerpiece. It turns a flat file into a claim with a trust tier: unverified, machine-confirmed, or human-reviewed (marked with a `human:` actor). An agent can then treat a human-reviewed metric definition differently from an unverified note. A vector store can carry that in metadata too, but OKF makes it a defined field every reader interprets the same way, instead of a per-pipeline convention. This is also why v0.2 restructured v0.1's flat `timestamp` into `generated: { by, at }`: a fact now records who produced it and when, not just a bare date.
+
+A concept with the v0.2 fields looks like this:
+
+```yaml
+---
+type: metric
+title: Weekly Active Users
+verified:
+  - { by: "human:data-team", at: 2026-07-20 }
+stale_after: 2026-10-20
+sources:
+  - id: wau-sql
+    resource: /queries/weekly-active-users.sql
+    title: WAU definition query
+---
+```
+
+`stale_after` is the quiet one. The bare RAG pattern has no built-in notion of a fact expiring; unless you add time-to-live logic yourself, a stale chunk sits in the index looking exactly as retrievable as a fresh one. OKF lets the knowledge itself declare an expiry date, which pushes staleness from an invisible failure into a field you can query and act on. Combined with the `sources` block, this gives a bundle a kind of [grounding](https://geotoolbox.ai/glossary/grounding) and accountability that a retrieval index does not carry by default.
+
+## Does OKF Replace RAG? The Hybrid Split
+
+No. The headlines calling OKF a RAG killer are selling a clean story that the people actually building with it do not repeat.
+
+The working consensus is a hybrid, and the division is lopsided. The small share of facts that are stable, critical, and reused constantly (metric definitions, business rules, schema, regulated facts) lives in OKF, where it is written once and read directly. The large majority, the long tail of unstructured PDFs, tickets, logs, and changing documents, stays in RAG, where retrieval is the only sane option.
+
+A router in front of the agent decides which path a query takes: a lightweight classifier, or the agent itself, sends known-knowns to the bundle and everything else to the vector store. The bundle reaches the model the way any file does, through a file-read tool or an MCP resource, and `index.md` lets the agent scan a directory before pulling the one concept it needs rather than loading the whole bundle into context.
+
+These two are not even mutually exclusive at the storage layer. An OKF bundle is clean, well-structured Markdown, which happens to be close to ideal input for a RAG chunking pipeline: point retrieval at the bundle and you get better chunks than raw source documents would give. OKF improves the knowledge; RAG still handles [how it gets found](https://geotoolbox.ai/blog/query-fan-out) at scale.
+
+There is a minority position worth stating fairly. Some writers, [Alphamatch](https://www.alphamatch.ai/blog/google-open-knowledge-format-okf-vs-rag-2026) among them, argue OKF removes the need for RAG in many enterprise agent scenarios, since re-retrieving stable facts from chunks is pure waste. They have a point about that slice. But "replaces RAG for facts you have already curated" is a far narrower claim than "replaces RAG," and it collapses the moment your agent needs anything outside the curated set.
+
+So the plain answer to "is RAG obsolete in 2026" is that OKF displaces vector retrieval for the curated facts you can address directly, and leaves the long tail exactly where it was.
+
+## When to Use OKF, RAG, or Both
+
+Set the labels aside and ask four questions about the knowledge itself: How big is it? How often does it change? How badly does the agent need to be right? And how often is it reused? Those answers point at a tool.
+
+<table>
+<thead>
+<tr><th>Your situation</th><th>Use</th><th>Why</th></tr>
+</thead>
+<tbody>
+<tr><td>Metric definitions, business rules, schemas</td><td><strong>OKF</strong></td><td>Small, stable, reused constantly, must be exact</td></tr>
+<tr><td>Millions of support tickets, PDFs, logs</td><td><strong>RAG</strong></td><td>Too large and unstructured to curate by hand</td></tr>
+<tr><td>Regulated facts the agent must never get wrong</td><td><strong>OKF</strong></td><td>The <code>verified</code> tier records a human-reviewed audit trail</td></tr>
+<tr><td>Fast-changing, exploratory research corpus</td><td><strong>RAG</strong></td><td>Curation cannot keep pace with the churn</td></tr>
+<tr><td>An enterprise agent that needs both</td><td><strong>Hybrid</strong></td><td>Route known-knowns to OKF, the long tail to RAG</td></tr>
+</tbody>
+</table>
+
+The rule underneath the table is simple: when you can name the fact and getting it wrong is expensive, curate it in OKF; when the knowledge is a haystack you search occasionally, leave it in RAG. Most real systems land on the last row, because production agents need both a handful of things they are certain about and a large body of things they can look up.
+
+One decision worth making early: what belongs in the curated core. The temptation is to over-curate and turn OKF into a second unmaintained wiki. The test is reuse under pressure. If an agent reads a fact on nearly every task and a wrong answer causes real damage, it earns a concept file. Everything else stays in retrieval.
+
+Cost cuts the same way. OKF avoids embedding spend, a vector database, and retrieval latency for the facts it holds, but loading many concept files burns context tokens and will not scale to thousands of them. That points back at the same split: a small curated core in OKF, the bulk in RAG.
+
+## OKF vs Knowledge Graphs, Wikis, and llms.txt
+
+The most common objection to OKF is that it is nothing new. It is worth taking seriously, because it is half right. A folder of Markdown files with metadata is not a novel invention. What is new is the shared contract.
+
+Against a formal [knowledge graph](https://geotoolbox.ai/glossary/knowledge-graph), OKF trades power for maintainability. A triple store with a query language gives you richer traversal, but it also demands specialized tooling and people who know it. OKF is human-readable files anyone on the team can edit in a text editor and review in a Git pull request. You get the graph shape, through cross-links, without the graph database.
+
+Against a wiki, Obsidian vault, or a `CLAUDE.md` file, the difference is standardization. Those all work, but each one is bespoke. OKF fixes the frontmatter fields and the required `type`, so any agent or vendor that speaks OKF can read your bundle without custom parsing. Portability is the entire pitch, and it is why the "just a folder" dismissal understates it.
+
+Against [llms.txt](https://geotoolbox.ai/blog/llms-txt), the two are complementary, not competing. An llms.txt file is a pointer, a curated index that tells an agent where to look on your site. OKF is the structured knowledge the agent reads once it gets there. You can publish both, and for AI discoverability they stack cleanly with [schema markup](https://geotoolbox.ai/blog/schema-markup-for-ai) and [entity data](https://geotoolbox.ai/blog/entity-seo) as layers of the same job: making your knowledge legible to machines.
+
+So OKF is not a breakthrough in data modeling. It is a standard wrapped around a pattern that already worked, which is a less exciting claim and a more useful one.
+
+## How to Build and Host an OKF Bundle
+
+Building a bundle is closer to writing documentation than to standing up a database. The steps are short.
+
+Start with a directory of Markdown files, one concept per file. Give each file YAML frontmatter with at least a `type`, then add the recommended `title` and `description`, and layer in the v0.2 `verified` and `stale_after` fields wherever a fact is high-stakes enough to warrant them. Cross-link related concepts with plain Markdown links so the agent can walk between them. Add an `index.md` at each level so an agent can read a directory listing before opening every file. The result is a tree like this:
+
+```text
+okf/
+  index.md
+  metrics/
+    weekly-active-users.md
+    revenue.md
+  policies/
+    refund-policy.md
+```
+
+Then host it. A bundle is just files, so the options are ordinary: commit it to a Git repository, ship it as a tarball, or serve it from your site under a path like `/okf/`. Nothing about it requires Vertex AI, a vector database, or a Google account, which is what "vendor-neutral" means in practice, at least by design: no other major vendor has adopted OKF yet.
+
+One caution before you publish. A bundle of metric definitions, business rules, and schemas is internal knowledge. Serve publicly only what you would want public, and keep sensitive concepts behind auth or off the public tree entirely.
+
+The most useful real example comes from GEO practitioner [Suganthan Mohanadasan](https://suganthan.com/blog/open-knowledge-format/), who converted his published writing into a live bundle and built a free generator that turns a site or sitemap into OKF without code. His live bundle, at the time of writing, runs 61 concepts, of which only 18 carry a `verified` entry and eight are already past their `stale_after` date. That is the trust layer working as intended: the maintenance signal is visible in the file instead of hidden in a stale index. Google's three sample bundles are another starting point if you would rather adapt than build from scratch.
+
+The one caveat to set expectations: as of this writing, no major crawler ingests OKF bundles automatically. Publishing one is a bet on where [agent-ready sites](https://geotoolbox.ai/blog/agent-ready-website) are heading, not a switch that lights up traffic today.
+
+## OKF and AI Visibility: Should SEOs Adopt It Yet?
+
+Here is the verdict, since the heading asked: for internal agent knowledge, adopt it now. For public AI visibility, treat it as a low-cost bet, not a ranking tactic.
+
+Publishing an OKF bundle is a cheap, low-risk way to hand curated facts to any agent that reads your site, and it stacks neatly with the other machine-readability layers. GEO practitioners are already experimenting with it on that basis, [Marie Haynes](https://www.mariehaynes.com/okf) among them. But there is no demonstrated citation or ranking lift from doing it, and the skeptics on r/TechSEO are right that OKF was built for organizational knowledge, not search. The sharper worry is adoption: OKF risks becoming another Google standard nobody uses, in the same lineage as protocols Google has shipped and quietly abandoned. The data world has a long graveyard of formats that went nowhere.
+
+Weigh both honestly and the move is small. Building a bundle for your own agents pays off now, because it fixes real RAG failure modes on facts you cannot afford to get wrong. Publishing it publicly is speculative, which is fine as long as you treat it that way and do not expect rankings to move.
+
+For anyone already asking whether AI systems can read and cite their site, OKF is that same question pointed inward at agents instead of outward at search engines. It is the discipline we apply at geotoolbox when we [check whether AI crawlers can reach and parse a site](https://geotoolbox.ai/blog/how-to-get-cited-by-ai): the format is new, but the job, making your knowledge legible to machines, is not.
+
+## The Bottom Line
+
+OKF is not the end of RAG. It is the curated-facts layer RAG never had, and the practical architecture uses both: OKF for the small set of things your agent must be certain about, RAG for the large set it looks up. The v0.2 trust layer, with provenance, verification tiers, and expiry, is the real advance and the part worth building around, not the "RAG is dead" headline.
+
+If you are weighing OKF because you want AI systems to read your knowledge correctly, that instinct is the same one that decides whether AI search cites you at all. You can check where your site stands with our free [AI readiness check](https://geotoolbox.ai/tools/ai-readiness), which tells you whether agents and AI crawlers can actually reach and parse what you have published, before you decide what to structure next.
+
+## Frequently Asked Questions
+
+### Is RAG obsolete in 2026?
+No. OKF replaces RAG only for the slice of knowledge that is small, stable, and already curated. For the long tail of large, unstructured, changing content, retrieval is still the right tool, and most production stacks run both.
+
+### Does OKF replace the vector database?
+Not in general. It removes the need to re-retrieve stable facts from a vector store, but anything outside your curated concept set still needs retrieval. In hybrid setups an OKF bundle can even feed the RAG pipeline as clean input rather than replacing it.
+
+### Do I need Vertex AI or Google Cloud to use OKF?
+No. An OKF bundle is plain Markdown files with YAML frontmatter. It requires no SDK, no vector database, and no Google account. You can store it in any Git repository or serve it from your own site.
+
+### Is OKF the same as llms.txt?
+No, and they work together. An llms.txt file is an index that points agents to content. OKF is the structured knowledge itself. One tells an agent where to look; the other is what it reads when it gets there.
+
+### What's the difference between OKF and a knowledge graph?
+A formal knowledge graph stores facts as queryable triples and needs specialized tooling. OKF gets a graph shape from Markdown cross-links while staying human-readable and Git-friendly. You trade some query power for far lower maintenance cost.
+
+### Is OKF an SEO ranking factor?
+There is no evidence it affects rankings. OKF was designed for internal agent knowledge, not search, and no major crawler ingests bundles automatically yet. Publishing one is a bet on agent readability, with no ranking payoff to expect.
+
+## Sources
+
+- How the Open Knowledge Format can improve data sharing - Google Cloud (official OKF announcement, June 2026, and the three sample bundles) - `cloud.google.com/blog/products/data-analytics/how-the-open-knowledge-format-can-improve-data-sharing`
+- okf/SPEC.md - GoogleCloudPlatform/knowledge-catalog, GitHub (the v0.2 specification: required fields, trust layer, Apache 2.0 license) - `github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md`
+- llm-wiki - Andrej Karpathy, GitHub Gist (the LLM-wiki pattern OKF standardizes, April 2026) - `gist.github.com/karpathy/442a6bf555914893e9891c11519de94f`
+- The OKF from Google is a new layer for agents - Marie Haynes (GEO practitioner treating OKF as an agent-knowledge layer; early hands-on experiments) - `mariehaynes.com/okf`
+- Open Knowledge Format (OKF): Google's New Markdown Format for AI Agents - Suganthan Mohanadasan (GEO practitioner build + free OKF generator) - `suganthan.com/blog/open-knowledge-format`
+- Open Knowledge Format vs. RAG: Rethinking how AI agents get their context - HPE Community (the rederive-versus-read framing) - `community.hpe.com/t5/ai-unlocked/open-knowledge-format-vs-rag-rethinking-how-ai-agents-get-their/ba-p/7270244`
+- Google's Open Knowledge Format (OKF) vs. RAG - Alphamatch (the minority "replaces RAG" position) - `alphamatch.ai/blog/google-open-knowledge-format-okf-vs-rag-2026`
