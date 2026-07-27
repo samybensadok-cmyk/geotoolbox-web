@@ -122,6 +122,7 @@ export const PLANS: Plan[] = [
       scans: "Weekly scans",
     },
     inheritsFrom: { brand: "Starter", agency: null },
+    featured: ["brand"],
     highlights: [
       "Pick any 5 of the 8 engines (Gemini & Claude included)",
       "100 pooled prompts — split across brands or all on one",
@@ -138,7 +139,8 @@ export const PLANS: Plan[] = [
     name: "Pro",
     priceMonthly: 399,
     priceYearly: 3828,
-    trialDays: 7,
+    // SG_LADDER_V3.1 2026-07-28: no trial on Pro (operator call — brand-tab trial
+    // lives on Starter only) and Plus carries the "Most popular" badge.
     // SG_PRO_TIER_V1 2026-07-28: brand-side depth tier filling the $199->$999
     // hole. All 8 engines on few brands; deliberately NO white-label or
     // unlimited seats so it cannot cannibalize Growth.
@@ -158,8 +160,7 @@ export const PLANS: Plan[] = [
       "Article writing — ~30 articles/mo from your credits",
       "3 team seats",
     ],
-    featured: ["brand"],
-    cta: { label: "Start 7-day free trial", href: SIGNUP },
+    cta: { label: "Get started", href: SIGNUP },
   },
   {
     id: "agency",
@@ -280,7 +281,7 @@ export const COMPARE_GROUPS: CompareGroup[] = [
       { label: "Scan frequency", values: ["—", "Weekly", "Weekly", "Weekly", "Weekly", "Weekly + daily add-on"] },
       { label: "History retention", values: ["—", "180 days", "1 year", "1 year", "Unlimited", "Unlimited"] },
       { label: "Team seats", values: ["—", "1", "2", "3", "Unlimited", "Unlimited"] },
-      { label: "Free trial", values: ["—", "7 days", "—", "7 days", "7 days", "—"] },
+      { label: "Free trial", values: ["—", "7 days", "—", "—", "7 days", "—"] },
     ],
   },
   {
