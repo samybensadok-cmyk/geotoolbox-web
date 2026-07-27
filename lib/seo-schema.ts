@@ -77,9 +77,13 @@ export function softwareApplicationSchema({
     applicationCategory,
     ...(applicationSubCategory ? { applicationSubCategory } : {}),
     operatingSystem: "Web",
+    // SG_PRICING_V2.1: Free is retired — feature pages describe capabilities of
+    // a paid product ($99–$999 self-serve range), so the schema must not assert
+    // a $0 offer that no longer exists.
     offers: {
-      "@type": "Offer",
-      price: "0",
+      "@type": "AggregateOffer",
+      lowPrice: "99",
+      highPrice: "999",
       priceCurrency: "USD",
       availability: "https://schema.org/InStock",
     },

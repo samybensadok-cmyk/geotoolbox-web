@@ -37,7 +37,10 @@ function Cell({ value, copy }: { value: string | boolean; copy: ComparisonCopy }
   return <span className="text-gray-800">{value}</span>
 }
 
-export function ComparisonTable({ copy }: { copy: ComparisonCopy }) {
+export function ComparisonTable({ copy, locale = "en" }: { copy: ComparisonCopy; locale?: string }) {
+  // FR checkout bills EUR at identical amounts (SG_EUR_CHECKOUT_V1) — the
+  // signup deep link carries the currency so js/auth.js needn't guess.
+  const currencyParam = locale === "fr" ? "&currency=eur" : ""
   // Merge structural truth (plans.ts) with localized labels (catalog). If the
   // catalog ever falls out of shape, we fall back to the plans.ts value rather
   // than rendering a hole.
@@ -95,7 +98,7 @@ export function ComparisonTable({ copy }: { copy: ComparisonCopy }) {
                       // has no billing toggle, so asserting one on the signup chip
                       // would be wrong half the time. (The old `col.id === "free"`
                       // bare-link branch was removed with the Free tier, SG_PRICING_V2.)
-                      href={`${SIGNUP}&plan=${col.id}`}
+                      href={`${SIGNUP}&plan=${col.id}${currencyParam}`}
                       prefetch={false}
                       className={cn(
                         "mt-2 inline-flex items-center justify-center rounded-full px-3 py-1 text-[12px] font-semibold transition-colors",

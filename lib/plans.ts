@@ -200,6 +200,7 @@ export const PLANS: Plan[] = [
       "Custom features & integrations built for your team",
       "Dedicated CSM + quarterly GEO strategy & QBR",
       "SSO / SAML, security review, DPA & 4-hour SLA",
+      "Audit log, GDPR data export/erasure, per-tenant rate limits",
       "Priority API & MCP access",
       "White-glove onboarding & team training",
       "Custom contract, invoicing, PO & net terms",

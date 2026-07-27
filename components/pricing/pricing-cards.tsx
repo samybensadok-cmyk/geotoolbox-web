@@ -159,10 +159,12 @@ export function PricingCards({ copy, locale }: { copy: PricingCardsCopy; locale:
               : copy.cta.getStarted
           // Plan-aware signup deep link (SG_SIGNUP_V2): the signup page reads
           // ?plan=&interval=, shows a plan chip, and nudges the upgrade after
-          // the first scan. Billing toggle state rides along.
+          // the first scan. Billing toggle state rides along. FR passes the
+          // checkout currency explicitly (SG_EUR_CHECKOUT_V1) so js/auth.js
+          // doesn't fall back to heuristics.
           const ctaHref = isExternal
             ? plan.cta.href
-            : `${plan.cta.href}&plan=${plan.id}&interval=${annual ? "annual" : "monthly"}`
+            : `${plan.cta.href}&plan=${plan.id}&interval=${annual ? "annual" : "monthly"}${locale === "fr" ? "&currency=eur" : ""}`
           return (
             <div
               key={plan.id}

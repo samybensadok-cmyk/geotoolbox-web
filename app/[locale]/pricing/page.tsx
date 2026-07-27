@@ -99,10 +99,14 @@ export default async function PricingPage({
     publisher: { "@id": `${siteConfig.url}/#organization` },
     offers: {
       "@type": "AggregateOffer",
-      priceCurrency: "USD",
+      // FR displays (and Stripe bills) EUR at identical numeric amounts
+      // (SG_EUR_CHECKOUT_V1), so the schema currency follows the locale.
+      // offerCount counts only self-serve priced tiers — Enterprise is
+      // custom-quoted and sits outside the low/high range.
+      priceCurrency: locale === "fr" ? "EUR" : "USD",
       lowPrice: String(Math.min(...priced)),
       highPrice: String(Math.max(...priced)),
-      offerCount: PLANS.length,
+      offerCount: priced.length,
     },
   }
 
@@ -122,7 +126,7 @@ export default async function PricingPage({
           </p>
         </div>
 
-        {/* Core features included on every plan (incl. Free) — cards only show
+        {/* Core features included on every plan — cards only show
             per-tier deltas, so the shared baseline needs its own, visible-enough
             band. Moved ABOVE the cards (was a barely-visible gray strip below them,
             easy to miss entirely) so visitors see the shared floor before comparing
@@ -153,10 +157,8 @@ export default async function PricingPage({
         </div>
 
         {/* SG_PRICING_V2 2026-07-27: the Starter promo strip that used to sit here
-            is REMOVED. It existed because Starter was demoted out of the card row;
-            now that Starter is a card in the Brands tab, the strip duplicated it —
-            and it still advertised the retired $39/$49 pricing. The `pricing.strip.*`
-            keys remain in messages/*.json but are no longer rendered. */}
+            is REMOVED (it advertised the retired $39/$49 pricing); the
+            `pricing.strip.*` keys were deleted from messages/*.json in v2.1. */}
       </section>
 
       {/* How credits work — the make-or-break explainer */}
@@ -198,7 +200,7 @@ export default async function PricingPage({
       </section>
 
       {/* Full comparison */}
-      <ComparisonTable copy={compareCopy} />
+      <ComparisonTable copy={compareCopy} locale={locale} />
 
       {/* Enterprise band */}
       <section className="bg-gray-950 px-6 py-16">
@@ -233,7 +235,9 @@ export default async function PricingPage({
             {t("finalCta.body")}
           </p>
           <Link
-            href={siteConfig.appSignupUrl}
+            // FR checkout bills EUR — pass the currency explicitly so
+            // js/auth.js's sgCheckoutCurrency() doesn't have to guess.
+            href={`${siteConfig.appSignupUrl}${locale === "fr" ? "&currency=eur" : ""}`}
             prefetch={false}
             className="mt-8 inline-flex items-center justify-center rounded-full bg-accent-900 px-8 py-4 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25"
           >

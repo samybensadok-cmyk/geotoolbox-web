@@ -3,7 +3,7 @@ import { siteConfig } from "@/lib/config"
 
 /**
  * DualCTA — a configurable feature-page CTA band giving both buyer archetypes an
- * on-ramp: a low-friction self-serve primary (→ /app, free, no card) plus an
+ * on-ramp: a low-friction self-serve primary (→ /app, 7-day free trial) plus an
  * optional artifact secondary ("See a sample report"). Distinct from the
  * homepage-specific components/landing/cta.tsx. Drop at every section break.
  */
