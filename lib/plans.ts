@@ -32,7 +32,8 @@
 //    ~25-40 brands at Scale-typical configs; "unlimited" was a promise the
 //    credit pool couldn't keep, and it undercut the $1,500+ Enterprise floor.
 //    Unlimited brands are now Enterprise-only.
-//  - 7-day free trial (card required) on Starter, Pro and Growth: 25% of the
+//  - 7-day free trial (card required) on Starter and Growth only (v3.1 pulled
+//    Pro from the trial): 25% of the
 //    monthly credit grant + max 3 generated articles during trial, full grant
 //    on first payment. T-24h renewal reminder email. No trial on Scale/Ent.
 //  - `inheritsFrom` and `featured` are per-segment: a card must never
