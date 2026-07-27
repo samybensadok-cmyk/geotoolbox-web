@@ -73,7 +73,7 @@ function parseCompareShape() {
 // BECAUSE this self-check failed (free removed, script not updated) and the
 // session shipped anyway — if this guard exits non-zero, fixing it is part of
 // the change, not optional.
-const EXPECTED_PLAN_IDS = ["starter", "consultant", "agency", "scale", "enterprise"]
+const EXPECTED_PLAN_IDS = ["starter", "consultant", "pro", "agency", "scale", "enterprise"]
 const EXPECTED_ROW_COUNTS = [7, 9, 12, 6, 2, 1]
 
 const PLAN_QUOTAS = parseQuotas()

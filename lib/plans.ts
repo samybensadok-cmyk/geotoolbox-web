@@ -29,7 +29,7 @@
 //    reference a tier the active tab doesn't show ("Everything in Growth,
 //    plus:" on the Brands tab was the bug that forced this).
 
-export type PlanId = "starter" | "consultant" | "agency" | "scale" | "enterprise"
+export type PlanId = "starter" | "consultant" | "pro" | "agency" | "scale" | "enterprise"
 
 /** The two pricing-page tabs. Plans list every tab they appear under. */
 export type PlanSegment = "brand" | "agency"
@@ -120,8 +120,36 @@ export const PLANS: Plan[] = [
       "Community: Reddit & forum AI citations",
       "Actions: weekly prioritized to-do list",
     ],
-    featured: ["brand"],
     cta: { label: "Get started", href: SIGNUP },
+  },
+  {
+    id: "pro",
+    segments: ["brand"],
+    name: "Pro",
+    priceMonthly: 399,
+    priceYearly: 3828,
+    trialDays: 7,
+    // SG_PRO_TIER_V1 2026-07-28: brand-side depth tier filling the $199->$999
+    // hole. All 8 engines on few brands; deliberately NO white-label or
+    // unlimited seats so it cannot cannibalize Growth.
+    tagline: "Every engine, full depth, for one team.",
+    quotas: {
+      credits: "50,000 credits/mo",
+      domains: "5 brands",
+      prompts: "100 prompts/brand",
+      engines: "All 8 engines",
+      scans: "Weekly scans",
+    },
+    inheritsFrom: { brand: "Consultant", agency: null },
+    highlights: [
+      "All 8 AI engines (+ Gemini, Claude, AI Mode)",
+      "100 prompts/brand — double the tracking depth",
+      "Ask GeoToolBox — AI analyst chat over your own data",
+      "Article writing — ~30 articles/mo from your credits",
+      "3 team seats",
+    ],
+    featured: ["brand"],
+    cta: { label: "Start 7-day free trial", href: SIGNUP },
   },
   {
     id: "agency",
@@ -154,7 +182,7 @@ export const PLANS: Plan[] = [
   },
   {
     id: "scale",
-    segments: ["brand", "agency"],
+    segments: ["agency"],
     name: "Scale",
     priceMonthly: 999,
     priceYearly: 9588,
@@ -166,7 +194,7 @@ export const PLANS: Plan[] = [
       engines: "All 8 engines",
       scans: "Weekly scans · daily add-on",
     },
-    inheritsFrom: { brand: "Consultant", agency: "Growth" },
+    inheritsFrom: { brand: null, agency: "Growth" },
     highlights: [
       "All 8 AI engines · 100 prompts/brand",
       "Article writing — ~60 articles/mo from your credits",
@@ -221,6 +249,7 @@ export const PLANS: Plan[] = [
 export const COMPARE_COLUMNS: { id: PlanId; name: string }[] = [
   { id: "starter", name: "Starter" },
   { id: "consultant", name: "Consultant" },
+  { id: "pro", name: "Pro" },
   { id: "agency", name: "Growth" },
   { id: "scale", name: "Scale" },
 ]
@@ -235,72 +264,72 @@ export const COMPARE_GROUPS: CompareGroup[] = [
   {
     group: "Usage & limits",
     rows: [
-      { label: "Monthly credits", values: ["—", "12,000", "30,000", "80,000", "130,000"] },
-      { label: "Brands / domains", values: ["—", "1", "5", "20", "30"] },
-      { label: "Prompts per brand", values: ["—", "50", "50", "50", "100"] },
-      { label: "Scan frequency", values: ["—", "Weekly", "Weekly", "Weekly", "Weekly + daily add-on"] },
-      { label: "History retention", values: ["—", "180 days", "1 year", "Unlimited", "Unlimited"] },
-      { label: "Team seats", values: ["—", "1", "1", "Unlimited", "Unlimited"] },
-      { label: "Free trial", values: ["—", "7 days", "—", "7 days", "—"] },
+      { label: "Monthly credits", values: ["—", "12,000", "30,000", "50,000", "80,000", "130,000"] },
+      { label: "Brands / domains", values: ["—", "1", "5", "5", "20", "30"] },
+      { label: "Prompts per brand", values: ["—", "50", "50", "100", "50", "100"] },
+      { label: "Scan frequency", values: ["—", "Weekly", "Weekly", "Weekly", "Weekly", "Weekly + daily add-on"] },
+      { label: "History retention", values: ["—", "180 days", "1 year", "1 year", "Unlimited", "Unlimited"] },
+      { label: "Team seats", values: ["—", "1", "1", "3", "Unlimited", "Unlimited"] },
+      { label: "Free trial", values: ["—", "7 days", "—", "7 days", "7 days", "—"] },
     ],
   },
   {
     group: "AI engines",
     rows: [
-      { label: "Engines you can run", values: ["—", "3", "Pick 3 of 5", "Pick 5 of 8", "All 8"] },
-      { label: "ChatGPT", values: [Y, Y, Y, Y, Y] },
-      { label: "Perplexity", values: [N, Y, Y, Y, Y] },
-      { label: "Google AI Overviews", values: [N, Y, Y, Y, Y] },
-      { label: "Google AI Mode", values: [N, N, N, Y, Y] },
-      { label: "Bing Copilot", values: [N, N, Y, Y, Y] },
-      { label: "Grok", values: [N, N, Y, Y, Y] },
-      { label: "Gemini", values: [N, N, N, Y, Y] },
-      { label: "Claude", values: [N, N, N, Y, Y] },
+      { label: "Engines you can run", values: ["—", "3", "Pick 3 of 5", "All 8", "Pick 5 of 8", "All 8"] },
+      { label: "ChatGPT", values: [Y, Y, Y, Y, Y, Y] },
+      { label: "Perplexity", values: [N, Y, Y, Y, Y, Y] },
+      { label: "Google AI Overviews", values: [N, Y, Y, Y, Y, Y] },
+      { label: "Google AI Mode", values: [N, N, N, Y, Y, Y] },
+      { label: "Bing Copilot", values: [N, N, Y, Y, Y, Y] },
+      { label: "Grok", values: [N, N, Y, Y, Y, Y] },
+      { label: "Gemini", values: [N, N, N, Y, Y, Y] },
+      { label: "Claude", values: [N, N, N, Y, Y, Y] },
     ],
   },
   {
     group: "Tracking & analysis",
     rows: [
-      { label: "Visibility tracker & share of voice", values: [Y, Y, Y, Y, Y] },
-      { label: "GEO Scan", values: [Y, Y, Y, Y, Y] },
-      { label: "Query Fan-Out analysis", values: [Y, Y, Y, Y, Y] },
-      { label: "Agent Readiness scan", values: [Y, Y, Y, Y, Y] },
-      { label: "Content Analyzer", values: [Y, Y, Y, Y, Y] },
-      { label: "Competitor Intel", values: [Y, Y, Y, Y, Y] },
-      { label: "Analytics (GSC + GA4 + AI traffic)", values: [Y, Y, Y, Y, Y] },
-      { label: "Domain Overview + Opportunities", values: [N, N, Y, Y, Y] },
-      { label: "Citation Interceptor", values: [N, N, Y, Y, Y] },
-      { label: "Community (Reddit & forum citations)", values: [N, N, Y, Y, Y] },
-      { label: "Ask GeoToolBox (AI analyst chat)", values: [N, N, N, Y, Y] },
-      { label: "PR Coverage Tracker", values: [N, N, N, N, Y] },
+      { label: "Visibility tracker & share of voice", values: [Y, Y, Y, Y, Y, Y] },
+      { label: "GEO Scan", values: [Y, Y, Y, Y, Y, Y] },
+      { label: "Query Fan-Out analysis", values: [Y, Y, Y, Y, Y, Y] },
+      { label: "Agent Readiness scan", values: [Y, Y, Y, Y, Y, Y] },
+      { label: "Content Analyzer", values: [Y, Y, Y, Y, Y, Y] },
+      { label: "Competitor Intel", values: [Y, Y, Y, Y, Y, Y] },
+      { label: "Analytics (GSC + GA4 + AI traffic)", values: [Y, Y, Y, Y, Y, Y] },
+      { label: "Domain Overview + Opportunities", values: [N, N, Y, Y, Y, Y] },
+      { label: "Citation Interceptor", values: [N, N, Y, Y, Y, Y] },
+      { label: "Community (Reddit & forum citations)", values: [N, N, Y, Y, Y, Y] },
+      { label: "Ask GeoToolBox (AI analyst chat)", values: [N, N, N, Y, Y, Y] },
+      { label: "PR Coverage Tracker", values: [N, N, N, N, N, Y] },
     ],
   },
   {
     group: "Content & strategy",
     rows: [
-      { label: "Content Studio — SEO briefs", values: [N, N, "15/mo", Y, Y] },
+      { label: "Content Studio — SEO briefs", values: [N, N, "15/mo", "15/mo", Y, Y] },
       // SG_ARTICLE_REPRICE_V1 2026-07-27: articles now cost 250cr (was 1,000cr), so
       // these volumes sit at ~9-13% of each grant instead of 38-77%. Consultant gains
       // article access at 15/mo. Beyond these, articles simply draw on credits — extra
       // volume is a credit top-up, not a separate cap (no cap is enforced in code).
-      { label: "AI article writing (5-stage)", values: [N, N, "15/mo", "30/mo", "60/mo"] },
-      { label: "Actions: weekly prioritized to-do list", values: [N, N, Y, Y, Y] },
-      { label: "AI prompt suggestions", values: [N, N, Y, Y, Y] },
-      { label: "White-label client reports", values: [N, N, N, Y, Y] },
-      { label: "One-off GEO audit & strategy", values: [N, N, N, N, Y] },
+      { label: "AI article writing (5-stage)", values: [N, N, "15/mo", "30/mo", "30/mo", "60/mo"] },
+      { label: "Actions: weekly prioritized to-do list", values: [N, N, Y, Y, Y, Y] },
+      { label: "AI prompt suggestions", values: [N, N, Y, Y, Y, Y] },
+      { label: "White-label client reports", values: [N, N, N, N, Y, Y] },
+      { label: "One-off GEO audit & strategy", values: [N, N, N, N, N, Y] },
     ],
   },
   {
     group: "API & add-ons",
     rows: [
-      { label: "API & MCP access", values: [N, N, N, N, "Coming soon"] },
-      { label: "Daily automated scans", values: [N, N, N, N, "Add-on"] },
+      { label: "API & MCP access", values: [N, N, N, N, N, "Coming soon"] },
+      { label: "Daily automated scans", values: [N, N, N, N, N, "Add-on"] },
     ],
   },
   {
     group: "Support",
     rows: [
-      { label: "Support", values: ["—", "Email", "Email", "Email", "Priority"] },
+      { label: "Support", values: ["—", "Email", "Email", "Email", "Email", "Priority"] },
     ],
   },
 ]
