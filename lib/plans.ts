@@ -1,58 +1,51 @@
 // Single source of truth for pricing. Mirrors the backend plan config in
-// inc/plan_limits.php (SG_PLAN_DEFAULTS) + SG_PLAN_PRICES_USD on the Replit app.
-// If the backend plan limits change, update this file too.
+// inc/plan_limits.php (SG_PLAN_DEFAULTS) + the Stripe/Neon stripe_price_map on
+// the Replit app. If the backend plan limits change, update this file too.
 //
-// 2026-06-09 rewrite — aligned to the real backend after the per-tier engine
-// model + competitive repricing:
-//  - Per-tier engine model: free=ChatGPT only; starter=3 fixed; consultant=pick
-//    3 of 5; agency=pick 5 of 8; scale/enterprise=all 8 (AI Mode added as 8th engine).
-//  - Credits right-sized: 1k / 12k / 50k / 150k / 300k / 500k+.
-//  - Starter is single-brand (depth, not breadth). Brands unlimited at Agency+.
-//  - Team seats: 1 on Free/Starter/Consultant, unlimited on Agency+ (live 2026-06-09).
-//  - Annual rates: Agency $299/mo, Scale $499/mo (monthly unchanged).
-//  - Vaporware removed (white-label reports, KB, alerts, GBP audit, SSO,
-//    CSM are NOT shipped yet) — see the roadmap; they return here as they ship.
-//
-// 2026-06-10 additions:
-//  - API & MCP access shown on Scale/Enterprise as "coming soon" (explicit
-//    operator call — sells the roadmap on the top tiers).
-//  - Daily automated scans are NO LONGER included free on Scale/Enterprise —
-//    they're a paid add-on available on those two tiers only. Backend
-//    scan_frequency for scale/enterprise must follow when the add-on ships.
-//
-// 2026-07-17: White-Label Reports + Ask GeoToolBox are now SHIPPED (Growth+).
-//   The 2026-06-09 "vaporware removed … NOT shipped yet" note above is
-//   historical — both are live and reflected in the PLANS highlights +
-//   COMPARE_GROUPS below.
-
-// 2026-07-27 SG_PRICING_V2 — operator decisions + measured-cost repricing.
-//  - Entry price $49 -> $99. Free plan RETIRED from sale (the backend
-//    SG_PLAN_DEFAULTS['free'] entry is deliberately kept as the fallback for
-//    anonymous/unknown accounts — it is no longer a sellable tier).
-//  - Prices: Starter $99/$948 · Consultant $199/$1908 · Growth $399/$3828 ·
-//    Scale $699/$6708. Annual ~20% off.
-//  - Credit grants re-derived off MEASURED per-credit COGS after the engine
-//    repricing (8-engine perkw fell 205cr -> 70cr). Grants hold ~70-81% margin
-//    at full burn: 12,000 / 30,000 / 80,000 / 130,000.
+// 2026-07-27 SG_PRICING_V2 — operator decisions + measured-cost repricing:
+//  - Free plan RETIRED from sale (backend keeps SG_PLAN_DEFAULTS['free'] only
+//    as the fallback for anonymous/unknown accounts — not a sellable tier).
+//  - Entry price $49 -> $99. Credit grants re-derived off MEASURED per-credit
+//    COGS after the engine repricing (8-engine perkw fell 205cr -> 70cr).
+//    Grants hold ~70-81% margin at full burn: 12,000 / 30,000 / 80,000 / 130,000.
 //  - Prompts per brand raised to 50 (100 on Scale), matching Peec (50 @ EUR85)
 //    and Profound (50 @ $99) at the same price point.
-//  - `segment` drives the Brands / Agencies tabs on the pricing page. Tiers
-//    marked "both" appear under either tab with tab-appropriate framing.
+//
+// 2026-07-28 SG_PRICING_V2.1 — segment-pure ladders (operator-approved):
+//  - Two tabs, three cards each, no tier appears where its story breaks:
+//      Brands & consultants -> Starter · Consultant · Scale
+//      Agencies             -> Growth · Scale · Enterprise
+//  - Agency ladder repriced UP: Growth $499/mo ($4,788/yr), Scale $999/mo
+//    ($9,588/yr). Rationale: $399 was ~$20/brand incl. white-label reports;
+//    agencies bill clients $500-2k/mo for the same deliverable.
+//  - Scale brand cap: 30 (was unlimited). 130k credits realistically support
+//    ~25-40 brands at Scale-typical configs; "unlimited" was a promise the
+//    credit pool couldn't keep, and it undercut the $1,500+ Enterprise floor.
+//    Unlimited brands are now Enterprise-only.
+//  - 7-day free trial (card required) on Starter and Growth: 25% of the
+//    monthly credit grant + max 3 generated articles during trial, full grant
+//    on first payment. T-24h renewal reminder email. No trial on Scale/Ent.
+//  - `inheritsFrom` and `featured` are per-segment: a card must never
+//    reference a tier the active tab doesn't show ("Everything in Growth,
+//    plus:" on the Brands tab was the bug that forced this).
 
 export type PlanId = "starter" | "consultant" | "agency" | "scale" | "enterprise"
 
-/** Which pricing tab a plan appears under. "both" renders in each. */
-export type PlanSegment = "brand" | "agency" | "both"
+/** The two pricing-page tabs. Plans list every tab they appear under. */
+export type PlanSegment = "brand" | "agency"
 
 export type Plan = {
   id: PlanId
-  segment: PlanSegment
+  /** which tabs render this plan as a card */
+  segments: PlanSegment[]
   name: string
   /** monthly price in USD; null = custom/contact */
   priceMonthly: number | null
   /** annual price in USD (per year); null = custom/contact */
   priceYearly: number | null
-  /** who it's for, one line */
+  /** free-trial length in days (card required); undefined = no trial */
+  trialDays?: number
+  /** who it's for, one line (default; per-segment copy may override in messages) */
   tagline: string
   /** the five aligned quota rows shown on every card, in fixed order */
   quotas: {
@@ -62,13 +55,17 @@ export type Plan = {
     engines: string
     scans: string
   }
-  /** "Everything in {prev}, plus:" bullets (3-5) */
+  /** "Everything in {prev}, plus:" bullets (default; agency override in messages) */
   highlights: string[]
-  /** carry-over line shown above highlights (null for Free) */
-  inheritsFrom: string | null
+  /**
+   * Carry-over line shown above highlights, PER SEGMENT — the named tier must
+   * be a visible card on that tab, or the line reads as a broken reference.
+   * null = base card of its ladder (self-contained highlights).
+   */
+  inheritsFrom: Record<PlanSegment, string | null>
+  /** tabs on which this card is visually featured ("Most popular") */
+  featured?: PlanSegment[]
   cta: { label: string; href: string }
-  featured?: boolean
-  badge?: string
 }
 
 const SIGNUP = "/app/?page=signup"
@@ -77,10 +74,11 @@ const BOOK_CALL = "https://calendly.com/samy-bensadok/30min-call"
 export const PLANS: Plan[] = [
   {
     id: "starter",
-    segment: "brand",
+    segments: ["brand"],
     name: "Starter",
     priceMonthly: 99,
     priceYearly: 948,
+    trialDays: 7,
     tagline: "One brand, tracked properly.",
     quotas: {
       credits: "12,000 credits/mo",
@@ -89,7 +87,7 @@ export const PLANS: Plan[] = [
       engines: "3 engines",
       scans: "Weekly scans",
     },
-    inheritsFrom: null,
+    inheritsFrom: { brand: null, agency: null },
     highlights: [
       "3 engines: ChatGPT, Perplexity, Google AI Overviews",
       "50 tracked prompts",
@@ -97,15 +95,15 @@ export const PLANS: Plan[] = [
       "GEO Scan, Agent Readiness & Content Analyzer",
       "180-day history",
     ],
-    cta: { label: "Get started", href: SIGNUP },
+    cta: { label: "Start 7-day free trial", href: SIGNUP },
   },
   {
     id: "consultant",
-    segment: "both",
+    segments: ["brand"],
     name: "Consultant",
     priceMonthly: 199,
     priceYearly: 1908,
-    tagline: "Solo consultants running multiple clients.",
+    tagline: "Solo consultants running a handful of brands.",
     quotas: {
       credits: "30,000 credits/mo",
       domains: "5 brands",
@@ -113,10 +111,7 @@ export const PLANS: Plan[] = [
       engines: "Pick 3 of 5 engines",
       scans: "Weekly scans",
     },
-    // null, not "Starter" — Starter (like Free) is filtered out of CARD_TIERS and only
-    // appears as a one-line strip below the cards, so "Everything in Starter, plus:"
-    // would reference a card the visitor never saw. Consultant is the first full card.
-    inheritsFrom: null,
+    inheritsFrom: { brand: "Starter", agency: null },
     highlights: [
       "Choose your 3 engines (+ Bing, Grok)",
       "Content Studio — 15 SEO briefs/mo",
@@ -125,14 +120,16 @@ export const PLANS: Plan[] = [
       "Community: Reddit & forum AI citations",
       "Actions: weekly prioritized to-do list",
     ],
+    featured: ["brand"],
     cta: { label: "Get started", href: SIGNUP },
   },
   {
     id: "agency",
-    segment: "agency",
+    segments: ["agency"],
     name: "Growth",
-    priceMonthly: 399,
-    priceYearly: 3828,
+    priceMonthly: 499,
+    priceYearly: 4788,
+    trialDays: 7,
     tagline: "Agencies scaling across a client roster.",
     quotas: {
       credits: "80,000 credits/mo",
@@ -141,48 +138,49 @@ export const PLANS: Plan[] = [
       engines: "Pick 5 of 8 engines",
       scans: "Weekly scans",
     },
-    inheritsFrom: "Consultant",
+    // Base card of the agency ladder — Consultant isn't on this tab, so the
+    // highlights are self-contained (they fold in the Consultant-level tools).
+    inheritsFrom: { brand: null, agency: null },
     highlights: [
-      "Ask GeoToolBox — AI analyst chat over your own data",
       "Choose 5 of all 8 engines (+ Gemini, Claude, AI Mode)",
-      "Article writing — ~30 articles/mo from your credits (5-stage copywriter)",
       "White-label client reports",
-      "Unlimited history retention",
-      "Unlimited team seats",
+      "Ask GeoToolBox — AI analyst chat over your own data",
+      "Content Studio, Citation Interceptor, Community & Actions",
+      "Article writing — ~30 articles/mo from your credits",
+      "Unlimited team seats · unlimited history",
     ],
-    cta: { label: "Get started", href: SIGNUP },
-    featured: true,
-    badge: "Most popular",
+    featured: ["agency"],
+    cta: { label: "Start 7-day free trial", href: SIGNUP },
   },
   {
     id: "scale",
-    segment: "both",
+    segments: ["brand", "agency"],
     name: "Scale",
-    priceMonthly: 699,
-    priceYearly: 6708,
-    tagline: "High-volume teams and large portfolios.",
+    priceMonthly: 999,
+    priceYearly: 9588,
+    tagline: "Every engine, every prompt, at full depth.",
     quotas: {
       credits: "130,000 credits/mo",
-      domains: "Unlimited brands",
+      domains: "30 brands",
       prompts: "100 prompts/brand",
       engines: "All 8 engines",
       scans: "Weekly scans · daily add-on",
     },
-    inheritsFrom: "Growth",
+    inheritsFrom: { brand: "Consultant", agency: "Growth" },
     highlights: [
+      "All 8 AI engines · 100 prompts/brand",
       "Article writing — ~60 articles/mo from your credits",
-      "PR Coverage Tracker — see which earned placements AI engines cite",
-      "All 8 AI engines",
+      "Ask GeoToolBox + white-label reports",
+      "PR Coverage Tracker — which earned placements AI engines cite",
       "API & MCP access (coming soon)",
       "One-off GEO audit & strategy session (annual plans only)",
       "Priority support",
-      "Unlimited brands & seats",
     ],
     cta: { label: "Get started", href: SIGNUP },
   },
   {
     id: "enterprise",
-    segment: "both",
+    segments: ["agency"],
     name: "Enterprise",
     priceMonthly: null,
     priceYearly: null,
@@ -194,14 +192,14 @@ export const PLANS: Plan[] = [
       engines: "All 8 + premium models",
       scans: "Weekly scans · daily add-on",
     },
-    inheritsFrom: "Scale",
+    inheritsFrom: { brand: null, agency: "Scale" },
     highlights: [
+      "Unlimited brands & prompts",
       "Premium frontier models (top-tier GPT, Claude & Gemini)",
       "Unlimited article generation",
       "Custom features & integrations built for your team",
       "Dedicated CSM + quarterly GEO strategy & QBR",
       "SSO / SAML, security review, DPA & 4-hour SLA",
-      "Audit log, GDPR data export/erasure, per-tenant rate limits",
       "Priority API & MCP access",
       "White-glove onboarding & team training",
       "Custom contract, invoicing, PO & net terms",
@@ -237,11 +235,12 @@ export const COMPARE_GROUPS: CompareGroup[] = [
     group: "Usage & limits",
     rows: [
       { label: "Monthly credits", values: ["—", "12,000", "30,000", "80,000", "130,000"] },
-      { label: "Brands / domains", values: ["—", "1", "5", "20", "Unlimited"] },
+      { label: "Brands / domains", values: ["—", "1", "5", "20", "30"] },
       { label: "Prompts per brand", values: ["—", "50", "50", "50", "100"] },
-      { label: "Scan frequency", values: ["Monthly", "Weekly", "Weekly", "Weekly", "Weekly + daily add-on"] },
-      { label: "History retention", values: ["90 days", "180 days", "1 year", "Unlimited", "Unlimited"] },
-      { label: "Team seats", values: ["1", "1", "1", "Unlimited", "Unlimited"] },
+      { label: "Scan frequency", values: ["—", "Weekly", "Weekly", "Weekly", "Weekly + daily add-on"] },
+      { label: "History retention", values: ["—", "180 days", "1 year", "Unlimited", "Unlimited"] },
+      { label: "Team seats", values: ["—", "1", "1", "Unlimited", "Unlimited"] },
+      { label: "Free trial", values: ["—", "7 days", "—", "7 days", "—"] },
     ],
   },
   {
@@ -300,7 +299,7 @@ export const COMPARE_GROUPS: CompareGroup[] = [
   {
     group: "Support",
     rows: [
-      { label: "Support", values: ["Community", "Email", "Email", "Email", "Priority"] },
+      { label: "Support", values: ["—", "Email", "Email", "Email", "Priority"] },
     ],
   },
 ]

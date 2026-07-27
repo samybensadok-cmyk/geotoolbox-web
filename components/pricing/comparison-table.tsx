@@ -4,7 +4,9 @@ import { cn } from "@/lib/utils"
 import { COMPARE_COLUMNS, COMPARE_GROUPS } from "@/lib/plans"
 
 const SIGNUP = "/app/?page=signup"
-const FEATURED = "consultant"
+// SG_PRICING_V2.1: Growth is the featured tier — matches the "Most popular"
+// badge on the Agencies tab (the cards feature Consultant on the Brands tab).
+const FEATURED = "agency"
 const BOOK_CALL = "https://calendly.com/samy-bensadok/30min-call"
 
 // Localized labels for the comparison matrix, merged with COMPARE_GROUPS by

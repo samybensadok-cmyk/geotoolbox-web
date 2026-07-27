@@ -16,8 +16,8 @@ const variants: Record<string, Record<InlineCtaTarget, Variant>> = {
       href: "/features/content-analyzer",
     },
     signup: {
-      text: "Comparing tools? See it on your own domain first — one scan across all eight engines, free plan, no card.",
-      button: "Start free",
+      text: "Comparing tools? See it on your own domain first — one scan across all eight engines, 7-day free trial.",
+      button: "Start free trial",
       href: "/app/?page=signup",
     },
   },
@@ -33,8 +33,8 @@ const variants: Record<string, Record<InlineCtaTarget, Variant>> = {
       href: "/features/content-analyzer",
     },
     signup: {
-      text: "Vous comparez les outils ? Voyez d’abord le vôtre à l’œuvre : un scan sur les huit moteurs, offre gratuite, sans carte.",
-      button: "Commencer gratuitement",
+      text: "Vous comparez les outils ? Voyez d’abord le vôtre à l’œuvre : un scan sur les huit moteurs, 7 jours d’essai gratuit.",
+      button: "Démarrer l’essai gratuit",
       href: "/app/?page=signup",
     },
   },

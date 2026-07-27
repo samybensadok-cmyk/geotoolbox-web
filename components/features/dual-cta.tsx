@@ -9,11 +9,11 @@ import { siteConfig } from "@/lib/config"
  */
 
 export function DualCTA({
-  primaryLabel = "Start free",
+  primaryLabel = "Start free trial",
   primaryHref = siteConfig.appSignupUrl,
   secondaryLabel,
   secondaryHref,
-  microcopy = "Free plan · no credit card",
+  microcopy = "7-day free trial · cancel anytime",
   align = "center",
 }: {
   primaryLabel?: string

@@ -68,8 +68,13 @@ function parseCompareShape() {
 
 // EXPECTED SHAPE — asserted so a refactor of plans.ts that defeats the regexes
 // above fails loudly instead of silently parsing a subset and reporting "OK".
-const EXPECTED_PLAN_IDS = ["free", "starter", "consultant", "agency", "scale", "enterprise"]
-const EXPECTED_ROW_COUNTS = [6, 9, 12, 7, 2, 1]
+// SG_PRICING_V2.1 2026-07-28: Free is retired (5 plans), and "Usage & limits"
+// gained a "Free trial" row (7). NOTE: yesterday's stale-table incident happened
+// BECAUSE this self-check failed (free removed, script not updated) and the
+// session shipped anyway — if this guard exits non-zero, fixing it is part of
+// the change, not optional.
+const EXPECTED_PLAN_IDS = ["starter", "consultant", "agency", "scale", "enterprise"]
+const EXPECTED_ROW_COUNTS = [7, 9, 12, 6, 2, 1]
 
 const PLAN_QUOTAS = parseQuotas()
 const COMPARE_SHAPE = parseCompareShape()
@@ -121,11 +126,15 @@ for (const locale of locales) {
   if (/\d/.test(money)) {
     errors.push(`[${locale}] cards.money "${money}" contains a literal digit — it would alter every displayed price`)
   }
+  // SG_EUR_CHECKOUT_V1 2026-07-27: FR quotes EUR at IDENTICAL numeric amounts
+  // ($299 = 299 €) and the Stripe Prices carry currency_options[eur] to match,
+  // so "€" is correct for fr. Any other symbol is still a mistake.
   const symbols = money.replace("{amount}", "").replace(/[\s  ]/g, "")
-  if (symbols !== "$") {
+  const expectedSymbol = locale === "fr" ? "€" : "$"
+  if (symbols !== expectedSymbol) {
     errors.push(
-      `[${locale}] cards.money "${money}" renders currency "${symbols}", expected "$" — ` +
-        `billing is in USD; showing € or another symbol would misstate the price`,
+      `[${locale}] cards.money "${money}" renders currency "${symbols}", expected "${expectedSymbol}" — ` +
+        `a wrong symbol would misstate the price (EUR is only valid for fr, at identical amounts)`,
     )
   }
 
@@ -138,10 +147,8 @@ for (const locale of locales) {
     const copy = pricing.cards.plans[planId]
     const truth = PLAN_QUOTAS[planId]
     if (!copy) {
-      // Only the tiers rendered as cards need copy; free/starter are a strip.
-      if (["consultant", "agency", "scale", "enterprise"].includes(planId)) {
-        errors.push(`[${locale}] cards.plans.${planId} is missing — the card would crash at render`)
-      }
+      // Every plan renders as a card on at least one tab (SG_PRICING_V2.1).
+      errors.push(`[${locale}] cards.plans.${planId} is missing — the card would crash at render`)
       continue
     }
     for (const [field, str] of Object.entries(copy.quotas)) {
