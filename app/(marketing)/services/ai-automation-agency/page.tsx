@@ -393,8 +393,8 @@ export default function AiAutomationAgencyPage() {
                     <div className="bg-white p-2">
                       <Image
                         src="/services/automation/gsc-queries-growth-2026-07.png"
-                        width={2612}
-                        height={884}
+                        width={2548}
+                        height={804}
                         alt={`Google Search Console chart: queries ranked for geotoolbox.ai growing from 27 in May 2026 to ${fmt(proofStats.google.rankedKeywords)} in July 2026 — content produced by the article-writing skill.`}
                         fetchPriority="high"
                         sizes="(min-width: 1024px) min(48vw, 720px), 100vw"
@@ -617,19 +617,19 @@ export default function AiAutomationAgencyPage() {
             {[
               {
                 chrome: "Bing WMT · AI Performance",
-                src: "/services/automation/bing-ai-citations-13.4k-2026-07.png",
-                width: 2646,
-                height: 928,
+                src: "/services/automation/bing-ai-citations-2026-07-27.png",
+                width: 2718,
+                height: 1016,
                 alt: `Bing Webmaster Tools AI Performance report: ~${fmt(proofStats.aiCitations.total)} total AI-citation appearances and ${proofStats.aiCitations.avgCitedPages} average cited pages over a trailing ${proofStats.aiCitations.windowDays}-day window.`,
                 caption: `~${fmt(proofStats.aiCitations.total)} AI-citation appearances · trailing ${proofStats.aiCitations.windowDays}-day Bing sample (Copilot + partners) · not unique citations.`,
               },
               {
                 chrome: "Google Analytics 4",
                 src: "/services/automation/ga4-users-growth-2026-07.png",
-                width: 1584,
-                height: 802,
-                alt: "Google Analytics 4 chart: 1.7K active users for 21 June to 22 July 2026, up 1,053% on the previous period.",
-                caption: "1.7K active users, +1,053% vs the previous period · GA4, 21 Jun – 22 Jul 2026.",
+                width: 1676,
+                height: 1016,
+                alt: "Google Analytics 4 chart: 2K active users over the last 30 days to 27 July 2026, up 535.4% on the previous period, with 9.8K events and 3.5K views.",
+                caption: "2K active users, +535% vs the previous period · GA4, last 30 days to 27 Jul 2026 · all traffic sources.",
               },
             ].map((r) => (
               <figure

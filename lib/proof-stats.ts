@@ -26,19 +26,24 @@
  */
 
 export const proofStats = {
-  asOf: "26 Jul 2026",
+  asOf: "27 Jul 2026",
   // Google Search Console — verifiable, unique. Fresh zero-authority domain
   // (indexed since April 2026, near-zero traffic until publishing began);
   // about 7 weeks of active content publishing produced these Google figures.
   // NOTE: `dailyImpressions` is a Google + Bing BLENDED daily figure — do NOT
   // recompute it from GSC alone (GSC-only is materially lower). Bump only from
-  // the combined dashboard.
-  google: { rankedKeywords: 6416, top10: 2274, top3: 332, dailyImpressions: 9400 },
+  // the combined dashboard. Left at 9,400 on the 27 Jul bump: no fresh blended
+  // reading was taken, and GSC-only (114K/28d) is not a substitute.
+  // rankedKeywords/top10/top3 bumped from the GSC monthly Looker view for
+  // Jul 2026 (month-to-date): 6,635 queries, 1,990 at pos 4-10 + 339 at pos
+  // 1-3 = 2,329 in the top 10. Looker caps at 1M rows per API call, so these
+  // are floors, not ceilings.
+  google: { rankedKeywords: 6635, top10: 2329, top3: 339, dailyImpressions: 9400 },
   // Bing Webmaster Tools "AI Performance" — Microsoft Copilot + partner AI assistants.
   // NOTE: total citation APPEARANCES over a trailing 30 days, a SAMPLE, NOT unique citations.
   aiCitations: {
-    total: 13400,
-    avgCitedPages: 24,
+    total: 14000,
+    avgCitedPages: 25,
     windowDays: 30,
     source: "Microsoft Copilot and partners",
     sampled: true,
@@ -60,4 +65,4 @@ export type ProofStats = typeof proofStats
 // Published content counts — counted on disk (content/blog, content/fr/blog,
 // content/glossary). Shared by /services/ai-automation-agency (page + OG image)
 // so the figures can't drift between surfaces. Re-count when bumping.
-export const contentCounts = { en: 120, fr: 50, glossary: 57, asOf: "26 Jul 2026" } as const
+export const contentCounts = { en: 121, fr: 50, glossary: 57, asOf: "27 Jul 2026" } as const
