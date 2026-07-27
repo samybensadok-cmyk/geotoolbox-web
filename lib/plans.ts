@@ -127,6 +127,7 @@ export const PLANS: Plan[] = [
       "Pick any 5 of the 8 engines (Gemini & Claude included)",
       "100 pooled prompts — split across brands or all on one",
       "Content Studio — 15 SEO briefs/mo · ~15 articles/mo",
+      "Ask GeoToolBox — 10 AI analyst questions/mo",
       "Citation Interceptor + Community (Reddit & forums)",
       "Actions: weekly prioritized to-do list",
       "2 team seats",
@@ -156,7 +157,7 @@ export const PLANS: Plan[] = [
     highlights: [
       "All 8 AI engines on every prompt, every week",
       "150 pooled prompts — split across brands or all on one",
-      "Ask GeoToolBox — AI analyst chat over your own data",
+      "Ask GeoToolBox — 50 AI analyst questions/mo",
       "Article writing — ~30 articles/mo from your credits",
       "3 team seats",
     ],
@@ -183,7 +184,7 @@ export const PLANS: Plan[] = [
     highlights: [
       "Choose 5 of all 8 engines (+ Gemini, Claude, AI Mode)",
       "White-label client reports",
-      "Ask GeoToolBox — AI analyst chat over your own data",
+      "Ask GeoToolBox — 100 AI analyst questions/mo",
       "Content Studio, Citation Interceptor, Community & Actions",
       "Article writing — ~30 articles/mo from your credits",
       "Unlimited team seats · unlimited history",
@@ -209,7 +210,7 @@ export const PLANS: Plan[] = [
     highlights: [
       "All 8 AI engines available on every client brand",
       "Article writing — ~60 articles/mo from your credits",
-      "Ask GeoToolBox + white-label reports",
+      "Ask GeoToolBox (300 questions/mo) + white-label reports",
       "PR Coverage Tracker — which earned placements AI engines cite",
       "API & MCP access (coming soon)",
       "One-off GEO audit & strategy session (annual plans only)",
@@ -311,7 +312,7 @@ export const COMPARE_GROUPS: CompareGroup[] = [
       { label: "Domain Overview + Opportunities", values: [N, N, Y, Y, Y, Y] },
       { label: "Citation Interceptor", values: [N, N, Y, Y, Y, Y] },
       { label: "Community (Reddit & forum citations)", values: [N, N, Y, Y, Y, Y] },
-      { label: "Ask GeoToolBox (AI analyst chat)", values: [N, N, N, Y, Y, Y] },
+      { label: "Ask GeoToolBox (AI analyst chat)", values: [N, N, "10/mo", "50/mo", "100/mo", "300/mo"] },
       { label: "PR Coverage Tracker", values: [N, N, N, N, N, Y] },
     ],
   },
