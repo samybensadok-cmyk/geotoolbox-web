@@ -89,10 +89,11 @@ export function ComparisonTable({ copy }: { copy: ComparisonCopy }) {
                   >
                     <div className="text-[14px] font-bold text-gray-900">{col.name}</div>
                     <Link
-                      // Plan-aware deep link (SG_SIGNUP_V2); "free" stays bare. No
-                      // interval — this table has no billing toggle, so asserting
-                      // one on the signup chip would be wrong half the time.
-                      href={col.id === "free" ? SIGNUP : `${SIGNUP}&plan=${col.id}`}
+                      // Plan-aware deep link (SG_SIGNUP_V2). No interval — this table
+                      // has no billing toggle, so asserting one on the signup chip
+                      // would be wrong half the time. (The old `col.id === "free"`
+                      // bare-link branch was removed with the Free tier, SG_PRICING_V2.)
+                      href={`${SIGNUP}&plan=${col.id}`}
                       prefetch={false}
                       className={cn(
                         "mt-2 inline-flex items-center justify-center rounded-full px-3 py-1 text-[12px] font-semibold transition-colors",

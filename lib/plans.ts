@@ -25,10 +25,28 @@
 //   historical — both are live and reflected in the PLANS highlights +
 //   COMPARE_GROUPS below.
 
-export type PlanId = "free" | "starter" | "consultant" | "agency" | "scale" | "enterprise"
+// 2026-07-27 SG_PRICING_V2 — operator decisions + measured-cost repricing.
+//  - Entry price $49 -> $99. Free plan RETIRED from sale (the backend
+//    SG_PLAN_DEFAULTS['free'] entry is deliberately kept as the fallback for
+//    anonymous/unknown accounts — it is no longer a sellable tier).
+//  - Prices: Starter $99/$948 · Consultant $199/$1908 · Growth $399/$3828 ·
+//    Scale $699/$6708. Annual ~20% off.
+//  - Credit grants re-derived off MEASURED per-credit COGS after the engine
+//    repricing (8-engine perkw fell 205cr -> 70cr). Grants hold ~70-81% margin
+//    at full burn: 12,000 / 30,000 / 80,000 / 130,000.
+//  - Prompts per brand raised to 50 (100 on Scale), matching Peec (50 @ EUR85)
+//    and Profound (50 @ $99) at the same price point.
+//  - `segment` drives the Brands / Agencies tabs on the pricing page. Tiers
+//    marked "both" appear under either tab with tab-appropriate framing.
+
+export type PlanId = "starter" | "consultant" | "agency" | "scale" | "enterprise"
+
+/** Which pricing tab a plan appears under. "both" renders in each. */
+export type PlanSegment = "brand" | "agency" | "both"
 
 export type Plan = {
   id: PlanId
+  segment: PlanSegment
   name: string
   /** monthly price in USD; null = custom/contact */
   priceMonthly: number | null
@@ -58,60 +76,40 @@ const BOOK_CALL = "https://calendly.com/samy-bensadok/30min-call"
 
 export const PLANS: Plan[] = [
   {
-    id: "free",
-    name: "Free",
-    priceMonthly: 0,
-    priceYearly: 0,
-    tagline: "Kick the tires on AI visibility, no card required.",
-    quotas: {
-      credits: "1,000 credits/mo",
-      domains: "1 brand",
-      prompts: "5 prompts/brand",
-      engines: "ChatGPT",
-      scans: "Monthly scans",
-    },
-    inheritsFrom: null,
-    highlights: [
-      "AI visibility tracker + share of voice",
-      "GEO Scan",
-      "Agent Readiness scan",
-      "Content Analyzer (grade any page)",
-      "AI-ready export",
-    ],
-    cta: { label: "Start free", href: SIGNUP },
-  },
-  {
     id: "starter",
+    segment: "brand",
     name: "Starter",
-    priceMonthly: 49,
-    priceYearly: 468,
-    tagline: "Solo SEOs going deep on one brand.",
+    priceMonthly: 99,
+    priceYearly: 948,
+    tagline: "One brand, tracked properly.",
     quotas: {
       credits: "12,000 credits/mo",
       domains: "1 brand",
-      prompts: "10 prompts/brand",
+      prompts: "50 prompts/brand",
       engines: "3 engines",
       scans: "Weekly scans",
     },
-    inheritsFrom: "Free",
+    inheritsFrom: null,
     highlights: [
       "3 engines: ChatGPT, Perplexity, Google AI Overviews",
+      "50 tracked prompts",
       "Weekly automated scans",
-      "12× the credits of Free",
+      "GEO Scan, Agent Readiness & Content Analyzer",
       "180-day history",
     ],
     cta: { label: "Get started", href: SIGNUP },
   },
   {
     id: "consultant",
+    segment: "both",
     name: "Consultant",
-    priceMonthly: 179,
-    priceYearly: 1788,
+    priceMonthly: 199,
+    priceYearly: 1908,
     tagline: "Solo consultants running multiple clients.",
     quotas: {
-      credits: "50,000 credits/mo",
+      credits: "30,000 credits/mo",
       domains: "5 brands",
-      prompts: "15 prompts/brand",
+      prompts: "50 prompts/brand",
       engines: "Pick 3 of 5 engines",
       scans: "Weekly scans",
     },
@@ -131,14 +129,15 @@ export const PLANS: Plan[] = [
   },
   {
     id: "agency",
+    segment: "agency",
     name: "Growth",
-    priceMonthly: 349,
-    priceYearly: 3588,
-    tagline: "Consultants and agencies scaling lots of clients.",
+    priceMonthly: 399,
+    priceYearly: 3828,
+    tagline: "Agencies scaling across a client roster.",
     quotas: {
-      credits: "150,000 credits/mo",
-      domains: "20 brands",
-      prompts: "25 prompts/brand",
+      credits: "80,000 credits/mo",
+      domains: "20 client brands",
+      prompts: "50 prompts/brand",
       engines: "Pick 5 of 8 engines",
       scans: "Weekly scans",
     },
@@ -146,7 +145,7 @@ export const PLANS: Plan[] = [
     highlights: [
       "Ask GeoToolBox — AI analyst chat over your own data",
       "Choose 5 of all 8 engines (+ Gemini, Claude, AI Mode)",
-      "Article writing — 30 articles/mo (5-stage copywriter)",
+      "Article writing — ~30 articles/mo from your credits (5-stage copywriter)",
       "White-label client reports",
       "Unlimited history retention",
       "Unlimited team seats",
@@ -157,20 +156,21 @@ export const PLANS: Plan[] = [
   },
   {
     id: "scale",
+    segment: "both",
     name: "Scale",
-    priceMonthly: 599,
-    priceYearly: 5988,
+    priceMonthly: 699,
+    priceYearly: 6708,
     tagline: "High-volume teams and large portfolios.",
     quotas: {
-      credits: "300,000 credits/mo",
+      credits: "130,000 credits/mo",
       domains: "Unlimited brands",
-      prompts: "50 prompts/brand",
+      prompts: "100 prompts/brand",
       engines: "All 8 engines",
       scans: "Weekly scans · daily add-on",
     },
     inheritsFrom: "Growth",
     highlights: [
-      "Article writing — 100 articles/mo",
+      "Article writing — ~60 articles/mo from your credits",
       "PR Coverage Tracker — see which earned placements AI engines cite",
       "All 8 AI engines",
       "API & MCP access (coming soon)",
@@ -182,6 +182,7 @@ export const PLANS: Plan[] = [
   },
   {
     id: "enterprise",
+    segment: "both",
     name: "Enterprise",
     priceMonthly: null,
     priceYearly: null,
@@ -210,11 +211,14 @@ export const PLANS: Plan[] = [
 ]
 
 // ---- Comparison table -------------------------------------------------------
-// Columns are the 4 paid self-serve tiers; Free is a standalone strip and
-// Enterprise a separate strip (per pricing-page best practice). NOTE: each
-// COMPARE_GROUPS row.values has 5 entries in PlanId order
-// [free, starter, consultant, agency, scale]; the table slices off the free
-// value (index 0) at render, so these stay in sync.
+// Columns are the 4 paid self-serve tiers; Enterprise is a separate strip.
+//
+// ⚠️ Each COMPARE_GROUPS row.values still has 5 entries and index 0 is a RETIRED
+// placeholder (formerly Free). The table slices index 0 off at render, and
+// components/pricing/comparison-table.tsx merges localized labels with these rows
+// BY INDEX — so the row count and order must not change without updating
+// messages/en.json + messages/fr.json in lockstep. Index 0 is kept as "—" rather
+// than removed precisely to avoid that desync. (SG_PRICING_V2 2026-07-27)
 export const COMPARE_COLUMNS: { id: PlanId; name: string }[] = [
   { id: "starter", name: "Starter" },
   { id: "consultant", name: "Consultant" },
@@ -232,9 +236,9 @@ export const COMPARE_GROUPS: CompareGroup[] = [
   {
     group: "Usage & limits",
     rows: [
-      { label: "Monthly credits", values: ["1,000", "12,000", "50,000", "150,000", "300,000"] },
-      { label: "Brands / domains", values: ["1", "1", "5", "20", "Unlimited"] },
-      { label: "Prompts per brand", values: ["5", "10", "15", "25", "50"] },
+      { label: "Monthly credits", values: ["—", "12,000", "30,000", "80,000", "130,000"] },
+      { label: "Brands / domains", values: ["—", "1", "5", "20", "Unlimited"] },
+      { label: "Prompts per brand", values: ["—", "50", "50", "50", "100"] },
       { label: "Scan frequency", values: ["Monthly", "Weekly", "Weekly", "Weekly", "Weekly + daily add-on"] },
       { label: "History retention", values: ["90 days", "180 days", "1 year", "Unlimited", "Unlimited"] },
       { label: "Team seats", values: ["1", "1", "1", "Unlimited", "Unlimited"] },
@@ -243,7 +247,7 @@ export const COMPARE_GROUPS: CompareGroup[] = [
   {
     group: "AI engines",
     rows: [
-      { label: "Engines you can run", values: ["ChatGPT only", "3", "Pick 3 of 5", "Pick 5 of 8", "All 8"] },
+      { label: "Engines you can run", values: ["—", "3", "Pick 3 of 5", "Pick 5 of 8", "All 8"] },
       { label: "ChatGPT", values: [Y, Y, Y, Y, Y] },
       { label: "Perplexity", values: [N, Y, Y, Y, Y] },
       { label: "Google AI Overviews", values: [N, Y, Y, Y, Y] },
@@ -274,9 +278,12 @@ export const COMPARE_GROUPS: CompareGroup[] = [
   {
     group: "Content & strategy",
     rows: [
-      { label: "AI-ready export", values: [Y, Y, Y, Y, Y] },
       { label: "Content Studio — SEO briefs", values: [N, N, "15/mo", Y, Y] },
-      { label: "AI article writing (5-stage)", values: [N, N, N, "30/mo", "100/mo"] },
+      // SG_ARTICLE_REPRICE_V1 2026-07-27: articles now cost 250cr (was 1,000cr), so
+      // these volumes sit at ~9-13% of each grant instead of 38-77%. Consultant gains
+      // article access at 15/mo. Beyond these, articles simply draw on credits — extra
+      // volume is a credit top-up, not a separate cap (no cap is enforced in code).
+      { label: "AI article writing (5-stage)", values: [N, N, "15/mo", "30/mo", "60/mo"] },
       { label: "Actions: weekly prioritized to-do list", values: [N, N, Y, Y, Y] },
       { label: "AI prompt suggestions", values: [N, N, Y, Y, Y] },
       { label: "White-label client reports", values: [N, N, N, Y, Y] },

@@ -5,10 +5,12 @@ import { useState } from "react"
 import { cn } from "@/lib/utils"
 import { PLANS, type Plan } from "@/lib/plans"
 
-// Card row anchors high: Consultant → Agency → Scale → Enterprise. Free and the
-// entry-level Starter tier are demoted to a one-line strip below the cards so the
-// pricing reads premium for agencies/large teams rather than cheap.
-const CARD_TIERS = PLANS.filter((p) => p.id !== "starter" && p.id !== "free")
+// SG_PRICING_V2 2026-07-27: Free is gone and Starter is now the $99 entry, so it
+// gets a real card rather than being demoted to a strip — at $99 it no longer makes
+// the page read cheap. With the Brands/Agencies tabs each side shows exactly four:
+//   Brands   → Starter · Consultant · Scale · Enterprise
+//   Agencies → Consultant · Growth · Scale · Enterprise
+const CARD_TIERS = PLANS
 
 // Localized display copy for the cards. EVERY number (price, quota figure) still
 // comes from lib/plans.ts — this only carries the words around them, keyed by
@@ -29,6 +31,11 @@ export type PricingCardsCopy = {
   billedMonthly: string
   save: string
   everythingIn: string
+  /** SG_PRICING_V2 — Brands/Agencies tab labels. Optional so existing locale
+   *  files keep type-checking; English fallbacks are applied at the call site
+   *  until messages/en.json + messages/fr.json carry these keys. */
+  segmentLabel?: string
+  segments?: { brands: string; agencies: string }
   cta: { getStarted: string; startFree: string; bookCall: string }
   badge: { mostPopular: string }
   plans: Record<
@@ -62,9 +69,47 @@ function priceDisplay(plan: Plan, annual: boolean, copy: PricingCardsCopy, local
 
 export function PricingCards({ copy, locale }: { copy: PricingCardsCopy; locale: string }) {
   const [annual, setAnnual] = useState(true)
+  // SG_PRICING_V2 2026-07-27 — Brands / Agencies segmentation. Tiers marked
+  // segment:"both" (Consultant, Scale, Enterprise) render under either tab; only
+  // Starter (brand-only) and Growth (agency-only) are exclusive. Defaults to
+  // "brand" because Starter is the advertised entry point.
+  const [segment, setSegment] = useState<"brand" | "agency">("brand")
+  const visibleTiers = CARD_TIERS.filter(
+    (p) => p.segment === "both" || p.segment === segment
+  )
 
   return (
     <div>
+      {/* Audience tabs — Brands / Agencies */}
+      <div className="mb-6 flex items-center justify-center">
+        <div
+          role="radiogroup"
+          aria-label={copy.segmentLabel ?? "Choose audience"}
+          className="inline-flex items-center gap-1 rounded-full border border-gray-200 bg-gray-50 p-1"
+        >
+          {([
+            [copy.segments?.brands ?? "For brands", "brand"],
+            [copy.segments?.agencies ?? "For agencies", "agency"],
+          ] as const).map(([label, value]) => (
+            <button
+              key={value}
+              type="button"
+              role="radio"
+              aria-checked={segment === value}
+              onClick={() => setSegment(value)}
+              className={cn(
+                "rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors",
+                segment === value
+                  ? "bg-white text-gray-900 shadow-sm"
+                  : "text-gray-600 hover:text-gray-900"
+              )}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Billing toggle */}
       <div className="flex items-center justify-center">
         <div
@@ -102,7 +147,7 @@ export function PricingCards({ copy, locale }: { copy: PricingCardsCopy; locale:
 
       {/* Cards */}
       <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        {CARD_TIERS.map((plan) => {
+        {visibleTiers.map((plan) => {
           const p = priceDisplay(plan, annual, copy, locale)
           const c = copy.plans[plan.id]
           const isExternal = plan.cta.href.startsWith("http")
