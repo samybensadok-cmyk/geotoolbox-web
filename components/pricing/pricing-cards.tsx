@@ -16,7 +16,7 @@ import { PLANS, type Plan, type PlanSegment } from "@/lib/plans"
 // Localized display copy for the cards. EVERY number (price, quota figure) still
 // comes from lib/plans.ts — this only carries the words around them, keyed by
 // plan id, so a translation can never drift a price. Tier names (Starter,
-// Consultant, Growth, Scale, Enterprise) are product identifiers tied to billing
+// Plus, Pro, Growth, Scale, Enterprise) are product identifiers tied to billing
 // and stay English in all locales.
 export type PricingCardsCopy = {
   billingLabel: string

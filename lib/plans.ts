@@ -28,7 +28,7 @@
 //  - Agency ladder repriced UP: Growth $499/mo ($4,788/yr), Scale $999/mo
 //    ($9,588/yr). Rationale: $399 was ~$20/brand incl. white-label reports;
 //    agencies bill clients $500-2k/mo for the same deliverable.
-//  - Scale brand cap: 30 (was unlimited). 130k credits realistically support
+//  - Scale brand cap: 25 (was unlimited). 130k credits realistically support
 //    ~25-40 brands at Scale-typical configs; "unlimited" was a promise the
 //    credit pool couldn't keep, and it undercut the $1,500+ Enterprise floor.
 //    Unlimited brands are now Enterprise-only.
