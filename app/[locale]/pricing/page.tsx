@@ -152,25 +152,11 @@ export default async function PricingPage({
           <PricingCards copy={cardsCopy} locale={locale} />
         </div>
 
-        <div className="mx-auto mt-6 max-w-7xl">
-          <div className="flex flex-col items-center justify-between gap-3 rounded-2xl border border-gray-200 bg-gray-50 px-6 py-4 sm:flex-row">
-            <p className="text-[14px] text-gray-700">
-              <span className="font-semibold text-gray-900">{t("strip.strong")}</span>{t("strip.lead")}
-              {/* Starter deep link (SG_SIGNUP_V2): signup pre-selects the plan */}
-              <Link href={`${siteConfig.appSignupUrl}&plan=starter&interval=annual`} prefetch={false} className="font-semibold text-accent-700 underline-offset-2 hover:underline">
-                {t("strip.link")}
-              </Link>
-              {t("strip.tail")}
-            </p>
-            <Link
-              href={siteConfig.appSignupUrl}
-              prefetch={false}
-              className="shrink-0 rounded-full border border-gray-300 px-5 py-2 text-[14px] font-semibold text-gray-900 transition-colors hover:border-gray-400 hover:bg-white"
-            >
-              {t("strip.cta")}
-            </Link>
-          </div>
-        </div>
+        {/* SG_PRICING_V2 2026-07-27: the Starter promo strip that used to sit here
+            is REMOVED. It existed because Starter was demoted out of the card row;
+            now that Starter is a card in the Brands tab, the strip duplicated it —
+            and it still advertised the retired $39/$49 pricing. The `pricing.strip.*`
+            keys remain in messages/*.json but are no longer rendered. */}
       </section>
 
       {/* How credits work — the make-or-break explainer */}

@@ -18,8 +18,10 @@ export async function PricingTeaser() {
   const t = await getTranslations("home.pricingTeaser")
   const locale = await getLocale()
   const base = locale === "en" ? "" : `/${locale}`
-  // FR writes prices postfix with a no-break space ("49 $"), EN prefix ("$49").
-  const fmtPrice = (n: number) => (locale === "fr" ? `${n} $` : `$${n}`)
+  // FR writes prices postfix, EN prefix. SG_PRICING_V2 2026-07-27: FR now quotes
+  // EUR with the SAME numbers, no FX conversion ($299 -> 299 €) — the Stripe tier
+  // Prices carry currency_options[eur] at identical amounts to match.
+  const fmtPrice = (n: number) => (locale === "fr" ? `${n} €` : `$${n}`)
   const tiles = TEASER_IDS.map((id) => {
     const plan = PLANS.find((p) => p.id === id)!
     return {
