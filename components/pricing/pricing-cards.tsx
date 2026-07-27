@@ -5,10 +5,10 @@ import { useState } from "react"
 import { cn } from "@/lib/utils"
 import { PLANS, type Plan, type PlanSegment } from "@/lib/plans"
 
-// SG_PRICING_V2.1 2026-07-28: segment-pure tabs. Each tab shows exactly the
+// SG_LADDER_V3 2026-07-28: segment-pure tabs. Each tab shows exactly the
 // three cards whose story is coherent for that audience:
-//   Brands & consultants → Starter · Consultant · Scale
-//   Agencies             → Growth · Scale · Enterprise
+//   Brands & consultants → Starter · Plus · Pro (footprint ladder, pooled prompts)
+//   Agencies             → Growth · Scale · Enterprise (client-capacity ladder)
 // Everything segment-dependent (inheritsFrom, featured, tagline/highlights
 // overrides) resolves against the ACTIVE tab so a card can never reference a
 // tier the visitor can't see.

@@ -12,9 +12,19 @@
 //    and Profound (50 @ $99) at the same price point.
 //
 // 2026-07-28 SG_PRICING_V2.1 — segment-pure ladders (operator-approved):
-//  - Two tabs, three cards each, no tier appears where its story breaks:
-//      Brands & consultants -> Starter · Consultant · Scale
+//  - Two tabs, three cards each, no tier appears where its story breaks.
+//
+// 2026-07-28 SG_LADDER_V3 (operator + Codex synthesis) — the brand ladder
+// scales on FOOTPRINT (prompts x engines, POOLED across brands), not brand
+// count; the agency ladder scales on client capacity + white-label ops:
+//      Brands & consultants -> Starter · Plus · Pro
 //      Agencies             -> Growth · Scale · Enterprise
+//  - Pooled prompts: Plus 100 / Pro 150 account-wide — a consultant splits
+//    them across clients, a brand pours them into one program.
+//  - Every advertised config is credit-fundable at WORST-case engine mix on
+//    the brand tab (Plus 94%, Pro 91% of grant) and standard mix on agency.
+//  - "Consultant" is a persona both tabs serve, not a tier; the $199 tier's
+//    billing id stays 'consultant', display name is Plus.
 //  - Agency ladder repriced UP: Growth $499/mo ($4,788/yr), Scale $999/mo
 //    ($9,588/yr). Rationale: $399 was ~$20/brand incl. white-label reports;
 //    agencies bill clients $500-2k/mo for the same deliverable.
@@ -22,7 +32,7 @@
 //    ~25-40 brands at Scale-typical configs; "unlimited" was a promise the
 //    credit pool couldn't keep, and it undercut the $1,500+ Enterprise floor.
 //    Unlimited brands are now Enterprise-only.
-//  - 7-day free trial (card required) on Starter and Growth: 25% of the
+//  - 7-day free trial (card required) on Starter, Pro and Growth: 25% of the
 //    monthly credit grant + max 3 generated articles during trial, full grant
 //    on first payment. T-24h renewal reminder email. No trial on Scale/Ent.
 //  - `inheritsFrom` and `featured` are per-segment: a card must never
@@ -98,27 +108,27 @@ export const PLANS: Plan[] = [
     cta: { label: "Start 7-day free trial", href: SIGNUP },
   },
   {
-    id: "consultant",
+    id: "consultant", // display name "Plus" since SG_LADDER_V3 — id kept for billing continuity
     segments: ["brand"],
-    name: "Consultant",
+    name: "Plus",
     priceMonthly: 199,
     priceYearly: 1908,
-    tagline: "Solo consultants running a handful of brands.",
+    tagline: "A second brand, more engines, one shared prompt pool.",
     quotas: {
       credits: "30,000 credits/mo",
-      domains: "5 brands",
-      prompts: "50 prompts/brand",
-      engines: "Pick 3 of 5 engines",
+      domains: "Up to 3 brands",
+      prompts: "100 prompts, pooled",
+      engines: "Pick 5 of 8 engines",
       scans: "Weekly scans",
     },
     inheritsFrom: { brand: "Starter", agency: null },
     highlights: [
-      "Choose your 3 engines (+ Bing, Grok)",
-      "Content Studio — 15 SEO briefs/mo",
-      "Domain Overview + Opportunities",
-      "Citation Interceptor — offsite citation gaps",
-      "Community: Reddit & forum AI citations",
+      "Pick any 5 of the 8 engines (Gemini & Claude included)",
+      "100 pooled prompts — split across brands or all on one",
+      "Content Studio — 15 SEO briefs/mo · ~15 articles/mo",
+      "Citation Interceptor + Community (Reddit & forums)",
       "Actions: weekly prioritized to-do list",
+      "2 team seats",
     ],
     cta: { label: "Get started", href: SIGNUP },
   },
@@ -132,18 +142,18 @@ export const PLANS: Plan[] = [
     // SG_PRO_TIER_V1 2026-07-28: brand-side depth tier filling the $199->$999
     // hole. All 8 engines on few brands; deliberately NO white-label or
     // unlimited seats so it cannot cannibalize Growth.
-    tagline: "Every engine, full depth, for one team.",
+    tagline: "Every engine, full depth — fully funded weekly.",
     quotas: {
       credits: "50,000 credits/mo",
-      domains: "5 brands",
-      prompts: "100 prompts/brand",
+      domains: "Up to 5 brands",
+      prompts: "150 prompts, pooled",
       engines: "All 8 engines",
       scans: "Weekly scans",
     },
-    inheritsFrom: { brand: "Consultant", agency: null },
+    inheritsFrom: { brand: "Plus", agency: null },
     highlights: [
-      "All 8 AI engines (+ Gemini, Claude, AI Mode)",
-      "100 prompts/brand — double the tracking depth",
+      "All 8 AI engines on every prompt, every week",
+      "150 pooled prompts — split across brands or all on one",
       "Ask GeoToolBox — AI analyst chat over your own data",
       "Article writing — ~30 articles/mo from your credits",
       "3 team seats",
@@ -161,7 +171,7 @@ export const PLANS: Plan[] = [
     tagline: "Agencies scaling across a client roster.",
     quotas: {
       credits: "80,000 credits/mo",
-      domains: "20 client brands",
+      domains: "15 client brands",
       prompts: "50 prompts/brand",
       engines: "Pick 5 of 8 engines",
       scans: "Weekly scans",
@@ -189,14 +199,14 @@ export const PLANS: Plan[] = [
     tagline: "Every engine, every prompt, at full depth.",
     quotas: {
       credits: "130,000 credits/mo",
-      domains: "30 brands",
-      prompts: "100 prompts/brand",
+      domains: "25 brands",
+      prompts: "50 prompts/brand",
       engines: "All 8 engines",
       scans: "Weekly scans · daily add-on",
     },
     inheritsFrom: { brand: null, agency: "Growth" },
     highlights: [
-      "All 8 AI engines · 100 prompts/brand",
+      "All 8 AI engines available on every client brand",
       "Article writing — ~60 articles/mo from your credits",
       "Ask GeoToolBox + white-label reports",
       "PR Coverage Tracker — which earned placements AI engines cite",
@@ -238,9 +248,9 @@ export const PLANS: Plan[] = [
 ]
 
 // ---- Comparison table -------------------------------------------------------
-// Columns are the 4 paid self-serve tiers; Enterprise is a separate strip.
+// Columns are the 5 paid self-serve tiers; Enterprise is a separate strip.
 //
-// ⚠️ Each COMPARE_GROUPS row.values still has 5 entries and index 0 is a RETIRED
+// ⚠️ Each COMPARE_GROUPS row.values has 6 entries and index 0 is a RETIRED
 // placeholder (formerly Free). The table slices index 0 off at render, and
 // components/pricing/comparison-table.tsx merges localized labels with these rows
 // BY INDEX — so the row count and order must not change without updating
@@ -248,7 +258,7 @@ export const PLANS: Plan[] = [
 // than removed precisely to avoid that desync. (SG_PRICING_V2 2026-07-27)
 export const COMPARE_COLUMNS: { id: PlanId; name: string }[] = [
   { id: "starter", name: "Starter" },
-  { id: "consultant", name: "Consultant" },
+  { id: "consultant", name: "Plus" },
   { id: "pro", name: "Pro" },
   { id: "agency", name: "Growth" },
   { id: "scale", name: "Scale" },
@@ -265,26 +275,26 @@ export const COMPARE_GROUPS: CompareGroup[] = [
     group: "Usage & limits",
     rows: [
       { label: "Monthly credits", values: ["—", "12,000", "30,000", "50,000", "80,000", "130,000"] },
-      { label: "Brands / domains", values: ["—", "1", "5", "5", "20", "30"] },
-      { label: "Prompts per brand", values: ["—", "50", "50", "100", "50", "100"] },
+      { label: "Brands / domains", values: ["—", "1", "Up to 3", "Up to 5", "15", "25"] },
+      { label: "Tracked prompts", values: ["—", "50", "100 pooled", "150 pooled", "50/brand", "50/brand"] },
       { label: "Scan frequency", values: ["—", "Weekly", "Weekly", "Weekly", "Weekly", "Weekly + daily add-on"] },
       { label: "History retention", values: ["—", "180 days", "1 year", "1 year", "Unlimited", "Unlimited"] },
-      { label: "Team seats", values: ["—", "1", "1", "3", "Unlimited", "Unlimited"] },
+      { label: "Team seats", values: ["—", "1", "2", "3", "Unlimited", "Unlimited"] },
       { label: "Free trial", values: ["—", "7 days", "—", "7 days", "7 days", "—"] },
     ],
   },
   {
     group: "AI engines",
     rows: [
-      { label: "Engines you can run", values: ["—", "3", "Pick 3 of 5", "All 8", "Pick 5 of 8", "All 8"] },
+      { label: "Engines you can run", values: ["—", "3", "Pick 5 of 8", "All 8", "Pick 5 of 8", "All 8"] },
       { label: "ChatGPT", values: [Y, Y, Y, Y, Y, Y] },
       { label: "Perplexity", values: [N, Y, Y, Y, Y, Y] },
       { label: "Google AI Overviews", values: [N, Y, Y, Y, Y, Y] },
-      { label: "Google AI Mode", values: [N, N, N, Y, Y, Y] },
+      { label: "Google AI Mode", values: [N, N, Y, Y, Y, Y] },
       { label: "Bing Copilot", values: [N, N, Y, Y, Y, Y] },
       { label: "Grok", values: [N, N, Y, Y, Y, Y] },
-      { label: "Gemini", values: [N, N, N, Y, Y, Y] },
-      { label: "Claude", values: [N, N, N, Y, Y, Y] },
+      { label: "Gemini", values: [N, N, Y, Y, Y, Y] },
+      { label: "Claude", values: [N, N, Y, Y, Y, Y] },
     ],
   },
   {
