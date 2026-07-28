@@ -80,7 +80,6 @@ export default function PrivacyPage() {
             <li>Google Analytics Data API: AI traffic data</li>
             <li>Google Analytics 4: aggregated usage analytics for our website</li>
             <li>Microsoft Clarity: aggregated usage analytics for our website (heatmaps and session replay with sensitive text and inputs masked)</li>
-            <li>PostHog: product usage events inside the application (consent-based in the EEA/UK/Switzerland, proxied through our own domain)</li>
             <li>Stripe: payment processing (we never store card numbers ourselves)</li>
             <li>Resend: transactional email delivery (verification, magic links, digests)</li>
             <li>Vercel: application hosting</li>
@@ -111,7 +110,7 @@ export default function PrivacyPage() {
             We use <strong>strictly necessary cookies</strong> for session management, security (CSRF protection), and remembering your cookie choice. These are always on and require no consent.
           </p>
           <p className="mt-3">
-            We also use analytics cookies as described below; where applicable law requires consent — including for visitors from the EEA, the United Kingdom, and Switzerland — these tools are enabled only after you accept the consent banner. They are set by <strong>Google Analytics 4</strong> (aggregated traffic, pages viewed, device type, approximate location), <strong>Microsoft Clarity</strong> (aggregated interaction patterns, including heatmaps and session replays that mask sensitive text and form inputs), and — inside the application — <strong>PostHog</strong> (product usage events, proxied through our own domain). None of these are used for advertising or cross-site tracking.
+            We also use analytics cookies as described below; where applicable law requires consent — including for visitors from the EEA, the United Kingdom, and Switzerland — these tools are enabled only after you accept the consent banner. They are set by <strong>Google Analytics 4</strong> (aggregated traffic, pages viewed, device type, approximate location) and <strong>Microsoft Clarity</strong> (aggregated interaction patterns, including heatmaps and session replays that mask sensitive text and form inputs). Neither is used for advertising or cross-site tracking.
           </p>
           <p className="mt-3">
             If you are visiting from the EEA, the United Kingdom, or Switzerland, <strong>no analytics run until you accept</strong> the consent banner. You can refuse with one click (remembered for 6 months / 180 days; acceptance is remembered for 12 months / 365 days), and change your choice at any time via the <strong>Cookie settings</strong> link in the website footer, the <strong>Cookie settings</strong> link on the app&apos;s Account page, or by clearing the <code className="px-1 py-0.5 rounded bg-gray-100 text-[13px]">sg_consent</code> cookie. We also set a short-lived <code className="px-1 py-0.5 rounded bg-gray-100 text-[13px]">sg_cc</code> cookie holding only your country code (or the value <code className="px-1 py-0.5 rounded bg-gray-100 text-[13px]">unknown</code> when it cannot be determined), used to decide whether the banner applies; it contains no identifier.
@@ -121,7 +120,7 @@ export default function PrivacyPage() {
         <section>
           <h2 className="text-lg font-semibold text-gray-900">7. International Data Transfers</h2>
           <p className="mt-2">
-            We are based in the European Union, and several of the subprocessors listed in Section 4 (including Google, Microsoft, Vercel, Neon, PostHog, Stripe, and Sentry) process data in the United States. Where personal data of individuals in the EEA, the United Kingdom, or Switzerland is transferred to the United States, we rely on the <strong>EU&ndash;U.S. Data Privacy Framework</strong> (and its UK and Swiss extensions) where the provider holds an active certification, and on the European Commission&apos;s <strong>Standard Contractual Clauses</strong> incorporated into the provider&apos;s data processing agreement otherwise. Analytics data (Google Analytics, Microsoft Clarity, PostHog) is only processed at all for EEA/UK/Swiss visitors after explicit consent (see Section 6).
+            We are based in the European Union, and several of the subprocessors listed in Section 4 (including Google, Microsoft, Vercel, Neon, Stripe, and Sentry) process data in the United States. Where personal data of individuals in the EEA, the United Kingdom, or Switzerland is transferred to the United States, we rely on the <strong>EU&ndash;U.S. Data Privacy Framework</strong> (and its UK and Swiss extensions) where the provider holds an active certification, and on the European Commission&apos;s <strong>Standard Contractual Clauses</strong> incorporated into the provider&apos;s data processing agreement otherwise. Analytics data (Google Analytics, Microsoft Clarity) is only processed at all for EEA/UK/Swiss visitors after explicit consent (see Section 6).
           </p>
         </section>
 
