@@ -2,7 +2,7 @@
 title: "Kimi K3 vs Claude: Coding, Cost, and Reasoning Compared"
 description: "Kimi K3 vs Claude, compared honestly: which wins on frontend coding, reasoning, speed, and real cost per task across Fable 5, Opus 5, and GPT-5.6 Sol."
 date: "2026-07-26"
-recheckBy: "2026-07-27"  # K3 weights publish 2026-07-27: the open-weights section + FAQ tense; re-verify HF repo before/at publish
+updated: "2026-07-28"
 author: "Samy BEN SADOK"
 tags: ["kimi-k3", "claude", "kimi-k3-vs-claude", "fable-5", "claude-opus-5", "llm-comparison", "ai-coding", "open-weights", "moonshot-ai"]
 draft: false
@@ -28,7 +28,7 @@ That framing matters because most "Kimi K3 vs Claude" takes are really "should I
 <tr><td><strong>Hard reasoning</strong></td><td><strong>Claude</strong></td><td>Fable 5 and Opus 5 clear K3 by roughly ten points on Humanity's Last Exam</td></tr>
 <tr><td><strong>Cost per task</strong></td><td><strong>Kimi K3</strong></td><td>Around $0.95 per Intelligence Index task versus $2.03 for Opus 5</td></tr>
 <tr><td><strong>Speed</strong></td><td><strong>Claude</strong></td><td>Fable 5 outputs roughly twice as fast; Opus 5 starts a task in about a third of the time</td></tr>
-<tr><td><strong>Open weights</strong></td><td><strong>Kimi K3</strong></td><td>Open-weight model (weights scheduled July 27); Claude is closed and API-only</td></tr>
+<tr><td><strong>Open weights</strong></td><td><strong>Kimi K3</strong></td><td>Open-weight model (weights public since July 27, custom license); Claude is closed and API-only</td></tr>
 <tr><td><strong>Refusal-sensitive work</strong></td><td>Kimi K3 <em>(reported)</em></td><td>Developers report fewer blanket refusals on security- and medical-adjacent work</td></tr>
 </tbody>
 </table>
@@ -99,7 +99,7 @@ On paper this is the easiest win in the comparison. Kimi K3 charges $3 per milli
 </tbody>
 </table>
 
-Two things complicate the clean number. The first is verbosity. K3 reasons on every request, and while it now exposes lower effort settings, by default it still meters far more output than a comparable Claude call: Artificial Analysis clocked K3 at 130M output tokens to run its index, against a 63M median. On an agent job with retries and a growing history, that extra output lands on the $15 line, which is why first-week users on Kimi's coding plans repeatedly report a single task eating a startling share of their quota.
+Two things complicate the clean number. The first is verbosity. K3 reasons on every request, and with its reasoning effort locked to the single "max" setting on Moonshot's API and OpenRouter alike, it meters far more output than a comparable Claude call: Artificial Analysis clocked K3 at 130M output tokens to run its index, against a 63M median. On an agent job with retries and a growing history, that extra output lands on the $15 line, which is why first-week users on Kimi's coding plans repeatedly report a single task eating a startling share of their quota.
 
 The second is a comparison error worth naming, because so many of the "K3 is 10x cheaper" posts are built on it. **People compare K3's per-token API price to their flat monthly Claude subscription and conclude K3 is far cheaper. Those are different products.** A $20 Claude Pro plan is not billed per token; a fair comparison is API against API (where K3 undercuts Opus and Fable but sits near Sonnet), or subscription against subscription (where Kimi's coding plans have their own tiers and their own quota complaints). Our [Kimi API pricing](https://geotoolbox.ai/blog/kimi-api-pricing) guide covers the token rates and tiers, and the [Claude pricing guide](https://geotoolbox.ai/blog/claude-pricing) does the same on the Anthropic side. Compare like with like and the gap narrows from "10x" to "real but workload-dependent."
 
@@ -119,11 +119,11 @@ Across serious testers, the pattern is consistent: they keep Claude Code as the 
 
 ## Open Weights vs Closed: What You Actually Get
 
-This is the one axis where the comparison is not close, and also the one most people misread. Kimi K3 is an [open-weight](https://geotoolbox.ai/glossary/open-weights) model: Moonshot scheduled the weights for public release on July 27, 2026, and as of writing a countdown still sits on the Hugging Face repo rather than a download link, so confirm they have actually landed before you plan around them. Claude is closed. You reach it only through Anthropic's API or apps, and you never hold the model.
+This is the one axis where the comparison is not close, and also the one most people misread. Kimi K3 is an [open-weight](https://geotoolbox.ai/glossary/open-weights) model: Moonshot published the weights on July 27, 2026 to its Hugging Face repo, under a custom Kimi K3 License that permits commercial use with conditions at very large scale. Claude is closed. You reach it only through Anthropic's API or apps, and you never hold the model.
 
-The trap is assuming "open weights" means "I can run this myself." For almost everyone, you cannot. At 2.8 trillion parameters, even a four-bit quantization puts the weights past a terabyte, and full precision is several times that. That is data-center hardware, not a workstation with a good graphics card, and community reports point to needing dozens of accelerators. The new attention design also has to be integrated into local runtimes before self-hosting is smooth. Our [run an LLM locally](https://geotoolbox.ai/blog/run-llm-locally) guide and our [best open-source LLMs](https://geotoolbox.ai/blog/best-open-source-llms) ranking both include a self-host reality check for exactly this class of model.
+The trap is assuming "open weights" means "I can run this myself." For almost everyone, you cannot. At 2.8 trillion parameters, the repository is about 1.5TB in K3's native 4-bit MXFP4 format, and you need roughly 1.4TB of GPU memory just to load it, so Moonshot recommends a supernode of 64 or more accelerators. That is data-center hardware, not a workstation with a good graphics card. Community quantizations for llama.cpp and Ollama did land quickly, but they shrink the hardware bill without erasing it. Our [run an LLM locally](https://geotoolbox.ai/blog/run-llm-locally) guide and our [best open-source LLMs](https://geotoolbox.ai/blog/best-open-source-llms) ranking both include a self-host reality check for exactly this class of model.
 
-So what does open buy you against Claude? Three things that matter to a specific kind of buyer: you can keep data in your own jurisdiction if you self-host, you can fine-tune the model on your own domain, and you are insulated from a provider changing terms, prices, or pulling a model. That residency point comes with a catch worth stating plainly: the hosted K3 API sends your prompts to Moonshot's servers in China, so the data benefit only holds if you run the weights yourself. If none of these apply, "open" is a transparency benefit rather than a practical one, and Claude's closed, hosted convenience is the better trade. The distinction, and why it is not the same as "open source," is covered in our [open weights vs open source](https://geotoolbox.ai/blog/open-weights-vs-open-source) explainer.
+So what does open buy you against Claude, if not laptop inference? The sharpest version practitioners land on is that a model this large is legally open but operationally closed to anyone without a cluster, and the payoff is not that you personally run it. It is that anyone can, which creates a market: because the weights are public, competing providers host K3 and drive the API price down, the way many independent hosts already do for models like GLM. On top of that, you can keep data in your own jurisdiction if you self-host, fine-tune on your own domain, and stay insulated from a provider changing terms, prices, or pulling a model. That residency point comes with a catch worth stating plainly: the hosted K3 API sends your prompts to Moonshot's servers in China, so the data benefit only holds if you run the weights yourself. If none of these apply, "open" is a transparency benefit rather than a practical one, and Claude's closed, hosted convenience is the better trade. The distinction, and why it is not the same as "open source," is covered in our [open weights vs open source](https://geotoolbox.ai/blog/open-weights-vs-open-source) explainer.
 
 ## Adding GPT-5.6 Sol: The Three-Way
 
@@ -158,7 +158,7 @@ Do not switch on launch-week benchmarks. Pilot instead: run K3 and your current 
 
 Return to where we started. With web search off, both Claude Fable 5 and Gemini denied that Kimi K3 exists, and one insisted a real Claude model was fictional. Two of the most capable systems on earth, blind to a launch that led the AI news cycle for a week, because their training predates it.
 
-That lag is not a quirk of new model launches. It is how every assistant treats anything newer than its training, including your business. A product you shipped last month, a rebrand, a corrected fact about what you do, all of it is invisible to deployed assistants until training catches up or they read it live on the web. And when K3's weights go public, the model gets fine-tuned into a long tail of downstream tools you will never see, each answering questions about your market from whatever it can find about you.
+That lag is not a quirk of new model launches. It is how every assistant treats anything newer than its training, including your business. A product you shipped last month, a rebrand, a corrected fact about what you do, all of it is invisible to deployed assistants until training catches up or they read it live on the web. And now that K3's weights are public, the model gets fine-tuned into a long tail of downstream tools you will never see, each answering questions about your market from whatever it can find about you.
 
 That makes reachability the lever, not the model. The systems that update faster than training do so by fetching live pages, so if AI crawlers cannot reach and parse your site, you are absent from the layer that stays current, and correct answers about you never get a chance to form. This is the core of [AI visibility](https://geotoolbox.ai/blog/what-is-ai-visibility) and of [getting cited by AI](https://geotoolbox.ai/blog/what-is-geo): the businesses that surface well are the ones a model can find, read, and trust without tripping over contradictions.
 
@@ -184,7 +184,7 @@ No, it is noticeably slower. K3 outputs around 32 tokens per second, about half 
 
 ### Are Kimi K3's weights available yet?
 
-Moonshot scheduled the open weights for public release on July 27, 2026. As of writing, the Hugging Face repo shows a countdown rather than a download, so check whether they have actually landed. Even once public, the model is far too large to run on consumer hardware, so hosting through an API remains the practical route for most.
+Yes. Moonshot published the open weights on July 27, 2026 to its Hugging Face repo, under a custom Kimi K3 License. But the model is far too large to run on consumer hardware, about 1.5TB to download and needing a large multi-node GPU cluster to serve (Moonshot recommends 64-plus accelerators), so hosting through an API remains the practical route for most.
 
 ### Does Kimi K3 hallucinate more than Claude?
 

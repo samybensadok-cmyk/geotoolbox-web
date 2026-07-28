@@ -2,8 +2,8 @@
 title: "What Is Kimi K3? Moonshot AI's 2.8T Open Model, Explained"
 description: "What is Kimi K3? Moonshot AI's open-weight model explained: real specs, which benchmarks to trust, pricing, whether you can run it, and K2 vs DeepSeek."
 date: "2026-07-17"
-recheckBy: "2026-07-27"  # K3 weights publish 2026-07-27: 'weights not out until July 27' + the can-you-run-it section
-updated: "2026-07-26"
+recheckBy: "2026-08-31"  # weights now public (July 27); recheck for independent benchmarks + reasoning_effort levels landing
+updated: "2026-07-28"
 author: "Samy BEN SADOK"
 tags: ["kimi-k3", "kimi-ai", "moonshot-ai", "open-weights", "mixture-of-experts", "chinese-ai", "llm", "guide"]
 draft: false
@@ -15,7 +15,7 @@ So here is the plain version, current as of July 2026: what Kimi K3 actually is,
 
 ## What Is Kimi K3?
 
-**Kimi K3 is Moonshot AI's 2.8-trillion-parameter open-weight [mixture-of-experts](https://geotoolbox.ai/glossary/mixture-of-experts) model, released on July 16, 2026, with a one-million-token context window. At launch it is the largest open-weight model any lab has announced, though the weights themselves do not go public until July 27.** Only a small fraction of those parameters fire on any given token, which is the design trick that makes a model this size runnable at all.
+**Kimi K3 is Moonshot AI's 2.8-trillion-parameter open-weight [mixture-of-experts](https://geotoolbox.ai/glossary/mixture-of-experts) model, launched on July 16, 2026, with a one-million-token context window. It is the largest open-weight model any lab has released, and the weights went public on July 27 under Moonshot's own Kimi K3 License.** Only a small fraction of those parameters fire on any given token, which is the design trick that makes a model this size runnable at all.
 
 The more useful thing to understand is what Kimi K3 is not. It is not a finished, sign-in-and-chat product that beats everything else, and it is not the budget option Moonshot built its name on. It is a specialist: strong on coding, agent workflows, and long-context tasks, priced and positioned as a frontier model, and noticeably weaker outside that lane. One developer testing it on launch day put it bluntly, calling it "materially worse than GPT-5.6 Sol and Fable 5 for non-coding use cases."
 
@@ -106,11 +106,11 @@ One more thing worth naming: almost nobody can measure their own burn. The plans
 
 ## Can You Actually Run Kimi K3?
 
-"Open weights" sounds like you can download K3 and run it yourself. For almost everyone, you cannot. First, the weights were not even out at launch: Moonshot scheduled the public release for July 27, so launch week was API-only.
+"Open weights" sounds like you can download K3 and run it yourself. The weights are genuinely public now, released on July 27 to Moonshot's Hugging Face repo, and community quantizations for llama.cpp, Ollama, and LM Studio appeared almost immediately. But for almost everyone, downloadable is still not the same as runnable, and the reason is scale.
 
-Second, the size. At 2.8 trillion parameters, even an aggressive quantization lands the model somewhere around 650GB to 1TB, and full precision is closer to 1.7TB. That is not a consumer-hardware problem you solve with a better graphics card. A 512GB Mac Studio does not reach the smallest viable build, and a setup that runs K2 comfortably falls well short. As one community tester summarized it, free to download is not the same as possible to run. The new attention architecture also has to be integrated into tools like llama.cpp and Ollama before local runs work smoothly, which historically lands weeks after a release, not on day one. Our [best open-source LLMs](https://geotoolbox.ai/blog/best-open-source-llms) ranking includes a self-host reality check for exactly this class of model.
+At 2.8 trillion parameters, the repository is about 1.5TB to download in K3's native 4-bit MXFP4 format, and you need roughly 1.4TB of fast accelerator memory just to load the weights before any conversation. Moonshot recommends serving it on a supernode of 64 or more accelerators; community estimates put the floor around 21 H100-class GPUs, or three server nodes of eight 80GB cards each. A single RTX 4090 or a 512GB Mac Studio does not come close. One tester who did get it onto an M1 MacBook, by streaming individual experts from Hugging Face per token, measured it at roughly one minute per token, which captures the gap between "I can technically load it" and "I can use it."
 
-So who actually self-hosts K3? Organizations with real GPU infrastructure and a reason to keep data in-house, mainly privacy, compliance, or high-volume cost control. For everyone else, "open weights" is a licensing and transparency benefit rather than a run-it-on-your-laptop one. To actually try K3 today, the practical paths are Moonshot's own platform, a router like OpenRouter, or the free tier in the Kimi consumer app if you just want to kick the tires. Note that API credits are billed separately and are not bundled into any Kimi app subscription, so paying for the app does not hand you API access. Our [open weights vs open source](https://geotoolbox.ai/blog/open-weights-vs-open-source) explainer covers why the distinction matters.
+This is the tension practitioners keep circling: K3 may be legally open while staying operationally closed to anyone without a data center. What open weights buy you here is not laptop inference. The most-upvoted framing in the community is that the real payoff is provider competition: because anyone can host K3, a market of API providers drives the price down, the way many independent hosts already do for models like GLM. Alongside that you get durability (a version cannot be silently retired out from under you) and data residency for teams that self-host. So who self-hosts? Organizations with real GPU infrastructure and a reason to keep data in-house, and even they mostly run it non-interactively. That is the practitioners' fix for the speed problem: point it at an overnight job like "analyze this codebase for vulnerabilities" rather than an interactive chat. A response an hour later is fine there. For everyone else, the practical paths are Moonshot's own platform, a router like OpenRouter, or the free tier in the Kimi consumer app. Note that API credits are billed separately and are not bundled into any Kimi app subscription, so paying for the app does not hand you API access. Our [open weights vs open source](https://geotoolbox.ai/blog/open-weights-vs-open-source) explainer covers why the distinction matters, and our [best open-source LLMs](https://geotoolbox.ai/blog/best-open-source-llms) ranking includes a self-host reality check for this class of model.
 
 ## Kimi K3 vs Kimi K2 vs DeepSeek: Which Should You Use?
 
@@ -123,7 +123,7 @@ For most day-to-day work the math favors its own siblings. Kimi K2.6 and K2.7 Co
 <tr><th>Model</th><th>Best for</th><th>Open weights?</th><th>Rough cost</th><th>Watch for</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>Kimi K3</strong></td><td>1M context, vision, frontier coding and agents</td><td>Yes (weights July 27)</td><td>High ($15 output)</td><td>Slow, verbose, day-2 benchmarks unverified</td></tr>
+<tr><td><strong>Kimi K3</strong></td><td>1M context, vision, frontier coding and agents</td><td>Yes (public, custom license)</td><td>High ($15 output)</td><td>Slow, verbose, needs a GPU cluster to self-host</td></tr>
 <tr><td><strong>Kimi K2.6 / K2.7 Code</strong></td><td>Everyday coding at low cost</td><td>Yes</td><td>Low</td><td>Not frontier-level on the hardest tasks</td></tr>
 <tr><td><strong>DeepSeek V4</strong></td><td>Cheapest reasoning and coding per token</td><td>Yes</td><td>Lowest</td><td>Same China data questions</td></tr>
 <tr><td><strong>Claude Fable 5 / Opus</strong></td><td>High-stakes reasoning and verified coding</td><td>No</td><td>Premium</td><td>Closed; you rent, not own</td></tr>
@@ -136,7 +136,7 @@ The mature move is to pilot, not switch. Run K3 on one real, measurable task alo
 
 Come back to where this started. A day after launch, the assistants most people use could not describe Kimi K3 because their training predates it, and they will stay behind for months. That lag is not a Kimi quirk. It is how every model treats anything new, including your business.
 
-If a brand-new, heavily covered AI model is invisible to deployed assistants, then a product launch, a rebrand, or a corrected fact about your company is invisible the same way until training and the live web catch up. That gap is exactly what [AI visibility](https://geotoolbox.ai/blog/what-is-ai-visibility) work addresses. And because K3's weights go public, the model gets fine-tuned and embedded into a long tail of downstream tools you will never see individually, each answering questions about your market from whatever it can find about you.
+If a brand-new, heavily covered AI model is invisible to deployed assistants, then a product launch, a rebrand, or a corrected fact about your company is invisible the same way until training and the live web catch up. That gap is exactly what [AI visibility](https://geotoolbox.ai/blog/what-is-ai-visibility) work addresses. And because K3's weights are public, the model gets fine-tuned and embedded into a long tail of downstream tools you will never see individually, each answering questions about your market from whatever it can find about you.
 
 That makes two things the actual levers, and neither is the model. The first is reachability: every one of these systems and the crawlers feeding them has to be able to fetch your site, or you are absent from the live layer that updates faster than training does. The second is consistency, the [core of getting cited by AI](https://geotoolbox.ai/blog/what-is-geo): the businesses described correctly are the ones whose facts line up across the sources a model reads. In our experience at geotoolbox, the companies that surface well in AI answers are rarely the ones with the prettiest homepage; they are the ones a model can find, parse, and trust without tripping over contradictions.
 
@@ -150,15 +150,15 @@ Yes. Kimi K3 is built by Moonshot AI, a Beijing lab founded in 2023 and backed b
 
 ### Is Kimi K3 open source?
 
-Not quite. K3 is open weights, not open source. Moonshot scheduled the model files for public release on July 27, 2026, and its earlier K2 models shipped under a modified MIT license, but the company does not release the training data or full recipe, and the Kimi app and API stay closed. So you can run and fine-tune the model, but you cannot fully reproduce how it was made.
+Not quite. K3 is open weights, not open source. Moonshot released the model files on July 27, 2026 under its own Kimi K3 License, which permits commercial use but is not an OSI-approved open-source license: it adds a separate-agreement requirement for very large model-as-a-service operators and a "Kimi K3" display requirement for very large products. The company also does not release the training data or full recipe, and the Kimi app and API stay closed. So you can run and fine-tune the model, but you cannot fully reproduce how it was made.
 
 ### Is Kimi K3 free?
 
-The model weights become free to download and run once they go public on July 27, if you have the hardware, but using K3 through the API is not: it is reported at $3 per million input tokens and $15 per million output, nearly four times the older K2 line's output rate. Third-party providers sometimes offer limited free access, and Moonshot's consumer app has a free tier, but there is no permanent free API tier.
+The model weights are free to download and run (they went public on July 27, 2026), if you have the hardware, but using K3 through the API is not: it is reported at $3 per million input tokens and $15 per million output, nearly four times the older K2 line's output rate. Third-party providers sometimes offer limited free access, and Moonshot's consumer app has a free tier, but there is no permanent free API tier.
 
 ### Can I run Kimi K3 on my own computer?
 
-Realistically, no. At 2.8 trillion parameters, K3 needs roughly 650GB to 1TB even when heavily quantized, which is far beyond any consumer machine, and the weights are not public until July 27. Self-hosting is practical only for organizations with serious GPU infrastructure. For everyone else, the hosted API or a provider like OpenRouter is the route.
+Realistically, no. The weights are public now, but at 2.8 trillion parameters K3 is about 1.5TB to download and needs roughly 1.4TB of GPU memory just to load, so Moonshot recommends a supernode of 64 or more accelerators. That is far beyond any consumer machine: a 512GB Mac Studio does not come close, and the one tester who forced it onto a MacBook measured about a minute per token. Self-hosting is practical only for organizations with serious GPU infrastructure, usually run as overnight batch jobs rather than interactive chat. For everyone else, the hosted API or a provider like OpenRouter is the route.
 
 ### Is Kimi K3 better than Claude or GPT?
 
