@@ -29,6 +29,7 @@ const LOCALIZED_ROOTS = new Set([
   "/features",
   "/pricing",
   "/blog",
+  "/privacy", // FR privacy policy shipped 2026-07-28 (CNIL: consent info in the visitor's language)
   // All 13 feature detail pages migrated under app/[locale]/features (2026-07-22).
   "/features/geo-scan",
   "/features/agent-readiness",

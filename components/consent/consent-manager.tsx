@@ -49,7 +49,7 @@ const COPY = {
     accept: "Accepter",
     refuse: "Refuser",
     policy: "Politique de confidentialité",
-    policyHref: "/privacy",
+    policyHref: "/fr/privacy",
     dialogLabel: "Consentement aux cookies",
   },
 } as const

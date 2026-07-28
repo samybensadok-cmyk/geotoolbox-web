@@ -4,7 +4,14 @@ import { siteConfig } from "@/lib/config"
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description: "How GEO Toolbox collects, uses, and protects your data.",
-  alternates: { canonical: `${siteConfig.url}/privacy` },
+  alternates: {
+    canonical: `${siteConfig.url}/privacy`,
+    languages: {
+      en: `${siteConfig.url}/privacy`,
+      fr: `${siteConfig.url}/fr/privacy`,
+      "x-default": `${siteConfig.url}/privacy`,
+    },
+  },
 }
 
 export default function PrivacyPage() {
@@ -53,7 +60,7 @@ export default function PrivacyPage() {
             <li>Authentication logs (sign-in attempts, session cookies) — purged automatically within 7 days of inactivity</li>
             <li>Page-fetch cache (rendered HTML we fetched on your behalf to analyze) — held up to 24 hours, then superseded on the next fetch</li>
             <li>Analysis outputs you generate (scan reports, domain overviews, agent-readiness checks, content briefs, citability analyses, competitor radar scans, AI-ready export transforms, AI visibility tracking) — <strong>retained indefinitely</strong> so you and your team can compare performance over time. Your plan controls how much of that history is visible in the dashboard: lower tiers show a limited window of scan history (for example 180 days on <strong>Starter</strong>) while higher tiers show your complete history. Older data outside your plan&apos;s window is not displayed, but it is never modified or deleted while your account is active.</li>
-            <li>Internal cost and audit logs for our own infrastructure monitoring, containing no personal data beyond a non-identifying account ID</li>
+            <li>Internal cost and audit logs for our own infrastructure monitoring, containing no personal data beyond a pseudonymous account ID</li>
             <li>Error telemetry (anonymized, no PII) for up to 90 days</li>
           </ul>
           <p className="mt-3">
@@ -72,7 +79,10 @@ export default function PrivacyPage() {
             <li>Google Search Console API: search performance data</li>
             <li>Google Analytics Data API: AI traffic data</li>
             <li>Google Analytics 4: aggregated usage analytics for our website</li>
-            <li>Microsoft Clarity: aggregated usage analytics for our website (heatmaps and session replay)</li>
+            <li>Microsoft Clarity: aggregated usage analytics for our website (heatmaps and session replay with sensitive text and inputs masked)</li>
+            <li>PostHog: product usage events inside the application (consent-based in the EEA/UK/Switzerland, proxied through our own domain)</li>
+            <li>Stripe: payment processing (we never store card numbers ourselves)</li>
+            <li>Resend: transactional email delivery (verification, magic links, digests)</li>
             <li>Vercel: application hosting</li>
             <li>Replit: application hosting (PHP backend)</li>
             <li>Neon: PostgreSQL database hosting</li>
@@ -89,6 +99,10 @@ export default function PrivacyPage() {
             <li>Request deletion of all server-side data by emailing <a href="mailto:samy@geotoolbox.ai" className="text-accent-700 underline hover:text-accent-800">samy@geotoolbox.ai</a>; we respond within 14 days</li>
             <li>Clear locally cached data by clearing your browser storage</li>
           </ul>
+          <p className="mt-3">
+            If you are in the European Economic Area, the United Kingdom, or Switzerland, you additionally have the rights of <strong>access</strong>, <strong>rectification</strong>, <strong>erasure</strong>, <strong>restriction of processing</strong>, <strong>data portability</strong>, and <strong>objection</strong> under the GDPR (Articles 15&ndash;21), and the right to <strong>withdraw consent at any time</strong> without affecting the lawfulness of prior processing. Exercise any of these by emailing{" "}
+            <a href="mailto:samy@geotoolbox.ai" className="text-accent-700 underline hover:text-accent-800">samy@geotoolbox.ai</a>. You also have the right to lodge a complaint with your local supervisory authority &mdash; in France, the CNIL (<a href="https://www.cnil.fr" className="text-accent-700 underline hover:text-accent-800">cnil.fr</a>).
+          </p>
         </section>
 
         <section>
@@ -97,15 +111,22 @@ export default function PrivacyPage() {
             We use <strong>strictly necessary cookies</strong> for session management, security (CSRF protection), and remembering your cookie choice. These are always on and require no consent.
           </p>
           <p className="mt-3">
-            With your consent, we also use analytics cookies set by <strong>Google Analytics 4</strong> (aggregated traffic, pages viewed, device type, approximate location), <strong>Microsoft Clarity</strong> (aggregated interaction patterns, including heatmaps and session replays that mask text and form inputs), and — inside the application — <strong>PostHog</strong> (product usage events, proxied through our own domain). None of these are used for advertising or cross-site tracking.
+            We also use analytics cookies as described below; where applicable law requires consent — including for visitors from the EEA, the United Kingdom, and Switzerland — these tools are enabled only after you accept the consent banner. They are set by <strong>Google Analytics 4</strong> (aggregated traffic, pages viewed, device type, approximate location), <strong>Microsoft Clarity</strong> (aggregated interaction patterns, including heatmaps and session replays that mask sensitive text and form inputs), and — inside the application — <strong>PostHog</strong> (product usage events, proxied through our own domain). None of these are used for advertising or cross-site tracking.
           </p>
           <p className="mt-3">
-            If you are visiting from the EEA, the United Kingdom, or Switzerland, <strong>no analytics run until you accept</strong> the consent banner. You can refuse with one click (remembered for 6 months; acceptance is remembered for 12), and change your choice at any time via the <strong>Cookie settings</strong> link in the footer or by clearing the <code className="px-1 py-0.5 rounded bg-gray-100 text-[13px]">sg_consent</code> cookie. We also set a short-lived <code className="px-1 py-0.5 rounded bg-gray-100 text-[13px]">sg_cc</code> cookie holding only your country code, used to decide whether the banner applies; it contains no identifier.
+            If you are visiting from the EEA, the United Kingdom, or Switzerland, <strong>no analytics run until you accept</strong> the consent banner. You can refuse with one click (remembered for 6 months / 180 days; acceptance is remembered for 12 months / 365 days), and change your choice at any time via the <strong>Cookie settings</strong> link in the website footer, the <strong>Cookie settings</strong> link on the app&apos;s Account page, or by clearing the <code className="px-1 py-0.5 rounded bg-gray-100 text-[13px]">sg_consent</code> cookie. We also set a short-lived <code className="px-1 py-0.5 rounded bg-gray-100 text-[13px]">sg_cc</code> cookie holding only your country code (or the value <code className="px-1 py-0.5 rounded bg-gray-100 text-[13px]">unknown</code> when it cannot be determined), used to decide whether the banner applies; it contains no identifier.
           </p>
         </section>
 
         <section>
-          <h2 className="text-lg font-semibold text-gray-900">7. Contact</h2>
+          <h2 className="text-lg font-semibold text-gray-900">7. International Data Transfers</h2>
+          <p className="mt-2">
+            We are based in the European Union, and several of the subprocessors listed in Section 4 (including Google, Microsoft, Vercel, Neon, PostHog, Stripe, and Sentry) process data in the United States. Where personal data of individuals in the EEA, the United Kingdom, or Switzerland is transferred to the United States, we rely on the <strong>EU&ndash;U.S. Data Privacy Framework</strong> (and its UK and Swiss extensions) where the provider holds an active certification, and on the European Commission&apos;s <strong>Standard Contractual Clauses</strong> incorporated into the provider&apos;s data processing agreement otherwise. Analytics data (Google Analytics, Microsoft Clarity, PostHog) is only processed at all for EEA/UK/Swiss visitors after explicit consent (see Section 6).
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-lg font-semibold text-gray-900">8. Contact</h2>
           <p className="mt-2">
             For privacy questions or data deletion requests, email{" "}
             <a href="mailto:samy@geotoolbox.ai" className="text-accent-700 underline hover:text-accent-800">samy@geotoolbox.ai</a>.
