@@ -2,8 +2,7 @@ import { DM_Sans, DM_Mono } from "next/font/google"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { PromoBanner } from "@/components/layout/promo-banner"
-import { ClarityAnalytics } from "@/components/analytics/clarity"
-import { GoogleAnalytics } from "@/components/analytics/google-analytics"
+import { ConsentManager } from "@/components/consent/consent-manager"
 import "@/app/globals.css"
 
 // Font instances live here (module scope, as next/font requires) so BOTH root
@@ -52,8 +51,10 @@ export function RootShell({
         <Header nav={nav} locale={locale} />
         <main id="main-content" className="flex-1">{children}</main>
         <Footer nav={nav} footer={footer} locale={locale} />
-        <ClarityAnalytics />
-        <GoogleAnalytics />
+        {/* SG_CONSENT_V1: GA4 + Clarity now mount through the consent gate —
+            EEA/UK/CH visitors (and unknown-country, fail-closed) see a banner and
+            nothing loads until Accept; everyone else is unchanged. */}
+        <ConsentManager locale={locale} />
       </body>
     </html>
   )

@@ -11,7 +11,7 @@ export default function PrivacyPage() {
   return (
     <div className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
       <h1 className="text-3xl font-bold tracking-tight text-gray-900">Privacy Policy</h1>
-      <p className="mt-2 text-sm text-gray-600">Last updated: April 22, 2026</p>
+      <p className="mt-2 text-sm text-gray-600">Last updated: July 28, 2026</p>
 
       <div className="mt-10 space-y-8 text-[15px] leading-relaxed text-gray-600">
         <section>
@@ -92,9 +92,15 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="text-lg font-semibold text-gray-900">6. Cookies</h2>
+          <h2 className="text-lg font-semibold text-gray-900">6. Cookies &amp; Consent</h2>
           <p className="mt-2">
-            We use essential cookies for session management. To understand how visitors use our website, we also use first-party analytics cookies set by <strong>Google Analytics 4</strong> (aggregated traffic, pages viewed, device type, and approximate location) and <strong>Microsoft Clarity</strong> (aggregated interaction patterns, including heatmaps and session replays that mask text and form inputs). These analytics cookies are not used for advertising or cross-site tracking. You can block or clear them at any time through your browser settings.
+            We use <strong>strictly necessary cookies</strong> for session management, security (CSRF protection), and remembering your cookie choice. These are always on and require no consent.
+          </p>
+          <p className="mt-3">
+            With your consent, we also use analytics cookies set by <strong>Google Analytics 4</strong> (aggregated traffic, pages viewed, device type, approximate location), <strong>Microsoft Clarity</strong> (aggregated interaction patterns, including heatmaps and session replays that mask text and form inputs), and — inside the application — <strong>PostHog</strong> (product usage events, proxied through our own domain). None of these are used for advertising or cross-site tracking.
+          </p>
+          <p className="mt-3">
+            If you are visiting from the EEA, the United Kingdom, or Switzerland, <strong>no analytics run until you accept</strong> the consent banner. You can refuse with one click (remembered for 6 months; acceptance is remembered for 12), and change your choice at any time via the <strong>Cookie settings</strong> link in the footer or by clearing the <code className="px-1 py-0.5 rounded bg-gray-100 text-[13px]">sg_consent</code> cookie. We also set a short-lived <code className="px-1 py-0.5 rounded bg-gray-100 text-[13px]">sg_cc</code> cookie holding only your country code, used to decide whether the banner applies; it contains no identifier.
           </p>
         </section>
 

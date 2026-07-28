@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { CookieSettingsButton } from "@/components/consent/cookie-settings-button"
 import { tools } from "@/lib/tools"
 import { localizeNavHref } from "@/lib/i18n/nav"
 import { makeLocalizer } from "@/lib/i18n/siblings"
@@ -125,6 +126,8 @@ export function Footer({
           <div className="flex gap-4">
             <Link href={L("/privacy")} className="text-xs text-gray-600 hover:text-gray-900 transition-colors">{footer?.privacy ?? "Privacy"}</Link>
             <Link href={L("/terms")} className="text-xs text-gray-600 hover:text-gray-900 transition-colors">{footer?.terms ?? "Terms"}</Link>
+            {/* SG_CONSENT_V1: GDPR withdrawal must be as easy as consent */}
+            <CookieSettingsButton label={footer?.cookieSettings ?? (locale === "fr" ? "Param\u00e8tres des cookies" : "Cookie settings")} />
           </div>
         </div>
       </div>
