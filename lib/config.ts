@@ -18,6 +18,7 @@ export const siteConfig = {
     {
       group: "Scanning",
       features: [
+        { slug: "ai-visibility-tracker", name: "AI Visibility Tracker", desc: "Scheduled AI-citation tracking in 20 markets" },
         { slug: "geo-scan", name: "GEO Scan", desc: "8-engine AI visibility scan" },
         { slug: "agent-readiness", name: "Agent Readiness", desc: "Site-level AI agent + crawler readiness scan" },
         { slug: "query-fanout", name: "Query Fan-Out", desc: "The real questions AI fans out for a topic" },

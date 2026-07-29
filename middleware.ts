@@ -68,7 +68,7 @@ export default function middleware(request: NextRequest) {
 // guard above is what actually lets those in-body images through.
 export const config = {
   // NOTE "/features/:path*" (was exact "/features"): as of the FR feature-page
-  // migration, the hub AND all 13 /features/<slug> detail pages live under
+  // migration, the hub AND all 14 /features/<slug> detail pages live under
   // app/[locale]/features, so the whole subtree enters next-intl routing.
   // ⚠️ Every slug must have an app/[locale]/features/<slug>/page.tsx — a
   // detail page left under (marketing) will 404 the moment it's matched here.

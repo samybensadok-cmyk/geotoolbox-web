@@ -55,7 +55,7 @@ function NotFoundContent() {
                   className="group block rounded-2xl border border-gray-200 bg-white p-5 transition-all hover:-translate-y-0.5 hover:border-accent-400 hover:shadow-lg hover:shadow-gray-900/5"
                 >
                   <p className="font-mono text-[10px] font-semibold uppercase tracking-widest text-accent-700">Browse features</p>
-                  <p className="mt-2 text-[15px] font-semibold text-gray-900">13 features</p>
+                  <p className="mt-2 text-[15px] font-semibold text-gray-900">14 features</p>
                   <p className="mt-1 text-[13px] leading-relaxed text-gray-600">Every capability in one place.</p>
                 </Link>
               </li>

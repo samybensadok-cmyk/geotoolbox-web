@@ -49,8 +49,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
     ...marketingEntries("/features", { changeFrequency: "weekly", priority: 0.9 }),
     ...marketingEntries("/pricing", { changeFrequency: "weekly", priority: 0.9 }),
-    // 13 feature detail pages — localized under app/[locale]/features (2026-07-22).
+    // 14 feature detail pages — localized under app/[locale]/features (2026-07-22).
     ...[
+      "ai-visibility-tracker",
       "geo-scan",
       "agent-readiness",
       "query-fanout",

@@ -59,6 +59,7 @@ const groupMeta: {
     eyebrow: "text-accent-700",
     gridCols: "grid-cols-1",
     features: [
+      { slug: "ai-visibility-tracker", name: "AI Visibility Tracker", tint: "cool" },
       { slug: "geo-scan", name: "GEO Scan", tint: "mint" },
       { slug: "agent-readiness", name: "Agent Readiness", tint: "steel" },
       { slug: "query-fanout", name: "Query Fan-Out", tint: "iris" },
@@ -104,7 +105,7 @@ type GroupCopy = {
 }
 
 const CTA_PILLS = [
-  "GEO Scan", "Query Fan-Out", "Domain Overview", "Content Analyzer", "Content Studio",
+  "Visibility Tracker", "GEO Scan", "Query Fan-Out", "Domain Overview", "Content Analyzer", "Content Studio",
   "Competitor Intel", "Citation Interceptor", "Analytics", "Community", "PR Coverage",
 ]
 

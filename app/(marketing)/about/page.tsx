@@ -8,7 +8,7 @@ import { siteConfig } from "@/lib/config"
 export const metadata: Metadata = {
   title: "About",
   description:
-    "GEO Toolbox is the AI visibility platform: 13 features and 9 free tools that measure your AI-search visibility across 8 engines.",
+    "GEO Toolbox is the AI visibility platform: 14 features and 9 free tools that measure your AI-search visibility across 8 engines.",
   alternates: { canonical: `${siteConfig.url}/about` },
 }
 
@@ -27,7 +27,7 @@ export default function AboutPage() {
             Built for the AI search era.
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-gray-700">
-            GEO Toolbox is the AI visibility platform that gets your brand cited by AI. Thirteen features and nine free tools that measure your visibility across eight engines, ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Google AI Mode, Bing Copilot, and Grok, find why a page isn&apos;t cited, and win the citations your competitors are taking.
+            GEO Toolbox is the AI visibility platform that gets your brand cited by AI. Fourteen features and nine free tools that measure your visibility across eight engines, ChatGPT, Perplexity, Gemini, Claude, Google AI Overviews, Google AI Mode, Bing Copilot, and Grok, find why a page isn&apos;t cited, and win the citations your competitors are taking.
           </p>
         </div>
       </section>
@@ -40,10 +40,10 @@ export default function AboutPage() {
               AI engines are becoming the default interface between questions and answers. That shift rewrites the rules of visibility: there&apos;s no SERP to scroll, no ten blue links, just a generated response that either cites you or doesn&apos;t. Generative engine optimization (GEO) is the discipline that forms around that new reality: measuring where you stand, then winning the citations you&apos;re missing.
             </p>
             <p>
-              GEO Toolbox exists to make that layer legible, then actionable. Every scan runs a prompt across eight engines, aggregates every domain and URL cited, and returns an AI visibility score from 0 to 100 alongside the raw citations, yours and your competitors&apos;. Thirteen connected features build on that primitive: scanning and query fan-out, agent readiness, content grading and briefing, competitive and community intelligence, offsite citation interception, earned-media tracking, and AI-driven analytics, plus nine free tools that need no account, taking you through the full workflow from the first scan to the published fix.
+              GEO Toolbox exists to make that layer legible, then actionable. Every scan runs a prompt across eight engines, aggregates every domain and URL cited, and returns an AI visibility score from 0 to 100 alongside the raw citations, yours and your competitors&apos;. Fourteen connected features build on that primitive: continuous prompt tracking, scanning and query fan-out, agent readiness, content grading and briefing, competitive and community intelligence, offsite citation interception, earned-media tracking, and AI-driven analytics, plus nine free tools that need no account, taking you through the full workflow from the first scan to the published fix.
             </p>
             <p>
-              The tool is built and operated by Samy Ben Sadok, its founder and an SEO and growth strategist with over a decade of experience. Plans start at $99/mo ($79/mo billed annually) with a 7-day free trial, it supports eight countries, and it is used daily by agency teams and in-house SEO professionals tracking how AI cites their brands.
+              The tool is built and operated by Samy Ben Sadok, its founder and an SEO and growth strategist with over a decade of experience. Plans start at $99/mo ($79/mo billed annually) with a 7-day free trial, it supports markets across North America, Europe, Asia-Pacific, the Middle East, and Africa, and it is used daily by agency teams and in-house SEO professionals tracking how AI cites their brands.
             </p>
             <p className="text-base text-gray-600">
               Questions, partnerships, or feedback?{" "}

@@ -58,6 +58,7 @@ export function Footer({
           <div>
             <h4 className="text-xs font-semibold text-gray-900 uppercase tracking-wider">{footer?.scanAnalyze ?? "Scan & Analyze"}</h4>
             <ul className="mt-3 space-y-2">
+              <li><Link href={L("/features/ai-visibility-tracker")} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">AI Visibility Tracker</Link></li>
               <li><Link href={L("/features/geo-scan")} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">GEO Scan</Link></li>
               <li><Link href={L("/features/content-analyzer")} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Content Analyzer</Link></li>
               <li><Link href={L("/features/content-studio")} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Content Studio</Link></li>

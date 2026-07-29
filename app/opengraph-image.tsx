@@ -51,7 +51,7 @@ export default function OGImage() {
             lineHeight: 1.4,
           }}
         >
-          13 features to measure and own your visibility across eight AI engines.
+          14 features to measure and own your visibility across eight AI engines.
         </div>
 
         {/* Bottom bar */}

@@ -173,7 +173,7 @@ export default function KeywordToPromptsPage() {
               These are the prompts. Now see if you&apos;re in the answers.
             </h2>
             <p className="mt-2 max-w-xl text-base text-gray-300">
-              The AI Visibility Tracker runs your flagged prompts through 8 AI engines on a schedule, one of 13 features on
+              The <Link href="/features/ai-visibility-tracker" className="underline decoration-gray-500 underline-offset-2 hover:text-white">AI Visibility Tracker</Link> runs your flagged prompts through 8 AI engines on a schedule, one of 14 features on
               the paid platform, and shows whether your brand is mentioned, cited, or beaten by a competitor.
             </p>
           </div>

@@ -193,7 +193,7 @@ export default async function PrCoverageTrackerPage({
 
       <RelatedFeatures
         current="pr-coverage-tracker"
-        related={["citation-interceptor", "domain-overview", "analytics", "white-label-reports"]}
+        related={["ai-visibility-tracker", "citation-interceptor", "domain-overview", "white-label-reports"]}
         base={base}
         copy={c.raw("related") as { eyebrow: string; heading: string; allFeatures: string; learnMore: string }}
         descriptions={cardDescriptions}

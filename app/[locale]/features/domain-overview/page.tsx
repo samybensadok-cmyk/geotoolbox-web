@@ -262,7 +262,7 @@ export default async function DomainOverviewPage({
 
       <RelatedFeatures
         current="domain-overview"
-        related={["geo-scan", "competitor-intel", "analytics", "ask-geotoolbox"]}
+        related={["ai-visibility-tracker", "geo-scan", "competitor-intel", "analytics"]}
         base={base}
         copy={c.raw("related") as { eyebrow: string; heading: string; allFeatures: string; learnMore: string }}
         descriptions={cardDescriptions}

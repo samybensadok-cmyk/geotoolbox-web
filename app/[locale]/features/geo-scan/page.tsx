@@ -245,7 +245,7 @@ export default async function GeoScanPage({
 
       <RelatedFeatures
         current="geo-scan"
-        related={["domain-overview", "content-analyzer", "competitor-intel"]}
+        related={["ai-visibility-tracker", "domain-overview", "content-analyzer", "competitor-intel"]}
         base={base}
         copy={c.raw("related") as { eyebrow: string; heading: string; allFeatures: string; learnMore: string }}
         descriptions={cardDescriptions}

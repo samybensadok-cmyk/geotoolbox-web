@@ -2,6 +2,7 @@ import Link from "next/link"
 import { siteConfig } from "@/lib/config"
 
 type Slug =
+  | "ai-visibility-tracker"
   | "geo-scan"
   | "agent-readiness"
   | "content-analyzer"
