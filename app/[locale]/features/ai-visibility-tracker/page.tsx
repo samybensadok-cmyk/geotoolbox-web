@@ -24,7 +24,7 @@ import { marketingAlternatesFor } from "@/lib/i18n/siblings"
 // tracker mockup depicts the English product UI, so its sample data stays
 // English on both locales. Market NAMES are localized (messages `markets.list`,
 // index-matched to MARKET_CODES). Product, tier and engine names are never
-// translated. Scope guard (DEBRIEF-2026-07-29 §3.1): the tracker covers 20
+// translated. Scope guard (DEBRIEF-2026-07-29 §3.1): the tracker covers 29
 // markets; GEO Scan covers 8 — keep the two claims scoped; make no claims here
 // about the Domain Overview mentions dataset (Google-only outside the US).
 
@@ -67,10 +67,11 @@ const trackedPrompts = [
 ]
 
 // ISO codes, index-matched to the localized names in messages `markets.list`.
-// Live registry order (Wave 1, 2026-07-29): 8 original + 12 added.
+// Live registry order (Wave 1 + Wave 2, 2026-07-29): 8 original + 12 + 9.
 const MARKET_CODES = [
   "US", "GB", "AU", "CA", "IE", "FR", "ES", "DE",
   "SG", "IN", "NZ", "ZA", "AE", "MX", "HK", "PH", "MY", "NG", "AT", "CH",
+  "NL", "IT", "BR", "PT", "PL", "SE", "DK", "NO", "FI",
 ]
 
 const statusStyle: Record<string, string> = {

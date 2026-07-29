@@ -43,7 +43,7 @@ export default function AboutPage() {
               GEO Toolbox exists to make that layer legible, then actionable. Every scan runs a prompt across eight engines, aggregates every domain and URL cited, and returns an AI visibility score from 0 to 100 alongside the raw citations, yours and your competitors&apos;. Fourteen connected features build on that primitive: continuous prompt tracking, scanning and query fan-out, agent readiness, content grading and briefing, competitive and community intelligence, offsite citation interception, earned-media tracking, and AI-driven analytics, plus nine free tools that need no account, taking you through the full workflow from the first scan to the published fix.
             </p>
             <p>
-              The tool is built and operated by Samy Ben Sadok, its founder and an SEO and growth strategist with over a decade of experience. Plans start at $99/mo ($79/mo billed annually) with a 7-day free trial, it supports markets across North America, Europe, Asia-Pacific, the Middle East, and Africa, and it is used daily by agency teams and in-house SEO professionals tracking how AI cites their brands.
+              The tool is built and operated by Samy Ben Sadok, its founder and an SEO and growth strategist with over a decade of experience. Plans start at $99/mo ($79/mo billed annually) with a 7-day free trial, it supports markets across the Americas, Europe, Asia-Pacific, the Middle East, and Africa, and it is used daily by agency teams and in-house SEO professionals tracking how AI cites their brands.
             </p>
             <p className="text-base text-gray-600">
               Questions, partnerships, or feedback?{" "}
