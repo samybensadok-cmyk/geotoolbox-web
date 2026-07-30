@@ -123,10 +123,10 @@ const tiers: Tier[] = [
 const addons = [
   {
     name: "Authority placements",
-    price: "$250",
+    price: "From $450",
     unit: "per secured placement",
     detail:
-      "A mention or citation on a source AI engines actually quote in your market — sourced, negotiated, verified live before it's billed.",
+      "A mention or citation on a source AI engines actually quote in your market — sourced, negotiated, verified live before it's billed. Priced by niche: competitive verticals (finance, crypto, legal) run higher.",
   },
   {
     name: "Citable page pack",
@@ -887,7 +887,7 @@ export default function AiSeoServicePage() {
           <div className="mt-10 rounded-2xl border border-gray-200 p-6 sm:p-8">
             <h3 className="text-lg font-semibold text-gray-900">Add-ons — extend any Sprint or retainer</h3>
             <p className="mt-1 text-[13px] text-gray-500">
-              Fixed unit prices, added to an engagement when you need them — the base never gets repriced mid-project.
+              Starting prices, scoped and added on a call — the base engagement never gets repriced mid-project.
             </p>
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
               {addons.map((a) => (
