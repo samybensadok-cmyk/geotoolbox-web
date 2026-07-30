@@ -140,7 +140,7 @@ const faqs = [
   {
     question: "How is AEO different from SEO?",
     answer:
-      "SEO competes for ten ranked links a human might click; AEO competes for the single answer slot above them. You usually need page-one relevance before an engine will extract you — so the work overlaps — but the scoreboard is different: answer-slot presence per question. A client guide we worked on sat at organic position 5–6 while featured in Google's AI Overview — the slot, not the rank, is what the buyer reads.",
+      "SEO competes for ten ranked links a human might click; AEO competes for the single answer slot above them. You usually need page-one relevance before an engine will extract you — so the work overlaps — but the scoreboard is different: answer-slot presence per question. A client guide we worked on sat at organic position 5–6 in the US while featured in Google's AI Overview — the slot, not the rank, is what the buyer reads.",
   },
   {
     question: "How is AEO different from GEO?",
@@ -373,7 +373,7 @@ export default function AeoServicePage() {
                     </div>
                   </div>
                   <figcaption className="mt-3 font-mono text-[12px] text-gray-500">
-                    The same client guide is featured in Google&apos;s AI Overview — from organic position 5–6.
+                    The same client guide is featured in Google&apos;s AI Overview — from organic position 5–6 in the US.
                   </figcaption>
                 </figure>
               </div>
