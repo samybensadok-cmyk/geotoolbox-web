@@ -13,7 +13,7 @@ import { proofStats } from "@/lib/proof-stats"
 const PAGE_URL = `${siteConfig.url}/services/answer-engine-optimization`
 // Every CTA books a call — no free-tool CTA, no self-serve tier on this page.
 const CALL_HREF = "https://calendly.com/samy-bensadok/30min-call"
-// The $750 Report is a direct purchase — same live Stripe checkout handler
+// The $925 Report is a direct purchase — same live Stripe checkout handler
 // as the flagship /services/ai-seo-agency page.
 const CHECKOUT_REPORT = "/app/?action=service_checkout&item=report"
 
@@ -93,13 +93,13 @@ type Tier = {
 
 const tiers: Tier[] = [
   {
-    name: "Visibility Report",
-    price: "$750",
+    name: "AI + SEO Visibility Report",
+    price: "$925",
     billing: "One-off",
     summary: "The full baseline: the answer slots in your market, who owns them, and the pages worth building.",
     detail:
       "A one-off diagnostic that maps the buying-intent questions in your market, whose text owns each answer slot today, and the specific pages to restructure or build.",
-    cta: { label: "Buy the Report — $750", href: CHECKOUT_REPORT },
+    cta: { label: "Buy the Report — $925", href: CHECKOUT_REPORT },
     kind: "buy",
     chip: "One-off",
   },
@@ -183,8 +183,8 @@ const serviceSchema = {
   offers: [
     {
       "@type": "Offer",
-      name: "Visibility Report",
-      price: "750",
+      name: "AI + SEO Visibility Report",
+      price: "925",
       priceCurrency: "USD",
       description: "One-off diagnostic mapping buying-intent questions, current answer-slot owners, and the pages to build.",
     },
@@ -614,7 +614,7 @@ export default function AeoServicePage() {
             active clients at a time, so there&apos;s sometimes a short wait.
           </p>
           <p className="mt-2 text-[13px] leading-relaxed text-gray-500">
-            The $750 Report is a fixed price, payable by card — buy it above and you&apos;ll go straight to secure checkout. The
+            The $925 Report is a fixed price, payable by card — buy it above and you&apos;ll go straight to secure checkout. The
             Sprint and retainer are scoped to your project on the call. Looking for the umbrella service?
             See{" "}
             <Link href="/services/ai-seo-agency" className="font-medium text-accent-700 underline decoration-accent-200 underline-offset-2 hover:decoration-accent-500">

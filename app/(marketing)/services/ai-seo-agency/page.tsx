@@ -15,7 +15,7 @@ import { proofStats } from "@/lib/proof-stats"
 const PAGE_URL = `${siteConfig.url}/services/ai-seo-agency`
 // Every call books an intro/teardown call — no free-tool CTA anywhere on this page.
 const TEARDOWN_HREF = "https://calendly.com/samy-bensadok/30min-call"
-// The $750 Report is a direct purchase — wired to the live Stripe checkout
+// The $925 Report is a direct purchase — wired to the live Stripe checkout
 // endpoint (Vercel rewrites /app/* to the Replit app; the handler 303-redirects
 // to Stripe Checkout). Sprint/retainer stay book-a-call.
 const CHECKOUT = { report: "/app/?action=service_checkout&item=report", sprint: "https://calendly.com/samy-bensadok/30min-call" }
@@ -79,13 +79,13 @@ type Tier = {
 
 const tiers: Tier[] = [
   {
-    name: "Visibility Report",
-    price: "$750",
+    name: "AI + SEO Visibility Report",
+    price: "$925",
     billing: "One-off",
-    summary: "The full baseline: prompts, engines, competitors, and the pages worth building.",
+    summary: "The full AI + SEO baseline: prompts, engines, competitors, and the pages worth building.",
     detail:
       "A one-off diagnostic that maps the buying-intent prompts in your market, who gets cited today, and the specific pages to build.",
-    cta: { label: "Buy the Report — $750", href: CHECKOUT.report },
+    cta: { label: "Buy the Report — $925", href: CHECKOUT.report },
     kind: "buy",
     chip: "One-off",
   },
@@ -149,6 +149,20 @@ const addons = [
     detail:
       "We run the campaigns under your brand — delivery, dashboards and reports included. Our platform and process, your client relationship.",
   },
+  {
+    name: "Flagship citable article",
+    price: "From $950",
+    unit: "per article",
+    detail:
+      "One revenue keyword, the full pipeline — a hybrid method: AI research depth (multi-engine fact panel, SERP and competitor analysis) with human editorial gates on every claim. 48-hour minimum turnaround — the QA is not skippable — then tracked for 90 days.",
+  },
+  {
+    name: "Content cluster sprint",
+    price: "From $7,500",
+    unit: "10–12 articles, 30 days",
+    detail:
+      "A full topic cluster plus hub — the exact playbook behind our own blog — interlinked, fact-checked, and tracked from day one.",
+  },
 ]
 
 type PastClientResult = {
@@ -167,7 +181,7 @@ const pastClientResults: PastClientResult[] = [
     label: "Legal-services vertical · client guide",
     points: [
       "Cited by 7 of 7 AI engines — the #1 cited source for “how to run google ads for lawyers,” cited ahead of google.com itself.",
-      "Featured in Google’s AI Overview for “google ads for lawyers.” Organic position 5–6.",
+      "Featured in Google’s AI Overview for “google ads for lawyers.” Organic position 5–6 (US).",
       "On page 1 within weeks of publishing, with no prior topical authority.",
     ],
     image: {
@@ -181,7 +195,7 @@ const pastClientResults: PastClientResult[] = [
     label: "Fintech / crypto vertical · client guide",
     points: [
       "Cited by 6 of 7 AI engines — the #2 cited source, behind only google.com, for “how to run crypto Google Ads without getting disapproved.”",
-      "Ranks a cluster of crypto-ads terms at positions 2–10 (Ahrefs), several surfaced in Google’s AI Overview.",
+      "Ranks a cluster of crypto-ads terms at positions 2–10 in the US (Ahrefs), several surfaced in Google’s AI Overview.",
     ],
     image: {
       src: "/services/track-record/crypto-ai-scan.png",
@@ -261,8 +275,8 @@ const serviceSchema = {
   offers: [
     {
       "@type": "Offer",
-      name: "Visibility Report",
-      price: "750",
+      name: "AI + SEO Visibility Report",
+      price: "925",
       priceCurrency: "USD",
       description: "One-off diagnostic mapping buying-intent prompts, current citations, and the pages to build.",
     },
@@ -868,7 +882,7 @@ export default function AiSeoServicePage() {
             active clients at a time, so there&apos;s sometimes a short wait.
           </p>
           <p className="mt-2 text-[13px] leading-relaxed text-gray-500">
-            The $750 Report is a fixed price, payable by card — buy it above and you&apos;ll go straight to secure checkout. The Sprint and retainer are scoped to your project on the call. Focused on one surface? See the{" "}
+            The $925 Report is a fixed price, payable by card — buy it above and you&apos;ll go straight to secure checkout. The Sprint and retainer are scoped to your project on the call. Focused on one surface? See the{" "}
             <Link href="/services/generative-engine-optimization" className="font-medium text-accent-700 underline decoration-accent-200 underline-offset-2 hover:decoration-accent-500">
               generative engine optimization
             </Link>{" "}

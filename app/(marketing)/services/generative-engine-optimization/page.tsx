@@ -13,7 +13,7 @@ import { proofStats } from "@/lib/proof-stats"
 const PAGE_URL = `${siteConfig.url}/services/generative-engine-optimization`
 // Every CTA books a call — no free-tool CTA, no self-serve tier on this page.
 const CALL_HREF = "https://calendly.com/samy-bensadok/30min-call"
-// The $750 Report is a direct purchase — same live Stripe checkout handler
+// The $925 Report is a direct purchase — same live Stripe checkout handler
 // as the flagship /services/ai-seo-agency page.
 const CHECKOUT_REPORT = "/app/?action=service_checkout&item=report"
 
@@ -93,13 +93,13 @@ type Tier = {
 
 const tiers: Tier[] = [
   {
-    name: "Visibility Report",
-    price: "$750",
+    name: "AI + SEO Visibility Report",
+    price: "$925",
     billing: "One-off",
-    summary: "The full GEO baseline: prompts, engines, competitors, and the pages worth building.",
+    summary: "The full AI + SEO baseline: prompts, engines, competitors, and the pages worth building.",
     detail:
       "A one-off diagnostic that maps the buying-intent prompts in your market, who gets cited today across the AI engines, and the specific pages to build.",
-    cta: { label: "Buy the Report — $750", href: CHECKOUT_REPORT },
+    cta: { label: "Buy the Report — $925", href: CHECKOUT_REPORT },
     kind: "buy",
     chip: "One-off",
   },
@@ -162,6 +162,20 @@ const addons = [
     detail:
       "We run the campaigns under your brand — delivery, dashboards and reports included. Our platform and process, your client relationship.",
   },
+  {
+    name: "Flagship citable article",
+    price: "From $950",
+    unit: "per article",
+    detail:
+      "One revenue keyword, the full pipeline — a hybrid method: AI research depth (multi-engine fact panel, SERP and competitor analysis) with human editorial gates on every claim. 48-hour minimum turnaround — the QA is not skippable — then tracked for 90 days.",
+  },
+  {
+    name: "Content cluster sprint",
+    price: "From $7,500",
+    unit: "10–12 articles, 30 days",
+    detail:
+      "A full topic cluster plus hub — the exact playbook behind our own blog — interlinked, fact-checked, and tracked from day one.",
+  },
 ]
 
 const faqs = [
@@ -215,8 +229,8 @@ const serviceSchema = {
   offers: [
     {
       "@type": "Offer",
-      name: "Visibility Report",
-      price: "750",
+      name: "AI + SEO Visibility Report",
+      price: "925",
       priceCurrency: "USD",
       description: "One-off diagnostic mapping buying-intent prompts, current AI citations, and the pages to build.",
     },
@@ -659,7 +673,7 @@ export default function GeoServicePage() {
             active clients at a time, so there&apos;s sometimes a short wait.
           </p>
           <p className="mt-2 text-[13px] leading-relaxed text-gray-500">
-            The $750 Report is a fixed price, payable by card — buy it above and you&apos;ll go straight to secure checkout. The
+            The $925 Report is a fixed price, payable by card — buy it above and you&apos;ll go straight to secure checkout. The
             Sprint and retainer are scoped to your project on the call. Looking for the umbrella service?
             See{" "}
             <Link href="/services/ai-seo-agency" className="font-medium text-accent-700 underline decoration-accent-200 underline-offset-2 hover:decoration-accent-500">
