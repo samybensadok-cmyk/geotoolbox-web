@@ -147,7 +147,7 @@ const addons = [
     price: "From $2,000",
     unit: "/mo",
     detail:
-      "Your agency's brand on the reports and delivery — our platform and process, your client relationship.",
+      "We run the campaigns under your brand — delivery, dashboards and reports included. Our platform and process, your client relationship.",
   },
 ]
 
