@@ -117,6 +117,40 @@ const tiers: Tier[] = [
   },
 ]
 
+// À-la-carte add-ons — fixed unit prices so a Sprint or retainer extends
+// without repricing the base. Single-sourced here; the GEO service page
+// carries the same list — mirror any change there.
+const addons = [
+  {
+    name: "Authority placements",
+    price: "$250",
+    unit: "per secured placement",
+    detail:
+      "A mention or citation on a source AI engines actually quote in your market — sourced, negotiated, verified live before it's billed.",
+  },
+  {
+    name: "Citable page pack",
+    price: "$1,500",
+    unit: "per 5 pages",
+    detail:
+      "Five additional pages written and structured to be quotable — entities, sources, schema — and interlinked with the pages you already rank with.",
+  },
+  {
+    name: "Additional market",
+    price: "From $500",
+    unit: "/mo per market",
+    detail:
+      "Tracker coverage plus a localized content cadence in any of the 29 markets the platform measures.",
+  },
+  {
+    name: "White-label delivery",
+    price: "From $2,000",
+    unit: "/mo",
+    detail:
+      "Your agency's brand on the reports and delivery — our platform and process, your client relationship.",
+  },
+]
+
 type PastClientResult = {
   label: string
   points: string[]
@@ -251,6 +285,24 @@ const serviceSchema = {
         "@type": "UnitPriceSpecification",
         // Displayed as "from $3,500/mo" — represent as a floor, not an exact price.
         minPrice: "3500",
+        priceCurrency: "USD",
+        unitText: "MONTH",
+        referenceQuantity: {
+          "@type": "QuantitativeValue",
+          value: "1",
+          unitText: "MONTH",
+        },
+      },
+    },
+    {
+      "@type": "Offer",
+      name: "Scale Retainer",
+      description:
+        "Multi-brand or enterprise GEO + SEO retainer: weekly cadence, multi-market tracking, priority build capacity. From $8,000/mo, scoped on a call.",
+      priceSpecification: {
+        "@type": "UnitPriceSpecification",
+        // Displayed as "from $8,000/mo" — a floor, scoped on the call.
+        minPrice: "8000",
         priceCurrency: "USD",
         unitText: "MONTH",
         referenceQuantity: {
@@ -830,6 +882,32 @@ export default function AiSeoServicePage() {
             </Link>
             .
           </p>
+
+          {/* Add-ons + Scale — à-la-carte extensions; keep in sync with the GEO page */}
+          <div className="mt-10 rounded-2xl border border-gray-200 p-6 sm:p-8">
+            <h3 className="text-lg font-semibold text-gray-900">Add-ons — extend any Sprint or retainer</h3>
+            <p className="mt-1 text-[13px] text-gray-500">
+              Fixed unit prices, added to an engagement when you need them — the base never gets repriced mid-project.
+            </p>
+            <div className="mt-5 grid gap-4 sm:grid-cols-2">
+              {addons.map((a) => (
+                <div key={a.name} className="rounded-xl border border-gray-100 bg-gray-50/50 p-4">
+                  <div className="flex items-baseline justify-between gap-3">
+                    <span className="text-sm font-semibold text-gray-900">{a.name}</span>
+                    <span className="whitespace-nowrap text-sm font-semibold text-gray-900">
+                      {a.price} <span className="font-normal text-gray-500">{a.unit}</span>
+                    </span>
+                  </div>
+                  <p className="mt-1.5 text-[13px] leading-relaxed text-gray-600">{a.detail}</p>
+                </div>
+              ))}
+            </div>
+            <p className="mt-5 text-[13px] leading-relaxed text-gray-600">
+              Running multiple brands, or revenue past $20M? The{" "}
+              <span className="font-semibold text-gray-900">Scale retainer (from $8,000/mo)</span> adds weekly cadence,
+              multi-market tracking and priority build capacity — scoped on a call.
+            </p>
+          </div>
 
           {/* Risk reversal */}
           <div className="mt-10 grid grid-cols-1 gap-7 rounded-2xl border border-gray-200 bg-white p-8 sm:grid-cols-3">
