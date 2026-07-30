@@ -167,7 +167,7 @@ const addons = [
     price: "From $950",
     unit: "per article",
     detail:
-      "One revenue keyword, the full pipeline — a hybrid method: AI research depth (multi-engine fact panel, SERP and competitor analysis) with human editorial gates on every claim. 48-hour minimum turnaround — the QA is not skippable — then tracked for 90 days.",
+      "The exact pipeline behind our own blog — 15,000 Bing citations in its first two months. One revenue keyword per article: AI research depth (multi-engine fact panel, SERP and competitor analysis), human editorial gates on every claim. 48-hour minimum turnaround — the QA is not skippable — then tracked for 90 days.",
   },
   {
     name: "Content cluster sprint",
