@@ -921,6 +921,10 @@ export default function AiSeoServicePage() {
               <span className="font-semibold text-gray-900">Scale retainer (from $8,000/mo)</span> adds weekly cadence,
               multi-market tracking and priority build capacity — scoped on a call.
             </p>
+            <p className="mt-2 text-[13px] leading-relaxed text-gray-500">
+              One exclusion on the content offers: we don&apos;t take GEO, SEO or AI-visibility topics. We won&apos;t
+              write for competitors — that beat is ours.
+            </p>
           </div>
 
           {/* Risk reversal */}
