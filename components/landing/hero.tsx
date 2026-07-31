@@ -163,7 +163,7 @@ export async function Hero() {
                   filter: "blur(18px)",
                 }}
               />
-              <div className="relative">
+              <div className="relative" data-zoomable="">
                 <HeroMockup />
               </div>
             </div>

@@ -154,7 +154,9 @@ export function FeatureHero({
                     filter: "blur(18px)",
                   }}
                 />
-                <div className="relative">{children}</div>
+                {/* data-zoomable: the site-wide ImageLightbox clones this DOM
+                    mockup into a scaled overlay on click (vector-crisp zoom). */}
+                <div className="relative" data-zoomable="">{children}</div>
               </div>
             </div>
           )}
