@@ -54,21 +54,26 @@ const fill = (tpl: string, vars: Record<string, string>) =>
 
 function priceDisplay(plan: Plan, annual: boolean, copy: PricingCardsCopy, locale: string) {
   const money = (n: number) => fill(copy.money, { amount: n.toLocaleString(locale) })
-  if (plan.priceMonthly === null) return { big: copy.custom, sub: null, save: null }
+  if (plan.priceMonthly === null) return { big: copy.custom, sub: null, save: null, strike: null }
   if (annual && plan.priceYearly) {
     const perMo = Math.round(plan.priceYearly / 12)
     const save = plan.priceMonthly * 12 - plan.priceYearly
     return {
       big: money(perMo),
+      // Ahrefs-style anchor (2026-07-31, operator ask): the undiscounted
+      // 12×monthly total struck through next to the real annual bill.
+      strike: money(plan.priceMonthly * 12),
       sub: fill(copy.billedYearly, { total: money(plan.priceYearly) }),
       save: fill(copy.save, { amount: money(save) }),
     }
   }
-  return { big: money(plan.priceMonthly), sub: copy.billedMonthly, save: null }
+  return { big: money(plan.priceMonthly), sub: copy.billedMonthly, save: null, strike: null }
 }
 
 export function PricingCards({ copy, locale }: { copy: PricingCardsCopy; locale: string }) {
-  const [annual, setAnnual] = useState(true)
+  // Monthly first (operator call 2026-07-31): lead with the real monthly price,
+  // let the annual toggle reveal the discount via the strikethrough anchor.
+  const [annual, setAnnual] = useState(false)
   // Defaults to "brand" because Starter is the advertised entry point.
   const [segment, setSegment] = useState<PlanSegment>("brand")
   const visibleTiers = PLANS.filter((p) => p.segments.includes(segment))
@@ -189,7 +194,10 @@ export function PricingCards({ copy, locale }: { copy: PricingCardsCopy; locale:
                   <span className="text-sm font-medium text-gray-500">{copy.perMo}</span>
                 )}
               </div>
-              <div className="mt-1 flex min-h-[20px] items-center gap-2">
+              <div className="mt-1 flex min-h-[20px] flex-wrap items-center gap-x-2 gap-y-1">
+                {p.strike && annual && (
+                  <s className="text-xs text-gray-400">{p.strike}</s>
+                )}
                 {p.sub && <span className="text-xs text-gray-500">{p.sub}</span>}
                 {p.save && annual && (
                   <span className="rounded bg-accent-50 px-1.5 py-0.5 text-[11px] font-semibold text-accent-700">

@@ -3,6 +3,7 @@ import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { PromoBanner } from "@/components/layout/promo-banner"
 import { ConsentManager } from "@/components/consent/consent-manager"
+import { ImageLightbox } from "@/components/ui/image-lightbox"
 import "@/app/globals.css"
 
 // Font instances live here (module scope, as next/font requires) so BOTH root
@@ -55,6 +56,9 @@ export function RootShell({
             EEA/UK/CH visitors (and unknown-country, fail-closed) see a banner and
             nothing loads until Accept; everyone else is unchanged. */}
         <ConsentManager locale={locale} />
+        {/* Site-wide click-to-zoom for content images (blog figures, service/
+            feature screenshots). Delegated — no per-page wiring needed. */}
+        <ImageLightbox />
       </body>
     </html>
   )
