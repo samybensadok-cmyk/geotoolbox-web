@@ -1,4 +1,5 @@
 import { proofStats } from "@/lib/proof-stats"
+import { GrowthCharts } from "@/components/services/growth-charts"
 
 /**
  * ProofResults — the hard-numbers proof band for the Done-For-You service page.
@@ -16,19 +17,33 @@ import { proofStats } from "@/lib/proof-stats"
  * never dressed up as ChatGPT / Perplexity / Google data.
  */
 export function ProofResults() {
-  const { google, aiCitations, weeksToResult, asOf } = proofStats
+  const { google, aiCitations, impressions, weeksToResult, asOf } = proofStats
   const fmt = (n: number) => n.toLocaleString("en-US")
+  const blended = impressions.source === "google+bing"
 
   const stats: Array<{ value: string; label: string; source: string; tag?: string }> = [
-    { value: fmt(google.rankedKeywords), label: "Keywords ranked in Google", source: "Google Search Console" },
-    { value: fmt(google.top10), label: "On Google's first page (top 10)", source: "Google Search Console" },
+    {
+      value: fmt(google.rankedKeywords),
+      label: "Keywords ranked in Google",
+      source: `Google Search Console · ${google.windowDays}-day window`,
+    },
+    {
+      value: fmt(google.top10),
+      label: "On Google's first page (top 10)",
+      source: `Google Search Console · ${google.windowDays}-day window`,
+    },
     {
       value: `~${fmt(aiCitations.total)}`,
       label: "AI-citation appearances",
       source: `Bing WMT · ${aiCitations.source} · ${aiCitations.windowDays}-day sample`,
       tag: `${aiCitations.windowDays}-day sample`,
     },
-    { value: `~${fmt(google.dailyImpressions)}`, label: "Impressions per day", source: "Google + Bing (combined)", tag: "combined" },
+    {
+      value: `~${fmt(impressions.perDay)}`,
+      label: blended ? "Impressions per day" : "Google impressions per day",
+      source: blended ? "Google + Bing (combined)" : `Google Search Console · ${google.windowDays}-day avg`,
+      ...(blended ? { tag: "combined" } : {}),
+    },
   ]
 
   return (
@@ -92,17 +107,26 @@ export function ProofResults() {
           ))}
         </dl>
 
+        {/* Monthly growth — same generated data as the tiles, so they can't drift */}
+        <div className="mt-14">
+          <GrowthCharts variant="dark" />
+        </div>
+
         {/* Provenance footnotes */}
-        <div className="mt-14 max-w-3xl border-t border-white/10 pt-6">
+        <div className="mt-10 max-w-3xl border-t border-white/10 pt-6">
           <p className="text-[13px] font-medium text-gray-400">
-            As of {asOf}. The keyword and first-page figures are from Google Search Console —
-            deduplicated and verifiable in Search Console. Impressions per day is a combined Google
-            Search Console + Bing Webmaster Tools daily figure.
+            As of {asOf}. The keyword, first-page, and monthly-chart figures are exact unique-query
+            counts from the Google Search Console API, refreshed automatically every 48 hours
+            (keywords over a trailing {google.windowDays}-day window, chart by calendar month).{" "}
+            {blended
+              ? "Impressions per day is a combined Google Search Console + Bing Webmaster Tools daily figure."
+              : `Impressions per day is a Google-only ${google.windowDays}-day average from Search Console.`}
           </p>
           <p className="mt-2 text-[13px] leading-relaxed text-gray-400">
             The ~{fmt(aiCitations.total)} AI-citation figure is a {aiCitations.windowDays}-day sample
-            from Bing Webmaster Tools&apos; AI Performance report ({aiCitations.source}) — a count of citation
-            appearances, not unique citations, and not attributable to ChatGPT, Perplexity, or Google.
+            from Bing Webmaster Tools&apos; AI Performance report ({aiCitations.source}), as of{" "}
+            {aiCitations.asOf} — a count of citation appearances, not unique citations, and not
+            attributable to ChatGPT, Perplexity, or Google.
           </p>
         </div>
       </div>

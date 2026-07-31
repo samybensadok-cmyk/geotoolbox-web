@@ -1,52 +1,63 @@
 /**
  * proof-stats.ts — single source of truth for the live proof numbers shown on
- * the Done-For-You service page (/services/ai-seo-agency). A daily bump is ONE
- * edit here; every surface (ProofResults table, hero rounded phrasing, case
- * study, FAQ) reads from this file so no number can drift.
+ * the service pages. Every surface (ProofResults band, GrowthCharts, hero
+ * phrasing, case study, FAQ, OG images) reads from here so no number can drift.
+ *
+ * AS OF 2026-07-31 the Google figures are AUTOMATED: a 48h GitHub Action
+ * (`.github/workflows/update-proof-stats.yml` → `scripts/update-proof-stats.mjs`)
+ * regenerates `proof-stats.generated.json` from the Search Console API and the
+ * push redeploys the site. DO NOT hand-edit the Google numbers here — they come
+ * from the JSON. Manual fields (Bing AI-citations, weeksToResult) remain below
+ * with their own "as of" stamp.
  *
  * PROVENANCE — read before editing:
- *  - `google.*`  → Google Search Console for the geotoolbox.ai test domain.
- *    Real, unique, verifiable. A fresh zero-authority domain, ~7 weeks of
- *    publishing. Always framed as "in Google" / "ranked in Google". The public
- *    proof surfaces lead with `top10` (keywords on Google's first page).
- *  - `aiCitations.total` → Bing Webmaster Tools "AI Performance" report. This is
- *    total citation APPEARANCES over a trailing 30-day window across Microsoft
- *    Copilot and partner AI assistants — a SAMPLE, NOT unique citations. NEVER
- *    attribute this number to ChatGPT / Perplexity / Google. Always footnote the
- *    source and the "sampled, non-unique appearance count" caveat.
+ *  - `google.*` → Google Search Console API for the geotoolbox.ai test domain.
+ *    Real, unique, verifiable, EXACT counts (25k-row pagination, no Looker 1M-row
+ *    cap). rankedKeywords/top10/top3 are unique queries over a TRAILING 28 full
+ *    days ending 3 days back (never calendar month-to-date, which would reset to
+ *    ~0 every 1st). Always framed as "in Google" / "ranked in Google".
+ *  - `impressions` → `perDay` is Google-only while `source === "google"`; it
+ *    becomes a Google+Bing blend automatically when the BING_WMT_API_KEY secret
+ *    is configured (`source === "google+bing"`). Surfaces MUST label the figure
+ *    from `source` — never hardcode "Google + Bing (combined)".
+ *  - `aiCitations.total` → Bing Webmaster Tools "AI Performance" report. Total
+ *    citation APPEARANCES over a trailing 30-day window across Microsoft Copilot
+ *    and partner AI assistants — a SAMPLE, NOT unique citations. NEVER attribute
+ *    this number to ChatGPT / Perplexity / Google. MANUAL: that report has no
+ *    public API (confirmed 2026-07-31; on Microsoft's backlog) — bump it by hand
+ *    and update `aiCitations.asOf` at the same time.
  *  - `weeksToResult` → TIME TO FIRST MEANINGFUL AI CITATION only. It is NOT a
- *    label for the Bing appearance total. The Google totals were produced by
- *    about 7 weeks of active CONTENT (blog) publishing (the domain was indexed
- *    since April 2026 but drove near-zero traffic until publishing began), so
- *    "about 7 weeks of content publishing" is the correct anchor for the Google
- *    figures (rankedKeywords, top10). The Bing `aiCitations.total` is a SEPARATE
- *    trailing 30-day report window (a recent-activity snapshot that refreshes
- *    daily) — keep it decoupled from the 7-week build story; describe it as a
- *    trailing 30-day sample, never as citations earned "in 7 weeks".
+ *    label for the Bing appearance total, and the Google totals were produced by
+ *    about 7 weeks of active content publishing (domain indexed since April 2026,
+ *    near-zero traffic until publishing began).
  */
+import generated from "./proof-stats.generated.json"
 
 export const proofStats = {
-  asOf: "27 Jul 2026",
-  // Google Search Console — verifiable, unique. Fresh zero-authority domain
-  // (indexed since April 2026, near-zero traffic until publishing began);
-  // about 7 weeks of active content publishing produced these Google figures.
-  // NOTE: `dailyImpressions` is a Google + Bing BLENDED daily figure — do NOT
-  // recompute it from GSC alone (GSC-only is materially lower). Bump only from
-  // the combined dashboard. Left at 9,400 on the 27 Jul bump: no fresh blended
-  // reading was taken, and GSC-only (114K/28d) is not a substitute.
-  // rankedKeywords/top10/top3 bumped from the GSC monthly Looker view for
-  // Jul 2026 (month-to-date): 6,635 queries, 1,990 at pos 4-10 + 339 at pos
-  // 1-3 = 2,329 in the top 10. Looker caps at 1M rows per API call, so these
-  // are floors, not ceilings.
-  google: { rankedKeywords: 6635, top10: 2329, top3: 339, dailyImpressions: 9400 },
-  // Bing Webmaster Tools "AI Performance" — Microsoft Copilot + partner AI assistants.
-  // NOTE: total citation APPEARANCES over a trailing 30 days, a SAMPLE, NOT unique citations.
+  // Automated — regenerated every 48h from the Search Console API.
+  asOf: generated.asOf,
+  google: {
+    rankedKeywords: generated.google.rankedKeywords,
+    top10: generated.google.top10,
+    top3: generated.google.top3,
+    dailyImpressions: generated.impressions.perDay,
+    windowDays: generated.google.windowDays,
+  },
+  impressions: {
+    perDay: generated.impressions.perDay,
+    source: generated.impressions.source as "google" | "google+bing",
+  },
+  monthly: generated.monthly,
+
+  // Manual — Bing WMT "AI Performance" has no public API; bump by hand and
+  // update `asOf` here in the same edit.
   aiCitations: {
     total: 14000,
     avgCitedPages: 25,
     windowDays: 30,
     source: "Microsoft Copilot and partners",
     sampled: true,
+    asOf: "27 Jul 2026",
   },
   // Top buying-intent grounding query from Bing WMT "AI Performance" — an
   // appearance count in Bing's AI Performance report, NOT unique citations.
@@ -56,7 +67,6 @@ export const proofStats = {
     source: "Bing WMT AI Performance",
   },
   // TIME TO FIRST MEANINGFUL AI CITATION only — NOT a label for the Bing total.
-  // The Bing appearance total is a separate trailing 30-day report window.
   weeksToResult: 7,
 } as const
 

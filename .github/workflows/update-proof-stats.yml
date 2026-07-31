@@ -1,0 +1,51 @@
+# Regenerates lib/proof-stats.generated.json from the Search Console API every
+# 48h and pushes it — the push triggers the Vercel deploy, so the service-page
+# proof numbers + growth charts refresh together.
+#
+# Secrets:
+#   GSC_SA_KEY        (required) full JSON of the gsc-reader service-account key
+#                     (same one the local GSC MCP uses — already a user on the
+#                     sc-domain:geotoolbox.ai property).
+#   BING_WMT_API_KEY  (optional) Bing Webmaster Tools API key; when present the
+#                     impressions figure becomes a Google+Bing blend and the page
+#                     relabels itself automatically. Bing failures never block
+#                     the Google update.
+name: Update proof stats
+on:
+  schedule:
+    - cron: "17 6 */2 * *" # every 2 days at 06:17 UTC
+  workflow_dispatch: {}
+concurrency:
+  group: update-proof-stats
+  cancel-in-progress: false
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Write service-account key
+        run: printf '%s' "$GSC_SA_KEY" > /tmp/gsc-sa.json
+        env:
+          GSC_SA_KEY: ${{ secrets.GSC_SA_KEY }}
+      - name: Regenerate proof-stats.generated.json
+        run: node scripts/update-proof-stats.mjs
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: /tmp/gsc-sa.json
+          BING_WMT_API_KEY: ${{ secrets.BING_WMT_API_KEY }}
+      - name: Commit & push if changed
+        run: |
+          rm /tmp/gsc-sa.json
+          if git diff --quiet lib/proof-stats.generated.json; then
+            echo "No change — skipping commit"
+            exit 0
+          fi
+          git config user.name "proof-stats-bot"
+          git config user.email "actions@github.com"
+          git add lib/proof-stats.generated.json
+          git commit -m "chore: refresh proof stats from GSC API (auto, 48h)"
+          git push

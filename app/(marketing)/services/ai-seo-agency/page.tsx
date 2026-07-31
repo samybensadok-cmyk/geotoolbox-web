@@ -154,7 +154,7 @@ const addons = [
     price: "From $950",
     unit: "per article",
     detail:
-      "The exact pipeline behind our own blog — 15,000 Bing citations in its first two months. One revenue keyword per article: AI research depth (multi-engine fact panel, SERP and competitor analysis), human editorial gates on every claim. 48-hour minimum turnaround — the QA is not skippable — then tracked for 90 days.",
+      `The exact pipeline behind our own blog — ~${proofStats.aiCitations.total.toLocaleString("en-US")} AI-citation appearances in a trailing ${proofStats.aiCitations.windowDays}-day Bing sample. One revenue keyword per article: AI research depth (multi-engine fact panel, SERP and competitor analysis), human editorial gates on every claim. 48-hour minimum turnaround — the QA is not skippable — then tracked for 90 days.`,
   },
   {
     name: "Content cluster sprint",
@@ -616,10 +616,12 @@ export default function AiSeoServicePage() {
               </h2>
               <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-gray-600">
                 <p>
-                  I started geotoolbox.ai from nothing — no aged domain, no link package. About{" "}
-                  {proofStats.weeksToResult} weeks in, Google Search Console showed it ranking across
-                  thousands of keywords, {fmt(proofStats.google.top10)} of them on page one (real,
-                  unique, verifiable in GSC). And the part a normal SEO can&apos;t report: over a trailing{" "}
+                  I started geotoolbox.ai from nothing — no aged domain, no link package. The first
+                  meaningful AI citations arrived in about {proofStats.weeksToResult} weeks, and today
+                  Google Search Console shows it ranking across thousands of keywords —{" "}
+                  {fmt(proofStats.google.top10)} of them on page one over the trailing{" "}
+                  {proofStats.google.windowDays} days (real, unique, verifiable in GSC). And the part a
+                  normal SEO can&apos;t report: over a trailing{" "}
                   {proofStats.aiCitations.windowDays}-day window, Bing&apos;s AI Performance report logged a
                   large volume of AI-citation appearances across Copilot and partners — a sampled count,
                   Bing&apos;s data, in the receipt.
@@ -645,7 +647,7 @@ export default function AiSeoServicePage() {
                     a duplicate. */}
                 <dl className="mt-6 space-y-5">
                   <div className="flex items-baseline justify-between gap-4 border-b border-gray-100 pb-5">
-                    <dt className="text-[13px] font-medium text-gray-600">Google results, in about</dt>
+                    <dt className="text-[13px] font-medium text-gray-600">First AI citations, in about</dt>
                     <dd className="font-mono text-2xl font-bold tabular-nums text-gray-900">
                       {proofStats.weeksToResult} wks
                     </dd>
@@ -653,7 +655,7 @@ export default function AiSeoServicePage() {
                   <div className="flex items-baseline justify-between gap-4 border-b border-gray-100 pb-5">
                     <dt className="text-[13px] font-medium text-gray-600">In Google&apos;s top 3</dt>
                     <dd className="font-mono text-2xl font-bold tabular-nums text-gray-900">
-                      {proofStats.google.top3}
+                      {fmt(proofStats.google.top3)}
                     </dd>
                   </div>
                   <div className="flex items-baseline justify-between gap-4">
@@ -669,10 +671,10 @@ export default function AiSeoServicePage() {
                   </div>
                 </dl>
                 <p className="mt-6 border-t border-gray-100 pt-4 text-[12px] leading-relaxed text-gray-500">
-                  Google figures are unique GSC data. The AI-citation figure is a{" "}
-                  {proofStats.aiCitations.windowDays}-day sampled appearance count from Bing Webmaster
-                  Tools (Microsoft Copilot and partners) — not unique citations, not ChatGPT, Perplexity, or
-                  Google. As of {proofStats.asOf}.
+                  Google figures are unique GSC data, as of {proofStats.asOf}. The AI-citation figure is
+                  a {proofStats.aiCitations.windowDays}-day sampled appearance count from Bing Webmaster
+                  Tools (Microsoft Copilot and partners), as of {proofStats.aiCitations.asOf} — not unique
+                  citations, not ChatGPT, Perplexity, or Google.
                 </p>
               </div>
             </div>

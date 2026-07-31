@@ -9,6 +9,10 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { siteConfig } from "@/lib/config"
 import { PRIMARY_AUTHOR } from "@/lib/authors"
 import { proofStats, contentCounts } from "@/lib/proof-stats"
+import { GrowthCharts } from "@/components/services/growth-charts"
+
+// Latest month in the generated GSC series (the current month while partial).
+const latestMonth = proofStats.monthly[proofStats.monthly.length - 1]
 
 const PAGE_URL = `${siteConfig.url}/services/ai-automation-agency`
 // Book-a-call only at launch (operator decision 2026-07-23): every build is
@@ -390,22 +394,15 @@ export default function AiAutomationAgencyPage() {
                         The receipt
                       </span>
                     </div>
-                    <div className="bg-white p-2">
-                      <Image
-                        src="/services/automation/gsc-queries-growth-2026-07.png"
-                        width={2548}
-                        height={804}
-                        alt={`Google Search Console chart: queries ranked for geotoolbox.ai growing from 27 in May 2026 to ${fmt(proofStats.google.rankedKeywords)} in July 2026 — content produced by the article-writing skill.`}
-                        fetchPriority="high"
-                        sizes="(min-width: 1024px) min(48vw, 720px), 100vw"
-                        className="h-auto w-full"
-                      />
+                    <div className="bg-white">
+                      <GrowthCharts variant="light" panels="queries" frameless />
                     </div>
                   </div>
                   <figcaption className="mt-3 font-mono text-[12px] text-gray-500">
-                    27 → {fmt(proofStats.google.rankedKeywords)} Google queries (90-day GSC view), after about{" "}
-                    {proofStats.weeksToResult} weeks of publishing — every page written by the skill. As of{" "}
-                    {proofStats.asOf}.
+                    {fmt(proofStats.monthly[0].queries)} → {fmt(latestMonth.queries)} monthly Google queries
+                    ({proofStats.monthly[0].label} → {latestMonth.label}
+                    {latestMonth.partial ? ", month to date" : ""}) — every page written by the skill. Live
+                    Search Console data, refreshed automatically. As of {proofStats.asOf}.
                   </figcaption>
                 </figure>
               </div>
@@ -566,10 +563,12 @@ export default function AiAutomationAgencyPage() {
                   {CONTENT_COUNTS.glossary} glossary entries as of {CONTENT_COUNTS.asOf}.
                 </p>
                 <p>
-                  The output holds up under the only test that matters — public performance data. After about{" "}
-                  {proofStats.weeksToResult} weeks of active publishing, the domain had grown from 27 Google
-                  queries to {fmt(proofStats.google.rankedKeywords)} in the 90-day GSC view, with{" "}
-                  {fmt(proofStats.google.top10)} on page one. Separately, Bing&apos;s AI Performance report
+                  The output holds up under the only test that matters — public performance data. The domain
+                  went from {fmt(proofStats.monthly[0].queries)} monthly Google queries in{" "}
+                  {proofStats.monthly[0].label} to {fmt(latestMonth.queries)} in {latestMonth.label}
+                  {latestMonth.partial ? " (month to date)" : ""}, with {fmt(latestMonth.top10)} on page one —
+                  and the first meaningful AI citations arrived in about {proofStats.weeksToResult} weeks of
+                  publishing. Separately, Bing&apos;s AI Performance report
                   logs ~{fmt(proofStats.aiCitations.total)} AI-citation appearances over its own trailing{" "}
                   {proofStats.aiCitations.windowDays}-day window. That&apos;s what a production AI system
                   looks like: measurable output, quality gates, a paper trail.
