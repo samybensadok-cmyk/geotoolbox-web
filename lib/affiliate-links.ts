@@ -77,7 +77,7 @@ export const AFFILIATE_LINKS: Record<string, AffiliateLink> = {
   // appends `?sharedid=gtb-<ref>` for per-article attribution. Swap in exact
   // per-product ad IDs later if cleaner asset-level reporting is wanted.
   semrush: { url: "https://semrush.sjv.io/c/7438816/3082487/13053?u=https%3A%2F%2Fwww.semrush.com%2F", program: "Semrush (all-in-one)", cluster: "c3-seo-suite", noUtm: true, subIdParam: "sharedid" },
-  "semrush-seo": { url: "https://semrush.sjv.io/c/7438816/3082487/13053?u=https%3A%2F%2Fwww.semrush.com%2Ffeatures%2Fseo%2F", program: "Semrush SEO Toolkit", cluster: "c3-seo-suite", noUtm: true, subIdParam: "sharedid" },
+  "semrush-seo": { url: "https://semrush.sjv.io/c/7438816/3082487/13053?u=https%3A%2F%2Fwww.semrush.com%2Fseo%2F", program: "Semrush SEO Toolkit", cluster: "c3-seo-suite", noUtm: true, subIdParam: "sharedid" },
   "semrush-content": { url: "https://semrush.sjv.io/c/7438816/3082487/13053?u=https%3A%2F%2Fwww.semrush.com%2Ffeatures%2Fcontent-marketing%2F", program: "Semrush Content Toolkit", cluster: "c1-content", noUtm: true, subIdParam: "sharedid" },
   "semrush-ai": { url: "https://semrush.sjv.io/c/7438816/3082487/13053?u=https%3A%2F%2Fwww.semrush.com%2Flp%2Fai-toolkit%2Fen%2F", program: "Semrush AI Visibility Toolkit", cluster: "c3-seo-suite", noUtm: true, subIdParam: "sharedid" },
   spyfu: { url: "https://www.spyfu.com/", program: "SpyFu", cluster: "c3-seo-suite", pending: true },
