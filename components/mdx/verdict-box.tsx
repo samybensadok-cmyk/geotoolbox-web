@@ -8,22 +8,30 @@
  * the MDX anchor override). Pair the post with a `review:` frontmatter block
  * so the matching Review schema is emitted (lib/seo-schema.ts reviewSchema).
  *
+ * IMPORTANT — string props only in MDX. next-mdx-remote/rsc strips JSX
+ * expression attributes (`rating={4.25}`, `pros={[...]}`) off MDX components
+ * before render (same pipeline constraint that gives BlogImage its string
+ * w/h props), so `rating` is a numeric STRING and `pros`/`cons` are
+ * pipe-delimited STRINGS: pros="First win|Second win|Third win".
+ *
  * Registered in components/mdx/index.tsx so MDX can use it directly.
  */
 
 type VerdictBoxProps = {
   /** Product name, e.g. "Semrush" */
   name: string
-  /** Rating on a 1–5 scale, e.g. 4.25 — rendered as fractional stars */
-  rating: number
+  /** Rating on a 1–5 scale as a string, e.g. "4.25" — rendered as fractional stars */
+  rating: string | number
   /** One-line "best for" audience */
   bestFor: string
   /** Price-from line, e.g. "$117.33/mo billed annually" */
   priceFrom: string
   /** Trial line, e.g. "7-day free trial (card required)" */
   trial?: string
-  pros: string[]
-  cons: string[]
+  /** Pipe-delimited list: "First win|Second win" (arrays also accepted) */
+  pros: string | string[]
+  /** Pipe-delimited list: "First cost|Second cost" (arrays also accepted) */
+  cons: string | string[]
   /** Affiliate CTA — must be a /go/ redirect */
   ctaHref: string
   ctaLabel: string
@@ -31,8 +39,14 @@ type VerdictBoxProps = {
   ctaNote?: string
 }
 
+function toList(v: string | string[] | undefined): string[] {
+  if (Array.isArray(v)) return v
+  if (typeof v === "string") return v.split("|").map((s) => s.trim()).filter(Boolean)
+  return []
+}
+
 function Stars({ rating }: { rating: number }) {
-  const pct = Math.max(0, Math.min(100, (rating / 5) * 100))
+  const pct = Number.isFinite(rating) ? Math.max(0, Math.min(100, (rating / 5) * 100)) : 0
   const row = "★★★★★"
   return (
     <span
@@ -56,16 +70,19 @@ function Stars({ rating }: { rating: number }) {
 
 export function VerdictBox({
   name,
-  rating,
+  rating: ratingProp,
   bestFor,
   priceFrom,
   trial,
-  pros,
-  cons,
+  pros: prosProp,
+  cons: consProp,
   ctaHref,
   ctaLabel,
   ctaNote = "Affiliate link — we may earn a commission. It never changes the verdict.",
 }: VerdictBoxProps) {
+  const rating = typeof ratingProp === "number" ? ratingProp : Number.parseFloat(ratingProp)
+  const pros = toList(prosProp)
+  const cons = toList(consProp)
   return (
     <aside
       className="not-prose my-8 rounded-2xl border border-[var(--surface-warm-border)] bg-[var(--surface-warm)] p-6 sm:p-7"
