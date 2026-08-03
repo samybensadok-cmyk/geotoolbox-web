@@ -7,8 +7,9 @@ import { siteConfig } from "@/lib/config"
 /**
  * Free AI-Readiness Score widget. POSTs to the hardened Replit endpoint
  * (api/ai_readiness.php, same-origin via the /api/* rewrite). Renders a composite
- * built from 5 SSRF-safe checks that are a fixed subset of the 28-check paid
- * rubric — shown explicitly as a PARTIAL ("5 of 28 checks"), never the paid /100.
+ * built from 5 SSRF-safe checks that are a fixed subset of the full paid
+ * rubric — shown explicitly as a PARTIAL ("5 checks out of the full rubric"),
+ * never the paid /100.
  */
 
 type Status = "pass" | "warn" | "fail" | "na"
@@ -278,7 +279,7 @@ function ResultCard({ result, copied, setCopied }: { result: ReadinessResult; co
         <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-slate-500">What this score is — and isn&apos;t</p>
         <ul className="mt-3 space-y-1.5">
           <li>· <strong className="text-slate-900">These are infrastructure signals</strong> — whether AI agents can reach, crawl, and parse your site. They&apos;re table stakes, not a guarantee of citations.</li>
-          <li>· <strong className="text-slate-900">It&apos;s a partial.</strong> 5 of our 28 checks. A high free score doesn&apos;t mean the other 23 (rendering, structured data, MCP, commerce, visual) pass.</li>
+          <li>· <strong className="text-slate-900">It&apos;s a partial.</strong> 5 checks out of the full rubric. A high free score doesn&apos;t mean the remaining checks (rendering, structured data, MCP, commerce, visual) pass.</li>
           <li>· <strong className="text-slate-900">No score buys visibility.</strong> Getting cited depends on your content and authority. This fixes the plumbing so you&apos;re not invisible by accident.</li>
         </ul>
       </div>

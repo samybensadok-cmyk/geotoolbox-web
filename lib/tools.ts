@@ -35,6 +35,12 @@ export const tools: ToolEntry[] = [
     navDesc: "Score your site on 5 of 28 AI-readiness checks",
   },
   {
+    slug: "agent-readiness-scanner",
+    name: "Agent Readiness Scanner",
+    desc: "Run the full Agent Readiness scan on any domain: live fetches as six AI crawlers, a real browser render, robots checked against 34 AI bots, and a 0-100 score with your Level 0 to 4 agent readiness verdict. Free, no sign-up.",
+    navDesc: "The full agent readiness scan, free",
+  },
+  {
     slug: "ai-crawler-checker",
     name: "AI Crawler Checker",
     desc: "See which of 34 AI crawlers — GPTBot, ClaudeBot, PerplexityBot and more — your robots.txt allows or blocks, with the exact line to fix. Free.",

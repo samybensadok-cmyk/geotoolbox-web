@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server"
 import { tools } from "@/lib/tools"
 
 /**
- * FreeTools — the give-back section. Nine standalone tools, no signup, no
+ * FreeTools — the give-back section. Standalone tools, no signup, no
  * email gate. Nobody else in the category leads with free utility, which is
  * exactly why it belongs on the homepage. Tool names come from lib/tools.ts
  * (product names, not translated); the one-line descriptions are localized
