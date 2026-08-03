@@ -6,6 +6,7 @@ import { Callout } from "./callout"
 import { YouTube } from "./youtube"
 import { AffiliateDisclosure } from "./affiliate-disclosure"
 import { BlogImage } from "./blog-image"
+import { VerdictBox } from "./verdict-box"
 import { AiCrawlerCheckerWidget } from "@/components/tools/ai-crawler-checker-widget"
 import { slugify } from "@/lib/utils"
 import { makeLocalizer } from "@/lib/i18n/siblings"
@@ -34,6 +35,7 @@ const baseComponents: MDXComponents = {
   YouTube,
   AffiliateDisclosure,
   AiCrawlerCheckerWidget,
+  VerdictBox,
   Image,
   BlogImage,
   h2: ({ children, ...props }) => (

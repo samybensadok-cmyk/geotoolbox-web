@@ -157,6 +157,80 @@ export function articleSchema(post: {
 }
 
 /**
+ * Review schema — product-review posts (e.g. /blog/semrush-review). Drives
+ * review-star rich results on the SERP. Emitted alongside Article schema when
+ * a post carries a `review:` frontmatter block. itemReviewed is a third-party
+ * SoftwareApplication (never our own product — self-serving reviews are
+ * ineligible for the snippet per Google's guidelines).
+ */
+export function reviewSchema(post: {
+  slug: string
+  title: string
+  description: string
+  date: string
+  updated?: string
+  author?: string
+  url?: string
+  review: {
+    itemName: string
+    itemUrl?: string
+    rating: number
+    lowPrice?: number
+    highPrice?: number
+  }
+}) {
+  const pageUrl = post.url ?? `${siteConfig.url}/blog/${post.slug}`
+  const profile = getAuthorByName(post.author)
+  const author = profile
+    ? {
+        "@type": "Person",
+        "@id": `${siteConfig.url}/author/${profile.slug}#person`,
+        name: profile.name,
+        url: `${siteConfig.url}/author/${profile.slug}`,
+      }
+    : { "@type": "Person", name: post.author || siteConfig.author }
+  return {
+    "@context": "https://schema.org",
+    "@type": "Review",
+    "@id": `${pageUrl}#review`,
+    name: post.title,
+    reviewBody: post.description,
+    datePublished: post.date,
+    dateModified: post.updated ?? post.date,
+    author,
+    publisher: {
+      "@type": "Organization",
+      name: siteConfig.name,
+      url: siteConfig.url,
+    },
+    itemReviewed: {
+      "@type": "SoftwareApplication",
+      name: post.review.itemName,
+      operatingSystem: "Web",
+      applicationCategory: "BusinessApplication",
+      ...(post.review.itemUrl ? { url: post.review.itemUrl } : {}),
+      ...(post.review.lowPrice != null && post.review.highPrice != null
+        ? {
+            offers: {
+              "@type": "AggregateOffer",
+              lowPrice: String(post.review.lowPrice),
+              highPrice: String(post.review.highPrice),
+              priceCurrency: "USD",
+            },
+          }
+        : {}),
+    },
+    reviewRating: {
+      "@type": "Rating",
+      ratingValue: String(post.review.rating),
+      bestRating: "5",
+      worstRating: "1",
+    },
+    mainEntityOfPage: { "@type": "WebPage", "@id": pageUrl },
+  }
+}
+
+/**
  * BreadcrumbList schema — drives breadcrumb rich results in SERP.
  * Pass the visible trail: [{ name: "Home", url: "/" }, { name: "Features", url: "/features" }, ...]
  */

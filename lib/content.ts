@@ -102,6 +102,21 @@ export type Post = {
   /** localization provenance (set on non-en files by the translation pipeline) */
   donorSlug?: string
   donorCommit?: string
+  /** product-review posts: emits Review schema (star snippets). See reviewSchema(). */
+  review?: PostReview
+}
+
+/** Frontmatter block for product-review posts (`review:` key). */
+export type PostReview = {
+  /** Name of the reviewed product, e.g. "Semrush" */
+  itemName: string
+  /** Canonical URL of the reviewed product */
+  itemUrl?: string
+  /** Rating on a 1–5 scale, e.g. 4.25 */
+  rating: number
+  /** Self-serve price range of the reviewed product (USD/month) for the offer block */
+  lowPrice?: number
+  highPrice?: number
 }
 
 export function getAllPosts(locale: string = "en"): Post[] {
@@ -129,6 +144,7 @@ export function getAllPosts(locale: string = "en"): Post[] {
         locale,
         donorSlug: data.donorSlug,
         donorCommit: data.donorCommit,
+        review: data.review,
       } as Post
     })
     .filter((p) => !p.draft)
@@ -158,6 +174,7 @@ export function getPostBySlug(slug: string, locale: string = "en"): Post | undef
     locale,
     donorSlug: data.donorSlug,
     donorCommit: data.donorCommit,
+    review: data.review,
   }
 }
 

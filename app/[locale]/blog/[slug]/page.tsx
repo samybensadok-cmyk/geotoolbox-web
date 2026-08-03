@@ -12,7 +12,7 @@ import { setRequestLocale, getTranslations, getMessages } from "next-intl/server
 import { frenchTypography, rehypeFrenchTypography } from "@/lib/french-typography"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
 import { JsonLd } from "@/components/seo/json-ld"
-import { articleSchema, faqPageSchema } from "@/lib/seo-schema"
+import { articleSchema, faqPageSchema, reviewSchema } from "@/lib/seo-schema"
 import { getAuthorByName } from "@/lib/authors"
 import { AuthorBio } from "@/components/blog/author-bio"
 import { RelatedPosts } from "@/components/blog/related-posts"
@@ -139,6 +139,20 @@ export default async function BlogPost({
               url: urlFor("blog", post.slug, locale),
             }),
             ...(faqs.length > 0 ? [faqPageSchema(faqs, bcp47[locale as Locale])] : []),
+            ...(post.review
+              ? [
+                  reviewSchema({
+                    slug: post.slug,
+                    title: post.title,
+                    description: post.description,
+                    date: post.date,
+                    updated: post.updated,
+                    author: post.author,
+                    url: urlFor("blog", post.slug, locale),
+                    review: post.review,
+                  }),
+                ]
+              : []),
           ]}
         />
         <div className="mx-auto max-w-5xl">
