@@ -35,7 +35,8 @@ type VerdictBoxProps = {
   /** Affiliate CTA — must be a /go/ redirect */
   ctaHref: string
   ctaLabel: string
-  /** Small line under the CTA, defaults to the affiliate note */
+  /** Small line under the CTA, defaults to the affiliate note. Pass "" to omit
+   *  (e.g. when the article's own disclosure sits directly above the box). */
   ctaNote?: string
 }
 
@@ -167,7 +168,7 @@ export function VerdictBox({
             <path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </a>
-        <p className="mt-2 text-[12px] text-gray-500">{ctaNote}</p>
+        {ctaNote ? <p className="mt-2 text-[12px] text-gray-500">{ctaNote}</p> : null}
       </div>
     </aside>
   )
