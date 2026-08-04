@@ -1,4 +1,6 @@
 import type { Metadata } from "next"
+import { notFound } from "next/navigation"
+import { contentLocales } from "@/i18n/routing"
 import { getAllPosts } from "@/lib/content"
 import Link from "next/link"
 import { siteConfig } from "@/lib/config"
@@ -14,6 +16,9 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>
 }): Promise<Metadata> {
   const { locale } = await params
+  // Mirror the page guard: never emit metadata (canonical to a 404) for
+  // marketing-only locales.
+  if (!(contentLocales as readonly string[]).includes(locale)) notFound()
   const basePath = locale === "en" ? "" : `/${locale}`
   const t = await getTranslations({ locale, namespace: "blogIndex" })
   return {
@@ -75,6 +80,9 @@ export default async function BlogIndex({
   searchParams: Promise<{ tag?: string; topic?: string }>
 }) {
   const { locale } = await params
+  // The blog exists only for content locales (en/fr). Marketing-only locales
+  // (es) must 404 here rather than render an empty index.
+  if (!(contentLocales as readonly string[]).includes(locale)) notFound()
   setRequestLocale(locale)
   return <BlogIndexInner locale={locale} searchParams={searchParams} />
 }

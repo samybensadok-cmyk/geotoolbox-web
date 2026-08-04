@@ -75,5 +75,5 @@ export const config = {
   // "/pricing" stays EXACT — it has no localized child routes; a localized
   // marketing page's base path enters next-intl, nothing below it does unless
   // the children are migrated too.
-  matcher: ["/", "/features/:path*", "/pricing", "/blog/:path*", "/glossary/:path*", "/fr/:path*"],
+  matcher: ["/", "/features/:path*", "/pricing", "/blog/:path*", "/glossary/:path*", "/fr/:path*", "/es/:path*"],
 }

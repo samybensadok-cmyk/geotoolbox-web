@@ -227,7 +227,7 @@ export async function Features() {
                 {g.tools.map(([name, slug]) => (
                   <li key={slug}>
                     <Link
-                      href={`/features/${slug}`}
+                      href={`${base}/features/${slug}`}
                       className="text-[14px] font-medium text-gray-700 transition-colors hover:text-accent-700"
                     >
                       {name}

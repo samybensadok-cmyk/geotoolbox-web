@@ -9,7 +9,7 @@ import { defineRouting } from "next-intl/routing"
 // (blog, glossary) live under app/[locale]/. Marketing/feature/tool
 // pages stay at root (EN-only) until they're translated (spec §10 P3).
 export const routing = defineRouting({
-  locales: ["en", "fr"],
+  locales: ["en", "fr", "es"],
   defaultLocale: "en",
   localePrefix: "as-needed",
   // Crawler-safe + deep-link-safe: never auto-redirect on Accept-Language.
@@ -27,7 +27,16 @@ export const routing = defineRouting({
 export type Locale = (typeof routing.locales)[number]
 
 // BCP-47 forms for <html lang> + hreflang (spec §0: one locked form each).
+// es is deliberately language-only (neutral international Spanish targeting
+// Spain + LatAm together), unlike fr-FR which targets France specifically.
 export const bcp47: Record<Locale, string> = {
   en: "en-US",
   fr: "fr-FR",
+  es: "es",
 }
+
+// Locales that have CONTENT (blog/glossary) trees under content/{locale}/.
+// Marketing pages under app/[locale]/ serve ALL routing.locales; the content
+// routes serve only these — /es/blog etc. must 404, not render an empty index
+// or leak into the sitemap. KEEP IN SYNC with content/ directories.
+export const contentLocales: readonly Locale[] = ["en", "fr"]

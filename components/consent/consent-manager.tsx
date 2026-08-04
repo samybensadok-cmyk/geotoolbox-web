@@ -52,12 +52,22 @@ const COPY = {
     policyHref: "/fr/privacy",
     dialogLabel: "Consentement aux cookies",
   },
+  es: {
+    // No /es/privacy yet — link the EN policy (same follow-up as FR had
+    // before 2026-07-28; an ES policy is tracked as an open item).
+    text: "Usamos cookies de analítica (Google Analytics, Microsoft Clarity) para entender cómo se usa el sitio. Las cookies estrictamente necesarias están siempre activas.",
+    accept: "Aceptar",
+    refuse: "Rechazar",
+    policy: "Política de privacidad",
+    policyHref: "/privacy",
+    dialogLabel: "Consentimiento de cookies",
+  },
 } as const
 
 export function ConsentManager({ locale = "en" }: { locale?: string }) {
   const [trackersOn, setTrackersOn] = useState(false)
   const [bannerOpen, setBannerOpen] = useState(false)
-  const copy = COPY[locale === "fr" ? "fr" : "en"]
+  const copy = COPY[locale as keyof typeof COPY] ?? COPY.en
 
   // Initial decision. Runs client-only; until it resolves, nothing loads —
   // fail-closed by construction.

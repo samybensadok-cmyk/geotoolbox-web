@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatDate(dateString: string, locale: string = "en"): string {
-  const intlLocale = locale === "fr" ? "fr-FR" : "en-US"
+  const intlLocale = locale === "fr" ? "fr-FR" : locale === "es" ? "es" : "en-US"
   const hasTime = /[T:]/.test(dateString)
   if (hasTime) {
     const d = new Date(dateString)

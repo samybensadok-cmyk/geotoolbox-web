@@ -24,12 +24,11 @@ import { routing } from "@/i18n/routing"
  * French visitor to an empty page is worse than sending them to the populated
  * EN glossary. Add it here the moment content/fr/glossary/ is populated.
  */
-const LOCALIZED_ROOTS = new Set([
+// Marketing routes are 1:1 same-path across ALL routing.locales (en/fr/es).
+const MARKETING_ROOTS = new Set([
   "/",
   "/features",
   "/pricing",
-  "/blog",
-  "/privacy", // FR privacy policy shipped 2026-07-28 (CNIL: consent info in the visitor's language)
   // All 14 feature detail pages migrated under app/[locale]/features (2026-07-22).
   "/features/ai-visibility-tracker",
   "/features/geo-scan",
@@ -47,6 +46,21 @@ const LOCALIZED_ROOTS = new Set([
   "/features/white-label-reports",
 ])
 
+// Routes whose localized version exists only for SOME locales. /blog is live
+// for fr but es has no articles yet (an empty /es/blog would be worse than the
+// populated EN blog — same logic that keeps /glossary out entirely). /privacy
+// is an FR-only page (CNIL: consent info in the visitor's language, shipped
+// 2026-07-28); [locale]/privacy 404s every other non-en locale by design.
+const PARTIAL_ROOTS: Record<string, ReadonlySet<string>> = {
+  "/blog": new Set(["fr"]),
+  "/privacy": new Set(["fr"]),
+}
+
+function isLocalizedFor(path: string, locale: string): boolean {
+  if (MARKETING_ROOTS.has(path)) return true
+  return PARTIAL_ROOTS[path]?.has(locale) ?? false
+}
+
 export function localizeNavHref(href: string, locale: string): string {
   // The default locale has no prefix, so EN output stays byte-identical and
   // this is a guaranteed no-op there.
@@ -59,6 +73,6 @@ export function localizeNavHref(href: string, locale: string): string {
   const [, path, suffix] = match
   // Trailing-slash tolerant: "/blog/" and "/blog" are the same route.
   const clean = path.length > 1 && path.endsWith("/") ? path.slice(0, -1) : path
-  if (!LOCALIZED_ROOTS.has(clean)) return href
+  if (!isLocalizedFor(clean, locale)) return href
   return `/${locale}${clean === "/" ? "" : clean}${suffix}`
 }

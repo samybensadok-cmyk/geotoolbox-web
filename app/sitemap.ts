@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next"
 import { getAllPosts, getAllGlossaryTerms } from "@/lib/content"
 import { siteConfig } from "@/lib/config"
-import { routing, bcp47 } from "@/i18n/routing"
+import { routing, bcp47, contentLocales } from "@/i18n/routing"
 import { alternatesFor } from "@/lib/i18n/siblings"
 import { tools } from "@/lib/tools"
 
@@ -31,15 +31,16 @@ function marketingEntries(
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     ...marketingEntries("", { changeFrequency: "weekly", priority: 1 }),
-    // Blog index per locale, cross-referenced via hreflang alternates.
-    ...routing.locales.map((locale) => ({
+    // Blog index per CONTENT locale (en/fr — es has no articles yet, so no
+    // /es/blog entry and no es hreflang), cross-referenced via alternates.
+    ...contentLocales.map((locale) => ({
       url: locale === "en" ? `${siteConfig.url}/blog` : `${siteConfig.url}/${locale}/blog`,
       lastModified: new Date(),
       changeFrequency: "daily" as const,
       priority: 0.9,
       alternates: {
         languages: Object.fromEntries([
-          ...routing.locales.map((l) => [
+          ...contentLocales.map((l) => [
             bcp47[l],
             l === "en" ? `${siteConfig.url}/blog` : `${siteConfig.url}/${l}/blog`,
           ]),

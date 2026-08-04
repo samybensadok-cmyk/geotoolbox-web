@@ -26,12 +26,22 @@ const COPY = {
     cta: "Voir les offres",
     dismiss: "Fermer",
   },
+  es: {
+    message: (
+      <>
+        Oferta fundadores: <strong>30&nbsp;% de descuento durante 12 meses</strong> en cualquier plan —{" "}
+        <strong>solo 20 plazas</strong>. Usa el código <strong className="font-mono">FOUNDING30</strong> al pagar.
+      </>
+    ),
+    cta: "Ver planes",
+    dismiss: "Cerrar",
+  },
 } as const
 
 export function PromoBanner({ locale = "en" }: { locale?: string }) {
   const [dismissed, setDismissed] = useState(true)
   const pathname = usePathname()
-  const t = locale === "fr" ? COPY.fr : COPY.en
+  const t = COPY[locale as keyof typeof COPY] ?? COPY.en
 
   useEffect(() => {
     localStorage.removeItem("promoBannerDismissed:LAUNCH20")
@@ -48,7 +58,7 @@ export function PromoBanner({ locale = "en" }: { locale?: string }) {
     <div className="flex items-center justify-center gap-3 bg-accent-700 px-4 py-2 text-center text-sm text-white">
       <p>
         {t.message}{" "}
-        <a href={locale === "fr" ? "/fr/pricing" : "/pricing"} className="underline underline-offset-2">
+        <a href={locale === "en" ? "/pricing" : `/${locale}/pricing`} className="underline underline-offset-2">
           {t.cta}
         </a>
       </p>

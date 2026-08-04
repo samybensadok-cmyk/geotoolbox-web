@@ -1,11 +1,11 @@
 import Link from "next/link"
 import { getTranslations, getLocale } from "next-intl/server"
 import { siteConfig } from "@/lib/config"
+import { localizeNavHref } from "@/lib/i18n/nav"
 
 export async function CTA() {
   const t = await getTranslations("home.cta")
   const locale = await getLocale()
-  const base = locale === "en" ? "" : `/${locale}`
   return (
     <section className="relative overflow-hidden bg-gray-950 px-6 py-24 sm:py-32">
       {/* Subtle grid bleed anchors the dark panel without being a gradient blob */}
@@ -53,7 +53,7 @@ export async function CTA() {
                 </svg>
               </Link>
               <Link
-                href={`${base}/blog`}
+                href={localizeNavHref("/blog", locale)}
                 className="text-[13px] font-medium text-gray-400 transition-colors hover:text-white"
               >
                 {t("readResearch")} &rarr;
