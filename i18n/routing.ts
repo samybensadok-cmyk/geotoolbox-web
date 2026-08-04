@@ -35,8 +35,16 @@ export const bcp47: Record<Locale, string> = {
   es: "es",
 }
 
-// Locales that have CONTENT (blog/glossary) trees under content/{locale}/.
-// Marketing pages under app/[locale]/ serve ALL routing.locales; the content
-// routes serve only these — /es/blog etc. must 404, not render an empty index
-// or leak into the sitemap. KEEP IN SYNC with content/ directories.
-export const contentLocales: readonly Locale[] = ["en", "fr"]
+// Locales whose BLOG content tree is wired under content/{locale}/blog.
+// Marketing pages under app/[locale]/ serve ALL routing.locales; the blog
+// serves these — AND additionally self-gates on posts actually existing
+// (a wired locale with zero posts still 404s its index and stays out of the
+// sitemap/feed), so /es/blog goes live automatically with the first ES
+// article, with no flag to flip at ship time. KEEP IN SYNC with content/.
+export const contentLocales: readonly Locale[] = ["en", "fr", "es"]
+
+// The glossary is a separate, narrower policy: en is live, fr deliberately
+// renders a "definitions on the way" placeholder (operator call 2026-07-18),
+// and every other locale 404s. Do NOT fold this into contentLocales — adding
+// es there must not resurrect an English placeholder at /es/glossary.
+export const glossaryLocales: readonly Locale[] = ["en", "fr"]

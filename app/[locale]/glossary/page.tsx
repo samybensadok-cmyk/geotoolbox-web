@@ -6,7 +6,7 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { breadcrumbsSchema } from "@/lib/seo-schema"
 import { setRequestLocale } from "next-intl/server"
 import { notFound } from "next/navigation"
-import { contentLocales } from "@/i18n/routing"
+import { glossaryLocales } from "@/i18n/routing"
 import { localePath } from "@/lib/i18n/paths"
 
 export async function generateMetadata({
@@ -17,7 +17,7 @@ export async function generateMetadata({
   const { locale } = await params
   // Mirror the page guard: never emit metadata (canonical to a 404) for
   // marketing-only locales.
-  if (!(contentLocales as readonly string[]).includes(locale)) notFound()
+  if (!(glossaryLocales as readonly string[]).includes(locale)) notFound()
   const basePath = locale === "en" ? "" : `/${locale}`
   return {
     title: "GEO Glossary",
@@ -35,7 +35,7 @@ export default async function GlossaryIndex({
   const { locale } = await params
   // Content locales only (en/fr — fr keeps its deliberate placeholder).
   // Marketing-only locales (es) 404 rather than render an English shell.
-  if (!(contentLocales as readonly string[]).includes(locale)) notFound()
+  if (!(glossaryLocales as readonly string[]).includes(locale)) notFound()
   setRequestLocale(locale)
   const basePath = locale === "en" ? "" : `/${locale}`
   const terms = getAllGlossaryTerms(locale)

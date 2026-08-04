@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { contentLocales } from "@/i18n/routing"
+import { contentLocales, bcp47, type Locale } from "@/i18n/routing"
 import { getAllPosts } from "@/lib/content"
 import Link from "next/link"
 import { siteConfig } from "@/lib/config"
@@ -10,6 +10,14 @@ import { TOPICS, primaryTopic, topicBySlug, topicCounts } from "@/lib/blog-topic
 import { BlogResults, type LitePost } from "@/components/blog/blog-results"
 import { setRequestLocale, getTranslations } from "next-intl/server"
 
+// A wired locale still 404s its blog until it has posts — so /es/blog goes
+// live automatically with the first ES article, no flag to flip. The default
+// locale (en) is always live.
+function blogIsLive(locale: string): boolean {
+  if (!(contentLocales as readonly string[]).includes(locale)) return false
+  return locale === "en" || getAllPosts(locale).length > 0
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -17,22 +25,25 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params
   // Mirror the page guard: never emit metadata (canonical to a 404) for
-  // marketing-only locales.
-  if (!(contentLocales as readonly string[]).includes(locale)) notFound()
+  // locales whose blog isn't live yet.
+  if (!blogIsLive(locale)) notFound()
   const basePath = locale === "en" ? "" : `/${locale}`
   const t = await getTranslations({ locale, namespace: "blogIndex" })
+  // hreflang only for locales whose blog index actually resolves.
+  const languages = Object.fromEntries([
+    ...(contentLocales as readonly string[])
+      .filter(blogIsLive)
+      .map((l) => [bcp47[l as Locale], l === "en" ? `${siteConfig.url}/blog` : `${siteConfig.url}/${l}/blog`]),
+    ["x-default", `${siteConfig.url}/blog`],
+  ])
   return {
     title: "Blog",
     description: t("description"),
     alternates: {
       canonical: `${siteConfig.url}${basePath}/blog`,
-      languages: {
-        "en-US": `${siteConfig.url}/blog`,
-        "fr-FR": `${siteConfig.url}/fr/blog`,
-        "x-default": `${siteConfig.url}/blog`,
-      },
+      languages,
     },
-    openGraph: { locale: locale === "fr" ? "fr_FR" : "en_US" },
+    openGraph: { locale: locale === "fr" ? "fr_FR" : locale === "es" ? "es_ES" : "en_US" },
   }
 }
 
@@ -80,9 +91,9 @@ export default async function BlogIndex({
   searchParams: Promise<{ tag?: string; topic?: string }>
 }) {
   const { locale } = await params
-  // The blog exists only for content locales (en/fr). Marketing-only locales
-  // (es) must 404 here rather than render an empty index.
-  if (!(contentLocales as readonly string[]).includes(locale)) notFound()
+  // 404 until this locale's blog is live (wired in contentLocales AND has
+  // at least one post) — never render an empty index.
+  if (!blogIsLive(locale)) notFound()
   setRequestLocale(locale)
   return <BlogIndexInner locale={locale} searchParams={searchParams} />
 }

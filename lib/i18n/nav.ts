@@ -52,6 +52,9 @@ const MARKETING_ROOTS = new Set([
 // is an FR-only page (CNIL: consent info in the visitor's language, shipped
 // 2026-07-28); [locale]/privacy 404s every other non-en locale by design.
 const PARTIAL_ROOTS: Record<string, ReadonlySet<string>> = {
+  // ⚠️ ADD "es" to /blog the day the first ES article ships — the blog route,
+  // sitemap and feed self-gate on posts existing, but this nav map is static
+  // (client Header can't check content), so it's the one manual flip.
   "/blog": new Set(["fr"]),
   "/privacy": new Set(["fr"]),
 }

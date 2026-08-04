@@ -31,23 +31,26 @@ function marketingEntries(
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     ...marketingEntries("", { changeFrequency: "weekly", priority: 1 }),
-    // Blog index per CONTENT locale (en/fr — es has no articles yet, so no
-    // /es/blog entry and no es hreflang), cross-referenced via alternates.
-    ...contentLocales.map((locale) => ({
-      url: locale === "en" ? `${siteConfig.url}/blog` : `${siteConfig.url}/${locale}/blog`,
-      lastModified: new Date(),
-      changeFrequency: "daily" as const,
-      priority: 0.9,
-      alternates: {
-        languages: Object.fromEntries([
-          ...contentLocales.map((l) => [
-            bcp47[l],
-            l === "en" ? `${siteConfig.url}/blog` : `${siteConfig.url}/${l}/blog`,
+    // Blog index per LIVE content locale — a wired locale (es) joins here
+    // automatically once it has posts, mirroring the blogIsLive() gate in
+    // app/[locale]/blog/page.tsx. Cross-referenced via hreflang alternates.
+    ...contentLocales
+      .filter((locale) => locale === "en" || getAllPosts(locale).length > 0)
+      .map((locale, _i, live) => ({
+        url: locale === "en" ? `${siteConfig.url}/blog` : `${siteConfig.url}/${locale}/blog`,
+        lastModified: new Date(),
+        changeFrequency: "daily" as const,
+        priority: 0.9,
+        alternates: {
+          languages: Object.fromEntries([
+            ...live.map((l) => [
+              bcp47[l],
+              l === "en" ? `${siteConfig.url}/blog` : `${siteConfig.url}/${l}/blog`,
+            ]),
+            ["x-default", `${siteConfig.url}/blog`],
           ]),
-          ["x-default", `${siteConfig.url}/blog`],
-        ]),
-      },
-    })),
+        },
+      })),
     ...marketingEntries("/features", { changeFrequency: "weekly", priority: 0.9 }),
     ...marketingEntries("/pricing", { changeFrequency: "weekly", priority: 0.9 }),
     // 14 feature detail pages — localized under app/[locale]/features (2026-07-22).

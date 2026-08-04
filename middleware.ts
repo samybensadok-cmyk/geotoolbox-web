@@ -8,8 +8,8 @@ const handleI18nRouting = createMiddleware(routing)
 // token): /blog/<slug>.md and /glossary/<slug>.md serve the article as plain
 // markdown, as does requesting the canonical URL with `Accept: text/markdown`.
 // Both rewrite to the internal /md/<locale>/<section>/<slug> route handler.
-const MD_TWIN = /^\/(?:(fr)\/)?(blog|glossary)\/([^/]+)\.md$/
-const ARTICLE_PATH = /^\/(?:(fr)\/)?(blog|glossary)\/([^/]+)$/
+const MD_TWIN = /^\/(?:(fr|es)\/)?(blog|glossary)\/([^/]+)\.md$/
+const ARTICLE_PATH = /^\/(?:(fr|es)\/)?(blog|glossary)\/([^/]+)$/
 
 function markdownRewrite(request: NextRequest, locale: string, section: string, slug: string) {
   const res = NextResponse.rewrite(new URL(`/md/${locale}/${section}/${slug}`, request.url))

@@ -1,11 +1,13 @@
 import { getAllPosts } from "@/lib/content"
 import { siteConfig } from "@/lib/config"
+import { contentLocales } from "@/i18n/routing"
 
 export async function GET() {
-  // All locales in one feed; FR slugs live under /fr/blog/. pubDate uses the
-  // `updated` date when present so refreshed posts carry a freshness signal
+  // All content locales in one feed (localized slugs live under /<locale>/blog/;
+  // a locale with zero posts contributes nothing). pubDate uses the `updated`
+  // date when present so refreshed posts carry a freshness signal
   // (AI ingestion pipelines + feed readers resurface them).
-  const posts = [...getAllPosts("en"), ...getAllPosts("fr")].sort(
+  const posts = contentLocales.flatMap((l) => getAllPosts(l)).sort(
     (a, b) =>
       new Date(b.updated ?? b.date).getTime() - new Date(a.updated ?? a.date).getTime()
   )
