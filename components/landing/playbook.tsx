@@ -7,7 +7,12 @@ export async function Playbook() {
   const t = await getTranslations("home.playbook")
   const locale = await getLocale()
   const faqs = t.raw("faqs") as Faq[]
-  const guideHref = locale === "fr" ? "/fr/blog/generative-engine-optimization" : "/blog/what-is-geo"
+  const guideHref =
+    locale === "fr"
+      ? "/fr/blog/generative-engine-optimization"
+      : locale === "es"
+        ? "/es/blog/geo-seo"
+        : "/blog/what-is-geo"
 
   const faqJsonLd = {
     "@context": "https://schema.org",
