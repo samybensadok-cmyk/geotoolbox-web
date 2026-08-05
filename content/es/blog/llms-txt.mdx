@@ -1,0 +1,175 @@
+---
+title: "llms.txt: qué es y si de verdad vale la pena"
+description: "Qué dice Google sobre llms.txt, qué muestran los estudios reales sobre si los rastreadores de IA lo leen y la regla de decisión clara sobre si te hace falta."
+date: "2026-08-06"
+author: "Samy BEN SADOK"
+tags: ["llms-txt", "geo", "ai-visibility", "ai-crawlers", "guide"]
+draft: false
+locale: "es"
+donorSlug: "llms-txt"
+donorCommit: "3c94ef3"
+noindex: false
+---
+
+El archivo llms.txt ha pasado de ser una propuesta poco conocida a convertirse en una casilla más dentro de la mitad de los plugins de SEO, casi siempre vendida como «el robots.txt para la IA». ¿De verdad lo necesitas? La versión corta: la mayoría de los sitios de marketing pueden saltárselo, mientras que los sitios de documentación y para desarrolladores no deberían.
+
+<Callout type="tip" title="El archivo que sí controla el acceso de los rastreadores es robots.txt">
+A diferencia de llms.txt, robots.txt decide si los rastreadores de IA pueden acceder a tu sitio o no. Nuestro [comprobador gratuito de rastreadores de IA](https://geotoolbox.ai/tools/ai-crawler-checker) muestra cuáles de los 34 rastreadores de IA permite o bloquea tu sitio.
+</Callout>
+
+## Lo que debes saber
+
+- **El archivo llms.txt es un índice curado en Markdown que se coloca en `/llms.txt`, propuesto por Jeremy Howard el 3 de septiembre de 2024** para ayudar a un modelo de IA a entender un sitio en el momento de la consulta.
+- **Google confirma que no hace falta crearlo para aparecer en las AI Overviews (las «Vistas creadas con IA» de Google) o el Modo IA**, y ningún proveedor de IA (OpenAI, Anthropic, Google, Meta) ha confirmado que lo lea.
+- **Ahrefs analizó 137.210 dominios en junio de 2026: el 97 % de los archivos llms.txt publicados no recibió ni una sola visita de un bot de IA en mayo de 2026.**
+- **La única excepción real son los sitios de documentación técnica**: los asistentes de código sí lo usan, y plataformas como Mintlify lo generan automáticamente.
+- **La recomendación:** si es gratis o automático, déjalo; si tuvieras que crearlo y mantenerlo a mano solo para ganar visibilidad en IA, la evidencia dice que no vale la pena.
+
+## Qué es realmente el archivo llms.txt
+
+[El archivo llms.txt](https://geotoolbox.ai/glossary/llms-txt) es un archivo de texto plano en Markdown que se coloca en la raíz de tu sitio, en `/llms.txt`. El desarrollador Jeremy Howard lo propuso el 3 de septiembre de 2024 para resolver un problema concreto: un modelo de IA tiene una ventana de contexto limitada, y un sitio web completo, con su navegación, su publicidad y su JavaScript, es demasiado grande y demasiado desordenado para procesarlo con limpieza. El archivo pretende ser un mapa curado, una lista breve de tus páginas más importantes en un formato que un modelo pueda leer sin tener que descifrar toda tu maquetación.
+
+El formato es sencillo: un H1 con el nombre de tu sitio, opcionalmente un resumen de una línea en un bloque de cita, y después secciones H2 que enumeran enlaces a tus páginas clave con descripciones breves. También existe una sección «Optional» para enlaces que un modelo puede omitir cuando anda corto de espacio. Eso es, en esencia, toda la especificación.
+
+Algo que conviene dejar claro desde el principio, porque la mayoría de las guías lo difuminan: la [especificación](https://llmstxt.org/) dice que llms.txt sirve para ayudar a un modelo a «usar un sitio web en el momento de la inferencia», es decir, cuando alguien le pasa tu sitio a ChatGPT o a Claude y le pregunta sobre él. La propuesta no afirma en ningún momento que los buscadores te posicionen mejor por tenerlo, ni que ningún motor de IA llegue a leerlo. Es una sugerencia sobre cómo los sitios podrían exponer contenido a los modelos, no un estándar que nadie se haya comprometido a seguir.
+
+## Lo que dice Google (y son dos cosas distintas)
+
+Buena parte de la confusión sobre llms.txt viene de que Google parece decir dos cosas contrarias. Search no deja lugar a dudas al respecto: su [documentación sobre funciones de IA](https://developers.google.com/search/docs/appearance/ai-features) afirma que «no necesitas crear nuevos archivos legibles por máquina, archivos de texto para IA ni marcado» para aparecer en estas funciones, y que no hay optimizaciones especiales necesarias para las AI Overviews o el Modo IA más allá de estar indexado y ser apto para mostrar un fragmento. Dicho de otro modo: llms.txt no hace nada por tu visibilidad en la búsqueda con IA de Google. John Mueller, de Google, lo comparó con la vieja metaetiqueta de palabras clave: una afirmación que un sitio hace sobre sí mismo y que un rastreador simplemente puede ignorar y comprobar leyendo la página real.
+
+Luego está el otro Google. [Lighthouse de Chrome ahora incluye una auditoría de llms.txt](https://developer.chrome.com/docs/lighthouse/agentic-browsing/llms-txt), lo que parece un espaldarazo hasta que lees la categoría en la que está: no es SEO, es «Agentic browsing» (navegación agéntica), y solo marca un problema si tu llms.txt devuelve un error de servidor. Un archivo ausente se marca como «no aplicable», porque, en palabras del propio Google, el archivo es «opcional por ahora». El enfoque es la eficiencia de un agente, ayudarlo a entender tu estructura más rápido, no el posicionamiento.
+
+No es una contradicción: son dos equipos respondiendo a dos preguntas distintas. El equipo de búsqueda te dice que llms.txt no hará que te citen. El equipo de navegación agéntica dice que podría ayudar a un agente de IA a explorarte con más eficiencia algún día. Ninguno de los dos lo llama señal de posicionamiento, y ambos lo llaman opcional.
+
+Un episodio de finales de 2025, que Google tuvo que aclarar en enero de 2026, muestra el poco peso que tiene el archivo incluso dentro de Google. El CMS que hay detrás de la documentación para desarrolladores de Google empezó a generar archivos llms.txt, de modo que el archivo apareció en varias propiedades de Google; el equipo de Search lo retiró de su propia documentación mientras otros equipos dejaron el suyo tal cual. Cuando le preguntaron a Mueller en Bluesky si el archivo que seguía activo en ai.google.dev era un espaldarazo, [su respuesta](https://www.seroundtable.com/google-does-not-endorse-llms-txt-40789.html) fue «para ser directo, no».
+
+## ¿Funciona de verdad? Esto es lo que muestran los datos
+
+Deja la teoría a un lado y mira lo que se ha medido. Toda la evidencia apunta en la misma dirección para el uso que más le importa a la mayoría de los propietarios de sitios: que te encuentren en la búsqueda con IA.
+
+<table>
+  <thead>
+    <tr><th>La afirmación</th><th>Lo que muestra la evidencia medida</th><th>Fuente</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Los bots de búsqueda con IA leen tu llms.txt</td><td>Un archivo de Search Engine Land no registró ninguna visita de GPTBot, ClaudeBot, PerplexityBot ni Google-Extended a lo largo de unas diez semanas de registros de servidor (de mediados de agosto a finales de octubre de 2025); estudios de registros posteriores encontraron el mismo interés casi nulo: 84 peticiones de 62.100 visitas de bots de IA en una prueba de 90 días (febrero de 2026), y 408 peticiones de 515 millones de eventos de bots de IA en las marcas a las que hace seguimiento Limy (mayo de 2026)</td><td>Semrush / OtterlyAI / Limy</td></tr>
+    <tr><td>Mejora las citas o el tráfico en IA</td><td>«No hay pruebas de que llms.txt mejore la recuperación por parte de la IA, aumente el tráfico ni incremente la precisión del modelo»; el <a href="https://seranking.com/blog/llms-txt/">estudio de SE Ranking de noviembre de 2025</a> sobre casi 300.000 dominios encontró lo mismo: al retirar llms.txt de su modelo de predicción de citas, las predicciones mejoraron en vez de empeorar</td><td>Ahrefs / SE Ranking</td></tr>
+    <tr><td>Los grandes proveedores de IA lo admiten</td><td>Ninguno se ha comprometido a analizarlo; Mueller: ningún servicio de IA ha dicho que lo use. Search Engine Land lo volvió a comprobar en enero de 2026: ni OpenAI, ni Anthropic, ni Google, ni Meta</td><td>Google / Ahrefs / Search Engine Land</td></tr>
+    <tr><td>La adopción ya es mayoritaria</td><td>El 10,13 % de casi 300.000 dominios en el estudio de SE Ranking lo tenían, repartido de forma casi uniforme por la web en lugar de concentrarse en los dominios más grandes; un rastreo anterior de julio de 2025 solo había encontrado 951 dominios</td><td>SE Ranking; NerdyData, vía Semrush</td></tr>
+    <tr><td>El poco tráfico que llega no es de motores de IA leyendo el archivo</td><td><a href="https://ahrefs.com/blog/llmstxt-study/">Ahrefs analizó 137.210 dominios</a> en junio de 2026: el 28 % publica un llms.txt, pero el 97 % de esos archivos no recibió ni una sola visita en mayo de 2026; de las peticiones que sí llegaron a los archivos restantes, el 96 % del total era tráfico de bots en general (no de humanos), y un 12 % del total procedía del propio sector SEO auditándose a sí mismo (herramientas de GEO/AEO, comprobadores de llms.txt e investigadores)</td><td>Ahrefs</td></tr>
+  </tbody>
+</table>
+
+Ryan Law, director de marketing de contenidos de Ahrefs, lo describió, a título personal, como [«una solución en busca de un problema»](https://ahrefs.com/blog/what-is-llms-txt/), y el veredicto de Semrush tras [hacer una prueba en vivo](https://www.semrush.com/blog/llms-txt/) fue que «probablemente no vale la pena ahora mismo, a menos que tengas curiosidad y quieras experimentar». La prueba más directa hasta la fecha es la de Search Engine Land, que [monitorizó un grupo de sitios](https://searchengineland.com/does-llms-txt-matter-467740) durante 90 días antes y después de añadir el archivo (enero de 2026): ocho de ellos no mostraron ningún cambio medible, mientras que uno cayó un 19,7 %. Los que sí ganaron tráfico de IA lo debieron a una campaña de relaciones públicas y a contenido nuevo, no al archivo. [OtterlyAI](https://otterly.ai/blog/the-llms-txt-experiment/), tras su propia prueba de registros de servidor de 90 días, fue un paso más allá y eliminó por completo la comprobación de llms.txt de su auditoría GEO (febrero de 2026). Para la visibilidad en búsqueda con IA, ese es el estado de la evidencia: de momento no parece hacer nada.
+
+Hay una excepción real, y es la razón por la que el archivo no es pura moda pasajera. Los asistentes de código de IA que incorporan la documentación a su contexto sí obtienen y usan el llms.txt; plataformas de documentación como Mintlify lo generan automáticamente para los sitios que alojan, y es la única vía de adopción que tiene detrás la documentación de un proveedor, y no solo mediciones de registros de servidor. Por eso los primeros en adoptarlo (Anthropic, Stripe, Mintlify) son casi todos sitios de documentación para desarrolladores: Anthropic sirve su llms.txt en `docs.anthropic.com`, no en su dominio principal, y lo mismo hace Mintlify. El error habitual es generalizar a partir de ellos. Su adopción se cita como prueba de que llms.txt funciona para todo el mundo, cuando en realidad lo único que demuestra es que funciona para documentación técnica que las máquinas consumen directamente.
+
+## ¿Deberías molestarte? La regla de decisión
+
+No hace falta una reunión de estrategia para esto. Cuatro situaciones lo resuelven.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/llms-txt/llms-txt-decision-rule-es.png" alt="Regla de decisión en cuatro situaciones sobre si tu sitio necesita un archivo llms.txt." w="1100" h="734" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">La decisión en una sola vista: los sitios de documentación lo crean, los archivos automáticos se dejan tal cual, el resto se lo puede saltar.</figcaption>
+</figure>
+
+<table>
+  <thead>
+    <tr><th>Tu situación</th><th>Veredicto</th><th>Por qué</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Publicas documentación de API, SDKs o guías técnicas que la gente pega en ChatGPT o Claude</td><td><strong>Créalo</strong></td><td>Los agentes de código y las herramientas para desarrolladores sí lo obtienen, según las propias plataformas que lo generan, y les da un contexto más limpio sobre tu producto</td></tr>
+    <tr><td>Usas una plataforma o un plugin que lo genera automáticamente (GitBook, un plugin de SEO, una plataforma de documentación como Mintlify, o un módulo de PrestaShop para tiendas online)</td><td><strong>Consérvalo</strong></td><td>Esfuerzo cero y riesgo bajo mientras se mantenga actualizado, y ya estás cubierto si la adopción crece</td></tr>
+    <tr><td>Llevas un sitio de marketing, una tienda online o una web corporativa y quieres citas de IA</td><td><strong>Sáltatelo</strong></td><td>Hoy ningún buscador de IA lo lee; esa hora rinde más invertida en accesibilidad y contenido</td></tr>
+    <tr><td>Llevas un blog pequeño o un negocio local</td><td><strong>Sáltatelo</strong></td><td>Tu sitemap y tu robots.txt ya cubren el descubrimiento para los bots que importan</td></tr>
+  </tbody>
+</table>
+
+La norma de fondo: si es gratis o automático, tener un llms.txt no te cuesta nada, así que déjalo. Si tuvieras que crearlo y mantenerlo a mano solo para perseguir visibilidad en búsqueda con IA, la evidencia dice que no lo hagas. El único grupo para el que merece un esfuerzo deliberado ahora mismo son los sitios centrados en documentación y de cara a desarrolladores, donde las máquinas sí leen el archivo de verdad.
+
+El caso de PrestaShop merece un apunte: la firma española Clearis vende [un módulo «Generador LLMS»](https://tienda.clearis.es/en/addons/modules/ai/llms-generator-index-your-prestashop-ai-friendly) que genera el llms.txt automáticamente para tiendas online. Se presenta como una ventaja para que la IA entienda mejor tu catálogo de productos; esa promesa concreta no está respaldada por la evidencia de la sección anterior. Si ya lo tienes instalado, déjalo: no cuesta nada. Pero no esperes que mueva tus citas en IA.
+
+## Cómo crear un archivo llms.txt (bien hecho)
+
+Si tu caso cae en el lado de «créalo», la especificación es corta y el archivo se hace en minutos. Nuestro [generador de llms.txt](https://geotoolbox.ai/tools/llms-txt-generator) gratuito se encarga de la parte tediosa: pega un dominio y construye un archivo correcto según la especificación a partir de tu propio sitemap, con títulos y descripciones reales, dejando fuera las páginas que no aportan nada a un índice para IA. Edita lo que te entregue antes de publicarlo, porque la curación es la parte que importa.
+
+1. **Empieza con un H1** con el nombre de tu sitio o producto. Es el único elemento que la especificación exige.
+2. **Añade un resumen de una línea** en una cita en bloque justo debajo, describiendo qué es el sitio.
+3. **Agrupa tus páginas clave en secciones H2**, cada una con un enlace en Markdown y una descripción breve; por ejemplo, una sección «Documentación» que enlace tu guía rápida, tu referencia de API y tus tutoriales.
+4. **Añade una sección «Optional»** al final para enlaces que un modelo puede omitir cuando anda corto de contexto.
+5. **Guárdalo como `/llms.txt`** en la raíz de tu dominio y comprueba que carga en tudominio.com/llms.txt.
+
+Mantenlo curado. La idea es entregarle a un modelo tus páginas mejores y más actuales: deja fuera las URL escasas, duplicadas o archivadas. Un archivo sobrecargado juega en tu contra.
+
+Una corrección que conviene hacer, porque la mitad de las guías se equivocan en esto: **llms-full.txt no forma parte de la especificación oficial.** Es una convención aparte, popularizada por plataformas de documentación como Mintlify que lo generan para la documentación que alojan, y vuelca toda tu documentación en un único archivo grande. Puede ayudar a herramientas de documentación específicas, pero es opcional, no es «el resto del estándar», y en un sitio grande se vuelve demasiado pesado para ser útil. Si quieres tener uno, nuestro [generador de llms.txt](https://geotoolbox.ai/tools/llms-txt-generator) también lo construye junto al archivo índice, con menos páginas porque pesa mucho más.
+
+## En qué se equivocan las guías
+
+Más allá de la confusión con llms-full.txt, hay varias lagunas que se repiten en la mayoría de las guías sobre llms.txt y que conviene conocer antes de publicar uno.
+
+La validación es escasa. La auditoría de Lighthouse solo comprueba que el archivo cargue sin un error de servidor, y nunca mira la estructura. Creamos un [comprobador gratuito de llms.txt](https://geotoolbox.ai/tools/llms-txt-checker) para cubrir esa carencia: valida la estructura H1 y H2 contra la especificación y confirma que cada URL enlazada resuelve correctamente. Lo que ninguna herramienta puede decirte es si un modelo va a interpretar el archivo como tú pretendes; no existe un equivalente al probador de robots.txt de Search Console para esto, por lo que en parte sigues publicando a ciegas.
+
+Y aquí hay un error más serio que se repite en varias guías en español que aparecen entre los primeros resultados de búsqueda: **llms.txt no tiene ninguna sintaxis de permisos, bloqueo o consentimiento de entrenamiento.** Algunas presentan directivas como `$trainingAllowed`, `$chatAllowed` o `$embargo` como si formaran parte de la especificación, prometiendo protección de contenido premium o control sobre qué modelo puede usar tu contenido. Ninguna de esas directivas existe en la [especificación real](https://llmstxt.org/): llms.txt es únicamente un índice curado en Markdown, con H1, cita de resumen y secciones H2 de enlaces anotados; no bloquea nada ni concede ningún permiso. Si tu objetivo es controlar el acceso, la herramienta correcta es [robots.txt](https://geotoolbox.ai/glossary/robots-txt), no llms.txt. De paso, vigila el nombre del archivo: es `llms.txt`, en plural; `llm.txt`, en singular, es una errata bastante habitual y ningún modelo lee ese nombre.
+
+Las instrucciones de unos archivos y otros pueden chocar entre sí. Si listas una página en llms.txt que también está marcada como noindex o bloqueada en robots.txt, nada en la especificación dice cuál gana, y no deberías dar por hecho que un agente lo resuelve como tú lo harías. Hay también una contrapartida más silenciosa: llms.txt es un archivo público; listar tus páginas de más valor en uno le entrega un mapa ordenado tanto a agentes bien intencionados como a scrapers y a la competencia.
+
+Y se queda obsoleto. Un archivo que se desincroniza de tu contenido real alimenta a los modelos con enlaces y respuestas desactualizados. Si no puedes mantenerlo al día, un llms.txt viejo es peor que no tener ninguno.
+
+## llms.txt frente a robots.txt y el sitemap
+
+La etiqueta de «robots.txt para la IA» se repite por todas partes, y es el modelo mental equivocado. Los tres archivos hacen trabajos genuinamente distintos.
+
+[robots.txt](https://geotoolbox.ai/glossary/robots-txt) es control de acceso. Les dice a los [rastreadores](https://geotoolbox.ai/blog/ai-crawlers) (incluidos los de IA) qué rutas pueden solicitar, y los bots bien educados lo obedecen; ignorar una regla de robots.txt es portarse mal. Un [sitemap](https://geotoolbox.ai/blog/xml-sitemap) es un inventario completo de tus URL para que los buscadores puedan descubrir cada página. llms.txt no es ninguna de las dos cosas: no controla el acceso y no es exhaustivo; es un resumen curado de tu mejor contenido, ofrecido a un modelo por si acaso pregunta.
+
+La diferencia práctica que importa: robots.txt tiene dientes, llms.txt no tiene ninguno. Un rastreador que ignora tu robots.txt está incumpliendo una regla. Un modelo que ignora tu llms.txt no está haciendo nada malo, porque el archivo siempre fue solo una sugerencia. Por eso complementa a esos archivos más antiguos en lugar de sustituirlos.
+
+## ¿Es llms.txt una distracción de la visibilidad real en IA?
+
+Para la mayoría de los sitios, un poco. No porque el archivo sea perjudicial, sino porque absorbe una atención que estaría mejor invertida en otra parte. Lo que decide si los motores de IA te citan no tiene nada de exótico, y llms.txt no está en esa lista.
+
+Empieza por si los rastreadores de IA pueden siquiera acceder a tus páginas y renderizarlas. Una regla de robots.txt o un cortafuegos que bloquee a OAI-SearchBot o a PerplexityBot, o contenido que solo aparece después de ejecutar un JavaScript que el rastreador no llega a procesar, te dejará fuera de las respuestas de IA por muy pulido que esté tu llms.txt. En nuestra experiencia auditando sitios para visibilidad en IA, esa brecha de accesibilidad explica muchos más casos de «no nos citan» que cualquier archivo ausente. Después de eso viene el contenido en sí: páginas claras, que responden primero, que un modelo pueda citar textualmente. Nuestra guía sobre [cómo optimizar para la búsqueda con IA](https://geotoolbox.ai/blog/how-to-optimize-for-ai-search) repasa ambas cosas, y la pregunta más amplia de si los agentes pueden llegar a usar tu sitio está cubierta en [cómo preparar tu sitio para agentes de IA](https://geotoolbox.ai/blog/agent-ready-website).
+
+Si quieres saber dónde rinde más tu hora, revisa primero la vía de acceso. Esa es la parte de la visibilidad en IA que sí tiene evidencia detrás.
+
+## La conclusión
+
+llms.txt es una propuesta real que resuelve un problema real para una audiencia reducida. Si publicas documentación para desarrolladores, o tu plataforma genera el archivo gratis, tenerlo es sensato y no te cuesta nada. Para todos los demás que persiguen visibilidad en búsqueda con IA, la evidencia medida dice que es lo último de la lista de prioridades.
+
+Así que trátalo como lo que es: una nota al pie de diez minutos, no una estrategia. El trabajo que de verdad mueve tu presencia en las respuestas de IA es asegurarte de que los agentes puedan acceder, renderizar y citar tus páginas. Si solo vas a hacer una cosa esta semana, pasa tu dominio por nuestro [AI-Readiness Score](https://geotoolbox.ai/tools/ai-readiness) gratuito y corrige lo que te señale; el [Content Analyzer](https://geotoolbox.ai/features/content-analyzer) añade la nota de citabilidad de cada página. Ahí es donde apunta la evidencia, y llms.txt puede esperar a que el estándar alcance al bombo.
+
+## Preguntas frecuentes
+
+### ¿ChatGPT, Claude o Perplexity leen de verdad el llms.txt?
+
+Puedes responder esto para tu propio sitio en cinco minutos: publica el archivo, espera unas semanas y busca en los registros de tu servidor las peticiones a /llms.txt filtrando por el user-agent del bot. Todas las pruebas publicadas hasta ahora han salido vacías o casi vacías para los rastreadores de búsqueda; la más grande, el [análisis de Limy de mayo de 2026](https://limy.ai/blog/llms.txt-in-2026-the-full-guide) sobre 515 millones de eventos de bots de IA en las marcas que sigue, registró solo 408 peticiones al archivo. Esa es una prueba más sólida que cualquier declaración de un proveedor.
+
+### ¿Dónde va exactamente el archivo llms.txt?
+
+En la raíz de tu dominio, igual que robots.txt: tudominio.com/llms.txt, servido como texto plano o Markdown con un estado 200. Varios plugins de SEO de WordPress te lo escriben automáticamente; en plataformas de documentación alojada suele generarse solo; en cualquier otro caso es un archivo estático en la raíz de tu sitio. Fernando Tellado, una de las principales referencias de WordPress en español, construyó [el plugin gratuito VigIA](https://ayudawp.com/llms-txt-llms-full-txt/) para generar llms.txt y llms-full.txt y bloquear rastreadores de IA a la vez; su propio veredicto, basado en los datos de los sitios donde está instalado, es tajante: «a día de hoy ninguna IA lo lee siquiera».
+
+### ¿Cuál es la diferencia entre llms.txt y llms-full.txt?
+
+llms.txt es el índice breve y curado que define la especificación; llms-full.txt vuelca toda la documentación en un solo archivo. La regla práctica de selección: un asistente de código con una ventana de contexto pequeña quiere el índice, y una herramienta que construye una base de conocimiento local quiere el volcado completo. Si solo vas a publicar uno, publica el índice.
+
+### ¿Debería añadir llms.txt a un sitio de marketing o solo a la documentación?
+
+Un caso intermedio que conviene conocer: los sitios SaaS con una sección /docs pueden servir llms.txt limitado a la documentación y saltárselo en las páginas de marketing. Así consigues el beneficio para los asistentes de código allí donde existe, sin fingir que la página de inicio lo necesita.
+
+### ¿llms.txt afecta a la indexación de Google o a mis reglas de robots.txt?
+
+No hay interacción en ningún sentido. Googlebot indexa tus páginas exista o no el archivo, y llms.txt no puede saltarse un bloqueo de robots.txt: un rastreador al que robots.txt le prohíbe el acceso tampoco debería obtener tu llms.txt. Trátalos como archivos totalmente independientes.
+
+## Fuentes
+
+- El archivo /llms.txt - especificación llms.txt (Jeremy Howard, la propuesta, formato e intención) - `llmstxt.org`
+- llms.txt | Lighthouse - Google Chrome for Developers (el enfoque de la auditoría de navegación agéntica) - `developer.chrome.com/docs/lighthouse/agentic-browsing/llms-txt`
+- Funciones de IA y tu sitio web - Google Search Central (no hacen falta archivos especiales para las funciones de IA) - `developers.google.com/search/docs/appearance/ai-features`
+- Qué es llms.txt, ¿deberías preocuparte por él? - Ahrefs (veredicto y valoración de John Mueller) - `ahrefs.com/blog/what-is-llms-txt`
+- El estudio de Ahrefs sobre 137.210 dominios: el 97 % de los archivos llms.txt no reciben tráfico de IA - Ahrefs, junio de 2026 - `ahrefs.com/blog/llmstxt-study`
+- Qué es LLMs.txt, ¿deberías usarlo? - Semrush (prueba de registros de servidor y datos de adopción) - `semrush.com/blog/llms-txt`
+- LLMs.txt: por qué las marcas confían en él y por qué no funciona - SE Ranking (estudio de adopción y correlación con citas sobre 300.000 dominios, noviembre de 2025) - `seranking.com/blog/llms-txt`
+- ¿Importa llms.txt? Seguimos a 10 sitios para averiguarlo - Search Engine Land (prueba antes/después en 10 sitios, enero de 2026) - `searchengineland.com/does-llms-txt-matter-467740`
+- llms.txt y visibilidad en IA: resultados del estudio GEO de OtterlyAI - OtterlyAI (experimento de registros de servidor de 90 días, febrero de 2026) - `otterly.ai/blog/the-llms-txt-experiment`
+- LLMs.txt en 2026: la guía completa - Limy (análisis de 515 millones de eventos de rastreo, mayo de 2026) - `limy.ai/blog/llms.txt-in-2026-the-full-guide`
+- El equipo de Search de Google no respalda los archivos LLMs.txt - Search Engine Roundtable (Mueller sobre los propios archivos llms.txt de Google, enero de 2026) - `seroundtable.com/google-does-not-endorse-llms-txt-40789.html`
+- llms.txt y llms-full.txt: guía y plugin VigIA - Fernando Tellado, Ayuda WordPress (referencia del WordPress en español, datos propios de telemetría) - `ayudawp.com/llms-txt-llms-full-txt`
