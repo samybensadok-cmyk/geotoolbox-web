@@ -12,9 +12,19 @@
  * `updated:` / `recheckBy:` — is what moves the title forward again.
  *
  * Tokens (use in `title:` / `description:` frontmatter):
- *   $MONTH_YEAR  → "August 2026" · "août 2026" · "agosto de 2026"
- *   $MONTH       → "August"      · "août"      · "agosto"
- *   $YEAR        → "2026"
+ *   $MONTH_YEAR          → "August 2026" · "août 2026" · "agosto de 2026"
+ *   $MONTH               → "August"      · "août"      · "agosto"
+ *   $YEAR                → "2026"
+ *   $UPDATED_MONTH_YEAR  → ALWAYS the `updated:` month. Never the clock.
+ *
+ * Use `$UPDATED_MONTH_YEAR` for any phrase that asserts a specific verification
+ * month — "current to X", "verified in X", "à jour en X", "datos verificados en
+ * X". Those are claims about when a human actually checked something, and the
+ * freshness window is a tolerance, not a re-verification: a post updated on
+ * 2026-07-15 is still "fresh" on 2026-09-01 under the 60-day grace, so a
+ * clock-following "current to September 2026" would assert a check that never
+ * happened. `$MONTH_YEAR` is a soft maintenance signal and belongs in titles;
+ * `$UPDATED_MONTH_YEAR` is a hard factual claim and belongs in these phrases.
  *
  * Month names and the month/year join are produced by Intl for the post's own
  * locale, so Spanish gets its "de" and French stays lowercase without a lookup
@@ -33,7 +43,7 @@
 /** Days a post stays "current" after `updated:` when it declares no `recheckBy:`. */
 export const DEFAULT_GRACE_DAYS = 60
 
-const TOKEN_RE = /\$MONTH_YEAR|\$MONTH|\$YEAR/g
+const TOKEN_RE = /\$UPDATED_MONTH_YEAR|\$MONTH_YEAR|\$MONTH|\$YEAR/g
 
 /** BCP-47 tag used for month formatting. Falls back to the locale itself. */
 const INTL_TAG: Record<string, string> = { en: "en-US", fr: "fr-FR", es: "es-ES" }
@@ -123,14 +133,19 @@ export function resolveDateTokens(
   if (!TOKEN_RE.test(text)) return text
 
   const when = effectiveTokenDate(signals, now, graceDays)
+  // Never clock-following: the month a human last actually touched the post.
+  const updatedWhen = toUtcDate(signals.updated) ?? toUtcDate(signals.date) ?? when
   const tag = INTL_TAG[locale] ?? locale
-  const fmt = (opts: Intl.DateTimeFormatOptions) =>
-    new Intl.DateTimeFormat(tag, { ...opts, timeZone: "UTC" }).format(when)
+  const fmt = (opts: Intl.DateTimeFormatOptions, d: Date = when) =>
+    new Intl.DateTimeFormat(tag, { ...opts, timeZone: "UTC" }).format(d)
 
   TOKEN_RE.lastIndex = 0
   return text.replace(TOKEN_RE, (token, offset: number) => {
     let out: string
     switch (token) {
+      case "$UPDATED_MONTH_YEAR":
+        out = fmt({ month: "long", year: "numeric" }, updatedWhen)
+        break
       case "$MONTH_YEAR":
         out = fmt({ month: "long", year: "numeric" })
         break

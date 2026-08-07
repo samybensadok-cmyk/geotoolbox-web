@@ -65,6 +65,27 @@ eq(resolveDateTokens("X $MONTH_YEAR", "en", {}, SEP02), "X September 2026",
 eq(isWithinFreshnessWindow({ recheckBy: "2026-08-10" }, AUG10), true, "recheckBy === today is still fresh")
 eq(isWithinFreshnessWindow({ recheckBy: "2026-08-09" }, AUG10), false, "recheckBy yesterday is stale")
 
+// ------------------------------- $UPDATED_MONTH_YEAR never follows the clock
+// The failure this prevents: a post updated 2026-07-15 is still INSIDE the 60-day
+// grace on 2026-09-01, so $MONTH_YEAR renders "September" — but nobody verified
+// anything in September. Any phrase asserting a verification month must pin.
+const jul = { updated: "2026-07-15" }
+eq(resolveDateTokens("Grok pricing, current to $MONTH_YEAR", "en", jul, new Date(Date.UTC(2026, 8, 1))),
+   "Grok pricing, current to September 2026", "$MONTH_YEAR does follow the clock inside grace (the hazard)")
+eq(resolveDateTokens("Grok pricing, current to $UPDATED_MONTH_YEAR", "en", jul, new Date(Date.UTC(2026, 8, 1))),
+   "Grok pricing, current to July 2026", "$UPDATED_MONTH_YEAR pins to updated even while fresh")
+eq(resolveDateTokens("verified $UPDATED_MONTH_YEAR pricing", "en", fresh, MAR2027),
+   "verified August 2026 pricing", "$UPDATED_MONTH_YEAR pins when lapsed too")
+eq(resolveDateTokens("Comparatif vérifié en $UPDATED_MONTH_YEAR.", "fr", jul, SEP02),
+   "Comparatif vérifié en juillet 2026.", "fr locale form")
+eq(resolveDateTokens("datos verificados en $UPDATED_MONTH_YEAR", "es", jul, SEP02),
+   "datos verificados en julio de 2026", "es locale form, with its 'de'")
+eq(resolveDateTokens("$UPDATED_MONTH_YEAR : le point", "fr", jul, SEP02),
+   "Juillet 2026 : le point", "capitalised at offset 0")
+// both tokens in one string resolve independently
+eq(resolveDateTokens("Guide $MONTH_YEAR, verified $UPDATED_MONTH_YEAR", "en", jul, new Date(Date.UTC(2026, 8, 1))),
+   "Guide September 2026, verified July 2026", "the two tokens coexist and differ")
+
 // ------------------------------------------------------------------ no-ops
 eq(resolveDateTokens("Plain title, no tokens", "en", fresh, AUG10),
    "Plain title, no tokens", "untouched when no token present")

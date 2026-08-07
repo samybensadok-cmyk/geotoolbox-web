@@ -127,7 +127,7 @@ for (const [locale, dir] of LOCALE_DIRS) {
     const { data, content } = matter(fs.readFileSync(full, "utf-8"))
     scanned++
     const meta = `${data.title ?? ""} ${data.description ?? ""}`
-    if (!/\$MONTH_YEAR|\$MONTH|\$YEAR/.test(meta)) continue
+    if (!/\$UPDATED_MONTH_YEAR|\$MONTH_YEAR|\$MONTH|\$YEAR/.test(meta)) continue
     tokened++
 
     const signals = { date: data.date, updated: data.updated, recheckBy: data.recheckBy }
