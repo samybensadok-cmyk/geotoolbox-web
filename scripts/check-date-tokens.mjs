@@ -55,8 +55,8 @@ const MONTHS = {
  * legitimate "launched on July 9" and the gate would be turned off within a week.
  */
 const CURRENCY_LEADINS = {
-  en: ["current to", "dated to", "reconciled and dated", "up to date as of", "this guide is current"],
-  fr: ["à jour en", "arrêté à", "arrêtée à", "daté de", "datée de"],
+  en: ["current to", "current as of", "dated to", "reconciled and dated", "up to date as of", "this guide is current"],
+  fr: ["à jour en", "arrêté à", "arrêtée à", "daté de", "datée de", "datés de", "datées de", "recalculé au", "recalculés au", "recalculée au", "recalculées au"],
   es: ["actualizado a", "actualizada a", "vigente en", "este artículo está comprobado"],
 }
 
@@ -77,6 +77,46 @@ const OPENERS = {
   es: /^\s*(?:\*\*)?A fecha de\s+/i,
 }
 
+/**
+ * FRONTMATTER guard — the class the body gate structurally cannot see.
+ *
+ * The rollout tokenised three descriptions that were stating FACTS, not
+ * freshness: "the $MONTH_YEAR shift to public prices" (an event dated June 11),
+ * "Prix de Kimi au 20 $MONTH_YEAR" (a day-specific verification), and "shipped
+ * … on July 21, $YEAR" (a launch date, which a 2027 refresh would have turned
+ * into a fabricated launch). All three rendered falsehoods the moment the clock
+ * moved, and none was catchable by a gate that reads bodies.
+ *
+ * Rule, from that: a clock-following token may only follow a CURRENCY phrase.
+ * Next to a verification verb, an event noun, or a day-of-month it is wrong —
+ * use a literal, or $UPDATED_MONTH_YEAR where the claim tracks maintenance.
+ */
+const FRONTMATTER_HAZARDS = [
+  { re: /\b(?:\d{1,2})\s*,?\s*\$(?:MONTH_YEAR|MONTH|YEAR)\b/i,
+    why: "a day-of-month immediately before the token — that is a specific date, not a month stamp" },
+  { re: /\$(?:MONTH_YEAR|MONTH)\s*,?\s*\d{1,2}\b/i,
+    why: "a day-of-month immediately after the token — same problem" },
+  { re: /\b(?:verified|vendor-checked|vérifiée?s?|comprobad[oa]s?|verificad[oa]s?)\s+(?:en\s+|in\s+)?\$(?:MONTH_YEAR|MONTH|YEAR)/i,
+    why: "asserts WHEN someone checked — an act, not currency. Use a literal month" },
+  { re: /\$(?:MONTH_YEAR|MONTH|YEAR)\s+(?:shift|launch|release|announcement|cut|update|lancement|sortie|anuncio)\b/i,
+    why: "names a dated EVENT — events do not move. Use a literal month" },
+  { re: /\b(?:shipped|launched|released|announced|lancé|sorti|publicad[oa])\b[^.]{0,40}\$(?:MONTH_YEAR|MONTH|YEAR)/i,
+    why: "a launch/release date — a refresh would fabricate a new one. Use a literal" },
+]
+
+function frontmatterHazards(data) {
+  const out = []
+  for (const key of ["title", "description"]) {
+    const v = data[key]
+    if (typeof v !== "string" || !v.includes("$")) continue
+    for (const h of FRONTMATTER_HAZARDS) {
+      const m = h.re.exec(v)
+      if (m) out.push({ key, why: h.why, quote: m[0] })
+    }
+  }
+  return out
+}
+
 function stripFences(body) {
   return body.replace(/```[\s\S]*?```/g, "")
 }
@@ -89,11 +129,11 @@ function currencyClaims(body, locale) {
   const leadAlt = leadins.map((l) => l.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")
   // lead-in, then up to ~24 chars of filler (articles, "the", "de", **bold**),
   // then a month, then a 4-digit year.
-  const re = new RegExp(`(${leadAlt})[^.\\n]{0,24}?(${monthAlt})\\s+(?:de\\s+)?(\\d{4})`, "gi")
+  const re = new RegExp(`(${leadAlt})[^.\\n]{0,24}?(${monthAlt})\\s+(?:\\d{1,2},?\\s+)?(?:de\\s+)?(\\d{4})`, "gi")
   // Same shape, but anchored to the start of a paragraph.
   const opener = OPENERS[locale] ?? OPENERS.en
   const openerRe = new RegExp(
-    `^\\s*(?:\\*\\*)?${opener.source.replace(/^\^\\s\*\(\?:\\\*\\\*\)\?/, "").replace(/\\s\+$/, "")}\\s+(?:the\\s+)?(${monthAlt})\\s+(?:de\\s+)?(\\d{4})`,
+    `^\\s*(?:\\*\\*)?${opener.source.replace(/^\^\\s\*\(\?:\\\*\\\*\)\?/, "").replace(/\\s\+$/, "")}\\s+(?:the\\s+)?(${monthAlt})\\s+(?:\\d{1,2},?\\s+)?(?:de\\s+)?(\\d{4})`,
     "i"
   )
   const out = []
@@ -111,6 +151,7 @@ function currencyClaims(body, locale) {
 const failures = []
 const warnings = []
 const acknowledged = []
+const hazards = []
 let tokened = 0
 let scanned = 0
 
@@ -132,6 +173,10 @@ for (const [locale, dir] of LOCALE_DIRS) {
 
     const signals = { date: data.date, updated: data.updated, recheckBy: data.recheckBy }
     const rel = path.relative(ROOT, full)
+
+    for (const h of frontmatterHazards(data)) {
+      hazards.push({ file: rel, key: h.key, quote: h.quote, why: h.why })
+    }
 
     // What month will the title actually claim, now and a year from now?
     const claimNow = effectiveTokenDate(signals, NOW)
@@ -174,6 +219,10 @@ for (const [locale, dir] of LOCALE_DIRS) {
 const say = (r) =>
   `  ${r.file}:${r.line}\n     title will read "${r.title}" · body says "${r.body}"\n     matched ${JSON.stringify(r.quote)}\n     in: ${r.full}`
 
+if (hazards.length) {
+  console.error(`\n✗ date-token gate: ${hazards.length} token(s) attached to a FACT rather than to currency\n`)
+  hazards.forEach((h) => console.error(`  ${h.file} [${h.key}]\n     ${JSON.stringify(h.quote)}\n     ${h.why}\n`))
+}
 if (failures.length) {
   console.error(`\n✗ date-token gate: ${failures.length} title/body month conflict(s)\n`)
   failures.forEach((r) => console.error(say(r) + "\n"))
@@ -187,10 +236,10 @@ if (acknowledged.length) {
   acknowledged.forEach((a) => console.log(`  ${a.file}:${a.line} — ${a.reason}\n     ${JSON.stringify(a.quote)}`))
   console.log("")
 }
-if (failures.length) {
+if (failures.length || hazards.length) {
   console.error("Fix the BODY (drop the blanket currency claim, or point it at the rendered")
   console.error("updated stamp) — never rewrite a dated fact to follow the clock. If an")
   console.error("article is too anchored to reconcile, remove its token instead.\n")
-  process.exit(1)
+  if (failures.length || hazards.length) process.exit(1)
 }
 console.log(`✓ date-token gate: ${tokened} tokened post(s) of ${scanned} scanned, no title/body month conflicts`)
