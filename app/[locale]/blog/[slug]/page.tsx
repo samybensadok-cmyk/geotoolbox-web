@@ -22,6 +22,12 @@ import { NewsletterSignup } from "@/components/newsletter/newsletter-signup"
 import { newsletterCopyFrom } from "@/components/newsletter/copy"
 import { Avatar } from "@/components/ui/avatar"
 
+// Daily ISR. The blog is otherwise fully static, which would freeze the
+// $MONTH/$YEAR title tokens (lib/seo-tokens.ts) at whatever month the site was
+// last deployed. Revalidating once a day lets the month roll over on its own,
+// within 24h of the 1st, while pages still serve from the static cache.
+export const revalidate = 86400
+
 export async function generateStaticParams() {
   return routing.locales.flatMap((locale) =>
     getAllPostSlugs(locale).map((slug) => ({ locale, slug }))

@@ -2,6 +2,7 @@ import fs from "fs"
 import path from "path"
 import matter from "gray-matter"
 import { calculateReadingTime, slugify } from "./utils"
+import { resolveDateTokens } from "./seo-tokens"
 
 export type Heading = { level: 2 | 3; text: string; slug: string }
 
@@ -88,6 +89,12 @@ export type Post = {
   description: string
   date: string
   updated?: string
+  /**
+   * Operator-declared shelf life (frontmatter `recheckBy:`). Also gates the
+   * $MONTH/$YEAR title tokens — see lib/seo-tokens.ts: past this date the
+   * tokens stop claiming the current month and pin to `updated`.
+   */
+  recheckBy?: string
   author: string
   tags: string[]
   image?: string
@@ -127,12 +134,16 @@ export function getAllPosts(locale: string = "en"): Post[] {
     .map((file) => {
       const raw = fs.readFileSync(path.join(dir, file), "utf-8")
       const { data, content } = matter(raw)
+      // $MONTH / $YEAR tokens resolve here, at the shared loader, so metadata,
+      // the OG image, RSS, llms.txt, the .md twin, sitemap and search all agree.
+      const tokens = { date: data.date, updated: data.updated, recheckBy: data.recheckBy }
       return {
         slug: file.replace(".mdx", ""),
-        title: data.title ?? "",
-        description: data.description ?? "",
+        title: resolveDateTokens(data.title ?? "", locale, tokens),
+        description: resolveDateTokens(data.description ?? "", locale, tokens),
         date: data.date ?? "",
         updated: data.updated,
+        recheckBy: data.recheckBy,
         author: data.author ?? "Samy Ben Sadok",
         tags: data.tags ?? [],
         image: data.image,
@@ -157,12 +168,14 @@ export function getPostBySlug(slug: string, locale: string = "en"): Post | undef
   if (!fs.existsSync(filePath)) return undefined
   const raw = fs.readFileSync(filePath, "utf-8")
   const { data, content } = matter(raw)
+  const tokens = { date: data.date, updated: data.updated, recheckBy: data.recheckBy }
   return {
     slug,
-    title: data.title ?? "",
-    description: data.description ?? "",
+    title: resolveDateTokens(data.title ?? "", locale, tokens),
+    description: resolveDateTokens(data.description ?? "", locale, tokens),
     date: data.date ?? "",
     updated: data.updated,
+    recheckBy: data.recheckBy,
     author: data.author ?? "Samy Ben Sadok",
     tags: data.tags ?? [],
     image: data.image,

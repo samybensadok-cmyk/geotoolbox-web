@@ -3,6 +3,16 @@ import { getPostBySlug, extractHeadings } from "@/lib/content"
 import { buildBlogCard, deriveCardData, type CardData } from "@/lib/og/blog-card"
 import { loadOgFonts } from "@/lib/og/og-fonts"
 
+// KNOWN LIMITATION, deliberate. This card renders post.title, so a title using
+// the $MONTH/$YEAR tokens (lib/seo-tokens.ts) bakes the month into the image.
+// Unlike the page route, a metadata-image convention does not honour
+// `revalidate` — verified against .next/prerender-manifest.json, where the page
+// paths carry 86400 and these do not — so the card is frozen until the next
+// deploy. Accepted because the card only surfaces on social shares, it is
+// cosmetic there, and this repo deploys often enough to keep it close. If that
+// ever stops being true, generate the card from the raw frontmatter title
+// instead of the resolved one rather than forcing this route dynamic.
+
 export const size = { width: 1200, height: 630 }
 export const contentType = "image/png"
 

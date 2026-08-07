@@ -10,6 +10,11 @@ import { TOPICS, primaryTopic, topicBySlug, topicCounts } from "@/lib/blog-topic
 import { BlogResults, type LitePost } from "@/components/blog/blog-results"
 import { setRequestLocale, getTranslations } from "next-intl/server"
 
+// No `revalidate` here on purpose: this route reads `searchParams` (?tag / ?topic),
+// so it already renders on demand and its $MONTH/$YEAR tokens (lib/seo-tokens.ts)
+// are always current. The ISR setting lives on the static routes that need it —
+// [slug]/page.tsx and [slug]/opengraph-image.tsx.
+
 // A wired locale still 404s its blog until it has posts — so /es/blog goes
 // live automatically with the first ES article, no flag to flip. The default
 // locale (en) is always live.
