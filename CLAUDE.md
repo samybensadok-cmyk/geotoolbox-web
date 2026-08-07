@@ -58,7 +58,18 @@ Frontmatter `title:` and `description:` support date tokens, the Yoast
   (`searchParams`). The OG card image cannot revalidate and is frozen until the
   next deploy — see the note in `opengraph-image.tsx`.
 - Titles get longer in some months ("September" vs "May"). Check the ~60-char
-  SERP budget against the longest month, not the current one.
+  SERP budget against the longest month, not the current one. `$YEAR` is the
+  fallback when `$MONTH_YEAR` would blow the budget.
+- **`npm run check:dates` is the gate.** It fails when a tokened post's body
+  makes a blanket currency claim naming a different month, and it prints every
+  `{/* date-ok: reason */}` override on each run so exceptions stay auditable.
+  Its blind spot is documented in the file header: hard-coded months in H2s,
+  `<th>` cells and figcaptions are NOT checked, because those date the data, not
+  the article. Fix those by re-verifying the article, never by editing the stamp.
+- **Do not bump `updated:` just to add a token.** Tokenising changes how a date
+  renders, not what the article claims. Bumping resets the freshness window and
+  manufactures the exact signal the gate polices. Only a real content refresh
+  moves `updated:`.
 
 ## Dev-server / RAM safety (post 2026-06-08 crash — TWO back-to-back OOM crashes, ~80GB on a 16GB Mac)
 - **NEVER run `next dev` (or any long-lived watcher: `npm run dev`, `vercel dev`, `tsc --watch`) as a foreground Bash call.** A dev server never returns; its stdout is unbounded; the agent buffers every recompile/error line in memory. While a file is being edited through broken intermediate states, Turbopack loops recompile→error→fast-refresh and the buffer balloons to tens of GB → swap death → hard crash. Origin: blog `page.tsx` redesign — crashed twice, redesign sat uncommitted until recovered.

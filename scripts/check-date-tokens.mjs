@@ -19,6 +19,17 @@
  * July 9, 2026", "the July 30 price cut" — and must never be rewritten to
  * follow the clock. The two are told apart by the phrase that introduces them,
  * which is why this matches lead-ins rather than bare month names.
+ *
+ * KNOWN BLIND SPOT, measured not guessed: this only reads prose lead-ins, so it
+ * does NOT see hard-coded months in H2 headings, `<th>` cells or figcaptions —
+ * "## Claude vs ChatGPT at a Glance (July 2026)", "<th>Top models (July 2026)".
+ * A sweep on 2026-08-07 found 16 such stamps across 8 tokened posts. They were
+ * left alone deliberately: a month on a table header dates THAT TABLE's data,
+ * which is honest, and the articles carrying them have not been re-verified, so
+ * silently advancing them to match the title would be the very lie this gate
+ * exists to stop. Fix them by re-verifying the article, not by editing the
+ * stamp. If that class ever needs gating, match headings and `<th>` separately
+ * — do not widen the prose rule, or source-dating starts failing again.
  */
 import fs from "fs"
 import path from "path"
