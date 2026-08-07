@@ -165,7 +165,12 @@ export default async function BlogPost({
           <Breadcrumbs
             trail={[
               { name: t("home"), href: "/" },
-              { name: "Blog", href: isFr ? "/fr/blog" : "/blog" },
+              {
+                name: "Blog",
+                // Locale-aware, not an fr/en binary: the hardcoded ternary sent
+                // every ES reader to the English blog index.
+                href: locale === routing.defaultLocale ? "/blog" : `/${locale}/blog`,
+              },
               { name: post.title, href: "" },
             ]}
           />
@@ -346,7 +351,7 @@ export default async function BlogPost({
               {isCommercialIntent(slug) && (
                 <p className="text-[13px] text-gray-600">
                   <Link
-                    href={isFr ? "/fr/pricing" : "/pricing"}
+                    href={locale === routing.defaultLocale ? "/pricing" : `/${locale}/pricing`}
                     className="font-semibold text-accent-700 hover:text-accent-800"
                   >
                     {t("seePricing")}
@@ -394,7 +399,7 @@ export default async function BlogPost({
 
           <div className="mt-10 flex items-center justify-center">
             <Link
-              href={isFr ? "/fr/blog" : "/blog"}
+              href={locale === routing.defaultLocale ? "/blog" : `/${locale}/blog`}
               className="inline-flex items-center gap-1.5 rounded-sm text-[13px] font-semibold text-gray-600 transition-colors duration-200 hover:text-accent-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
             >
               <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">

@@ -28,14 +28,16 @@ function childrenToText(children: ReactNode): string {
   return ""
 }
 
-// Non-anchor components are locale-independent, so they're shared across every
-// locale's component map.
+// Components with no locale-dependent output, shared across every locale's map.
+// NOTE: AffiliateDisclosure and VerdictBox are NOT here — they render their own
+// chrome (headings, field labels, the affiliate note) and so must be bound to a
+// locale in getMdxComponents below. Adding a component with any user-visible
+// English string to this map is how a localized article ends up shipping English
+// furniture under a Spanish headline.
 const baseComponents: MDXComponents = {
   Callout,
   YouTube,
-  AffiliateDisclosure,
   AiCrawlerCheckerWidget,
-  VerdictBox,
   Image,
   BlogImage,
   h2: ({ children, ...props }) => (
@@ -63,6 +65,12 @@ export function getMdxComponents(locale: string): MDXComponents {
   const localize = makeLocalizer(locale)
   return {
     ...baseComponents,
+    // Chrome-rendering components, bound to this locale. MDX never passes
+    // `locale` itself (next-mdx-remote strips JSX expression attributes off
+    // MDX-authored components), so binding it here is the only place it can
+    // come from.
+    AffiliateDisclosure: (props) => <AffiliateDisclosure {...props} locale={locale} />,
+    VerdictBox: (props) => <VerdictBox {...props} locale={locale} />,
     a: ({ href, children, ...props }) => {
       // Affiliate redirect links (/go/<slug>) — sponsored, open in a new tab,
       // and NOT client-routed (server 302 redirect handler, not a page). Never
