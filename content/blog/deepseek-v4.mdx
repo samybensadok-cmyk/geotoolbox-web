@@ -2,7 +2,8 @@
 title: "DeepSeek V4: What It Actually Is Now (GA, Pricing, and the Catches)"
 description: "DeepSeek V4 explained, current to August 2026: what changed at GA, Flash vs Pro, the real API cost, self-hosting, and how honest the benchmarks really are."
 date: "2026-08-01"
-recheckBy: "2026-09-15"  # peak/off-peak effective date TBD; V4-Flash build (0731) + independent benchmarks still moving
+updated: "2026-08-08"
+recheckBy: "2026-09-15"  # pricing page warns of a coming "significant" overall price increase, subject to official notice (verified live 2026-08-08, no peak/off-peak scheme shown); V4-Flash build (0731) + independent benchmarks still moving
 author: "Samy BEN SADOK"
 tags: ["deepseek-v4", "deepseek", "open-weights", "mixture-of-experts", "chinese-ai", "llm", "ai-models", "guide"]
 draft: false
@@ -18,7 +19,7 @@ In one line: DeepSeek V4 is Chinese lab DeepSeek's current open-weight model fam
 
 V4 is not a single model. **DeepSeek-V4-Pro** is the flagship, built for hard reasoning, agentic work, and demanding code. **DeepSeek-V4-Flash** is the fast, cheap workhorse for everything else. Both are [mixture-of-experts](https://geotoolbox.ai/glossary/mixture-of-experts) models, both ship a one-million-token context window, and both are released as [open weights](https://geotoolbox.ai/blog/open-weights-vs-open-source) under the MIT License, so you can download and run them yourself.
 
-Several things changed when V4 moved from preview to GA, and each one trips people up. DeepSeek announced a peak and off-peak pricing scheme for the API (not yet in effect). It retired the old `deepseek-chat` and `deepseek-reasoner` model names. And it quietly refreshed Flash to a new build, DeepSeek-V4-Flash-0731, on July 31, so the model you call today is not quite the one reviewers tested in May.
+Several things changed when V4 moved from preview to GA, and each one trips people up. It retired the old `deepseek-chat` and `deepseek-reasoner` model names on July 24. It quietly refreshed Flash to a new build, DeepSeek-V4-Flash-0731, on July 31, so the model you call today is not quite the one reviewers tested in May. And its pricing page now warns of a coming "significant" price increase, "subject to official notice."
 
 One limit to set expectations early: V4 is text in, text out. There is no image, audio, or video input, which is the clearest single gap against ChatGPT, Gemini, and Claude. If your work needs to read a screenshot or a chart, V4 is not the tool.
 
@@ -99,17 +100,7 @@ The web and mobile apps are free. The money question starts on the API, and this
 
 A few catches separate that sticker price from your actual bill.
 
-**Peak and off-peak pricing is coming, but it is not live yet.** At GA, DeepSeek announced that API requests during Beijing business hours will bill at twice the regular rate. As of August 2026 the rates above are flat all day; the multiplier is published but its start date is "subject to official announcement." When it lands, the doubled hours are 09:00 to 12:00 and 14:00 to 18:00 Beijing time (UTC+8). For US teams that is mostly good news, because peak in China falls on your off-hours:
-
-<table>
-<thead>
-<tr><th>Beijing (peak, 2x)</th><th>UTC</th><th>US Eastern</th><th>US Pacific</th></tr>
-</thead>
-<tbody>
-<tr><td>09:00-12:00</td><td>01:00-04:00</td><td>9:00 PM-midnight</td><td>6:00-9:00 PM</td></tr>
-<tr><td>14:00-18:00</td><td>06:00-10:00</td><td>2:00-6:00 AM</td><td>11:00 PM-3:00 AM</td></tr>
-</tbody>
-</table>
+**A price increase is likely coming, and DeepSeek is signaling it.** As of August 2026 the rates above are flat all day, with no time-of-day surcharge to schedule around. But the pricing page now carries an unusual warning: DeepSeek says it plans to "raise the overall pricing for DeepSeek API services in the near future, with a significant increase expected," the specifics "subject to official notice." (A peak/off-peak multiplier that circulated after V4's launch is not on the current pricing page.) In a market where these prices mostly fall, that is worth pricing into any budget you build on today's rates.
 
 **Thinking mode is on by default, and it bills at the output rate.** Before it answers, V4 generates internal reasoning tokens, and those count as output even though you never see them. A short reply can quietly produce thousands of billed tokens first. If your bill is higher than the sticker suggested, this is almost always why. Turn thinking off for routine work (classification, extraction, short replies) and leave it on only where the reasoning earns its cost.
 
@@ -186,8 +177,8 @@ Start with Flash for almost everything: chat, extraction, summarization, high-vo
 ### How much does DeepSeek V4 cost per month?
 The app is free. On the API your bill tracks your token volume, so the honest answer is to work it out from the table above: multiply your monthly input and output tokens by the Flash rates, and remember thinking mode adds billed reasoning tokens on top. Most individual use lands in a few dollars a month and scales from there; Pro runs about triple Flash for the same volume. Our [DeepSeek pricing](https://geotoolbox.ai/blog/deepseek-pricing) guide has worked examples. Cache hits and turning thinking off for simple tasks move the bill most.
 
-### When are DeepSeek's peak hours, and is peak pricing live?
-Peak pricing is announced but not yet in effect as of August 2026; the rates are currently flat all day. When it starts, peak hours are 09:00 to 12:00 and 14:00 to 18:00 Beijing time (UTC+8), which fall in the US evening and overnight, so US daytime work stays on the off-peak rate.
+### Is DeepSeek V4 about to get more expensive?
+Possibly. As of August 2026 the rates are flat all day, but DeepSeek's pricing page warns it plans to raise overall API pricing "in the near future, with a significant increase expected," the specifics "subject to official notice." No amount or date is given, so budget on today's rates but treat them as a floor, not a promise. (An earlier peak/off-peak surcharge that circulated after V4's launch is not on the current pricing page.)
 
 ### Why is my DeepSeek bill higher than the sticker price?
 Almost always because thinking mode is on by default and its reasoning tokens bill at the output rate, even though you never see them. Turn thinking off for routine tasks, and structure prompts to reuse a common prefix so more tokens hit the cheaper cache-hit rate.
@@ -212,7 +203,7 @@ It has not shipped. R2 was expected in 2025 and remains unreleased; V4's built-i
 
 ## Sources
 
-- DeepSeek API Models & Pricing (rates, peak/off-peak policy, model names) - DeepSeek, accessed August 2026 - `api-docs.deepseek.com/quick_start/pricing`
+- DeepSeek API Models & Pricing (rates, model names, forthcoming price-increase notice) - DeepSeek, accessed August 2026 - `api-docs.deepseek.com/quick_start/pricing`
 - DeepSeek-V4-Pro model card (architecture, parameters, vendor benchmarks, license) - DeepSeek on Hugging Face - `huggingface.co/deepseek-ai/DeepSeek-V4-Pro`
 - DeepSeek-V4 technical report (hybrid attention, long-context efficiency) - arXiv - `arxiv.org/abs/2606.19348`
 - CAISI Evaluation of DeepSeek V4 Pro (independent benchmarks, frontier-lag finding) - NIST, May 2026 - `nist.gov/news-events/news/2026/05/caisi-evaluation-deepseek-v4-pro`

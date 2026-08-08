@@ -2,17 +2,18 @@
 title: "Qu'est-ce que DeepSeek ? L'IA chinoise à poids ouverts"
 description: "Qu'est-ce que DeepSeek ? Le laboratoire chinois derrière R1, V3 et V4 : le mythe des 6 millions de dollars, poids ouverts vs open source, la CNIL et les prix."
 date: "2026-07-05"
-updated: "2026-07-20"
+updated: "2026-08-08"
+recheckBy: "2026-09-15"
 author: "Samy BEN SADOK"
 tags: ["cest-quoi-deepseek", "deepseek", "deepseek-r1", "open-weights", "chinese-ai", "llm", "guide"]
 draft: false
 locale: "fr"
 donorSlug: "what-is-deepseek"
-donorCommit: "5a3504b"
+donorCommit: "25c808a"
 noindex: false
 ---
 
-DeepSeek est le laboratoire chinois d'IA dont les modèles à poids ouverts et bon marché ont brièvement fait perdre à Nvidia un montant record de sa capitalisation boursière et mis le reste du secteur à cran. Si vous vous souvenez de la panique de janvier 2025 et voulez la version claire de ce qu'est réellement DeepSeek, qui le développe, s'il est sûr et où il en est aujourd'hui, voici l'essentiel, à jour en juillet 2026 et jusqu'à la version V4, que la plupart des articles explicatifs n'ont toujours pas intégrée.
+DeepSeek est le laboratoire chinois d'IA dont les modèles à poids ouverts et bon marché ont brièvement fait perdre à Nvidia un montant record de sa capitalisation boursière et mis le reste du secteur à cran. Si vous vous souvenez de la panique de janvier 2025 et voulez la version claire de ce qu'est réellement DeepSeek, qui le développe, s'il est sûr et où il en est aujourd'hui, voici l'essentiel, à jour en août 2026, maintenant que DeepSeek V4 est disponible dans sa version complète et stable, ce que la plupart des articles explicatifs n'ont toujours pas intégré.
 
 Ce dernier point a son importance. Presque tous les articles « qu'est-ce que DeepSeek » que vous trouverez ont été écrits pendant la frénésie autour de R1 début 2025, et s'arrêtent là. C'est vrai aussi côté français : les principales explications en français (Tenable, BFMTV, Le Temps) datent toutes de cette même semaine de janvier 2025 et n'ont jamais été mises à jour depuis. Nous couvrons ici ce qu'elles omettent ou déforment : la gamme de modèles actuelle, la véritable histoire derrière les fameux « 6 millions de dollars », la distinction entre poids ouverts et open source, la réalité des enjeux de sécurité et de la question chinoise, ce que dit précisément la CNIL, et ce qu'un modèle ouvert chinois puissant signifie pour la présence de votre marque dans les outils d'IA.
 
@@ -46,20 +47,20 @@ DeepSeek fait tourner deux gammes de modèles. La série V (V3, V4) regroupe des
 
 <table>
 <thead>
-<tr><th>Modèle (juillet 2026)</th><th>Sortie</th><th>Description</th></tr>
+<tr><th>Modèle (août 2026)</th><th>Sortie</th><th>Description</th></tr>
 </thead>
 <tbody>
 <tr><td><strong>DeepSeek-V3</strong></td><td>Décembre 2024</td><td>Modèle généraliste : 671 milliards de paramètres au total / 37 milliards actifs (mixture-of-experts, ou mélange d'experts), contexte de 128 000 tokens</td></tr>
 <tr><td><strong>DeepSeek-R1</strong></td><td>Janvier 2025</td><td>Le modèle de raisonnement à l'origine de la panique ; a égalé les performances d'OpenAI o1 sur des benchmarks clés, pour un coût bien inférieur</td></tr>
 <tr><td><strong>DeepSeek-V3.1</strong></td><td>Août 2025</td><td>Modèle hybride combinant un mode « réflexion » et un mode rapide sans réflexion</td></tr>
 <tr><td><strong>DeepSeek-V3.2</strong></td><td>Décembre 2025</td><td>Attention plus efficace sur les contextes longs</td></tr>
-<tr><td><strong>DeepSeek-V4</strong> (toujours en préversion au 19 juillet 2026 ; alias hérités retirés le 24 juillet 2026)</td><td>Avril 2026</td><td>V4-Pro (1 600 milliards de paramètres au total / 49 milliards actifs) et V4-Flash (284 milliards / 13 milliards actifs), tous deux avec un contexte de 1 million de tokens</td></tr>
+<tr><td><strong>DeepSeek-V4</strong> (disponible en version stable depuis le 20 juillet 2026)</td><td>Avril 2026 (préversion), version stable en juillet 2026</td><td>V4-Pro (1 600 milliards de paramètres au total / 49 milliards actifs) et V4-Flash (284 milliards / 13 milliards actifs), tous deux avec un contexte de 1 million de tokens</td></tr>
 </tbody>
 </table>
 
-Quelques points à retenir. La plupart de ces modèles sont de type « mélange d'experts » (mixture-of-experts, ou MoE) : ils comportent un nombre considérable de paramètres, mais n'en activent qu'une petite partie pour chaque [token](https://geotoolbox.ai/blog/what-are-tokens-in-ai), ce qui explique leur faible coût d'exécution. Le vrai tournant d'avril 2026 a été la [préversion de V4](https://api-docs.deepseek.com/news/news260424), qui a porté la fenêtre de contexte à un million de tokens et donné naissance à deux modèles distincts : un modèle Flash rapide et un modèle Pro plus lourd, tous deux publiés en poids ouverts sous licence MIT.
+Quelques points à retenir. La plupart de ces modèles sont de type « mélange d'experts » (mixture-of-experts, ou MoE) : ils comportent un nombre considérable de paramètres, mais n'en activent qu'une petite partie pour chaque [token](https://geotoolbox.ai/blog/what-are-tokens-in-ai), ce qui explique leur faible coût d'exécution. Le vrai tournant d'avril 2026 a été la [préversion de V4](https://api-docs.deepseek.com/news/news260424), qui a porté la fenêtre de contexte à un million de tokens et donné naissance à deux modèles distincts : un modèle Flash rapide et un modèle Pro plus lourd, tous deux publiés en poids ouverts sous licence MIT. V4 a été proposé en préversion à partir du 24 avril, puis est passé en version stable le 20 juillet 2026, le modèle Flash étant mis à jour vers la version DeepSeek-V4-Flash-0731 fin juillet. (Curieusement, la fiche du modèle V4-Pro décrit toujours « une version préliminaire de la série DeepSeek-V4 », alors même que le produit est sorti.) Le 24 juillet 2026, les anciens alias deepseek-chat et deepseek-reasoner ont été retirés.
 
-Il manque toujours un modèle qu'on nous demande sans cesse : DeepSeek-R2. Attendu en 2025, il n'a toujours pas été publié à ce jour. Certaines informations suggèrent que Liang Wenfeng n'était pas satisfait des performances du modèle, et évoquent aussi des difficultés matérielles liées à la volonté d'entraîner le modèle sur des puces Huawei fabriquées en Chine. La gamme évoluant tous les deux mois environ, considérez ce tableau comme un instantané de juillet 2026 et vérifiez la fiche du modèle que vous utilisez réellement. (DeepSeek a par ailleurs annoncé le passage de V4 en version stable, sortie de préversion, pour la mi-juillet 2026 ; vérifiez si c'est déjà le cas au moment de votre lecture.)
+Il manque toujours un modèle qu'on nous demande sans cesse : DeepSeek-R2. Attendu en 2025, il n'a toujours pas été publié à ce jour. Certaines informations suggèrent que Liang Wenfeng n'était pas satisfait des performances du modèle, et évoquent aussi des difficultés matérielles liées à la volonté d'entraîner le modèle sur des puces Huawei fabriquées en Chine. La gamme évoluant tous les deux mois environ, considérez ce tableau comme un instantané d'août 2026 et vérifiez la fiche du modèle que vous utilisez réellement.
 
 ## Pourquoi DeepSeek a bouleversé le marché, et le mythe des 6 millions de dollars
 
@@ -80,7 +81,7 @@ DeepSeek est présenté comme open source à peu près partout, y compris par de
 
 Ce que vous ne pouvez pas faire, c'est le reconstruire. Les poids ouverts, cela veut dire que les fichiers finaux du modèle sont publics. L'open source, au sens strict, impliquerait aussi de publier les données d'entraînement et suffisamment de détails sur la méthode pour reproduire le modèle à partir de zéro. DeepSeek publie des articles détaillés, plus que la plupart des autres, mais ne divulgue pas ses données d'entraînement : vous pouvez donc utiliser le modèle librement sans pouvoir en auditer ou en recréer intégralement la fabrication.
 
-Cette distinction n'est pas que théorique, car elle change ce à quoi vous pouvez vraiment vous fier et ce que vous pouvez réellement maîtriser. C'est aussi une nuance qu'aucune des principales sources françaises sur le sujet, y compris certaines qui devraient le savoir, ne fait correctement à ce jour : la plupart parlent d'« open source » sans distinction, y compris quand elles citent la licence MIT et l'absence de données d'entraînement publiées dans le même paragraphe. La même vague de modèles à poids ouverts, DeepSeek, Kimi, [le GLM de Zhipu](https://geotoolbox.ai/blog/what-is-glm-5-2), [Qwen](https://geotoolbox.ai/blog/what-is-qwen), Llama, Mistral, redéfinit le marché précisément parce que les poids sont libres de circuler, même si aucun d'entre eux n'est ouvert au sens strict du terme. Si vous comparez DeepSeek au reste, notre guide [comparatif des principaux modèles chinois](https://geotoolbox.ai/blog/chinese-ai-models-compared) les met dans un même tableau. Et cela met en évidence le point le plus pratique sur la sécurité de DeepSeek : puisque les poids sont publics et sous licence MIT, vous n'êtes pas obligé d'utiliser les serveurs de DeepSeek, ce qui change complètement la donne côté confidentialité.
+Cette distinction n'est pas que théorique, car elle change ce à quoi vous pouvez vraiment vous fier et ce que vous pouvez réellement maîtriser. C'est aussi une nuance qu'aucune des principales sources françaises sur le sujet, y compris certaines qui devraient le savoir, ne fait correctement à ce jour : la plupart parlent d'« open source » sans distinction, y compris quand elles citent la licence MIT et l'absence de données d'entraînement publiées dans le même paragraphe. La même vague de modèles à poids ouverts, DeepSeek, Kimi, [le GLM de Zhipu](https://geotoolbox.ai/blog/what-is-glm-5-2), [Qwen](https://geotoolbox.ai/blog/what-is-qwen), Llama, Mistral, et désormais [Inkling](https://geotoolbox.ai/fr/blog/cest-quoi-inkling), conçu aux États-Unis, redéfinit le marché précisément parce que les poids sont libres de circuler, même si aucun d'entre eux n'est ouvert au sens strict du terme. Si vous comparez DeepSeek au reste, notre guide [comparatif des principaux modèles chinois](https://geotoolbox.ai/blog/chinese-ai-models-compared) les met dans un même tableau. Et cela met en évidence le point le plus pratique sur la sécurité de DeepSeek : puisque les poids sont publics et sous licence MIT, vous n'êtes pas obligé d'utiliser les serveurs de DeepSeek, ce qui change complètement la donne côté confidentialité.
 
 ## DeepSeek est-il sûr ? Confidentialité, interdictions et la question chinoise
 
@@ -126,11 +127,11 @@ Côté capacités, c'est sur le raisonnement, le code et le prix que DeepSeek ri
 
 ## DeepSeek est-il gratuit ? Tarifs et modalités d'accès
 
-Oui, DeepSeek est gratuit via l'application web et les applications mobiles, sans paiement requis. C'est surtout l'API qui se démarque, avec des tarifs nettement inférieurs à ceux des laboratoires américains. Les chiffres ci-dessous sont les [tarifs actuels de l'API V4](https://api-docs.deepseek.com/quick_start/pricing) ; ils évoluent, et les anciens alias de modèles (deepseek-chat, deepseek-reasoner) seront retirés le 24 juillet 2026, donc vérifiez avant de développer dessus. Avec le passage de V4 en version stable (prévu mi-juillet 2026), DeepSeek introduira par ailleurs une tarification différenciée heures pleines / heures creuses : les heures pleines (9 h–12 h et 14 h–18 h, heure de Pékin) seront facturées au double du tarif des heures creuses, et un préavis de 24 h par e-mail est envoyé avant tout changement de facturation.
+Oui, DeepSeek est gratuit via l'application web et les applications mobiles, sans paiement requis. C'est surtout l'API qui se démarque, avec des tarifs nettement inférieurs à ceux des laboratoires américains. Les chiffres ci-dessous sont les [tarifs actuels de l'API V4](https://api-docs.deepseek.com/quick_start/pricing) ; ils évoluent, et les anciens alias de modèles (deepseek-chat, deepseek-reasoner) ont été retirés le 24 juillet 2026 : appelez désormais directement deepseek-v4-flash et deepseek-v4-pro. À noter aussi : au 8 août 2026, la page tarifaire de DeepSeek prévient que l'entreprise compte « augmenter la tarification globale » de l'API « dans un avenir proche, avec une augmentation importante à prévoir », les modalités précises restant « sous réserve d'une annonce officielle ». Les tarifs ci-dessous sont donc encore appliqués de façon uniforme, sans distinction d'horaire, mais mieux vaut les traiter comme un plancher que comme une promesse. (Un système d'heures pleines / heures creuses a circulé après le lancement de V4, mais il ne figure pas sur la page tarifaire actuelle.)
 
 <table>
 <thead>
-<tr><th>Usage</th><th>Prix (juillet 2026)</th><th>Ce que vous obtenez</th></tr>
+<tr><th>Usage</th><th>Prix (août 2026)</th><th>Ce que vous obtenez</th></tr>
 </thead>
 <tbody>
 <tr><td><strong>Chat gratuit</strong></td><td>Gratuit</td><td>Accès web et mobile, aucune configuration</td></tr>
@@ -160,7 +161,7 @@ Cela dépend de l'usage. Les modèles ont des garde-fous comme n'importe quel as
 
 ### DeepSeek est-il gratuit ?
 
-Oui. Les applications web et mobile sont gratuites, et l'API figure parmi les moins chères de tous les modèles majeurs, environ 0,14 $ par million de tokens en entrée pour V4-Flash en juillet 2026. Les poids ouverts sont aussi gratuits à télécharger et exécuter sous licence MIT si vous avez le matériel. Les prix évoluent, vérifiez la page officielle des tarifs.
+Oui. Les applications web et mobile sont gratuites, et l'API figure parmi les moins chères de tous les modèles majeurs, environ 0,14 $ par million de tokens en entrée pour V4-Flash en août 2026. Les poids ouverts sont aussi gratuits à télécharger et exécuter sous licence MIT si vous avez le matériel. Les prix évoluent, vérifiez la page officielle des tarifs.
 
 ### DeepSeek est-il interdit aux États-Unis ?
 
