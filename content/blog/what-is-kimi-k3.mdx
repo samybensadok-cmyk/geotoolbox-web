@@ -2,8 +2,8 @@
 title: "What Is Kimi K3? Moonshot AI's 2.8T Open Model, Explained"
 description: "What is Kimi K3? Moonshot AI's open-weight model explained: real specs, which benchmarks to trust, pricing, whether you can run it, and K2 vs DeepSeek."
 date: "2026-07-17"
-recheckBy: "2026-08-31"  # weights now public (July 27); recheck for independent benchmarks + reasoning_effort levels landing
-updated: "2026-07-28"
+recheckBy: "2026-08-31"  # weights public (July 27); reasoning_effort low/high/max landed (confirmed 2026-08-08); recheck for independent benchmarks + Qwen3.8 open-weights window (~Aug 10)
+updated: "2026-08-08"
 author: "Samy BEN SADOK"
 tags: ["kimi-k3", "kimi-ai", "moonshot-ai", "open-weights", "mixture-of-experts", "chinese-ai", "llm", "guide"]
 draft: false
@@ -35,7 +35,7 @@ Kimi K3 holds 2.8 trillion parameters in total but activates only 16 of 896 expe
 
 The headline architecture change is Kimi Delta Attention, a hybrid linear-attention design that, in Moonshot's own Kimi Linear research, decodes up to 6.3 times faster at long context. It is paired with Attention Residuals, which pull information across model depth for a claimed efficiency gain at minimal extra cost, and Gated MLA for sharper attention. Roughly three out of every four attention layers use the cheaper linear form, which is what cuts the memory footprint enough to make a 1M window practical rather than theoretical.
 
-The practical specs matter more than the internals for most readers. Kimi K3 takes text, images, and video as input and returns text, with a [context window](https://geotoolbox.ai/glossary/context-window) of 1,048,576 tokens and default output up to 131,072. Reasoning is always on, but at launch the `reasoning_effort` control accepts only one setting, "max," with more levels promised later, and the sampling parameters are locked server-side. Put simply: K3 thinks hard on every request whether you want it to or not, which shows up later in both the speed and the bill.
+The practical specs matter more than the internals for most readers. Kimi K3 takes text, images, and video as input and returns text, with a [context window](https://geotoolbox.ai/glossary/context-window) of 1,048,576 tokens and default output up to 131,072. Reasoning is always on, and the `reasoning_effort` control now accepts three levels, `low`, `high`, and `max`, defaulting to `max`; the sampling parameters are locked server-side. At launch only `max` was available, so early write-ups describe a single-setting model. Put simply: K3 always thinks, and unless you dial the effort down it thinks hard on every request, which shows up in both the speed and the bill.
 
 ## The Benchmarks, and Which Ones You Can Actually Trust
 
@@ -100,7 +100,7 @@ Per-token pricing is only half the story, and it is not the half that bit early 
 
 The mechanism is measurable. Artificial Analysis needed 130 million tokens to run K3 through its Intelligence Index against a 63 million average across the field, roughly double. In Simon Willison's test, a single SVG generation returned 16,658 output tokens of which 13,241 were reasoning, costing 25 cents for one image. Several users independently describe the same trace pattern behind it: paragraphs of "wait, actually" as the model backtracks and second-guesses itself on small details.
 
-This is where the locked `reasoning_effort` setting stops being a footnote. Because "max" is the only accepted value at launch, there is no cheap mode to fall back to. Every request, however trivial, pays full reasoning tokens at the $15 output rate. It also makes K3 slow enough to break evaluation harnesses: one public comparison had to raise a five-minute per-task timeout to thirty, and one task still took around nine minutes. Moonshot and OpenRouter both say more levels are coming, and until they land, budget for the ceiling on every call.
+This is where `reasoning_effort` stops being a footnote. At launch "max" was the only accepted value, with no cheaper mode to fall back to; Moonshot has since added `low` and `high`, but `max` is still the default, so every request you do not explicitly turn down pays full reasoning tokens at the $15 output rate. Max effort also makes K3 slow enough to break evaluation harnesses: one public comparison had to raise a five-minute per-task timeout to thirty, and one task still took around nine minutes. If cost or latency matters, set the effort level explicitly rather than leaving it at the default.
 
 One more thing worth naming: almost nobody can measure their own burn. The plans report usage as an opaque percentage rather than tokens, which is why some users route their coding subscriptions through a gateway purely to get visibility into what they are actually spending.
 
