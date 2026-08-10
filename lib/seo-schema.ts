@@ -110,7 +110,12 @@ export function articleSchema(post: {
   url?: string
 }) {
   const pageUrl = post.url ?? `${siteConfig.url}/blog/${post.slug}`
-  const fallbackImage = `${siteConfig.url}/blog/${post.slug}/opengraph-image`
+  // Must mirror the URL Next's metadata-image convention actually serves:
+  // <pageUrl>/opengraph-image/og — the `/og` segment comes from
+  // generateImageMetadata in [slug]/opengraph-image.tsx, and pageUrl carries
+  // the locale prefix for fr/es. The bare `/blog/<slug>/opengraph-image`
+  // shape 404s on every locale.
+  const fallbackImage = `${pageUrl}/opengraph-image/og`
   const profile = getAuthorByName(post.author)
   const author = profile
     ? {
