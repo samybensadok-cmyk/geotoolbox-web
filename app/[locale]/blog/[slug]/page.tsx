@@ -8,6 +8,7 @@ import { getMdxComponents } from "@/components/mdx"
 import { formatDate } from "@/lib/utils"
 import { routing, bcp47, type Locale } from "@/i18n/routing"
 import { alternatesFor, urlFor } from "@/lib/i18n/siblings"
+import { rehypeLocalizeLinks } from "@/lib/i18n/rehype-localize-links"
 import { setRequestLocale, getTranslations, getMessages } from "next-intl/server"
 import { frenchTypography, rehypeFrenchTypography } from "@/lib/french-typography"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
@@ -299,6 +300,9 @@ export default async function BlogPost({
                     rehypePlugins: [
                       [rehypeShiki, { themes: { light: "github-light", dark: "one-dark-pro" } }],
                       ...(isFr ? [rehypeFrenchTypography] : []),
+                      // Localize hrefs on ALL anchors (incl. raw-HTML links inside
+                      // `<table>` grids, which the `a` component override misses).
+                      ...(locale !== routing.defaultLocale ? [rehypeLocalizeLinks(locale)] : []),
                     ],
                   },
                 }}

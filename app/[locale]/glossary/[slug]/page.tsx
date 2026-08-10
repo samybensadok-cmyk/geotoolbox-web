@@ -11,6 +11,7 @@ import {
 import { getMdxComponents } from "@/components/mdx"
 import { formatDate } from "@/lib/utils"
 import { routing } from "@/i18n/routing"
+import { rehypeLocalizeLinks } from "@/lib/i18n/rehype-localize-links"
 import { alternatesFor, urlFor } from "@/lib/i18n/siblings"
 import { localePath } from "@/lib/i18n/paths"
 import { setRequestLocale } from "next-intl/server"
@@ -117,6 +118,7 @@ export default async function GlossaryEntry({
                   mdxOptions: {
                     rehypePlugins: [
                       [rehypeShiki, { themes: { light: "github-light", dark: "one-dark-pro" } }],
+                      ...(locale !== routing.defaultLocale ? [rehypeLocalizeLinks(locale)] : []),
                     ],
                   },
                 }}
