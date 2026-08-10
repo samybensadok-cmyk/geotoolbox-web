@@ -19,8 +19,20 @@ export function cleanLlmExcerpt(raw: string): string {
   /* Headings: "### My recommendations" → "My recommendations". */
   s = s.replace(/^#{1,6}\s*/gm, "")
 
-  /* Markdown links keep their label: "[www.g2.com](https://…)" → "www.g2.com". */
-  s = s.replace(/\[([^\]]+)\]\((?:[^)]*)\)/g, "$1")
+  /* Asterisk bullets read as stray stars once emphasis is stripped. */
+  s = s.replace(/^[ \t]*\*[ \t]+/gm, "- ")
+
+  /* The excerpt is clamped upstream and routinely cuts INSIDE a trailing
+     "[label](https://…" citation link — drop the severed link entirely so a
+     raw half-URL never ships. */
+  s = s.replace(/\s*\[[^\]]*\]\([^)]*$/, "").replace(/\s*\[[^\]]*$/, "")
+
+  /* Markdown links: a bare-hostname label ("[www.g2.com](https://…)") is an
+     inline citation — the report's Cited chips already carry the sources, so
+     drop it. A worded label keeps its text. Spacing is normalized below. */
+  s = s.replace(/\[([^\]]+)\]\((?:[^)]*)\)/g, (_m, label: string) =>
+    /^[\w-]+(?:\.[\w-]+)+$/.test(label.trim()) ? " " : ` ${label} `
+  )
 
   /* Numeric citation runs "[1][2][13]" point at footnotes we don't show. */
   s = s.replace(/(?:\[\d{1,3}\])+/g, "")
@@ -31,7 +43,9 @@ export function cleanLlmExcerpt(raw: string): string {
   /* Whitespace: spaces before punctuation left by stripped markers, 3+ blank
      lines, trailing space per line. */
   s = s
+    .replace(/[ \t]{2,}/g, " ")
     .replace(/[ \t]+([.,;:!?])/g, "$1")
+    .replace(/\n[ \t]+/g, "\n")
     .replace(/[ \t]+\n/g, "\n")
     .replace(/\n{3,}/g, "\n\n")
     .trim()
