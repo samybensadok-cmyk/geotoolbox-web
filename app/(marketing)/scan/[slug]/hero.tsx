@@ -1,5 +1,6 @@
 import { EngineMark } from "@/components/landing/engine-marks"
 import { ScoreLegend } from "@/components/features/score-legend"
+import { ExcerptText } from "./excerpt"
 import {
   clampPct,
   fmtDate,
@@ -270,8 +271,8 @@ function LostDeal({ row }: { row: NonNullable<LgsPublicV1["lost_deal"]> }) {
       <p className="mt-3 text-[14px] leading-relaxed text-gray-600">
         Someone in your market asked an AI engine this, and here is what came back.
       </p>
-      <blockquote className="mt-4 rounded-xl border border-gray-100 bg-gray-50 p-4 text-[15px] italic leading-relaxed text-gray-800">
-        {row.excerpt}
+      <blockquote className="mt-4 whitespace-pre-line rounded-xl border border-gray-100 bg-gray-50 p-4 text-[15px] italic leading-relaxed text-gray-800">
+        <ExcerptText text={row.excerpt} />
       </blockquote>
       <p className="mt-3 font-mono text-[11px] leading-relaxed text-gray-500">
         — Perplexity, answering &ldquo;{row.prompt}&rdquo;

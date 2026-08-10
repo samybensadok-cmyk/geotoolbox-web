@@ -1,4 +1,5 @@
 import { EngineMark } from "@/components/landing/engine-marks"
+import { ExcerptText } from "./excerpt"
 import {
   cellState,
   competitorHosts,
@@ -274,8 +275,8 @@ export function WinLose({ data }: { data: LgsPublicV1 }) {
                       aria-hidden="true"
                       className="absolute inset-y-0 left-0 w-[3px] bg-accent-600"
                     />
-                    <blockquote className="text-[15px] italic leading-relaxed text-gray-800">
-                      {row.excerpt}
+                    <blockquote className="whitespace-pre-line text-[15px] italic leading-relaxed text-gray-800">
+                      <ExcerptText text={row.excerpt} />
                     </blockquote>
                     <figcaption className="mt-3 font-mono text-[11px] leading-relaxed text-gray-500">
                       — {meta ? meta.name : row.engine}, answering &ldquo;{row.prompt}&rdquo;
