@@ -15,14 +15,24 @@ import { makeLocalizer } from "./siblings"
 // /<locale>/... links are returned unchanged. Idempotent with the component
 // override (re-running localize on an already-localized href is a no-op), and a
 // no-op for the default locale (en), where it should not be wired in at all.
+// Anchors reach the rehype stage in two shapes: markdown-origin links are hast
+// `element` nodes (tagName/properties); anchors written as raw HTML/JSX in the
+// MDX source (the `<table>` grids) are `mdxJsxTextElement`/`mdxJsxFlowElement`
+// nodes (name/attributes) — the SAME reason raw HTML bypasses the components
+// map. We must handle both, or the raw-HTML links this plugin exists to fix are
+// silently skipped.
+type MdxJsxAttribute = { type: string; name?: string; value?: unknown }
 type HastNode = {
   type: string
   tagName?: string
+  name?: string
   properties?: { href?: unknown; [k: string]: unknown }
+  attributes?: MdxJsxAttribute[]
   children?: HastNode[]
 }
 
 function walk(node: HastNode, localize: (href: string) => string): void {
+  // markdown-origin anchor
   if (
     node.type === "element" &&
     node.tagName === "a" &&
@@ -30,6 +40,19 @@ function walk(node: HastNode, localize: (href: string) => string): void {
     typeof node.properties.href === "string"
   ) {
     node.properties.href = localize(node.properties.href)
+  }
+  // raw-HTML / JSX-origin anchor
+  if (
+    (node.type === "mdxJsxTextElement" || node.type === "mdxJsxFlowElement") &&
+    node.name === "a" &&
+    Array.isArray(node.attributes)
+  ) {
+    for (const attr of node.attributes) {
+      // skip mdxJsxExpressionAttribute (no name) and expression-valued hrefs
+      if (attr.type === "mdxJsxAttribute" && attr.name === "href" && typeof attr.value === "string") {
+        attr.value = localize(attr.value)
+      }
+    }
   }
   if (node.children) for (const child of node.children) walk(child, localize)
 }
