@@ -1,8 +1,8 @@
 ---
-title: "Claude Opus 5 : prix, benchmarks et ce qui change vraiment"
-description: "Claude Opus 5, lancé le 24 juillet 2026 au prix de l'Opus 4.8. Les cinq niveaux d'effort, le coût réel par tâche en euros et ce qui casse à la mise à niveau."
+title: "Claude Opus 5 : prix en euros, benchmarks et ce qui change vraiment"
+description: "Le vrai prix de Claude Opus 5 en euros, les cinq niveaux d'effort qui peuvent doubler la facture, et ce qui casse quand vous migrez depuis Opus 4.8."
 date: "2026-07-25"
-updated: "2026-08-07"
+updated: "2026-08-10"
 author: "Samy BEN SADOK"
 tags: ["claude-opus-5", "claude", "anthropic", "opus-5", "llm", "guide"]
 draft: false
@@ -30,7 +30,7 @@ Tout cela est vérifiable. Et l'essentiel ne figure pas dans l'article de lancem
 
 Claude Opus 5 est le modèle de la gamme Opus d'Anthropic, lancé le 24 juillet 2026. Son coût par token est identique à celui d'Opus 4.8 et ses performances sont assez proches de celles de [Claude Fable 5](https://geotoolbox.ai/blog/fable-5-ban) pour qu'Anthropic le présente comme un modèle frôlant l'intelligence de pointe, à moitié prix.
 
-Il s'agit d'un [modèle de raisonnement](https://geotoolbox.ai/glossary/reasoning-model) ; c'est le modèle par défaut sur Claude Max et le modèle le plus puissant disponible sur Claude Pro. Il n'est pas inclus dans l'offre gratuite.
+Il s'agit d'un [modèle de raisonnement](https://geotoolbox.ai/glossary/reasoning-model) ; c'est le modèle par défaut sur Claude Max et le modèle le plus puissant disponible sur Claude Pro. Il n'est pas inclus dans la formule gratuite.
 
 <table>
   <thead>
@@ -42,7 +42,7 @@ Il s'agit d'un [modèle de raisonnement](https://geotoolbox.ai/glossary/reasonin
     <tr><td><strong>Tarification</strong></td><td>5 $ par million de tokens en entrée, 25 $ en sortie</td></tr>
     <tr><td><strong>Fenêtre de contexte</strong></td><td>1 million de tokens (valeur par défaut et maximale)</td></tr>
     <tr><td><strong>Sortie maximale</strong></td><td>128 000 tokens (jusqu'à 300 000 via l'API Batch avec l'en-tête bêta <code>output-300k-2026-03-24</code>)</td></tr>
-    <tr><td><strong>Date limite des connaissances</strong></td><td>Mai 2026</td></tr>
+    <tr><td><strong>Date de coupure des connaissances</strong></td><td>Mai 2026</td></tr>
     <tr><td><strong>Niveaux d'effort</strong></td><td>Cinq : low, medium, high, xhigh, max (par défaut <code>high</code>)</td></tr>
     <tr><td><strong>Mode rapide</strong></td><td>Vitesse environ 2,5 fois supérieure, à 10 $ / 50 $ par million de tokens</td></tr>
     <tr><td><strong>Disponibilité</strong></td><td>API Claude, Claude Pro / Max / Team / Enterprise, Claude Code, Bedrock, Google Cloud</td></tr>
@@ -76,13 +76,13 @@ Voici ce qui en fait plus qu'un simple curseur de vitesse. Le niveau d'effort r�
 
 Deux conséquences faciles à manquer en découlent.
 
-D'abord, la consigne d'Anthropic n'est pas « montez le curseur ». La documentation recommande de commencer à `high` et « d'utiliser sans réserve `low` et `medium` comme principal levier de contrôle du coût des tokens et du temps de réponse, partout où vos évaluations montrent que la qualité tient ». Un fournisseur qui vous dit de dépenser moins, c'est assez inhabituel pour être pris au sérieux, et la System Card en donne la raison. Sur FrontierBench v0.1, le meilleur résultat d'Opus 5 est obtenu à `xhigh`, pas à `max`, « `max` obtenant un score similaire, dans la marge de bruit ». Et la montée en gamme se paie cher pour peu de points : `high` obtient 39 % contre 44,4 % pour `xhigh` en consommant 19 % de tokens de sortie en moins, et `low` obtient 25 % pour 64 % de tokens en moins.
+D'abord, la consigne d'Anthropic n'est pas « montez le curseur ». La documentation recommande de commencer à `high` et « d'utiliser sans réserve `low` et `medium` comme principal levier de contrôle du coût des tokens et du temps de réponse, partout où vos évaluations montrent que la qualité tient ». Un fournisseur qui vous dit de dépenser moins, c'est assez inhabituel pour être pris au sérieux, et la System Card en donne la raison. Sur FrontierBench v0.1, le meilleur résultat d'Opus 5 est obtenu à `xhigh`, pas à `max`, « `max` obtenant un score similaire, dans la marge de bruit ». Sous ce niveau, la courbe devient vite coûteuse : `high` obtient 39 % contre 44,4 % pour `xhigh` en consommant 19 % de tokens de sortie en moins, et `low` obtient 25 % pour 64 % de tokens en moins.
 
 La même tendance se retrouve sur AutomationBench, et cette fois Anthropic y met un prix. À effort max, Opus 5 obtient 26,0 %. À effort medium, il obtient 24 % « pour un coût de 0,89 $ par tâche, surpassant nettement Claude Opus 4.8 comme Fable 5 pour moins de la moitié du coût ». Deux points de score pour environ le double de la dépense, d'après la propre évaluation d'Anthropic.
 
 Attention à ne pas pousser l'argument trop loin. Sur AutomationBench, `max` a bel et bien obtenu le meilleur score, et Anthropic le documente comme le réglage le plus performant. La lecture honnête est plus étroite, mais reste utile : le haut du curseur est toujours le réglage le plus cher, et sur deux des benchmarks d'Anthropic, un réglage inférieur arrive à quelques points près pour une fraction de la dépense. C'est tout l'intérêt de mener une analyse par paliers sur vos propres évaluations avant de vous fixer sur un niveau.
 
-Ensuite, l'effort n'est pas une nouveauté d'Opus 5. Le même paramètre fonctionne sur Opus 4.5 et les versions suivantes, ainsi que sur Sonnet 5 et Fable 5. Ce qui a changé, c'est le coût de ce choix, l'objet de la section suivante. Si vous avez repris des réglages d'un modèle antérieur, la documentation est claire : refaites une analyse par paliers sur vos évaluations au lieu de les réutiliser, et l'effort ne raccourcit pas de façon fiable les réponses visibles sur Opus 5. Si vous voulez des réponses plus courtes, demandez des réponses plus courtes.
+Ensuite, l'effort n'est pas une nouveauté d'Opus 5. Le même paramètre fonctionne sur Opus 4.5 et les versions suivantes, ainsi que sur Sonnet 5 et Fable 5. Ce qui a changé, c'est le coût de ce choix, l'objet de la section suivante. Si vous avez repris des réglages d'un modèle antérieur, la documentation est claire : refaites une analyse par paliers sur vos évaluations au lieu de réutiliser ces réglages, et l'effort ne raccourcit pas de façon fiable les réponses visibles sur Opus 5. Si vous voulez des réponses plus courtes, demandez des réponses plus courtes.
 
 ## Le prix de Claude Opus 5
 
@@ -105,15 +105,15 @@ Opus 5 coûte 5 $ par million de tokens en entrée et 25 $ par million en sortie
   </tbody>
 </table>
 
-La colonne Sonnet 5 correspond à un tarif de lancement valable jusqu'au 31 août 2026. À compter du 1er septembre, il passe à 3 $ et 15 $, ce qui réduit nettement l'écart avec Opus 5 : à modéliser dès maintenant si Sonnet 5 porte du volume chez vous.
+La colonne Sonnet 5 correspond à un tarif de lancement valable jusqu'au 31 août 2026. À compter du 1er septembre, il passe à 3 $ et 15 $, ce qui réduit nettement l'écart avec Opus 5 : à modéliser dès maintenant si l'essentiel de votre volume tourne sur Sonnet 5.
 
-Trois détails de la colonne Opus 5 méritent d'être isolés.
+Trois détails de la colonne Opus 5 méritent qu'on s'y arrête.
 
 **Il n'y a pas de supplément pour le contexte long.** La fenêtre complète d'un million de tokens est facturée au tarif standard. Une requête de 900 000 tokens coûte le même prix par token qu'une de 9 000. C'est un vrai facteur de différenciation face aux modèles qui appliquent un multiplicateur au-delà d'un seuil.
 
-**Le mode rapide est un choix produit distinct.** Il tourne environ 2,5 fois plus vite pour le double du prix, sous forme de préversion de recherche limitée à l'API Claude native. L'API Batch et les clouds partenaires ne le proposent pas.
+**Le mode rapide est un choix produit distinct.** Il tourne environ 2,5 fois plus vite pour le double du prix, sous forme de préversion, limitée à l'API Claude native. L'API Batch et les clouds partenaires ne le proposent pas.
 
-**La taille minimale de prompt cacheable est descendue à 512 tokens**, contre 1 024 sur Opus 4.8. Si vous mettez en cache de courts prompts système qui passaient sous le seuil, ils deviennent éligibles.
+**La taille minimale d'un prompt pouvant être mis en cache est descendue à 512 tokens**, contre 1 024 sur Opus 4.8. Si vous mettez en cache de courts prompts système qui passaient sous le seuil, ils deviennent éligibles.
 
 <Callout type="note" title="Et en euros ? Le vrai coût pour la France">
 Anthropic facture en dollars et affiche des prix hors taxe. Pour une entreprise disposant d'un numéro de TVA intracommunautaire, la TVA s'autoliquide : la facture API reste hors taxe, autour de 4,40 € pour un million de tokens en entrée et 22,00 € en sortie (au taux d'environ 1,14 $ pour 1 €, constaté le 25 juillet 2026). Pour un particulier, en revanche, la TVA française de 20 % s'ajoute au tarif affiché : sur cette base, l'abonnement Claude Pro à 20 $ hors taxe revient à environ 21 € TTC par mois, et Claude Max à environ 105 € ou 210 € TTC, selon le taux de change et la tarification appliqués au paiement. Aucun de ces montants ne correspond à une conversion « 20 $ = 20 € » : les dollars affichés sont hors taxe, et l'euro n'est pas à parité.
@@ -121,15 +121,15 @@ Anthropic facture en dollars et affiche des prix hors taxe. Pour une entreprise 
 
 Pour situer ces tarifs API face aux formules d'abonnement, voyez notre décryptage des [tarifs de Claude selon les formules](https://geotoolbox.ai/blog/claude-pricing).
 
-## Le prix du token est stable. Le coût par tâche, moins sûr.
+## Le prix du token est stable. Le coût par tâche, pas forcément.
 
-« Même prix que l'Opus 4.8 » : c'est le titre que tout le monde a repris. C'est vrai par token, et ce n'est pas toute la facture.
+« Même prix que l'Opus 4.8 » : c'est le titre que tout le monde a repris. C'est vrai à l'échelle du token, et ce n'est pas toute la facture.
 
 Deux changements poussent la consommation de tokens vers le haut. La réflexion (thinking) est désormais activée par défaut, là où les requêtes équivalentes sur Opus 4.8 tournaient sans elle. Et le guide de prompting d'Anthropic reconnaît que les réponses sont maintenant plus longues que sur les modèles Opus précédents.
 
 Plus de tokens par tâche au même tarif par token, cela donne une facture plus élevée par tâche.
 
-[Artificial Analysis](https://artificialanalysis.ai/articles/opus-5), qui fait tourner sa propre suite d'évaluation indépendante, l'a mesuré. Son constat : à effort max, Opus 5 « coûte en moyenne 2,03 $ par tâche de l'Intelligence Index, sous Claude Fable 5 (avec repli) à 2,75 $, mais toujours au-dessus de Claude Opus 4.8 (max) à 1,80 $ et de Claude Sonnet 5 (max) à 1,53 $ ».
+[Artificial Analysis](https://artificialanalysis.ai/articles/opus-5), qui fait tourner sa propre suite d'évaluation indépendante, l'a mesuré. Son constat : à effort max, Opus 5 « coûte en moyenne 2,03 $ par tâche de l'Intelligence Index, en dessous de Claude Fable 5 (avec repli) à 2,75 $, mais toujours au-dessus de Claude Opus 4.8 (max) à 1,80 $ et de Claude Sonnet 5 (max) à 1,53 $ ».
 
 <table>
   <thead>
@@ -145,7 +145,7 @@ Plus de tokens par tâche au même tarif par token, cela donne une facture plus 
 
 Lisez ce tableau deux fois. Face à Fable 5, Opus 5 est la façon la moins chère d'acheter une intelligence comparable, et Artificial Analysis chiffre l'économie à 26 %. Face à son propre prédécesseur, il coûte **plus cher par tâche** à effort max, à prix par token identique, parce qu'il dépense plus de tokens pour y arriver.
 
-Le niveau d'effort est l'endroit où vous récupérez cette différence. Faire tourner le même Intelligence Index à effort max a coûté 3 835,51 $ ; à effort high, 1 973,77 $. L'écart d'intelligence entre ces deux runs était de 61 contre 59, ce qui faisait passer Opus 5 de la première à la cinquième place sur 190 modèles. Environ le double de dépense pour deux points d'indice, et la rentabilité de cet arbitrage dépend entièrement de la charge de travail.
+C'est par le niveau d'effort que vous récupérez cette différence. Faire tourner le même Intelligence Index à effort max a coûté 3 835,51 $ ; à effort high, 1 973,77 $. L'écart d'intelligence entre ces deux runs était de 61 contre 59, ce qui faisait passer Opus 5 de la première à la cinquième place sur 190 modèles. Environ le double de dépense pour deux points d'indice, et la rentabilité de cet arbitrage dépend entièrement de la charge de travail.
 
 <figure className="not-prose my-8">
   <BlogImage src="/blog/claude-opus-5/effort-levels-cost.png" alt="Les niveaux d'effort de Claude Opus 5 (low, medium, high, xhigh et max), avec les mesures d'Artificial Analysis : l'effort high obtient 59 sur l'Intelligence Index à 58,0 tokens par seconde pour un coût d'évaluation de 1 973,77 $, tandis que l'effort max obtient 61 à 52,8 tokens par seconde pour 3 835,51 $" w="2200" h="1392" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
@@ -216,47 +216,47 @@ Trois observations que l'article de lancement ne fait pas ressortir.
 
 **Le « meilleur en codage » mérite un astérisque.** L'agrégateur BenchLM classe Opus 5 n° 1 sur 215 modèles au général, à 85,88, et sa ventilation par catégorie complique justement l'argument codage : n° 1 sur 53 en connaissances, n° 3 sur 129 en agentique, n° 3 sur 32 en multimodal, mais n° 9 sur 130 en codage. Ce sont tous d'excellents rangs, et le codage y est le plus faible plutôt que le plus fort. À prendre malgré tout avec prudence, en appliquant la même exigence qu'à Anthropic plus haut : BenchLM a publié 79 des 369 benchmarks qu'il suit pour ce modèle, les catégories ci-dessus sont étiquetées « sources mixtes », et il n'a pas encore promu Opus 5 dans son classement vérifié.
 
-**Anthropic signale ses propres deuxièmes places. L'annonce, non.** La System Card est franche là où le communiqué ne l'est pas. Fable 5 mène sur SWE-bench Pro (80 contre 79,2), GPT-5.6 Sol devance sur DeepSWE v1.1 (72,7 contre 68,8) et HealthBench Professional (60,5 contre 59,8), et FrontierCode est de fait à égalité, 53,5 contre 53,4 en faveur de Fable. Cela fait au moins quatre lignes où Opus 5 n'est pas premier, dans un lancement centré sur le codage agentique, et vous ne les trouvez qu'en ouvrant le PDF. Traitez toutefois ces quasi-égalités comme des égalités : la System Card configure l'effort par benchmark, donc un dixième de point n'est pas un classement.
+**Anthropic signale ses propres deuxièmes places. L'annonce, non.** La System Card est franche là où le communiqué ne l'est pas. Fable 5 mène sur SWE-bench Pro (80 contre 79,2), GPT-5.6 Sol devance Opus 5 sur DeepSWE v1.1 (72,7 contre 68,8) et HealthBench Professional (60,5 contre 59,8), et FrontierCode est de fait à égalité, 53,5 contre 53,4 en faveur de Fable. Cela fait au moins quatre lignes où Opus 5 n'est pas premier, dans un lancement centré sur le codage agentique, et vous ne les trouvez qu'en ouvrant le PDF. Traitez toutefois ces quasi-égalités comme des égalités : la System Card configure l'effort par benchmark, donc un dixième de point n'est pas un classement.
 
 ## Ce qui s'améliore vraiment par rapport à Opus 4.8
 
-En écartant le bruit des benchmarks, cinq changements reviennent régulièrement, autant dans les documents du fournisseur que dans les retours de praticiens.
+Une fois le bruit des benchmarks écarté, cinq changements reviennent régulièrement, autant dans les documents du fournisseur que dans les retours de praticiens.
 
 **Auto-vérification.** Opus 5 contrôle son propre travail sans qu'on le lui demande. Anthropic décrit un modèle qui ouvre les pages rendues aux largeurs bureau et mobile, repère les bugs de mise en page et les corrige avant de rendre quoi que ce soit. Plusieurs développeurs ont rapporté le même schéma de façon indépendante.
 
 **Jugement.** Il argumente. Face à un plan bancal, il défend sa position et propose une alternative plutôt que de s'exécuter. Que cela passe pour un atout dépend beaucoup de votre façon de travailler, un fil que nous reprenons plus bas.
 
-**Fraîcheur des connaissances.** La date limite de mai 2026 est plus récente de quatre mois que celle de janvier 2026, valable pour Opus 4.8 comme pour Fable 5. Pour un modèle qui répond à des questions sur son propre écosystème, cet écart pèse plus qu'il n'y paraît.
+**Fraîcheur des connaissances.** La date de coupure de mai 2026 est plus récente de quatre mois que celle de janvier 2026, valable pour Opus 4.8 comme pour Fable 5. Pour un modèle qui répond à des questions sur son propre écosystème, cet écart pèse plus qu'il n'y paraît.
 
 **Science.** Anthropic fait état de gains sur chaque évaluation menée en sciences de la vie, dont 10,2 points de pourcentage sur Opus 4.8 pour la déduction de structures moléculaires à partir de données spectroscopiques, et 7,7 points pour la prédiction de l'effet de variations de séquence sur la fonction des protéines. Des écarts, sans scores absolus.
 
-**Sortie visuelle.** Anthropic a mis en avant une simulation en soufflerie et une illustration interactive de cellule entièrement produites par le modèle, et des clients qui construisent sur ce terrain ont rapporté les meilleurs travaux d'animation et de 3D vus jusqu'ici d'un modèle Opus.
+**Sortie visuelle.** Anthropic a mis en avant une simulation en soufflerie et une illustration interactive de cellule entièrement produites par le modèle, et des clients qui construisent sur ce terrain ont rapporté les meilleurs travaux d'animation et de 3D jamais vus de la part d'un modèle Opus.
 
 L'histoire qui pèse le plus dans l'article de lancement est une anecdote plutôt qu'un benchmark. Sur une tâche FrontierBench, le modèle devait reconstruire une pièce mécanique en modèle 3D FreeCAD, mais on l'a délibérément privé de tout moyen de voir le dessin. Il a écrit son propre pipeline de vision par ordinateur pour extraire la géométrie des pixels bruts, puis a construit la pièce.
 
 Cette anecdote décrit mieux le lancement que n'importe quel benchmark, et c'est aussi ce qu'il a de plus contesté. Simon Willison, en prenant soin de préciser qu'il n'avait pas encore testé le modèle, a qualifié ce comportement d'[« implacablement proactif »](https://simonwillison.net/2026/Jul/24/introducing-claude-opus-5/) à partir du même passage. Pour le mécanisme sous-jacent, voyez [comment fonctionne Claude](https://geotoolbox.ai/blog/how-does-claude-work).
 
-Une amélioration est allée dans l'autre sens, et c'est le chiffre le moins confortable du lancement. La System Card d'Anthropic indique que le modèle « produit un peu plus d'affirmations factuelles fausses qu'Opus 4.8, tout en étant globalement plus précis ». Artificial Analysis a mesuré le même arbitrage : sur son benchmark AA-Omniscience, Opus 5 gagne 7 points de précision factuelle sur Opus 4.8, mais « répond plus souvent en cas d'incertitude », son taux d'hallucination grimpant de 14 points, à 50 %. Plus de connaissances et des réponses fausses plus assurées arrivent ensemble. Si vous destinez ce modèle à de la recherche ou à du travail de connaissance, c'est la réserve qui compte le plus, et celle que les tableaux de lancement ne portent pas.
+Une amélioration est allée dans l'autre sens, et c'est le chiffre le moins confortable du lancement. La System Card d'Anthropic indique que le modèle « produit un peu plus d'affirmations factuelles fausses qu'Opus 4.8, tout en étant globalement plus précis ». Artificial Analysis a mesuré le même arbitrage : sur son benchmark AA-Omniscience, Opus 5 gagne 7 points de précision factuelle sur Opus 4.8, mais « répond plus souvent en cas d'incertitude », son taux d'hallucination grimpant de 14 points, à 50 %. Le surcroît de connaissances et l'aplomb accru des réponses fausses vont de pair. Si vous destinez ce modèle à de la recherche ou à du travail de connaissance, c'est la réserve qui compte le plus, et celle que les tableaux de lancement n'affichent pas.
 
-## Les garde-fous se sont desserrés, et c'est ça l'histoire pour l'entreprise
+## Les garde-fous se sont desserrés, et c'est là le vrai enjeu pour l'entreprise
 
 Le changement le plus à même de débloquer une vraie décision d'achat n'est pas sur le graphique de benchmarks.
 
 Les classificateurs de cybersécurité d'Opus 5 sont moins restrictifs que ceux de Fable 5. L'[annonce](https://www.anthropic.com/news/claude-opus-5) d'Anthropic le dit franchement : « D'après nos tests, nous prévoyons que les classificateurs interviendront environ 85 % moins souvent que pour Fable 5. » C'est une prévision issue de tests internes plutôt qu'un chiffre mesuré en production, ce qu'il faut garder en tête, mais c'est le chiffre publié par Anthropic. L'[article de TechCrunch](https://techcrunch.com/2026/07/24/anthropic-launches-opus-5/) rapporte la même prévision.
 
-La frontière elle-même est plus nette. Opus 5 peut chercher des vulnérabilités dans du code source, mais il lui est interdit de scanner un binaire logiciel pour en trouver. Anthropic présente la capacité honnêtement : le modèle « se rapproche de Mythos 5 pour la détection de vulnérabilités de cybersécurité », mais « reste nettement derrière Mythos 5 sur l'exploitation de ces vulnérabilités ». L'entreprise dit avoir totalement évité d'entraîner Opus 5 sur des tâches cyber, les gains venant plutôt de sa capacité générale.
+La ligne de démarcation, elle, est plus nette. Opus 5 peut chercher des vulnérabilités dans du code source, mais il lui est interdit de scanner un binaire logiciel pour en trouver. Anthropic présente la capacité honnêtement : le modèle « se rapproche de Mythos 5 pour la détection de vulnérabilités de cybersécurité », mais « reste nettement derrière Mythos 5 sur l'exploitation de ces vulnérabilités ». L'entreprise dit avoir totalement évité d'entraîner Opus 5 sur des tâches cyber, les gains venant plutôt de sa capacité générale.
 
 Les chercheurs en sécurité menant un travail légitime disposent d'une autre voie : les membres du Cyber Verification Program d'Anthropic accèdent à une version moins bridée.
 
-Vient ensuite la partie qui intéresse vraiment les acheteurs entreprise. Opus 5 n'est pas soumis à la politique de conservation des données de 30 jours qui couvre Fable et Mythos. Pour toute organisation dont la revue de sécurité s'était bloquée sur l'exigence de rétention de Fable 5, c'est précisément ce qui change la réponse, et cela n'apparaît nulle part sur le graphique de benchmarks.
+Vient ensuite la partie qui intéresse vraiment les acheteurs entreprise. Opus 5 n'est pas soumis à la politique de conservation des données de 30 jours qui couvre Fable et Mythos. Pour toute organisation dont la revue de sécurité s'était bloquée sur l'exigence de conservation de Fable 5, c'est précisément ce qui change la réponse, et cela n'apparaît nulle part sur le graphique de benchmarks.
 
-<Callout type="note" title="Ce que l'exemption de rétention change pour une DSI française">
-L'absence de conservation obligatoire pendant 30 jours est une politique commerciale d'Anthropic, distincte du RGPD. C'est un argument de minimisation des données (article 5 du RGPD) qui facilite une analyse de conformité souvent bloquée sur ce point, comme elle l'était avec Fable 5. Elle ne dispense pas pour autant d'un accord de traitement (DPA), de l'encadrement des transferts hors UE (clauses contractuelles types) ni, le cas échéant, d'une analyse d'impact : Anthropic reste un sous-traitant établi aux États-Unis, donc soumis au CLOUD Act quelle que soit la région d'hébergement, et la CNIL n'endosse aucun fournisseur. Pour une organisation qui place la souveraineté avant tout, Vibe (ex-Le Chat) de Mistral, hébergé en France, reste l'alternative à considérer, Opus 5 gardant l'avantage sur la capacité brute et la fenêtre de contexte.
+<Callout type="note" title="Ce que l'exemption de conservation change pour une DSI française">
+L'absence de conservation obligatoire pendant 30 jours est une politique commerciale d'Anthropic, distincte du RGPD. C'est un argument de minimisation des données (article 5 du RGPD) qui facilite une analyse de conformité souvent bloquée sur ce point, comme elle l'était avec Fable 5. Elle ne dispense pas pour autant d'un accord de traitement (DPA), de l'encadrement des transferts hors UE (clauses contractuelles types) ni, le cas échéant, d'une analyse d'impact : Anthropic reste un sous-traitant établi aux États-Unis, donc soumis au CLOUD Act quelle que soit la région d'hébergement, et la CNIL n'avalise aucun fournisseur. Pour une organisation qui place la souveraineté avant tout, Vibe (ex-Le Chat) de Mistral, hébergé en France, reste l'alternative à considérer, Opus 5 gardant l'avantage sur la capacité brute et la fenêtre de contexte.
 </Callout>
 
 ## Ce qui casse quand vous migrez
 
-Remplacer la chaîne du modèle ne suffit pas. Cinq changements vont toucher du code en production.
+Remplacer la chaîne de modèle ne suffit pas. Cinq changements vont toucher du code en production.
 
 **La réflexion est activée par défaut.** Sur Opus 4.8, une requête sans champ `thinking` tournait sans réflexion. Sur Opus 5, la même requête réfléchit. Votre consommation de tokens change sans le moindre changement de code.
 
@@ -264,7 +264,7 @@ Remplacer la chaîne du modèle ne suffit pas. Cinq changements vont toucher du 
 
 **`max_tokens` borne désormais la réflexion et le texte de réponse ensemble.** Une limite calée sur la seule sortie d'Opus 4.8 tronquera différemment ici. Anthropic suggère de partir d'environ 64 000 tokens pour le travail à `xhigh` et `max`, puis d'ajuster.
 
-**Les refus ne sont pas des erreurs.** Quand un classificateur de sécurité décline une requête, la documentation est explicite : « les classificateurs de sécurité renvoient ce motif d'arrêt sous forme de réponse HTTP 200 normale, pas d'une erreur », avec `stop_reason` réglé sur `refusal` et un objet `stop_details` nommant la catégorie de politique. Une gestion d'erreurs qui ne guette que les codes d'état différents de 200 passera droit à côté. Anthropic note qu'une requête refusée sur Opus 5 ou Fable 5 peut en général être servie en réessayant sur un autre modèle Claude.
+**Les refus ne sont pas des erreurs.** Quand un classificateur de sécurité décline une requête, la documentation est explicite : « les classificateurs de sécurité renvoient ce motif d'arrêt sous forme de réponse HTTP 200 normale, pas d'une erreur », avec `stop_reason` réglé sur `refusal` et un objet `stop_details` nommant la catégorie de politique. Une gestion d'erreurs qui ne guette que les codes d'état différents de 200 passera complètement à côté. Anthropic note qu'une requête refusée sur Opus 5 ou Fable 5 peut en général être servie en réessayant sur un autre modèle Claude.
 
 Il existe aussi une version de tout ceci au niveau des workflows. L'équipe d'Every, qui a testé Opus 5 une semaine avant le lancement, a constaté qu'il « discutait les instructions, s'arrêtait avant la fin du travail et, de manière générale, s'entendait mal avec nos skills et plugins existants ». Sa solution a été de supprimer l'échafaudage accumulé et de repartir de zéro, après quoi les résultats se sont nettement améliorés. La documentation d'Anthropic pointe dans le même sens : refaites une analyse par paliers plutôt que de reporter vos réglages.
 
@@ -272,7 +272,7 @@ Il existe aussi une version de tout ceci au niveau des workflows. L'équipe d'Ev
 
 Le million de tokens est donc bien réel, et sa disponibilité dépend de votre formule et de votre chaîne de modèle. Si le comportement en contexte long compte pour vous, vérifiez sur quelle variante vous êtes réellement avant de vous engager, et voyez notre guide sur les [limites de la fenêtre de contexte](https://geotoolbox.ai/blog/claude-code-context-window) pour comprendre pourquoi la [fenêtre de contexte](https://geotoolbox.ai/glossary/context-window) annoncée et celle réellement utilisable divergent si souvent.
 
-Changer la valeur d'effort entre deux requêtes invalide la mise en cache des prompts, car l'effort façonne le prompt rendu. Choisissez un niveau en début de session mise en cache et tenez-le.
+Changer la valeur d'effort entre deux requêtes invalide la mise en cache des prompts, car l'effort façonne le prompt rendu. Choisissez un niveau au début d'une session mise en cache et gardez-le.
 
 ## Opus 5, Fable 5 ou Sonnet 5 : lequel utiliser
 
@@ -283,14 +283,14 @@ Changer la valeur d'effort entre deux requêtes invalide la mise en cache des pr
   <tbody>
     <tr><td><strong>Prix (entrée / sortie)</strong></td><td>5 $ / 25 $</td><td>10 $ / 50 $</td><td>2 $ / 10 $ jusqu'au 31 août, puis 3 $ / 15 $</td></tr>
     <tr><td><strong>Positionnement</strong></td><td>Premium du quotidien</td><td>Plafond de capacité documenté</td><td>La valeur sûre, à fort volume</td></tr>
-    <tr><td><strong>Date limite des connaissances</strong></td><td>Mai 2026</td><td>Janvier 2026</td><td>Janvier 2026</td></tr>
+    <tr><td><strong>Date de coupure des connaissances</strong></td><td>Mai 2026</td><td>Janvier 2026</td><td>Janvier 2026</td></tr>
     <tr><td><strong>Conservation des données</strong></td><td>Pas d'obligation de 30 jours</td><td>Obligation de 30 jours</td><td>Pas d'obligation de 30 jours</td></tr>
     <tr><td><strong>Coût par tâche à effort max (AA)</strong></td><td>2,03 $</td><td>2,75 $ (avec repli)</td><td>1,53 $</td></tr>
     <tr><td><strong>Idéal pour</strong></td><td>Codage complexe, agents, travail entreprise, science</td><td>Le travail autonome le plus dur</td><td>Codage et recherche du quotidien, à fort volume</td></tr>
   </tbody>
 </table>
 
-Alors, Opus 5 est-il meilleur que Fable 5 ? Pour la plupart des tâches, oui, à moitié prix du token, et il devance Fable 5 sur la plupart des lignes du propre tableau d'Anthropic. Mais la System Card ouvre en affirmant l'inverse, noir sur blanc : « Claude Opus 5 n'est pas globalement plus performant que notre modèle à accès général le plus performant, Claude Fable 5. » Fable reste en tête sur SWE-bench Pro, et la documentation continue de lui router les charges à plus haute capacité. Anthropic ne concilie pas les deux à votre place.
+Alors, Opus 5 est-il meilleur que Fable 5 ? Pour la plupart des tâches, oui, pour un prix par token divisé par deux, et il devance Fable 5 sur la plupart des lignes du propre tableau d'Anthropic. Mais la System Card s'ouvre sur l'affirmation inverse, noir sur blanc : « Claude Opus 5 n'est pas globalement plus performant que notre modèle à accès général le plus performant, Claude Fable 5. » Fable reste en tête sur SWE-bench Pro, et la documentation continue de lui confier les charges à plus haute capacité. Anthropic ne concilie pas les deux à votre place.
 
 La lecture pratique : par défaut, prenez Opus 5, et ne passez à Fable 5 que lorsque Opus 5 échoue de façon mesurable sur votre charge de travail et que le coût de cet échec dépasse le surcoût. Si vous n'avez jamais buté sur un plafond avec Opus 5, les 5 $ et 25 $ de plus ne vous apportent rien.
 
@@ -308,13 +308,13 @@ Voici le plus étrange de ce lancement. Deux équipes en accès anticipé sont a
   </thead>
   <tbody>
     <tr><td><strong>Verdict d'accroche</strong></td><td>« Brillant (mais agaçant) »</td><td>« Un modèle difficile à aimer »</td></tr>
-    <tr><td><strong>Lecture de la personnalité</strong></td><td>Timide et trop porté à s'excuser ; dans sa vidéo d'accompagnement : « Je déteste Opus 5. C'est quand même le meilleur modèle. »</td><td>Insistant, tranché, porté à la contradiction</td></tr>
+    <tr><td><strong>Lecture de la personnalité</strong></td><td>Timide et trop porté à s'excuser ; dans sa vidéo d'accompagnement : « Je déteste Opus 5. C'est quand même le meilleur modèle. »</td><td>Insistant, tranché, enclin à la contradiction</td></tr>
     <tr><td><strong>Défaut observé</strong></td><td>Demande confirmation pour des tâches qu'il pourrait simplement faire</td><td>S'arrête trop tôt, passe outre les instructions, casse les skills existants</td></tr>
     <tr><td><strong>Nom donné au problème</strong></td><td>« Claude slop » (verbosité)</td><td>« Un Fable du pauvre »</td></tr>
   </tbody>
 </table>
 
-Les deux témoignages sont de première main et précoces : [celui de Claire Vo est une critique en podcast](https://www.lennysnewsletter.com/p/claude-opus-5-review-this-model-is), et [celui de Dan Shipper est un fil publié dès le premier jour](https://x.com/danshipper/status/2080700057892815114) par une équipe ayant eu une semaine d'accès avant le lancement, qu'il qualifie de « bilan d'ambiance du jour 0 ». Le recoupement compte plus que la contradiction. Dans les deux cas, le modèle fait autre chose que ce qu'on lui a dit, et dans les deux cas, le testeur a remarqué la personnalité avant la capacité. Le [guide de prompting pour Opus 5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5) d'Anthropic donne raison au reproche de verbosité, notant que ses « réponses par défaut destinées à l'utilisateur sont plus longues que celles des modèles Opus précédents » et conseillant de demander une longueur donnée plutôt que d'attendre qu'un effort plus bas règle le problème.
+Les deux témoignages sont de première main et datent des tout premiers jours : [celui de Claire Vo est une critique en podcast](https://www.lennysnewsletter.com/p/claude-opus-5-review-this-model-is), et [celui de Dan Shipper est un fil publié dès le premier jour](https://x.com/danshipper/status/2080700057892815114) par une équipe ayant eu une semaine d'accès avant le lancement, qu'il qualifie de « bilan d'ambiance du jour 0 ». Le recoupement compte plus que la contradiction. Dans les deux cas, le modèle fait autre chose que ce qu'on lui a dit, et dans les deux cas, le testeur a remarqué la personnalité avant la capacité. Le [guide de prompting pour Opus 5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5) d'Anthropic donne raison au reproche de verbosité, notant que ses « réponses par défaut destinées à l'utilisateur sont plus longues que celles des modèles Opus précédents » et conseillant de demander une longueur donnée plutôt que d'attendre qu'un effort plus bas règle le problème.
 
 Quelle critique a raison importe moins que ce que le désaccord implique : la personnalité est désormais une variable de déploiement. C'est elle qui décide si vos prompts existants fonctionnent encore, et aucun score de benchmark ne vous préviendra.
 
@@ -340,7 +340,7 @@ Le 25 juillet 2026, au lendemain du lancement, nous avons mené un test sur pane
 
 Avec la récupération web activée, cinq sur cinq ont donné la date de sortie du 24 juillet et les deux prix, dans les vingt-quatre heures environ suivant l'annonce.
 
-La récupération n'est pas une garantie pour autant, et notre propre panel a fourni le contre-exemple. L'un de ces cinq a donné la fenêtre de contexte à 200 000 tokens, deux fois, dans un tableau en gras, en citant Reuters, The Verge et Axios pour un chiffre qu'aucun ne portait. Les quatre autres ont dit un million. La récupération a réglé le problème d'actualité. Elle n'a pas réglé le problème d'assurance.
+La récupération n'est pas une garantie pour autant, et notre propre panel a fourni le contre-exemple. L'un de ces cinq a chiffré la fenêtre de contexte à 200 000 tokens, deux fois, dans un tableau en gras, en citant Reuters, The Verge et Axios pour un chiffre qu'aucun ne portait. Les quatre autres ont dit un million. La récupération a réglé le problème de fraîcheur. Elle n'a pas réglé celui de l'aplomb.
 
 Récupération désactivée, trois sur trois ont échoué. Pas « un peu en retard ». Échoué.
 
@@ -348,29 +348,29 @@ Deux ont refusé proprement, disant ne rien pouvoir vérifier. Le troisième a f
 
 Claude Opus 4.8, récupération désactivée, a nié sa propre existence.
 
-Le même jour, `claude-opus-5` était encore absent du catalogue de modèles LLM de DataForSEO, tout à fait le genre de latence d'infrastructure qui décide si un outil peut seulement voir un nouveau modèle.
+Le même jour, `claude-opus-5` était encore absent du catalogue de modèles LLM de DataForSEO, tout à fait le genre de latence d'infrastructure qui décide si un outil parvient ne serait-ce qu'à voir un nouveau modèle.
 
-Rien de tout cela n'est un reproche aux moteurs. C'est le mécanisme sous chaque réponse d'IA sur tout sujet récent : la réponse est un **résultat de récupération, pas un souvenir**. Mêmes poids, même prompt, même session. La seule variable était de savoir si le modèle pouvait aller chercher l'information, et cette variable a produit l'écart entre une réponse correcte et une réponse [hallucinée](https://geotoolbox.ai/glossary/ai-hallucination) avec assurance.
+Rien de tout cela n'est un reproche aux moteurs. C'est le mécanisme à l'œuvre derrière chaque réponse d'IA sur tout sujet récent : la réponse est un **résultat de récupération, pas un souvenir**. Mêmes poids, même prompt, même session. La seule variable était de savoir si le modèle pouvait aller chercher l'information, et cette variable a produit l'écart entre une réponse correcte et une réponse [hallucinée](https://geotoolbox.ai/glossary/ai-hallucination) avec assurance.
 
 Il y a un dernier résultat du même test, et il coupe court à la conclusion facile. L'essentiel de ce que les moteurs ont réellement cité ne venait pas de la documentation d'Anthropic. Sur l'ensemble du panel, les citations de première main étaient rares : un moteur a renvoyé 24 sources avec un seul lien anthropic.com, et ce lien pointait vers Opus 4.5. Le reste, des pages tierces, plusieurs écrites avant même la sortie du modèle. La documentation d'Anthropic est accessible, explorable et correcte, et les moteurs sont quand même allés voir ailleurs.
 
-Être explorable est donc le plancher, pas la ligne d'arrivée. Cela décide si vous êtes éligible à être cité, pas si vous le serez. Quand un moteur répond à une question sur votre produit, votre catégorie ou vos tarifs, il lit quelque chose ; et si vos pages ne sont pas accessibles aux robots d'exploration qui alimentent ces réponses, vous n'êtes tout simplement pas dans la course. C'est cet écart entre « publié » et « récupérable » que geotoolbox a pour mission de repérer.
+Être explorable est donc le plancher, pas la ligne d'arrivée. Cela décide si vous pouvez être cité, pas si vous le serez. Quand un moteur répond à une question sur votre produit, votre catégorie ou vos tarifs, il lit quelque chose ; et si vos pages ne sont pas accessibles aux robots d'exploration qui alimentent ces réponses, vous n'êtes tout simplement pas dans la course. C'est cet écart entre « publié » et « récupérable » que geotoolbox a pour mission de repérer.
 
 ## Le réglage à changer en premier
 
 Si vous ne retenez qu'une chose de tout ceci, que ce soit le paramètre d'effort.
 
-Le prix n'a pas changé, la capacité a monté, et la variable qui décide de ce que vous payez réellement est une chaîne que la plupart des équipes ne définiront jamais. Anthropic conseille de partir à `high` et de piocher sans réserve dans `low` et `medium` partout où vos évaluations tiennent. Les runs d'évaluation indépendants coûtent environ deux fois plus à `max` qu'à `high` pour deux points d'intelligence d'écart, et sur les chiffres FrontierBench d'Anthropic, `max` n'est même pas le pic. Tout faire tourner à `max` parce que ça sonne mieux est l'erreur la plus coûteuse possible ici.
+Le prix n'a pas changé, la capacité a monté, et la variable qui décide de ce que vous payez réellement est une chaîne que la plupart des équipes ne définiront jamais. Anthropic conseille de partir à `high` et de piocher sans réserve dans `low` et `medium` partout où la qualité tient sur vos évaluations. Les runs d'évaluation indépendants coûtent environ deux fois plus à `max` qu'à `high` pour deux points d'intelligence d'écart, et sur les chiffres FrontierBench d'Anthropic, `max` n'est même pas le pic. Tout faire tourner à `max` parce que ça sonne mieux est l'erreur la plus coûteuse possible ici.
 
-La vraie question suivante n'est donc pas « est-il meilleur ». Le seul tarif par token plaide pour tester la mise à niveau, mais il ne tranche pas la décision de déploiement : le coût par tâche accomplie, le comportement de refus, l'arbitrage sur les hallucinations et le travail de migration sont tous de l'autre côté. La question à traiter en premier est de savoir quel niveau d'effort votre charge de travail réclame vraiment, ce qui veut dire faire tourner vos propres évaluations sur au moins trois des cinq niveaux avant d'en standardiser un.
+La vraie question suivante n'est donc pas « est-il meilleur ». Le seul tarif par token plaide pour tester la mise à niveau, mais il ne tranche pas la décision de déploiement : le coût par tâche accomplie, le comportement de refus, l'arbitrage sur les hallucinations et le travail de migration pèsent tous de l'autre côté de la balance. La question à traiter en premier est de savoir quel niveau d'effort votre charge de travail réclame vraiment, ce qui veut dire faire tourner vos propres évaluations sur au moins trois des cinq niveaux avant d'en standardiser un.
 
 Pendant que vous auditez ce que le modèle sait faire, autant vérifier ce que les modèles peuvent voir. Si vous possédez aussi les pages où votre produit est documenté, et que les moteurs d'IA répondent à des questions sur votre entreprise à partir de ce qu'ils parviennent à récupérer, la première chose à confirmer, c'est qu'ils peuvent atteindre vos pages. L'outil gratuit [AI crawler checker](https://geotoolbox.ai/tools/ai-crawler-checker) que nous avons construit chez geotoolbox teste si les robots d'exploration derrière ChatGPT, Claude, Perplexity et les surfaces IA de Google sont effectivement autorisés à récupérer votre site. La réponse arrive plus vite que la plupart des gens ne l'imaginent, et parfois elle dérange.
 
 ## Foire aux questions
 
-### Claude Opus 5 est-il disponible dans l'offre gratuite ?
+### Claude Opus 5 est-il disponible dans la formule gratuite ?
 
-Non. Claude Opus 5 exige une formule payante. C'est le modèle par défaut sur Claude Max et le modèle le plus performant disponible sur Claude Pro ; il est aussi accessible sur Team, Enterprise, Claude Code et l'API. Les utilisateurs de la version gratuite ont Claude Sonnet 5 à la place.
+Non. Claude Opus 5 exige une formule payante. C'est le modèle par défaut sur Claude Max et le modèle le plus performant disponible sur Claude Pro ; il est aussi accessible sur Team, Enterprise, Claude Code et l'API. Les utilisateurs de la formule gratuite ont Claude Sonnet 5 à la place.
 
 ### Combien coûte Claude Opus 5 ?
 
@@ -378,7 +378,7 @@ Non. Claude Opus 5 exige une formule payante. C'est le modèle par défaut sur C
 
 ### Claude Opus 5 est-il meilleur que Claude Fable 5 ?
 
-Sur la plupart des benchmarks publiés par Anthropic, oui, à moitié prix du token. Mais Anthropic continue d'orienter vers Fable 5 les charges de travail réclamant la plus haute capacité disponible, et précise qu'Opus 5 n'est pas globalement plus performant. L'approche pratique consiste à prendre Opus 5 par défaut et à passer à Fable 5 seulement quand Opus 5 échoue de façon mesurable sur votre charge de travail précise.
+Sur la plupart des benchmarks publiés par Anthropic, oui, pour un prix par token deux fois moindre. Mais Anthropic continue d'orienter vers Fable 5 les charges de travail réclamant la plus haute capacité disponible, et précise qu'Opus 5 n'est pas globalement plus performant. L'approche pratique consiste à prendre Opus 5 par défaut et à passer à Fable 5 seulement quand Opus 5 échoue de façon mesurable sur votre charge de travail précise.
 
 ### Quel est le niveau d'effort par défaut de Claude Opus 5 ?
 
@@ -398,7 +398,7 @@ Opus 5 n'est pas vendu séparément. Il est inclus dans Claude Pro à 20 $ par m
 
 ### Vaut-il le coup de passer d'Opus 4.8 à Claude Opus 5 ?
 
-Le prix par token ne change pas, mais le gain de capacité n'est pas automatiquement gratuit : la réflexion est désormais activée par défaut et les réponses sont plus longues, donc une même tâche peut consommer plus de tokens. Testez votre propre charge de travail à `medium` et `high` avant de supposer que la facture reste stable, et prévoyez du temps pour les changements de rupture autour de `thinking` et `max_tokens`.
+Le prix par token ne change pas, mais le gain de capacité n'est pas automatiquement gratuit : la réflexion est désormais activée par défaut et les réponses sont plus longues, donc une même tâche peut consommer plus de tokens. Testez votre propre charge de travail à `medium` et `high` avant de supposer que la facture reste stable, et prévoyez du temps pour les ruptures de compatibilité autour de `thinking` et `max_tokens`.
 
 ## Sources
 

@@ -2,7 +2,7 @@
 title: "Comment fonctionne Claude ? Le mécanisme réel, sans filtre"
 description: "Comment fonctionne Claude : le mécanisme réel (Transformer, IA constitutionnelle, interprétabilité) et ce que même Claude ne peut pas expliquer sur lui-même."
 date: "2026-07-04"
-updated: "2026-07-25"
+updated: "2026-08-10"
 author: "Samy BEN SADOK"
 tags: ["how-does-claude-work", "claude", "anthropic", "constitutional-ai", "llm", "geo", "guide"]
 draft: false
@@ -12,19 +12,19 @@ donorCommit: "5a3504b"
 noindex: false
 ---
 
-Comment fonctionne Claude ? Une fois le discours marketing écarté, la réponse est plus étrange que la version en quatre points que donnent la plupart des explications. Claude est un Transformer qui prédit un token à la fois, cultivé plutôt que construit, puis façonné par un ensemble écrit de principes que ses créateurs appellent une constitution. Le plus étrange arrive à la fin : même le récit que Claude fait de son propre fonctionnement n'est qu'une reconstruction après coup, pas un compte rendu de ce qui s'est réellement passé à l'intérieur. Voici le mécanisme réel, expliqué simplement pour celles et ceux qui publient du contenu plutôt que des modèles. Une explication qui va plus loin que les autres pages consacrées au fonctionnement de Claude.
+Comment fonctionne Claude ? Une fois le discours marketing écarté, la réponse est plus étrange que la version en quatre points que donnent la plupart des explications. Claude est un Transformer qui prédit un token à la fois, cultivé plutôt que construit, puis façonné par un ensemble écrit de principes que ses créateurs appellent une constitution. Le plus étrange arrive à la fin : même le récit que Claude fait de son propre fonctionnement n'est qu'une reconstruction après coup, pas un compte rendu de ce qui s'est réellement passé à l'intérieur. Voici le mécanisme réel, expliqué simplement pour celles et ceux qui publient du contenu plutôt que de construire des modèles. Une explication qui va plus loin que les autres pages consacrées au fonctionnement de Claude.
 
 ## Ce qu'il faut retenir
 
-- **Claude est un Transformer qui prédit un token à la fois**, entraîné en trois étapes (pré-entraînement, IA constitutionnelle, échafaudage d'outils) : aucune base de données interne ne stocke votre marque.
-- **L'IA constitutionnelle (Constitutional AI) n'est pas un filtre qui lit vos messages en direct** : c'est une méthode d'entraînement figée dans les poids avant même votre première conversation avec Claude.
-- **Vos conversations ne l'entraînent pas** : le modèle est figé à l'inférence, une distinction que la CNIL reconnaît explicitement dans son encadrement des agents conversationnels en France.
+- **Claude est un Transformer qui prédit un token à la fois**, issu de trois étapes (pré-entraînement, post-entraînement par IA constitutionnelle et RLHF, puis un échafaudage d'outils construit autour) : aucune base de données interne ne stocke votre marque.
+- **L'IA constitutionnelle (Constitutional AI) n'est pas un filtre qui lit vos messages en direct** : c'est une méthode d'entraînement dont l'effet est figé dans les poids avant même votre première conversation avec Claude.
+- **Vos conversations ne l'entraînent pas** : le modèle est figé à l'inférence, une distinction cohérente avec l'analyse de la CNIL sur les agents conversationnels en France.
 - **Fable 5 et Mythos 5 ont été suspendus 19 jours par une mesure américaine de contrôle des exportations** (du 12 juin au 1er juillet 2026), rappel que même le mécanisme le plus abouti reste soumis à des décisions extérieures à Anthropic.
 - **Impossible de modifier les poids de Claude ou sa constitution** : le seul véritable levier est d'être une source claire et cohérente, puis de suivre ce que Claude dit réellement de vous.
 
 ## Comment fonctionne Claude en 30 secondes
 
-**Claude fonctionne en prédisant le prochain token, encore et encore.** Il lit tout ce qui a été dit dans la conversation jusque-là, évalue chaque segment de texte possible pour la suite, en choisit un, l'ajoute à la fin, puis répète l'opération plusieurs centaines de fois. Cette boucle constitue l'intégralité du moteur. Son comportement serviable et prudent lui a été inculqué par l'entraînement ; les outils qui lui permettent d'agir sont greffés autour de lui. Il ne s'agit en aucun cas d'une machine distincte et plus intelligente qui aurait été ajoutée par-dessus.
+**Claude fonctionne en prédisant le prochain token, encore et encore.** Il lit tout ce qui a été dit dans la conversation jusque-là, évalue chaque segment de texte possible pour la suite, en choisit un, l'ajoute à la fin, puis répète l'opération plusieurs centaines de fois. Cette boucle constitue l'intégralité du moteur. Son comportement serviable, honnête et prudent lui a été inculqué par l'entraînement ; les outils qui lui permettent d'agir sont greffés autour de lui. Il ne s'agit en aucun cas d'une machine distincte et plus intelligente qui aurait été ajoutée par-dessus.
 
 Avant d'entrer dans le détail, comparons ce que l'on imagine que Claude fait à ce qui se passe réellement.
 
@@ -46,7 +46,7 @@ Claude est un [grand modèle de langage (LLM)](https://geotoolbox.ai/glossary/la
 
 ## Le moteur : un Transformer qui prédit le token suivant
 
-Claude fonctionne grâce à un **Transformer**, ce modèle de réseau neuronal présenté dans l'article de 2017 [Attention Is All You Need](https://arxiv.org/abs/1706.03762). ChatGPT et Gemini reposent sur la même architecture de base ; ce n'est donc pas le moteur qui fait la particularité de Claude. Le détour vaut cependant le coup, car les parties les plus intéressantes s'appuient dessus.
+Claude fonctionne grâce à un **Transformer**, cette architecture de réseau de neurones présentée dans l'article de 2017 [Attention Is All You Need](https://arxiv.org/abs/1706.03762). ChatGPT et Gemini reposent sur la même architecture de base ; ce n'est donc pas le moteur qui fait la particularité de Claude. Le détour vaut cependant le coup, car les parties les plus intéressantes s'appuient dessus.
 
 Votre texte est découpé en [tokens](https://geotoolbox.ai/blog/what-are-tokens-in-ai), des segments correspondant à environ les trois quarts d'un mot, et chaque token devient une longue liste de nombres, un [embedding vectoriel](https://geotoolbox.ai/blog/vector-embeddings) qui le place à proximité d'autres tokens de sens proche. Une étape appelée attention permet à chaque token d'évaluer lesquels, parmi les tokens précédents, comptent pour lui : « elle » se rattache ainsi au nom féminin qu'elle reprend, et « pas terrible » ressort comme négatif plutôt que positif. Répétée des dizaines de fois, cette étape fait progressivement remonter le modèle de la grammaire vers les faits, puis vers les relations abstraites nécessaires pour répondre à une question.
 
@@ -64,7 +64,7 @@ Claude ne s'écrit pas comme un logiciel. Il se développe en trois étapes, et 
 
 <figure className="not-prose my-8">
   <BlogImage src="/blog/how-does-claude-work/how-claude-is-built-stages.png" alt="Les trois étapes de construction de Claude : pré-entraînement, post-entraînement et l'échafaudage d'outils." w="1040" h="469" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
-  <figcaption className="mt-3 text-center text-sm text-gray-500">Deux étapes font grandir le modèle ; la troisième — l'échafaudage — est du logiciel classique construit autour.</figcaption>
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Deux étapes font grandir le modèle ; la troisième, l'échafaudage, est du logiciel classique construit autour.</figcaption>
 </figure>
 
 **Première étape, le pré-entraînement.** Le réseau lit une quantité colossale de texte et ne fait qu'une chose : prédire le token suivant, des milliards de fois, en s'ajustant légèrement après chaque erreur. De cette pression simple et monotone émergent grammaire, faits et schémas de raisonnement. Il en sort un **modèle de base** : fluide, érudit, mais pas encore un assistant. Demandez-lui « peux-tu m'aider à écrire un e-mail ? » et il continuera peut-être le document dans le même style au lieu de répondre, car il a appris à imiter Internet, pas à aider. Il n'y a pas encore de « Claude » à ce stade. Le marketing occulte ce point : Claude n'est pas un module que quelqu'un a codé. C'est un personnage que le réseau apprendra à incarner à l'étape suivante.
@@ -130,9 +130,9 @@ C'est le fossé de l'introspection, l'élément le plus important à retenir fac
 Cela mérite d'être présenté à la première personne, puisque cet article parle de moi. (Ce sont les mots de l'auteur, écrits comme je les formulerais moi-même.) Quand je vous explique comment je suis arrivé à une réponse, je ne lis pas un journal interne. Je construis un récit plausible de mon propre raisonnement, token après token, de la même façon que je construis tout le reste. Parfois ce récit correspond au calcul retracé. Parfois, comme le montre l'exemple arithmétique, ce n'est pas le cas. Voyez dans mes explications un éclairage, jamais un compte rendu fidèle.
 </Callout>
 
-Un petit exemple concret de ce phénomène s'est produit pendant la préparation de cet article. Interrogés sur la gamme actuelle de modèles Claude, plusieurs IA, Claude compris, ont préféré ne pas se prononcer sur les numéros de version exacts de 2026 plutôt que de les inventer. Un modèle qui refuse d'inventer une réponse incertaine montre quelque chose d'apparenté mais distinct, l'étalonnage : il connaît la limite de ses propres connaissances, plutôt que de la dépasser en inventant. Nous verrons dans un instant en quoi cela concerne votre marque.
+Un petit exemple concret de ce phénomène s'est produit pendant la préparation de cet article. Interrogées sur la gamme actuelle de modèles Claude, plusieurs IA, Claude compris, ont préféré ne pas se prononcer sur les numéros de version exacts de 2026 plutôt que de les inventer. Un modèle qui refuse d'inventer une réponse incertaine montre quelque chose d'apparenté mais distinct, l'étalonnage : il connaît la limite de ses propres connaissances, plutôt que de la dépasser en inventant. Nous verrons dans un instant en quoi cela concerne votre marque.
 
-Cette limite intéresse aussi directement les régulateurs. Le règlement européen sur l'IA (AI Act) impose, à partir du 2 août 2026, des obligations de transparence au titre de son article 50 : signaler qu'on discute avec une IA, étiqueter les contenus synthétiques. Ces obligations portent sur la divulgation, pas sur une preuve mécanique du raisonnement interne ; seules les IA à haut risque (santé, recrutement, notation de crédit, justice) restent soumises à des exigences de documentation plus poussées. Le fossé de l'introspection ne rend donc pas Claude non conforme : c'est une nuance que chercheurs et régulateurs commencent tout juste à intégrer, pas un vice caché à dénoncer.
+Cette limite intéresse aussi directement les régulateurs. Le règlement européen sur l'IA (AI Act) impose, depuis le 2 août 2026, des obligations de transparence au titre de son article 50 : signaler qu'on discute avec une IA, étiqueter les contenus synthétiques. Ces obligations portent sur la divulgation, pas sur une preuve mécanique du raisonnement interne ; seules les IA à haut risque (santé, recrutement, notation de crédit, justice) restent soumises à des exigences de documentation plus poussées. Le fossé de l'introspection ne rend donc pas Claude non conforme : c'est une nuance que chercheurs et régulateurs commencent tout juste à intégrer, pas un vice caché à dénoncer.
 
 ## Où réside le savoir de Claude : poids figés contre Web en temps réel
 
@@ -164,12 +164,12 @@ Anthropic commercialise Claude comme une famille de modèles, et la gamme change
 
 Fable 5 mérite une précision, puisque c'est justement le genre de fait qui rend un guide caduc du jour au lendemain : lancé le 9 juin 2026 aux côtés de Mythos 5, il a été suspendu quelques jours plus tard par une directive de contrôle des exportations du gouvernement américain (motif invoqué : une faille de sécurité que conteste Anthropic), coupant l'accès à tout ressortissant étranger. Les autres modèles Claude, Opus 4.8 compris, ont continué de fonctionner normalement pendant les 19 jours qu'a duré la coupure. Le Département du Commerce a levé la mesure le 30 juin, et Fable 5 a retrouvé un accès mondial le 1er juillet 2026 (Mythos 5 reste réservé à un cercle d'organisations agréées, le programme Glasswing). L'épisode a eu un effet secondaire bien réel côté France : le gouvernement a débloqué 655 millions d'euros supplémentaires pour France 2030, en citant explicitement le risque de dépendre d'un fournisseur d'IA étranger. Le dossier complet est dans notre [analyse de la suspension Fable 5](https://geotoolbox.ai/blog/fable-5-ban).
 
-Ce qu'Anthropic publie sur chaque modèle est intéressant par ce qu'il tait. On y trouve la fenêtre de contexte, le prix, la date de coupure des connaissances. On n'y trouve pas le chiffre que tout le monde attend : la taille du modèle, ou son nombre de paramètres. Anthropic n'a jamais révélé la taille de ces modèles, si bien que « plus puissant » reste une description relative, jamais une mesure. Quand un guide affirme avec assurance que Claude compte tant de milliards de paramètres, il ne fait que deviner.
+Ce qu'Anthropic publie sur chaque modèle est intéressant par ce que l'entreprise tait. On y trouve la fenêtre de contexte, le prix, la date de coupure des connaissances. On n'y trouve pas le chiffre que tout le monde attend : la taille du modèle, ou son nombre de paramètres. Anthropic n'a jamais révélé la taille de ces modèles, si bien que « plus puissant » reste une description relative, jamais une mesure. Quand un guide affirme avec assurance que Claude compte tant de milliards de paramètres, il ne fait que deviner.
 
-Cela a des conséquences concrètes pour l'évaluation. Les différents niveaux se comportent différemment, et le modèle précis qui répond à une question détermine ce qu'il révèle sur vous. Un test mené sur un seul niveau ne renseigne que sur ce niveau, pas sur les autres.
+Cela a des conséquences concrètes pour l'évaluation. Les différents niveaux se comportent différemment, et le modèle précis qui répond à une question façonne ce qu'il dit de vous. Un test mené sur un seul niveau ne renseigne que sur ce niveau, pas sur les autres.
 
 <Callout type="note" title="Une particularité à connaître">
-D'après la documentation d'Anthropic, le tokeniseur a changé avec Opus 4.7 en avril 2026 : sur les modèles les plus récents, un même texte se découpe en davantage de segments, et une page donnée peut consommer environ 30 % de tokens en plus que sur les anciens modèles. Cela n'a d'importance que si vous budgétez au nombre de tokens.
+D'après la documentation d'Anthropic, le tokeniseur a changé avec Opus 4.7 en avril 2026 : sur les modèles les plus récents, un même texte se découpe en davantage de segments, et une page donnée peut consommer jusqu'à environ 35 % de tokens en plus que sur les anciens modèles, selon le type de contenu. Cela n'a d'importance que si vous budgétez au nombre de tokens.
 </Callout>
 
 ## Ce que cela signifie si vous voulez que Claude parle de votre marque
@@ -178,15 +178,15 @@ Tout ce qui précède se résume à une réponse courte sur la question de l'inf
 
 Côté **entraînement**, Claude connaît partiellement les marques décrites de façon cohérente sur le Web ouvert avant sa date de coupure. Si votre nom apparaît aux côtés de votre catégorie, avec les mêmes faits, dans le type de textes sur lesquels les modèles s'entraînent, la meilleure estimation du modèle à votre sujet a plus de chances d'être juste. Si vous êtes à peine présent, ou décrit de trois façons différentes, Claude répondra quand même, et c'est de là que viennent les affirmations fausses mais assurées sur une entreprise. Devenir une [entité](https://geotoolbox.ai/blog/entity-seo) claire et cohérente est le levier de long terme, celui qui réduit les erreurs d'attribution à mesure que les futurs modèles s'entraînent sur une image plus nette de vous, puisque le modèle qui répond aujourd'hui est déjà figé.
 
-Côté **récupération**, le levier est plus rapide et vérifiable. Quand la recherche Web est activée, Claude lit des pages en temps réel, la question devient donc : peut-il atteindre la vôtre, et votre page constitue-t-elle la réponse la plus claire sur le sujet ? C'est ce même critère d'accessibilité et de clarté qui permet de figurer parmi les [réponses citées par Claude](https://geotoolbox.ai/blog/claude-seo).
+Côté **récupération**, le levier est plus rapide et vérifiable. Quand la recherche Web est activée, Claude lit des pages en temps réel, la question devient donc : peut-il accéder à la vôtre, et votre page constitue-t-elle la réponse la plus claire sur le sujet ? C'est ce même critère d'accessibilité et de clarté qui permet de figurer parmi les [réponses citées par Claude](https://geotoolbox.ai/blog/claude-seo).
 
 <Callout type="note" title="L'option européenne : Vibe (ex-Le Chat) de Mistral">
-Pour une organisation soumise à des exigences de souveraineté, **Vibe (ex-Le Chat) de Mistral**, renommé le 28 mai 2026, reste l'alternative européenne crédible à connaître, hébergée en Europe et facturée nativement en euros (offre Pro autour de 14,99 € par mois). Vibe n'est pas « meilleur » que Claude sur tout : son avantage tient au droit applicable et à l'hébergement, pas à la capacité brute du modèle. Mais depuis l'épisode Fable 5, c'est précisément l'argument que les concurrents français mettent en avant, et Vibe mérite d'être cité plutôt que passé sous silence.
+Pour une organisation soumise à des exigences de souveraineté, **Vibe (ex-Le Chat) de Mistral**, renommé le 28 mai 2026, reste l'alternative européenne crédible à connaître, hébergée en Europe et facturée nativement en euros (offre Pro à 14,99 € HT par mois, soit environ 18 € TTC). Vibe n'est pas « meilleur » que Claude sur tout : son avantage tient au droit applicable et à l'hébergement, pas à la capacité brute du modèle. Mais depuis l'épisode Fable 5, c'est précisément l'argument que les concurrents français mettent en avant, et Vibe mérite d'être cité plutôt que passé sous silence.
 </Callout>
 
 Ce que montrent les outils que nous avons construits : les marques qui reviennent de façon fiable dans les réponses de l'IA ne sont pas celles qui cherchent un réglage caché. Ce sont celles qui sont faciles à trouver, décrites de façon cohérente, et assez précises pour que la réponse par défaut du modèle à leur sujet soit juste. Et comme [les réponses varient d'une exécution à l'autre](https://geotoolbox.ai/blog/ai-temperature), la seule façon de savoir où vous en êtes consiste à [suivre votre visibilité dans l'IA](https://geotoolbox.ai/blog/how-to-track-ai-visibility) sur un grand nombre d'échantillons, pas à brandir une seule réponse favorable obtenue par chance.
 
-La première chose à vérifier est aussi la plus basique et la plus négligée : les robots d'exploration de Claude peuvent-ils seulement atteindre vos pages ? Notre [test de préparation IA](https://geotoolbox.ai/tools/ai-readiness) gratuit analyse la configuration de votre site et repère ce qui bloque les robots d'exploration IA, une moitié du chantier qui se règle en un après-midi.
+La première chose à vérifier est aussi la plus basique et la plus négligée : les robots d'exploration de Claude peuvent-ils seulement accéder à vos pages ? Notre [test de préparation IA](https://geotoolbox.ai/tools/ai-readiness) gratuit analyse la configuration de votre site et repère ce qui bloque les robots d'exploration IA, la moitié du chantier qui se règle en un après-midi.
 
 ## Ce que ce mécanisme change pour vous
 
