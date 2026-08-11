@@ -1,0 +1,229 @@
+---
+title: "Rastreadores de IA: la lista de bots y cómo controlarlos"
+description: "Los rastreadores de IA leen tus páginas para ChatGPT, Claude, Perplexity y Google. La lista de cada bot, qué hace y cómo controlarlo en tu robots.txt."
+date: "2026-08-11"
+recheckBy: "2026-09-15"
+author: "Samy BEN SADOK"
+tags: ["ai-crawlers", "rastreadores-de-ia", "robots-txt", "geo", "ai-visibility", "guide"]
+draft: false
+locale: "es"
+donorSlug: "ai-crawlers"
+donorCommit: "bdaddf4"
+noindex: false
+---
+
+Los rastreadores de IA son los bots que leen tus páginas por cuenta de las empresas de inteligencia artificial, y ya hay decenas de ellos. Unos recogen datos para entrenar modelos, otros construyen el índice que un asistente cita en sus respuestas y otros van por una página en el momento exacto en que alguien pregunta. La diferencia importa más de lo que la mayoría de los responsables de un sitio cree, porque bloquear el equivocado te saca en silencio de las respuestas de IA sin conseguir nada de lo que en realidad buscabas. Esta es la lista actual de cada rastreador de IA importante, lo que hace cada uno y cómo controlarlos en tu robots.txt sin cortar el tráfico que sí quieres.
+
+## Lo que debes saber
+
+- Los rastreadores de IA hacen tres trabajos distintos: **entrenar** modelos, **buscar y citar** (construir el índice que el asistente consulta al responder) y **recuperar una página a petición** de un usuario. Bloquear cada tipo te cuesta algo diferente.
+- Bloquear GPTBot no te saca de ChatGPT: el entrenamiento y las citas pasan por bots distintos. Las respuestas de búsqueda de ChatGPT llegan por OAI-SearchBot y ChatGPT-User, no por GPTBot.
+- El error caro es bloquearlo todo con una sola regla amplia y llevarte por delante a los bots de cita junto con los de entrenamiento. Ahí es donde desapareces de las respuestas de IA sin querer.
+- En España, las «Vistas creadas con IA» (AI Overviews) se generan a partir del mismo rastreo de Googlebot que la Búsqueda: bloquear Googlebot te deja fuera de las dos.
+- Los medios españoles ya aplican esta lógica: según Vipnet360 (junio de 2026), bloquean los bots de entrenamiento un 37,2 % de las veces y los que actúan a petición del usuario solo un 10,6 %.
+
+## Qué es un rastreador de IA y los tres trabajos que hace
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/rastreadores-de-ia/tres-trabajos-rastreadores-es.png" alt="Los rastreadores de IA agrupados por sus tres trabajos: entrenamiento, búsqueda y recuperación a petición." w="1100" h="608" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Los bots de entrenamiento, de búsqueda y de recuperación a petición hacen trabajos distintos, y bloquear cada uno te cuesta algo diferente.</figcaption>
+</figure>
+
+Un [rastreador de IA](https://geotoolbox.ai/glossary/ai-crawler) es un bot que lee tus páginas por cuenta de una empresa de IA. La etiqueta abarca muchas máquinas distintas que hacen tres trabajos muy diferentes, y esa diferencia lo es todo.
+
+El primer trabajo es **entrenar**. Estos rastreadores recogen texto que puede servir para entrenar o afinar un modelo. GPTBot, ClaudeBot y CCBot son rastreadores de entrenamiento. Bloquearlos excluye tu contenido del entrenamiento de modelos futuros. No afecta en nada a que una herramienta de IA te cite hoy.
+
+El segundo trabajo es **buscar y recuperar**. Estos rastreadores construyen el índice que un asistente consulta cuando responde a una pregunta en tiempo real, y luego enlaza sus fuentes. OAI-SearchBot, Claude-SearchBot y PerplexityBot hacen esto. Bloquea uno de ellos y dejas de ser citable en las respuestas de ese motor, lo que suele ser justo lo contrario de lo que quiere el dueño de un sitio. [Cómo funciona la búsqueda con IA](https://geotoolbox.ai/blog/how-does-ai-search-work) recorre el bucle de recuperar y citar que alimentan estos bots.
+
+El tercer trabajo es la **recuperación a petición del usuario**. Cuando alguien le pide a ChatGPT o a Claude que mire una página concreta, un recuperador la lee en tiempo real. ChatGPT-User y Claude-User hacen esto. No rastrean la web según un calendario: están cumpliendo el encargo de una persona concreta.
+
+Ten claros esos tres trabajos y cada decisión de bloqueo se vuelve más sencilla. Casi toda la confusión alrededor de bloquear bots de IA viene de tratar a un bot como si hiciera los tres.
+
+## La lista de rastreadores de IA: los bots que importan en 2026
+
+Esta es la lista actual de rastreadores de IA que conviene conocer, con el trabajo que hace cada uno y el token de robots.txt que lo controla. La columna **Tipo** remite a los tres trabajos de arriba, y la columna de recomendación muestra la decisión por defecto para cada bot.
+
+<table>
+  <thead>
+    <tr><th>Rastreador</th><th>Operador</th><th>Tipo</th><th>Token de robots.txt</th><th>Recomendación por defecto</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>GPTBot</td><td>OpenAI</td><td>Entrenamiento</td><td>GPTBot</td><td>Bloquéalo para no entrenar</td></tr>
+    <tr><td>OAI-SearchBot</td><td>OpenAI</td><td>Búsqueda</td><td>OAI-SearchBot</td><td>Permítelo (citas de ChatGPT)</td></tr>
+    <tr><td>ChatGPT-User</td><td>OpenAI</td><td>A petición</td><td>ChatGPT-User</td><td>Permítelo</td></tr>
+    <tr><td>ClaudeBot</td><td>Anthropic</td><td>Entrenamiento</td><td>ClaudeBot</td><td>Bloquéalo para no entrenar</td></tr>
+    <tr><td>Claude-SearchBot</td><td>Anthropic</td><td>Búsqueda</td><td>Claude-SearchBot</td><td>Permítelo (citas de Claude)</td></tr>
+    <tr><td>Claude-User</td><td>Anthropic</td><td>A petición</td><td>Claude-User</td><td>Permítelo</td></tr>
+    <tr><td>PerplexityBot</td><td>Perplexity</td><td>Búsqueda</td><td>PerplexityBot</td><td>Permítelo (citas de Perplexity)</td></tr>
+    <tr><td>Perplexity-User</td><td>Perplexity</td><td>A petición</td><td>Perplexity-User</td><td>Permítelo (suele ignorar robots.txt)</td></tr>
+    <tr><td>Googlebot</td><td>Google</td><td>Búsqueda</td><td>Googlebot</td><td>No lo bloquees nunca (Búsqueda + Vistas creadas con IA)</td></tr>
+    <tr><td>Google-Extended</td><td>Google</td><td>Entrenamiento</td><td>Google-Extended</td><td>Bloquéalo para no entrenar a Gemini</td></tr>
+    <tr><td>Bingbot</td><td>Microsoft</td><td>Búsqueda</td><td>Bingbot</td><td>No lo bloquees nunca (Bing + Copilot)</td></tr>
+    <tr><td>Applebot</td><td>Apple</td><td>Búsqueda</td><td>Applebot</td><td>Permítelo (Siri, Spotlight)</td></tr>
+    <tr><td>Applebot-Extended</td><td>Apple</td><td>Entrenamiento</td><td>Applebot-Extended</td><td>Bloquéalo para no entrenar la IA de Apple</td></tr>
+    <tr><td>DuckAssistBot</td><td>DuckDuckGo</td><td>Búsqueda</td><td>DuckAssistBot</td><td>Permítelo (respuestas de DuckDuckGo; no entrena)</td></tr>
+    <tr><td>Amazonbot</td><td>Amazon</td><td>Entrenamiento y búsqueda</td><td>Amazonbot</td><td>Tú decides</td></tr>
+    <tr><td>Meta-ExternalAgent</td><td>Meta</td><td>Entrenamiento</td><td>Meta-ExternalAgent</td><td>Bloquéalo para no entrenar la IA de Meta</td></tr>
+    <tr><td>CCBot</td><td>Common Crawl</td><td>Entrenamiento</td><td>CCBot</td><td>Bloquéalo (alimenta muchos modelos)</td></tr>
+    <tr><td>Bytespider</td><td>ByteDance</td><td>Entrenamiento</td><td>Bytespider</td><td>Bloquéalo (aunque suele ignorar robots.txt)</td></tr>
+    <tr><td>GoogleOther</td><td>Google</td><td>Investigación</td><td>GoogleOther</td><td>Tú decides</td></tr>
+  </tbody>
+</table>
+
+Ese es el conjunto que importa para la mayoría de los sitios, pero no es todo el campo. Recién llegados como MistralAI-User, DeepSeek, [Grok de xAI](https://geotoolbox.ai/blog/what-is-grok) y cohere-ai también rastrean, y los nombres cambian a menudo: los bots se lanzan, se renombran y se dividen en agentes de entrenamiento y de búsqueda por separado. La lista comunitaria [ai.robots.txt en GitHub](https://github.com/ai-robots-txt/ai.robots.txt) sigue más de 150 agentes de usuario de IA y genera archivos robots.txt y configuraciones de servidor listos para usar, y [Known Agents](https://knownagents.com/agents) (antes Dark Visitors) mantiene un directorio en vivo parecido. Toma cualquier lista estática, esta incluida, como una foto de un momento concreto.
+
+Unas cuantas cifras ponen el tráfico en perspectiva, aunque el reparto se mueve lo bastante rápido como para que cualquier foto quede desfasada enseguida: comprueba un panel en vivo antes de citar cualquier cifra. En los [datos de rastreo de Cloudflare de mayo de 2026](https://www.digitalapplied.com/blog/ai-crawler-bot-traffic-statistics-2026-data-reference), Googlebot era el mayor bot vinculado a la IA con un 27,26 % de las peticiones, seguido de GPTBot con un 11,48 % y de ClaudeBot con un 9,73 %: una inversión respecto a abril de 2026, cuando ClaudeBot iba primero con un 11,69 % frente al 9,84 % de GPTBot. Estos bots ya son una parte real de quién visita tu sitio. El caso de un solo sitio es revelador: el consultor SEO Suganthan Mohanadasan contó [8.060 peticiones de rastreadores de IA en una semana](https://suganthan.com/blog/how-to-make-website-agent-ready) de al menos ocho organizaciones en los registros de su propio servidor, frente a 1.421 en los 44 días anteriores. A escala mundial, los bots ya superan a las personas: a principios de junio de 2026, [Cloudflare informó](https://www.tomshardware.com/tech-industry/artificial-intelligence/bots-have-now-passed-human-traffic-online-cloudflare-boss-laments-says-agentic-traffic-wasnt-expected-to-eclipse-real-people-until-next-year) de que el tráfico automatizado de todo tipo superó al humano por primera vez en sus datos, con un 57,5 % de las peticiones web.
+
+## OpenAI: GPTBot, OAI-SearchBot y ChatGPT-User
+
+OpenAI opera tres rastreadores, y la [documentación de bots de OpenAI](https://developers.openai.com/api/docs/bots) nombra a cada uno. [GPTBot](https://geotoolbox.ai/blog/gptbot) es el rastreador de entrenamiento: si lo prohíbes, tu contenido no debería usarse para entrenar modelos futuros. [OAI-SearchBot](https://geotoolbox.ai/glossary/oai-searchbot) es el que importa para la visibilidad. Construye el índice que hay detrás de la búsqueda de ChatGPT, y OpenAI es explícito: los sitios que se excluyen de OAI-SearchBot no aparecerán en las respuestas de búsqueda de ChatGPT. ChatGPT-User es el recuperador en tiempo real que actúa cuando una persona le pide a ChatGPT que lea una página.
+
+La conclusión práctica es aquello en lo que se equivocan casi todas las guías para «bloquear ChatGPT»: bloquear GPTBot no cambia nada de tu presencia en la búsqueda de ChatGPT. El entrenamiento y la cita corren por bots distintos. Si quieres mantener tu contenido fuera del entrenamiento pero seguir siendo citable, bloquea GPTBot y deja en paz a OAI-SearchBot y a ChatGPT-User. Nuestra guía para [salir citado en ChatGPT](https://geotoolbox.ai/blog/seo-for-chatgpt) cubre el lado de las citas. OpenAI también opera OAI-AdsBot, que solo valida las páginas de destino de los anuncios y no entrena modelos.
+
+## Anthropic: ClaudeBot, Claude-SearchBot y Claude-User
+
+Anthropic sigue el mismo patrón con tres rastreadores separados, documentados en su [página de rastreadores](https://support.claude.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler). [ClaudeBot](https://geotoolbox.ai/glossary/claudebot) recoge datos de entrenamiento. Claude-SearchBot indexa páginas para que puedan aparecer en la búsqueda web de Claude. Claude-User lee una página concreta cuando la pregunta de un usuario apunta a ella.
+
+La trampa es tratarlos como uno solo. Muchos sitios bloquean ClaudeBot para excluirse del entrenamiento y dan por hecho que han bloqueado a Claude, cuando solo se han excluido del entrenamiento: las citas siguen fluyendo por Claude-SearchBot y Claude-User. El error inverso es peor: bloquear esos dos, a menudo con una regla de cortafuegos demasiado amplia, te elimina en silencio de las respuestas que querías ganar. Si te topas con consejos antiguos sobre anthropic-ai o Claude-Web, son nombres heredados que ya no están en el conjunto actual de Anthropic. Nuestra [guía de SEO para Claude](https://geotoolbox.ai/blog/claude-seo) profundiza en lo que Claude cita realmente.
+
+## Google: Googlebot frente a Google-Extended
+
+Google es donde ocurre el error más caro. [Google-Extended](https://geotoolbox.ai/glossary/google-extended) no es un rastreador: es un token de robots.txt que controla si tu contenido puede usarse para entrenar y fundamentar los modelos Gemini de Google. Google lo introdujo [como un control específico de robots.txt](https://blog.google/innovation-and-ai/products/an-update-on-web-publisher-controls/) para que los editores pudieran excluirse de ese uso, y como es independiente de Googlebot, prohibirlo no afecta a tu posicionamiento ni a tu indexación en la Búsqueda.
+
+Googlebot es el rastreador que sí lee tus páginas, y ahora alimenta dos cosas a la vez: la Búsqueda de Google clásica y las Vistas creadas con IA que se colocan por encima. Ese doble papel es la trampa. Quien quiere mantener la IA de Google fuera a veces bloquea Googlebot y se elimina por completo de la Búsqueda de Google, Vistas creadas con IA incluidas. En España esto pesa aún más: las [«Vistas creadas con IA»](https://geotoolbox.ai/blog/google-ai-overviews-seo) están disponibles desde marzo de 2025 y se generan a partir del mismo rastreo de Googlebot que la Búsqueda. Bloquearlo te deja fuera de ambas. La palanca correcta es Google-Extended para el entrenamiento, y nada más. Deja a Googlebot en paz.
+
+## Perplexity y el resto del grupo
+
+[PerplexityBot](https://geotoolbox.ai/glossary/perplexitybot) indexa páginas para las respuestas de Perplexity y, según la [documentación de Perplexity](https://docs.perplexity.ai/guides/bots), no se usa para rastrear contenido con destino a modelos fundacionales de IA: bloquearlo solo te cuesta las citas de Perplexity. Perplexity-User es el recuperador que actúa a petición del usuario, y Perplexity dice que por lo general ignora robots.txt porque una persona ha pedido la página. Perplexity también ha estado en el punto de mira: [Cloudflare informó](https://blog.cloudflare.com/perplexity-is-using-stealth-undeclared-crawlers-to-evade-website-no-crawl-directives/) de que usaba rastreadores no declarados para llegar a sitios que lo habían bloqueado, un recordatorio de que una política publicada y el comportamiento real no siempre coinciden. Nuestra [guía de SEO para Perplexity](https://geotoolbox.ai/blog/perplexity-seo) cubre la mecánica de las citas.
+
+El resto del grupo se divide por las mismas líneas. [CCBot](https://geotoolbox.ai/glossary/ccbot) es Common Crawl, un conjunto de datos abierto que alimenta a muchos modelos, y por eso bloquear solo GPTBot no mantiene tu texto fuera del entrenamiento. [Amazonbot](https://geotoolbox.ai/glossary/amazonbot) recoge contenido para la IA de Amazon y para Alexa. [Applebot](https://geotoolbox.ai/glossary/applebot) da servicio a Siri y a Spotlight y conviene dejarlo pasar; el token aparte Applebot-Extended es el que te excluye del entrenamiento de los modelos de Apple. [Meta-ExternalAgent](https://geotoolbox.ai/glossary/meta-externalagent) es el rastreador de entrenamiento de Meta, hoy uno de los más activos de la web. [Bingbot](https://geotoolbox.ai/glossary/bingbot) alimenta tanto a Bing como a [Microsoft Copilot](https://geotoolbox.ai/blog/copilot-seo): bloquearlo te cuesta los dos. DuckAssistBot es el rastreador en tiempo real de DuckDuckGo para sus respuestas asistidas por IA; DuckDuckGo afirma que el contenido que recoge no se usa para entrenar modelos, lo que lo convierte en un bot de recuperación y búsqueda, no de entrenamiento. Y [Bytespider](https://geotoolbox.ai/glossary/bytespider), el rastreador de ByteDance, es del que más se quejan los dueños de sitios: se ha documentado que ignora robots.txt y machaca los servidores con tráfico, por lo que una simple regla de robots.txt rara vez lo detiene.
+
+## ¿Deberías bloquear los rastreadores de IA? La respuesta honesta
+
+Empieza por lo que de verdad estás intercambiando. Bloquear los rastreadores de entrenamiento protege tu contenido del entrenamiento de modelos y recorta el ancho de banda, y algunos sitios han declarado ahorros reales. Bloquear los rastreadores de búsqueda y cita hace algo muy distinto: te vuelve invisible en las respuestas de IA que cada vez sustituyen más a un clic de búsqueda.
+
+Los números ayudan a ver la decisión. Los rastreadores de entrenamiento se llevan más de lo que devuelven: en los [datos de rastreo frente a referencias de Cloudflare](https://blog.cloudflare.com/crawlers-click-ai-bots-training/) de julio de 2025, los bots de Anthropic rastrearon unas 38.000 páginas por cada visitante que remitieron, los de OpenAI unas 1.100 y los de Google unas 5. Los registros de un solo sitio lo confirman: [Suganthan Mohanadasan midió](https://suganthan.com/blog/how-to-make-website-agent-ready) que los rastreadores de OpenAI eran el 43 % del volumen de rastreo de IA pero le enviaron apenas 3 visitas humanas en una semana. Los bots de búsqueda y cita son los que realmente te mandan un lector. Si un bot se lleva tu contenido para entrenar un modelo y nunca envía a nadie, bloquearlo es una decisión fácil. Bloquear al bot que te pone en la respuesta es mucho más difícil, porque ese tráfico es justo lo que buscas.
+
+Eso deja tres estrategias viables:
+
+1. **Permitirlo todo.** La opción más sencilla, y la correcta si tu meta es la máxima visibilidad en IA y el ancho de banda no es un problema. La contrapartida es que tu contenido puede usarse para entrenar.
+2. **Bloquear el entrenamiento, permitir la búsqueda.** El punto medio por defecto para la mayoría de los sitios: prohíbe GPTBot, ClaudeBot, Google-Extended, CCBot y los demás tokens de entrenamiento, pero deja accesibles OAI-SearchBot, Claude-SearchBot, PerplexityBot, Googlebot y Bingbot. Te excluyes del entrenamiento y sigues siendo citable.
+3. **Bloquearlo todo.** Solo tiene sentido cuando proteger el contenido o controlar la carga del servidor importa más que cualquier visibilidad en IA, algo habitual en archivos de pago y grandes bibliotecas de medios.
+
+La mayoría de los sitios quieren la opción 2, y los medios españoles ya se mueven en esa dirección: según un [análisis de Vipnet360](https://www.elpaisdelosnegocios.es/2026/06/mas-de-la-mitad-de-los-medios-de.html) de junio de 2026 sobre unos 150 medios, el 46 % restringe algún rastreador de IA, y los bots de entrenamiento se bloquean un 37,2 % de las veces y los que actúan a petición del usuario solo un 10,6 %. Es decir, los editores ya distinguen entre entrenar y citar. El error caro es llegar a la opción 3 por accidente, con una regla amplia que se lleva a los bots de cita junto con los de entrenamiento. Verás guías en español que te dicen que lo bloquees todo por igual, y algunas hasta prohíben PerplexityBot como si fuera un bot de entrenamiento: eso es precisamente el error que te deja sin citas. Si tu objetivo es que te encuentren en las respuestas de IA, el resto de tu trabajo de [optimización para la búsqueda con IA](https://geotoolbox.ai/blog/how-to-optimize-for-ai-search) se desperdicia en el momento en que se bloquea el bot equivocado.
+
+En la UE hay una capa más, y conviene enmarcarla bien. El [Artículo 4 de la Directiva 2019/790](https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=CELEX:32019L0790) permite reservarte los derechos de minería de datos sobre tus contenidos por medios legibles por máquina, y robots.txt es el método reconocido para hacerlo: bloquear los bots de entrenamiento es también la forma de ejercer ese derecho. Es una cuestión de propiedad intelectual, no de RGPD, porque los rastreadores acceden a páginas públicas y bloquearlos no equivale a proteger datos personales. Conviene una advertencia: el alcance de esa excepción para el entrenamiento de IA generativa todavía se debate, y bloquear sigue siendo la vía práctica más segura al margen de cómo se resuelva.
+
+Un costo de segundo orden que vale la pena nombrar: el contenido con el que un modelo nunca se entrenó tiene menos probabilidades de surgir como una mención de marca espontánea en respuestas que no lanzan una búsqueda en vivo. Para la mayoría de los sitios ese efecto es pequeño al lado de las citas, pero no es cero.
+
+## Cómo bloquear o permitir rastreadores de IA en robots.txt
+
+Antes de editar nada a mano, mira dónde está tu dominio ahora. Este comprobador gratuito lee tu robots.txt del lado del servidor y muestra cuáles de los 34 rastreadores de IA están permitidos o bloqueados, con la línea exacta que hay que cambiar:
+
+<AiCrawlerCheckerWidget />
+
+La superficie de control de la mayoría de estos bots es el [robots.txt](https://geotoolbox.ai/glossary/robots-txt) en la raíz de tu dominio. Cada rastreador vigila su propio token: los permites o los bloqueas línea por línea. Una configuración selectiva, que bloquea el entrenamiento y deja accesibles los bots de cita, tiene este aspecto:
+
+```
+# Excluye tu contenido del entrenamiento de modelos de IA
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+# Deja accesibles los bots de búsqueda y cita sin bloquearlos:
+# OAI-SearchBot, Claude-SearchBot, PerplexityBot, Googlebot, Bingbot
+```
+
+Para bloquear en cambio todos los rastreadores de IA, añade también un bloque Disallow para cada token de búsqueda y de usuario. Para permitirlo todo, no añadas nada.
+
+En lugar de editar a mano, nuestro [generador de robots.txt](https://geotoolbox.ai/tools/robots-txt-generator) gratuito construye este archivo con cada rastreador de IA etiquetado por el trabajo que hace, para que veas lo que cuesta bloquear cualquiera de ellos antes de decidirte. Una vez que el archivo esté publicado, el [probador de robots.txt](https://geotoolbox.ai/tools/robots-txt-tester) gratuito comprueba una URL concreta contra él por cada rastreador y nombra la regla exacta que decidió el resultado. Ese segundo paso detecta algo que este formato de fragmento esconde: si tu archivo también tiene un grupo `User-agent: *`, un grupo con nombre como `GPTBot` lo **sustituye** para ese rastreador en vez de sumarse a él. Cualquier ruta que creías bloqueada para todo el sitio no lo está para los bots que nombraste.
+
+Dos advertencias antes de fiarte de ese archivo. Primero, robots.txt es un [estándar voluntario](https://www.rfc-editor.org/rfc/rfc9309.html): los bots que se portan bien lo obedecen, pero es una petición, no un muro. Algunos bots lo ignoran directamente, y los recuperadores a petición como ChatGPT-User y Perplexity-User están hechos para eso. Segundo, los cambios tardan en registrarse: una edición de robots.txt no es instantánea, y un rastreador puede seguir aplicando sus reglas antiguas hasta un día después.
+
+En la práctica, trata robots.txt como necesario pero no suficiente. Cuando necesites un bloqueo real y no una petición educada, escala:
+
+<table>
+  <thead>
+    <tr><th>Herramienta</th><th>¿Detiene a bots que ignoran robots.txt?</th><th>Costo</th><th>Ideal para</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>robots.txt</td><td>No, solo es orientativo</td><td>Gratis</td><td>Excluir a rastreadores que se portan bien</td></tr>
+    <tr><td>Regla de WAF o de borde (bloqueo por agente de usuario o IP)</td><td>Sí</td><td>De gratis a moderado</td><td>Frenar a un bot abusivo como Bytespider</td></tr>
+    <tr><td>Cloudflare AI Crawl Control</td><td>Sí</td><td>Desde el plan gratuito</td><td>Bloqueo gestionado de muchos bots a la vez</td></tr>
+    <tr><td>Pago por rastreo (HTTP 402)</td><td>Sí</td><td>Variable</td><td>Cobrar a las empresas de IA por el acceso</td></tr>
+  </tbody>
+</table>
+
+## Cómo distinguir un rastreador de IA real de uno falso
+
+Un agente de usuario es solo una línea de texto, y cualquiera puede enviarla. Muchos scrapers rastrean la web anunciándose como GPTBot para aprovecharse de su reputación, y bloquear el nombre no les hace nada. Por eso, antes de fiarte de una entrada en los registros de tu servidor, confirma que la petición viene realmente de quien dice venir.
+
+Los rastreadores reales publican sus rangos de IP justo para esto. OpenAI lista los rangos de direcciones de GPTBot, OAI-SearchBot y ChatGPT-User en archivos JSON, y Perplexity, Amazon y otros hacen lo mismo. La comprobación es un cruce de DNS inverso e IP: toma la dirección de origen de una petición que dice ser un bot de IA, confirma que cae dentro del rango publicado por el operador y trata cualquier petición fuera de ese rango como una posible suplantación que hay que someter a verificación o limitar en el cortafuegos.
+
+En la práctica descargas la lista publicada, por ejemplo la de OpenAI en [openai.com/gptbot.json](https://openai.com/gptbot.json), y la comparas con las direcciones que aparecen en tus registros bajo ese agente de usuario. Una petición que ondea la bandera de GPTBot desde una dirección que OpenAI no posee no es GPTBot, y una regla de robots.txt basada en el nombre nunca iba a detenerla. Este es el paso que casi todas las listas de rastreadores se saltan, y es la diferencia entre saber quién rastrea realmente tu sitio y fiarte de una etiqueta.
+
+## Cómo mantener tu lista de rastreadores al día
+
+Una lista como esta es exacta el día que se publica y va un poco desfasada un trimestre después. Los rastreadores comunitarios existen porque el reparto no para de moverse: sincronizar tu robots.txt con [ai.robots.txt](https://github.com/ai-robots-txt/ai.robots.txt) o [Known Agents](https://knownagents.com/agents) cada pocos meses es mejor que mantenerlo a mano.
+
+La lista es lo fácil, de todos modos. La pregunta más difícil es si los bots que quieres pueden llegar realmente a tus páginas, y eso falla más a menudo de lo que la gente espera. Una línea Disallow perdida, un cortafuegos que exige una verificación al tráfico que no viene de un navegador o un contenido que solo se muestra después de ejecutar JavaScript pueden dejar a un bot de cita mirando una página vacía. Según nuestra experiencia auditando sitios para la visibilidad en IA, la causa más común de un «no nos citan en ningún sitio» no es un contenido flojo: es un bot de búsqueda o de usuario bloqueado por accidente. El [Analizador de contenido](https://geotoolbox.ai/features/content-analyzer) de geotoolbox lee una página como cada gran rastreador de IA e informa de si pueden llegar a ella y procesarla (su puntuación de legibilidad para IA), junto con una nota de lo citable que es la página una vez que llegan. Para una lectura a nivel de sitio, el escaneo de [Agent Readiness](https://geotoolbox.ai/features/agent-readiness) (gratis con una cuenta) comprueba ese mismo acceso de los rastreadores desde tu URL raíz.
+
+## Preguntas frecuentes
+
+### ¿Necesito una regla de robots.txt distinta para cada bot de IA?
+
+Sí, robots.txt no tiene un comodín para «todos los bots de IA»: cada token de agente de usuario necesita su propio bloque, por eso vale la pena usar las configuraciones generadas por las listas comunitarias. Un único Disallow bajo `User-agent: *` también afecta a Googlebot y a Bingbot, el clásico error de bloquearlo todo sin querer.
+
+### ¿Bloquear Google-Extended afecta a las citas en las Vistas creadas con IA?
+
+No, por partida doble: no toca tu posicionamiento en la Búsqueda ni te quita de las Vistas creadas con IA, porque estas se construyen a partir del rastreo normal de Googlebot. Google-Extended solo gobierna el entrenamiento y la fundamentación de Gemini: es el único token que puedes bloquear hoy sin ningún costo de visibilidad en las superficies de Google.
+
+### Si bloqueo GPTBot, ¿me quedo fuera de ChatGPT?
+
+No. GPTBot es el rastreador de entrenamiento. Las respuestas de búsqueda de ChatGPT llegan por OAI-SearchBot y ChatGPT-User: bloquear GPTBot deja intacta tu visibilidad en las respuestas de búsqueda de ChatGPT. Un matiz: tu contenido puede estar ya en conjuntos de entrenamiento a través de CCBot, algo que bloquear GPTBot hoy no deshace.
+
+### ¿Bloquear rastreadores de IA en robots.txt funciona de verdad?
+
+Con los grandes operadores, sí, y puedes verificarlo: sus rangos de IP publicados te permiten confirmar en los registros de tu servidor si las peticiones pararon tras el cambio. Si un bot bloqueado sigue apareciendo, comprueba la IP antes de culpar al operador: suele ser un suplantador que se apropia del nombre.
+
+### ¿Cómo detengo a Bytespider para que no me consuma el ancho de banda?
+
+Como Bytespider suele ignorar robots.txt, el arreglo efectivo es una regla de cortafuegos o WAF que bloquee su agente de usuario o sus rangos de IP, no una línea Disallow. Verifica la IP en vez de fiarte de la cadena del agente de usuario, ya que el nombre es fácil de falsificar.
+
+### ¿Qué agente de usuario exacto usa cada motor de IA?
+
+Las cadenas completas llevan la versión y la información de contacto más allá del token, por ejemplo «Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatible; GPTBot/1.2; +https://openai.com/gptbot». Para robots.txt solo necesitas el token (GPTBot, OAI-SearchBot, Claude-SearchBot, etc., según la tabla de arriba); para el análisis de registros, cruza el token con los rangos de IP publicados por el operador.
+
+## Por dónde empezar
+
+La lista seguirá cambiando, pero la lógica que hay debajo no: los rastreadores de entrenamiento, de búsqueda y de usuario hacen trabajos distintos, y el único error real es bloquear a los que te ponen en la respuesta. Decide de qué te quieres excluir y escribe el robots.txt que lo refleje. La accesibilidad es solo la primera mitad, eso sí: una vez que un bot entra, la siguiente pregunta es si un agente puede [usar tu sitio](https://geotoolbox.ai/blog/agent-ready-website) de verdad.
+
+Ese último paso es el que casi nadie da. Antes de invertir tiempo en el contenido, confirma que los rastreadores de IA que te importan sí pueden acceder a tus páginas. Empieza con el [Comprobador de rastreadores de IA](https://geotoolbox.ai/tools/ai-crawler-checker) gratuito de geotoolbox, que lee tu robots.txt contra los 34 rastreadores de IA en segundos (comprueba la ruta de la página de inicio; revisa también las subpáginas clave a mano). Después, porque robots.txt puede decir que sí mientras un cortafuegos dice que no, el escaneo gratuito de [Agent Readiness](https://geotoolbox.ai/features/agent-readiness) comprueba el acceso real de los rastreadores a nivel de sitio desde tu URL raíz.
+
+## Fuentes
+
+- Bots y rastreadores de OpenAI (GPTBot, OAI-SearchBot, ChatGPT-User) - OpenAI - `developers.openai.com/api/docs/bots`
+- ¿Anthropic rastrea datos de la web y cómo pueden bloquear los dueños de un sitio al rastreador? - Anthropic - `support.claude.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler`
+- Rastreadores de Perplexity - Perplexity - `docs.perplexity.ai/guides/bots`
+- Una actualización de los controles para editores web (Google-Extended) - Google - `blog.google/innovation-and-ai/products/an-update-on-web-publisher-controls`
+- La brecha entre rastreo y clic: datos de Cloudflare sobre bots de IA, entrenamiento y referencias - Cloudflare, julio de 2025 - `blog.cloudflare.com/crawlers-click-ai-bots-training`
+- Los bots ya superan al tráfico humano (57,5 % de las peticiones web, junio de 2026) - Tom's Hardware - `tomshardware.com/tech-industry/artificial-intelligence/bots-have-now-passed-human-traffic-online-cloudflare-boss-laments`
+- Perplexity usa rastreadores sigilosos no declarados para evadir directivas de no rastreo - Cloudflare - `blog.cloudflare.com/perplexity-is-using-stealth-undeclared-crawlers-to-evade-website-no-crawl-directives`
+- Estadísticas de tráfico de bots rastreadores de IA (datos de 2026) - Digital Applied - `digitalapplied.com/blog/ai-crawler-bot-traffic-statistics-2026-data-reference`
+- Protocolo de exclusión de robots (RFC 9309) - IETF - `rfc-editor.org/rfc/rfc9309.html`
+- ai.robots.txt - lista comunitaria de rastreadores de IA - `github.com/ai-robots-txt/ai.robots.txt`
+- Known Agents (antes Dark Visitors) - directorio en vivo de agentes y rastreadores de IA - `knownagents.com/agents`
+- Cómo preparar tu sitio para los agentes (registros de rastreo de IA de un solo sitio) - Suganthan Mohanadasan - `suganthan.com/blog/how-to-make-website-agent-ready`
+- Más de la mitad de los medios españoles restringen los rastreadores de IA (análisis de Vipnet360) - El País de los Negocios, junio de 2026 - `elpaisdelosnegocios.es/2026/06/mas-de-la-mitad-de-los-medios-de.html`
+- Directiva (UE) 2019/790 sobre derechos de autor en el mercado único digital (Art. 4, exclusión de minería de datos) - EUR-Lex - `eur-lex.europa.eu/legal-content/ES/TXT/?uri=CELEX:32019L0790`
