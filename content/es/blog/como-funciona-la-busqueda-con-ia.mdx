@@ -1,0 +1,136 @@
+---
+title: "¿Cómo funciona la búsqueda con IA? ChatGPT, Perplexity, Gemini"
+description: "ChatGPT, Perplexity, Gemini y las Vistas creadas con IA de Google siguen el mismo bucle de cuatro etapas: leer, buscar, elegir fuentes y responder con citas."
+date: "2026-08-11"
+recheckBy: "2026-09-01"
+author: "Samy BEN SADOK"
+tags: ["how-does-ai-search-work", "busqueda-con-ia", "buscadores-de-ia", "geo", "ai-search", "guide"]
+draft: false
+locale: "es"
+donorSlug: "how-does-ai-search-work"
+donorCommit: "babb1a9"
+noindex: false
+---
+
+La búsqueda con IA no tiene una sola forma. ChatGPT, Perplexity, Gemini, Claude y las Vistas creadas con IA de Google tratan tu consulta de manera distinta. Pero el proceso de fondo que comparten es el mismo: leer la pregunta, buscar en la web, quedarse con las buenas fuentes y redactar una respuesta fundamentada con citas. Para ver dónde está todo esto en 2026, motor por motor, consulta nuestro informe de campo sobre el [estado de la búsqueda con IA](https://geotoolbox.ai/blog/state-of-ai-search-2026).
+
+## Lo que debes saber
+
+- Los buscadores de IA (ChatGPT, Perplexity, Gemini, Claude, Copilot) siguen el mismo bucle de cuatro etapas: entender y ampliar la consulta, recuperar pasajes de páginas, evaluar las fuentes y generar una respuesta citada. Ese mecanismo tiene nombre: la generación aumentada por recuperación (RAG).
+- Cada motor bebe de un índice distinto: ChatGPT de Bing y de su propio rastreo, Perplexity de su índice propio, las Vistas creadas con IA y Gemini del índice de Google, Claude de Brave Search y Copilot de Bing.
+- El vínculo con el SEO clásico se afloja rápido: Ahrefs midió que solo el 38 % de las citas de las Vistas creadas con IA estaban en el top 10 orgánico en marzo de 2026, frente a un 76 % en julio de 2025.
+- En España ya están disponibles tanto las «Vistas creadas con IA» como el «Modo IA» de Google (este último desde octubre de 2025), así que la Búsqueda responde ya directamente a las preguntas de tu sector citando fuentes.
+- Ser accesible para los rastreadores de IA es un requisito, no una palanca de posicionamiento: si OAI-SearchBot o Claude-SearchBot no pueden leer tu página, ninguna otra optimización cuenta.
+
+## Búsqueda con IA frente a búsqueda clásica: la diferencia real
+
+Con la búsqueda de Google clásica se muestran diez enlaces y haces clic. La búsqueda con IA, en cambio, analiza tu pregunta, aprovecha muchas fuentes a la vez y redacta una sola respuesta, con unas pocas URL citadas debajo.
+
+El cambio de comportamiento por parte del usuario es igual de profundo. Las consultas dirigidas a una IA son varias veces más largas que las expresiones de tres o cuatro palabras que se teclean en el buscador clásico. Le hablas a la IA como a un colega: frases completas, contexto, preguntas de seguimiento. Ese simple cambio transforma todo el trabajo que el motor tiene que hacer entre bastidores.
+
+Una precisión inicial. Si buscaste «cómo funciona la búsqueda con IA» y aterrizaste en la documentación de Microsoft o de Cloudflare, viste otra cosa. Esas páginas describen Azure AI Search o Cloudflare AI Search, productos basados en bases de datos vectoriales que las empresas usan para añadir búsqueda semántica dentro de sus propias aplicaciones. Tecnología importante, pero un tema totalmente distinto. Aquí hablamos de los buscadores de IA de consumo que responden preguntas al público: ChatGPT Search, Perplexity, las Vistas creadas con IA de Google, Gemini, Claude y [Microsoft Copilot](https://geotoolbox.ai/blog/what-is-copilot). Si estás decidiendo cuál usar, ordenamos y comparamos [los mejores buscadores de IA](https://geotoolbox.ai/blog/best-ai-search-engines) por caso de uso.
+
+## Las 4 etapas que sigue todo buscador de IA
+
+Casi todos los motores de este ámbito siguen el mismo bucle de cuatro etapas. Las implementaciones varían de un motor a otro; la estructura no cambia.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/como-funciona-la-busqueda-con-ia/busqueda-ia-cuatro-etapas.png" alt="Las cuatro etapas de la búsqueda con IA: comprensión de la consulta, recuperación, evaluación de fuentes y respuesta citada." w="1300" h="499" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Todos los grandes buscadores de IA siguen este mismo bucle: solo cambian las implementaciones.</figcaption>
+</figure>
+
+1. **Comprensión de la consulta.** El modelo lee tu pregunta, deduce la intención y la amplía. Sinónimos, conceptos relacionados y lo que Google llama **[query fan-out](https://geotoolbox.ai/blog/query-fan-out)**: descomponer una pregunta compleja en varias subconsultas paralelas. Pide «un viaje de 5 días a Japón» y el motor busca a la vez hoteles en Tokio, el tiempo en Kioto, abonos de tren y una docena de aspectos más que no llegaste a plantear.
+
+2. **Recuperación.** El motor lanza esas subconsultas contra un índice de búsqueda y las compara con [pasajes fragmentados](https://geotoolbox.ai/blog/content-chunking) de páginas indexadas, no con documentos enteros. A veces es un índice asociado como Bing (el caso de ChatGPT). A veces una API de resultados de búsqueda (SERP). A veces un rastreo propio guardado en caché. El resultado: un grupo de documentos candidatos por subconsulta, normalmente unas pocas docenas.
+
+3. **Evaluación de fuentes.** Es la etapa que casi todas las explicaciones se saltan. El sistema puntúa cada candidato según su autoridad, su actualidad, su relevancia y el grado de acuerdo entre distintas fuentes. Una afirmación que aparece en tres fuentes independientes gana a una que aparece en una sola. Los motores no publican su método de puntuación, pero el comportamiento de citación observado sugiere que un dominio ya citado antes parte con ventaja frente a uno nuevo sobre el mismo tema.
+
+4. **Generación con cita.** El modelo toma las fuentes que sobreviven, llena su ventana de contexto con su texto y produce una respuesta anclada en ese texto. Los enlaces que muestra debajo de la respuesta son citas visibles, aunque no una trazabilidad perfecta del origen. Todo este esquema tiene nombre: la **[generación aumentada por recuperación](https://geotoolbox.ai/glossary/retrieval-augmented-generation)** (RAG), y vale la pena entender [qué es el RAG y cómo convertirte en la página que el motor recupera](https://geotoolbox.ai/blog/what-is-rag).
+
+## Cómo funciona la búsqueda de ChatGPT (arraigada en Bing)
+
+La búsqueda web de ChatGPT se construyó sobre el índice de Bing y sigue apoyándose en él, mientras OpenAI incorpora cada vez más su propio rastreo y sus propios criterios de clasificación. Ese equilibrio cambia rápido: el rastreo de la web de OpenAI se triplicó aproximadamente entre agosto de 2025 y marzo de 2026, según un [análisis de Botify sobre unos 7.000 millones de archivos de registro de servidores](https://www.botify.com/blog/openai-tripled-web-crawl) publicado en abril de 2026. Cuando activas una búsqueda dentro de ChatGPT, el modelo consulta ese índice combinado, recupera los resultados, los evalúa y redacta una respuesta (para ver qué acaba citando y por qué solo cita una parte, mira [cómo cita sus fuentes ChatGPT](https://geotoolbox.ai/blog/chatgpt-citations)). Desglosamos ese bucle de recuperación en [cómo funciona la búsqueda de ChatGPT](https://geotoolbox.ai/blog/how-chatgpt-search-works).
+
+OpenAI documenta ya cuatro rastreadores, y los tres que importan para la visibilidad tienen tareas distintas. **OAI-SearchBot** construye el índice que hay detrás de la búsqueda de ChatGPT. **ChatGPT-User** va a buscar una página concreta en tiempo real cuando la pregunta de un usuario apunta a ella. **GPTBot** recoge datos de entrenamiento, un uso aparte (los nuevos modelos de ChatGPT sabrán qué había en tu sitio en el momento del entrenamiento, pero las respuestas en vivo pasan por los robots de búsqueda y de recuperación). El cuarto, **OAI-AdsBot**, revisa las páginas enviadas como anuncios de ChatGPT y no tiene nada que ver con la visibilidad orgánica. [Los agentes de usuario de estos robots](https://geotoolbox.ai/blog/ai-crawlers) importan porque, si tu sitio bloquea los robots de búsqueda o de recuperación en el archivo robots.txt o con una regla de cortafuegos de aplicaciones web (WAF), eres invisible para ese motor.
+
+La implicación práctica: cuidar tu cobertura en Bing ayuda, porque la búsqueda de ChatGPT usa Bing como uno de sus proveedores externos. Envía tu sitemap a [Bing Webmaster Tools](https://www.bing.com/webmasters) y corrige ahí los problemas de cobertura. Pero la búsqueda de ChatGPT también mezcla el rastreo propio de OpenAI: no trates Bing como el índice entero.
+
+## Cómo funciona Perplexity (Sonar)
+
+Perplexity se presenta como «motor de respuesta» y no como buscador, y su arquitectura refleja ese matiz. Su modelo de respuesta propio, **Sonar**, está basado en Llama 3.3 de Meta, según [el propio anuncio de Perplexity](https://www.perplexity.ai/hub/blog/meet-new-sonar). La recuperación corre sobre el índice propio de Perplexity, rastreado por PerplexityBot. Perplexity Pro permite además cambiar a modelos subyacentes de OpenAI, Anthropic y Google.
+
+Perplexity parece anclar sus respuestas muy cerca del texto recuperado, pero el grupo exacto de candidatos, el orden y el montaje del contexto son propietarios. Contrasta con ChatGPT, un asistente más general donde la búsqueda web es solo una capa más. Una distinción que detalla [ChatGPT frente a Perplexity](https://geotoolbox.ai/blog/chatgpt-vs-perplexity) en clave de visibilidad.
+
+Perplexity también se apoya mucho en Reddit. El seguimiento de citas de Profound, un proveedor de herramientas de visibilidad en IA, situó a Reddit como el dominio más citado en las respuestas de Perplexity en su análisis de 2025, por delante de cualquier otra fuente de ese conjunto de datos. Un matiz al respecto: [Reddit demandó a Perplexity en octubre de 2025](https://www.cnbc.com/2025/10/23/reddit-user-data-battle-ai-industry-sues-perplexity-scraping-posts-openai-chatgpt-google-gemini-lawsuit.html) por el uso de datos extraídos, y a diferencia de Google y OpenAI, Perplexity no tiene acuerdo de licencia con Reddit, por lo que ese peso podría moverse mientras el caso sigue su curso. En cualquier caso, si tu sector tiene discusiones activas en Reddit y tu marca no está en ellas, le regalas terreno a la competencia.
+
+## Cómo funcionan las Vistas creadas con IA de Google
+
+Las **Vistas creadas con IA** (AI Overviews) son los bloques de respuesta que aparecen en la parte superior de los resultados de Google para una parte creciente de consultas. Funcionan con [Gemini](https://geotoolbox.ai/blog/what-is-gemini) y beben del índice principal de Google, no de un rastreo separado dedicado a la IA. En España ya están disponibles, igual que el Modo IA.
+
+Ese último detalle es lo que las distingue del resto de motores de esta lista. Las Vistas creadas con IA sacan sus citas de páginas en las que los sistemas de Google ya confían, pero el solapamiento con el posicionamiento clásico se afloja rápido: a escala mundial, Ahrefs midió que [solo el 38 % de las citas de las Vistas creadas con IA](https://ahrefs.com/blog/ai-overview-citations-top-10/) estaban en el top 10 orgánico para la misma consulta en marzo de 2026, frente a un 76 % en julio de 2025, un cambio que Ahrefs atribuye en parte a que Google saca fuentes de consultas relacionadas del fan-out. Los fundamentos del SEO clásico (contenido útil, técnica sólida, señales de autoridad reales) siguen pesando, pero ya no por la vía de un simple «me posiciono primero, me citan después».
+
+El **Modo IA (AI Mode)**, la interfaz conversacional autónoma de Google, se comporta más como ChatGPT o Perplexity. Un análisis de las citas del Modo IA (SE Ranking, junio de 2025, 10.000 palabras clave) encontró que solo un 14 % de las URL citadas estaban en el top 10 visible de Google: el conjunto de citas es más amplio que lo que muestran las SERP clásicas (mira [el SEO para el Modo IA de Google](https://geotoolbox.ai/blog/google-ai-mode-seo) para optimizarlo).
+
+El término que hay que conocer aquí es **Google-Extended**. No es un rastreador, sino un control del archivo robots.txt que decide si tu contenido puede usarse para entrenar y fundamentar los modelos Gemini de Google. Las Vistas creadas con IA son una función de la Búsqueda alimentada por el Googlebot habitual: bloquear Google-Extended no te saca de ellas. La única salida pasa por los controles estándar de la Búsqueda, con el costo de visibilidad que eso implica.
+
+## Cómo gestionan la búsqueda Claude, Gemini y Copilot
+
+Claude añadió la búsqueda web en vivo unos meses después de ChatGPT, con una implementación muy parecida: recuperar de una infraestructura de búsqueda, evaluar, generar con citas. Esa infraestructura es Brave Search. Anthropic nunca anunció la alianza, pero su propia [lista de subencargados](https://trust.anthropic.com/subprocessors) menciona a Brave para la búsqueda web, y en una comprobación puntual de marzo de 2025 [Profound midió un solapamiento del 86,7 %](https://www.tryprofound.com/blog/what-is-claude-web-search-explained) (13 de 15 resultados de prueba) entre los resultados citados por Claude y los primeros resultados no patrocinados de Brave. Los rastreadores que conviene conocer son **Claude-SearchBot**, que indexa páginas para la búsqueda web de Claude, y **Claude-User**, que recupera una página cuando la pregunta de un usuario apunta a ella. **ClaudeBot** es el rastreador de entrenamiento. (Las guías antiguas citan anthropic-ai o Claude-Web: nombres heredados que Anthropic ya no usa.) La misma división entre entrenamiento, búsqueda y recuperación que en OpenAI.
+
+Gemini fundamenta sus respuestas en la Búsqueda de Google cuando el modelo juzga que necesita datos externos. En la app de Gemini, ese anclaje es lo que alimenta la función «Mostrar fuentes». Si optimizas para Gemini, en realidad optimizas para el índice de Google sobre el que se apoya.
+
+Microsoft Copilot es el más simple del grupo. Es una capa ligera sobre los resultados habituales de Bing, con la generación de respuestas a cargo de modelos de OpenAI y de los modelos propios MAI de Microsoft, cuya incorporación a ciertos usos de texto de Copilot [anunció Microsoft en agosto de 2025](https://microsoft.ai/news/two-new-in-house-models/). Si estás indexado y bien posicionado en Bing, eres candidato a que te cite Copilot.
+
+Aquí tienes todo el panorama de un vistazo:
+
+<table>
+  <thead>
+    <tr><th>Motor</th><th>Bebe de</th><th>Robots de búsqueda y recuperación</th><th>Opt-out de entrenamiento</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Búsqueda de ChatGPT</td><td>Índice de Bing + rastreo propio de OpenAI</td><td>OAI-SearchBot, ChatGPT-User</td><td>GPTBot</td></tr>
+    <tr><td>Perplexity</td><td>Índice propio de Perplexity</td><td>PerplexityBot, Perplexity-User</td><td>No se usa para entrenamiento</td></tr>
+    <tr><td>Vistas creadas con IA / Modo IA de Google</td><td>Índice principal de Google</td><td>Googlebot</td><td>Google-Extended (entrenamiento de Gemini)</td></tr>
+    <tr><td>Gemini</td><td>Anclaje en la Búsqueda de Google</td><td>Googlebot</td><td>Google-Extended</td></tr>
+    <tr><td>Claude</td><td>Brave Search + rastreo propio de Anthropic</td><td>Claude-SearchBot, Claude-User</td><td>ClaudeBot</td></tr>
+    <tr><td>Microsoft Copilot</td><td>Índice de Bing</td><td>Bingbot</td><td>n/d</td></tr>
+  </tbody>
+</table>
+
+## Qué implica si quieres que te citen
+
+Cuentan tres cosas, y todas se derivan del bucle de cuatro etapas de arriba.
+
+**Sé accesible.** La mayoría de los problemas de «no aparezco en la IA» son más simples de lo que se cree. El robot no llega a la página. Una regla del robots.txt bloquea GPTBot. Una regla de Cloudflare o DataDome limita el ritmo de OAI-SearchBot. Un sitio que depende exclusivamente de JavaScript para mostrarse puede devolver una página en blanco a un robot que no ejecuta JavaScript. Hay un caso que las guías en español señalan a menudo y el resto pasa por alto: el «Bot Fight Mode» de Cloudflare viene activado por defecto en varios planes y puede bloquear en silencio a PerplexityBot o ClaudeBot aunque tu robots.txt los permita. Y lo del renderizado no es teórico, está medido: un [estudio de Vercel y MERJ](https://vercel.com/blog/the-rise-of-the-ai-crawler) de diciembre de 2024 constató que ninguno de los grandes rastreadores de IA renderizaba JavaScript, en un mes de tráfico de la red de Vercel que incluyó 569 millones de peticiones de GPTBot. La gran excepción es Google: Gemini y las Vistas creadas con IA pasan por Googlebot, que sí renderiza JavaScript. Si los robots no pueden recuperar tus páginas, todo lo demás es esfuerzo perdido. Es justo lo que detecta el [verificador de rastreadores de IA](https://geotoolbox.ai/tools/ai-crawler-checker) gratuito de Geotoolbox: lee tu robots.txt y muestra cuáles de los 34 rastreadores de IA documentados permites o bloqueas, hasta la línea exacta que hace el bloqueo. Una salvedad: la accesibilidad es un punto de partida, no una palanca de posicionamiento. Un robot permitido todavía tiene que elegir citarte. Uno bloqueado nunca lo hará.
+
+**Ofrece una respuesta clara a una pregunta clara.** La búsqueda con IA tiende a favorecer las respuestas nítidas y directas. Los datos estructurados ayudan a que Google y Bing entiendan el contenido y desbloqueen ciertas funciones, pero no está demostrado públicamente que sean una palanca directa de citación en ChatGPT o Perplexity. Presenta tus afirmaciones en un formato que el modelo pueda reutilizar directamente: párrafos cortos, tablas, definiciones en lista. Es el arte de [redactar páginas que los modelos de lenguaje (LLM) citan](https://geotoolbox.ai/blog/ai-content-optimization). Si la parte de arriba de tu página habla de tu marca y la respuesta está enterrada en la sección cuarta, perderás frente a quien puso la respuesta arriba.
+
+**Construye señales de autoridad en varias fuentes.** La evaluación RAG compara las fuentes entre sí y suele premiar su coherencia. Trata esa concordancia entre fuentes como una señal plausible, no como una regla garantizada. Una afirmación presente en tu sitio, en un hilo de un foro, en una transcripción de YouTube y en una comparativa de terceros está mejor situada que la misma afirmación aislada en tu sitio. Trata la presencia externa (Reddit, foros verticales, Quora, transcripciones de pódcast, directorios de expertos) como parte de tu base de visibilidad, no como un canal aparte.
+
+## Preguntas frecuentes
+
+### ¿La búsqueda con IA es lo mismo que Azure AI Search?
+
+No. Azure AI Search y los productos parecidos (Cloudflare AI Search, Elasticsearch con extensiones vectoriales) son herramientas de infraestructura que las empresas usan para añadir búsqueda semántica dentro de sus propias aplicaciones. Los buscadores de IA como ChatGPT, Perplexity y las Vistas creadas con IA de Google son productos de consumo que responden preguntas a partir de la web abierta. Comparten técnicas de fondo ([embeddings](https://geotoolbox.ai/blog/vector-embeddings), RAG, correspondencia semántica), pero resuelven problemas distintos.
+
+### ¿El SEO clásico sigue importando para la búsqueda con IA?
+
+Sí, aunque el vínculo se afloja: según la medición de Ahrefs de marzo de 2026, solo un 38 % de las citas de las Vistas creadas con IA estaban en el top 10 orgánico para la misma consulta, frente al 76 % de julio de 2025. La búsqueda de ChatGPT se apoya en el índice de Bing; por eso, estar bien indexado en Bing es una palanca directa. Incluso Perplexity, que usa su propia recuperación, tiene en cuenta señales de autoridad que se solapan con el SEO clásico: backlinks, credibilidad del dominio, calidad del contenido. El SEO ya no basta por sí solo, pero sigue siendo necesario.
+
+### ¿Están disponibles en España las Vistas creadas con IA y el Modo IA?
+
+Sí. Las Vistas creadas con IA (el nombre oficial en español de las AI Overviews) llevan tiempo apareciendo en los resultados de Google en España, y el Modo IA está disponible allí desde octubre de 2025. En la práctica, la Búsqueda de Google responde ya directamente a muchas consultas de tu sector citando fuentes; a tus páginas les conviene estar preparadas.
+
+### ¿Los buscadores de IA rastrean las páginas en vivo o usan un índice en caché?
+
+Depende del motor y de la acción. Las consultas en vivo (búsqueda de ChatGPT, Perplexity, Claude con búsqueda web) consultan un índice o una API de SERP en tiempo real cuando haces la pregunta. Los rastreos de entrenamiento (GPTBot, ClaudeBot, CCBot) siguen un calendario aparte y alimentan los pesos del modelo. Google-Extended es un control del robots.txt, no un rastreador, y la recuperación la siguen haciendo los robots de Google existentes. Para controlar el entrenamiento o la recuperación, el robots.txt y tu WAF son las palancas, con una salvedad: las recuperaciones lanzadas por el usuario escapan en parte al robots.txt. [OpenAI indica](https://developers.openai.com/api/docs/bots) que las reglas del robots.txt «pueden no aplicarse» a ChatGPT-User, y [Perplexity precisa](https://docs.perplexity.ai/guides/bots) que Perplexity-User «por lo general las ignora»: una regla del WAF es el bloqueo más firme. Si además quieres oponerte al uso de tu contenido por motivos de RGPD, en la UE debes señalarlo de forma expresa: combina varias señales (robots.txt, el archivo ai.txt, el protocolo TDMRep o etiquetas meta «noai») en lugar de una sola línea, ya que ninguna es vinculante por sí sola.
+
+### ¿Por qué las IA citan tanto a Reddit?
+
+Porque Reddit está lleno de gente que se explica las cosas entre sí, en lenguaje sencillo, con validación cruzada de otros comentaristas. Ese formato es casi ideal para el RAG: corto, declarativo, contrastado y a menudo con ejemplos concretos. Los mismos datos que sitúan a Reddit como la fuente más citada en Perplexity también lo colocan entre las tres más citadas en ChatGPT, [Grok](https://geotoolbox.ai/blog/what-is-grok) y las Vistas creadas con IA de Google. Para las marcas, la conclusión es que estar presente en discusiones activas (de forma útil, no promocional) es una estrategia de citación de alto valor.
+
+## Y ahora, ¿por dónde sigo?
+
+Si hay algo que recordar del bucle de cuatro etapas, es que la etapa 2 (la recuperación) puede fallar en silencio. Si OAI-SearchBot o Claude-SearchBot no pueden llegar a tu página, ninguna de las demás etapas se pone en marcha.
+
+Si no estás seguro de que tu sitio sea accesible para los robots que cuentan, lanza el [test gratuito de compatibilidad con los rastreadores de IA](https://geotoolbox.ai/tools/ai-crawler-checker) de Geotoolbox y mira cuáles de los 34 rastreadores de IA documentados permite o bloquea tu robots.txt hoy, motor por motor. Es la comprobación más barata de toda tu base de visibilidad en IA, y una de las más fáciles de descuidar sin darte cuenta.
