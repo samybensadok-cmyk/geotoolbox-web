@@ -4,9 +4,9 @@ import { getAllGlossaryTerms, getGlossaryCategories } from "@/lib/content"
 import { siteConfig } from "@/lib/config"
 import { JsonLd } from "@/components/seo/json-ld"
 import { breadcrumbsSchema } from "@/lib/seo-schema"
-import { setRequestLocale } from "next-intl/server"
+import { setRequestLocale, getTranslations } from "next-intl/server"
 import { notFound } from "next/navigation"
-import { glossaryLocales } from "@/i18n/routing"
+import { glossaryLocales, bcp47, routing, type Locale } from "@/i18n/routing"
 import { localePath } from "@/lib/i18n/paths"
 
 export async function generateMetadata({
@@ -19,11 +19,19 @@ export async function generateMetadata({
   // marketing-only locales.
   if (!(glossaryLocales as readonly string[]).includes(locale)) notFound()
   const basePath = locale === "en" ? "" : `/${locale}`
+  const t = await getTranslations({ locale, namespace: "glossary" })
+  // Reciprocal hreflang across every glossary-enabled locale (same-path
+  // relationship, like the marketing pages — the index has no donor slug).
+  const languages: Record<string, string> = {}
+  for (const loc of glossaryLocales) {
+    const p = loc === routing.defaultLocale ? "" : `/${loc}`
+    languages[bcp47[loc as Locale]] = `${siteConfig.url}${p}/glossary`
+  }
+  languages["x-default"] = `${siteConfig.url}/glossary`
   return {
-    title: "GEO Glossary",
-    description:
-      "Plain-English definitions of generative engine optimization (GEO), AI search, and AI crawler terms. Short answers that link to the full guides.",
-    alternates: { canonical: `${siteConfig.url}${basePath}/glossary` },
+    title: t("indexTitle"),
+    description: t("indexMetaDescription"),
+    alternates: { canonical: `${siteConfig.url}${basePath}/glossary`, languages },
   }
 }
 
@@ -33,13 +41,15 @@ export default async function GlossaryIndex({
   params: Promise<{ locale: string }>
 }) {
   const { locale } = await params
-  // Content locales only (en/fr — fr keeps its deliberate placeholder).
-  // Marketing-only locales (es) 404 rather than render an English shell.
+  // Content locales only. FR is live with real entries since 2026-08-11;
+  // the empty-state is a cold-start fallback. Marketing-only locales (es)
+  // 404 rather than render an English shell.
   if (!(glossaryLocales as readonly string[]).includes(locale)) notFound()
   setRequestLocale(locale)
   const basePath = locale === "en" ? "" : `/${locale}`
   const terms = getAllGlossaryTerms(locale)
   const categories = getGlossaryCategories(locale)
+  const t = await getTranslations("glossary")
 
   return (
     <>
@@ -47,16 +57,15 @@ export default async function GlossaryIndex({
         <JsonLd
           data={[
             breadcrumbsSchema([
-              { name: "Home", url: "/" },
-              { name: "Glossary", url: "/glossary" },
+              { name: t("home"), url: basePath || "/" },
+              { name: t("glossary"), url: `${basePath}/glossary` },
             ]),
             {
               "@context": "https://schema.org",
               "@type": "DefinedTermSet",
-              name: `${siteConfig.name} Glossary`,
+              name: t("definedTermSetName"),
               url: `${siteConfig.url}${basePath}/glossary`,
-              description:
-                "Definitions of generative engine optimization, AI search, and AI crawler terms.",
+              description: t("indexMetaDescription"),
               hasDefinedTerm: terms.map((t) => ({
                 "@type": "DefinedTerm",
                 name: t.term,
@@ -70,15 +79,14 @@ export default async function GlossaryIndex({
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-[6fr_6fr] lg:items-end lg:gap-16">
             <div>
               <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-                Reference
+                {t("indexEyebrow")}
               </p>
               <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-                GEO Glossary.
+                {t("indexH1")}
               </h1>
             </div>
             <p className="max-w-xl text-base leading-relaxed text-gray-600">
-              Short, plain-English definitions of the terms behind generative engine
-              optimization and AI search. Each one links to the full guide.
+              {t("indexIntro")}
             </p>
           </div>
         </div>
@@ -88,7 +96,7 @@ export default async function GlossaryIndex({
         <div className="mx-auto max-w-7xl">
           {terms.length === 0 ? (
             <div className="mt-2 rounded-2xl border border-gray-200 bg-gray-50 px-6 py-16 text-center">
-              <p className="text-gray-600">Definitions are on the way. Check back soon.</p>
+              <p className="text-gray-600">{t("indexEmpty")}</p>
             </div>
           ) : (
             <div className="mt-2 space-y-14">

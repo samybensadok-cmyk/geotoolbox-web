@@ -1,0 +1,28 @@
+---
+term: "robots.txt"
+aliases: ["fichier robots.txt", "bloquer les robots IA", "robots.txt GPTBot", "autoriser les robots IA"]
+definition: "Le fichier robots.txt est un fichier texte placé à la racine d'un site qui indique aux robots d'exploration, agent par agent, les chemins qu'ils peuvent ou non récupérer. Pour la recherche IA, c'est le principal levier pour autoriser ou bloquer des robots comme GPTBot, OAI-SearchBot, ClaudeBot et PerplexityBot — Google faisant exception, via l'identifiant de contrôle Google-Extended. La plupart des robots IA légitimes le respectent."
+category: "Robots d'exploration IA"
+related: ["llms-txt"]
+article: "/blog/how-to-optimize-for-ai-search"
+articleLabel: "Référencement IA : la méthode en 7 étapes"
+updated: "2026-08-11"
+draft: false
+donorSlug: "robots-txt"
+donorCommit: "4df80be"
+relatedArticles:
+  - href: "/blog/ai-visibility-audit"
+    label: "AI Visibility Audit: A Step-by-Step Checklist"
+  - href: "/blog/ai-crawlers"
+    label: "AI Crawlers: The List of AI Bots & How to Control Them"
+  - href: "/blog/agent-ready-website"
+    label: "Agentic Browsers Are Here: Is Your Site Agent-Ready?"
+---
+
+L'exception Google mérite d'être explicite : Google-Extended n'est pas un robot mais un identifiant de contrôle, qui vous retire uniquement de l'entraînement et de l'ancrage des modèles Gemini. Votre présence dans les AI Overviews (aperçus IA) et le Mode IA (AI Mode) dépend, elle, de l'accès laissé à Googlebot et des contrôles nosnippet et max-snippet.
+
+Une seule règle trop large — un `User-agent: *` fourre-tout censé arrêter les aspirateurs de contenu — peut bloquer sans bruit les robots IA que vous vouliez justement laisser passer. Vérifiez chaque agent IA explicitement : le [testeur de robots.txt](https://geotoolbox.ai/tools/robots-txt-tester) gratuit teste une URL robot par robot et nomme la règle qui a tranché, et le [générateur de robots.txt](https://geotoolbox.ai/tools/robots-txt-generator) écrit le fichier en indiquant, pour chaque robot IA, ce que son blocage vous coûterait.
+
+Bon à savoir quand vous lisez un fichier : un robot n'obéit qu'à un seul identifiant user-agent, le plus spécifique qui le nomme, tous les groupes déclarant cet identifiant étant fusionnés entre eux. Un groupe `User-agent: GPTBot` nommé remplace donc le groupe `User-agent: *` pour ce robot au lieu de s'y ajouter, si bien que les règles que vous croyez valables pour tout le site peuvent ne pas s'appliquer aux robots que vous avez isolés. À l'intérieur du groupe retenu, c'est le chemin correspondant le plus long qui l'emporte, pas le premier : l'ordre des règles n'a aucune importance. Et à longueur de chemin égale, c'est la règle la moins restrictive qui gagne — un `Allow` l'emporte sur un `Disallow` de même précision.
+
+Les récupérations déclenchées par un utilisateur font exception, et le comportement varie d'un fournisseur à l'autre : OpenAI indique que les règles du robots.txt peuvent ne pas s'appliquer à ChatGPT-User, Perplexity indique que Perplexity-User les ignore généralement, tandis qu'Anthropic affirme que bloquer Claude-User dans le robots.txt arrête bien ses récupérations.

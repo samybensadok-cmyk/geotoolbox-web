@@ -261,17 +261,23 @@ export function definedTermSchema(t: {
   slug: string
   term: string
   definition: string
+  // Locale of the page emitting the schema; non-en locales prefix the URLs
+  // (/fr/glossary/...) so the self-referential url matches the page. Optional
+  // so EN callers stay byte-identical.
+  locale?: string
+  setName?: string
 }) {
+  const prefix = t.locale && t.locale !== "en" ? `/${t.locale}` : ""
   return {
     "@context": "https://schema.org",
     "@type": "DefinedTerm",
     name: t.term,
     description: t.definition,
-    url: `${siteConfig.url}/glossary/${t.slug}`,
+    url: `${siteConfig.url}${prefix}/glossary/${t.slug}`,
     inDefinedTermSet: {
       "@type": "DefinedTermSet",
-      name: `${siteConfig.name} Glossary`,
-      url: `${siteConfig.url}/glossary`,
+      name: t.setName ?? `${siteConfig.name} Glossary`,
+      url: `${siteConfig.url}${prefix}/glossary`,
     },
   }
 }

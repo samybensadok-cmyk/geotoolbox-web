@@ -12,9 +12,9 @@ import { getMdxComponents } from "@/components/mdx"
 import { formatDate } from "@/lib/utils"
 import { routing } from "@/i18n/routing"
 import { rehypeLocalizeLinks } from "@/lib/i18n/rehype-localize-links"
-import { alternatesFor, urlFor } from "@/lib/i18n/siblings"
+import { alternatesFor, urlFor, makeLocalizer } from "@/lib/i18n/siblings"
 import { localePath } from "@/lib/i18n/paths"
-import { setRequestLocale } from "next-intl/server"
+import { setRequestLocale, getTranslations } from "next-intl/server"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
 import { JsonLd } from "@/components/seo/json-ld"
 import {
@@ -36,7 +36,8 @@ export async function generateMetadata({
   const { locale, slug } = await params
   const term = getGlossaryTermBySlug(slug, locale)
   if (!term) return {}
-  const title = `${term.term}: Definition`
+  const t = await getTranslations({ locale, namespace: "glossary" })
+  const title = t("metaTitle", { term: term.term })
   return {
     title,
     description: term.definition,
@@ -64,21 +65,26 @@ export default async function GlossaryEntry({
   const related = term.related
     .map((s) => all.find((t) => t.slug === s))
     .filter((t): t is NonNullable<typeof t> => Boolean(t))
+  const t = await getTranslations("glossary")
+  // Frontmatter links (article, relatedArticles) are authored as EN paths and
+  // bypass the MDX rehype pass, so localize them here from the same donor map.
+  const localize = makeLocalizer(locale)
+  const basePath = locale === routing.defaultLocale ? "" : `/${locale}`
 
   return (
     <>
       <section className="bg-[var(--surface-warm)] px-6 pt-16 pb-10 sm:pt-20 sm:pb-14">
         <JsonLd
           data={[
-            definedTermSchema({ slug: term.slug, term: term.term, definition: term.definition }),
-            faqPageSchema([{ question: `What is ${term.term}?`, answer: term.definition }]),
+            definedTermSchema({ slug: term.slug, term: term.term, definition: term.definition, locale, setName: t("definedTermSetName") }),
+            faqPageSchema([{ question: t("faqQuestion", { term: term.term }), answer: term.definition }]),
           ]}
         />
         <div className="mx-auto max-w-3xl">
           <Breadcrumbs
             trail={[
-              { name: "Home", href: "/" },
-              { name: "Glossary", href: "/glossary" },
+              { name: t("home"), href: basePath || "/" },
+              { name: t("glossary"), href: `${basePath}/glossary` },
               { name: term.term, href: "" },
             ]}
           />
@@ -91,7 +97,7 @@ export default async function GlossaryEntry({
             </h1>
             {term.aliases.length > 0 && (
               <p className="mt-2 text-sm text-gray-500">
-                Also: {term.aliases.join(", ")}
+                {t("also", { aliases: term.aliases.join(", ") })}
               </p>
             )}
             {/* Answer-first definition — the chunk AI engines lift verbatim */}
@@ -100,7 +106,7 @@ export default async function GlossaryEntry({
             </p>
             {term.updated && (
               <p className="mt-5 text-xs text-gray-500">
-                Updated <time dateTime={term.updated}>{formatDate(term.updated)}</time>
+                {t("updatedLabel")} <time dateTime={term.updated}>{formatDate(term.updated, locale)}</time>
               </p>
             )}
           </header>
@@ -129,13 +135,13 @@ export default async function GlossaryEntry({
           {term.article && (
             <div className="mt-10 rounded-2xl border border-[var(--surface-warm-border)] bg-[var(--surface-warm)] p-6">
               <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-                Go deeper
+                {t("goDeeper")}
               </p>
               <Link
-                href={term.article}
+                href={localize(term.article)}
                 className="group mt-2 inline-flex items-center gap-2 text-[17px] font-semibold tracking-tight text-gray-900 hover:text-accent-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
               >
-                {term.articleLabel ?? "Read the full guide"}
+                {term.articleLabel ?? t("readFullGuide")}
                 <svg className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
@@ -146,7 +152,7 @@ export default async function GlossaryEntry({
                   {term.relatedArticles.map((a) => (
                     <li key={a.href}>
                       <Link
-                        href={a.href}
+                        href={localize(a.href)}
                         className="group inline-flex items-center gap-1.5 text-[14px] font-medium text-gray-700 hover:text-accent-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
                       >
                         {a.label}
@@ -164,7 +170,7 @@ export default async function GlossaryEntry({
           {related.length > 0 && (
             <div className="mt-10 border-t border-gray-200 pt-8">
               <p className="mb-4 font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-500">
-                Related terms
+                {t("relatedTerms")}
               </p>
               <div className="flex flex-wrap gap-2">
                 {related.map((r) => (
@@ -182,20 +188,20 @@ export default async function GlossaryEntry({
 
           <div className="mt-12 flex items-center justify-between gap-4 border-t border-gray-200 pt-8">
             <Link
-              href="/glossary"
+              href={`${basePath}/glossary`}
               className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-gray-600 transition-colors hover:text-accent-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
             >
               <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M10 7H4m0 0l3-3m-3 3l3 3" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-              All terms
+              {t("allTerms")}
             </Link>
             <Link
               href="/app"
               prefetch={false}
               className="inline-flex shrink-0 items-center gap-2 rounded-full bg-accent-900 px-5 py-2.5 text-[13.5px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
             >
-              Run a free scan
+              {t("runScan")}
               <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
               </svg>

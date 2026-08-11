@@ -44,7 +44,7 @@ export const bcp47: Record<Locale, string> = {
 export const contentLocales: readonly Locale[] = ["en", "fr", "es"]
 
 // The glossary is a separate, narrower policy: en is live, fr deliberately
-// renders a "definitions on the way" placeholder (operator call 2026-07-18),
+// rendered a "definitions on the way" placeholder until FR entries shipped 2026-08-11,
 // and every other locale 404s. Do NOT fold this into contentLocales — adding
 // es there must not resurrect an English placeholder at /es/glossary.
 export const glossaryLocales: readonly Locale[] = ["en", "fr"]
