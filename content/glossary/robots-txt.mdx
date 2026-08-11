@@ -1,12 +1,12 @@
 ---
 term: "robots.txt"
 aliases: ["robots file"]
-definition: "robots.txt is a plain-text file at the root of a site that tells crawlers which paths they may or may not fetch, by user agent. For AI search it is the primary control for allowing or blocking crawlers like GPTBot, ClaudeBot, PerplexityBot, and Google-Extended. Most well-behaved AI crawlers respect it."
+definition: "robots.txt is a plain-text file at the root of a site that tells crawlers which paths they may or may not fetch, by user agent. For AI search it is the primary control for allowing or blocking crawlers like GPTBot, OAI-SearchBot, ClaudeBot, and PerplexityBot. Google is the exception: Google-Extended is a control token, not a crawler, and it only opts you out of Gemini model training and grounding — appearance in AI Overviews and AI Mode is governed by Googlebot's robots.txt access plus the nosnippet and max-snippet preview controls. Most well-behaved AI crawlers respect it."
 category: "AI Crawlers"
 related: ["llms-txt", "gptbot", "google-extended"]
 article: "/blog/how-to-optimize-for-ai-search"
 articleLabel: "How to Optimize for AI Search"
-updated: "2026-06-11"
+updated: "2026-08-11"
 draft: false
 relatedArticles:
   - href: "/blog/ai-visibility-audit"
@@ -19,6 +19,6 @@ relatedArticles:
 
 A single overly broad rule, such as a catch-all `User-agent: *` disallow meant to stop scrapers, can silently block the AI crawlers you actually want. Check each AI user agent explicitly — the free [robots.txt tester](https://geotoolbox.ai/tools/robots-txt-tester) tests a URL per crawler and names the rule that decided it, and the [robots.txt generator](https://geotoolbox.ai/tools/robots-txt-generator) writes the file with each AI crawler labelled by what blocking it costs you.
 
-Worth knowing when you read a file: a crawler obeys exactly one user-agent token — the most specific one naming it — with every group declaring that token merged together. A named `User-agent: GPTBot` group therefore replaces the `User-agent: *` group for that bot rather than adding to it, so rules you assume apply site-wide may not apply to the bots you singled out. Within the group that wins, the longest matching path wins, not the first, so rule order does not matter.
+Worth knowing when you read a file: a crawler obeys exactly one user-agent token — the most specific one naming it — with every group declaring that token merged together. A named `User-agent: GPTBot` group therefore replaces the `User-agent: *` group for that bot rather than adding to it, so rules you assume apply site-wide may not apply to the bots you singled out. Within the group that wins, the longest matching path wins, not the first, so rule order does not matter — and when two rules match at the same path length, the least restrictive one wins, so an `Allow` beats an equally specific `Disallow`.
 
 User-initiated fetchers are the exception, and behavior varies by vendor: OpenAI says robots.txt rules may not apply to ChatGPT-User, Perplexity says Perplexity-User generally ignores them, while Anthropic says blocking Claude-User in robots.txt does stop its fetches.
