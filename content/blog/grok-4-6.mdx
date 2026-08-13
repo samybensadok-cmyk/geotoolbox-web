@@ -1,0 +1,183 @@
+---
+title: "Grok 4.6: Specs, Benchmarks, Real Cost & the Honest Verdict (2026)"
+description: "Grok 4.6 is xAI's agent-first model, out August 12, 2026. A close read of the specs, the real benchmark table, the 200K price cliff, and AI-search impact."
+date: "2026-08-13"
+recheckBy: "2026-09-12"
+author: "Samy BEN SADOK"
+tags: ["grok-4.6", "grok", "xai", "spacexai", "ai-model", "llm", "guide"]
+draft: false
+---
+
+Grok 4.6 is xAI's newest model, and the day after it launched we ran a quick test: we asked two frontier AI assistants, with web search switched off, what Grok 4.6 was. One, running on training data that ends in early 2024, knew Grok only up to version 1.5. The other, current to late 2025, stopped at Grok 4.1. Neither knew 4.6 existed. Only an assistant that searches the live web can see it at all, and that gap is a small preview of why this release matters well beyond the benchmark charts.
+
+This is the plain, current version of what Grok 4.6 is: what xAI shipped on August 12, 2026, what it really costs once you read past the headline price, how the benchmark table looks when you read the losses first, and what a model built for agents means for whether AI can find your site. The numbers here come from xAI's own announcement and model card, cross-checked against Artificial Analysis.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/grok-4-6/grok-4-6-engine-knowledge.png" alt="Three AI engines and the latest Grok each knows: a GPT-family model with an early-2024 cutoff knows only up to Grok 1.5, a Claude-family model current to late 2025 stops at Grok 4.1, and only live web retrieval sees Grok 4.6, released August 12 2026." w="1040" h="669" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Checked the day after launch: only an engine that retrieves the live web can see a model released yesterday.</figcaption>
+</figure>
+
+## What Is Grok 4.6?
+
+**Grok 4.6 is xAI's frontier AI model, released on August 12, 2026, and built for long-running agents, coding, and knowledge work.** It is the newest version of [Grok](https://geotoolbox.ai/blog/what-is-grok), the [large language model](https://geotoolbox.ai/glossary/large-language-model) assistant made by xAI, the company Elon Musk founded in 2023 and which now operates as SpaceXAI after the 2026 SpaceX merger. If you have been tracking the version numbers, 4.6 lands about a month after [Grok 4.5](https://geotoolbox.ai/blog/grok-4-5) and slots in as the current flagship.
+
+Grok 4.6 is not a bigger model than 4.5. xAI describes a longer round of training on top of 4.5's foundation rather than a larger base, and secondary coverage reads the underlying model as unchanged in size. That matters because it changes how you should read the benchmark numbers below. The model is aimed at people who build software and run agents, not at people asking a chatbot for trivia, and at launch it shipped for developers and inside apps, not in xAI's own consumer chatbot.
+
+Grok 4.6 reads text and images, writes text, holds a 500,000-token context window, and adds a new "xhigh" reasoning setting above the levels 4.5 offered. Its knowledge cutoff is February 1, 2026 (the model card gives a January 2026 pretraining cutoff), so anything newer than that, including its own launch, it only knows through live search tools, not from memory.
+
+## Is Grok 4.6 Out? What xAI Actually Shipped
+
+Yes. Grok 4.6 went live on August 12, 2026, announced by SpaceXAI (the name xAI now trades under). Musk had publicly floated a rollout "around August 7," so the date slipped a few days, and the model shipped with a full evaluation table, a model card, and live API access rather than a teaser.
+
+What actually changed is narrower than a new version number suggests, and xAI is fairly open about it. According to [xAI's announcement](https://x.ai/news/grok-4-6), Grok 4.6 came from a longer supplemental training run than 4.5 got, regenerated fine-tuning data, and reinforcement learning in agentic environments. xAI does not itself claim a larger base model; the "same ~1.5-trillion-scale base, held constant" reading comes from secondary coverage. Either way, the work went into the training layers, not raw scale.
+
+A few things are genuinely new. The first is the agent focus: xAI says the model stays on a task across many steps without drifting, and that on longer runs it started checking its own work before moving on. That is vendor self-observation, not an independently measured result, so test it against your own workload. The second is the new **xhigh** reasoning-effort level, which sits above the low, medium, and high settings 4.5 shipped with. The third is the coding tuning: Grok 4.6 was developed in collaboration with Cursor and received supplemental training on anonymized Cursor workflow data, building on the Cursor collaboration behind 4.5.
+
+Two claims worth pinning down, because the coverage blurs them. Some write-ups described the Cursor relationship as xAI acquiring or investing in Cursor; xAI's own materials call it a training collaboration, so leave the ownership version alone until a primary source confirms it. And there is no open-weights release: Grok 4.6 is a closed, hosted model with no self-hosting path.
+
+## Grok 4.6 Specs at a Glance
+
+Here is the spec sheet, from [xAI's developer docs and model card](https://docs.x.ai/developers/grok-4-6).
+
+<table>
+<thead>
+<tr><th>Property</th><th>Grok 4.6</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Model ID</strong></td><td>grok-4.6</td></tr>
+<tr><td><strong>Released</strong></td><td>August 12, 2026</td></tr>
+<tr><td><strong>Context window</strong></td><td>500,000 tokens (unchanged from Grok 4.5)</td></tr>
+<tr><td><strong>Knowledge cutoff</strong></td><td>February 1, 2026</td></tr>
+<tr><td><strong>Modalities</strong></td><td>Text and image input; text-only output; no output limit</td></tr>
+<tr><td><strong>Reasoning levels</strong></td><td>Low, medium, high (default), xhigh (new)</td></tr>
+<tr><td><strong>Tools</strong></td><td>Function calling, web search, X search, code execution</td></tr>
+<tr><td><strong>Price</strong></td><td>$2 / $0.50 / $6 per 1M tokens (input / cached / output) below 200K prompt tokens; doubles above</td></tr>
+<tr><td><strong>Availability</strong></td><td>xAI API, Grok Build (default), Cursor (all plans), Microsoft Office add-ins; OpenRouter, Vercel, Cloudflare, and other gateways</td></tr>
+<tr><td><strong>Open weights</strong></td><td>No; no self-hosting</td></tr>
+</tbody>
+</table>
+
+Two details in that table get missed in most write-ups. The context window did **not** grow; it was already 500K on Grok 4.5, so anyone implying a bump is wrong. And the price has a second half that only appears once a request's prompt gets past the 200K mark, which we break down next because it lands squarely on the agent workloads this model is sold for.
+
+## Grok 4.6 Benchmarks: Read the Losses First
+
+Grok 4.6 scores **61 on the Artificial Analysis Intelligence Index**, a composite of nine benchmarks, up five points from Grok 4.5's 56 and level with GPT-5.6 Sol Max. That figure is third-party: [Artificial Analysis](https://artificialanalysis.ai/models/grok-4-6) runs the index. [VentureBeat](https://venturebeat.com/technology/spacexai-debuts-grok-4-6-overtaking-kimi-k3s-performance-and-matching-gpt-5-6-sol-for-worlds-third-best-on-artificial-analysis) called it the world's third-best model, behind Anthropic's Claude Opus 5 and Fable 5. Read that carefully: on Artificial Analysis's own page the Grok 4.6 (high) variant sits sixth of the 184 model variants it tracks as of mid-August 2026, because "third best" counts flagship models and the two ahead of it are both Anthropic's.
+
+The more useful exercise is to read xAI's own evaluation table. Here is the full table xAI published, with the best score in each row in bold.
+
+<table>
+<thead>
+<tr><th>Benchmark</th><th>Grok 4.6 (High)</th><th>Grok 4.5 (High)</th><th>GPT-5.6 Sol Max</th><th>Fable 5 Max</th></tr>
+</thead>
+<tbody>
+<tr><td>AA Intelligence Index</td><td>61</td><td>56</td><td>61</td><td><strong>62</strong></td></tr>
+<tr><td>GDPVal-AA v2</td><td><strong>1753</strong></td><td>1526</td><td>1728</td><td>1741</td></tr>
+<tr><td>CursorBench v3.2</td><td>69.9%</td><td>66.7%</td><td>67.2%</td><td><strong>70.5%</strong></td></tr>
+<tr><td>DeepSWE v1.1</td><td>65.9%</td><td>54%</td><td><strong>73%</strong></td><td>70%</td></tr>
+<tr><td>FrontierCode v1.1 (Extended)</td><td>61.3%</td><td>56.6%</td><td>60.6%</td><td><strong>63.6%</strong></td></tr>
+<tr><td>APEX-Agents</td><td>57.5%</td><td>47.1%</td><td>56.7%</td><td><strong>59.2%</strong></td></tr>
+<tr><td>Terminal-Bench v3.0</td><td>26%</td><td>15.7%</td><td><strong>34.6%</strong></td><td>34.1%</td></tr>
+<tr><td>APEX-SWE</td><td>56.4%</td><td>53.6%</td><td>n/a</td><td><strong>58.8%</strong></td></tr>
+<tr><td>AA-Briefcase</td><td><strong>1577</strong></td><td>1313</td><td>1502</td><td>1574</td></tr>
+<tr><td>Harvey LAB</td><td><strong>15.8%</strong></td><td>12.9%</td><td>2.5%</td><td>11.3%</td></tr>
+</tbody>
+</table>
+
+Read down the bold column: **Fable 5 Max wins more rows than anyone else, five of the ten.** GPT-5.6 takes two, DeepSWE and Terminal-Bench. Grok 4.6 posts the top raw score in three: GDPVal-AA v2, AA-Briefcase, and Harvey LAB. Two of those come with an asterisk. Its GDPVal and AA-Briefcase margins over Fable are only a handful of Elo points (1753 to 1741, and 1577 to 1574), which MarkTechPost reads as inside the noise, and both are wins only because this four-model table leaves out Claude Opus 5, which tops the Intelligence Index overall and, by xAI's own model card, leads both of those evals. That leaves Harvey LAB as Grok's one clear win, and it too deserves a caveat: GPT-5.6 scores just 2.5% there against Grok's 15.8%, a gap wide enough to look like a scoring or harness artifact until someone reproduces it.
+
+Head to head with GPT-5.6, the coding rows split evenly: Grok 4.6 edges CursorBench and FrontierCode, GPT-5.6 leads DeepSWE and Terminal-Bench.
+
+One more thing to read carefully: this is xAI's table, not a neutral one. xAI chose which benchmarks appear, and each rival's column is that rival's best self-reported or publicly available result rather than a controlled head-to-head. The benchmarks themselves are third-party suites, not xAI in-house tests: Artificial Analysis (the Intelligence Index, GDPVal-AA v2, and AA-Briefcase), Vals AI (Harvey LAB), Cursor (CursorBench), Mercor (the APEX evals), Cognition (FrontierCode), Datacurve (DeepSWE), and the Harbor team at Stanford with the Laude Institute (Terminal-Bench). The model card credits Artificial Analysis, Mercor, and Datacurve with running the GDPVal, APEX-SWE, and DeepSWE results themselves; the rest xAI appears to have run against those external suites. Where the vendor's hand shows is the selection: Claude Opus 5 has no column, and CursorBench is scored on Cursor's own harness by the same partner whose anonymized workflow data went into training this model. So read it as a vendor-curated scorecard rather than a controlled head-to-head: Grok 4.6 is a clear step up from 4.5, level with GPT-5.6 on the broad independent index, and behind the top Claude models.
+
+## What Grok 4.6 Really Costs
+
+The headline is cheap: **$2 per million input tokens and $6 per million output**, the same as Grok 4.5 and, by xAI's own framing, about half what the flagship Claude and GPT models charge. That is the number every roundup leads with. It is also only half the story. For how the rates line up across Grok versions, see our [Grok pricing guide](https://geotoolbox.ai/blog/grok-pricing).
+
+Send a request whose prompt hits the **200K mark and the rate doubles to $4 in, $12 out, and $1 for cached input, applied to every token in that request**, not just the tokens past the line. Below that line, cached input is $0.50 per million, but that rate is not automatic: xAI's docs tell you to set a `prompt_cache_key` (or the `x-grok-conv-id` header on Chat Completions), or your requests scatter across servers and you pay the full $2 input rate on a cache-cold one. The awkward part is where the cliff sits: 200K is exactly the context a long-running agent working across a large codebase or a 500K-token corpus will blow through, which is the workload xAI markets this model for. The 500K window is real, but the second half of it is billed at double. For long agent loops, xAI points to context compaction as the way to stay under the line.
+
+The per-token price is only part of the cost, and the fuller picture cuts both ways. On the plus side, Artificial Analysis's own runs show Grok 4.6 finishing its AA-Briefcase agent workload in roughly 53 turns and about half a billion input tokens, against about 103 turns and two billion for Claude Opus 5 Max, a large per-task efficiency edge (VentureBeat's caveat: whether it carries from those controlled runs into production is untested). On the minus side, its cost-per-completed-task lands mid-pack on the same site, less economical than several cheaper models and than Grok 4.5 itself, with throughput near the median. Put together: cheap per token, often fewer turns per task, but mid-pack once you price the whole workflow, and double above 200K.
+
+There is also a "fast" variant at double the standard price. xAI has not published a separate model ID, latency figure, or throughput spec for it, so at launch you get the price without the specification. For the first week, Grok Build and Cursor include 2x usage, meaning double the usual allowance while you try it, which does not change the underlying rates.
+
+## Grok 4.6 vs Grok 4.5, GPT-5.6 and Claude
+
+If you are deciding between models, the short version is that Grok 4.6 is the agentic upgrade over 4.5 and a mid-priced alternative to the frontier leaders, not the top model on the independent index.
+
+<table>
+<thead>
+<tr><th>Question</th><th>The short answer</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Is 4.6 worth it over Grok 4.5?</strong></td><td>Yes for multi-step agentic and coding work (+5 on the intelligence index, large jumps on the agent benchmarks). For scoped, validated, cache-heavy prompts, 4.5 is still fine; it lists at the same price, so the case for staying is simplicity, not a lower rate.</td></tr>
+<tr><td><strong>vs GPT-5.6 Sol Max?</strong></td><td>Level on the composite index (61 each). Head to head, the coding rows split two apiece: Grok edges CursorBench and FrontierCode, GPT-5.6 leads DeepSWE and Terminal-Bench. Roughly a wash, decided by price and your stack.</td></tr>
+<tr><td><strong>vs Claude Opus 5 / Fable 5?</strong></td><td>Both Claude models sit above Grok 4.6 on the index: Fable 5 wins more rows than anyone in xAI's own chart, and Opus 5 tops the index overall. Grok's argument is cost, not raw capability. See our <a href="https://geotoolbox.ai/blog/grok-vs-claude">Grok vs Claude</a> breakdown.</td></tr>
+<tr><td><strong>vs Kimi K3?</strong></td><td>Grok 4.6 passes Kimi K3 on the intelligence index. Kimi's pitch is open weights; Grok's is a managed, tool-rich API.</td></tr>
+</tbody>
+</table>
+
+Whatever the current leaderboard says, these standings turn over every few weeks now. A ranking that is true in August can flip by October, so timestamp any "best model" claim you rely on. For how the two most common rivals stack up in practice, see [Grok vs ChatGPT](https://geotoolbox.ai/blog/grok-vs-chatgpt).
+
+## How to Access Grok 4.6
+
+At launch, Grok 4.6 is mostly a developer product. Per xAI's model card, it is available through the xAI API (as `grok-4.6`), as the default model in Grok Build, in Cursor on every plan tier, and, notably, as the default model in the Microsoft Word, PowerPoint, and Excel add-ins, a direct move onto Copilot's turf. It is also routable through OpenRouter, Vercel, Cloudflare, and other gateways.
+
+What it is **not**, yet, is a consumer chatbot. The model card says xAI plans to add Grok 4.6 to its consumer surfaces (the web app, mobile apps, and Grok-in-X) "at a later date," so if you are asking whether Grok 4.6 is the model answering you at grok.com or in the X app today, the answer is probably not yet.
+
+Is it free? xAI's launch page advertises a "Try it in Grok Build for free" option, while press coverage puts Grok Build behind the $30-a-month SuperGrok plan, so check x.ai/build before assuming free access. API use is paid at the rates above. The clearest free element is the first-week 2x usage promotion in Cursor and Grok Build.
+
+If you are in the European Union, verify availability before you plan around it. Grok 4.5 was blocked across all 27 EU states until mid-July after its launch while xAI completed EU AI Act evaluations, and no source confirms Grok 4.6's day-one EU status either way, so treat it as an open question rather than an assumed yes.
+
+## Grok 4.6, Agents, and Whether AI Can Find You
+
+This part matters even if you never call the API. Grok 4.6's headline feature is agents: models that run for many steps, use tools, and pull information as they go. Two of its four built-in tools are web search and X search, and its own knowledge stops at February 1, 2026. That combination means the model does not "know" the current web; it retrieves it, live, every time a question runs past its cutoff. It could not tell you about its own launch without searching for it.
+
+That is the whole argument for [AI visibility](https://geotoolbox.ai/blog/what-is-ai-visibility) in one model. When an agent answers a question about your company, your product, or your market, it is reading whatever it can fetch and parse in that moment. If your pages are slow, blocked to its crawler, or structured so the important facts are buried in scripts and images, the agent works from whatever it found instead, which is often a competitor or a forum thread. The model getting better at agentic work raises the stakes on being retrievable, because more of what people learn about you now passes through a machine reading your site on their behalf.
+
+This is the lane we work in. Grok, like the other engines, reaches your content through a bot, and the first question is whether that bot can even load your pages. You can check which AI crawlers reach your site, and whether they are being served or blocked, with our [AI Crawler Checker](https://geotoolbox.ai/tools/ai-crawler-checker), and get a broader read on whether your pages are structured to survive an agentic pass with the [AI Readiness](https://geotoolbox.ai/tools/ai-readiness) check. A new model version is a good prompt to confirm the basics: the fastest capability gain for you is not the model's, it is making sure the pages it retrieves are yours. For the mechanics of how these bots crawl and render, see our guide to [AI crawlers](https://geotoolbox.ai/blog/ai-crawlers).
+
+## Should You Use Grok 4.6? The Verdict
+
+Grok 4.6 is a real step up from 4.5 and a credible mid-priced frontier model, though not the top model on the independent index. Whether it is right for you comes down to a few concrete questions.
+
+Use it if you are doing multi-step agentic or coding work, want tool-rich API access without managing weights, and your requests stay under 200K prompt tokens, where the price is competitive. Think twice if your workload routinely crosses that 200K line, since the doubled rate erases the cost advantage on exactly the long-context agent runs the model is pitched for. Stay on Grok 4.5 for scoped, validated, cache-heavy prompts where the extra capability does not pay for itself.
+
+Two more factors belong in the decision. On governance, xAI's model card documents autonomous behavior in detail but includes little formal autonomy-risk evaluation, which is worth weighing for a regulated or enterprise deployment; and the wider picture matters too, since X and the earlier xAI organization face open UK and EU investigations (Ofcom, the ICO, and a formal EU DSA probe) that concern the platform's history rather than any finding against the Grok 4.6 API. On timing, Musk has signaled on X that a larger Grok 4.7 is "weeks" away, reportedly a genuine scale jump rather than another post-training pass, and his dates have slipped before, so treat it as a target rather than a plan. For what is known about the next jumps, see [what we know about Grok 5](https://geotoolbox.ai/blog/grok-5).
+
+## Frequently Asked Questions
+
+### Is Grok 4.6 free?
+
+Not as a consumer chatbot yet. At launch it ran on developer surfaces (the API, Cursor, Grok Build, and the Office add-ins), and xAI's model card says consumer access on the web, mobile, and X is coming "at a later date." xAI's launch page advertises a free Grok Build trial, though coverage puts Grok Build inside the $30-a-month SuperGrok plan, so check x.ai/build before assuming free access. API use is paid.
+
+### How much does Grok 4.6 cost?
+
+$2 per million input tokens and $6 per million output, with cached input at $0.50, below 200K prompt tokens. Above that threshold every token in the request is billed at double: $4 input, $12 output, $1 cached. A separate "fast" variant costs twice the standard rate.
+
+### What is Grok 4.6's context window?
+
+500,000 tokens, the same as Grok 4.5. It did not increase. Note that the doubled pricing kicks in at 200K prompt tokens, well before the window is full.
+
+### Is Grok 4.6 better than Grok 4.5?
+
+On the benchmarks, yes: it scores 61 on the Artificial Analysis Intelligence Index versus 56 for 4.5, with sizable gains on agent and coding tests. In practice it is the better choice for multi-step agentic work, while 4.5 remains reasonable for focused, cache-heavy prompts. The two list at the same price, so the reason to stay on 4.5 is simplicity, not cost.
+
+### Is Grok 4.6 better than GPT-5.6 or Claude?
+
+It ties GPT-5.6 Sol Max at 61 on the composite index, and against GPT-5.6 the coding benchmarks split evenly. Anthropic's Claude Opus 5 and Fable 5 both sit above Grok 4.6 on the index. Grok's advantage is price, not top-end capability.
+
+### How many parameters does Grok 4.6 have?
+
+xAI has not published an exact parameter count. The model card describes it as part of a "1.5-trillion-scale" family, so read "1.5T" as a family-level label rather than a confirmed spec.
+
+### When is Grok 4.7 or Grok 5 coming?
+
+Musk has said on X that Grok 4.7 is "weeks" away at a larger scale; his dates have slipped before, so his timelines are targets, not commitments. No primary source gives a Grok 5 date, so treat any specific timeline for it as speculation.
+
+## Sources
+
+- Introducing Grok 4.6 - xAI (SpaceXAI), Aug 12, 2026 - `x.ai/news/grok-4-6`
+- Grok 4.6 model overview and specifications - xAI Docs - `docs.x.ai/developers/grok-4-6`
+- Grok 4.6 Intelligence Index, cost and speed - Artificial Analysis - `artificialanalysis.ai/models/grok-4-6`
+- SpaceXAI debuts Grok 4.6 - VentureBeat, Aug 12, 2026 - `venturebeat.com/technology/spacexai-debuts-grok-4-6-overtaking-kimi-k3s-performance-and-matching-gpt-5-6-sol-for-worlds-third-best-on-artificial-analysis`
+- SpaceXAI Releases Grok 4.6 - MarkTechPost, Aug 12, 2026 - `marktechpost.com/2026/08/12/spacexai-releases-grok-4-6`
+- xAI's Grok 4.6 Holds the Base Model Constant - FourWeekMBA, Aug 12, 2026 - `fourweekmba.com/ai-xai-grok-4-6-post-training-turn`
