@@ -42,6 +42,8 @@ const nextConfig: NextConfig = {
       { source: "/login",  destination: "/app?page=login",  permanent: true },
       { source: "/signup", destination: "/app?page=signup", permanent: true },
       { source: "/features/content-brief", destination: "/features/content-studio", permanent: true },
+      // ES: retargeted geo-seo → que-es-geo (better head term "que es geo", KD16/1,060). 2026-08-13.
+      { source: "/es/blog/geo-seo", destination: "/es/blog/que-es-geo", permanent: true },
     ]
   },
   async rewrites() {

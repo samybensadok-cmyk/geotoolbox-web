@@ -11,7 +11,7 @@ export async function Playbook() {
     locale === "fr"
       ? "/fr/blog/generative-engine-optimization"
       : locale === "es"
-        ? "/es/blog/geo-seo"
+        ? "/es/blog/que-es-geo"
         : "/blog/what-is-geo"
 
   const faqJsonLd = {
