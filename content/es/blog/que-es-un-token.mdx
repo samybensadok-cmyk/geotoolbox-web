@@ -1,0 +1,193 @@
+---
+title: "¿Qué es un token en IA? Por qué ChatGPT cuenta mal"
+description: "¿Qué es un token en IA? Los fragmentos que los modelos leen en vez de palabras: tokenización, costo por token, penalización del español y visibilidad en IA."
+date: "2026-08-14"
+author: "Samy BEN SADOK"
+tags: ["tokens", "tokenization", "ai-search", "geo", "guide"]
+draft: false
+locale: "es"
+donorSlug: "what-are-tokens-in-ai"
+donorCommit: "ee5ef5d"
+noindex: false
+---
+
+Pregúntale a ChatGPT cuántas erres hay en la palabra inglesa «strawberry»: más de una vez ha respondido «dos». El modelo no es tonto. Simplemente no lee las palabras ni las letras como tú. Lee tokens.
+
+En IA, los tokens son los fragmentos de texto que un modelo procesa de verdad. Una vez que entiendes cómo funcionan, toda una serie de comportamientos raros deja de ser un misterio: las letras mal contadas, las facturas por token, los errores de «longitud de contexto superada», los nombres de marca que salen mal escritos. Este artículo explica qué es un token, para quien publica contenido y no construye modelos, e incluye la parte que los manuales técnicos se saltan: qué cambia, y qué no, la tokenización para tu visibilidad en la búsqueda con IA.
+
+Y antes de seguir, una aclaración que en español hace más falta que en inglés: este token no tiene nada que ver con las criptomonedas ni con el «token» que te pide el banco. Volvemos a ello enseguida.
+
+## Lo que debes saber
+
+- Un token es un fragmento de texto que un modelo de IA trata como una sola unidad: unos cuatro caracteres, más o menos tres cuartos de una palabra, y 100 tokens equivalen a unas 75 palabras en inglés.
+- ChatGPT cuenta mal las letras de «strawberry» porque maneja tokens, no letras: la limitación es estructural, no una avería pasajera.
+- En las API, los tokens de salida cuestan más que los de entrada, y el historial de una conversación se vuelve a facturar en cada turno (con descuentos por cacheo de prompts).
+- Un texto en español consume aproximadamente entre 1,2 y 1,5 veces más tokens que el mismo texto en inglés (entre un 20 y un 50 % más), en el extremo bajo de la banda europea.
+- La tokenización no es un ajuste que puedas optimizar: para la visibilidad en IA, la palanca real es que los robots de IA puedan acceder a tus páginas.
+
+## ¿Qué es un token en IA?
+
+**Un token es un fragmento de texto que un modelo de IA trata como una sola unidad.** Suele medir unos cuatro caracteres, es decir, más o menos tres cuartos de una palabra. Un modelo no lee tus palabras como tú, y la mayor parte del tiempo no ve las letras una a una. Funciona por tokens.
+
+Esto despista, porque los tokens no coinciden con las palabras. Algunas palabras cortas y frecuentes son un solo token. Las más largas o raras se parten en varios. Hasta un espacio o una mayúscula cambian las cosas: según [la propia documentación de OpenAI](https://help.openai.com/en/articles/4936856-what-are-tokens-and-how-to-count-them), las cadenas `" red"` (con espacio), `" Red"` (con espacio y mayúscula) y `"Red"` (sin espacio) forman tres tokens distintos. El modelo ve tres cosas diferentes donde tú ves una sola palabra.
+
+Los órdenes de magnitud que vale la pena recordar vienen de la misma fuente. Cien tokens son unas 75 palabras en inglés. La frase inglesa «You miss 100% of the shots you don't take» son 11 tokens en el tokenizador de OpenAI. Son promedios, no leyes, y se mueven según el idioma y el contenido, pero sirven para razonar.
+
+<table>
+<thead>
+<tr><th>Tokens</th><th>Palabras (inglés, aprox.)</th><th>Caracteres (aprox.)</th><th>Escala</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>~0,75</td><td>~4</td><td>parte de una palabra</td></tr>
+<tr><td>100</td><td>~75</td><td>~400</td><td>un párrafo corto</td></tr>
+<tr><td>1000</td><td>~750</td><td>~4000</td><td>una sección larga de blog</td></tr>
+<tr><td>100.000</td><td>~75.000</td><td>~400.000</td><td>un libro corto</td></tr>
+<tr><td>1.000.000</td><td>~750.000</td><td>~4.000.000</td><td>~10 novelas</td></tr>
+</tbody>
+</table>
+
+¿Por qué debería importarte esto si publicas contenido? Porque el token es la unidad que hay detrás de casi todo lo que un sistema de IA hace con tu texto: la parte de tu página que un modelo puede retener a la vez, la forma en que se factura a quien lo opera, y la razón por la que a veces destroza una cifra o un nombre de marca. Entender los tokens es saber distinguir las limitaciones reales del folclore que rodea a los [grandes modelos de lenguaje](https://geotoolbox.ai/glossary/large-language-model).
+
+<Callout type="note" title="Nada que ver con los tokens de cripto (ni con el del banco)">
+Si buscaste «token» y aterrizaste en cotizaciones de criptomonedas, es otro tema. En español la confusión es más fuerte que en inglés, porque la palabra «token» entró en el vocabulario general de la mano de la blockchain. Conviene separar tres significados sin relación entre sí: el **token de IA** (el fragmento de texto de este artículo); el **token cripto** (un activo negociable inscrito en una blockchain); y el **token de acceso o autenticación** (ese código temporal, o el dispositivo físico, que tu banco usa para autorizar operaciones). Misma palabra, tres mundos distintos.
+</Callout>
+
+## Cómo funciona la tokenización: del texto a los identificadores
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/que-es-un-token/text-to-token-ids.png" alt="«¡Hola, mundo!» tal como lo ve una persona frente a los cinco identificadores de tokens que recibe el modelo." w="1100" h="632" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">El tokenizador convierte «¡Hola, mundo!» en cinco enteros antes de que el modelo lo vea. En inglés, «Hello, world!» son solo cuatro.</figcaption>
+</figure>
+
+Antes de que tu texto llegue al modelo, un programa aparte, el **tokenizador**, lo trocea en tokens y sustituye cada uno por un número. «¡Hola, mundo!» no entra en el modelo como palabras. Entra como una lista corta de enteros, algo así como [40932, 69112, 11, 29452, 0] (son los identificadores del tokenizador de GPT-4; un modelo más reciente asigna otros números). El modelo trabaja con los números. Casi siempre recibe identificadores del tokenizador en vez de un flujo de caracteres, de modo que la estructura a nivel de letras no le queda directamente accesible.
+
+El troceado sigue un método llamado **tokenización en subpalabras**. Las palabras frecuentes obtienen su propio token. Las raras, los nombres de marca y las palabras compuestas largas se rompen en trozos. «Tokenización» podría partirse en «token» e «ización». Un nombre de producto inventado puede estallar en cuatro o cinco fragmentos, y por eso un modelo a veces destroza una marca poco habitual: la reconstruye a partir de pedazos, no la recuerda entera. El tokenizador no lee para entender, solo compara el texto con un vocabulario fijo de fragmentos conocidos, construido una vez, de antemano. Las imágenes y el audio corren la misma suerte en los modelos multimodales, troceados también en tokens, y la lógica se mantiene igual.
+
+Ese vocabulario procede de un algoritmo llamado **byte pair encoding (BPE)**, un truco de compresión de datos de los años noventa que Sennrich, Haddow y Birch [adaptaron a los modelos de lenguaje neuronales en 2016](https://arxiv.org/abs/1508.07909). El BPE parte de los caracteres sueltos y fusiona una y otra vez los pares vecinos más frecuentes hasta obtener un vocabulario del tamaño deseado. GPT-2 se detuvo en 50.257 tokens. La familia GPT sigue usando BPE, a través de la biblioteca [tiktoken](https://github.com/openai/tiktoken) de OpenAI (el vocabulario `cl100k_base` para GPT-4, `o200k_base` para GPT-4o). Otras familias usan métodos emparentados: WordPiece para BERT, SentencePiece para Gemini y las primeras generaciones de modelos Llama.
+
+Esta etapa condiciona todo lo demás. La tokenización es solo el primer escalón. Cada identificador de token se asocia después a un [vector de embedding](https://geotoolbox.ai/blog/vector-embeddings), esa lista de números que sí carga el significado. Primero el token, luego el identificador, por último el vector. El token es el corte en bruto. En el embedding es donde [empieza la comprensión](https://geotoolbox.ai/blog/how-does-chatgpt-work).
+
+## Por qué ChatGPT no cuenta las erres de «strawberry»
+
+El fallo famoso, ese en el que un modelo jura que «strawberry» solo tiene dos erres, viene directo de los tokens. La palabra llega como un puñado de tokens de subpalabra, y ninguno es una letra. El modelo maneja dos o tres identificadores opacos y se le pide que cuente algo que no puede mirar.
+
+Una pregunta de ortografía es, para un modelo, un ejercicio de memoria, no de percepción. Para contar las erres tiene que recordar cómo se escribe la palabra a partir de sus datos de entrenamiento y luego contar sobre las letras así recuperadas, y cada uno de esos dos pasos puede torcerse. Es como preguntar cuántas veces aparece la letra «e» en una palabra que solo has oído, nunca leído.
+
+Los tokens no lo explican todo, hay que decirlo. Pídele a un modelo que deletree «strawberry» y suele conseguirlo, y aun así se equivoca al contar, lo que demuestra que el paso de contar falla por sí solo. Los tokens hacen que la tarea sea difícil. No son la única razón de que salga mal.
+
+La aritmética se tuerce por un motivo parecido. Los números largos se cortan en tokens por puntos arbitrarios, de modo que «1234567» puede partirse en trozos que no cuadran para un cálculo dígito a dígito. En parte por ese motivo, algunos modelos han dudado ante preguntas del tipo «¿9,11 es mayor que 9,9?». Además, el modelo dedica una cantidad fija de cálculo a cada token, sin un proceso iterativo como el que usarías para arrastrar las llevadas de una suma larga.
+
+Los modelos recientes lo hacen mejor, pero conviene precisar por qué. La solución habitual consiste en deletrear la palabra o en separar las letras, lo que facilita la tarea a nivel de caracteres. Es un parche, no un arreglo en el tokenizador. A finales de 2025, [algunas pruebas seguían sorprendiendo a GPT-5.2 contando mal](https://dataconomy.com/2025/12/15/gpt-5-2-still-counts-two-rs-in-strawberry/) ciertas variantes. A mediados de 2026 los buques insignia más nuevos suelen pasar el famoso test de «strawberry», sobre todo porque ese caso concreto ya les resulta familiar. Pueden tropezar con palabras menos habituales, mal escritas o inventadas, porque la tokenización en subpalabras mantiene las letras fuera de alcance. Y la mecánica no conoce fronteras: las palabras en español pasan por el mismo troceado. Es la misma familia de fallos que hay detrás de otras [alucinaciones de la IA](https://geotoolbox.ai/blog/ai-hallucinations): el modelo afirma con aplomo algo que su arquitectura no le ha permitido comprobar.
+
+El mismo punto ciego explica una frustración que todo redactor ha vivido: pides 1000 palabras y te devuelven 700, con el modelo jurando que entregó 1000. Genera token a token, sin un contador de palabras interno, por lo que no puede controlar la longitud de lo que escribe mejor de lo que cuenta las erres. Aplica el mismo criterio a todo lo que dependa de caracteres o recuentos, desde invertir una cadena hasta resolver un Wordle: apóyate en los modelos para el sentido, no para contar letras.
+
+## Tokens, ventana de contexto y memoria
+
+La **ventana de contexto** de un modelo es el máximo que puedes ponerle delante de una vez, y se mide en tokens, no en palabras ni en páginas. Todo tiene que caber ahí dentro: tu prompt, los documentos que pegas, las instrucciones de sistema que nunca ves y la respuesta que el modelo está a punto de escribir. Cuando alguien dice que un modelo «se acuerda» de una conversación larga, quiere decir que la conversación entera todavía cabe en la ventana.
+
+<Callout type="warning" title="Datos personales en el contexto: el reflejo de protección de datos">
+«Los documentos que pegas» llenan la ventana de contexto, y ahí se esconde un punto ciego. Pegar un contrato de cliente, un archivo de RRHH o una lista de prospectos en un prompt no es solo un problema de presupuesto de tokens: es una transferencia de datos personales al proveedor del modelo, a veces alojado fuera de tu país según el servicio contratado. En la UE y España rige el RGPD, y la Agencia Española de Protección de Datos lo recordó en su decálogo [«Cuidado con lo que le confIAs»](https://www.aepd.es/prensa-y-comunicacion/notas-de-prensa/aepd-publica-decalogo-recomendaciones-proteger-privacidad-al-usar-ia) (enero de 2026): no compartas datos personales con la IA. Varios países de habla hispana tienen normativas equivalentes de protección de datos. El riesgo no viene de la tokenización, viene de introducir datos personales en una herramienta de consumo. Es un asunto de gobernanza, distinto de los mecanismos de tokens que se describen aquí.
+</Callout>
+
+Estas ventanas han crecido rápido y siguen moviéndose: toma cada cifra como una foto fija. La trayectoria por épocas:
+
+<table>
+<thead>
+<tr><th>Modelo (época)</th><th>Ventana de contexto aproximada</th></tr>
+</thead>
+<tbody>
+<tr><td>GPT-3 (2020)</td><td>~2048 tokens</td></tr>
+<tr><td>GPT-4 (2023)</td><td>~8000 a 32.000 tokens</td></tr>
+<tr><td>GPT-4o (2024)</td><td>~128.000 tokens</td></tr>
+<tr><td>Claude 3 y 3.5 (2024)</td><td>~200.000 tokens</td></tr>
+<tr><td>Gemini 1.5 Pro (2024)</td><td>hasta ~1 a 2 millones de tokens</td></tr>
+<tr><td>Modelos de punta (2026)</td><td>~1 millón, algunos bastante más</td></tr>
+</tbody>
+</table>
+
+A mediados de 2026, [más de una docena de modelos de punta ofrecen ventanas de un millón de tokens o más](https://artificialanalysis.ai/models) a escala mundial, y el mayor modelo de pesos abiertos anuncia 10 millones. Una advertencia que el marketing olvida: el contexto realmente aprovechable es menor que la cifra anunciada; una ventana de un millón de tokens no te da un millón de tokens de atención confiable.
+
+Cuando te pasas de la ventana, el sistema no te avisa con delicadeza. Una API puede lanzar un error de límite de contexto, mientras que una herramienta de chat puede truncar, resumir, compactar o gestionar de otro modo el contexto antiguo, y de ahí que una sesión larga acabe olvidando su principio o perdiendo la parte de arriba de un documento que pegaste. Ningún comportamiento está garantizado. La única certeza es que el texto original completo ya no cabe.
+
+Aquí es también donde los tokens se cruzan con la búsqueda con IA. Cuando ChatGPT o un resumen de IA de Google responden a una pregunta, la [generación aumentada por recuperación](https://geotoolbox.ai/blog/what-is-rag) va a buscar pasajes en la web y los mete en ese mismo presupuesto de tokens antes de que el modelo escriba una palabra. Como la [ventana de contexto](https://geotoolbox.ai/glossary/context-window) es finita, el sistema solo conserva los pasajes que clasifica más arriba. Tu contenido compite por un hueco que se mide en tokens.
+
+## Cómo funciona el precio por token, y por qué cada respuesta cuesta más
+
+Cuando una empresa construye sobre un modelo de IA a través de su API, paga por token, con un precio que suele darse por millón de tokens. Dos detalles sorprenden. Primero, **los tokens de salida cuestan más que los de entrada**, a menudo varias veces más, porque generar el texto token a token es la parte cara. Leer tu prompt sale barato. Escribir la respuesta, no.
+
+Segundo, una conversación no se factura solo por tu último mensaje. Para responder al quinto turno, el modelo relee los turnos uno a cuatro, con lo que todo el historial viaja con la petición y se cobra de nuevo, y por eso un intercambio largo sale más caro con cada respuesta. También es la razón por la que un agente que [recarga todo su contexto en cada paso](https://geotoolbox.ai/blog/reduce-claude-code-token-costs) puede disparar la factura. Los proveedores ya descuentan el texto repetido con el cacheo de prompts, pero la estructura se mantiene: el historial viaja en cada turno. Las entradas invisibles se acumulan igual, desde el prompt de sistema hasta los tokens de razonamiento interno que un modelo consume antes de su respuesta visible.
+
+Aquí hay una palanca de costo real, y conviene nombrarla con cuidado para que no se aplique mal. Recortar el relleno de los prompts y las instrucciones puede rebajar el gasto de API, [una firma de seguridad cifra el ahorro entre un 10 y un 30 %](https://www.pivotpointsecurity.com/ai-tokens-how-they-impact-usage-costs/). Es una práctica real, pero vive por completo en el lado de construir aplicaciones. Trata sobre los prompts que envía un desarrollador, no sobre el contenido web que tú publicas. Ten clara esa distinción, porque el mundo del SEO la enreda sin parar.
+
+<Callout type="note" title="¿Cuántos tokens vale un dólar?">
+No hay respuesta fija, porque las tarifas cambian según el modelo y con frecuencia, pero el orden de magnitud se mantiene. A las tarifas de unos pocos dólares por millón de tokens, habituales en 2026, un dólar da para varios cientos de miles de tokens de entrada, del orden de unos cientos de páginas de texto. En la salida, con precios más altos, compra menos.
+</Callout>
+
+Una aclaración más, porque es la pregunta que hay detrás de mucha confusión: una suscripción como ChatGPT Plus es una tarifa mensual plana (unos 20 dólares al mes, más los impuestos que apliquen en tu país), no una facturación por token. El pago por token es el mundo de las API. La mayoría de quienes redactan contenido no lo tocan nunca directamente.
+
+## ¿El español consume más tokens que el inglés?
+
+Los tokenizadores no son neutrales de un idioma a otro, y la brecha puede ser grande. Una misma frase traducida desde el inglés puede pedir bastantes más tokens, porque el vocabulario del tokenizador se entrenó sobre todo con inglés y tiene menos fragmentos listos para el resto. Un [estudio de Petrov y sus colegas](https://arxiv.org/abs/2305.15425) midió que, para un mismo contenido, el número de tokens puede llegar a multiplicarse hasta unas 15 veces según el idioma.
+
+El español está en el extremo bajo de la banda europea: aproximadamente 1,2 a 1,5 veces los tokens del inglés para el mismo contenido (entre un 20 y un 50 % más), según el tokenizador y el tipo de texto. Los tokenizadores más recientes (`o200k_base`) reducen la brecha frente a los antiguos (`cl100k_base`). El efecto se ve bien en una sola palabra: [Xataka comprobó](https://www.xataka.com/robotica-e-ia/pregunta-usar-chatgpt-gemini-ingles-eficiente-ahorra-tokens-respuesta-yes) que «desarrollador» son tres tokens en el tokenizador de GPT-4o frente a un solo token para «developer». La brecha se dispara para el alemán o para las lenguas de alfabeto no latino, como el árabe o el hindi, donde una palabra puede producir más tokens que letras. El español se queda lejos de esos casos extremos.
+
+Este sobrecosto tiene tres consecuencias que casi nadie conecta con la cifra:
+
+- **Tu contenido en español cuesta más de procesar.** A igual volumen, una página en español consume más tokens que una en inglés, por lo que cada llamada de API relacionada cuesta un poco más. En un chatbot de soporte que mueve miles de mensajes al día, ese 20 a 50 % acaba pesando, y lo peor es que no aparece en ninguna línea contable hasta que llega la factura.
+- **La ventana de contexto retiene menos de tu contenido en español.** El mismo presupuesto de tokens traga menos texto en español, de manera que un modelo que recupera pasajes para responder tiene menos margen de una vez.
+- **La densidad y la claridad pesan entonces un poco más.** Para la [visibilidad en la búsqueda con IA](https://geotoolbox.ai/blog/what-is-geo), escribir denso y sin relleno ayuda a que un pasaje en español quepa entero en el presupuesto de tokens que el motor le concede.
+
+## ¿Los tokens afectan tu visibilidad en la búsqueda con IA?
+
+Aquí es donde el tema se vende mal, así que va la respuesta honesta. **La tokenización no es un ajuste que puedas tocar.** Tú no eliges el tokenizador. Puedes inspeccionar uno abierto, como el de OpenAI, para ver cómo trocea una muestra, pero no puedes cambiarlo, y los sistemas de recuperación cerrados que hay detrás de la búsqueda con IA trocean y seleccionan las páginas con reglas que nunca publican. Cualquier consejo que te pida escribir «para el tokenizador» te vende un control que no está en tus manos.
+
+Lo que sí es real ocurre un nivel más arriba. La búsqueda con IA preselecciona el contenido por su significado, comparando los embeddings de tus pasajes con los de la consulta mediante [búsqueda semántica](https://geotoolbox.ai/glossary/semantic-search). Los pasajes claros y autónomos se recuperan mejor. Pero eso es sencillamente escribir bien. Es el mismo consejo que ya valía antes de que se pronunciara la palabra token, y tiene un mecanismo detrás, no un truco.
+
+Unas cuantas promesas para descartar. «Trocea tu contenido en piezas del tamaño de un token» es una consigna que la [guía de Google sobre funciones de IA](https://developers.google.com/search/docs/fundamentals/ai-optimization-guide) considera ahora innecesaria, lo mismo que decimos nosotros a propósito del [troceado de contenido](https://geotoolbox.ai/blog/content-chunking). «Optimiza tu texto a nivel de token para posicionar en IA» toma las prácticas de reducción de costos de API vistas arriba y finge que se aplican al contenido web, sin la menor prueba. «Elige un nombre de marca compatible con los tokens para que la IA lo escriba bien» es otra: el modelo puede titubear con un nombre muy fragmentado, pero rebautizar tu empresa alrededor de un tokenizador que no ves no es una estrategia. Y «un token es igual a una palabra» es sencillamente falso, como mostraba la primera tabla.
+
+En nuestra experiencia, en Geotoolbox, las personas más perdidas en este punto han leído consejos reales de ingeniería sobre recortar el costo de tokens en una aplicación y han supuesto que valían para su blog. No es así. Lo que de verdad controlas está por encima del tokenizador: la claridad de tus páginas, su legibilidad y su accesibilidad. De eso trata nuestra guía sobre la [optimización para la búsqueda con IA](https://geotoolbox.ai/blog/how-to-optimize-for-ai-search).
+
+## Preguntas frecuentes
+
+### ¿Cuántas palabras son 1000 tokens?
+
+Unas 750 palabras en inglés. La regla es de un token por cada tres cuartos de palabra: una respuesta de 1000 tokens ocupa unas dos páginas de un libro de bolsillo. La puntuación y las palabras raras hacen variar la cuenta, y en español ese mismo contenido consume entre un 20 y un 50 % más de tokens, de manera que esos 1000 tokens rinden menos palabras. Aun así, la referencia de 750 sirve para hacerte una idea al planificar.
+
+### ¿Por qué ChatGPT no puede contar las letras de «strawberry»?
+
+Porque la palabra le llega como unos pocos tokens de subpalabra, sin que la estructura a nivel de letras le quede directamente accesible. Contar las erres es, por tanto, recordarlas y sumarlas de memoria, más que leerlas en la página. Los modelos que responden bien suelen escribir la palabra letra por letra antes, lo que es un parche, no una cura.
+
+### ¿Cómo compruebo cuántos tokens usa mi texto?
+
+Con una herramienta de tokenización. El [Tokenizer](https://platform.openai.com/tokenizer) gratuito de OpenAI muestra el troceado exacto para los modelos GPT, y su biblioteca [tiktoken](https://github.com/openai/tiktoken) hace lo mismo en código. Para otras familias, el Tokenizer Playground de Hugging Face cubre la mayoría de los tokenizadores abiertos. Las cuentas difieren de una familia a otra: una cifra obtenida con un tokenizador es solo una estimación para otro.
+
+### ¿El español consume realmente más tokens que el inglés?
+
+Sí, pero moderadamente: alrededor de 1,2 a 1,5 veces los tokens del inglés para el mismo contenido (entre un 20 y un 50 % más), en el extremo bajo de la banda europea y lejos de las lenguas de alfabeto no latino. La cifra exacta depende del tokenizador (los más recientes penalizan menos) y del tipo de texto. En la práctica, pesa sobre todo en los grandes volúmenes de API y en el sitio que tu contenido en español ocupa dentro de la ventana de contexto.
+
+### ¿Qué pasa cuando alcanzo el límite de tokens?
+
+En una API obtienes un error de «longitud de contexto superada»; en un chat, los turnos más antiguos suelen truncarse o retirarse del contexto. Si te ocurre, abre una conversación nueva, vuelve a pegar solo lo que importa o pide un resumen de la conversación. Un modelo con una ventana de contexto mayor te da margen, pero no te vuelve inmune.
+
+### ¿Un «token de IA» es una criptomoneda?
+
+No. Son dos sentidos sin relación. En IA, un token es una unidad de texto que un modelo procesa. En cripto, un «token» es un activo digital negociable inscrito en una blockchain. Este artículo solo habla del primero.
+
+## Lo que los tokens cambian de verdad para ti
+
+Los tokens son un diagnóstico, no un tablero de mando. Explican por qué la máquina cuenta mal, trunca y factura como lo hace. Las palancas están todas en otro sitio.
+
+La primera es el acceso. Si un robot de IA no puede alcanzar tu página, nada de esta maquinaria de tokens se aplicará jamás, porque la página nunca entra en el presupuesto. Esa condición sí la puedes comprobar: nuestro [AI Readiness](https://geotoolbox.ai/tools/ai-readiness) gratuito de Geotoolbox indica si los robots y agentes útiles para ChatGPT Search, Perplexity y las funciones de IA de Google Search pueden alcanzar una página, y qué los bloquea cuando no pueden. Los tokens te dicen cómo lee la máquina. El acceso de los robots te dice si te lee siquiera.
+
+## Fuentes
+
+- Ayuda de OpenAI: qué son los tokens y cómo contarlos - `help.openai.com/en/articles/4936856-what-are-tokens-and-how-to-count-them`
+- OpenAI Tokenizer (herramienta interactiva) y tiktoken (biblioteca) - `platform.openai.com/tokenizer` - `github.com/openai/tiktoken`
+- Sennrich, Haddow y Birch (2016): Neural Machine Translation of Rare Words with Subword Units (byte pair encoding) - `arxiv.org/abs/1508.07909`
+- Petrov et al. (2023): Language Model Tokenizers Introduce Unfairness Between Languages - `arxiv.org/abs/2305.15425`
+- Xataka: por qué preguntar en inglés gasta menos tokens que en español - `xataka.com/robotica-e-ia/pregunta-usar-chatgpt-gemini-ingles-eficiente-ahorra-tokens-respuesta-yes`
+- Dataconomy: GPT-5.2 sigue contando dos erres en «strawberry» - `dataconomy.com/2025/12/15/gpt-5-2-still-counts-two-rs-in-strawberry`
+- AEPD: decálogo «Cuidado con lo que le confIAs» (recomendaciones de privacidad al usar IA), enero de 2026 - `aepd.es/prensa-y-comunicacion/notas-de-prensa/aepd-publica-decalogo-recomendaciones-proteger-privacidad-al-usar-ia`
+- Google Search Central: guía sobre funciones de IA e IA generativa - `developers.google.com/search/docs/fundamentals/ai-optimization-guide`
+- Pivot Point Security: los tokens de IA y su impacto en los costos - `pivotpointsecurity.com/ai-tokens-how-they-impact-usage-costs`
+- Artificial Analysis: comparativa de modelos de IA, incluidas las ventanas de contexto (2026) - `artificialanalysis.ai/models`
