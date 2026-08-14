@@ -2,8 +2,8 @@
 title: "What Is Qwen3.8-Max? Alibaba's 2.4T Flagship"
 description: "What is Qwen3.8-Max? Alibaba's 2.4T-parameter flagship: the published benchmarks, the independent ones, API pricing, and the open-weights promise."
 date: "2026-07-22"
-updated: "2026-08-07"
-recheckBy: "2026-08-14"  # volatile: Alibaba committed to the open weights in the week of 2026-08-10 with no license named; a drop rewrites the weights section, the comparison table and two FAQ answers
+updated: "2026-08-14"
+recheckBy: "2026-09-14"  # weights shipped 08-12 (text-only, bespoke license); re-check license terms + any multimodal/27B drop
 author: "Samy BEN SADOK"
 tags: ["qwen3-8-max", "qwen", "qwen3", "alibaba", "tongyi-qianwen", "chinese-ai", "open-weights", "llm", "guide"]
 draft: false
@@ -11,7 +11,7 @@ draft: false
 
 When Alibaba previewed Qwen3.8-Max in July, half the AI assistants we tested did not know it existed, and one that did was already repeating specs Alibaba had never published. Two weeks later the real release landed with a full benchmark table, and on its headline coding benchmark the independent number came in five points below Alibaba's own.
 
-This page pins down what is actually known as of August 7, 2026: what the published benchmarks show and where the outside measurements disagree, what the API costs, whether the promised open weights have arrived, and why a model most marketers will never touch still shapes what AI tools say about their brands. Every number below is labeled as Alibaba's own or independently measured.
+This page pins down what is actually known as of August 14, 2026: what the published benchmarks show and where the outside measurements disagree, what the API costs, what the open-weight release did and did not deliver, and why a model most marketers will never touch still shapes what AI tools say about their brands. Every number below is labeled as Alibaba's own or independently measured.
 
 ## What Is Qwen3.8-Max?
 
@@ -21,13 +21,13 @@ Alibaba calls it ["the most capable model in the Qwen family to date"](https://q
 
 One thing to establish before reading those benchmarks, because it decides which rows mean anything. On some rows Alibaba re-ran every model itself: its SWE-bench Pro footnote says all baselines were evaluated on the same corrected benchmark. On its headline row, Terminal-Bench 2.1, it did not. There it ran Qwen under Claude Code and, in its own words, reported "the best published score across harnesses" for everyone else, taking Claude's figures from Artificial Analysis and GPT-5.6 Sol's from OpenAI. A self-run score against other labs' best published scores is not a controlled comparison.
 
-The competitive timing was not subtle. The July preview landed days after Moonshot AI announced [Kimi K3](https://geotoolbox.ai/blog/what-is-kimi-k3), the model Moonshot's own card puts at 2.8T parameters, which had just claimed the "largest ever" headline and then shipped its weights on schedule. Alibaba has now promised something it has never done: open weights for a Max-class model, committed for the week of August 10, 2026. For a company whose [Qwen family](https://geotoolbox.ai/blog/what-is-qwen) built its reputation on open models, that promise is doing a lot of work, and we get to its track record below.
+The competitive timing was not subtle. The July preview landed days after Moonshot AI announced [Kimi K3](https://geotoolbox.ai/blog/what-is-kimi-k3), the model Moonshot's own card puts at 2.8T parameters, which had just claimed the "largest ever" headline and then shipped its weights on schedule. Alibaba then promised something it had never done: open weights for a Max-class model, committed for the week of August 10, 2026. It delivered two days past that window, on August 12, with a text-only variant under a bespoke license. For a company whose [Qwen family](https://geotoolbox.ai/blog/what-is-qwen) built its reputation on open models, what that release does and does not include matters, and we get to it below.
 
 One housekeeping note: Alibaba's Qwen team also shipped Qwen-Image-3.0 on July 21. That is a separate image-generation model, despite the similar naming and back-to-back launch dates.
 
 ## Published vs Independently Confirmed: The Spec Reality
 
-The July preview shipped with almost nothing you could check. The August release fixed most of that, and the distinction that still matters is between what Alibaba has now published and what anyone outside Alibaba has confirmed. The table below shows where each spec stands as of August 7, 2026.
+The July preview shipped with almost nothing you could check. The August release fixed most of that, and the distinction that still matters is between what Alibaba has now published and what anyone outside Alibaba has confirmed. The table below shows where each spec stands as of August 14, 2026.
 
 <table>
 <thead>
@@ -41,7 +41,7 @@ The July preview shipped with almost nothing you could check. The August release
 <tr><td><strong>$2 in / $6 out per 1M tokens</strong></td><td>Vendor-published</td><td>Listed on <a href="https://www.alibabacloud.com/help/en/model-studio/model-pricing">Alibaba Cloud Model Studio's pricing page</a> for the international region, the same rate in thinking and non-thinking modes</td></tr>
 <tr><td><strong>Benchmark scores</strong></td><td>Published, and contested</td><td>A full table shipped with the release. Some rows re-run every model; the headline Terminal-Bench row imports rivals' best published scores. On that row <a href="https://artificialanalysis.ai/evaluations/terminalbench-v2-1">Artificial Analysis independently measures 81.3%</a> where Alibaba reports 86.6</td></tr>
 <tr><td><strong>"Second only to Fable 5"</strong></td><td>Withdrawn in practice</td><td>The August release post does not repeat it, and neither Alibaba's own table nor the independent leaderboard supports it</td></tr>
-<tr><td><strong>Open-weight release</strong></td><td>Promised, not delivered</td><td>Committed to the week of August 10, 2026. As of August 7 nothing has appeared on Hugging Face or ModelScope and no license has been named</td></tr>
+<tr><td><strong>Open-weight release</strong></td><td>Delivered August 12, 2026 (partial)</td><td>Qwen3.8-2.4T-A95B on Alibaba's official Hugging Face org: text-only, 262,144-token native context (extensible to about 1M), bespoke "Qwen3.8-Max" license, not Apache 2.0</td></tr>
 </tbody>
 </table>
 
@@ -78,7 +78,7 @@ One thing the coding numbers understate: Alibaba published a second table for mu
 <tr><th>Model</th><th>Parameters</th><th>Benchmark position</th><th>Pricing per 1M tokens</th><th>Weights</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>Qwen3.8-Max</strong></td><td>2.4T total, 95B active (vendor-stated)</td><td>Vendor table: 86.6 Terminal-Bench 2.1, 67.7 SWE-bench Pro, 92.6 GPQA. Independently, Artificial Analysis measures 81.3 on Terminal-Bench 2.1</td><td>$2 in / $6 out</td><td>Closed; committed for the week of August 10, 2026, license unannounced</td></tr>
+<tr><td><strong>Qwen3.8-Max</strong></td><td>2.4T total, 95B active (vendor-stated)</td><td>Vendor table: 86.6 Terminal-Bench 2.1, 67.7 SWE-bench Pro, 92.6 GPQA. Independently, Artificial Analysis measures 81.3 on Terminal-Bench 2.1</td><td>$2 in / $6 out</td><td>Open since August 12, 2026 (text-only variant, bespoke "Qwen3.8-Max" license); multimodal version API-only</td></tr>
 <tr><td><strong>Kimi K3</strong></td><td>2.8T (claimed)</td><td>StackPerf 83/100; AA Intelligence Index 57</td><td>$3 in / $15 out</td><td>Published on Hugging Face under a custom Kimi K3 License</td></tr>
 <tr><td><strong>Qwen3.7-Max</strong> (previous flagship)</td><td>Undisclosed</td><td>Vendor card: GPQA 92.4, SWE-bench Verified 80.4%</td><td>$2.50 in / $7.50 out list, on a limited-time 50% discount</td><td>Closed</td></tr>
 <tr><td><strong>Claude Fable 5</strong></td><td>Undisclosed</td><td>SWE-bench Verified 95% (vendor)</td><td>$10 in / $50 out</td><td>Closed</td></tr>
@@ -93,13 +93,13 @@ The gap at the top is still real, and the cleanest like-for-like is Alibaba's ow
 
 One deployment note for regulated businesses: like the rest of the family, Qwen models carry documented, baked-in guardrails aligned with Chinese content rules on politically sensitive topics. For coding and agent work this rarely surfaces; for content-adjacent or compliance-sensitive workloads, test before you commit. Data residency deserves the same diligence: confirm the service region, retention terms, and contracting entity for the specific product rather than assuming them. If residency is a hard requirement, the clean answer is open weights and self-hosting.
 
-## Will the Weights Open?
+## Did the Weights Open?
 
-The open-weight promise is the biggest claim in the release and the one with the weakest track record behind it. **As of August 7, 2026 the weights have not shipped.** Alibaba's August 3 launch post commits to publishing them "next week," which is the week of August 10, and names no license.
+The open-weight promise was the biggest claim in the release and the one with the weakest track record behind it, and it was ultimately kept, two days late and with caveats. **On August 12, 2026, [Qwen3.8-2.4T-A95B](https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B) landed in Alibaba's official Hugging Face organization.** The published variant is text-only (the multimodal version stays API-only), its native context stops at 262,144 tokens (extensible to about 1M), and the license is a bespoke "Qwen3.8-Max" license rather than Apache 2.0.
 
-Here is the pattern it would break. Alibaba runs a genuine two-track strategy: the small and mid-size Qwen models ship under Apache 2.0 and dominate the open ecosystem, while the Max-tier flagships stay closed. Qwen3.7-Max: API-only. Qwen3.6-Max-Preview: API-only. No Max-tier flagship has ever had its weights published, which Alibaba itself acknowledges by calling this "the first time we will open-source the weights of a Qwen-Max-class model." A named window is a real upgrade on July's "soon," but a window is not a repository.
+Here is the pattern it broke. Alibaba runs a genuine two-track strategy: the small and mid-size Qwen models ship under Apache 2.0 and dominate the open ecosystem, while the Max-tier flagships stayed closed. Qwen3.7-Max: API-only. Qwen3.6-Max-Preview: API-only. No Max-tier flagship had ever had its weights published, which Alibaba itself acknowledged by calling this "the first time we will open-source the weights of a Qwen-Max-class model." The repository now exists; what remains open is how the bespoke license terms compare to Apache 2.0 in practice.
 
-The competitive read is hard to ignore: Moonshot announced Kimi K3 with a firm weights date of July 27, days before Alibaba's preview, and then met it. A promise keeps Alibaba's open-flagship credibility alive through a news cycle it would otherwise have lost, and weight-release promises across the industry have a habit of slipping once headlines move on.
+The competitive read is hard to ignore: Moonshot announced Kimi K3 with a firm weights date of July 27, days before Alibaba's preview, and then met it. The promise kept Alibaba's open-flagship credibility alive through a news cycle it would otherwise have lost, and weight-release promises across the industry have a habit of slipping once headlines move on.
 
 The verification bar is simple, and worth being strict about: an actual repository under [Alibaba's own Hugging Face organization](https://huggingface.co/Qwen) containing weights and a license file. Not a blog post, not a tweet, and not a third-party repository that merely carries the name. Repos titled Qwen3.8 have already appeared from unaffiliated accounts, and they are worth understanding because they are the trap. Some are empty placeholders holding a README. Others do contain real weights that are simply not this model: one of the most-downloaded, at roughly 23,000 downloads, ships files named `qwen3-4b-thinking-2507`, an older and far smaller Qwen wearing the new number. Both kinds carry an Apache 2.0 label that is not Alibaba's terms. Until the real URL exists under Alibaba's own account, treat the release as a roadmap item that can slip. And keep in mind that even a delivered release can be less open than the headline suggests: [open weights are not open source](https://geotoolbox.ai/blog/open-weights-vs-open-source), and the license attached will matter as much as the download link.
 
@@ -111,7 +111,7 @@ At 2.4 trillion parameters, the arithmetic is brutal. The packed weights alone w
 
 The 95B active-parameter figure changes the cost picture without changing that conclusion. Compute per token is closer to a 95-billion-parameter dense model than to a 2.4-trillion one, which is why a $2 input price is not as implausible as the headline size makes it look, but you still have to hold all 2.4 trillion parameters in memory to serve any of them. Sparse activation makes the model cheap to run at scale, not cheap to own.
 
-The realistic play for anyone who [runs models locally](https://geotoolbox.ai/blog/run-llm-locally) is to wait for the family, not the flagship. Qwen's actual open-weight strength has always been its smaller checkpoints, the 7B-to-480B range that much of the local agent ecosystem is built on. That is why the more useful half of the promised release is the smaller one. On launch day the Qwen team said that alongside the Max weights, "Qwen3.8-27B is also going open-weights," and a 27-billion-parameter model is something a single well-specified machine can actually run. That commitment was made on Alibaba's X account rather than in the launch post, which names only the Max weights. The 2.4T model itself, open or not, is a datacenter artifact.
+The realistic play for anyone who [runs models locally](https://geotoolbox.ai/blog/run-llm-locally) is to wait for the family, not the flagship. Qwen's actual open-weight strength has always been its smaller checkpoints, the 7B-to-480B range that much of the local agent ecosystem is built on. That is why the more useful half of the promised release remains the smaller one, which has not yet appeared. On launch day the Qwen team said that alongside the Max weights, "Qwen3.8-27B is also going open-weights," and a 27-billion-parameter model is something a single well-specified machine can actually run. That commitment was made on Alibaba's X account rather than in the launch post, which names only the Max weights. The 2.4T model itself, open or not, is a datacenter artifact.
 
 ## What AI Engines Say About Qwen3.8-Max
 
@@ -134,7 +134,7 @@ The citation data shows where those answers come from. In DataForSEO's LLM-menti
 
 If you are not shipping AI models, here is why this launch belongs on your radar: every new frontier model is a new surface that describes brands, including yours, to its users.
 
-Qwen matters disproportionately here because of how it spreads. As we covered in our [Qwen explainer](https://geotoolbox.ai/blog/what-is-qwen), it is the most-downloaded open model family in the world, fine-tuned and rebranded inside products that never mention Alibaba. If the promised weights or smaller family checkpoints ship, they will propagate into that same ecosystem, and their answers about your company travel with them, into tools you will never audit.
+Qwen matters disproportionately here because of how it spreads. As we covered in our [Qwen explainer](https://geotoolbox.ai/blog/what-is-qwen), it is the most-downloaded open model family in the world, fine-tuned and rebranded inside products that never mention Alibaba. Now that the Max weights have shipped, and if the promised 27B checkpoint follows, they will propagate into that same ecosystem, and their answers about your company travel with them, into tools you will never audit.
 
 The launch-window lesson from our four-engine test applies directly to brands. The moment something new is true about your company, a launch, a rename, a pricing change, there is a window where AI engines only know what a few early pages say. Whoever fills that window shapes the answer, and corrections tend to lag well behind the first version. The time to know how AI systems describe your brand is before a wrong version hardens, not after a prospect quotes it back to you.
 
@@ -148,7 +148,7 @@ Yes. Alibaba released it on August 3, 2026, after showing a preview build on Jul
 
 ### Is Qwen3.8-Max free or open source?
 
-Neither, today. The API is paid at $2 per million input tokens and $6 per million output, with a one-million-token free allowance to start, and the weights are still closed. Alibaba has committed to publishing them in the week of August 10, 2026, which would be the first open Max-tier Qwen ever, but as of August 7 nothing has appeared and no license has been named.
+The API is paid at $2 per million input tokens and $6 per million output, with a one-million-token free allowance to start. The weights opened on August 12, 2026, the first open Max-tier Qwen ever, but with conditions: the published variant is text-only and ships under a bespoke "Qwen3.8-Max" license rather than Apache 2.0, so it is open-weight, not open source.
 
 ### How many parameters does Qwen3.8-Max have?
 
@@ -158,9 +158,9 @@ Neither, today. The API is paid at $2 per million input tokens and $6 per millio
 
 On the evidence available, Kimi K3 is ahead. Artificial Analysis, which measures both under the same harness, scores Kimi K3 at 85.0% and Qwen3.8-Max at 81.3% on Terminal-Bench 2.1. Trilogy AI's earlier blind StackPerf run pointed the same way, 83 to 80, though that one tested the July preview build and Qwen used fewer tool calls with none failing. Alibaba's own published table does not compare the two directly.
 
-### When do the open weights come out?
+### When did the open weights come out?
 
-Alibaba has committed to the week of August 10, 2026. As of August 7 they have not been published and no license has been announced. The credible bar is a repository under Alibaba's own Hugging Face organization containing weights and a license file. Third-party repos carrying the Qwen3.8 name do not count, whether they are empty or hold relabelled weights from older Qwen models. For contrast, Moonshot named July 27 for Kimi K3's weights at announcement and delivered on it.
+August 12, 2026, two days past the committed week-of-August-10 window: the Qwen3.8-2.4T-A95B repository under Alibaba's own Hugging Face organization, with weights and a bespoke "Qwen3.8-Max" license file. That was the credible bar; the third-party repos that carried the Qwen3.8 name before that date held either nothing or relabelled weights from older Qwen models. For contrast, Moonshot named July 27 for Kimi K3's weights at announcement and delivered on it exactly.
 
 ### How can I try Qwen3.8-Max from the US?
 
