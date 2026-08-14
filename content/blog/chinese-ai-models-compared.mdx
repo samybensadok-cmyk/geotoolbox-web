@@ -2,8 +2,8 @@
 title: "Chinese AI Models Compared: DeepSeek, Qwen, GLM, Kimi ($YEAR)"
 description: "An honest, current comparison of the top Chinese AI models - DeepSeek, Qwen, GLM, Kimi and more - covering capability, cost, safety, and AI visibility."
 date: "2026-06-27"
-updated: "2026-08-08"
-recheckBy: "2026-08-14"  # volatile: Qwen3.8-Max weights committed for the week of 2026-08-10, licence unannounced; also re-check the Kimi row (K2.6 -> K3) in the Batch 4 pass
+updated: "2026-08-14"
+recheckBy: "2026-09-14"  # Qwen weights-status resolved 08-14 (shipped 08-12, text-only, bespoke license). STILL PENDING for the freshness track: Kimi row K2.6 -> K3, and open-vs-closed.png regen (June-2026 capture, now date-scoped in alt+figcaption)
 author: "Samy BEN SADOK"
 tags: ["chinese-ai-models", "deepseek", "qwen", "glm", "kimi", "open-weights", "chinese-ai", "ai-comparison", "geo", "guide"]
 draft: false
@@ -21,7 +21,7 @@ A year ago, "Chinese AI model" mostly meant DeepSeek. In August 2026 it means a 
 </thead>
 <tbody>
 <tr><td><strong>DeepSeek V4</strong></td><td>DeepSeek (Hangzhou)</td><td>Yes</td><td>~1M</td><td>Cheap reasoning and coding</td><td>~$0.14 (Flash)</td></tr>
-<tr><td><strong>Qwen3.8-Max</strong></td><td>Alibaba</td><td>Smaller models yes; flagship weights promised for the week of Aug 10, 2026, not yet published</td><td>1M</td><td>Multilingual, agents, multimodal</td><td>$2</td></tr>
+<tr><td><strong>Qwen3.8-Max</strong></td><td>Alibaba</td><td>Smaller models yes; flagship weights published Aug 12, 2026 (text-only, bespoke license)</td><td>1M</td><td>Multilingual, agents, multimodal</td><td>$2</td></tr>
 <tr><td><strong>GLM-5.2</strong></td><td>Zhipu / Z.ai (Beijing)</td><td>Yes</td><td>~1M</td><td>Coding and agent work</td><td>~$1.00</td></tr>
 <tr><td><strong>Kimi K2.6</strong></td><td>Moonshot AI</td><td>Yes</td><td>~256K</td><td>Long context, agent swarms</td><td>~$0.80</td></tr>
 <tr><td><strong>MiniMax M3</strong></td><td>MiniMax</td><td>Yes</td><td>~1M</td><td>Long context at low cost</td><td>~$0.40</td></tr>
@@ -46,7 +46,7 @@ Four labs do most of the heavy lifting in this conversation. They are the ones w
 
 If DeepSeek grabbed the headlines, [Qwen](https://geotoolbox.ai/blog/what-is-qwen) quietly became the foundation. Alibaba's Qwen family is the most-downloaded open model line in the world: [MIT Technology Review reports](https://www.technologyreview.com/2026/02/12/1132811/whats-next-for-chinese-open-source-ai/) it accounted for more than 30 percent of all Hugging Face model downloads in 2024, and by August 2025 Qwen derivatives made up over 40 percent of new language-model variants on Hugging Face, versus about 15 percent for Meta's Llama. Alibaba ships new Qwen models at a relentless pace, several a month.
 
-The practical takeaway is that when a developer anywhere fine-tunes "an open model," it is very often a Qwen underneath. The smaller and mid-size Qwen models ship with open weights under permissive licenses, which is what makes them the default starting point. The catch: Alibaba keeps its very largest models as a closed API rather than an open download, a small but telling retreat from full openness. Qwen's strengths are breadth: strong multilingual coverage, agentic tool use, and a one-million-token context window. The current flagship, [Qwen3.8-Max](https://geotoolbox.ai/blog/qwen3-8-max), was released on August 3, 2026 at 2.4 trillion parameters with 95 billion active, priced at $2 per million input tokens and $6 per million output. Alibaba has committed to publishing its weights in the week of August 10, which would be the first open Max-tier Qwen; as of August 7 they have not appeared and no license has been named.
+The practical takeaway is that when a developer anywhere fine-tunes "an open model," it is very often a Qwen underneath. The smaller and mid-size Qwen models ship with open weights under permissive licenses, which is what makes them the default starting point. The catch: Alibaba keeps its very largest models as a closed API rather than an open download, a small but telling retreat from full openness. Qwen's strengths are breadth: strong multilingual coverage, agentic tool use, and a one-million-token context window. The current flagship, [Qwen3.8-Max](https://geotoolbox.ai/blog/qwen3-8-max), was released on August 3, 2026 at 2.4 trillion parameters with 95 billion active, priced at $2 per million input tokens and $6 per million output. Alibaba published its weights on August 12, 2026, the first open Max-tier Qwen, though as a text-only variant under a bespoke "Qwen3.8-Max" license rather than Apache 2.0.
 
 ### Zhipu GLM (GLM-5.2): The Frontier Challenger
 
@@ -79,8 +79,8 @@ Almost every article on this topic calls these models "open source," and almost 
 Most Chinese models are open <strong>weights</strong>, not open <strong>source</strong>. The lab publishes the trained model file so you can download, run, and fine-tune it, but it does not publish the training data or the full training code. So you can use the model freely, but you cannot fully reproduce or audit how it was built. A genuinely [open-source AI](https://geotoolbox.ai/glossary/open-source-ai) model would release all three; an [open-weights](https://geotoolbox.ai/glossary/open-weights) model releases only the weights. It is the difference between being handed a working engine and being handed the engine plus the factory blueprints. For the model-by-model license breakdown, see our guide to [open weights vs open source](https://geotoolbox.ai/blog/open-weights-vs-open-source).
 
 <figure className="not-prose my-8">
-  <BlogImage src="/blog/chinese-ai-models-compared/open-vs-closed.png" alt="Most Chinese frontier AI models ship open weights you can download and self-host; the top Qwen, Baidu's Ernie 5.1, and ByteDance's Doubao stay API-only." w="2200" h="1470" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
-  <figcaption className="mt-3 text-center text-sm text-gray-500">The open downloads span four current flagships plus open siblings from Qwen and Ernie; the top Qwen, Baidu's Ernie 5.1, and ByteDance's Doubao stay closed.</figcaption>
+  <BlogImage src="/blog/chinese-ai-models-compared/open-vs-closed.png" alt="Most Chinese frontier AI models ship open weights you can download and self-host; in this June 2026 capture the top Qwen, Baidu's Ernie 5.1, and ByteDance's Doubao stay API-only (since August 12, 2026 the newest Qwen Max ships text-only open weights under a bespoke license)." w="2200" h="1470" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">A June 2026 capture: the open downloads spanned four flagships plus open siblings from Qwen and Ernie, while the top Qwen, Baidu's Ernie 5.1, and ByteDance's Doubao stayed closed. Since August 12, 2026, the newest Qwen Max ships text-only weights under a bespoke license.</figcaption>
 </figure>
 
 "Open" also does not automatically mean "free for any use." The license attached to the weights decides that, and the licenses vary.
