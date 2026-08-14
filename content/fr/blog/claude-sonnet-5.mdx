@@ -1,8 +1,8 @@
 ---
 title: "Claude Sonnet 5 : prix, benchmarks et retour d'expérience (2026)"
-description: "Claude Sonnet 5 est sorti. Prix, benchmarks face à Sonnet 4.6 et Opus 4.8, et le vrai coût par tâche après le 1er septembre."
+description: "Claude Sonnet 5 est sorti. Prix, benchmarks face à Sonnet 4.6 et Opus 4.8, et le vrai coût par tâche à effort élevé."
 date: "2026-06-30"
-updated: "2026-08-10"
+updated: "2026-08-14"
 author: "Samy BEN SADOK"
 tags: ["claude-sonnet-5", "claude", "anthropic", "sonnet-5", "llm", "guide"]
 draft: false
@@ -17,7 +17,7 @@ Claude Sonnet 5 a été lancé le 30 juin 2026. Pendant des mois, des fuites et 
 ## Ce qu'il faut retenir
 
 - Claude Sonnet 5 a été lancé le 30 juin 2026 et devient le modèle par défaut des formules Free et Pro de Claude.
-- Le tarif de lancement est de 2 $ en entrée et 10 $ en sortie par million de tokens jusqu'au 31 août 2026, avant de passer à 3 $ et 15 $ le 1er septembre 2026.
+- Le tarif est de 2 $ en entrée et 10 $ en sortie par million de tokens : d'abord annoncé comme promotionnel jusqu'au 31 août 2026, Anthropic l'a rendu permanent en août 2026 (la hausse prévue à 3 $ et 15 $ n'aura pas lieu).
 - Sonnet 5 dépasse Sonnet 4.6 sur les cinq benchmarks publiés et fait quasiment jeu égal avec Opus 4.8 sur le travail intellectuel (GDPval-AA v2 : 1 618 contre 1 615 points).
 - Opus 4.8 garde l'avantage sur le codage pur : 69,2 % contre 63,2 % sur SWE-bench Pro, et reste le choix recommandé quand la précision prime.
 - Le nouveau tokeniseur génère entre 1,0 et 1,35 fois le volume de tokens d'avant selon le contenu (jusqu'à environ 35 % de plus) et le modèle en consomme davantage par tâche : les tests indépendants désignent l'effort medium comme le meilleur compromis qualité-coût.
@@ -47,19 +47,19 @@ La confusion n'a rien d'historique : elle est encore active aujourd'hui dans les
 
 ## Combien coûte Claude Sonnet 5 ?
 
-[Claude Sonnet 5 est lancé avec un tarif promotionnel](https://www.anthropic.com/news/claude-sonnet-5) valable jusqu'au 31 août 2026, avant de passer à son tarif standard :
+[Claude Sonnet 5 est lancé avec un tarif promotionnel](https://www.anthropic.com/news/claude-sonnet-5) qu'Anthropic a rendu permanent en août 2026, annulant la hausse prévue :
 
 <table>
 <thead>
 <tr><th>Période</th><th>Entrée (par million de tokens)</th><th>Sortie (par million de tokens)</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>Tarif de lancement (jusqu'au 31 août 2026)</strong></td><td>2,00 $</td><td>10,00 $</td></tr>
-<tr><td><strong>Tarif standard (à partir du 1er septembre 2026)</strong></td><td>3,00 $</td><td>15,00 $</td></tr>
+<tr><td><strong>Tarif promotionnel (annoncé jusqu'au 31 août 2026)</strong></td><td>2,00 $</td><td>10,00 $</td></tr>
+<tr><td><strong>Désormais permanent (hausse à 3 $/15 $ annulée)</strong></td><td>2,00 $</td><td>10,00 $</td></tr>
 </tbody>
 </table>
 
-À titre de comparaison, Claude Opus 4.8 coûte 5 $ par million de tokens en entrée et 25 $ en sortie. Le tarif de lancement de Sonnet 5 est environ 60 % moins cher dans les deux cas, et son tarif standard, identique au tarif actuel de Sonnet 4.6, reste 40 % moins cher qu'Opus.
+À titre de comparaison, Claude Opus 4.8 coûte 5 $ par million de tokens en entrée et 25 $ en sortie. Le tarif de Sonnet 5 est environ 60 % moins cher qu'Opus 4.8 dans les deux cas.
 
 À noter : Anthropic facture son API en dollars américains partout dans le monde, il n'existe pas de grille tarifaire par token en euros. Les clients en France règlent en USD, avec la TVA française applicable en plus, sauf pour les entreprises ayant renseigné un numéro de TVA intracommunautaire valide, qui peuvent passer en autoliquidation depuis la console Claude.
 
@@ -128,7 +128,7 @@ Le premier est le changement de tokeniseur vu dans la section tarifs : plus de t
 
 Le second facteur pèse davantage, et c'est un sujet propre à la comparaison Sonnet 5 / Sonnet 4.6, pas Sonnet 5 / Opus 4.8. [L'analyse du lancement par The Decoder](https://the-decoder.com/anthropics-new-claude-sonnet-5-closes-the-gap-to-the-pricier-opus-model-series/) pose le constat clairement : parce que Sonnet 5 fonctionne de façon plus agentique, il consomme vraisemblablement plus de tokens par tâche que son prédécesseur, donc même à tarif par token inchangé, le faire tourner peut coûter plus cher que le même travail exécuté sur Sonnet 4.6. Anthropic avait observé le même phénomène en passant d'Opus 4.6 à 4.7. Aux niveaux d'effort élevés en particulier, ce volume de tokens supplémentaire s'accumule, si bien que les économies par tâche face à n'importe quel modèle précédent, Sonnet ou Opus, peuvent finir bien en dessous de ce que suggère la grille tarifaire seule.
 
-À cela s'ajoute un piège de calendrier. [Une analyse de coût publiée après le lancement](https://www.finout.io/blog/claude-sonnet-5-pricing-2026-the-hidden-costs-and-real-savings-behind-the-cost-neutral-launch) applique ces chiffres à une charge de travail quotidienne fixe : au tarif de lancement, avec une inflation modérée du tokeniseur, elle ressort environ 20 % moins chère que le même travail sur Sonnet 4.6, si bien qu'une migration ce mois-ci ressemble à un gain net. Mais une fois le tarif standard en vigueur le 1er septembre (une hausse sèche de +50 % par token, de 2/10 $ à 3/15 $) et le surcoût du tokeniseur compté dans le haut de la fourchette, cette même charge de travail se retrouve environ 20 à 35 % *au-dessus* de l'ancienne référence Sonnet 4.6. Le changement qui ressemble à une économie en juillet peut discrètement devenir une hausse de coût en septembre. Basez votre budget sur le tarif standard, pas sur celui de lancement.
+À cela s'ajoute un piège de tokeniseur. [Une analyse de coût publiée après le lancement](https://www.finout.io/blog/claude-sonnet-5-pricing-2026-the-hidden-costs-and-real-savings-behind-the-cost-neutral-launch) a appliqué ces chiffres à une charge de travail quotidienne fixe : au tarif de 2/10 $, avec une inflation modérée du tokeniseur, elle ressort environ 20 % moins chère que le même travail sur Sonnet 4.6. Cette analyse modélisait aussi une hausse prévue au 1er septembre (de 2/10 $ à 3/15 $) qui, combinée au surcoût du tokeniseur dans le haut de la fourchette, aurait placé cette même charge 20 à 35 % *au-dessus* de l'ancienne référence Sonnet 4.6 ; mais Anthropic a annulé cette hausse en août 2026 et conservé 2/10 $ comme tarif permanent, de sorte que le basculement qu'elle annonçait n'a plus lieu. Ce qui reste à surveiller, c'est le surcoût du tokeniseur lui-même : budgétez selon votre volume réel de tokens à effort élevé, pas seulement le tarif au token.
 
 Même son de cloche côté français. Quentin Pleplé, ingénieur chez Theodo (un cabinet français qui accompagne ses clients sur l'adoption de Claude Code), a publié dès le jour du lancement [une mise en garde](https://fr.linkedin.com/posts/qpleple_nouveau-mod%C3%A8le-claude-sonnet-5-moins-cher-activity-7477809915273646080-O4ds) quasi identique : à effort élevé, l'économie de prix par token ne se traduit pas forcément par une économie réelle, et il vaut mieux réserver ce niveau aux tâches qui le justifient vraiment.
 
@@ -144,7 +144,7 @@ Sonnet 5 est le nouveau modèle par défaut pour les formules Free et Pro, et il
 Ni claude.ai ni l'API Claude directe ne sont nativement hébergés dans l'UE. Pour un hébergement régional garanti (Francfort, Irlande, Paris), souvent exigé pour la conformité RGPD, il faut passer par la plateforme Claude d'AWS ou Google Vertex AI. Indépendamment de la région, l'API propose une option de rétention nulle des données (ZDR) pour les organisations qui en font la demande, aucune conservation au-delà de la requête, aucune utilisation pour l'entraînement.
 </Callout>
 
-Pour les équipes qui évaluent une alternative souveraine : Mistral reste l'option européenne de référence. Mistral Medium 3.5 facture 1,50 $ en entrée et 7,50 $ en sortie par million de tokens, moins cher que le tarif standard de Sonnet 5 (le tarif de lancement de Sonnet 5 réduit l'écart, sans l'effacer). Côté codage agentique, Mistral propose Vibe (ex-Le Chat), vendu en abonnement plutôt qu'au token (à partir de 14,99 € HT par mois, soit environ 18 € TTC, en formule Pro), ce qui rend la comparaison directe avec Claude Code difficile. Sonnet 5 garde l'avantage sur la fenêtre de contexte (1 million contre 256 000 tokens chez Mistral Medium 3.5) et, selon plusieurs comparatifs tiers, sur la qualité du français produit, qui sonne moins « traduit ». Mistral, lui, conserve l'argument de la souveraineté : société française, hébergement européen.
+Pour les équipes qui évaluent une alternative souveraine : Mistral reste l'option européenne de référence. Mistral Medium 3.5 facture 1,50 $ en entrée et 7,50 $ en sortie par million de tokens, un peu moins cher que Sonnet 5 (2 $ / 10 $). Côté codage agentique, Mistral propose Vibe (ex-Le Chat), vendu en abonnement plutôt qu'au token (à partir de 14,99 € HT par mois, soit environ 18 € TTC, en formule Pro), ce qui rend la comparaison directe avec Claude Code difficile. Sonnet 5 garde l'avantage sur la fenêtre de contexte (1 million contre 256 000 tokens chez Mistral Medium 3.5) et, selon plusieurs comparatifs tiers, sur la qualité du français produit, qui sonne moins « traduit ». Mistral, lui, conserve l'argument de la souveraineté : société française, hébergement européen.
 
 Des outils tiers l'ont intégré dès le jour du lancement. [GitHub Copilot a rendu Sonnet 5 disponible](https://github.blog/changelog/2026-06-30-claude-sonnet-5-is-generally-available-for-github-copilot/) pour tous dès la sortie, sur les formules Copilot Pro, Pro+, Max, Business et Enterprise, avec un déploiement progressif sur VS Code, Visual Studio, le CLI Copilot, JetBrains et Xcode. Cursor l'a intégré le même jour, avec ses propres chiffres CursorBench.
 
@@ -154,7 +154,7 @@ Les premiers utilisateurs ont signalé deux accrocs au lancement. Si l'API et Cl
 
 Les réactions du premier jour se sont réparties selon des clivages prévisibles. Les développeurs qui orchestrent des workflows de codage agentique se sont montrés enthousiastes face au bond en matière d'usage d'outils et de suivi multi-étapes, plusieurs premiers retours le qualifiant de nouveau choix par défaut pour le travail Claude Code qui n'exige pas la précision d'Opus. D'autres ont contesté l'intérêt aux niveaux d'effort élevés, pour les raisons de coût vues plus haut, et une minorité très critique a estimé que le saut depuis Sonnet 4.6 ne méritait pas le « 5 » dans le nom, puisqu'il ne revendique pas un nouveau record de codage comme certaines versions Sonnet précédentes. C'est un argument valable sur le nom, pas sur les faits : les gains de benchmark face à Sonnet 4.6 sont réels, quel que soit le nom retenu pour la sortie. C'est le même schéma observé avec [Grok 5](https://geotoolbox.ai/blog/grok-5), où une sortie confirmée se fait tout de même critiquer par des observateurs en quête de raisons pour lesquelles le numéro n'aurait pas dû augmenter.
 
-Sur son positionnement face à OpenAI et Google : une vraie comparaison à armes égales n'existe toujours pas, car les trois éditeurs ne partagent pas de suite de tests commune et la page d'Anthropic ne contient aucun chiffre inter-éditeurs. Mais dans les jours qui ont suivi le lancement, un consensus s'est dégagé. Sonnet 5 est largement considéré comme le meilleur choix par défaut parmi les modèles de pointe largement accessibles, presque uniquement pour son rapport prix-performance. Le GPT-5.6 Sol d'OpenAI affiche les meilleurs scores agentiques bruts publiés à ce jour (son palier supérieur atteint environ 92 % sur Terminal-Bench 2.1, au-dessus de tous les modèles Claude), et il a cessé d'être une hypothèse le [9 juillet 2026, date de sa disponibilité générale](https://geotoolbox.ai/fr/blog/gpt-5-6). L'argument en faveur de Sonnet 5 n'est donc plus que l'alternative serait hors de portée : c'est la facture. Sol coûte 5 $/30 $ par million de tokens contre 2 $/10 $ au tarif de lancement de Sonnet 5, soit deux fois et demie le prix en entrée et trois fois en sortie, pour le haut du classement. Si une charge de travail a réellement besoin de ces scores, Sol est désormais là, et il s'achète. Sinon, et pour la plupart des équipes c'est le cas, Sonnet 5 vous emmène presque aussi loin pour une fraction du prix. Le Gemini 3.1 Pro de Google demeure le choix pour le très long contexte et le multimodal. Pour une comparaison directe entre Claude et ChatGPT, voir [notre analyse des deux modèles](https://geotoolbox.ai/fr/blog/claude-ou-chatgpt) ; nous y intégrerons Sonnet 5 à mesure que la comparaison à benchmarks communs se précisera.
+Sur son positionnement face à OpenAI et Google : une vraie comparaison à armes égales n'existe toujours pas, car les trois éditeurs ne partagent pas de suite de tests commune et la page d'Anthropic ne contient aucun chiffre inter-éditeurs. Mais dans les jours qui ont suivi le lancement, un consensus s'est dégagé. Sonnet 5 est largement considéré comme le meilleur choix par défaut parmi les modèles de pointe largement accessibles, presque uniquement pour son rapport prix-performance. Le GPT-5.6 Sol d'OpenAI affiche les meilleurs scores agentiques bruts publiés à ce jour (son palier supérieur atteint environ 92 % sur Terminal-Bench 2.1, au-dessus de tous les modèles Claude), et il a cessé d'être une hypothèse le [9 juillet 2026, date de sa disponibilité générale](https://geotoolbox.ai/fr/blog/gpt-5-6). L'argument en faveur de Sonnet 5 n'est donc plus que l'alternative serait hors de portée : c'est la facture. Sol coûte 5 $/30 $ par million de tokens contre 2 $/10 $ pour Sonnet 5, soit deux fois et demie le prix en entrée et trois fois en sortie, pour le haut du classement. Si une charge de travail a réellement besoin de ces scores, Sol est désormais là, et il s'achète. Sinon, et pour la plupart des équipes c'est le cas, Sonnet 5 vous emmène presque aussi loin pour une fraction du prix. Le Gemini 3.1 Pro de Google demeure le choix pour le très long contexte et le multimodal. Pour une comparaison directe entre Claude et ChatGPT, voir [notre analyse des deux modèles](https://geotoolbox.ai/fr/blog/claude-ou-chatgpt) ; nous y intégrerons Sonnet 5 à mesure que la comparaison à benchmarks communs se précisera.
 
 ## Ce que cela change si vous suivez votre visibilité dans l'IA
 
@@ -174,7 +174,7 @@ Oui. Il a été lancé le 30 juin 2026 et est désormais le modèle par défaut 
 
 ### Combien coûte Claude Sonnet 5 ?
 
-2 $ par million de tokens en entrée et 10 $ en sortie jusqu'au 31 août 2026. Ensuite, le tarif standard s'applique : 3 $ en entrée et 15 $ en sortie par million de tokens. Ces prix sont en dollars américains ; il n'existe pas de grille en euros.
+2 $ par million de tokens en entrée et 10 $ en sortie. Anthropic l'avait annoncé comme tarif de lancement jusqu'au 31 août 2026, mais l'a rendu permanent en août 2026 en annulant la hausse prévue à 3 $ / 15 $. Ces prix sont en dollars américains ; il n'existe pas de grille en euros.
 
 ### Claude Sonnet 5 est-il meilleur qu'Opus 4.8 ?
 
@@ -210,7 +210,7 @@ Non. Claude Science, lancé le même jour, est une application distincte pour la
 - Anthropic lance Claude Sonnet 5, une option moins chère pour faire tourner des agents - TechCrunch - contexte tarifaire concurrentiel et angle business - `techcrunch.com/2026/06/30/anthropic-launches-claude-sonnet-5-as-a-cheaper-way-to-run-agents`
 - Le nouveau Claude Sonnet 5 d'Anthropic comble l'écart avec la gamme Opus, plus chère - The Decoder - analyse complète des benchmarks et du vrai coût en tokens - `the-decoder.com/anthropics-new-claude-sonnet-5-closes-the-gap-to-the-pricier-opus-model-series`
 - Claude Sonnet 5 review: Should you switch? - CodeRabbit - benchmark indépendant de revue de code post-lancement : gain de précision, recul de la détection de bugs face à Sonnet 4.6, recommandation d'effort moyen - `coderabbit.ai/blog/claude-sonnet-5-review`
-- Claude Sonnet 5 Pricing 2026: The Hidden Costs and Real Savings - Finout - l'exemple chiffré montrant le basculement de coût au tarif standard du 1er septembre - `finout.io/blog/claude-sonnet-5-pricing-2026-the-hidden-costs-and-real-savings-behind-the-cost-neutral-launch`
+- Claude Sonnet 5 Pricing 2026: The Hidden Costs and Real Savings - Finout - l'exemple chiffré modélisant le basculement de coût au tarif standard du 1er septembre, qu'Anthropic a ensuite annulé - `finout.io/blog/claude-sonnet-5-pricing-2026-the-hidden-costs-and-real-savings-behind-the-cost-neutral-launch`
 - Anthropic lance le modèle Claude Sonnet 5 sur Claude et via ses API - TestingCatalog - intégration Cursor et le benchmark tiers CursorBench - `testingcatalog.com/anthropic-launches-claude-sonnet-5-model-on-claude-and-apis`
 - Claude Sonnet 5 disponible pour tous sur GitHub Copilot - GitHub Changelog - disponibilité dès le lancement chez GitHub Copilot et les formules concernées - `github.blog/changelog/2026-06-30-claude-sonnet-5-is-generally-available-for-github-copilot`
 - Fuite Claude Sonnet 5 « Fennec » : ce que montrent vraiment les journaux Vertex AI - Dev Community - le journal Vertex AI qui a fuité et l'identifiant du checkpoint - `dev.to/marc0dev/claude-sonnet-5-fennec-leak-what-the-vertex-ai-logs-actually-show-3ho5`

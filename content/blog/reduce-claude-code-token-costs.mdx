@@ -2,7 +2,7 @@
 title: "How to Reduce Claude Code Token Costs (and Why They Add Up Fast)"
 description: "Claude Code burns tokens fast because it re-reads your whole context on every step. Here is the mechanism, plus the highest-impact ways to cut your token bill."
 date: "2026-07-04"
-updated: "2026-07-10"
+updated: "2026-08-14"
 author: "Samy BEN SADOK"
 tags: ["claude-code", "agentic-ai", "claude", "claude-sonnet-5", "anthropic"]
 draft: false
@@ -136,7 +136,7 @@ For genuinely noisy jobs, hand them to a subagent. A subagent explores logs, run
 
 How you phrase a request changes how many tokens come back. Vague prompts like "improve this codebase" trigger broad scanning and long, hedged answers. Specific ones keep the work tight: "add input validation to the login function in auth.ts" lets Claude read one file and move. Negative prompts help too. Adding "do not redesign the architecture, do not add dependencies, do not touch code outside this function" reduces collateral changes and the tokens spent making them.
 
-Answer budgets are the cheapest lever of all, and they target the priciest tokens. Output tokens are billed five times more than input tokens, per token: [Anthropic's pricing](https://platform.claude.com/docs/en/about-claude/pricing) puts Sonnet 5 at 2 dollars per million input against 10 dollars per million output at its introductory rates (rising to 3 against 15 after August 2026, still 5 to 1). So "return only the diff," "answer in under 200 tokens," or "five bullets maximum" saves more than the word count suggests, and it usually improves the answer by forcing Claude to select instead of generating everything plausible.
+Answer budgets are the cheapest lever of all, and they target the priciest tokens. Output tokens are billed five times more than input tokens, per token: [Anthropic's pricing](https://platform.claude.com/docs/en/about-claude/pricing) puts Sonnet 5 at 2 dollars per million input against 10 dollars per million output per million output, a 5-to-1 ratio. So "return only the diff," "answer in under 200 tokens," or "five bullets maximum" saves more than the word count suggests, and it usually improves the answer by forcing Claude to select instead of generating everything plausible.
 
 We lean on this constantly in our own work. On routine tasks we ask for terse output by default and let the model spend its budget on reasoning rather than narration. The point is to constrain the output, not the thinking: a short answer is not a dumber one if the model still reasoned fully before replying. One caveat, since extended thinking is billed as output too: an answer-length limit does not cap the hidden thinking tokens, so on simple tasks pair the terse-output request with a lower `/effort`. Some developers push this further into a grammar-stripped "caveman" style for quick lookups, which saves input tokens too, with one real failure mode. Strip too much and Claude infers more, which means it sometimes infers wrong. Keep full sentences for anything that touches production code. One developer documented a roughly 60 percent cut from this kind of context and prompt discipline alone, in [this dev.to write-up](https://dev.to/numbpill3d/how-i-cut-my-claude-code-token-usage-by-60-and-got-better-output-48b0).
 
