@@ -1,0 +1,196 @@
+---
+title: "Faire tourner Kimi K3 en local : ce que ça exige vraiment"
+description: "Faire tourner Kimi K3 en local : le vrai matériel pour un modèle de 1,56 To, cinq routes par coût et vitesse, et un verdict honnête sur l'auto-hébergement."
+date: "2026-08-14"
+author: "Samy BEN SADOK"
+tags: ["kimi-k3", "run-llm-locally", "self-host-llm", "open-weights", "moonshot-ai", "vllm", "local-llm", "guide"]
+draft: false
+locale: "fr"
+donorSlug: "how-to-run-kimi-k3-locally"
+donorCommit: "bfc509b"
+noindex: false
+---
+
+Les guides français sur l'IA en local vous préparent à une certaine échelle. Un modèle de 7 milliards de paramètres tourne sur une RTX 4060 ; un modèle de 24 milliards demande environ 48 Go de VRAM ; au-delà de 70 milliards, on parle de « cartes professionnelles ». C'est le plafond que décrivent presque tous les tutoriels. Kimi K3 le fait exploser : le modèle affiche 2 800 milliards de paramètres, soit une quarantaine de fois ce plafond de 70 milliards, et ses poids pèsent 1,56 To. Face à ce chiffre, la vraie question n'est plus « est-ce que je peux l'avoir » (les poids sont publics sur Hugging Face en ce moment même), mais « comment le faire tourner ». Voici ce que ça exige, route par route, chiffres à l'appui.
+
+Petit avertissement en préambule, parce qu'il donne le ton. Le lendemain de la publication des poids par Moonshot, nous avons demandé à trois assistants comment faire tourner K3. Le 28 juillet 2026, recherche web coupée, Claude Opus 4.8 a répondu qu'il n'avait aucune information fiable sur l'existence d'un modèle nommé Kimi K3 et proposait de l'aide sur K2. Gemini 2.5 Flash a fait l'inverse : il insistait sur le fait que K3 était propriétaire, disponible uniquement dans le cloud, et que « la taille du téléchargement n'a pas d'importance puisque vous ne téléchargez pas les poids ». Seul ChatGPT, recherche activée, a répondu correctement. On y reviendra à la fin, car c'est le même mécanisme qui décide de ce que l'IA raconte sur votre produit.
+
+## Ce qu'il faut retenir
+
+- **Non, on ne fait pas tourner Kimi K3 sur une machine normale** : ses 2 800 milliards de paramètres pèsent 1,56 To de poids, plus que la mémoire rapide de n'importe quel poste de travail, PC de jeu ou Mac pris seul.
+- Il existe cinq routes, du simple appel à un fournisseur (la bonne réponse pour presque tout le monde, environ 3 $ / 15 $ le million de tokens) jusqu'à l'achat d'un rack à plusieurs centaines de milliers d'euros.
+- La seule voie à pleine vitesse est de servir le modèle vous-même avec vLLM ou SGLang sur un nœud 8 GPU B300 (ou 16 B200), que le nœud soit acheté ou loué à l'heure. En France, Scaleway loue un tel nœud (2,3 To de VRAM, région Paris) pour environ 80 € de l'heure.
+- Au tarif électrique français (0,2001 €/kWh au 1er août 2026, au-dessus du tarif américain), l'auto-hébergement revient encore plus cher qu'aux États-Unis : entre 130 et 350 € le million de tokens en électricité seule sur une machine lente.
+- La seule vraie raison de s'auto-héberger reste la résidence des données : des données sensibles que vous ne pouvez pas confier à un cloud américain, à cause du CLOUD Act. En dehors de ce cas, l'API est moins chère et plus rapide.
+
+## La réponse courte : peut-on faire tourner Kimi K3 en local ?
+
+Pas sur une machine normale. Kimi K3, le plus grand modèle à poids ouverts jamais publié, est un [modèle de 2 800 milliards de paramètres](https://geotoolbox.ai/blog/what-is-kimi-k3), et ses poids se téléchargent sous forme de 1,56 To répartis sur 96 fragments. Les charger demande plus de mémoire rapide que n'en contient le moindre poste de travail, PC de jeu ou Mac. Moonshot recommande un déploiement de production sur un supernode d'au moins 64 accélérateurs, soit huit nœuds de 8 GPU ou plus, sans jamais avoir publié de configuration minimale viable.
+
+Mais le « local » recouvre tout un éventail de configurations, depuis le simple fait de pointer votre éditeur vers un point d'accès hébergé jusqu'à l'achat d'un rack entier. La bonne question est de savoir laquelle de ces routes correspond à votre vraie contrainte : la confidentialité, le coût, la vitesse ou la curiosité.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/faire-tourner-kimi-k3-en-local/kimi-k3-memory-gap.png" alt="Diagramme à barres à l'échelle comparant la mémoire rapide de chaque option aux 1,56 To exigés par Kimi K3 : une RTX 4090 (24 Go) forme un trait fin, un Mac Studio de 512 Go et un serveur de 1 To de RAM restent tous deux sous la ligne pointillée des 1,56 To, et seul un nœud de datacenter à 8 GPU B300 (environ 2,3 To) la franchit." w="1100" h="582" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Les poids doivent tenir en mémoire rapide pour tourner à pleine vitesse. Un serveur doté d'une grande quantité de RAM peut néanmoins faire tourner K3 lentement en déchargeant les experts vers la mémoire système (Route 3), mais seul un nœud de datacenter franchit la ligne d'emblée.</figcaption>
+</figure>
+
+<table>
+<thead>
+<tr><th>Route</th><th>Ce qu'il faut</th><th>Vitesse réaliste</th><th>Coût approximatif</th><th>Pour qui</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>5. Passer par un fournisseur</strong></td><td>Rien, une clé d'API</td><td>env. 37 à 148 tok/s selon l'hôte</td><td>3 $ en entrée / 15 $ en sortie le million de tokens</td><td>Presque tout le monde</td></tr>
+<tr><td><strong>1. Louer un nœud capable</strong></td><td>8× B300 ou 16× B200, à l'heure</td><td>Comme la Route 2</td><td>env. 40 à 100 $ de l'heure, voire plus</td><td>Tester, jobs courts</td></tr>
+<tr><td><strong>2. S'auto-héberger sur vLLM</strong></td><td>Un nœud 8× B300 (ou 16× B200)</td><td>111 tok/s en TP8, 331 avec décodage spéculatif</td><td>Capex datacenter ou cloud</td><td>Structures avec une vraie infra GPU</td></tr>
+<tr><td><strong>3. Déchargement CPU + RAM</strong></td><td>Serveur à grosse RAM + 1 à 4 GPU</td><td>env. 10 tok/s en décodage, prefill lent</td><td>env. 5 000 à 65 000 € en une fois</td><td>Homelab, traitement de nuit</td></tr>
+<tr><td><strong>4. Cluster de Mac Studio</strong></td><td>4 à 5× M3 Ultra 512 Go</td><td>env. 15 tok/s par analogie, non mesuré</td><td>env. 48 000 € et plus en une fois</td><td>Expériences en mémoire unifiée</td></tr>
+</tbody>
+</table>
+
+Les vitesses des lignes auto-hébergées sont le plafond atteignable sur le bon matériel ; une première installation restera en dessous. La plupart des gens devraient se rabattre sur un fournisseur (Route 5), ou sur un nœud loué (Route 1) pour tester d'abord. Le reste de ce guide explique pourquoi, et ce que coûtent les autres.
+
+## Pourquoi il faut autant de mémoire : le calcul
+
+Le nombre qui décide de tout, c'est 1,56 To, la taille du [dépôt Kimi K3](https://huggingface.co/moonshotai/Kimi-K3) sur Hugging Face, réparti sur 96 fragments de poids. Un chiffre plus petit, autour de 594 Go, circule dans une partie des articles publiés au lancement. L'arithmétique l'écarte : 594 Go impliqueraient environ 1 200 milliards de paramètres en 4 bits, or K3 en compte 2 800 milliards. Quoi que mesure ce chiffre, ce ne sont pas les poids de ce modèle.
+
+Le calcul naïf donne 2 800 milliards de paramètres × 4 bits, soit 1,4 To. Le dépôt réel pèse 1,56 To parce que le format MXFP4 stocke un facteur d'échelle partagé par bloc et que les couches hors experts dépassent les 4 bits. Comptez donc 1,56 To résidents rien que pour les poids, et 1,8 à 2 To une fois ajoutés le cache KV et les tampons de calcul. C'est le mur, et il ne rétrécit pas. Comme K3 est entraîné avec quantification intégrée en 4 bits (avec des activations MXFP8 en 8 bits), il n'y a pas de division gratuite par deux à espérer du passage habituel de 16 à 4 bits : une version 8 bits serait plus grosse que ce qui a été publié, pas plus petite.
+
+La conception en [mélange d'experts](https://geotoolbox.ai/glossary/mixture-of-experts) est le second piège. K3 n'active que 16 de ses 896 experts routés (plus 2 experts partagés) par token, si bien qu'il calcule comme un modèle bien plus petit. Cela économise du calcul, pas de la mémoire. L'ensemble des poids doit rester résident, car n'importe quel token peut être routé vers n'importe quel expert. Un modèle creux allège la passe avant, mais l'empreinte mémoire, elle, ne bouge pas. Peu de guides francophones le disent clairement, et c'est pourtant ce mécanisme qui rend l'échelle de K3 compréhensible.
+
+Vient ensuite la [fenêtre de contexte](https://geotoolbox.ai/glossary/context-window). À 1 048 576 tokens, un contexte rempli ajoute une vraie pression mémoire au-dessus des poids. Le Kimi Delta Attention, la conception hybride qu'utilise K3, garde un état de taille constante sur la plupart des couches et adoucit ce coût, mais un job à long contexte exige quand même de prévoir une marge.
+
+Un dernier point avant de construire quoi que ce soit : K3 est publié sous une [licence Kimi K3](https://geotoolbox.ai/blog/open-weights-vs-open-source) maison, qui autorise l'usage commercial mais n'est pas open source au sens de l'OSI. C'est un modèle à poids ouverts (open weights), ce qui n'est pas la même chose. Un opérateur qui propose le modèle en service (MaaS) et dont le chiffre d'affaires dépasse 20 millions de dollars sur douze mois glissants doit négocier un accord séparé avec Moonshot, et tout produit au-dessus de 100 millions d'utilisateurs mensuels ou de 20 millions de dollars de revenus mensuels doit afficher « Kimi K3 » dans son interface. Pour une équipe qui s'auto-héberge afin de servir des clients, ce n'est pas une anecdote, c'est un feu vert ou un feu rouge.
+
+## Route 1 : louer un nœud capable (essayer avant d'acheter)
+
+Avant de dépenser un euro en matériel, louez le modèle pour une heure. C'est la route vers laquelle se tourne d'abord la communauté de l'inférence locale : au lancement, avant l'arrivée des fournisseurs tiers, plusieurs rapports faisaient état d'un point d'accès K3 hébergé par Moonshot qui limitait le débit en pleine tâche, si bien que la location était le moyen fiable d'évaluer le modèle avant de s'engager dans une machine.
+
+Le piège, c'est ce que vous louez. Une machine 8× H100 à environ 20 $ de l'heure est la configuration par défaut vers laquelle les gens se tournent, mais 8× H100 totalisent 640 Go, une capacité insuffisante pour charger un modèle de 1,56 To dans l'un des formats de précision recommandés dans ce guide. Il vous faut le même plancher que la Route 2, un nœud 8× B300 ou 16× B200, qui se loue plutôt entre 40 et 100 $ de l'heure, voire davantage, sur RunPod, Lambda ou Vast. Vous payez l'heure, pas les tokens, ce qui explique justement pourquoi cette route sert à mesurer plutôt qu'à produire.
+
+<Callout title="L'équivalent souverain de la Route 1, en France">
+Un point que les guides américains n'abordent pas : où louer, quand vos données ne peuvent pas transiter par un cloud américain. **Scaleway** loue à l'heure un nœud unique 8× B300 (2,3 To de VRAM, région Paris PAR-2, environ 80 € de l'heure), qui franchit le plancher de 1,56 To et correspond exactement à la configuration de démarrage de vLLM. C'est l'équivalent européen et souverain des Routes 1 et 2. **OVHcloud** plafonne pour sa part à 8× H200 (1,1 To par instance, à Gravelines) : cela ne suffit pas à lui seul, il faudrait agréger plusieurs nœuds. Autrement dit, un nœud K3 capable est réservable à l'heure sur le sol français, mais chez un seul des deux grands fournisseurs.
+</Callout>
+
+Chargez votre vrai cas d'usage, pas un exemple de démonstration. Testez sur le nœud loué votre longueur de contexte et votre nombre réel de requêtes simultanées, mesurez le débit et le temps jusqu'au premier token, puis décidez si posséder du matériel a du sens. Une heure de location coûte moins cher qu'une mauvaise machine. Si vous voulez seulement K3 dans votre éditeur, [un fournisseur](#route-5-passer-simplement-par-un-fournisseur) revient encore moins cher.
+
+## Route 2 : l'auto-héberger avec vLLM
+
+C'est la route pour laquelle Moonshot a conçu K3, et la seule qui atteint la pleine vitesse. [vLLM](https://vllm.ai/blog/2026-07-27-k3) a livré une prise en charge dès le jour zéro et propose la documentation la plus complète, mais ce n'est pas la seule voie : SGLang a livré sa propre prise en charge le même jour, le 27 juillet 2026, et Moonshot cite officiellement vLLM, SGLang et TokenSpeed. La pile de service est le moindre de vos soucis. Le matériel, non.
+
+Le supernode de 64 accélérateurs de Moonshot est une recommandation de production ; la configuration minimale qui fait juste tenir les poids est différente. D'après l'équipe vLLM, la configuration minimale est un nœud 8× B300 (ou un GB300 NVL72), ou un minimum de 16× B200 ou GB200 sur la génération précédente, et le MI355X d'AMD embarque la prise en charge ROCm dès son lancement si vous n'êtes pas sur NVIDIA. Leur propre note est sans détour : le modèle « tient à peine dans un seul NVIDIA DGX B300 ». Aucun H100, H200 ni B200 seul ne le contient, donc tout déploiement réel est un cluster distribué, et l'interconnexion compte autant que les cartes. Le parallélisme tensoriel sur une interconnexion lente est une régression, pas une amélioration : sans RDMA à haute bande passante entre les nœuds, les échanges all-to-all se bloquent et le traitement des prompts s'effondre. Sur un GB300 NVL72, vLLM a mesuré 111 tokens par seconde et par utilisateur en parallélisme tensoriel de taille 8 (331 avec le décodage spéculatif DSpark), et 118 en TP16, montant à 370 avec DSpark.
+
+La commande de service compte, car K3 a besoin de drapeaux que la plupart des guides de lancement oublient :
+
+```bash
+vllm serve moonshotai/Kimi-K3 \
+  --tensor-parallel-size 8 \
+  --max-model-len 131072 \
+  --trust-remote-code \
+  --load-format fastsafetensors \
+  --enable-prefix-caching \
+  --enable-auto-tool-choice \
+  --tool-call-parser kimi_k3 \
+  --reasoning-parser kimi_k3
+```
+
+Quelques-uns sont faciles à manquer. Réglez `--max-model-len` bien en dessous du contexte complet d'un million (131072 est un bon point de départ ; augmentez-le une fois la marge du cache KV mesurée), sinon le serveur tente d'allouer le cache pour tout le contexte et sature la mémoire au premier lancement. `--load-format fastsafetensors` réclame l'installation séparée du paquet `fastsafetensors`. Le cache de préfixe est désactivé par défaut pour K3, car la conception du cache hybride se stabilise encore : passez le drapeau pour l'économie au prefill, mais validez la sortie sur des préfixes répétés avant de vous y fier en production. Les analyseurs `kimi_k3` sont obligatoires pour l'usage d'outils et le raisonnement toujours actif de K3, et comme le gabarit de conversation est un programme Python plutôt qu'un fichier Jinja, faire confiance au code distant n'est pas optionnel. Un piège silencieux que les drapeaux ne couvrent pas : pour les conversations multi-tours, vous devez repasser l'intégralité du `reasoning_content` à chaque requête, sinon la qualité se dégrade au fil de l'échange sans la moindre erreur.
+
+Les étapes réalistes :
+
+1. Provisionnez le cluster (8× B300 au minimum, ou 16× B200) avec une interconnexion RDMA rapide entre les nœuds.
+2. Récupérez l'image conteneur officielle de vLLM ; la chaîne de dépendances tire des bibliothèques en préversion comme FlashInfer, si bien que les installations sur machine nue sont pénibles.
+3. Téléchargez les poids depuis le dépôt officiel de Moonshot uniquement. Anticipez : 1,56 To sur 96 fragments, c'est plusieurs heures sur une ligne rapide et presque une journée sur une connexion domestique, il faut un disque de préparation distinct de celui d'exécution, et c'est aussi un prérequis pour la route homelab.
+4. Servez avec la commande ci-dessus, en démarrant bien en dessous du contexte de 1 million.
+5. Testez la charge avec votre niveau réel de requêtes simultanées avant d'y diriger du trafic de production.
+
+## Route 3 : décharger sur le CPU et la RAM (la voie homelab)
+
+Si vous ne pouvez pas mettre 1,56 To en VRAM, vous pouvez en mettre l'essentiel en RAM système. C'est le schéma homelab : un serveur à grosse mémoire, environ 1 à 1,5 To de RAM DDR et un à quatre GPU, en gardant les couches de routage et d'attention plus le cache KV sur le GPU et en déchargeant les experts routés vers la RAM système. Le moteur pour ça, c'est llama.cpp avec ses drapeaux de déchargement d'experts (`-cmoe` pour garder les experts sur le CPU, `--no-mmap` pour un meilleur débit au prix d'un chargement bien plus long), ou ktransformers, avec lequel des praticiens rapportent 8 à 11 tok/s sur le prédécesseur K2.6 avec un EPYC bi-socket et quelques GPU grand public. Les estimations de la communauté placent le décodage de K3 dans ce schéma autour de 10 tokens par seconde, ce qui semble utilisable.
+
+Ça ne l'est pas pour du travail interactif, et la raison, c'est le prefill. Générer des tokens à 10 par seconde, ça passe ; traiter votre prompt, c'est là que ces machines s'effondrent. À environ 1 token par seconde de traitement de prompt, un contexte de 20 000 tokens prend près de six heures avant que le modèle réponde. Les jobs de nuit y survivent. Une boucle d'agent qui relit un grand contexte à chaque étape, non.
+
+Le point de repère le plus clair vient de deltafin, une [expérience open source](https://github.com/gavamedia/deltafin) qui lit les experts de K3 depuis le disque local à la demande sur un Apple M1 Max. La leçon tient dans le budget par token que publie l'auteur : le dépôt affiche aujourd'hui environ 3,4 secondes par token (0,29 tok/s), soit à peu près 20 fois mieux que dans sa première version publiée le 27 juillet 2026 (relevé au 14 août 2026). C'est une expérience qui évolue vite : profilez le chemin des entrées-sorties avant d'acheter un GPU plus rapide, car sur ce type de montage, l'essentiel du temps par token part à déplacer les poids hors du disque et à les décompresser ; le calcul lui-même est presque gratuit à côté.
+
+Deux autres chiffres cadrent les attentes. Les estimations de la communauté placent une version en 2 bits au-delà de 800 Go, donc avec le cache KV et les tampons, il vous faut au moins 1 To de RAM pour tenter le coup. Et le vrai plafond, c'est la bande passante mémoire, qui plafonne le débit bien avant le nombre de cœurs ou la capacité : des assembleurs rapportent des machines à RAM identique qui diffèrent d'un facteur 3 sur le débit. Dimensionnez la plateforme sur ses canaux mémoire ; privilégiez un EPYC ou un Xeon avec assez de CCD et de cache L3 pour saturer le contrôleur et avec la prise en charge d'AVX-512, et évitez les pénalités NUMA du bi-socket là où un seul socket suffira.
+
+<Callout title="Le mur électrique, version française">
+Une contrainte que les guides américains passent sous silence, et qui n'est pas qu'une question de facture. À 2 à 10 kW en continu selon la configuration, une telle machine tire environ 9 à 43 A en monophasé 230 V, et **peut atteindre ou dépasser une puissance souscrite domestique standard de 6 ou 9 kVA**. Il faut alors passer à au moins 12 kVA, souvent en triphasé, avec une intervention Enedis, un abonnement plus élevé et probablement un passage du Consuel. Côté coût, le tarif réglementé (Tarif Bleu d'EDF) est à **0,2001 €/kWh TTC** au 1er août 2026 (option Base, 6 kVA, délibération CRE 2026-147), soit environ 0,22 $, au-dessus de la fourchette américaine de 0,10 à 0,15 $. En clair : en France, faire tourner K3 chez soi coûte encore plus cher en électricité qu'aux États-Unis.
+</Callout>
+
+Si votre besoin réel est une IA en local souveraine, et non ce modèle géant précis, le bon outil n'est probablement pas K3. Un petit modèle Mistral, du même écosystème que Vibe (ex-Le Chat) de Mistral, tourne sur du matériel que vous possédez déjà : Mistral Small 3 (24 milliards de paramètres, licence Apache 2.0) se fait tourner en local via Ollama ou llama.cpp, avec une quantification Q4_K_M autour de 14 Go, là où K3 exige un datacenter. Notre [guide pour faire tourner un LLM en local](https://geotoolbox.ai/blog/run-llm-locally) couvre l'outillage sur du matériel que vous avez déjà.
+
+## Route 4 : un cluster de Mac Studio, est-ce possible ?
+
+Apple Silicon est le candidat évident pour un modèle gourmand en mémoire, car un M3 Ultra de 512 Go tient bien plus de mémoire utilisable que le moindre GPU seul. Un seul ne suffit pas. Pour atteindre les quelque 2 To de mémoire agrégée que réclame K3, il faut compter quatre à cinq Mac Studio de 512 Go, à environ 12 000 € TTC pièce en France (constaté au 14 août 2026), câblés ensemble, soit un cluster de l'ordre de 48 000 à 60 000 € TTC.
+
+C'est là que le plan rencontre la physique, et la physique, c'est la latence, pas la bande passante des poids. Les outils de cluster comme EXO ou mlx.distributed découpent le modèle couche par couche, si bien que chaque machine garde ses propres couches et leurs experts résidents ; ce qui traverse le lien, c'est un petit vecteur d'activation à chaque frontière de pipeline, à chaque token. Thunderbolt 5 délivre environ 6 à 8 Go/s en transferts réels, contre les 819 Go/s de bande passante mémoire locale du M3 Ultra, soit une centaine de fois plus lent, et les allers-retours se sérialisent sur quatre ou cinq sauts. Ce qui coûte vraiment, ce sont les temps d'attente entre les machines, accumulés à chaque aller-retour.
+
+Ce cluster peut-il charger le modèle ? Probablement, à condition de disposer de plus de 2 To de mémoire agrégée utilisable. Est-ce un assistant de code pratique ? Personne n'a encore publié d'exécution de K3 sur un cluster de Mac. Le point de repère le plus proche est un montage de génération précédente à deux Mac, 1 To combiné, qui rapportait environ 15 tokens par seconde sur d'autres grands modèles, plus la projection de son propriétaire d'un K3 fortement quantifié à un débit similaire avec, selon ses mots, un prefill « catastrophique ». Prenez ces 15 tokens par seconde pour une analogie, à confirmer par une vraie mesure. Pour la plupart des gens, un cluster de Mac est une expérience fascinante, pas un poste de travail.
+
+## Route 5 : passer simplement par un fournisseur
+
+Pour l'immense majorité des cas d'usage, la façon de faire tourner Kimi K3 « en local » consiste à pointer vos outils locaux vers un point d'accès hébergé et à continuer de travailler. K3 était disponible sur [OpenRouter](https://openrouter.ai/moonshotai/kimi-k3) via l'API de Moonshot depuis la mi-juillet ; dans les jours qui ont suivi la publication des poids, des fournisseurs indépendants comme Together AI et Modal l'y servaient aussi. Vous ajoutez une clé d'API à Cursor, VS Code ou vos propres scripts, et K3 répond depuis le cluster de quelqu'un d'autre. La vitesse varie beaucoup selon l'hôte : au mois d'août 2026, la fourchette va d'environ 37 tokens par seconde (le plus lent) à environ 148 (le plus rapide), et le point d'accès de Moonshot lui-même, autour de 39 tokens par seconde, se situe désormais dans la moitié basse du peloton plutôt qu'en dernière position (Artificial Analysis, août 2026).
+
+Il vaut la peine d'être précis sur ce que changent les poids ouverts, car la version qui circule l'exagère. L'argument le plus solide des discussions au moment du lancement, c'est que le gain n'est pas l'inférence sur ordinateur portable, que presque personne ne peut faire, mais l'option d'une multitude d'hôtes indépendants. Cela a fait baisser les prix des petits modèles ouverts. Sur K3, l'écart commence tout juste à bouger : la plupart des hôtes restent à 3 $ en entrée et 15 $ en sortie, mais quelques-uns (Morph en fp4, DigitalOcean, DeepInfra) descendent désormais autour de 2,80 $ en entrée et 14 $ en sortie, comme le documente notre analyse du [tarif de l'API Kimi](https://geotoolbox.ai/blog/kimi-api-pricing). Le vivier d'opérateurs capables d'héberger un modèle de 2 800 milliards de paramètres reste réduit, donc la pression à la baisse arrivera plus lentement que pour des poids de classe 70 milliards. Ce que vous obtenez aujourd'hui, c'est la durabilité, puisqu'une version ne peut pas être retirée en silence, et l'option de la résidence des données pour les équipes qui en ont besoin. L'API de Moonshot revient à 3,00 $ le million de tokens en entrée (0,30 $ le million pour les tokens servis depuis le cache), et 15,00 $ le million en sortie.
+
+## Kimi K3 en auto-hébergement : est-ce que ça en vaut la peine ?
+
+Pour la plupart des gens, non. Deux conditions le rendent rentable, et il vous en faut au moins une : des données que vous êtes légalement tenu de garder en interne, ou un cluster GPU déjà existant et déjà amorti. En l'absence des deux, l'économie se retourne vite contre vous.
+
+La façon la plus claire de le voir, c'est le coût par token. Les praticiens qui font le calcul aboutissent à une fourchette de 80 à 200 $ le million de tokens en électricité seule, avant le matériel : une machine à fort déchargement qui produit des tokens lentement, de l'ordre de 1 token par seconde, en tirant 2 à 5 kW aux tarifs américains proches de 0,10 à 0,15 $ le kWh. Au tarif français d'environ 0,20 € le kWh, cette fourchette grimpe encore, vers 130 à 350 € le million de tokens. L'API de Moonshot et ses hôtes tiers se situent bien en dessous. Le chiffre exact varie avec votre charge : les jobs limités par le décodage reviennent moins cher, tandis que ceux limités par le prefill se situent dans le haut de la fourchette, mais faire tourner K3 chez soi pour économiser de l'argent revient, pour la plupart des charges, plus cher que l'API une fois compté le matériel qu'il a aussi fallu acheter.
+
+<Callout title="La seule vraie raison de s'auto-héberger : la résidence des données">
+En dehors d'un cluster déjà amorti, le seul argument qui tienne est réglementaire, et il est plus fort en France qu'aux États-Unis. Le **CLOUD Act** américain de 2018 permet aux autorités des États-Unis de contraindre un fournisseur américain à donner accès aux données, même hébergées sur une instance située dans l'UE. Pour un avocat (secret professionnel), un acteur de la santé (données soumises à l'hébergement HDS), un service public ou un OIV, cela peut suffire à exclure une API grand public américaine et à imposer un traitement sur une infrastructure maîtrisée. Deux bémols, cependant. D'abord, s'auto-héberger n'est pas automatiquement « plus conforme au RGPD » qu'une API hébergée dans l'UE par un prestataire lui-même conforme : la résidence des données est un moyen, pas une case à cocher magique. Ensuite, à l'échelle de K3, cette voie souveraine repasse par un nœud de datacenter (le nœud Scaleway de la Route 1, ou une machine achetée) : le « local sur mon poste » n'existe pas pour ce modèle.
+</Callout>
+
+Les deux cas légitimes d'auto-hébergement sont donc étroits. Si vous disposez d'une véritable infrastructure GPU et d'une obligation de conserver les données en interne, faites tourner K3 de façon non interactive, comme un job de nuit où le mur du prefill n'a pas d'importance. Et tranchez la décision selon l'échelle avant de dimensionner quoi que ce soit : une installation par lots pour un seul utilisateur est un problème compris entre 5 000 et 65 000 € (les prix actuels de la DDR poussent les configurations réalistes à 1 To et plus vers la moitié haute), tandis que servir une équipe avec un contexte complet et de vrais accès concurrents réclame environ 3 To de mémoire répartis sur les GPU, pour les poids plus le cache KV, et se chiffre de 300 000 € à plusieurs millions.
+
+Un budget fixe impose aussi une question plus dure que le « comment » : à capacité mémoire égale, faites-vous tourner K3 en 2 bits, une quantification punitive, ou un modèle de pointe plus petit, exploité confortablement en 4 ou 8 bits, sur la même machine ? La communauté n'a pas tranché. Un camp qualifie un K3 en 2 bits de lobotomie ; un autre soutient que ses 104 milliards de paramètres actifs devraient mieux tenir que la plupart des modèles en Q2 ; personne n'a publié de chiffres de mémoire, de vitesse et de qualité côte à côte au moment d'écrire ces lignes. Traitez-le comme une question ouverte, et si la réponse n'est pas évidemment K3, les modèles de pointe plus petits de notre classement des [meilleurs LLM open source](https://geotoolbox.ai/blog/best-open-source-llms) vous donneront bien plus de capacité utile par euro de matériel.
+
+L'option patiente que la communauté ne cesse d'évoquer, c'est d'attendre. Les prix de la mémoire sont assez élevés pour que les assembleurs parlent de « RAMageddon », avec des coûts d'acquisition en entreprise en hausse de 50 à 80 % selon les estimations depuis fin 2025, certains reportant leurs machines à 2028 ou plus tard. Et une version distillée de K3, de 100 à 600 milliards de paramètres, exécutable sur bien moins de matériel, est l'issue qu'attendent beaucoup.
+
+## Foire aux questions
+
+### Quelle configuration ou quel PC pour faire tourner Kimi K3 en local ?
+
+Aucune configuration domestique ne convient. Même un M3 Ultra de 512 Go reste loin des 1,56 To dont les poids ont besoin, et une RTX 4090 (24 Go de VRAM) n'en couvre qu'environ un soixante-cinquième. Le plancher réel est un nœud de datacenter, 8× B300 (2,3 To) ou 16× B200. Un cluster de quatre à cinq Mac Studio de 512 Go peut tenir le modèle, mais le lien Thunderbolt entre eux est une centaine de fois plus lent que la mémoire interne de chaque machine, donc l'interconnexion fixe la vitesse. Personne n'a publié d'exécution de K3 sur un cluster de Mac ; l'analogie la plus proche, un montage de génération précédente testé sur d'autres grands modèles, tournait autour de 15 tokens par seconde.
+
+### Ollama et llama.cpp gèrent-ils Kimi K3 ?
+
+Pas dans une version publiée, à la date d'août 2026. Hugging Face liste désormais une trentaine de quantifications GGUF communautaires, mais llama.cpp ne sait lire l'architecture de K3 dans aucune version publiée : la prise en charge reste une pull request ouverte (la #26185), et les dépôts GGUF exigent une compilation depuis cette branche. L'étiquette « cloud » d'Ollama route vers les serveurs d'Ollama plutôt que de tourner en local. Les voies de service locales qui fonctionnent aujourd'hui sont vLLM et SGLang, tous deux pris en charge dès le jour zéro, plus TokenSpeed.
+
+### Quelle taille fait le téléchargement de Kimi K3 ?
+
+Le dépôt officiel pèse 1,56 To sur 96 fragments de poids, en précision native MXFP4 4 bits. Le chiffre de 594 Go souvent répété ne se réconcilie pas avec 2 800 milliards de paramètres en 4 bits. Comme K3 a été entraîné avec quantification intégrée en 4 bits, il n'y a pas de division gratuite par deux à espérer du passage habituel de 16 à 4 bits. Les quantifications communautaires sous 4 bits sont plus petites (une version 2 bits dépasse encore 800 Go), mais elles sacrifient de la qualité pour réduire la taille plutôt que de compresser un original gonflé.
+
+### Peut-on utiliser Kimi K3 commercialement en auto-hébergement ?
+
+Oui, sous conditions. K3 est publié sous la licence Kimi K3 maison, qui autorise l'usage commercial mais n'est pas open source au sens de l'OSI. Si le chiffre d'affaires de votre activité de modèle en service dépasse 20 millions de dollars sur douze mois glissants, vous devez négocier un accord séparé avec Moonshot, et un produit au-dessus de 100 millions d'utilisateurs mensuels ou de 20 millions de dollars de revenus mensuels doit afficher « Kimi K3 » dans son interface. L'usage interne n'entraîne aucune de ces obligations. Vérifiez la licence de la fiche du modèle avant de construire.
+
+### Existe-t-il une alternative française qu'on peut faire tourner en local ?
+
+Oui, si votre besoin est une IA locale et souveraine plutôt que ce modèle géant précis. Mistral Small 3 (24 milliards de paramètres, licence Apache 2.0) se fait tourner sur du matériel grand public via Ollama ou llama.cpp, avec une quantification Q4_K_M autour de 14 Go. Contrairement à K3, il ne réclame pas de datacenter. Mistral Large 3 (675 milliards de paramètres au total, 41 milliards actifs, Apache 2.0, sorti en décembre 2025) reste, lui, à l'échelle du cluster. Pour de la simple confidentialité sur du matériel que vous possédez déjà, c'est là qu'il faut commencer, plutôt que sur K3.
+
+### Quelle est la façon la moins chère de faire tourner Kimi K3 ?
+
+Un fournisseur hébergé, de loin. L'API de Moonshot démarre à 3 $ le million de tokens en entrée, et OpenRouter liste des fournisseurs concurrents, dont quelques-uns descendent vers 2,80 $. Aux tarifs américains, l'auto-hébergement peut revenir entre 80 et 200 $ le million de tokens sur une machine lente une fois l'énergie comptée, avant même le matériel, et davantage au tarif français. L'inférence locale bon marché d'un modèle de 2 800 milliards de paramètres n'existe pas à ce jour.
+
+## Ce que le lancement de K3 dit sur la recherche par IA
+
+La question difficile est celle qui a ouvert cet article. N'importe quel assistant répondant à partir de ses seules données d'entraînement continuera de se tromper sur K3 pendant des mois, car un modèle ne peut pas connaître une sortie postérieure à sa date de coupure, et la recherche web ne le sauve que si le moteur peut atteindre la page. Le problème n'a rien d'anecdotique. C'est le même mécanisme qui décide si les moteurs de recherche par IA décrivent correctement votre propre produit, vos prix et votre dernière nouveauté, ou s'ils répètent quelque chose de périmé. Et l'enjeu est désormais concret en France : les Aperçus IA (AI Overviews) et le Mode IA de Google y sont déployés depuis le 22 juillet 2026, donc ce qu'une IA raconte sur votre marque dans la recherche est une réalité française, pas une échéance lointaine.
+
+Commencez par éliminer la partie du problème sur laquelle vous pouvez agir : savoir si les robots d'exploration des IA atteignent bel et bien votre contenu. Notre [score de préparation IA](https://geotoolbox.ai/tools/ai-readiness) le mesure en une requête, pour qu'un défaut d'accessibilité facile à corriger ne soit pas ce qui vous tient à l'écart de la réponse.
+
+## Sources
+
+- Fiche du modèle Kimi K3 - Moonshot AI / Hugging Face - `huggingface.co/moonshotai/Kimi-K3`
+- Prise en charge de Kimi K3 dès le jour zéro - Blog vLLM, juillet 2026 - `vllm.ai/blog/2026-07-27-k3`
+- SGLang et Miles ajoutent la prise en charge de Kimi K3 dès le jour zéro - LMSYS, 27 juillet 2026 - `lmsys.org/blog/2026-07-27-kimi-k3-day0-support`
+- Kimi K3 : Open Frontier Intelligence (rapport technique) - arXiv - `arxiv.org/abs/2607.24653`
+- Liste des fournisseurs Kimi K3 - OpenRouter - `openrouter.ai/moonshotai/kimi-k3`
+- Benchmarks de vitesse de sortie des fournisseurs Kimi K3 - Artificial Analysis, août 2026 - `artificialanalysis.ai/models/kimi-k3`
+- deltafin (streaming des experts de Kimi K3 sur Apple Silicon) - GitHub - `github.com/gavamedia/deltafin`
+- Nœud GPU 8× B300 (2,3 To de VRAM), région Paris - Scaleway - `scaleway.com/en/b300-sxm`
+- Tarif réglementé de vente d'électricité (Tarif Bleu), grille au 1er août 2026 - CRE / EDF
+- Mistral Small 3 (24B, Apache 2.0), exécutable en local - Mistral AI - `mistral.ai/news/mistral-small-3`
+- Retours de praticiens - fils r/LocalLLaMA, r/LocalLLM, r/kimi, juillet 2026
