@@ -18,7 +18,7 @@ export default function PrivacyPage() {
   return (
     <div className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
       <h1 className="text-3xl font-bold tracking-tight text-gray-900">Privacy Policy</h1>
-      <p className="mt-2 text-sm text-gray-600">Last updated: July 28, 2026</p>
+      <p className="mt-2 text-sm text-gray-600">Last updated: August 15, 2026</p>
 
       <div className="mt-10 space-y-8 text-[15px] leading-relaxed text-gray-600">
         <section>
@@ -62,6 +62,7 @@ export default function PrivacyPage() {
             <li>Analysis outputs you generate (scan reports, domain overviews, agent-readiness checks, content briefs, citability analyses, competitor radar scans, AI-ready export transforms, AI visibility tracking) — <strong>retained indefinitely</strong> so you and your team can compare performance over time. Your plan controls how much of that history is visible in the dashboard: lower tiers show a limited window of scan history (for example 180 days on <strong>Starter</strong>) while higher tiers show your complete history. Older data outside your plan&apos;s window is not displayed, but it is never modified or deleted while your account is active.</li>
             <li>Internal cost and audit logs for our own infrastructure monitoring, containing no personal data beyond a pseudonymous account ID</li>
             <li>Error telemetry (anonymized, no PII) for up to 90 days</li>
+            <li>Billing and contract records &mdash; your acceptance of the <a href="/terms" className="text-accent-700 underline hover:text-accent-800">Terms of Service</a> (version, timestamp, IP address, plan and price disclosed at checkout), Stripe customer/subscription identifiers, and copies of billing communications we send you (trial confirmation, reminders, cancellation confirmations). Kept for the life of the account plus 5 years (limitation period for contractual claims); invoices are kept 10 years as required by French commercial law. These records are used to answer billing questions and payment disputes.</li>
           </ul>
           <p className="mt-3">
             <strong>Right to deletion.</strong> You can delete all of your data at any time by deleting your account or emailing{" "}

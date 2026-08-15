@@ -37,7 +37,7 @@ export default async function PrivacyPageFr({ params }: { params: Promise<{ loca
   return (
     <div className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
       <h1 className="text-3xl font-bold tracking-tight text-gray-900">Politique de confidentialité</h1>
-      <p className="mt-2 text-sm text-gray-600">Dernière mise à jour : 28 juillet 2026</p>
+      <p className="mt-2 text-sm text-gray-600">Dernière mise à jour : 15 août 2026</p>
       <p className="mt-2 text-xs text-gray-500">
         Cette traduction est fournie à titre de commodité. En cas de divergence, la{" "}
         <a href="/privacy" className="underline">version anglaise</a> prévaut.
@@ -83,6 +83,7 @@ export default async function PrivacyPageFr({ params }: { params: Promise<{ loca
             <li>Les résultats d&rsquo;analyse que vous générez (rapports de scan, aperçus de domaine, vérifications agent-readiness, briefs de contenu, analyses de citabilité, scans concurrents, exports AI-ready, suivi de visibilité IA) — <strong>conservés sans limite de durée</strong> afin que vous et votre équipe puissiez comparer les performances dans le temps. Votre forfait détermine la fenêtre d&rsquo;historique visible dans le tableau de bord (par exemple 180 jours pour <strong>Starter</strong>) : les formules inférieures affichent une fenêtre limitée, tandis que les formules supérieures affichent l&rsquo;intégralité de votre historique. Les données plus anciennes ne sont pas affichées mais ne sont ni modifiées ni supprimées tant que votre compte est actif.</li>
             <li>Des journaux internes de coûts et d&rsquo;audit pour la supervision de notre infrastructure, sans donnée personnelle au-delà d&rsquo;un identifiant de compte pseudonymisé</li>
             <li>La télémétrie d&rsquo;erreurs (anonymisée, sans donnée personnelle) pendant 90 jours au maximum</li>
+            <li>Données de facturation et de contrat &mdash; votre acceptation des <a href="/terms" className="text-accent-700 underline hover:text-accent-800">Conditions générales</a> (version, horodatage, adresse IP, formule et prix affichés au paiement), identifiants client/abonnement Stripe, et copies des communications de facturation que nous vous envoyons (confirmation d&apos;essai, rappels, confirmations de résiliation). Conservées pendant la durée du compte plus 5 ans (prescription contractuelle) ; les factures sont conservées 10 ans conformément au Code de commerce. Ces données servent à traiter les questions de facturation et les litiges de paiement.</li>
           </ul>
           <p className="mt-3">
             <strong>Droit à l&rsquo;effacement.</strong> Vous pouvez supprimer l&rsquo;ensemble de vos données à tout moment en supprimant votre compte ou en écrivant à{" "}

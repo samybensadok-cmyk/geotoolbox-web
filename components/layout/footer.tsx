@@ -115,6 +115,9 @@ export function Footer({
               <li><Link href={L("/contact")} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">{nav?.contact ?? "Contact"}</Link></li>
               <li><Link href={L("/privacy")} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">{footer?.privacyPolicy ?? "Privacy Policy"}</Link></li>
               <li><Link href={L("/terms")} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">{footer?.termsOfService ?? "Terms of Service"}</Link></li>
+              {/* SG_LEGAL_V2: refund policy + legal notice (LCEN mentions légales) */}
+              <li><Link href={L("/refund-policy")} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">{footer?.refundPolicy ?? "Cancellation & Refunds"}</Link></li>
+              <li><Link href={L("/legal")} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">{footer?.legalNotice ?? "Legal Notice"}</Link></li>
               <li><Link href={L("/affiliate-disclosure")} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">{footer?.affiliateDisclosure ?? "Affiliate Disclosure"}</Link></li>
             </ul>
           </div>
@@ -127,6 +130,7 @@ export function Footer({
           <div className="flex gap-4">
             <Link href={L("/privacy")} className="text-xs text-gray-600 hover:text-gray-900 transition-colors">{footer?.privacy ?? "Privacy"}</Link>
             <Link href={L("/terms")} className="text-xs text-gray-600 hover:text-gray-900 transition-colors">{footer?.terms ?? "Terms"}</Link>
+            <Link href={L("/legal")} className="text-xs text-gray-600 hover:text-gray-900 transition-colors">{footer?.legal ?? "Legal"}</Link>
             {/* SG_CONSENT_V1: GDPR withdrawal must be as easy as consent */}
             <CookieSettingsButton label={footer?.cookieSettings ?? (locale === "fr" ? "Param\u00e8tres des cookies" : "Cookie settings")} />
           </div>
