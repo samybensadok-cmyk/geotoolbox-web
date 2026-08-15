@@ -71,7 +71,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="text-lg font-semibold text-gray-900">4. Data Sharing</h2>
+          <h2 id="subprocessors" className="scroll-mt-24 text-lg font-semibold text-gray-900">4. Data Sharing</h2>
           <p className="mt-2">
             We do not sell, rent, or share your personal data with third parties for marketing purposes. We use the following subprocessors to operate the Service:
           </p>

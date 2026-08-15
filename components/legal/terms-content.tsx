@@ -60,7 +60,7 @@ const TOC: Array<[string, string]> = [
   ["law", "20. Governing law and disputes"],
   ["general", "21. General"],
   ["contact", "22. Contact"],
-  ["annex-a", "Annex A — French statutory texts (consumers and non-professionals)"],
+  ["annex-a", "Annex A — French statutory texts (consumers and non-professionals only)"],
   ["annex-b", "Annex B — Model withdrawal form (consumers only)"],
 ]
 
@@ -78,7 +78,7 @@ export function TermsContent({ localeNote }: { localeNote?: React.ReactNode }) {
         <UL>
           <li>GEO Toolbox is a business tool. By subscribing you confirm you are acting for business purposes.</li>
           <li>Paid plans are <strong>subscriptions that renew automatically</strong> (monthly or annually) until you cancel.</li>
-          <li>A free trial requires a card and <strong>converts automatically to a paid subscription when it ends</strong> unless you cancel first. The amount and date of the first charge are shown at checkout and in your confirmation email, and we email you before the charge.</li>
+          <li>A free trial requires a card and <strong>converts automatically to a paid subscription when it ends</strong> unless you cancel first. The amount and date of the first charge (for an annual plan, the full annual fee) are shown at checkout and in your confirmation email, and we also email you before the charge.</li>
           <li>You can cancel at any time from <strong>Account → Manage subscription</strong>. Cancellation takes effect at the end of the current period; you keep access until then.</li>
           <li><strong>Fees are non-refundable</strong> — including when a trial converts because you did not cancel in time, and for unused time or credits — except where the law gives you a right we cannot exclude (see §8).</li>
         </UL>
@@ -119,7 +119,7 @@ export function TermsContent({ localeNote }: { localeNote?: React.ReactNode }) {
             <strong>2.1 Acceptance.</strong> You accept these Terms by creating an account, ticking the acceptance box at signup or checkout, clicking a button that references them, or by using the Service. If you do not agree, do not use the Service. If you accept on behalf of a company or other entity, you confirm that you have authority to bind it, and &quot;you&quot; means that entity.
           </P>
           <P>
-            <strong>2.2 Business use only.</strong> The Service is a professional tool for marketers, SEO/GEO consultants, agencies and businesses. <strong>You confirm that you are obtaining and using the Service for the purposes of carrying on a trade, business, craft or profession, and not for personal, family or household purposes.</strong> Consumer-protection rules that apply only to consumers therefore do not apply to you, except as stated in §8.6 and §20.4 for the case where you nevertheless qualify as a consumer under mandatory law.
+            <strong>2.2 Business use only.</strong> The Service is a professional tool for marketers, SEO/GEO consultants, agencies and businesses. <strong>You confirm that you are obtaining and using the Service for the purposes of carrying on a trade, business, craft or profession, and not for personal, family or household purposes.</strong> We rely on this representation. If you nevertheless qualify as a consumer under the mandatory law of your country of residence, §8.6 and §20.4 apply to you.
           </P>
           <P>
             <strong>2.3 Age.</strong> You must be at least 18 years old.
@@ -129,7 +129,7 @@ export function TermsContent({ localeNote }: { localeNote?: React.ReactNode }) {
         <section>
           <H2 id="accounts">3. Accounts</H2>
           <P>
-            <strong>3.1</strong> You may sign in with an email address and password, a magic link, or Google OAuth. You are responsible for all activity under your account and for keeping your credentials confidential. Tell us immediately at{" "}
+            <strong>3.1</strong> You may sign in with an email address and password, a magic link, or Google OAuth. You are responsible for all activity under your account (unless caused by our breach) and for keeping your credentials confidential. Tell us immediately at{" "}
             <a href="mailto:samy@geotoolbox.ai" className={link}>samy@geotoolbox.ai</a> if you suspect unauthorised access.
           </P>
           <P>
@@ -149,7 +149,7 @@ export function TermsContent({ localeNote }: { localeNote?: React.ReactNode }) {
             <strong>4.2 Plans.</strong> Each plan grants the features and limits stated on the pricing page and at checkout (for example brands, prompts, engines, seats, history window). We may improve or adjust the Service; material reductions to a plan you have paid for take effect only from your next renewal, with notice under §19.
           </P>
           <P>
-            <strong>4.3 Credits.</strong> Usage is metered in credits. Each plan grants a monthly credit allowance (granted in full each billing cycle, or on a per-cycle basis during a trial as described in §5). <strong>Unused credits do not roll over, have no cash value and are not refundable.</strong> Credit weights per engine and tool are published in-app and may change; changes apply prospectively.
+            <strong>4.3 Credits.</strong> Usage is metered in credits. Each plan grants a monthly credit allowance, granted at the start of each month of service (including on annual plans), or at a reduced level during a trial as described in §5. <strong>Unused credits do not roll over, have no cash value and are not refundable.</strong> Credit weights per engine and tool are published in-app and may change; changes apply prospectively.
           </P>
           <P>
             <strong>4.4 Fair use.</strong> Plan limits are enforced technically. We may throttle or suspend usage that is abusive, automated beyond the intended use, or that threatens the stability or cost basis of the Service, after notice where practicable.
@@ -165,24 +165,24 @@ export function TermsContent({ localeNote }: { localeNote?: React.ReactNode }) {
             <strong>5.2 Automatic conversion — read this carefully.</strong> <strong>Unless you cancel before the trial ends, your trial converts automatically into a paid subscription for the plan and billing interval (monthly or annual) you selected, and the payment method on file is charged the amount shown at checkout on the trial end date.</strong> The exact amount, currency and first-charge date are displayed at checkout before you confirm, and are repeated in the confirmation email we send when the trial starts. The subscription then renews automatically under §6.
           </P>
           <P>
-            <strong>5.3 Reminders.</strong> We send the trial confirmation email at enrollment (including the amount and date of the first charge and how to cancel) and at least one reminder email before the first charge, to the address on your account. Reminders are a courtesy and a card-network requirement; <strong>non-receipt of a reminder (for example because of a spam filter or a wrong address) does not affect the automatic conversion or entitle you to a refund</strong>. Keep your email address current.
+            <strong>5.3 Reminders.</strong> We send the trial confirmation email at enrollment (including the amount and date of the first charge and how to cancel) — this is the notice of the upcoming charge — and, in addition, reminder emails before the first charge, to the address on your account. Reminders are sent as a courtesy and to meet card-network rules; <strong>non-receipt of a reminder (for example because of a spam filter or a wrong address) does not affect the automatic conversion or entitle you to a refund</strong>. Keep your email address current.
           </P>
           <P>
             <strong>5.4 How to cancel a trial.</strong> Cancel at any time before the trial ends from <strong>Account → Manage subscription</strong> (Stripe customer portal), or by emailing{" "}
-            <a href="mailto:samy@geotoolbox.ai" className={link}>samy@geotoolbox.ai</a> from your account email before the trial end time shown in your account. A trial cancelled before it ends is never charged. Cancellation is confirmed by email.
+            <a href="mailto:samy@geotoolbox.ai" className={link}>samy@geotoolbox.ai</a> from the account owner&apos;s address before the trial end date and time shown in your account and in the confirmation email. A trial cancelled before it ends is never charged. Cancellation is confirmed by email.
           </P>
           <P>
-            <strong>5.5 No refund for a missed cancellation.</strong> Because the conversion terms are disclosed at checkout, confirmed by email and reminded before the charge, <strong>a charge that results from your not cancelling before the trial end is a valid charge and is non-refundable</strong> (subject only to §8.6). This applies equally to monthly and annual subscriptions.
+            <strong>5.5 No refund for a missed cancellation.</strong> Because the conversion terms are disclosed at checkout and confirmed by email at enrollment, <strong>a charge that results from your not cancelling before the trial end is a valid charge and is non-refundable</strong> (subject only to §8.6); the additional reminders in §5.3 do not change this. This applies equally to monthly and annual subscriptions.
           </P>
           <P>
-            <strong>5.6 One trial per customer.</strong> Trials are limited to one per person, company and payment method, and are not available on upgrades or re-subscriptions. We may refuse, shorten, modify or end a trial, or withdraw the trial offer, at any time, and may charge immediately where we detect trial abuse (for example multiple accounts).
+            <strong>5.6 One trial per customer.</strong> Trials are limited to one per person, company and payment method, and are not available on upgrades or re-subscriptions. We may refuse, shorten or end a trial early, decline the subscription, close duplicate accounts, or withdraw the trial offer, where we detect trial abuse (for example multiple accounts or payment methods) or at any time on notice.
           </P>
         </section>
 
         <section>
           <H2 id="fees">6. Fees, billing and automatic renewal</H2>
           <P>
-            <strong>6.1 Subscriptions renew automatically.</strong> Paid plans are sold as recurring subscriptions. <strong>Your subscription renews automatically at the end of each billing period (monthly or annually, as selected) for a further period of the same length, and the payment method on file is charged the then-current fee for your plan at the start of each period, until you cancel</strong> under §7. Annual plans are charged in full, in advance, for the year.
+            <strong>6.1 Subscriptions renew automatically.</strong> Paid plans are sold as recurring subscriptions. <strong>Your subscription renews automatically at the end of each billing period (monthly or annually, as selected) for a further period of the same length, and the payment method on file is charged the then-current fee for your plan at the start of each period, until you cancel</strong> under §7. Annual plans are charged in full, in advance, for the year. For annual subscriptions we email a renewal reminder about five weeks (33–39 days) before the renewal date, stating the renewal amount, date and how to cancel.
           </P>
           <P>
             <strong>6.2 Payment.</strong> Payments are processed by Stripe. By providing a payment method you authorise us (through Stripe) to charge all fees due under the Agreement, including renewal fees, applicable taxes, and any credit packs or add-ons you order. Invoices and receipts are issued by email and available in the customer portal.
@@ -214,7 +214,7 @@ export function TermsContent({ localeNote }: { localeNote?: React.ReactNode }) {
             <strong>7.2 Effect.</strong> Cancellation stops future renewals. <strong>It takes effect at the end of the current billing period</strong> (or at the end of the trial, if you are trialing) and you keep access until then. <strong>No prorated or partial refund is given for the remainder of a period already paid</strong>, including annual periods, subject to §8.6.
           </P>
           <P>
-            <strong>7.3 Cut-off.</strong> To avoid a renewal charge, cancel before the renewal time shown in your account (dates and times are shown in UTC in the customer portal). A cancellation made after a charge applies to the following period.
+            <strong>7.3 Cut-off.</strong> To avoid a renewal charge, cancel no later than the day before the renewal date shown in your account and in our emails (charges run at the anniversary time of your original subscription, in UTC). A cancellation made after a charge applies to the following period.
           </P>
           <P>
             <strong>7.4 Deleting your account</strong> cancels any active subscription with effect at the end of the current period, and triggers data deletion under our Privacy Policy. Deleting an account does not by itself entitle you to a refund. Revoking Google OAuth access or uninstalling integrations does <em>not</em> cancel a subscription — use §7.1.
@@ -224,10 +224,10 @@ export function TermsContent({ localeNote }: { localeNote?: React.ReactNode }) {
         <section>
           <H2 id="refunds">8. Refunds, statutory rights and payment disputes</H2>
           <P>
-            <strong>8.1 All fees are non-refundable.</strong> Except as expressly stated in this §8, <strong>payment obligations are non-cancellable and fees paid are non-refundable</strong>. In particular, no refund or credit is given for: (a) a trial that converted because you did not cancel before it ended (§5.5); (b) an automatic renewal you did not cancel in time (§7.3), including annual renewals; (c) unused time in a billing period after you cancel or downgrade; (d) unused credits, seats, brands or prompts; (e) periods during which you did not use the Service; (f) features you did not use or that changed; (g) dissatisfaction with results, rankings or AI-engine outputs, which are outside our control (§13).
+            <strong>8.1 All fees are non-refundable.</strong> Except as expressly stated in this §8, <strong>fees for a billing period that has started are due in full and are non-refundable</strong>. In particular, no refund or credit is given for: (a) a trial that converted because you did not cancel before it ended (§5.5); (b) an automatic renewal you did not cancel in time (§7.3), including annual renewals; (c) unused time in a billing period after you cancel or downgrade; (d) unused credits, seats, brands or prompts; (e) periods during which you did not use the Service; (f) features you did not use or that changed; (g) dissatisfaction with results, rankings or AI-engine outputs, which are outside our control (§13).
           </P>
           <P>
-            <strong>8.2 Our own error.</strong> If we charged you incorrectly (wrong amount, duplicate charge, charge after a confirmed cancellation), tell us within 60 days of the charge and we will correct it and refund the difference.
+            <strong>8.2 Our own error.</strong> If we charged you incorrectly (wrong amount, duplicate charge, charge after a confirmed cancellation), we will correct it and refund the difference — please tell us promptly (ideally within 60 days) so we can trace the payment.
           </P>
           <P>
             <strong>8.3 Goodwill.</strong> We may, in our sole discretion and without obligation, grant a refund or credit as a gesture of goodwill. Doing so once does not oblige us to do so again, and does not modify these Terms.
@@ -237,11 +237,11 @@ export function TermsContent({ localeNote }: { localeNote?: React.ReactNode }) {
           </P>
           <P>
             <strong>8.5 Contact us before disputing a charge.</strong> If you believe a charge is wrong, contact us first at{" "}
-            <a href="mailto:samy@geotoolbox.ai" className={link}>samy@geotoolbox.ai</a> — most issues are resolved within two business days. Nothing in these Terms limits your right to raise a dispute with your card issuer or bank. However, if a chargeback is opened against a charge that was made in accordance with these Terms (for example a properly disclosed trial conversion or renewal), we will submit the evidence of your acceptance of these Terms, the checkout disclosures, the confirmation and reminder emails and your usage of the Service; while the dispute is open we may suspend the account, and if the dispute is decided in our favour or was raised without good-faith basis we may terminate the account for breach and the disputed amount remains due.
+            <a href="mailto:samy@geotoolbox.ai" className={link}>samy@geotoolbox.ai</a> — most issues are resolved within two business days. Nothing in these Terms limits your right to raise a dispute with your card issuer or bank. However, if a chargeback is opened against a charge that was made in accordance with these Terms (for example a properly disclosed trial conversion or renewal), we will submit the evidence of your acceptance of these Terms, the checkout disclosures, the confirmation and reminder emails and your usage of the Service; while the dispute is open we may suspend the account. If a chargeback succeeds against a charge validly made under these Terms, the amount remains due to us; if a chargeback is raised without a good-faith basis we may terminate the account for breach.
           </P>
           <P>
             <strong>8.6 Statutory rights of consumers.</strong> The Service is intended for business use (§2.2). If, despite that, you are a <em>consumer</em> under mandatory law of your country of residence (in particular the EU Consumer Rights Directive, the French Code de la consommation or the UK Consumer Contracts Regulations 2013), nothing in these Terms limits rights that cannot be excluded by contract. In that case: (a) you have a right to withdraw from the Agreement within 14 days of the day you subscribe (including the day a free trial starts), without giving a reason, by clear statement to{" "}
-            <a href="mailto:samy@geotoolbox.ai" className={link}>samy@geotoolbox.ai</a> (you may use the model form in Annex B); (b) by starting the Service immediately you <strong>expressly request that we begin performing during the withdrawal period and acknowledge</strong> that if you withdraw you must pay an amount proportionate to the service provided until you informed us of the withdrawal, and that you lose the right of withdrawal once the service has been fully performed; (c) refunds due under this §8.6 are made within 14 days of your notice; (d) the French provisions on tacit renewal and online cancellation reproduced in Annex A apply to consumers and non-professionals as defined there. Business customers have no right of withdrawal.
+            <a href="mailto:samy@geotoolbox.ai" className={link}>samy@geotoolbox.ai</a> (you may use the model form in Annex B); (b) at signup and checkout you gave your <strong>express request that we begin performing during the withdrawal period and acknowledged</strong> that if you withdraw you must pay an amount proportionate to the service provided until you informed us of the withdrawal, and that you lose the right of withdrawal once the service has been fully performed; (c) refunds due under this §8.6 are made within 14 days of your notice; (d) the French provisions on tacit renewal and online cancellation reproduced in Annex A apply to consumers and non-professionals as defined there. Business customers have no right of withdrawal.
           </P>
         </section>
 
@@ -259,7 +259,8 @@ export function TermsContent({ localeNote }: { localeNote?: React.ReactNode }) {
           <H2 id="data">10. Your data, privacy and connected accounts</H2>
           <P>
             <strong>10.1</strong> Our processing of personal data is described in the{" "}
-            <a href="/privacy" className={link}>Privacy Policy</a>. Where we process personal data on your behalf (for example within reports you generate), we act as your processor and our data processing terms are available on request.
+            <a href="/privacy" className={link}>Privacy Policy</a>. Where we process personal data on your behalf (for example within reports you generate), we act as your processor; our data processing terms (GDPR Art. 28) and current subprocessor list are available at{" "}
+            <a href="/privacy#subprocessors" className={link}>geotoolbox.ai/privacy</a> and on request in signed form.
           </P>
           <P>
             <strong>10.2 Your data.</strong> You retain all rights in the data, brands, prompts and content you submit (&quot;<strong>Customer Data</strong>&quot;). You grant us a non-exclusive licence to host, process and display Customer Data to provide, secure and improve the Service. We may use aggregated, de-identified usage data (for example engine-level citation statistics) that does not identify you or your clients.
@@ -271,14 +272,14 @@ export function TermsContent({ localeNote }: { localeNote?: React.ReactNode }) {
             <strong>10.4 Retention and export.</strong> Analysis outputs are retained as described in the Privacy Policy. After termination you may export your data for 30 days, after which we may delete it (billing records are kept as required by law).
           </P>
           <P>
-            <strong>10.5 Confidentiality.</strong> Each party will keep the other&apos;s non-public information confidential and use it only to perform the Agreement, except where disclosure is required by law.
+            <strong>10.5 Confidentiality.</strong> Each party will keep the other&apos;s non-public information confidential and use it only to perform the Agreement, for the term and three years after, except for information that is or becomes public without breach, was already lawfully known or independently developed by the receiving party, or must be disclosed by law (with prior notice where permitted).
           </P>
         </section>
 
         <section>
           <H2 id="ip">11. Intellectual property and licence</H2>
           <P>
-            <strong>11.1</strong> The Service, its software, methodology, scoring, databases, designs and content are owned by us or our licensors and protected by intellectual-property laws. We grant you a limited, non-exclusive, non-transferable, revocable licence to access and use the Service and to use the reports and outputs you generate for your own business or your clients&apos; business, during the term and within your plan limits.
+            <strong>11.1</strong> The Service, its software, methodology, scoring, databases, designs and content are owned by us or our licensors and protected by intellectual-property laws. We grant you a limited, non-exclusive, non-transferable licence (revocable only under §18) to access and use the Service and to use the reports and outputs you generate for your own business or your clients&apos; business, during the term and within your plan limits.
           </P>
           <P>
             <strong>11.2 White-label reports</strong> (where included in your plan) may be presented under your brand to your clients; you remain responsible for their use and for any claims you make on the basis of them.
@@ -315,7 +316,7 @@ export function TermsContent({ localeNote }: { localeNote?: React.ReactNode }) {
             <strong>13.2</strong> Outputs (scores, reports, briefs, generated content, recommendations) are informational tools for professionals, not professional, legal, financial or marketing advice. You are responsible for reviewing outputs before relying on or publishing them.
           </P>
           <P>
-            <strong>13.3</strong> If a third-party provider withdraws or restricts access, we may substitute, modify or remove the affected feature; where this materially reduces a paid plan, §4.2 and §18.4 apply.
+            <strong>13.3</strong> If a third-party provider withdraws or restricts access, we may substitute, modify or remove the affected feature, immediately where the provider leaves no alternative; if this materially reduces a paid plan you may terminate and we refund the unused part of the current period (§18.4).
           </P>
         </section>
 
@@ -345,14 +346,14 @@ export function TermsContent({ localeNote }: { localeNote?: React.ReactNode }) {
             <strong>16.2 Cap.</strong> Our total aggregate liability arising out of or in connection with the Agreement in any 12-month period is limited to <strong>the fees you paid us for the Service in the 12 months preceding the event giving rise to the claim</strong> (or €100 if you paid nothing).
           </P>
           <P>
-            <strong>16.3 Carve-outs.</strong> Nothing limits liability for death or personal injury caused by negligence, for fraud or wilful misconduct (dol), for gross negligence (faute lourde) to the extent it cannot be limited under French law, or for any other liability that cannot be limited by law. If you are a consumer, this §16 applies only to the extent permitted by mandatory law.
+            <strong>16.3 Carve-outs.</strong> Nothing limits liability for death or personal injury caused by negligence, for fraud or wilful misconduct (dol), for gross negligence (faute lourde) to the extent it cannot be limited under French law, or for any other liability that cannot be limited by law. If you are a consumer, §16.1–16.2 do not apply to you and our liability is governed by mandatory law.
           </P>
         </section>
 
         <section>
           <H2 id="indemnity">17. Indemnity</H2>
           <P>
-            If you are a business customer, you will defend and indemnify us against third-party claims, and related costs (including reasonable legal fees), arising from your Customer Data, your use of the Service in breach of the Agreement or of law, your white-label reports, or claims you make to your clients on the basis of outputs.
+            If you are a business customer, you will defend and indemnify us against third-party claims, and related costs (including reasonable legal fees), arising from your Customer Data, your use of the Service in breach of the Agreement or of law, your white-label reports, or claims you make to your clients on the basis of outputs — provided we notify you promptly of the claim, let you control the defence and settlement (no settlement admitting fault on our behalf without our consent), and reasonably cooperate at your cost.
           </P>
         </section>
 
@@ -368,7 +369,7 @@ export function TermsContent({ localeNote }: { localeNote?: React.ReactNode }) {
             <strong>18.3 Termination for breach.</strong> Either party may terminate the Agreement if the other materially breaches it and does not cure within 15 days of notice (immediately for breaches of §12 or non-payment persisting after reminder). On termination for your breach, fees for the current period remain due and are not refunded.
           </P>
           <P>
-            <strong>18.4 Termination by us for convenience or discontinuation.</strong> We may terminate the Agreement or discontinue the Service on at least 30 days&apos; notice by email. In that case (and only in that case) we will refund the prepaid fees for the unused part of your then-current period.
+            <strong>18.4 Termination by us for convenience or discontinuation.</strong> We may terminate the Agreement or discontinue the Service on at least 30 days&apos; notice by email. In that case we will refund the prepaid fees for the unused part of your then-current period.
           </P>
           <P>
             <strong>18.5 Effect.</strong> On termination your licence ends; §10.4 governs data export and deletion; §§8, 10.5, 11, 15–17, 20 and 21 survive.
@@ -388,7 +389,7 @@ export function TermsContent({ localeNote }: { localeNote?: React.ReactNode }) {
             <strong>20.1 Governing law.</strong> The Agreement is governed by French law, excluding its conflict-of-law rules and the UN Convention on Contracts for the International Sale of Goods.
           </P>
           <p className="mt-2 rounded border border-gray-300 bg-white p-3 font-semibold uppercase tracking-wide text-gray-900">
-            20.2 Jurisdiction (business customers). Any dispute arising out of or in connection with the Agreement that is not resolved amicably within 30 days of written notice shall be submitted to the exclusive jurisdiction of the competent courts of Paris, France, including for urgent, interim and multi-party proceedings, notwithstanding any other jurisdiction clause. This clause is expressly agreed between merchants within the meaning of article 48 of the French Code de procédure civile.
+            20.2 Jurisdiction (business customers). Any dispute arising out of or in connection with the Agreement that is not resolved amicably within 30 days of written notice shall be submitted to the exclusive jurisdiction of the competent courts of Paris, France, including for urgent, interim and multi-party proceedings, notwithstanding any other jurisdiction clause. Nothing prevents either party from seeking urgent or interim relief at any time. This clause is expressly agreed between merchants within the meaning of article 48 of the French Code de procédure civile.
           </p>
           <P>
             <strong>20.3 Talk to us first.</strong> Please contact us before starting any proceedings; we resolve almost every issue by email.
@@ -404,9 +405,10 @@ export function TermsContent({ localeNote }: { localeNote?: React.ReactNode }) {
           <P><strong>21.2 Assignment.</strong> You may not assign the Agreement without our consent. We may assign it to a successor of our business on notice.</P>
           <P><strong>21.3 Force majeure.</strong> Neither party is liable for delay or failure caused by events beyond its reasonable control (including third-party platform outages, network failures, and acts of authorities), except payment obligations.</P>
           <P><strong>21.4 Severability; waiver.</strong> If a provision is held unenforceable, it is limited to the minimum extent necessary and the rest remains in force. A failure to enforce is not a waiver.</P>
-          <P><strong>21.5 Notices.</strong> We may notify you by email to your account address or in-app; you notify us at <a href="mailto:samy@geotoolbox.ai" className={link}>samy@geotoolbox.ai</a>. Email notices are deemed received on the business day after sending.</P>
+          <P><strong>21.5 Notices.</strong> We may notify you by email to your account address or in-app; our notices are deemed received on the business day after sending. You notify us at <a href="mailto:samy@geotoolbox.ai" className={link}>samy@geotoolbox.ai</a>; your notices (including cancellations) are effective when they reach our mail server.</P>
           <P><strong>21.6 Language.</strong> These Terms are written in English. Translations are provided for convenience; where a translation is required by mandatory law for consumers, that translation applies to those consumers, and otherwise the English version prevails.</P>
-          <P><strong>21.7 Records.</strong> We keep a record of your acceptance of these Terms (version, timestamp, IP address, plan and disclosed price) and of billing communications, and may use it as evidence.</P>
+          <P><strong>21.7 Claims period; sanctions.</strong> For business customers, any claim arising out of the Agreement must be brought within one year of the event giving rise to it. You represent that you are not subject to sanctions or export restrictions that would prohibit us from providing the Service.</P>
+          <P><strong>21.8 Records.</strong> We keep a record of your acceptance of these Terms (version, timestamp, IP address, plan and disclosed price) and of billing communications, and may use it as evidence.</P>
         </section>
 
         <section>

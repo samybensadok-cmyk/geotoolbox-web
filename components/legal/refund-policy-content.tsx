@@ -29,7 +29,7 @@ export function RefundPolicyContent({ localeNote }: { localeNote?: React.ReactNo
           <ol className="mt-2 list-decimal space-y-1 pl-5">
             <li>Sign in and open <strong>Account → Manage subscription</strong> (this opens the Stripe customer portal).</li>
             <li>Choose <strong>Cancel subscription</strong> and confirm. You receive a confirmation email with the end date.</li>
-            <li>Alternatively, email <a href="mailto:samy@geotoolbox.ai" className={link}>samy@geotoolbox.ai</a> from the account owner&apos;s address before the renewal or trial-end time shown in your account.</li>
+            <li>Alternatively, email <a href="mailto:samy@geotoolbox.ai" className={link}>samy@geotoolbox.ai</a> from the account owner&apos;s address, no later than the day before the renewal date (or before the trial-end date and time) shown in your account and in our emails.</li>
           </ol>
           <p className="mt-2">Cancellation takes effect at the end of the current period (or of the trial). You keep access until then. Revoking Google access or deleting the app&apos;s cookies does <em>not</em> cancel a subscription.</p>
         </section>
@@ -44,12 +44,12 @@ export function RefundPolicyContent({ localeNote }: { localeNote?: React.ReactNo
             <li>periods in which you did not log in or use the Service;</li>
             <li>dissatisfaction with AI-engine results, rankings or citations, which are outside our control.</li>
           </ul>
-          <p className="mt-2">We <strong>do</strong> correct our own billing errors (wrong amount, duplicate charge, charge after a confirmed cancellation) — tell us within 60 days. If <em>we</em> terminate your subscription for convenience or discontinue the Service, we refund the unused part of the current period. We may also grant a goodwill refund at our sole discretion; doing so creates no obligation.</p>
+          <p className="mt-2">We <strong>do</strong> correct our own billing errors (wrong amount, duplicate charge, charge after a confirmed cancellation) — please tell us promptly. If <em>we</em> terminate your subscription for convenience, discontinue the Service, or a third-party change materially reduces your plan, we refund the unused part of the current period (Terms §13.3, §18.4, §19). Statutory rights of consumers are described below. We may also grant a goodwill refund at our sole discretion; doing so creates no obligation.</p>
         </section>
 
         <section>
           <h2 className="text-lg font-semibold text-gray-900">If you think a charge is wrong</h2>
-          <p className="mt-2">Email <a href="mailto:samy@geotoolbox.ai" className={link}>samy@geotoolbox.ai</a> first — most issues are resolved within two business days. You always keep the right to contact your bank; but for a charge made in accordance with the Terms (a disclosed trial conversion or renewal), we will provide the bank with the record of your acceptance, the checkout disclosures, the confirmation and reminder emails and your usage of the Service, and the account may be suspended while the dispute is open.</p>
+          <p className="mt-2">Email <a href="mailto:samy@geotoolbox.ai" className={link}>samy@geotoolbox.ai</a> first — most issues are resolved within two business days. You always keep the right to contact your bank; but for a charge made in accordance with the Terms (a disclosed trial conversion or renewal), we will provide the bank with the record of your acceptance, the checkout disclosures, the confirmation and reminder emails and your usage of the Service; the account may be suspended while the dispute is open, and if a chargeback succeeds against a valid charge the amount remains due (Terms §8.5).</p>
         </section>
 
         <section>
