@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils"
 import { PLANS, type Plan, type PlanSegment } from "@/lib/plans"
 import {
   PROMO,
+  fmtPromoAmount,
   isPromoLive,
   normalizePromoCode,
   promoDeadlineLabel,
@@ -30,7 +31,7 @@ const PROMO_UI: Record<PromoLocale, { strip: string; pill: string; then: string;
     firstYear: `first year, then {full}/yr`,
   },
   fr: {
-    strip: `Tarif fondateurs — -${PROMO.percentOff} % pendant vos ${PROMO.months} premiers mois avec le code ${PROMO.code}. ${PROMO.seats} places · jusqu’au {deadline}.`,
+    strip: `Tarif fondateurs — −${PROMO.percentOff} % pendant vos ${PROMO.months} premiers mois avec le code ${PROMO.code}. ${PROMO.seats} places · jusqu’au {deadline}.`,
     pill: `−${PROMO.percentOff} % · ${PROMO.months} mois`,
     then: `pendant ${PROMO.months} mois, puis {full}`,
     firstYear: `la première année, puis {full}/an`,
@@ -91,7 +92,7 @@ const fill = (tpl: string, vars: Record<string, string>) =>
   tpl.replace(/\{(\w+)\}/g, (m, k) => vars[k] ?? m)
 
 function priceDisplay(plan: Plan, annual: boolean, copy: PricingCardsCopy, locale: string, promo: boolean) {
-  const money = (n: number) => fill(copy.money, { amount: n.toLocaleString(locale) })
+  const money = (n: number) => fill(copy.money, { amount: fmtPromoAmount(n, locale) })
   if (plan.priceMonthly === null) return { big: copy.custom, sub: null, save: null, strike: null }
   if (promo && plan.priceMonthly > 0) {
     // SG_PROMO_V2: the 12-month repeating coupon covers 12 monthly invoices,
@@ -102,7 +103,7 @@ function priceDisplay(plan: Plan, annual: boolean, copy: PricingCardsCopy, local
       const perMo = Math.round(plan.priceYearly / 12)
       const promoYear = promoPrice(plan.priceYearly)
       return {
-        big: money(Math.round(promoYear / 12)),
+        big: money(Math.round((promoYear / 12) * 100) / 100),
         strike: money(perMo),
         sub: `${fill(copy.billedYearly, { total: money(promoYear) })} · ${fill(ui.firstYear, { full: money(plan.priceYearly) })}`,
         save: null,

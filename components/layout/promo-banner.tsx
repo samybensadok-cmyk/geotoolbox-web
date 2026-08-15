@@ -8,6 +8,7 @@ import {
   PROMO,
   isPromoLive,
   promoDaysLeft,
+  fmtPromoAmount,
   promoDeadlineLabel,
   promoPrice,
   rememberPromo,
@@ -61,7 +62,7 @@ type Variant = {
 // Anchor tier for the "state the number" variant — read from lib/plans.ts so
 // a reprice can't leave the banner quoting a stale price.
 const PLUS_FULL = PLANS.find((p) => p.id === "consultant")?.priceMonthly ?? 199
-const PLUS_PROMO = promoPrice(PLUS_FULL) // 139 at $199
+const PLUS_PROMO = promoPrice(PLUS_FULL) // 139.3 at $199 — shown to the cent, as charged
 
 function buildVariants(deadline: Record<PromoLocale, string>): Variant[] {
   return [
@@ -71,17 +72,17 @@ function buildVariants(deadline: Record<PromoLocale, string>): Variant[] {
       copy: {
         en: {
           lead: "Founding rate",
-          body: `Plus for $${PLUS_PROMO}/mo instead of $${PLUS_FULL} — ${PROMO.percentOff}% off any plan for ${PROMO.months} months. ${PROMO.seats} seats, ends ${deadline.en}.`,
+          body: `The Plus plan for $${fmtPromoAmount(PLUS_PROMO, "en")}/mo instead of $${PLUS_FULL} — ${PROMO.percentOff}% off for ${PROMO.months} months. ${PROMO.seats} seats, ends ${deadline.en}.`,
           cta: "Claim founding rate",
         },
         fr: {
           lead: "Tarif fondateurs",
-          body: `Plus à ${PLUS_PROMO} €/mois au lieu de ${PLUS_FULL} € — -${PROMO.percentOff} % sur toutes les formules pendant ${PROMO.months} mois. ${PROMO.seats} places, jusqu’au ${deadline.fr}.`,
+          body: `La formule Plus à ${fmtPromoAmount(PLUS_PROMO, "fr")} €/mois au lieu de ${PLUS_FULL} € — −${PROMO.percentOff} % pendant ${PROMO.months} mois. ${PROMO.seats} places, jusqu’au ${deadline.fr}.`,
           cta: "Profiter du tarif",
         },
         es: {
           lead: "Tarifa fundadores",
-          body: `Plus por $${PLUS_PROMO}/mes en lugar de $${PLUS_FULL} — ${PROMO.percentOff} % de descuento en cualquier plan durante ${PROMO.months} meses. ${PROMO.seats} plazas, hasta el ${deadline.es}.`,
+          body: `El plan Plus por $${fmtPromoAmount(PLUS_PROMO, "es")}/mes en lugar de $${PLUS_FULL} — ${PROMO.percentOff} % de descuento durante ${PROMO.months} meses. ${PROMO.seats} plazas, hasta el ${deadline.es}.`,
           cta: "Conseguir la tarifa",
         },
       },
@@ -92,17 +93,17 @@ function buildVariants(deadline: Record<PromoLocale, string>): Variant[] {
       copy: {
         en: {
           lead: "Which AI engines cite you?",
-          body: `Track ChatGPT, Gemini, Perplexity & 5 more — you and your competitors. Founding rate −${PROMO.percentOff}% for ${PROMO.months} months, until ${deadline.en}.`,
+          body: `See where ChatGPT, Perplexity, Gemini & co. cite you — and your competitors. Founding rate −${PROMO.percentOff}% for ${PROMO.months} months, until ${deadline.en}.`,
           cta: "Check my AI visibility",
         },
         fr: {
           lead: "Quelles IA vous citent ?",
-          body: `Suivez ChatGPT, Gemini, Perplexity et 5 autres — vous et vos concurrents. -${PROMO.percentOff} % pendant ${PROMO.months} mois, jusqu’au ${deadline.fr}.`,
+          body: `Voyez où ChatGPT, Perplexity, Gemini & co vous citent — et vos concurrents. −${PROMO.percentOff} % pendant ${PROMO.months} mois, jusqu’au ${deadline.fr}.`,
           cta: "Voir ma visibilité IA",
         },
         es: {
           lead: "¿Qué IA te citan?",
-          body: `Sigue ChatGPT, Gemini, Perplexity y 5 más — tú y tus competidores. −${PROMO.percentOff} % durante ${PROMO.months} meses, hasta el ${deadline.es}.`,
+          body: `Mira dónde te citan ChatGPT, Perplexity, Gemini y cía. — y a tus competidores. −${PROMO.percentOff} % durante ${PROMO.months} meses, hasta el ${deadline.es}.`,
           cta: "Ver mi visibilidad IA",
         },
       },
@@ -118,8 +119,8 @@ function buildVariants(deadline: Record<PromoLocale, string>): Variant[] {
         },
         fr: {
           lead: `${PROMO.seats} places fondateurs`,
-          body: `-${PROMO.percentOff} % pendant un an pour les ${PROMO.seats} premiers clients qui nous font des retours sans filtre. 0 € aujourd’hui avec l’essai. Clôture le ${deadline.fr}.`,
-          cta: "Prendre une place fondateur",
+          body: `−${PROMO.percentOff} % pendant un an pour les ${PROMO.seats} premiers clients qui nous font des retours sans filtre. 0 € aujourd’hui avec l’essai. Clôture le ${deadline.fr}.`,
+          cta: "Réserver ma place",
         },
         es: {
           lead: `${PROMO.seats} plazas fundadoras`,
@@ -136,17 +137,17 @@ function buildVariants(deadline: Record<PromoLocale, string>): Variant[] {
       copy: {
         en: {
           lead: "Founding offer",
-          body: `${PROMO.percentOff}% off any plan for ${PROMO.months} months + a 30-min onboarding call with the founder. ${PROMO.seats} seats, ends ${deadline.en}.`,
+          body: `${PROMO.percentOff}% off for ${PROMO.months} months + a 30-min onboarding call with the founder. ${PROMO.seats} seats, ends ${deadline.en}.`,
           cta: "Claim my seat",
         },
         fr: {
           lead: "Offre fondateurs",
-          body: `-${PROMO.percentOff} % sur toutes les formules pendant ${PROMO.months} mois + un appel d’onboarding de 30 min avec le fondateur. ${PROMO.seats} places, jusqu’au ${deadline.fr}.`,
+          body: `−${PROMO.percentOff} % pendant ${PROMO.months} mois + un appel d’onboarding de 30 min avec le fondateur. ${PROMO.seats} places, jusqu’au ${deadline.fr}.`,
           cta: "Réserver ma place",
         },
         es: {
           lead: "Oferta fundadores",
-          body: `${PROMO.percentOff} % de descuento en cualquier plan durante ${PROMO.months} meses + una llamada de onboarding de 30 min con el fundador. ${PROMO.seats} plazas, hasta el ${deadline.es}.`,
+          body: `${PROMO.percentOff} % de descuento durante ${PROMO.months} meses + una llamada de onboarding de 30 min con el fundador. ${PROMO.seats} plazas, hasta el ${deadline.es}.`,
           cta: "Reservar mi plaza",
         },
       },

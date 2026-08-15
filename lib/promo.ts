@@ -27,9 +27,20 @@ export const PROMO = {
 
 export type PromoLocale = "en" | "fr" | "es"
 
-/** Discounted whole-dollar price for display ($199 → $139, $99 → $69). */
+/**
+ * Discounted price, exact to the cent ($199 → 139.3, $948 → 663.6). Never round
+ * to whole dollars: Stripe charges the exact percentage ($139.30), and an
+ * advertised price below the charged one is the direction that gets disputed.
+ */
 export function promoPrice(price: number): number {
-  return Math.round(price * (1 - PROMO.percentOff / 100))
+  return Math.round(price * (100 - PROMO.percentOff)) / 100
+}
+
+/** "139.30" / "139,30" — 2 decimals only when there are cents. */
+export function fmtPromoAmount(n: number, locale: string): string {
+  const loc = locale === "fr" ? "fr-FR" : locale === "es" ? "es-ES" : "en-US"
+  const cents = Math.round(n * 100) % 100 !== 0
+  return n.toLocaleString(loc, { minimumFractionDigits: cents ? 2 : 0, maximumFractionDigits: 2 })
 }
 
 /** True until 23:59:59 UTC on the deadline day. */
