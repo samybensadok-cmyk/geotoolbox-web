@@ -12,7 +12,7 @@
 //    lever is the business-use representation in §2.2 (Shopify-style).
 //  - French L215-1→L215-3 + L241-3 must be reproduced in full where they apply
 //    (L215-4) → Annex A. Model withdrawal form (L221-5 7°) → Annex B.
-//  - Bracketed [[OPERATOR: …]] fields MUST be filled before publishing.
+//  - Entity facts (SIREN 827472424, RNE, address, franchise TVA) filled 2026-08-15 from public records; médiateur pending designation.
 
 export const TERMS_VERSION = "2.0"
 export const TERMS_UPDATED = "August 15, 2026"
@@ -101,7 +101,7 @@ export function TermsContent({ localeNote }: { localeNote?: React.ReactNode }) {
         <section>
           <H2 id="who-we-are">1. Who we are</H2>
           <P>
-            GEO Toolbox (&quot;<strong>GEO Toolbox</strong>&quot;, &quot;<strong>we</strong>&quot;, &quot;<strong>us</strong>&quot;) is operated by <strong>Samy Ben Sadok</strong>, sole trader (entrepreneur individuel — EI), registered in France under number [[OPERATOR: SIREN]], business address [[OPERATOR: business address]], VAT: [[OPERATOR: intra-EU VAT number, or &quot;TVA non applicable, art. 293 B du CGI&quot;]]. Full legal notice:{" "}
+            GEO Toolbox (&quot;<strong>GEO Toolbox</strong>&quot;, &quot;<strong>we</strong>&quot;, &quot;<strong>us</strong>&quot;) is operated by <strong>Samy Ben Sadok</strong>, sole trader (entrepreneur individuel — EI), registered in France under SIREN 827 472 424 (Registre national des entreprises), business address 1 esplanade de Chantilly, 93330 Neuilly-sur-Marne, France. VAT: not applicable — article 293 B of the French Code général des impôts (franchise en base); prices are therefore charged without French VAT until further notice. Full legal notice:{" "}
             <a href="/legal" className={link}>geotoolbox.ai/legal</a>. Contact:{" "}
             <a href="mailto:samy@geotoolbox.ai" className={link}>samy@geotoolbox.ai</a>.
           </P>
@@ -389,13 +389,13 @@ export function TermsContent({ localeNote }: { localeNote?: React.ReactNode }) {
             <strong>20.1 Governing law.</strong> The Agreement is governed by French law, excluding its conflict-of-law rules and the UN Convention on Contracts for the International Sale of Goods.
           </P>
           <p className="mt-2 rounded border border-gray-300 bg-white p-3 font-semibold uppercase tracking-wide text-gray-900">
-            20.2 Jurisdiction (business customers). Any dispute arising out of or in connection with the Agreement that is not resolved amicably within 30 days of written notice shall be submitted to the exclusive jurisdiction of the competent courts of Paris, France, including for urgent, interim and multi-party proceedings, notwithstanding any other jurisdiction clause. Nothing prevents either party from seeking urgent or interim relief at any time. This clause is expressly agreed between merchants within the meaning of article 48 of the French Code de procédure civile.
+            20.2 Jurisdiction (business customers). Any dispute arising out of or in connection with the Agreement that is not resolved amicably within 30 days of written notice shall be submitted to the exclusive jurisdiction of the competent courts of Paris, France, including for multi-party proceedings, notwithstanding any other jurisdiction clause. Nothing prevents either party from seeking urgent or interim relief at any time. For customers established in France, this clause applies only to the extent permitted by the French Code de procédure civile (article 48); otherwise the court that is competent under that code has jurisdiction.
           </p>
           <P>
             <strong>20.3 Talk to us first.</strong> Please contact us before starting any proceedings; we resolve almost every issue by email.
           </P>
           <P>
-            <strong>20.4 Consumers.</strong> If you are a consumer, §20.2 does not apply: you benefit from the mandatory consumer-protection rules of your country of residence and may bring proceedings before the courts of that country. French consumers may also use free consumer mediation: [[OPERATOR: name, address and website of the designated médiateur de la consommation]] (Code de la consommation L612-1 et seq.), after first contacting us in writing. The EU online dispute resolution platform was discontinued on 20 July 2025.
+            <strong>20.4 Consumers.</strong> If you are a consumer, §20.2 does not apply: you benefit from the mandatory consumer-protection rules of your country of residence and may bring proceedings before the courts of that country. French consumers may also use free consumer mediation (Code de la consommation L612-1 et seq.) after first contacting us in writing; the médiateur de la consommation is being designated and will be named here and at <a href="/legal" className={link}>geotoolbox.ai/legal</a>. The EU online dispute resolution platform was discontinued on 20 July 2025.
           </P>
         </section>
 
@@ -442,7 +442,7 @@ export function TermsContent({ localeNote }: { localeNote?: React.ReactNode }) {
           <H2 id="annex-b">Annex B — Model withdrawal form (consumers only)</H2>
           <P>Complete and return this form only if you are a consumer and wish to withdraw from the contract (§8.6).</P>
           <div className="mt-3 rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm">
-            <p>To: Samy Ben Sadok (GEO Toolbox), [[OPERATOR: business address]], samy@geotoolbox.ai</p>
+            <p>To: Samy Ben Sadok (GEO Toolbox), 1 esplanade de Chantilly, 93330 Neuilly-sur-Marne, France — samy@geotoolbox.ai</p>
             <p className="mt-2">I/We (*) hereby give notice that I/We (*) withdraw from my/our (*) contract for the provision of the following service: GEO Toolbox subscription, plan ______________</p>
             <p className="mt-2">Ordered on (*) / received on (*): ______________</p>
             <p className="mt-2">Name of consumer(s): ______________</p>
