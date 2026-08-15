@@ -6,14 +6,18 @@ import { trackEvent } from "@/lib/analytics"
 import { PLANS } from "@/lib/plans"
 import {
   PROMO,
+  fmtPromoAmount,
+  formatCountdown,
   isPromoLive,
   promoDaysLeft,
-  fmtPromoAmount,
   promoDeadlineLabel,
   promoPrice,
   rememberPromo,
+  reservePromo,
   type PromoLocale,
+  type Reservation,
 } from "@/lib/promo"
+import { useCountdown } from "@/components/promo/use-countdown"
 
 /**
  * SG_PROMO_V2 (2026-08-15) — founding-offer banner, variant-tested.
@@ -38,6 +42,10 @@ import {
  *   outcome — lead with the dream outcome, discount second.
  *   cohort  — reason-why scarcity ("20 founding customers, in exchange for
  *             blunt feedback") + risk reversal ($0 today).
+ *   reserve — per-visitor 48-h seat reservation with a LIVE countdown to a real
+ *             Stripe expiry (SG_PROMO_RESERVE_V1). Never re-minted after expiry;
+ *             falls back to the `price` copy if the backend refuses (rate limit,
+ *             sold out, closed) — logged with reserved:false.
  *   bonus   — INACTIVE: adds a founder onboarding call. Needs operator sign-off
  *             because it commits operator time; flip `active` to test it.
  *
@@ -130,6 +138,28 @@ function buildVariants(deadline: Record<PromoLocale, string>): Variant[] {
       },
     },
     {
+      // {cd} is replaced with the live hh:mm:ss countdown at render time.
+      id: "reserve",
+      active: true,
+      copy: {
+        en: {
+          lead: "Founding seat reserved for you",
+          body: `${PROMO.percentOff}% off for ${PROMO.months} months — your reservation expires in {cd}, then the seat goes back to the pool.`,
+          cta: "Claim my reserved seat",
+        },
+        fr: {
+          lead: "Place fondateur réservée pour vous",
+          body: `−${PROMO.percentOff} % pendant ${PROMO.months} mois — votre réservation expire dans {cd}, puis la place retourne au pool.`,
+          cta: "Prendre ma place réservée",
+        },
+        es: {
+          lead: "Plaza fundadora reservada para ti",
+          body: `${PROMO.percentOff} % de descuento durante ${PROMO.months} meses — tu reserva caduca en {cd}, luego la plaza vuelve al cupo.`,
+          cta: "Reclamar mi plaza",
+        },
+      },
+    },
+    {
       // Hormozi: a bonus beats a discount — but this one costs operator time
       // (up to 20 × 30 min). Inactive until approved. Copy is ready.
       id: "bonus",
@@ -181,6 +211,8 @@ function pickVariant(variants: Variant[]): Variant {
 export function PromoBanner({ locale = "en" }: { locale?: string }) {
   const [dismissed, setDismissed] = useState(true)
   const [variant, setVariant] = useState<Variant | null>(null)
+  // SG_PROMO_RESERVE_V1: null = not asked yet / not this variant; false = refused.
+  const [reservation, setReservation] = useState<Reservation | null | false>(null)
   const pathname = usePathname()
   const loc: PromoLocale = locale === "fr" || locale === "es" ? locale : "en"
   const ui = UI[loc]
@@ -214,21 +246,58 @@ export function PromoBanner({ locale = "en" }: { locale?: string }) {
     if (!isDismissed) setVariant(pickVariant(variants))
   }, [variants])
 
-  // One view event per page load where the banner is actually visible.
-  const suppressed = pathname?.startsWith("/services") ?? false
+  // Mint the personal reservation once the `reserve` variant is assigned.
   useEffect(() => {
-    if (dismissed || !variant || suppressed) return
-    trackEvent("promo_banner_view", { promo_variant: variant.id, promo_code: PROMO.code, locale: loc, page_path: pathname })
-  }, [dismissed, variant, suppressed, loc, pathname])
+    if (!variant || variant.id !== "reserve" || dismissed) return
+    let cancelled = false
+    reservePromo(variant.id).then((r) => {
+      if (!cancelled) setReservation(r ?? false)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [variant, dismissed])
+  const msLeft = useCountdown(reservation ? reservation.expiresAt : null)
+  const reservationLive = !!reservation && msLeft !== null && msLeft > 0
+
+  // One view event per page load where the banner is actually visible. For the
+  // reserve variant, wait until we know whether a reservation exists so the
+  // event carries `reserved` (the fallback copy is a different treatment).
+  const suppressed = pathname?.startsWith("/services") ?? false
+  const reserveSettled = variant?.id !== "reserve" || reservation !== null
+  useEffect(() => {
+    if (dismissed || !variant || suppressed || !reserveSettled) return
+    trackEvent("promo_banner_view", {
+      promo_variant: variant.id,
+      promo_code: reservation ? reservation.code : PROMO.code,
+      reserved: variant.id === "reserve" ? !!reservation : undefined,
+      locale: loc,
+      page_path: pathname,
+    })
+  }, [dismissed, variant, suppressed, reserveSettled, reservation, loc, pathname])
 
   // Suppress the sitewide discount banner on service (money) pages — a
   // sitewide discount code above a $4,000 offer creates discount ambiguity.
   if (suppressed) return null
   if (dismissed || !variant) return null
+  // Reserve variant: nothing to show until the mint resolves (avoids a flash of
+  // fallback copy that then swaps to a countdown).
+  if (variant.id === "reserve" && reservation === null) return null
 
-  const t = variant.copy[loc]
+  // Reserve variant without a live reservation (refused, or expired on a later
+  // visit) shows the standard `price` copy — honest fallback, still measured
+  // under promo_variant=reserve with reserved:false.
+  const isReserve = variant.id === "reserve" && reservationLive && reservation
+  const copyVariant = isReserve ? variant : variant.id === "reserve" ? variants.find((v) => v.id === "price") ?? variant : variant
+  const cd = isReserve && msLeft !== null ? formatCountdown(msLeft) : ""
+  const t = {
+    lead: copyVariant.copy[loc].lead,
+    body: copyVariant.copy[loc].body.replace("{cd}", cd),
+    cta: copyVariant.copy[loc].cta,
+  }
+  const activeCode = isReserve && reservation ? reservation.code : PROMO.code
   const pricingPath = loc === "en" ? "/pricing" : `/${loc}/pricing`
-  const href = `${pricingPath}?promo=${PROMO.code}&bv=${variant.id}`
+  const href = `${pricingPath}?promo=${activeCode}&bv=${variant.id}`
   const daysLeft = promoDaysLeft()
 
   return (
@@ -244,17 +313,17 @@ export function PromoBanner({ locale = "en" }: { locale?: string }) {
         </p>
         <span className="hidden items-center gap-1.5 whitespace-nowrap font-mono text-[11px] text-white/85 xl:inline-flex">
           <span className="rounded border border-white/30 px-1.5 py-0.5">
-            {ui.code} {PROMO.code}
+            {ui.code} {activeCode}
           </span>
-          {daysLeft <= 14 && (
+          {!isReserve && daysLeft <= 14 && (
             <span className="rounded border border-white/30 px-1.5 py-0.5">{ui.daysLeft(daysLeft)}</span>
           )}
         </span>
         <a
           href={href}
           onClick={() => {
-            rememberPromo(PROMO.code, variant.id)
-            trackEvent("promo_banner_click", { promo_variant: variant.id, promo_code: PROMO.code, locale: loc, page_path: pathname })
+            rememberPromo(activeCode, variant.id)
+            trackEvent("promo_banner_click", { promo_variant: variant.id, promo_code: activeCode, reserved: isReserve ? true : variant.id === "reserve" ? false : undefined, locale: loc, page_path: pathname })
           }}
           className="inline-flex shrink-0 items-center rounded-full bg-white px-3.5 py-1 text-[13px] font-semibold text-accent-800 shadow-sm transition-colors hover:bg-accent-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
         >
@@ -269,7 +338,7 @@ export function PromoBanner({ locale = "en" }: { locale?: string }) {
             } catch {
               /* ignore */
             }
-            trackEvent("promo_banner_dismiss", { promo_variant: variant.id, promo_code: PROMO.code, locale: loc, page_path: pathname })
+            trackEvent("promo_banner_dismiss", { promo_variant: variant.id, promo_code: activeCode, locale: loc, page_path: pathname })
             setDismissed(true)
           }}
           className="shrink-0 rounded px-1 text-white/80 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70"

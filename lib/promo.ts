@@ -64,11 +64,119 @@ export function promoDeadlineLabel(locale: string): string {
   return new Intl.DateTimeFormat(loc, { month: "short", day: "numeric", timeZone: "UTC" }).format(d).replace(/\.$/, "")
 }
 
-/** Only ever accept the one code we run — this string is echoed into URLs. */
+/**
+ * Accept the sitewide code OR a personal reservation code (`FOUND-XXXXXX`, see
+ * reservePromo). Anything else is dropped — this string is echoed into URLs.
+ */
+export const RESERVATION_CODE_RE = /^FOUND-[A-Z0-9]{6}$/
 export function normalizePromoCode(raw: string | null | undefined): string | null {
   if (!raw) return null
   const v = raw.trim().toUpperCase()
-  return v === PROMO.code ? v : null
+  if (v === PROMO.code) return v
+  return RESERVATION_CODE_RE.test(v) ? v : null
+}
+
+/* ------------------------------------------------------------------------ */
+/* SG_PROMO_RESERVE_V1 — per-visitor 48-hour seat reservation                 */
+/*                                                                            */
+/* The aggressive countdown pattern, done honestly: on first view of the      */
+/* `reserve` banner variant we ask the backend (?action=promo_reserve) to     */
+/* mint ONE single-use Stripe promotion code that expires in 48 h. The timer  */
+/* counts down to that real Stripe expiry, the code dies at zero, and we NEVER */
+/* re-mint for the same visitor (a reset timer is the fake-urgency pattern).  */
+/* After expiry the visitor simply sees the standard sitewide offer.          */
+/* ------------------------------------------------------------------------ */
+
+export const RESERVATION_KEY = "sg_promo_res"
+export const RESERVATION_HOURS = 48
+
+export type Reservation = { code: string; expiresAt: number; variant: string; campaign: string }
+type StoredReservation = Reservation | { expired: true; at: number }
+
+export function getReservation(): Reservation | null {
+  try {
+    const raw = localStorage.getItem(RESERVATION_KEY)
+    if (!raw) return null
+    const v = JSON.parse(raw) as Partial<Reservation> & { expired?: boolean }
+    if (v.expired) return null
+    if (typeof v.code !== "string" || !RESERVATION_CODE_RE.test(v.code) || typeof v.expiresAt !== "number") return null
+    if (v.expiresAt * 1000 <= Date.now()) {
+      // Expired: remember that so we never mint again for this visitor, and drop
+      // the dead personal code from the checkout carrier so it is never sent.
+      localStorage.setItem(RESERVATION_KEY, JSON.stringify({ expired: true, at: Date.now() } satisfies StoredReservation))
+      try {
+        const carried = JSON.parse(localStorage.getItem(PROMO_STORAGE_KEY) ?? "null") as { code?: string } | null
+        if (carried?.code && RESERVATION_CODE_RE.test(carried.code)) localStorage.removeItem(PROMO_STORAGE_KEY)
+      } catch {
+        /* ignore */
+      }
+      return null
+    }
+    return { code: v.code, expiresAt: v.expiresAt, variant: v.variant ?? "", campaign: v.campaign ?? PROMO.code }
+  } catch {
+    return null
+  }
+}
+
+/** True once a reservation has expired for this visitor (do not mint again). */
+export function reservationSpent(): boolean {
+  try {
+    const raw = localStorage.getItem(RESERVATION_KEY)
+    if (!raw) return false
+    const v = JSON.parse(raw) as { expired?: boolean; expiresAt?: number }
+    return !!v.expired || (typeof v.expiresAt === "number" && v.expiresAt * 1000 <= Date.now())
+  } catch {
+    return false
+  }
+}
+
+/**
+ * Mint a reservation (once per visitor). Returns the reservation, or null when
+ * the backend refuses (rate limit, sold out, closed) — callers fall back to the
+ * standard offer. Marks the visitor "spent" on sold_out/closed so we stop asking.
+ */
+let reserveInFlight: Promise<Reservation | null> | null = null
+export function reservePromo(variant: string): Promise<Reservation | null> {
+  const existing = getReservation()
+  if (existing) return Promise.resolve(existing)
+  if (reservationSpent()) return Promise.resolve(null)
+  if (reserveInFlight) return reserveInFlight
+  reserveInFlight = (async () => {
+    try {
+      const r = await fetch("/app/?action=promo_reserve", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ campaign: PROMO.code, bv: variant }),
+        credentials: "omit",
+        cache: "no-store",
+      })
+      const j = (await r.json()) as { ok?: boolean; code?: string; expires_at?: number; error?: string }
+      if (j.ok && typeof j.code === "string" && RESERVATION_CODE_RE.test(j.code) && typeof j.expires_at === "number") {
+        const res: Reservation = { code: j.code, expiresAt: j.expires_at, variant, campaign: PROMO.code }
+        localStorage.setItem(RESERVATION_KEY, JSON.stringify(res))
+        return res
+      }
+      if (j.error === "sold_out" || j.error === "closed") {
+        localStorage.setItem(RESERVATION_KEY, JSON.stringify({ expired: true, at: Date.now() } satisfies StoredReservation))
+      }
+      return null
+    } catch {
+      return null
+    } finally {
+      reserveInFlight = null
+    }
+  })()
+  return reserveInFlight
+}
+
+/** "47:59:12" — hours can exceed 24 (48-h window). */
+export function formatCountdown(msLeft: number): string {
+  const s = Math.max(0, Math.floor(msLeft / 1000))
+  const h = Math.floor(s / 3600)
+  const m = Math.floor((s % 3600) / 60)
+  const sec = s % 60
+  const pad = (n: number) => String(n).padStart(2, "0")
+  return `${pad(h)}:${pad(m)}:${pad(sec)}`
 }
 
 /** localStorage key the banner writes on click and the pricing page reads. */

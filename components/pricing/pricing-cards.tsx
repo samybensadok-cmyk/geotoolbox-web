@@ -6,7 +6,10 @@ import { cn } from "@/lib/utils"
 import { PLANS, type Plan, type PlanSegment } from "@/lib/plans"
 import {
   PROMO,
+  RESERVATION_CODE_RE,
   fmtPromoAmount,
+  formatCountdown,
+  getReservation,
   isPromoLive,
   normalizePromoCode,
   promoDeadlineLabel,
@@ -15,6 +18,7 @@ import {
   rememberPromo,
   type PromoLocale,
 } from "@/lib/promo"
+import { useCountdown } from "@/components/promo/use-countdown"
 
 // SG_PROMO_V2 (2026-08-15): offer continuity. When the visitor arrives from the
 // founding banner (?promo=FOUNDING30&bv=<variant>) — or clicked it earlier and
@@ -23,21 +27,24 @@ import {
 // Stripe promotion code. Copy lives here (not messages/*.json) so the parity
 // guard keeps validating the plan numbers untouched; every number still comes
 // from lib/plans.ts + lib/promo.ts.
-const PROMO_UI: Record<PromoLocale, { strip: string; pill: string; then: string; firstYear: string }> = {
+const PROMO_UI: Record<PromoLocale, { strip: string; stripReserved: string; pill: string; then: string; firstYear: string }> = {
   en: {
     strip: `Founding rate — ${PROMO.percentOff}% off for your first ${PROMO.months} months with code ${PROMO.code}. ${PROMO.seats} seats · ends {deadline}.`,
+    stripReserved: `Your founding seat is reserved — ${PROMO.percentOff}% off for your first ${PROMO.months} months. Reservation expires in {cd} (code {code}, applied at checkout).`,
     pill: `−${PROMO.percentOff}% · ${PROMO.months} months`,
     then: `for ${PROMO.months} months, then {full}`,
     firstYear: `first year, then {full}/yr`,
   },
   fr: {
     strip: `Tarif fondateurs — −${PROMO.percentOff} % pendant vos ${PROMO.months} premiers mois avec le code ${PROMO.code}. ${PROMO.seats} places · jusqu’au {deadline}.`,
+    stripReserved: `Votre place fondateur est réservée — −${PROMO.percentOff} % pendant vos ${PROMO.months} premiers mois. La réservation expire dans {cd} (code {code}, appliqué au paiement).`,
     pill: `−${PROMO.percentOff} % · ${PROMO.months} mois`,
     then: `pendant ${PROMO.months} mois, puis {full}`,
     firstYear: `la première année, puis {full}/an`,
   },
   es: {
     strip: `Tarifa fundadores — ${PROMO.percentOff} % de descuento durante tus primeros ${PROMO.months} meses con el código ${PROMO.code}. ${PROMO.seats} plazas · hasta el {deadline}.`,
+    stripReserved: `Tu plaza fundadora está reservada — ${PROMO.percentOff} % de descuento durante tus primeros ${PROMO.months} meses. La reserva caduca en {cd} (código {code}, aplicado al pagar).`,
     pill: `−${PROMO.percentOff} % · ${PROMO.months} meses`,
     then: `durante ${PROMO.months} meses, luego {full}`,
     firstYear: `el primer año, luego {full}/año`,
@@ -163,6 +170,19 @@ export function PricingCards({ copy, locale }: { copy: PricingCardsCopy; locale:
     }
     setPromo(recallPromo())
   }, [])
+  // SG_PROMO_RESERVE_V1: a personal FOUND- code with a stored reservation gets a
+  // live countdown; when it hits zero the offer is withdrawn on this page too.
+  const isPersonal = !!promo && RESERVATION_CODE_RE.test(promo.code)
+  const reservation = isPersonal ? getReservation() : null
+  const resMatches = !!reservation && !!promo && reservation.code === promo.code
+  const msLeft = useCountdown(resMatches ? reservation!.expiresAt : null)
+  useEffect(() => {
+    // A personal code is only honoured on this page while ITS reservation is
+    // live in this browser (expired, unknown or another device → no slashed
+    // prices; checkout re-validates anyway and falls back to list price).
+    if (isPersonal && !resMatches) setPromo(null)
+    else if (resMatches && msLeft !== null && msLeft <= 0) setPromo(null)
+  }, [isPersonal, resMatches, msLeft])
   const promoOn = !!promo
   const promoUi = PROMO_UI[(locale === "fr" || locale === "es" ? locale : "en") as PromoLocale]
 
@@ -238,7 +258,9 @@ export function PricingCards({ copy, locale }: { copy: PricingCardsCopy; locale:
           className="mx-auto mt-5 max-w-3xl rounded-xl border border-accent-200 bg-accent-50 px-4 py-2.5 text-center text-[13px] font-medium text-accent-900"
           data-promo-strip={promo?.variant || "direct"}
         >
-          {fill(promoUi.strip, { deadline: promoDeadlineLabel(locale) })}
+          {resMatches && msLeft !== null
+            ? fill(promoUi.stripReserved, { cd: formatCountdown(msLeft), code: promo?.code ?? "" })
+            : fill(promoUi.strip, { deadline: promoDeadlineLabel(locale) })}
         </p>
       )}
 
