@@ -1,9 +1,47 @@
 "use client"
 
 import Link from "next/link"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { cn } from "@/lib/utils"
 import { PLANS, type Plan, type PlanSegment } from "@/lib/plans"
+import {
+  PROMO,
+  isPromoLive,
+  normalizePromoCode,
+  promoDeadlineLabel,
+  promoPrice,
+  recallPromo,
+  rememberPromo,
+  type PromoLocale,
+} from "@/lib/promo"
+
+// SG_PROMO_V2 (2026-08-15): offer continuity. When the visitor arrives from the
+// founding banner (?promo=FOUNDING30&bv=<variant>) — or clicked it earlier and
+// navigated here by menu (localStorage) — the cards show the SLASHED price and
+// the CTA carries the promo into signup, where the backend pre-applies the
+// Stripe promotion code. Copy lives here (not messages/*.json) so the parity
+// guard keeps validating the plan numbers untouched; every number still comes
+// from lib/plans.ts + lib/promo.ts.
+const PROMO_UI: Record<PromoLocale, { strip: string; pill: string; then: string; firstYear: string }> = {
+  en: {
+    strip: `Founding rate — ${PROMO.percentOff}% off for your first ${PROMO.months} months with code ${PROMO.code}. ${PROMO.seats} seats · ends {deadline}.`,
+    pill: `−${PROMO.percentOff}% · ${PROMO.months} months`,
+    then: `for ${PROMO.months} months, then {full}`,
+    firstYear: `first year, then {full}/yr`,
+  },
+  fr: {
+    strip: `Tarif fondateurs — -${PROMO.percentOff} % pendant vos ${PROMO.months} premiers mois avec le code ${PROMO.code}. ${PROMO.seats} places · jusqu’au {deadline}.`,
+    pill: `−${PROMO.percentOff} % · ${PROMO.months} mois`,
+    then: `pendant ${PROMO.months} mois, puis {full}`,
+    firstYear: `la première année, puis {full}/an`,
+  },
+  es: {
+    strip: `Tarifa fundadores — ${PROMO.percentOff} % de descuento durante tus primeros ${PROMO.months} meses con el código ${PROMO.code}. ${PROMO.seats} plazas · hasta el {deadline}.`,
+    pill: `−${PROMO.percentOff} % · ${PROMO.months} meses`,
+    then: `durante ${PROMO.months} meses, luego {full}`,
+    firstYear: `el primer año, luego {full}/año`,
+  },
+}
 
 // SG_LADDER_V3 2026-07-28: segment-pure tabs. Each tab shows exactly the
 // three cards whose story is coherent for that audience:
@@ -52,9 +90,31 @@ export type PricingCardsCopy = {
 const fill = (tpl: string, vars: Record<string, string>) =>
   tpl.replace(/\{(\w+)\}/g, (m, k) => vars[k] ?? m)
 
-function priceDisplay(plan: Plan, annual: boolean, copy: PricingCardsCopy, locale: string) {
+function priceDisplay(plan: Plan, annual: boolean, copy: PricingCardsCopy, locale: string, promo: boolean) {
   const money = (n: number) => fill(copy.money, { amount: n.toLocaleString(locale) })
   if (plan.priceMonthly === null) return { big: copy.custom, sub: null, save: null, strike: null }
+  if (promo && plan.priceMonthly > 0) {
+    // SG_PROMO_V2: the 12-month repeating coupon covers 12 monthly invoices,
+    // or the FIRST annual invoice — after that the plan reverts to list price.
+    // Say so on the card; the signup chip and the Stripe disclosure repeat it.
+    const ui = PROMO_UI[(locale === "fr" || locale === "es" ? locale : "en") as PromoLocale]
+    if (annual && plan.priceYearly) {
+      const perMo = Math.round(plan.priceYearly / 12)
+      const promoYear = promoPrice(plan.priceYearly)
+      return {
+        big: money(Math.round(promoYear / 12)),
+        strike: money(perMo),
+        sub: `${fill(copy.billedYearly, { total: money(promoYear) })} · ${fill(ui.firstYear, { full: money(plan.priceYearly) })}`,
+        save: null,
+      }
+    }
+    return {
+      big: money(promoPrice(plan.priceMonthly)),
+      strike: money(plan.priceMonthly),
+      sub: fill(ui.then, { full: `${money(plan.priceMonthly)}${copy.perMo}` }),
+      save: null,
+    }
+  }
   if (annual && plan.priceYearly) {
     const perMo = Math.round(plan.priceYearly / 12)
     const save = plan.priceMonthly * 12 - plan.priceYearly
@@ -77,6 +137,33 @@ export function PricingCards({ copy, locale }: { copy: PricingCardsCopy; locale:
   // Defaults to "brand" because Starter is the advertised entry point.
   const [segment, setSegment] = useState<PlanSegment>("brand")
   const visibleTiers = PLANS.filter((p) => p.segments.includes(segment))
+
+  // SG_PROMO_V2: promo continuity — URL param wins, then the banner's stored
+  // click; nothing after the deadline. Resolved client-side only (the pricing
+  // page is statically rendered), so the default paint is list price and the
+  // slashed price appears on hydration — the same moment the toggle activates.
+  // window.location (not useSearchParams) so the static page needs no
+  // Suspense boundary and stays fully prerendered.
+  const [promo, setPromo] = useState<{ code: string; variant: string } | null>(null)
+  useEffect(() => {
+    if (!isPromoLive()) return
+    let qs: URLSearchParams | null = null
+    try {
+      qs = new URLSearchParams(window.location.search)
+    } catch {
+      qs = null
+    }
+    const fromUrl = normalizePromoCode(qs?.get("promo"))
+    if (fromUrl) {
+      const variant = (qs?.get("bv") ?? "").replace(/[^a-z0-9_-]/gi, "").slice(0, 16)
+      rememberPromo(fromUrl, variant)
+      setPromo({ code: fromUrl, variant })
+      return
+    }
+    setPromo(recallPromo())
+  }, [])
+  const promoOn = !!promo
+  const promoUi = PROMO_UI[(locale === "fr" || locale === "es" ? locale : "en") as PromoLocale]
 
   return (
     <div>
@@ -145,10 +232,19 @@ export function PricingCards({ copy, locale }: { copy: PricingCardsCopy; locale:
         </div>
       </div>
 
+      {promoOn && (
+        <p
+          className="mx-auto mt-5 max-w-3xl rounded-xl border border-accent-200 bg-accent-50 px-4 py-2.5 text-center text-[13px] font-medium text-accent-900"
+          data-promo-strip={promo?.variant || "direct"}
+        >
+          {fill(promoUi.strip, { deadline: promoDeadlineLabel(locale) })}
+        </p>
+      )}
+
       {/* Cards — both tabs render exactly three */}
       <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:mx-auto lg:max-w-5xl">
         {visibleTiers.map((plan) => {
-          const p = priceDisplay(plan, annual, copy, locale)
+          const p = priceDisplay(plan, annual, copy, locale, promoOn)
           const c = copy.plans[plan.id]
           const seg = segment === "agency" ? c.agency : undefined
           const tagline = seg?.tagline ?? c.tagline
@@ -167,9 +263,10 @@ export function PricingCards({ copy, locale }: { copy: PricingCardsCopy; locale:
           // the first scan. Billing toggle state rides along. FR passes the
           // checkout currency explicitly (SG_EUR_CHECKOUT_V1) so js/auth.js
           // doesn't fall back to heuristics.
+          const promoQs = promoOn && promo ? `&promo=${promo.code}${promo.variant ? `&bv=${promo.variant}` : ""}` : ""
           const ctaHref = isExternal
             ? plan.cta.href
-            : `${plan.cta.href}&plan=${plan.id}&interval=${annual ? "annual" : "monthly"}${locale === "fr" ? "&currency=eur" : ""}`
+            : `${plan.cta.href}&plan=${plan.id}&interval=${annual ? "annual" : "monthly"}${locale === "fr" ? "&currency=eur" : ""}${promoQs}`
           return (
             <div
               key={plan.id}
@@ -195,8 +292,13 @@ export function PricingCards({ copy, locale }: { copy: PricingCardsCopy; locale:
                 )}
               </div>
               <div className="mt-1 flex min-h-[20px] flex-wrap items-center gap-x-2 gap-y-1">
-                {p.strike && annual && (
+                {p.strike && (annual || promoOn) && (
                   <s className="text-xs text-gray-400">{p.strike}</s>
+                )}
+                {promoOn && plan.priceMonthly !== null && plan.priceMonthly > 0 && (
+                  <span className="rounded bg-accent-600 px-1.5 py-0.5 text-[11px] font-semibold text-white">
+                    {promoUi.pill}
+                  </span>
                 )}
                 {p.sub && <span className="text-xs text-gray-500">{p.sub}</span>}
                 {p.save && annual && (

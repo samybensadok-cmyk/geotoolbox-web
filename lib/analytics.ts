@@ -41,6 +41,12 @@ export type AnalyticsEvent =
   | "newsletter_signup"
   | "select_item"
   | "app_cta_click"
+  // SG_PROMO_V2 (2026-08-15): sitewide offer banner funnel. NOT key events —
+  // they exist so banner variants can be judged on view→click→dismiss and
+  // joined to begin_checkout/purchase via the `promo_variant` param.
+  | "promo_banner_view"
+  | "promo_banner_click"
+  | "promo_banner_dismiss"
 
 export function trackEvent(name: AnalyticsEvent, params: GtagParams = {}): void {
   try {
