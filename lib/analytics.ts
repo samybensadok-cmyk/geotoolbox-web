@@ -47,6 +47,11 @@ export type AnalyticsEvent =
   | "promo_banner_view"
   | "promo_banner_click"
   | "promo_banner_dismiss"
+  // SG_PROMO_EXIT_V1 (2026-08-15): exit-intent popup funnel, same non-key-event
+  // reasoning as the banner triplet above.
+  | "promo_exit_view"
+  | "promo_exit_click"
+  | "promo_exit_dismiss"
 
 export function trackEvent(name: AnalyticsEvent, params: GtagParams = {}): void {
   try {

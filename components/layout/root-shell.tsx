@@ -2,6 +2,7 @@ import { DM_Sans, DM_Mono } from "next/font/google"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { PromoBanner } from "@/components/layout/promo-banner"
+import { ExitIntentPopup } from "@/components/layout/exit-intent-popup"
 import { ConsentManager } from "@/components/consent/consent-manager"
 import { ImageLightbox } from "@/components/ui/image-lightbox"
 import "@/app/globals.css"
@@ -59,6 +60,9 @@ export function RootShell({
         {/* Site-wide click-to-zoom for content images (blog figures, service/
             feature screenshots). Delegated — no per-page wiring needed. */}
         <ImageLightbox />
+        {/* SG_PROMO_EXIT_V1: last-chance founding-offer popup, desktop-only
+            exit-intent trigger. See components/layout/exit-intent-popup.tsx. */}
+        <ExitIntentPopup locale={locale} />
       </body>
     </html>
   )

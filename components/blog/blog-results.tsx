@@ -14,6 +14,83 @@ export type LitePost = {
   topicLabel: string
 }
 
+// Client component — no NextIntlClientProvider is mounted in this app (see
+// components/layout/promo-banner.tsx for the same constraint/convention), so
+// `useTranslations` isn't available here. A self-contained locale-keyed
+// record, matching that file's pattern, is the fix.
+const UI = {
+  en: {
+    searchPlaceholder: "Search articles...",
+    searchAria: "Search articles",
+    clearSearchAria: "Clear search",
+    clearSearch: "Clear search",
+    noArticlesMatch: (q: string) => (
+      <>
+        No articles match <span className="font-semibold text-gray-900">&ldquo;{q}&rdquo;</span>
+      </>
+    ),
+    inTopic: (label: string) => <> in {label}</>,
+    resultsFor: (q: string) => <>Results for &ldquo;{q}&rdquo;</>,
+    found: (n: number) => `${n} found`,
+    latest: "Latest",
+    readTheArticle: "Read the article",
+    read: "Read",
+    minRead: (n: number) => `${n} min read`,
+    min: (n: number) => `${n} min`,
+    moreArticles: "More articles",
+    articlesIn: (label: string) => `${label} articles`,
+    total: (n: number) => `${n} total`,
+  },
+  fr: {
+    searchPlaceholder: "Rechercher des articles...",
+    searchAria: "Rechercher des articles",
+    clearSearchAria: "Effacer la recherche",
+    clearSearch: "Effacer la recherche",
+    noArticlesMatch: (q: string) => (
+      <>
+        Aucun article ne correspond à <span className="font-semibold text-gray-900">&laquo;&nbsp;{q}&nbsp;&raquo;</span>
+      </>
+    ),
+    inTopic: (label: string) => <> dans {label}</>,
+    resultsFor: (q: string) => <>Résultats pour &laquo;&nbsp;{q}&nbsp;&raquo;</>,
+    found: (n: number) => (n === 1 ? "1 résultat" : `${n} résultats`),
+    latest: "À la une",
+    readTheArticle: "Lire l’article",
+    read: "Lire",
+    minRead: (n: number) => `${n} min de lecture`,
+    min: (n: number) => `${n} min`,
+    moreArticles: "Plus d’articles",
+    articlesIn: (label: string) => `Articles ${label}`,
+    total: (n: number) => (n === 1 ? "1 au total" : `${n} au total`),
+  },
+  es: {
+    searchPlaceholder: "Buscar artículos...",
+    searchAria: "Buscar artículos",
+    clearSearchAria: "Borrar búsqueda",
+    clearSearch: "Borrar búsqueda",
+    noArticlesMatch: (q: string) => (
+      <>
+        Ningún artículo coincide con <span className="font-semibold text-gray-900">&laquo;{q}&raquo;</span>
+      </>
+    ),
+    inTopic: (label: string) => <> en {label}</>,
+    resultsFor: (q: string) => <>Resultados de &laquo;{q}&raquo;</>,
+    found: (n: number) => (n === 1 ? "1 resultado" : `${n} resultados`),
+    latest: "Lo último",
+    readTheArticle: "Leer el artículo",
+    read: "Leer",
+    minRead: (n: number) => `${n} min de lectura`,
+    min: (n: number) => `${n} min`,
+    moreArticles: "Más artículos",
+    articlesIn: (label: string) => `Artículos de ${label}`,
+    total: (n: number) => (n === 1 ? "1 en total" : `${n} en total`),
+  },
+} as const
+
+function uiFor(locale: string) {
+  return UI[locale as keyof typeof UI] ?? UI.en
+}
+
 function Arrow() {
   return (
     <svg className="h-3 w-3 transition-transform group-hover:translate-x-0.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
@@ -23,6 +100,7 @@ function Arrow() {
 }
 
 function PostCard({ post, locale }: { post: LitePost; locale: string }) {
+  const ui = uiFor(locale)
   return (
     <Link
       href={localePath("blog", post.slug, locale)}
@@ -32,7 +110,7 @@ function PostCard({ post, locale }: { post: LitePost; locale: string }) {
         <span className="font-mono text-[10px] font-semibold uppercase tracking-widest text-accent-700">
           {post.topicLabel}
         </span>
-        <span className="font-mono text-[10px] text-gray-400">{post.readingTime} min read</span>
+        <span className="font-mono text-[10px] text-gray-400">{ui.minRead(post.readingTime)}</span>
       </div>
       <h3 className="mt-3.5 line-clamp-2 text-[1.0625rem] font-semibold leading-snug tracking-tight text-gray-900 transition-colors group-hover:text-accent-700">
         {post.title}
@@ -42,10 +120,10 @@ function PostCard({ post, locale }: { post: LitePost; locale: string }) {
       </p>
       <div className="mt-5 flex items-center justify-between border-t border-gray-100 pt-3.5">
         <time className="font-mono text-[10.5px] text-gray-500" dateTime={post.date}>
-          {formatDate(post.date)}
+          {formatDate(post.date, locale)}
         </time>
         <span className="inline-flex items-center gap-1 font-mono text-[10.5px] font-semibold text-accent-700 opacity-0 transition-opacity group-hover:opacity-100">
-          Read <Arrow />
+          {ui.read} <Arrow />
         </span>
       </div>
     </Link>
@@ -61,6 +139,7 @@ export function BlogResults({
   activeLabel?: string
   locale: string
 }) {
+  const ui = uiFor(locale)
   const [q, setQ] = useState("")
   const query = q.trim().toLowerCase()
   const searching = query.length > 0
@@ -96,15 +175,15 @@ export function BlogResults({
             type="search"
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Search articles..."
-            aria-label="Search articles"
+            placeholder={ui.searchPlaceholder}
+            aria-label={ui.searchAria}
             className="w-full rounded-full border border-gray-200 bg-white py-2.5 pl-10 pr-10 text-sm text-gray-900 placeholder:text-gray-400 shadow-sm transition-colors focus:border-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-400/20"
           />
           {searching && (
             <button
               type="button"
               onClick={() => setQ("")}
-              aria-label="Clear search"
+              aria-label={ui.clearSearchAria}
               className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-gray-400 transition-colors hover:text-gray-700"
             >
               <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
@@ -118,16 +197,15 @@ export function BlogResults({
       {filtered.length === 0 ? (
         <div className="rounded-3xl border border-gray-200 bg-white px-6 py-20 text-center">
           <p className="text-gray-600">
-            No articles match{" "}
-            <span className="font-semibold text-gray-900">&ldquo;{q.trim()}&rdquo;</span>
-            {activeLabel ? <> in {activeLabel}</> : null}.
+            {ui.noArticlesMatch(q.trim())}
+            {activeLabel ? ui.inTopic(activeLabel) : null}.
           </p>
           <button
             type="button"
             onClick={() => setQ("")}
             className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-accent-700 hover:text-accent-800"
           >
-            Clear search <Arrow />
+            {ui.clearSearch} <Arrow />
           </button>
         </div>
       ) : searching ? (
@@ -135,10 +213,10 @@ export function BlogResults({
         <>
           <div className="mb-6 flex items-center gap-4">
             <h2 className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-500">
-              Results for &ldquo;{q.trim()}&rdquo;
+              {ui.resultsFor(q.trim())}
             </h2>
             <span className="h-px flex-1 bg-gray-200" />
-            <span className="font-mono text-[11px] text-gray-400">{filtered.length} found</span>
+            <span className="font-mono text-[11px] text-gray-400">{ui.found(filtered.length)}</span>
           </div>
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {filtered.map((post) => (
@@ -162,7 +240,7 @@ export function BlogResults({
                 <div className="flex items-center gap-3">
                   <span className="inline-flex items-center gap-1.5 font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-300">
                     <span className="h-1.5 w-1.5 rounded-full bg-accent-400" />
-                    Latest
+                    {ui.latest}
                   </span>
                   <span className="font-mono text-[11px] uppercase tracking-widest text-gray-400">
                     {featured.topicLabel}
@@ -177,12 +255,12 @@ export function BlogResults({
               </div>
               <div className="flex items-center gap-4 font-mono text-[11px] text-gray-400">
                 <span className="inline-flex items-center gap-1.5 font-semibold text-accent-300">
-                  Read the article <Arrow />
+                  {ui.readTheArticle} <Arrow />
                 </span>
                 <span className="hidden h-px flex-1 bg-white/10 sm:block" />
-                <time dateTime={featured.date}>{formatDate(featured.date)}</time>
+                <time dateTime={featured.date}>{formatDate(featured.date, locale)}</time>
                 <span>·</span>
-                <span>{featured.readingTime} min</span>
+                <span>{ui.min(featured.readingTime)}</span>
               </div>
             </Link>
 
@@ -197,7 +275,7 @@ export function BlogResults({
                     <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-gray-500">
                       <span className="text-accent-300/90">{post.topicLabel}</span>
                       <span>·</span>
-                      <span>{post.readingTime} min</span>
+                      <span>{ui.min(post.readingTime)}</span>
                     </div>
                     <h3 className="mt-2 line-clamp-2 text-[15px] font-semibold leading-snug text-gray-100 transition-colors group-hover:text-accent-200">
                       {post.title}
@@ -212,10 +290,10 @@ export function BlogResults({
             <>
               <div className="mt-14 mb-6 flex items-center gap-4">
                 <h2 className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-500">
-                  {activeLabel ? `${activeLabel} articles` : "More articles"}
+                  {activeLabel ? ui.articlesIn(activeLabel) : ui.moreArticles}
                 </h2>
                 <span className="h-px flex-1 bg-gray-200" />
-                <span className="font-mono text-[11px] text-gray-400">{filtered.length} total</span>
+                <span className="font-mono text-[11px] text-gray-400">{ui.total(filtered.length)}</span>
               </div>
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 {grid.map((post) => (

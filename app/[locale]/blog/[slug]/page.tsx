@@ -78,34 +78,95 @@ export async function generateMetadata({
 }
 
 // Feature cards surfaced in the post footer "What's next" block. Same
-// atmospheric tokens + accent colors as the /features tinted gallery
-// so readers transitioning from article to product see continuity.
-const relatedFeatures = [
-  {
-    slug: "geo-scan",
-    name: "GEO Scan",
-    blurb: "Measure how 8 AI engines cite your brand for any keyword. Baseline in minutes.",
-    bg: "bg-[var(--surface-mint)]",
-    border: "border-[var(--surface-mint-border)]",
-    dot: "bg-accent-500",
-  },
-  {
-    slug: "content-analyzer",
-    name: "Content Analyzer",
-    blurb: "Grade any URL A–F for AI citability. 21 signals with exact fixes.",
-    bg: "bg-[var(--surface-lilac)]",
-    border: "border-[var(--surface-lilac-border)]",
-    dot: "bg-indigo-500",
-  },
-  {
-    slug: "domain-overview",
-    name: "Domain Overview",
-    blurb: "The command center for your AI visibility. Aggregated across every scan.",
-    bg: "bg-[var(--surface-steel)]",
-    border: "border-[var(--surface-steel-border)]",
-    dot: "bg-slate-500",
-  },
-]
+// atmospheric tokens + accent colors as the /features tinted gallery so
+// readers transitioning from article to product see continuity. `name` is
+// the product's proper noun and stays untranslated across locales, matching
+// how the feature pages themselves keep "Content Analyzer"/"Domain Overview"
+// in the FR/ES hero eyebrow (messages/{fr,es}.json → featurePages.*.hero.eyebrow)
+// — only `blurb` is locale copy. Was hardcoded EN-only until 2026-08-15 (Fable
+// QA catch): every FR/ES article shipped these three cards in English, and the
+// href had no locale prefix even though /[locale]/features/<slug> exists for
+// all three.
+const RELATED_FEATURES: Record<string, { slug: string; name: string; blurb: string; bg: string; border: string; dot: string }[]> = {
+  en: [
+    {
+      slug: "geo-scan",
+      name: "GEO Scan",
+      blurb: "Measure how 8 AI engines cite your brand for any keyword. Baseline in minutes.",
+      bg: "bg-[var(--surface-mint)]",
+      border: "border-[var(--surface-mint-border)]",
+      dot: "bg-accent-500",
+    },
+    {
+      slug: "content-analyzer",
+      name: "Content Analyzer",
+      blurb: "Grade any URL A–F for AI citability. 21 signals with exact fixes.",
+      bg: "bg-[var(--surface-lilac)]",
+      border: "border-[var(--surface-lilac-border)]",
+      dot: "bg-indigo-500",
+    },
+    {
+      slug: "domain-overview",
+      name: "Domain Overview",
+      blurb: "The command center for your AI visibility. Aggregated across every scan.",
+      bg: "bg-[var(--surface-steel)]",
+      border: "border-[var(--surface-steel-border)]",
+      dot: "bg-slate-500",
+    },
+  ],
+  fr: [
+    {
+      slug: "geo-scan",
+      name: "GEO Scan",
+      blurb: "Mesurez comment 8 moteurs IA citent votre marque, pour n’importe quel mot-clé. Résultats en quelques minutes.",
+      bg: "bg-[var(--surface-mint)]",
+      border: "border-[var(--surface-mint-border)]",
+      dot: "bg-accent-500",
+    },
+    {
+      slug: "content-analyzer",
+      name: "Content Analyzer",
+      blurb: "Notez n’importe quelle URL de A à F pour la citabilité IA. 21 signaux, avec les correctifs exacts.",
+      bg: "bg-[var(--surface-lilac)]",
+      border: "border-[var(--surface-lilac-border)]",
+      dot: "bg-indigo-500",
+    },
+    {
+      slug: "domain-overview",
+      name: "Domain Overview",
+      blurb: "Le poste de commande de votre visibilité IA. Agrégé sur tous vos scans.",
+      bg: "bg-[var(--surface-steel)]",
+      border: "border-[var(--surface-steel-border)]",
+      dot: "bg-slate-500",
+    },
+  ],
+  es: [
+    {
+      slug: "geo-scan",
+      name: "GEO Scan",
+      blurb: "Mide cómo te citan 8 motores de IA para cualquier palabra clave. Resultados en minutos.",
+      bg: "bg-[var(--surface-mint)]",
+      border: "border-[var(--surface-mint-border)]",
+      dot: "bg-accent-500",
+    },
+    {
+      slug: "content-analyzer",
+      name: "Content Analyzer",
+      blurb: "Califica cualquier URL de A a F en citabilidad IA. 21 señales con las correcciones exactas.",
+      bg: "bg-[var(--surface-lilac)]",
+      border: "border-[var(--surface-lilac-border)]",
+      dot: "bg-indigo-500",
+    },
+    {
+      slug: "domain-overview",
+      name: "Domain Overview",
+      blurb: "El centro de mando de tu visibilidad en IA. Todos tus escaneos, en un solo lugar.",
+      bg: "bg-[var(--surface-steel)]",
+      border: "border-[var(--surface-steel-border)]",
+      dot: "bg-slate-500",
+    },
+  ],
+}
 
 export default async function BlogPost({
   params,
@@ -126,6 +187,7 @@ export default async function BlogPost({
   const headings = extractHeadings(post.content)
   const faqs = extractFaq(post.content)
   const relatedPosts = getRelatedPosts(slug, 3, locale)
+  const relatedFeatures = RELATED_FEATURES[locale] ?? RELATED_FEATURES.en
   const { source: mdxSource } = injectInlineCta(post)
 
   return (
@@ -310,7 +372,7 @@ export default async function BlogPost({
             </article>
           </div>
 
-          {author && <AuthorBio author={author} />}
+          {author && <AuthorBio author={author} locale={locale} />}
 
           {/* Email capture — double opt-in; source tag = per-article attribution. */}
           <div className="mt-12">
@@ -360,7 +422,11 @@ export default async function BlogPost({
                   >
                     {t("seePricing")}
                   </Link>
-                  {!isFr && (
+                  {/* /services/ai-seo-agency is EN-only (spec §10 P3) — locale
+                      check, not an fr/en binary: `!isFr` alone would leak this
+                      English-only link to ES readers the moment an ES slug
+                      joins COMMERCIAL_INTENT_SLUGS. */}
+                  {locale === routing.defaultLocale && (
                     <>
                       {" · "}
                       <Link href="/services/ai-seo-agency" className="font-semibold text-accent-700 hover:text-accent-800">
@@ -377,7 +443,7 @@ export default async function BlogPost({
             {relatedFeatures.map((f) => (
               <Link
                 key={f.slug}
-                href={`/features/${f.slug}`}
+                href={locale === routing.defaultLocale ? `/features/${f.slug}` : `/${locale}/features/${f.slug}`}
                 className={`group/card block rounded-2xl border ${f.border} ${f.bg} p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_16px_32px_-16px_rgba(15,23,42,0.16)] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2`}
               >
                 <div className="flex items-start justify-between gap-3">

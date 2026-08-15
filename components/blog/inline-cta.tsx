@@ -38,6 +38,23 @@ const variants: Record<string, Record<InlineCtaTarget, Variant>> = {
       href: "/app/?page=signup",
     },
   },
+  es: {
+    "ai-readiness": {
+      text: "¿Quieres saber cómo se posiciona tu propio sitio? Ejecuta el análisis de preparación IA gratis: cinco comprobaciones en vivo sobre tu dominio, sin registro.",
+      button: "Analiza tu sitio gratis",
+      href: "/tools/ai-readiness",
+    },
+    "content-analyzer": {
+      text: "¿Quieres este mismo análisis para tus propias páginas? El Analizador de contenido califica cualquier URL de A a F en 21 señales de citabilidad IA.",
+      button: "Evaluar una página",
+      href: "/features/content-analyzer",
+    },
+    signup: {
+      text: "¿Estás comparando herramientas? Compruébalo primero en tu propio dominio: un escaneo en los ocho motores, 7 días de prueba gratis.",
+      button: "Empezar prueba gratis",
+      href: "/app/?page=signup",
+    },
+  },
 }
 
 /**

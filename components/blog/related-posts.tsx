@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { getTranslations } from "next-intl/server"
 import { formatDate } from "@/lib/utils"
 import { localePath } from "@/lib/i18n/paths"
 import type { Post } from "@/lib/content"
@@ -11,16 +12,18 @@ const cardTints = [
   { bg: "bg-[var(--surface-steel)]", border: "border-[var(--surface-steel-border)]", dot: "bg-slate-500" },
 ]
 
-export function RelatedPosts({ posts, locale }: { posts: Post[]; locale: string }) {
+export async function RelatedPosts({ posts, locale }: { posts: Post[]; locale: string }) {
   if (posts.length === 0) return null
+
+  const t = await getTranslations({ locale, namespace: "blog" })
 
   return (
     <section aria-labelledby="related-posts-heading" className="mt-16">
       <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-        Keep reading
+        {t("keepReading")}
       </p>
       <h2 id="related-posts-heading" className="mt-2 text-[clamp(1.25rem,2.5vw,1.625rem)] font-bold tracking-tight text-gray-900">
-        More on this topic
+        {t("moreOnThisTopic")}
       </h2>
 
       <div className="mt-6 grid grid-cols-1 gap-5 md:grid-cols-3">
@@ -47,9 +50,9 @@ export function RelatedPosts({ posts, locale }: { posts: Post[]; locale: string 
                 {post.description}
               </p>
               <div className="mt-auto flex items-center gap-2 pt-3 text-xs text-gray-500">
-                <time dateTime={post.date}>{formatDate(post.date)}</time>
+                <time dateTime={post.date}>{formatDate(post.date, locale)}</time>
                 <span aria-hidden="true" className="text-gray-400">&middot;</span>
-                <span>{post.readingTime} min read</span>
+                <span>{t("minRead", { count: post.readingTime })}</span>
               </div>
             </Link>
           )
