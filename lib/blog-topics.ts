@@ -80,6 +80,7 @@ export const TOPICS: Topic[] = [
       "glm", "glm-5-2", "zhipu-ai", "z-ai", "openai", "anthropic", "gpt-5-6",
       "copilot", "microsoft-copilot", "copilot-ai", "copilot-seo",
       "copilot-studio", "microsoft-copilot-studio", "copilot-agents",
+      "meta-ai", "meta", "llama", "muse-spark", "meta-ai-vs-chatgpt",
       "elon-musk", "chinese-ai", "ai-assistant", "ai-news", "open-weights",
       "mistral", "mistral-ai", "mistral-large", "vibe", "le-chat", "cest-quoi-mistral", "ia-francaise",
       "what-is-claude-ai", "what-is-gemini", "what-is-grok", "what-is-copilot",
