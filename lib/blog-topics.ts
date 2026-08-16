@@ -98,6 +98,7 @@ export const TOPICS: Topic[] = [
       "schema-markup", "structured-data", "technical-seo", "content-strategy",
       "content", "writing", "ecommerce", "seo", "checklist", "ai-search",
       "geo", "ai-visibility", "ai-seo", "generative-engine-optimization",
+      "zero-click", "zero-click-search",
     ],
   },
 ]
