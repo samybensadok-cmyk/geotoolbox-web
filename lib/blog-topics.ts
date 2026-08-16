@@ -96,7 +96,7 @@ export const TOPICS: Topic[] = [
       "aeo", "llmo", "llm-seo", "llm", "generative-ai", "eeat",
       "schema-markup", "structured-data", "technical-seo", "content-strategy",
       "content", "writing", "ecommerce", "seo", "checklist", "ai-search",
-      "geo", "ai-visibility",
+      "geo", "ai-visibility", "ai-seo", "generative-engine-optimization",
     ],
   },
 ]
