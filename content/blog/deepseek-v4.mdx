@@ -2,8 +2,8 @@
 title: "DeepSeek V4: What It Actually Is Now (GA, Pricing, and the Catches)"
 description: "DeepSeek V4 explained, current to August 2026: what changed at GA, Flash vs Pro, the real API cost, self-hosting, and how honest the benchmarks really are."
 date: "2026-08-01"
-updated: "2026-08-08"
-recheckBy: "2026-09-15"  # pricing page warns of a coming "significant" overall price increase, subject to official notice (verified live 2026-08-08, no peak/off-peak scheme shown); V4-Flash build (0731) + independent benchmarks still moving
+updated: "2026-08-18"
+recheckBy: "2026-09-15"  # the warned price increase landed 2026-08-16 as peak/off-peak pricing (verified live api-docs.deepseek.com 08-18); V4-Flash build (0731) + independent benchmarks still moving
 author: "Samy BEN SADOK"
 tags: ["deepseek-v4", "deepseek", "open-weights", "mixture-of-experts", "chinese-ai", "llm", "ai-models", "guide"]
 draft: false
@@ -32,8 +32,8 @@ Flash and Pro are not a scaled-down copy and its bigger sibling; they are differ
 <tr><th>Model</th><th>Size (total / active)</th><th>Best for</th><th>API price (per 1M tokens)</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>V4-Flash</strong></td><td>284B / 13B active</td><td>Chat, extraction, classification, summarization, high-volume agent loops, most coding</td><td>$0.14 in / $0.28 out</td></tr>
-<tr><td><strong>V4-Pro</strong></td><td>1.6T / 49B active</td><td>Hard reasoning, complex multi-step analysis, the most demanding code</td><td>$0.435 in / $0.87 out</td></tr>
+<tr><td><strong>V4-Flash</strong></td><td>284B / 13B active</td><td>Chat, extraction, classification, summarization, high-volume agent loops, most coding</td><td>$0.22 in / $0.66 out off-peak, up to $0.44 / $1.32 at peak</td></tr>
+<tr><td><strong>V4-Pro</strong></td><td>1.6T / 49B active</td><td>Hard reasoning, complex multi-step analysis, the most demanding code</td><td>$0.66 in / $1.98 out off-peak, up to $1.32 / $3.96 at peak</td></tr>
 </tbody>
 </table>
 
@@ -93,18 +93,20 @@ The web and mobile apps are free. The money question starts on the API, and this
 <tr><th>Model</th><th>Input (cache miss)</th><th>Input (cache hit)</th><th>Output</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>V4-Flash</strong></td><td>$0.14</td><td>$0.0028</td><td>$0.28</td></tr>
-<tr><td><strong>V4-Pro</strong></td><td>$0.435</td><td>$0.003625</td><td>$0.87</td></tr>
+<tr><td><strong>V4-Flash</strong> — off-peak</td><td>$0.22</td><td>$0.007</td><td>$0.66</td></tr>
+<tr><td><strong>V4-Flash</strong> — peak</td><td>$0.44</td><td>$0.014</td><td>$1.32</td></tr>
+<tr><td><strong>V4-Pro</strong> — off-peak</td><td>$0.66</td><td>$0.022</td><td>$1.98</td></tr>
+<tr><td><strong>V4-Pro</strong> — peak</td><td>$1.32</td><td>$0.044</td><td>$3.96</td></tr>
 </tbody>
 </table>
 
 A few catches separate that sticker price from your actual bill.
 
-**A price increase is likely coming, and DeepSeek is signaling it.** As of August 2026 the rates above are flat all day, with no time-of-day surcharge to schedule around. But the pricing page now carries an unusual warning: DeepSeek says it plans to "raise the overall pricing for DeepSeek API services in the near future, with a significant increase expected," the specifics "subject to official notice." (A peak/off-peak multiplier that circulated after V4's launch is not on the current pricing page.) In a market where these prices mostly fall, that is worth pricing into any budget you build on today's rates.
+**The price increase DeepSeek was signaling has landed.** On August 16, 2026, DeepSeek replaced its flat all-day rate with the peak/off-peak split shown above: peak hours (01:00-04:00 and 06:00-10:00 UTC) bill at exactly double the off-peak rate across every column. In a market where these prices mostly fall, that is a rare reversal, and it is worth building your budget around the peak share of your actual traffic rather than assuming off-peak applies to everything.
 
 **Thinking mode is on by default, and it bills at the output rate.** Before it answers, V4 generates internal reasoning tokens, and those count as output even though you never see them. A short reply can quietly produce thousands of billed tokens first. If your bill is higher than the sticker suggested, this is almost always why. Turn thinking off for routine work (classification, extraction, short replies) and leave it on only where the reasoning earns its cost.
 
-**Cache hits are where the real economics live.** When the start of a request matches something processed recently (a reused system prompt, a document you keep sending), those tokens bill at the cache-hit rate, dropping Flash input from $0.14 to $0.0028. Caching is automatic and free; you do not mark anything as cacheable, you just keep the stable part of your prompt at the front. Structure prompts to reuse a common prefix, and the same workload can cost a fraction of the headline number. There is also no separate long-context surcharge, so a million-token prompt bills at the same per-token rate as a short one.
+**Cache hits are where the real economics live.** When the start of a request matches something processed recently (a reused system prompt, a document you keep sending), those tokens bill at the cache-hit rate, dropping Flash input from $0.22 to $0.007 off-peak (or $0.44 to $0.014 at peak). Caching is automatic and free; you do not mark anything as cacheable, you just keep the stable part of your prompt at the front. Structure prompts to reuse a common prefix, and the same workload can cost a fraction of the headline number. There is also no separate long-context surcharge, so a million-token prompt bills at the same per-token rate as a short one at whatever time it runs.
 
 ## How to Access V4: App, API, or Self-Host
 
