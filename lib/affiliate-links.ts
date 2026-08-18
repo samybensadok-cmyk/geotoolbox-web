@@ -76,14 +76,14 @@ export const AFFILIATE_LINKS: Record<string, AffiliateLink> = {
   // deep-link `u=` per product LP (deeplinking is supported on this ad); the route
   // appends `?sharedid=gtb-<ref>` for per-article attribution. Swap in exact
   // per-product ad IDs later if cleaner asset-level reporting is wanted.
-  semrush: { url: "https://semrush.sjv.io/c/7438816/3082487/13053?u=https%3A%2F%2Fwww.semrush.com%2F", program: "Semrush (all-in-one)", cluster: "c3-seo-suite", noUtm: true, subIdParam: "sharedid" },
+  semrush: { url: "https://semrush.sjv.io/c/7438816/3082487/13053?u=https%3A%2F%2Fwww.semrush.com%2Fsignup%2F", program: "Semrush (all-in-one)", cluster: "c3-seo-suite", noUtm: true, subIdParam: "sharedid" },
   "semrush-seo": { url: "https://semrush.sjv.io/c/7438816/3082487/13053?u=https%3A%2F%2Fwww.semrush.com%2Fseo%2F", program: "Semrush SEO Toolkit", cluster: "c3-seo-suite", noUtm: true, subIdParam: "sharedid" },
   "semrush-one": { url: "https://semrush.sjv.io/c/7438816/3082487/13053?u=https%3A%2F%2Fwww.semrush.com%2Fpricing%2F", program: "Semrush One (bundles pricing)", cluster: "c3-seo-suite", noUtm: true, subIdParam: "sharedid" },
   "semrush-content": { url: "https://semrush.sjv.io/c/7438816/3082487/13053?u=https%3A%2F%2Fwww.semrush.com%2Ffeatures%2Fcontent-marketing%2F", program: "Semrush Content Toolkit", cluster: "c1-content", noUtm: true, subIdParam: "sharedid" },
   "semrush-ai": { url: "https://semrush.sjv.io/c/7438816/3082487/13053?u=https%3A%2F%2Fwww.semrush.com%2Flp%2Fai-toolkit%2Fen%2F", program: "Semrush AI Visibility Toolkit", cluster: "c3-seo-suite", noUtm: true, subIdParam: "sharedid" },
   spyfu: { url: "https://www.spyfu.com/", program: "SpyFu", cluster: "c3-seo-suite", pending: true },
   seranking: { url: "https://seranking.com/?ga=5177285&source=link", program: "SE Ranking", cluster: "c3-seo-suite", noUtm: true },
-  mangools: { url: "https://mangools.com/#a5c67fb19feebf86deb273724", program: "Mangools", cluster: "c3-seo-suite", noUtm: true },
+  mangools: { url: "https://mangools.com/plans-and-pricing#a5c67fb19feebf86deb273724", program: "Mangools", cluster: "c3-seo-suite", noUtm: true },
   serpstat: { url: "https://serpstat.com/", program: "Serpstat", cluster: "c3-seo-suite", pending: true },
 
   // --- C4 · Rank tracking --------------------------------------------------
