@@ -1,0 +1,271 @@
+---
+title: "¿Qué es Claude Code? La herramienta agéntica de Anthropic"
+description: "Qué es Claude Code, la herramienta agéntica de Anthropic: lee tu base de código, edita archivos y ejecuta comandos. Cuánto cuesta y cómo funciona en 2026."
+date: "2026-08-20"
+author: "Samy BEN SADOK"
+tags: ["claude-code", "claude", "anthropic", "agentic-ai", "developer-tools", "ai-agents"]
+draft: false
+locale: "es"
+donorSlug: "what-is-claude-code"
+donorCommit: "3c94ef3"
+noindex: false
+---
+
+Claude Code es la herramienta de programación agéntica de Anthropic, no el asistente Claude con el que chateas. Esa distinción despista a casi todo el que lo busca, incluido Google: hoy su primer resultado orgánico para «claude code» es la página de acceso al asistente de chat.
+
+Además, evoluciona más rápido de lo que se actualizan las respuestas sobre él. El comando de instalación que todavía te ofrece el propio resumen con IA de Google está obsoleto. El planteamiento de «solo funciona en la terminal» va una versión por detrás. Aclara las dos cosas antes de decidir si la herramienta es para ti.
+
+## Lo que debes saber
+
+- **Claude Code es la herramienta de programación agéntica de Anthropic**: lee tu base de código, edita archivos, ejecuta comandos y pruebas, y encadena tareas de desarrollo a partir de instrucciones en lenguaje natural, con los permisos que tú controlas.
+- No es un modelo ni un chat con acceso a tus archivos: es el entorno donde Opus y Sonnet ejecutan el trabajo, con una terminal, acceso a git y capacidad de leer la salida de un error y corregirlo.
+- No es solo para la terminal. Funciona en la terminal, los editores (VS Code, JetBrains), la aplicación de escritorio y el navegador; el bucle agéntico es el mismo en todas esas superficies.
+- No es gratis: necesita una suscripción de pago a Claude (Pro desde 20 $/mes) o una cuenta de Anthropic Console que factura por token. No hay plan gratuito.
+- El problema que ilustra: los motores de IA lo describen a partir de fuentes obsoletas. En agosto de 2026, el propio resumen con IA de Google en España seguía presentándolo como una herramienta «desde la terminal».
+
+## Qué es Claude Code
+
+Claude Code es la herramienta de programación agéntica de Anthropic. Lee tu base de código, edita archivos, ejecuta comandos y pruebas, y lleva a cabo tareas de desarrollo de varios pasos a partir de instrucciones en lenguaje natural, siempre bajo los permisos que tú concedes.
+
+Los verbos son la parte que la gente pasa por alto. Claude Code no te sugiere código para que lo copies. Hace el trabajo: abre archivos, aplica cambios en varios a la vez, ejecuta el conjunto de pruebas, lee lo que ha fallado y vuelve a intentarlo.
+
+**Hay dos cosas que no es**, y ambas confusiones son habituales.
+
+**No es un modelo.** La gente dice «he usado Claude Code» igual que dice «he usado Opus», y pregunta cuál es mejor. La pregunta no tiene sentido. Claude Code es el entorno; Opus y Sonnet son los modelos que se ejecutan en él. Eliges el modelo con el comando `/model`, y el mismo bucle agéntico subyacente funciona con cualquiera que escojas.
+
+**No es un chat con acceso a tus archivos.** Un asistente de chat que puede leer tu repositorio te devuelve igualmente el trabajo a ti. Claude Code lo ejecuta. Tiene una terminal, puede hacer commits en git y puede lanzar una compilación y leer el mensaje de error. Esa es la diferencia entre una herramienta que describe una solución y otra que la aplica, y eso explica por qué la definición habla de [IA agéntica](https://geotoolbox.ai/blog/agentic-ai).
+
+La forma práctica de usarlo: abres una terminal en un proyecto, escribes `claude` y describes lo que quieres en una frase. Explora la base de código por su cuenta, en lugar de esperar a que le pegues los archivos relevantes. Para una definición de la categoría más amplia, nuestra entrada de glosario sobre el [agente de IA](https://geotoolbox.ai/glossary/ai-agent) cubre el patrón general; Claude Code es una de sus implementaciones más literales.
+
+## Claude Code frente a Claude: no son lo mismo
+
+Claude es el asistente con el que hablas. Claude Code es la herramienta que hace el trabajo en tu máquina. Los mismos modelos por debajo, productos distintos.
+
+Google no ayuda. Cuando geotoolbox consultó los resultados estadounidenses para «claude code» el 15 de julio de 2026, el primer resultado orgánico era la página de acceso a [Claude](https://geotoolbox.ai/blog/what-is-claude-ai), el asistente de chat. No la herramienta de programación. La consulta relacionada principal en Google Trends era «claude vs claude code», y el propio bloque «Otras preguntas» de Google derivaba hacia «¿es Claude mejor que ChatGPT?». Es un buscador intentando responder una pregunta sobre una herramienta de desarrollo con información sobre un chatbot.
+
+La separación es limpia una vez que la ves. **Claude** te responde, en un navegador, en una aplicación de escritorio o en el móvil. **Claude Code** funciona donde vive tu código, y cambia cosas.
+
+Lo que difiere es el entorno, no la inteligencia que hay dentro: [cómo funciona Claude](https://geotoolbox.ai/blog/how-does-claude-work) por dentro es idéntico en los dos productos, y por eso la respuesta a «cuál es mejor» es ninguno. No compiten entre sí.
+
+## Cómo funciona Claude Code: el bucle agéntico
+
+Todo lo que hace Claude Code se reduce a un bucle: mira el proyecto, decide un enfoque, aplica un cambio, ejecuta algo, lee el resultado, corrige. Lo hacen posible tres partes, y un modo decide cuándo empieza.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/que-es-claude-code/bucle-agentico.png" alt="El bucle agéntico de Claude Code: reúne el contexto, decide, edita archivos, ejecuta, lee el resultado, corrige y repite." w="1152" h="592" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">El camino de vuelta es lo que lo convierte en un bucle: lee la salida de los comandos y el resultado de las pruebas para decidir si vuelve a empezar.</figcaption>
+</figure>
+
+### Reúne su propio contexto
+
+No eres tú quien monta el contexto. Claude Code busca en el proyecto, abre los archivos que considera relevantes y los lee. Por eso se comporta de forma distinta a una ventana de chat, donde la calidad de la respuesta está limitada por lo bien que hayas elegido qué pegar.
+
+El costo es que todo lo que lee ocupa el mismo presupuesto. Tus instrucciones, los archivos que ha abierto, la salida de cada comando y la conversación entera comparten una sola [ventana de contexto](https://geotoolbox.ai/glossary/context-window), y se llena más rápido de lo que la mayoría espera. Explicamos esa mecánica en detalle en nuestra guía sobre la [ventana de contexto de Claude Code](https://geotoolbox.ai/blog/claude-code-context-window), incluido cómo leer el medidor antes de que la calidad de la salida empiece a degradarse.
+
+### Ejecuta cosas y lee lo que pasa
+
+El bucle se cierra porque Claude Code puede ejecutar. Ejecuta la prueba, lee el fallo, edita el archivo y vuelve a ejecutarla. Un asistente de chat adivina si su corrección ha funcionado. Claude Code lo comprueba.
+
+### Usa tus herramientas
+
+Los comandos de shell, git, tu ejecutor de pruebas y cualquier servidor MCP que tengas conectado están a su disposición, dentro de los permisos que concedas. Conectar una herramienta es lo que convierte un asistente de programación genérico en algo que puede abrir una pull request o consultar tu base de datos, y las [herramientas de código abierto en torno a Claude Code](https://geotoolbox.ai/blog/claude-code-open-source-tools) han crecido justo alrededor de esa costura.
+
+### El modo plan
+
+La mayoría de las guías se lo saltan, y es la función que cambia cómo se siente la herramienta. En el modo plan, Claude Code investiga y propone un enfoque sin tocar nada. Lees el plan, corriges lo que ha entendido mal y solo entonces le dejas ejecutar.
+
+Úsalo por defecto en cualquier tarea no trivial. El fallo típico de una herramienta agéntica no suele ser una mala línea de código. Es hacer con soltura la tarea equivocada, y un plan que puedes rechazar cuesta unos segundos y evita exactamente eso.
+
+## Dónde puedes usarlo de verdad
+
+Claude Code no es solo para la terminal. Ese planteamiento fue cierto en su día, todavía aparece en guías que se posicionan para este tema, y está desfasado.
+
+La [documentación de Anthropic en español](https://code.claude.com/docs/es/overview) lo dice claro: Claude Code está «disponible en tu terminal, IDE, aplicación de escritorio y navegador». La [página sobre cómo funciona](https://code.claude.com/docs/es/how-claude-code-works) va más allá, y suma el acceso mediante claude.ai/code, Remote Control, Slack y los pipelines de CI/CD. Curiosamente, la documentación nunca se compromete con un número, y páginas distintas enumeran listas distintas: una guía que te da una cifra cerrada se inventa una precisión que la documentación nunca pretende.
+
+Tres detalles son fáciles de confundir, y los tres siguen vigentes:
+
+La **aplicación de escritorio** es una superficie real de Claude Code, cosa que varios asistentes de IA te dirán que no. Las preguntas frecuentes del producto de Anthropic lo responden directamente: «Sí. Los usuarios de Max, Pro, Team y Enterprise pueden acceder a Claude Code en la aplicación de escritorio de Claude».
+
+El plugin de **JetBrains** sigue etiquetado como [Claude Code [Beta]](https://plugins.jetbrains.com/plugin/27310-claude-code-beta-) en el Marketplace de JetBrains, por la propia Anthropic. La extensión de VS Code no lleva esa etiqueta. Si trabajas en un IDE, conviene conocer esa distinción de antemano.
+
+**Remote Control** es la que nadie espera: tu código y la ejecución se quedan en tu máquina mientras diriges la sesión desde un navegador en otro sitio.
+
+Lo importante es que el bucle no cambia. Anthropic es explícita: la interfaz determina cómo ves e interactúas con Claude, mientras que el bucle agéntico subyacente sigue siendo idéntico. Elegir una superficie es una preferencia, no una decisión sobre lo que la herramienta puede hacer.
+
+## Cómo instalar Claude Code
+
+Usa el instalador nativo. Anthropic lo etiqueta como «Native Install (Recommended)» en la [documentación de instalación](https://code.claude.com/docs/en/setup). Elige el comando de tu plataforma.
+
+En macOS, Linux o WSL:
+
+```bash
+curl -fsSL https://claude.ai/install.sh | bash
+```
+
+En Windows, desde PowerShell:
+
+```powershell
+irm https://claude.ai/install.ps1 | iex
+```
+
+O con un gestor de paquetes, si ya usas uno. En macOS con Homebrew:
+
+```bash
+brew install --cask claude-code
+```
+
+En Windows con winget, desde PowerShell:
+
+```powershell
+winget install Anthropic.ClaudeCode
+```
+
+Después, apúntalo a un proyecto y arranca:
+
+```bash
+cd tu-proyecto
+claude
+```
+
+Puede que hayas leído que Claude Code se instala con `npm install -g @anthropic-ai/claude-code`. Ese comando todavía existe y la documentación de instalación aún lo recoge, de modo que, en sentido estricto, no es incorrecto. Simplemente ya no es la vía que Anthropic te señala. El [propio README del proyecto](https://github.com/anthropics/claude-code) es directo: «La instalación vía npm está obsoleta. Usa uno de los métodos recomendados a continuación».
+
+La razón práctica para que te importe es Node. El paquete de npm requiere Node.js 22 o superior desde la versión v2.1.198, aunque la documentación aclara que, con una versión anterior de Node, npm solo muestra un aviso y la instalación sigue funcionando. El instalador nativo se salta la cuestión por completo. Pide 4 GB de RAM y un sistema operativo razonablemente actual, y la [documentación de instalación](https://code.claude.com/docs/en/setup) enumera las versiones compatibles al detalle. Si llevabas tiempo posponiendo instalar Claude Code porque no querías gestionar una cadena de herramientas de Node para él, ese motivo ha caducado.
+
+Anthropic marca una vía como recomendada y la otra como obsoleta, y el resumen con IA de Google sigue ofreciéndote la obsoleta. Ese desfase no es un problema de instalación.
+
+## Cuánto cuesta Claude Code
+
+No, Claude Code no es gratis. Necesita o bien una suscripción de pago a Claude, o bien una cuenta de Anthropic Console, y ninguna de las dos tiene plan gratuito.
+
+Hay dos formas de pagar, y confundirlas es una fuente real de malentendidos. Una suscripción te da acceso a una cuota de uso limitada y compartida entre los productos de Claude. Una cuenta de Console te factura por token, y Anthropic no cobra ninguna tarifa aparte por Claude Code: «consume tokens de API al precio estándar de la API».
+
+<table>
+  <thead>
+    <tr><th>Plan</th><th>Precio</th><th>Acceso a Claude Code</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Pro</strong></td><td>20 $/mes, o 17 $/mes con pago anual (200 $ por adelantado)</td><td>Incluido</td></tr>
+    <tr><td><strong>Max 5x</strong></td><td>100 $/mes</td><td>Incluido, para bases de código más grandes</td></tr>
+    <tr><td><strong>Max 20x</strong></td><td>200 $/mes</td><td>Incluido, el mayor acceso a los modelos de Claude</td></tr>
+    <tr><td><strong>Console (API)</strong></td><td>Precio estándar de la API, por token</td><td>Sin tarifa aparte por Claude Code</td></tr>
+    <tr><td><strong>Fast mode</strong></td><td>10 $ / 50 $ por millón de tokens (entrada / salida)</td><td>Vista previa de investigación; también disponible con créditos de uso</td></tr>
+  </tbody>
+</table>
+
+<Callout type="note">
+Cifras verificadas en la [página de producto de Claude Code](https://claude.com/product/claude-code) de Anthropic el 20 de agosto de 2026. Son tarifas de lista en **dólares estadounidenses** (la propia página indica que «todos los precios excluyen los impuestos aplicables»); en España se les añade el IVA al pagar. El precio de este producto ha cambiado más de una vez en el último año: conviene comprobarlo antes de presupuestar. Nuestra guía de [precios de Claude](https://geotoolbox.ai/blog/claude-pricing) sigue toda la gama de planes, incluidos los asientos de Team y Enterprise.
+</Callout>
+
+El precio de lista es la parte fácil. Lo que casi nadie publica es lo que cuesta una jornada de trabajo, y Anthropic sí lo hace: en sus despliegues empresariales la media ronda los **13 $ por desarrollador y día activo**, y **de 150 $ a 250 $ por desarrollador al mes**, con un gasto que se mantiene por debajo de 30 $ por día activo para el 90 % de los usuarios.
+
+Esas cifras son el ancla útil. Si estás en Max 20x a 200 $ al mes y programas casi todos los días, andas más o menos en la media empresarial y la tarifa plana cumple su función. Si solo programas un par de días a la semana, ese mismo costo diario equivale aproximadamente a 110 $ al mes, por debajo de Max 20x y cerca de Max 5x, y refuerza el caso de pagar por token en una cuenta de Console en vez de comprar un plan que no vas a llenar. Trata la cifra como un techo aproximado, no como un presupuesto cerrado: es un dato de despliegue empresarial, y el uso individual se desvía con fuerza en los dos sentidos. Y si tu factura se dispara muy por encima de 30 $ en un día activo, eso no es el precio de la herramienta, es un patrón de uso que puedes cambiar. El vaivén es sobre todo contexto, no el plan que elegiste, y nuestra guía para [reducir el gasto en tokens de Claude Code](https://geotoolbox.ai/blog/reduce-claude-code-token-costs) cubre los hábitos que lo mueven.
+
+## Los límites de uso de los que todo el mundo se queja
+
+Esta es la queja. No el precio, los límites. En r/ClaudeAI hay un [hilo permanente sobre los límites de uso de Claude](https://www.reddit.com/r/ClaudeAI/comments/1s7fcjf/claude_usage_limits_discussion_megathread_ongoing/) que ha reunido más de 5.800 comentarios, y un subreddit no mantiene un hilo fijo para un tema que sale de vez en cuando.
+
+Lee el hilo y la queja se afina: el consumo es impredecible. No puedes ver lo que costará una petición antes de hacerla, no sabes con facilidad qué hábito te consume la cuota, y el límite tiende a llegar como una sorpresa a mitad de tarea en lugar de como algo que veías venir.
+
+Lo llamativo es que Anthropic no lo discute demasiado. Su propia [documentación de costos](https://code.claude.com/docs/en/costs) matiza cada número que te da: la cifra en dólares de `/usage` es aproximada, las estimaciones pueden diferir de tu factura real y el gasto «varía mucho» entre desarrolladores. Cuando la propia documentación del proveedor evita prometerte una cifra exacta, la comunidad no se está imaginando el problema.
+
+Lo que sí está documentado es la forma. El uso corre contra un límite de sesión de cinco horas con un límite semanal por encima, ambos documentados para [Pro y Max](https://support.claude.com/en/articles/9797557-usage-limit-best-practices). Y algo clave: la capacidad de la suscripción se comparte con el resto de Claude en lugar de ser una bolsa solo para programar: una tarde intensa en la ventana de chat gasta la misma cuota que necesita tu sesión de código de la noche.
+
+Lo que no está documentado es ninguna cifra concreta. Encontrarás cifras rotundas por ahí, y varios asistentes de IA te citarán recuentos exactos de prompts por plan. No pudimos verificar ninguno frente a una fuente primaria, así que no los repetimos.
+
+El mecanismo de fondo sí es real. Una prueba de julio de 2026 con un proxy de registro, hecha por la consultora Systima y [publicada en Hacker News](https://news.ycombinator.com/item?id=48883275), midió que Claude Code envía unos 33.000 tokens antes siquiera de leer tu prompt, frente a unos 7.000 de OpenCode. Tómalo como una única prueba sin revisión por pares, de una empresa con un producto en este espacio, más que como un hecho asentado, pero la dirección encaja con la documentación: el bucle lee mucho antes de actuar, y leer es por lo que estás pagando.
+
+## ¿Vale la pena Claude Code en 2026?
+
+Para la mayoría de los desarrolladores en activo, sí, con la salvedad de que recompensa una forma concreta de trabajar.
+
+La adopción no es marketing. Una [encuesta sobre herramientas de IA de 2026](https://newsletter.pragmaticengineer.com/p/ai-tooling-2026) publicada en The Pragmatic Engineer, de Gergely Orosz, en marzo de 2026, con investigación de Elin Nilsson, reveló que Claude Code pasó de la nada a ser la herramienta de programación con IA más usada entre los desarrolladores encuestados en unos ocho meses, y la más apreciada. Es una señal real de 906 ingenieros en activo, la mayoría de los cuales usa varias de estas herramientas a la vez.
+
+Ahora la parte que las guías entusiastas se dejan. El interés de búsqueda por Claude Code tocó techo hacia febrero y marzo de 2026 y ha bajado desde entonces. Nuestra propia consulta del volumen de búsqueda en Google el 15 de julio de 2026 lo sitúa en torno al 55 % de su pico de marzo, con una caída de cerca de un tercio trimestre a trimestre.
+
+Eso parece una herramienta que se enfría, y no lo es. Las otras herramientas de IA agéntica que seguimos cayeron con más fuerza: OpenClaw está en el 25 % de su pico de búsqueda y Antigravity en el 37 %, frente al 55 % de Claude Code. Claude Code retuvo más de su pico que cualquier herramienta rival que midiéramos, y sigue subiendo alrededor de un 124 % interanual. Toda la categoría está descendiendo a la vez tras un pico de expectación, no un producto que pierde frente a otro.
+
+La lectura que le daríamos a un colega: la herramienta funciona, el mercado ha dejado de asombrarse de que funcione, y lo que queda es la pregunta ordinaria de si encaja en tu flujo de trabajo. Si trabajas en una base de código casi a diario y estás dispuesto a usar el modo plan y vigilar tu contexto, la suscripción se amortiza rápido. Si lo que quieres es una ventana de chat que escriba funciones a petición, pagarás por un bucle que no estás usando.
+
+Si lo instalas, empieza con el modo plan en cualquier cosa mayor que un cambio de un solo archivo, y no pierdas de vista la ventana de contexto, porque es lo que gobierna a la vez la calidad de la salida y el costo.
+
+## Lo que dicen los motores de IA sobre Claude Code
+
+Mucha gente nunca lee un artículo como este. Le preguntan a un asistente «qué es Claude Code» y se quedan con la respuesta. Entonces, ¿de qué está hecha esa respuesta?
+
+Lo medimos. «Claude code» acumula unas 49.300 búsquedas mensuales con IA en Estados Unidos, y cuando extrajimos en julio de 2026 las fuentes a las que recurre ChatGPT para ese tema, el ranking no era el que esperarías:
+
+<table>
+  <thead>
+    <tr><th>Dominio de la fuente</th><th>Veces citado</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>reddit.com</strong></td><td>220</td></tr>
+    <tr><td>anthropic.com</td><td>155</td></tr>
+    <tr><td>github.com</td><td>102</td></tr>
+    <tr><td>cursor.com</td><td>64</td></tr>
+    <tr><td>businessinsider.com</td><td>59</td></tr>
+  </tbody>
+</table>
+
+Reddit supera al propio sitio de Anthropic como fuente sobre el propio producto de Anthropic. El fabricante no es la voz principal que describe al fabricante.
+
+Y no es solo un fenómeno estadounidense. En España, cuando consultamos el 20 de agosto de 2026 el resumen con IA de Google para «qué es Claude Code», seguía presentándolo como una «herramienta de codificación agéntica desarrollada por Anthropic que funciona directamente desde la terminal de tu computadora», y situaba la terminal como su interfaz principal. Hay más: una guía en español que aún se posiciona para esta consulta describe Claude Code como «un asistente conversacional especializado en código» que «no prueba el código, no lo ejecuta ni detecta errores en tiempo real», justo lo contrario del bucle de ejecutar y autocorregir que describen tanto la documentación de Anthropic como el resto de las fuentes que se posicionan a su lado. Les preguntamos a varios asistentes cómo se instala, y uno de ellos, en español, volvió al comando `npm` obsoleto sin ninguna nota de que lo esté. La descripción desfasada no espera a que la corrijas: sigue ahí, en tu mercado, en el resultado que la gente lee primero.
+
+Lo que nos lleva de vuelta al comando de instalación. El resumen con IA de Google para «what is claude code» todavía guía a los lectores para empezar con el comando `npm`, el que el repositorio de Anthropic marca como obsoleto. Su definición dice que la herramienta funciona «directamente dentro de tu terminal o IDE», algo que la documentación ya superó.
+
+Aquí está la parte que debería preocuparte. Mira lo que ese resumen cita en realidad. La página de descripción de Anthropic, citada tres veces, dice «Native Install (Recommended)» y no menciona npm en ningún momento. Su fuente independiente más citada, builder.io, citada también tres veces, les dice a los lectores sin rodeos que el instalador nativo reemplazó a npm. El comando de npm con el que arranca el resumen procede de otra cita: un tutorial de Zapier de agosto de 2025, citado dos veces, que sigue presentando `npm install -g @anthropic-ai/claude-code` como la forma de instalar Claude Code, sin nota de que se haya quedado obsoleto. Y la única página de Anthropic que sí documenta npm todavía, la de instalación, no está en el conjunto de citas. El motor no se quedó sin mejores fuentes: las citó, y aun así abrió su respuesta con la obsoleta.
+
+Vimos una versión más aguda de lo mismo. Cargamos doce fuentes en un modelo de investigación, tres de ellas páginas de la propia Anthropic: la descripción de Claude Code, la página de cómo funciona y la de producto. Le pedimos que comprobara el método de instalación. Informó de que la documentación enseña `npm install` y lo atribuyó a la documentación oficial. Ninguna de esas tres páginas oficiales contiene la cadena `npm install`. El comando era real, pero venía de los tutoriales de terceros del conjunto, dos de los cuales lo marcan como desfasado en la misma frase. El modelo lo tomó de ahí, lo atribuyó a la documentación de Anthropic y, por el camino, omitió la advertencia de obsolescencia. No estaba resumiendo una fuente antigua. Estaba mezclando el conjunto y atribuyéndolo a la fuente equivocada.
+
+Seamos justos: guías independientes ya habían detectado el desfase de npm antes que nosotros, y varias están entre las fuentes que los motores citan. Publicar la corrección no bastó, porque el motor tenía las fuentes corregidas en la mano y aun así sacó la obsoleta. Los motores van más retrasados justo en los hechos que cambiaron hace poco, que es exactamente cuando no puedes permitirte esperar a que se pongan al día. Y el peso de esas fuentes no lo corriges escribiendo una página mejor.
+
+Ese es exactamente el problema que geotoolbox existe para medir, y Claude Code es solo el caso práctico. Si un motor puede hacerle esto a Anthropic, en una página que Anthropic controla, puede hacértelo a ti, y tu analítica no lo mostrará. Nuestra guía sobre cómo [lograr que Claude te cite](https://geotoolbox.ai/blog/claude-seo) cubre la mecánica de acabar dentro de ese conjunto de citas en lugar de fuera.
+
+## Tener razón en tu documentación no basta
+
+Anthropic publica documentación precisa y actual sobre su propio producto y etiqueta la vía recomendada con claridad, y la respuesta que Google le da a quien pregunta qué es Claude Code sigue abriendo con el comando `npm` obsoleto. El desfase nunca estuvo en la documentación. Estuvo en lo que el motor hizo con ella.
+
+Tu producto tiene la misma exposición, sin el tráfico de documentación de Anthropic para amortiguarla. Si un motor lleva describiendo tu precio, tus funciones o tu configuración a partir de una guía que alguien escribió hace dieciocho meses, eso es invisible desde donde tú estás.
+
+Ese desfase es el que geotoolbox nació para cerrar. Nuestro [interceptor de citas](https://geotoolbox.ai/features/citation-interceptor) te muestra qué fuentes consultan realmente los motores cuando te describen, para que vayas a corregir las equivocadas en lugar de adivinar cuáles son.
+
+## Preguntas frecuentes
+
+### ¿Claude Code es gratis?
+
+No. Necesita o bien una suscripción de pago a Claude, empezando por Pro a 20 $ al mes, o bien una cuenta de Anthropic Console que factura por token. No hay plan gratuito. Por la vía de Console, Anthropic no cobra una tarifa aparte por Claude Code: pagas las tarifas estándar de la API por lo que uses.
+
+### ¿Claude Code es mejor que ChatGPT?
+
+Son productos de categorías distintas, así que la comparación suele significar otra cosa. ChatGPT es un asistente con el que hablas; Claude Code es una herramienta agéntica que edita y ejecuta tu código. La comparación justa es Claude Code frente a otras herramientas de programación agéntica como Cursor o Codex de OpenAI, no frente a un producto de chat.
+
+### ¿Claude Code funciona sin conexión?
+
+No. Los modelos se ejecutan en los servidores de Anthropic, no en tu máquina, de modo que cada petición necesita conexión de red. Lo que corre en local es el entorno: las lecturas de archivos, los comandos de shell y las ediciones ocurren en tu máquina, y por eso puede trabajar sobre una base de código privada sin subir el repositorio entero.
+
+### ¿Anthropic entrena con mi código?
+
+Depende de cómo pagues, y para una empresa española o latinoamericana esa distinción determina qué plan conviene contratar. Bajo los términos comerciales, que cubren la API de Console, Team y Enterprise, la [documentación de uso de datos](https://code.claude.com/docs/en/data-usage) de Anthropic indica que no entrena sus modelos con el código ni con los prompts que envías por Claude Code, salvo que optes por ello de forma explícita. En los planes de consumo, Free, Pro y Max, tus datos pueden usarse para mejorar modelos futuros cuando ese ajuste está activado, y puedes desactivarlo en cualquier momento en tu configuración de privacidad. En términos del RGPD, con un plan comercial tu empresa es la responsable del tratamiento y Anthropic el encargado; y aunque en la Unión Europea la autoridad principal sobre Anthropic es la irlandesa (su establecimiento europeo está en Dublín), es ante la AEPD donde ejerces tus derechos en España. Si mantener tu código fuera del entrenamiento es un requisito firme, o si trabajas con código de cliente, un plan de Console, Team o Enterprise es la opción más segura.
+
+### ¿Necesito saber programar para usar Claude Code?
+
+Ayuda bastante, pero la herramienta no se limita a escribir software. Una parte importante de la comunidad la usa como agente de automatización local para operaciones con archivos, tratamiento de datos e investigación. El límite es la revisión: si no puedes evaluar lo que hizo, no puedes sorprenderlo cuando haga con soltura la tarea equivocada.
+
+### ¿Claude Code es lo mismo que el Claude Agent SDK?
+
+No, aunque están muy relacionados. El Agent SDK es Claude Code empaquetado como biblioteca, para que construyas tu propio agente sobre el mismo entorno en lugar de usar la interfaz de Anthropic. Claude Code es el producto; el Agent SDK es el motor que se ofrece por separado.
+
+## Fuentes
+
+- Descripción general de Claude Code (Anthropic, Claude Code Docs) - `code.claude.com/docs/es/overview`
+- Configurar Claude Code (Anthropic, Claude Code Docs) - `code.claude.com/docs/en/setup`
+- Cómo funciona Claude Code (Anthropic, Claude Code Docs) - `code.claude.com/docs/es/how-claude-code-works`
+- Gestionar los costos con eficacia (Anthropic, Claude Code Docs) - `code.claude.com/docs/en/costs`
+- Uso de datos (Anthropic, Claude Code Docs) - `code.claude.com/docs/en/data-usage`
+- Buenas prácticas de límites de uso (Anthropic, Soporte de Claude) - `support.claude.com/en/articles/9797557-usage-limit-best-practices`
+- Página de producto de Claude Code (Anthropic) - `claude.com/product/claude-code`
+- anthropics/claude-code (Anthropic, GitHub) - `github.com/anthropics/claude-code`
+- Ficha del plugin Claude Code [Beta] (Anthropic, vía JetBrains Marketplace) - `plugins.jetbrains.com/plugin/27310-claude-code-beta-`
+- AI tooling in 2026 (Gergely Orosz y Elin Nilsson, The Pragmatic Engineer, marzo de 2026) - `newsletter.pragmaticengineer.com/p/ai-tooling-2026`
+- Hilo permanente sobre los límites de uso de Claude (r/ClaudeAI) - `reddit.com/r/ClaudeAI/comments/1s7fcjf/claude_usage_limits_discussion_megathread_ongoing`
+- Claude Code envía 33k tokens antes de leer el prompt; OpenCode envía 7k (Hacker News, julio de 2026) - `news.ycombinator.com/item?id=48883275`
