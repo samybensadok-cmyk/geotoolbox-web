@@ -4,7 +4,12 @@ export const siteConfig = {
   url: "https://geotoolbox.ai",
   appUrl: "/app/",
   appLoginUrl: "/app/?page=login",
-  appSignupUrl: "/app/?page=signup",
+  // SG_SIGNUP_INTERVAL_DEFAULT (2026-08-20): interval is EXPLICIT here on purpose.
+  // A signup with no interval is normalised server-side to ANNUAL
+  // (inc/auth_session.php sg_signup_normalize_plan), so a bare link sent buyers
+  // straight into a $948 Stripe Checkout seconds after clicking "Start free trial".
+  // Entry points that cannot express a billing choice must say monthly.
+  appSignupUrl: "/app/?page=signup&interval=monthly",
   author: "Samy Ben Sadok",
   links: {
     twitter: "https://twitter.com/geotoolbox",

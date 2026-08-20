@@ -94,11 +94,15 @@ export function ComparisonTable({ copy, locale = "en" }: { copy: ComparisonCopy;
                   >
                     <div className="text-[14px] font-bold text-gray-900">{col.name}</div>
                     <Link
-                      // Plan-aware deep link (SG_SIGNUP_V2). No interval — this table
-                      // has no billing toggle, so asserting one on the signup chip
-                      // would be wrong half the time. (The old `col.id === "free"`
-                      // bare-link branch was removed with the Free tier, SG_PRICING_V2.)
-                      href={`${SIGNUP}&plan=${col.id}${currencyParam}`}
+                      // Plan-aware deep link (SG_SIGNUP_V2). SG_SIGNUP_INTERVAL_DEFAULT
+                      // (2026-08-20): this table has no billing toggle, and OMITTING the
+                      // interval does not withhold an assertion — the server normalises a
+                      // missing interval to ANNUAL, so a bare link opened Checkout at $948.
+                      // Monthly is the honest default for a surface with no toggle; the
+                      // buyer can still switch to annual on the pricing cards or in-app.
+                      // (The old `col.id === "free"` bare-link branch was removed with the
+                      // Free tier, SG_PRICING_V2.)
+                      href={`${SIGNUP}&plan=${col.id}&interval=monthly${currencyParam}`}
                       prefetch={false}
                       className={cn(
                         "mt-2 inline-flex items-center justify-center rounded-full px-3 py-1 text-[12px] font-semibold transition-colors",
