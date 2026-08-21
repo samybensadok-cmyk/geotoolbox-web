@@ -31,14 +31,17 @@ export function extractHeadings(content: string): Heading[] {
  * Parse the "## Frequently Asked Questions" section of a post into Q/A pairs
  * for FAQPage JSON-LD. Supports both house formats: `### Question` headings
  * and bold-line questions (`**Question?**`) each followed by answer paragraphs.
- * Matches the EN heading and the FR house forms (« Foire aux questions »,
- * « Questions fréquentes ») so localized posts emit FAQPage too.
+ * Matches the EN heading and every live/planned locale's house FAQ H2 so
+ * localized posts emit FAQPage too: FR (« Foire aux questions », « Questions
+ * fréquentes »), ES (« Preguntas frecuentes »), DE (« Häufige Fragen »),
+ * NL (« Veelgestelde vragen »). ES was missing here, so 45 published ES posts
+ * emitted no FAQPage — add a locale's heading to this alternation when it ships.
  * Returns [] when no FAQ section exists or it has fewer than 2 questions.
  */
 export function extractFaq(content: string): Array<{ question: string; answer: string }> {
   const lines = content.split("\n")
   const start = lines.findIndex((l) =>
-    /^##\s+(frequently asked questions|faqs?|foire aux questions|questions fr[ée]quentes)\s*$/i.test(l.trim())
+    /^##\s+(frequently asked questions|faqs?|foire aux questions|questions fr[ée]quentes|preguntas frecuentes|h[äa]ufige fragen|veelgestelde vragen)\s*$/i.test(l.trim())
   )
   if (start === -1) return []
 
