@@ -15,11 +15,12 @@ export function generateStaticParams() {
 
 // ROOT LAYOUT #2 — the per-locale content tree (blog, glossary; EN via
 // `as-needed` at /blog, FR at /fr/blog). It renders its OWN <html> so the
-// lang attribute is correct per locale (en-US vs fr-FR) — the load-bearing SEO
-// signal for indexed /fr/ pages. setRequestLocale(locale) + generateStaticParams
+// lang attribute is correct per locale (en-US, and bare `fr`/`es` per the
+// language-only rule in i18n/routing.ts) — the load-bearing SEO signal for
+// indexed /fr/ and /es/ pages. setRequestLocale(locale) + generateStaticParams
 // keep everything below STATIC (getMessages resolves from the param, not the
 // request). Splitting this from the EN marketing root is what lets the marketing
-// tree be request-free/static while /fr still gets fr-FR.
+// tree be request-free/static while /fr and /es still get their own <html lang>.
 export default async function LocaleRootLayout({
   children,
   params,

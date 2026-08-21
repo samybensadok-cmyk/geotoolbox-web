@@ -26,12 +26,20 @@ export const routing = defineRouting({
 
 export type Locale = (typeof routing.locales)[number]
 
-// BCP-47 forms for <html lang> + hreflang (spec §0: one locked form each).
-// es is deliberately language-only (neutral international Spanish targeting
-// Spain + LatAm together), unlike fr-FR which targets France specifically.
+// BCP-47 forms for <html lang> + hreflang + inLanguage + og:locale.
+// STANDING RULE: language-only, one bare form per locale — NO region suffix.
+// We ship a single localized version per language, so each version targets the
+// WHOLE language (fr = all of la Francophonie incl. BE/CH/CA/Africa, es = Spain
+// + LatAm). This matches how mid-market SEO SaaS ship it — Semrush (14 langs),
+// Ahrefs, Brevo, Crisp, Livestorm all emit bare `fr`/`es`; region codes
+// (fr-FR, fr-BE…) only pay off for multinationals maintaining SEPARATE
+// per-country pages Google must disambiguate, which we do not.
+// => EVERY future locale (de, nl, it, pt, …) gets its bare language code here.
+// (`en-US` is the one legacy exception: kept so the original EN URLs are not
+// re-canonicalized; it could become `en` too by the same logic if desired.)
 export const bcp47: Record<Locale, string> = {
   en: "en-US",
-  fr: "fr-FR",
+  fr: "fr",
   es: "es",
 }
 

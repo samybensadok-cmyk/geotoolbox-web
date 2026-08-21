@@ -48,7 +48,7 @@ export async function generateMetadata({
       canonical: `${siteConfig.url}${basePath}/blog`,
       languages,
     },
-    openGraph: { locale: locale === "fr" ? "fr_FR" : locale === "es" ? "es_ES" : "en_US" },
+    openGraph: { locale: bcp47[locale as Locale].replace("-", "_") },
   }
 }
 

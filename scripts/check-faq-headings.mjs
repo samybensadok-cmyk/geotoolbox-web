@@ -9,7 +9,10 @@ import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 
 const ROOT = 'content';
-const FAQ_H = /^##\s+(frequently asked questions|foire aux questions|questions fr[ée]quentes|faqs?)\s*$/i;
+// KEEP IN SYNC with lib/content.ts extractFaq's heading alternation — every
+// locale's house FAQ H2 (EN/FR/ES/DE/NL). If they drift, this gate silently
+// skips a locale's FAQ sections (that is how ES went unchecked until 2026-08-21).
+const FAQ_H = /^##\s+(frequently asked questions|faqs?|foire aux questions|questions fr[ée]quentes|preguntas frecuentes|h[äa]ufige fragen|veelgestelde vragen)\s*$/i;
 const BOLD_Q = /^\*\*.*\*\*$/; // a whole-line bold paragraph inside the FAQ section
 
 function walk(dir) {
