@@ -11,11 +11,13 @@ import { PRIMARY_AUTHOR } from "@/lib/authors"
 import { proofStats } from "@/lib/proof-stats"
 
 const PAGE_URL = `${siteConfig.url}/services/generative-engine-optimization`
-// Every CTA books a call — no free-tool CTA, no self-serve tier on this page.
 const CALL_HREF = "https://calendly.com/samy-bensadok/30min-call"
-// The $925 Report is a direct purchase — same live Stripe checkout handler
-// as the flagship /services/ai-seo-agency page.
+// The $925 Report, the Flagship citable article, and the Content cluster
+// sprint are direct purchases — same live Stripe checkout handler as the
+// flagship /services/ai-seo-agency page. Everything else books a call.
 const CHECKOUT_REPORT = "/app/?action=service_checkout&item=report"
+const CHECKOUT_ARTICLE = "/app/?action=service_checkout&item=article"
+const CHECKOUT_CLUSTER_SPRINT = "/app/?action=service_checkout&item=cluster_sprint"
 
 export const metadata: Metadata = {
   // Base title 38 chars — template suffix "| GEO Toolbox" keeps total ≤60.
@@ -164,17 +166,19 @@ const addons = [
   },
   {
     name: "Flagship citable article",
-    price: "From $950",
+    price: "$450",
     unit: "per article",
     detail:
       `The exact pipeline behind our own blog — ~${proofStats.aiCitations.total.toLocaleString("en-US")} AI-citation appearances in a trailing ${proofStats.aiCitations.windowDays}-day Bing sample. One revenue keyword per article: AI research depth (multi-engine fact panel, SERP and competitor analysis), human editorial gates on every claim. 48-hour minimum turnaround — the QA is not skippable — then tracked for 90 days.`,
+    cta: { label: "Buy — $450", href: CHECKOUT_ARTICLE },
   },
   {
     name: "Content cluster sprint",
-    price: "From $7,500",
+    price: "$3,500",
     unit: "10–12 articles, 30 days",
     detail:
       "A full topic cluster plus hub — the exact playbook behind our own blog — interlinked, fact-checked, and tracked from day one.",
+    cta: { label: "Buy — $3,500", href: CHECKOUT_CLUSTER_SPRINT },
   },
 ]
 
@@ -695,11 +699,12 @@ export default function GeoServicePage() {
           <div className="mt-10 rounded-2xl border border-gray-200 p-6 sm:p-8">
             <h3 className="text-lg font-semibold text-gray-900">Add-ons — extend any Sprint or retainer</h3>
             <p className="mt-1 text-[13px] text-gray-500">
-              Starting prices, scoped and added on a call — the base engagement never gets repriced mid-project.
+              Fixed prices where you can buy now; everything else is scoped and added on a call — the base
+              engagement never gets repriced mid-project.
             </p>
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
               {addons.map((a) => (
-                <div key={a.name} className="rounded-xl border border-gray-100 bg-gray-50/50 p-4">
+                <div key={a.name} className="flex flex-col rounded-xl border border-gray-100 bg-gray-50/50 p-4">
                   <div className="flex items-baseline justify-between gap-3">
                     <span className="text-sm font-semibold text-gray-900">{a.name}</span>
                     <span className="whitespace-nowrap text-sm font-semibold text-gray-900">
@@ -707,6 +712,14 @@ export default function GeoServicePage() {
                     </span>
                   </div>
                   <p className="mt-1.5 text-[13px] leading-relaxed text-gray-600">{a.detail}</p>
+                  {"cta" in a && a.cta && (
+                    <a
+                      href={a.cta.href}
+                      className="mt-3 inline-flex w-fit items-center gap-1.5 rounded-full bg-accent-900 px-4 py-2 text-[12.5px] font-semibold text-white transition-colors hover:bg-accent-800"
+                    >
+                      {a.cta.label}
+                    </a>
+                  )}
                 </div>
               ))}
             </div>

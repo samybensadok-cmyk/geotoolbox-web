@@ -22,8 +22,12 @@ type Verify =
 
 type Competitor = { name: string; domain: string }
 
-const itemLabel = (item: string) =>
-  item === "sprint" ? "30-Day AI Visibility Sprint" : "AI Search Visibility Report"
+const ITEM_LABELS: Record<string, string> = {
+  sprint: "30-Day AI Visibility Sprint",
+  article: "Flagship Citable Article",
+  cluster_sprint: "Content Cluster Sprint",
+}
+const itemLabel = (item: string) => ITEM_LABELS[item] ?? "AI Search Visibility Report"
 
 export function IntakeForm() {
   const params = useSearchParams()
