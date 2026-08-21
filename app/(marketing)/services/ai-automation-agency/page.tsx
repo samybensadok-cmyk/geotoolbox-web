@@ -616,19 +616,19 @@ export default function AiAutomationAgencyPage() {
             {[
               {
                 chrome: "Bing WMT · AI Performance",
-                src: "/services/automation/bing-ai-citations-2026-07-27.png",
-                width: 2718,
-                height: 1016,
+                src: "/services/automation/bing-ai-citations-2026-08-21.png",
+                width: 1568,
+                height: 681,
                 alt: `Bing Webmaster Tools AI Performance report: ~${fmt(proofStats.aiCitations.total)} total AI-citation appearances and ${proofStats.aiCitations.avgCitedPages} average cited pages over a trailing ${proofStats.aiCitations.windowDays}-day window.`,
                 caption: `~${fmt(proofStats.aiCitations.total)} AI-citation appearances · trailing ${proofStats.aiCitations.windowDays}-day Bing sample (Copilot + partners) · not unique citations.`,
               },
               {
                 chrome: "Google Analytics 4",
-                src: "/services/automation/ga4-users-growth-2026-07.png",
-                width: 1676,
-                height: 1016,
-                alt: "Google Analytics 4 chart: 2K active users over the last 30 days to 27 July 2026, up 535.4% on the previous period, with 9.8K events and 3.5K views.",
-                caption: "2K active users, +535% vs the previous period · GA4, last 30 days to 27 Jul 2026 · all traffic sources.",
+                src: "/services/automation/ga4-users-growth-2026-08.png",
+                width: 1648,
+                height: 774,
+                alt: "Google Analytics 4 chart: 4.6K active users over the last 30 days to 21 August 2026, up 166% on the previous period, with 21K events and 13 key events.",
+                caption: "4.6K active users, +166% vs the previous period · GA4, last 30 days to 21 Aug 2026 · all traffic sources.",
               },
             ].map((r) => (
               <figure

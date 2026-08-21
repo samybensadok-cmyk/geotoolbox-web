@@ -52,18 +52,18 @@ export const proofStats = {
   // Manual — Bing WMT "AI Performance" has no public API; bump by hand and
   // update `asOf` here in the same edit.
   aiCitations: {
-    total: 49200,
-    avgCitedPages: 26,
+    total: 89700,
+    avgCitedPages: 32,
     windowDays: 30,
     source: "Microsoft Copilot and partners",
     sampled: true,
-    asOf: "11 Aug 2026",
+    asOf: "21 Aug 2026",
   },
   // Top buying-intent grounding query from Bing WMT "AI Performance" — an
   // appearance count in Bing's AI Performance report, NOT unique citations.
   topGroundingQuery: {
-    query: "best tools for Search Generative Experience",
-    appearances: 1200,
+    query: "evaluate AI visibility tracking platforms",
+    appearances: 10400,
     source: "Bing WMT AI Performance",
   },
   // TIME TO FIRST MEANINGFUL AI CITATION only — NOT a label for the Bing total.
@@ -75,4 +75,4 @@ export type ProofStats = typeof proofStats
 // Published content counts — counted on disk (content/blog, content/fr/blog,
 // content/glossary). Shared by /services/ai-automation-agency (page + OG image)
 // so the figures can't drift between surfaces. Re-count when bumping.
-export const contentCounts = { en: 125, fr: 53, glossary: 57, asOf: "11 Aug 2026" } as const
+export const contentCounts = { en: 137, fr: 59, glossary: 57, asOf: "21 Aug 2026" } as const
