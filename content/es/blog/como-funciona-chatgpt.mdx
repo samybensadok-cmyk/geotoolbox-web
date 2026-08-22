@@ -1,0 +1,200 @@
+---
+title: "Cómo funciona ChatGPT de verdad: el Transformer sin tecnicismos"
+description: "¿Cómo funciona ChatGPT? El mecanismo honesto: tokens, embeddings, atención y predicción del siguiente token, y qué significa para tu visibilidad en IA."
+date: "2026-08-22"
+author: "Samy BEN SADOK"
+tags: ["how-does-chatgpt-work", "transformer", "llm", "ai-search", "geo", "guide"]
+draft: false
+locale: "es"
+donorSlug: "how-does-chatgpt-work"
+donorCommit: "2f0d029"
+noindex: false
+---
+
+¿Cómo funciona ChatGPT? Si quitas el marketing, la respuesta es más extraña, y más sencilla, de lo que admiten casi todas las explicaciones. No piensa. El modelo que hay debajo no tiene ninguna base de datos donde busque tu sitio, y buena parte del tiempo ni siquiera está buscando en internet. Ejecuta una sola operación, unos cientos de veces por respuesta: predecir el siguiente token. Esto es esa operación explicada de forma sencilla, para quien publica contenido y no para quien construye modelos, con la parte que las explicaciones técnicas se saltan: qué significa, y qué no significa, cada paso para que aparezcas o no en las respuestas de la IA.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/como-funciona-chatgpt/chatgpt-next-token-loop.png" alt="El bucle de cuatro pasos de ChatGPT: tokenización, embeddings, capa de atención y elección del siguiente token." w="1300" h="537" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Cada respuesta de ChatGPT es este bucle: entran tokens, sale un token predicho, y se repite varios cientos de veces.</figcaption>
+</figure>
+
+## Lo que debes saber
+
+- **ChatGPT funciona prediciendo el siguiente token**: puntúa todos los tokens posibles, elige uno (no siempre el más probable) y repite el proceso unos cientos de veces por respuesta. No razona sobre tu pregunta ni consulta una base de datos.
+- Debajo hay una sola arquitectura, el Transformer (tokens, luego embeddings, luego atención, luego predicción), la misma que usan Claude, Gemini y la línea GPT-5 de OpenAI.
+- Las alucinaciones no son un fallo, sino una consecuencia del diseño: el modelo siempre busca una continuación probable, tenga el dato o no, y lo afirma con el mismo tono seguro.
+- ChatGPT usa dos fuentes de información muy distintas: el conocimiento congelado en sus pesos durante el entrenamiento y la recuperación en vivo (solo cuando hace una búsqueda web). En cada una se puede influir de forma diferente.
+- No existe ningún panel de control ni subasta para meter tu marca dentro de la respuesta. Lo único verificable hoy: si los rastreadores de ChatGPT llegan a tus páginas y qué dice el modelo sobre ti a lo largo de muchas ejecuciones.
+
+## Cómo funciona ChatGPT en 30 segundos: predice el siguiente token
+
+**ChatGPT funciona respondiendo a una pregunta pequeña, una y otra vez: dado el texto hasta ahora, qué token es probable que venga después.** Puntúa todos los tokens posibles, elige uno (no siempre el más probable, como veremos), lo añade al final y vuelve a preguntar. Cada respuesta que escribe es ese bucle ejecutándose unos cientos de veces. Dentro del modelo base no hay un paso aparte donde compruebe qué es verdad ni piense en tu pregunta como lo haría una persona. (Cuando ChatGPT hace una búsqueda web o usa una herramienta, el producto envuelve esos pasos extra alrededor del modelo, pero de eso hablamos más abajo.)
+
+La gente recurre a la palabra «autocompletar», y es un buen punto de partida siempre que no te quedes ahí. Stephen Wolfram, en su [explicación en lenguaje llano](https://writings.stephenwolfram.com/2023/02/what-is-chatgpt-doing-and-why-does-it-work/), lo describe como producir una «continuación razonable» del texto que tiene delante.
+
+El matiz honesto es que el «solo» de «solo autocompleta» esconde mucha complejidad. Para predecir la siguiente palabra en «la capital de Francia es» necesitas un dato. Para terminar «si vuelco la mesa, la uva que hay encima» necesitas un modelo aproximado de cómo se comporta el mundo físico. Una buena predicción de la siguiente palabra, a una escala suficientemente grande, empieza a parecerse a comprender, y por eso el debate sobre si estos modelos «entienden» no tiene una respuesta limpia.
+
+Para quien publica contenido, la conclusión práctica llega antes que cualquiera de las matemáticas. No estás convenciendo a una mente ni editando el registro de una base de datos. Estás moviendo la estadística de cómo tiende a continuar el texto sobre tu tema. Quédate con esto, porque explica casi todo lo que la máquina acierta y falla.
+
+<table>
+<thead>
+<tr><th>Lo que la gente supone que hace ChatGPT</th><th>Lo que ocurre en realidad</th></tr>
+</thead>
+<tbody>
+<tr><td>Piensa en tu pregunta y la entiende</td><td>Predice el siguiente token a partir de patrones, un token cada vez</td></tr>
+<tr><td>Busca tu marca en una base de datos en vivo</td><td>Genera a partir de pesos numéricos congelados durante el entrenamiento</td></tr>
+<tr><td>Busca en la web cada vez que responde</td><td>Solo cuando hace una búsqueda web; el resto del tiempo no consulta nada</td></tr>
+<tr><td>Se acuerda de ti entre chats</td><td>Empieza cada chat en blanco, salvo que una capa de memoria aparte guarde datos</td></tr>
+<tr><td>Lee tu página como un lector humano</td><td>Lee identificadores de token y vectores, no tu texto letra a letra</td></tr>
+</tbody>
+</table>
+
+## De tu prompt a los tokens: la tokenización
+
+Antes de que el modelo haga nada, un programa aparte llamado tokenizador trocea tu texto en **tokens** y cambia cada uno por un número. Un token es un fragmento de texto, normalmente unos cuatro caracteres o tres cuartos de una palabra en inglés (otros idiomas suelen costar más tokens por palabra). Las palabras comunes son un solo token; las raras y los nombres de marca menos habituales se parten en trozos. El modelo trabaja sobre todo con estos identificadores enteros y no con una vista letra a letra de tu texto, que es justo por lo que las tareas de contar letras se le dan mal. Los modelos multimodales convierten imágenes y audio en sus propias representaciones numéricas, aunque el proceso concreto es distinto al de la tokenización de texto.
+
+Esta es la raíz del famoso problema de ChatGPT para contar las erres de «ferrocarril». La palabra llega como unos pocos subtokens, ninguno de los cuales es una letra: contar letras se vuelve una tarea de memoria y no algo que pueda leer directamente. La misma mecánica explica los nombres de marca deformados y los números largos mal copiados. La historia completa, incluidas las palabras que todavía hacen tropezar a los modelos actuales, tiene [su propio artículo sobre los tokens](https://geotoolbox.ai/blog/what-are-tokens-in-ai); aquí basta con saber que los tokens son la unidad cruda sobre la que se construye todo lo que viene después.
+
+<Callout type="note" title="La densidad de palabras clave no se traslada aquí">
+La vieja costumbre de repetir una frase para señalar relevancia no sirve en este terreno. El modelo no cuenta cuántas veces aparece «mejor CRM para dentistas» en tu página en el momento de responder; en este paso ni siquiera está puntuando tu documento. Aprendió patrones a partir de textos mucho antes de que llegara tu pregunta, y la densidad en una sola página no es una de las palancas que los moldearon. La recuperación en vivo, más adelante en este artículo, es otra historia, donde un índice de búsqueda normal todavía tiene que encontrar tu página primero.
+</Callout>
+
+**El español paga un peaje en tokens que conviene conocer.** El mismo significado suele costar más tokens en español que en inglés, a menudo bastante más: las tildes, la ñ y las palabras más largas hacen que el tokenizador parta más el texto. Un nombre de marca en español o con caracteres poco comunes también tiende a fragmentarse en varios subtokens. Esto no cambia el mecanismo, pero sí explica por qué un texto largo en español consume más de tu ventana de contexto y, cuando trabajas por la API, cuesta algo más que su equivalente en inglés.
+
+## De tokens a vectores: los embeddings y el significado
+
+El identificador de un token sigue siendo solo un número que representa un fragmento de texto. El siguiente paso es donde entra el significado. Cada token se asigna a un **embedding** (una incrustación), una lista larga de números que puedes imaginar como un punto en un espacio, salvo que ese espacio tiene miles de dimensiones en lugar de tres. Los tokens que significan cosas parecidas se sitúan cerca. «Gato» y «perro» caen próximos porque aparecen en frases parecidas. «Gato» y «hoja de cálculo» quedan lejos. El significado, para un modelo, es geometría.
+
+Esas posiciones no se asignan a mano. Empiezan aleatorias y se van moviendo a medida que la red neuronal lee miles de millones de ejemplos durante el entrenamiento. Las palabras que aparecen juntas una y otra vez se acercan hasta que la disposición del espacio captura algo real sobre cómo se usa el lenguaje. El modelo nunca recibe una definición de «gato». Recibe la compañía que «gato» mantiene, y resulta que eso basta para situarlo. Puedes leer un tratamiento más completo de cómo los [embeddings vectoriales](https://geotoolbox.ai/blog/vector-embeddings) transportan significado, pero lo que importa aquí es la forma de la idea.
+
+Este es el primer punto donde el mecanismo toca tu visibilidad, y vale la pena ser preciso y no místico. Tu marca no es un único punto en este espacio. Su nombre a menudo se reparte entre varios tokens, y lo que el modelo construye es una asociación entre esos tokens, tu categoría y las palabras que suelen rodearlos. Si tu nombre aparece de forma coherente junto a tu categoría en los textos con los que el modelo se entrenó, esa asociación se refuerza. No es una etiqueta que añades ni un ajuste que activas. Es el resultado lento de que te describan, con precisión y de forma coherente, en el tipo de escritura del que aprenden los modelos. Seamos honestos con el límite, eso sí: nadie puede abrir el modelo y enseñarte esa asociación ni demostrar que se movió. Es una inferencia sobre cómo funciona el entrenamiento, y lo único que puedes observar de verdad son las respuestas que da el modelo, muestreadas a lo largo del tiempo.
+
+## Cómo lee el contexto: el mecanismo de atención
+
+Un punto en el espacio es una estimación decente de lo que significa una palabra por sí sola, pero las palabras cambian de significado según la compañía. «Banco» junto a «río» no es «banco» junto a «cuenta». El avance que hizo funcionar a los modelos modernos, el artículo de 2017 [Attention Is All You Need](https://arxiv.org/abs/1706.03762), construyó toda la arquitectura alrededor de un paso llamado **autoatención**, que actualiza el significado de cada token en función de los demás tokens que lo rodean antes de que se produzca ninguna predicción.
+
+La forma más sencilla de imaginar la atención es como una comprobación rápida de relevancia que cada token ejecuta contra cada token anterior. Cada token forma tres cosas:
+
+- una **consulta** (query): ¿qué estoy buscando?
+- una **clave** (key): ¿qué ofrezco?
+- un **valor** (value): ¿qué transporto?
+
+El modelo compara las consultas con las claves para puntuar cuán relevante es cada token anterior y luego mezcla los valores según esas puntuaciones. El token sigue siendo el mismo, pero ahora su representación incorpora el contexto que lo rodea.
+
+Fíjate en «esta película no fue buena». Por sí sola, «buena» tira hacia lo positivo. La atención deja que «buena» tire con fuerza de «no», y esa única conexión vuelca la frase hacia lo negativo. El modelo no sigue una regla gramatical que le hayan entregado. Aprendió, de océanos de texto, que «no» tiende a invertir lo que sigue, y ese patrón vive en los pesos.
+
+Aquí está la parte que conviene archivar para después, porque todo un género de consejos depende de que la gente no la conozca. En ningún punto de este paso hay una regla que diga «favorece la marca geotoolbox» o «da más peso al contenido con cierto formato». Los pesos que producen estas puntuaciones de atención se aprendieron de todo el texto que vio el modelo; las puntuaciones en sí se calculan de cero a partir de tu prompt cada vez. Lo mires como lo mires, no hay interruptores en un panel de control, ni un campo donde tu página pueda declararse importante.
+
+## Apilando el modelo: el Transformer, el entrenamiento y un token cada vez
+
+Un solo paso de atención no basta. Un [**Transformer**](https://geotoolbox.ai/glossary/transformer-model) apila decenas de estos bloques a lo largo de lo que se llama el flujo residual, el estado que cada token va arrastrando hacia arriba. Cada bloque combina una capa de atención, que enruta información entre tokens, con un MLP, una red feedforward que transforma el estado de cada token y es un lugar clave donde se aplican los hechos y las características aprendidas. Las capas iniciales captan patrones simples como las categorías gramaticales; las posteriores construyen relaciones abstractas. GPT-3 usó [96 de estos bloques](https://en.wikipedia.org/wiki/GPT-3), apilados en una sola red neuronal grande. Los mayores modelos comerciales de hoy ni siquiera publican ese número.
+
+Lo que contienen los bloques son **pesos**, también llamados parámetros, los números que codifican todo lo que el modelo aprendió. GPT-3 tenía [175.000 millones](https://en.wikipedia.org/wiki/GPT-3). Los modelos actuales no revelan sus cifras, y el dato de 100 billones que todavía se repite es un rumor que el director ejecutivo de OpenAI ha descartado en público, no una cifra confirmada.
+
+Esos pesos se fijan durante el **preentrenamiento**, cuando el modelo lee una cantidad enorme de texto y se ajusta para predecir mejor el siguiente token. Esa es la P de GPT: Generative Pre-trained Transformer, es decir, un Transformer generativo y preentrenado. Un paso posterior, el aprendizaje por refuerzo a partir de retroalimentación humana, descrito en el [artículo InstructGPT](https://arxiv.org/abs/2203.02155) de OpenAI, usa valoraciones de personas para que el modelo en crudo se comporte como un asistente útil en lugar de como un predictor de texto sin filtro.
+
+Ese paso hace más que enseñar modales: reconfigura lo que el modelo va a decir, de modo que el asistente terminado no es un espejo puro de su texto de entrenamiento. Es la pieza que convierte «predice el siguiente token» en «responde como si te ayudara».
+
+<Callout type="tip" title="Por qué las preguntas dirigidas dan pruebas inútiles">
+El aprendizaje por refuerzo a partir de retroalimentación humana puede empujar a los asistentes hacia respuestas complacientes, algo que aflora como adulación ante preguntas dirigidas. Pregúntale «¿verdad que mi marca es la mejor herramienta para esto?» y es probable que te diga que sí. Eso convierte una pregunta dirigida en una prueba de visibilidad que no vale nada: formula tus comprobaciones de forma neutra y fíate de cuántas veces se repite una respuesta antes que de lo halagadora que parezca una sola ejecución.
+</Callout>
+
+Nada de esto es exclusivo de ChatGPT. Los modelos de hoy, ya sean de [la línea GPT-5 de OpenAI](https://geotoolbox.ai/blog/gpt-5-6), el [Claude de Anthropic](https://geotoolbox.ai/blog/how-does-claude-work) o el Gemini de Google, funcionan todos sobre la misma idea del Transformer. Los nuevos modos de «razonamiento» o «pensamiento» no cambian el bucle central; gastan más cómputo antes de la respuesta visible, a menudo mediante un razonamiento intermedio oculto, y a veces con llamadas a herramientas o rondas de recuperación extra. En el fondo sigue siendo predicción del siguiente token, no una máquina distinta. Cuando alguien pregunta [cómo funcionan los grandes modelos de lenguaje](https://geotoolbox.ai/glossary/large-language-model) en general, esta es la respuesta para casi todos. Para ver en qué se diferencia ChatGPT de sus rivales en la práctica, tienes [Grok frente a ChatGPT](https://geotoolbox.ai/blog/grok-vs-chatgpt), [Gemini frente a ChatGPT](https://geotoolbox.ai/blog/gemini-vs-chatgpt) y [Claude frente a ChatGPT](https://geotoolbox.ai/blog/claude-vs-chatgpt).
+
+Cuando el texto sale de la pila, el modelo produce una puntuación (un logit) para cada token posible, convierte esas puntuaciones en probabilidades y selecciona un token mediante parámetros de decodificación como la temperatura o el top-p. Después añade ese token a la entrada y vuelve a ejecutarse para el siguiente. Un token cada vez, con el modelo atravesando toda su profundidad para cada token nuevo. Por eso una respuesta larga requiere cómputo real, y aparece en tu pantalla palabra a palabra.
+
+## Por qué ChatGPT se inventa cosas: las alucinaciones
+
+Una vez aceptas que lo único que el modelo busca, siempre, es un siguiente token probable, las alucinaciones dejan de ser un fallo y pasan a ser una consecuencia del diseño. Pregúntale a qué deporte juega Lionel Messi y responde «fútbol», porque «Messi» y «fútbol» aparecieron juntos en incontables ejemplos de entrenamiento. Pregúntale el nombre de la mascota de infancia de Messi, algo que apenas apareció en los textos con los que se entrenó, y no se detiene. Sigue buscando una palabra siguiente plausible, y sale una mascota que puede ser pura invención. Sus probabilidades internas son mucho más planas en la pregunta de la mascota que en la del deporte, pero nada en el bucle lo obliga a pararse y decirlo.
+
+OpenAI lo reconoce en su propia [guía sobre si ChatGPT dice la verdad](https://help.openai.com/en/articles/8313428-does-chatgpt-tell-the-truth): el sistema está construido para producir continuaciones plausibles, no hechos verificados, y puede equivocarse con total seguridad. Esa seguridad es la parte peligrosa. Una persona que no sabe algo suele matizar. El modelo entrega una estadística inventada o una cita falsa con el mismo tono firme que usa para lo que sí sabe. Esta es la misma maquinaria detrás de las [alucinaciones de la IA](https://geotoolbox.ai/blog/ai-hallucinations) en todos los modelos, no un fallo propio de uno solo.
+
+Para una marca, esta es la fuente de las peores experiencias. ChatGPT a veces afirma algo incorrecto sobre ti, tu precio o tu producto con total seguridad, y no hay ningún buzón al que enviar una corrección. La única palanca que tienes se deduce directamente del mecanismo. El modelo busca una continuación probable dado el texto que absorbió, y el trabajo consiste en hacer que la versión correcta sea la probable: información clara, coherente y actualizada sobre ti, repetida allí donde estos sistemas leen. Del lado de la recuperación, una página corregida puede cambiar la respuesta en cuanto el rastreador y el índice la recojan, aunque los plazos varían según el motor. Del lado del entrenamiento es lento y no ofrece garantías, porque no puedes obligar al modelo a reentrenarse. Es la única palanca, no un interruptor.
+
+## De dónde saca ChatGPT su información: entrenamiento frente a recuperación en vivo
+
+De todo este artículo, esta es la distinción que más confusión despeja entre quienes publican. ChatGPT se apoya en dos fuentes de información completamente separadas, y no se comportan en nada igual. Conviene mantener tres cosas separadas: el entrenamiento fija los pesos, lento y luego congelado; la conversación en vivo guía la respuesta mediante la información disponible en la ventana de contexto, sin cambiar un solo peso; y la recuperación decide qué páginas externas se incorporan a ese contexto.
+
+La primera es el **conocimiento paramétrico**, los patrones congelados en los pesos durante el entrenamiento. Es lo que responde cuando no hay herramientas activas: vasto, pero obsoleto por diseño, fijado en una fecha de corte y sin ninguna copia de tu página, solo un eco estadístico de textos que se le parecían.
+
+La segunda es la **recuperación en vivo**, que solo ocurre cuando el modelo hace una búsqueda web, algo que las versiones más nuevas ahora hacen por su cuenta para muchas preguntas y no solo cuando activas un interruptor. Ahí obtiene páginas web actuales, las lee y las resume, un proceso conocido como [generación aumentada por recuperación](https://geotoolbox.ai/blog/what-is-rag). Es la razón por la que las citas se comportan de forma tan distinta según el modo: con la recuperación activa, puede señalar páginas reales que acaba de obtener; con la recuperación apagada, cualquier cita se genera como cualquier otro token y puede estar completamente inventada. Todo lo que ocurre en [cómo funciona de verdad la búsqueda con IA](https://geotoolbox.ai/blog/how-does-ai-search-work) pasa por esta segunda vía.
+
+<table>
+<thead>
+<tr><th>Pregunta</th><th>Corpus de entrenamiento (paramétrico)</th><th>Recuperación en vivo (navegación/búsqueda)</th></tr>
+</thead>
+<tbody>
+<tr><td>Qué es</td><td>Patrones congelados en los pesos durante el entrenamiento</td><td>Páginas web actuales obtenidas en el momento de responder</td></tr>
+<tr><td>Cuándo se usa</td><td>Siempre, y la única fuente cuando no se ejecuta ninguna búsqueda</td><td>Solo cuando el modelo hace una búsqueda web</td></tr>
+<tr><td>Grado de actualización</td><td>Obsoleto, fijado en la fecha de corte del entrenamiento</td><td>Tan actual como la página que acaba de obtener</td></tr>
+<tr><td>Cómo influyes en él</td><td>Que te describan con precisión y de forma amplia antes del corte</td><td>Ser accesible y claro para el rastreador ahora mismo</td></tr>
+<tr><td>Qué rastreador lo controla</td><td>GPTBot (entrenamiento)</td><td>OAI-SearchBot (índice) y ChatGPT-User (obtención en vivo)</td></tr>
+</tbody>
+</table>
+
+Dos puertas, entonces, y se abren con llaves distintas. Entrar en el corpus de entrenamiento es lento y en gran medida está fuera de tus manos. La puerta de la recuperación sí puedes comprobarla, porque depende de si los rastreadores de búsqueda de ChatGPT pueden llegar a tus páginas, sobre todo OAI-SearchBot, que indexa páginas para la búsqueda de ChatGPT, y ChatGPT-User, que obtiene una página en vivo cuando la pregunta de un usuario lo dispara. ([GPTBot](https://geotoolbox.ai/blog/gptbot) es el rastreador de entrenamiento aparte, no la puerta de la búsqueda, una distinción que conviene tener clara antes de bloquear el rastreador equivocado.) Lo que recibe el rastreador también importa: en estudios de registros de rastreo, varios bots de IA se han comportado como analizadores del HTML inicial y no como navegadores completos: cualquier cosa que solo aparezca después de que se ejecute el JavaScript corre más riesgo de que la pasen por alto, aunque esto varía según el bot y conviene verificarlo. Una advertencia que merece decirse con claridad: la búsqueda de ChatGPT no es un simple envoltorio de ningún buscador concreto; no des por hecho que tu posición en Google se traslada tal cual.
+
+<Callout type="note" title="¿ChatGPT aprende de mis conversaciones? El ángulo RGPD">
+Hay un matiz de datos que conviene tener claro. Aunque los pesos del modelo están congelados y tus mensajes no lo reentrenan (eso lo vemos más abajo), OpenAI puede retener lo que escribes durante un tiempo (del orden de 30 días para las entradas de la API, aunque desactives el uso para entrenamiento), y por defecto los chats de las cuentas de consumo pueden usarse para mejorar el modelo salvo que lo desactives. Bajo el RGPD, eso significa una regla práctica: no metas datos de clientes ni datos personales en la IA de consumo. La base europea es el consentimiento y el derecho de oposición, no la activación por defecto habitual en Estados Unidos; para trabajar con datos reales, usa una vía con contrato de encargado de tratamiento (los planes de empresa o la API con las garantías firmadas) y no la app gratuita. Esto vale igual para lectores de España, regidos por la AEPD, y de Latinoamérica, donde rigen las leyes nacionales de protección de datos.
+</Callout>
+
+## Qué significa esto para tu visibilidad en IA
+
+Ahora la recompensa, y empieza con una resta. Como no hay ninguna regla sobre tu marca en ningún punto de los pesos, cualquier consejo que prometa «optimizar para el mecanismo de atención» o dar formato a tu contenido para que el modelo «le preste atención» te está vendiendo acceso a un panel de control que no existe. Es infalsable: no hay nada al otro lado que empujar.
+
+Lo mismo pasa con la esperanza de pagar por entrar. OpenAI empezó a mostrar anuncios etiquetados en ChatGPT a principios de 2026 y, desde julio de 2026, opera un sistema de anuncios de autoservicio (Ads Manager) con una subasta de segundo precio ponderada por relevancia. Pero esos anuncios aparecen en un bloque etiquetado y separado, debajo de la respuesta, nunca dentro de ella: a agosto de 2026 sigue sin existir ninguna subasta que coloque tu marca dentro del texto generado, y OpenAI afirma de forma explícita que los anuncios no influyen en las respuestas del asistente. La respuesta sale de los pesos y, a veces, de una obtención en vivo, y no hay caja registradora para ninguna de las dos.
+
+Lo que queda es menos emocionante y mucho más real, y se divide con nitidez en lo que puedes comprobar y lo que solo puedes trabajar. Dos palancas son verificables hoy: si los rastreadores de recuperación pueden llegar a tus páginas, y qué dicen los modelos sobre ti cuando lo [mides](https://geotoolbox.ai/blog/how-to-track-ai-visibility) a lo largo de muchas ejecuciones en lugar de fiarte de una sola captura afortunada, ya que el muestreo convierte cualquier respuesta suelta en una anécdota. Las otras dos son direccionales, fundadas en cómo funciona el entrenamiento pero imposibles de medir directamente para tu marca: que las fuentes que estos modelos leen te retraten de forma precisa y uniforme, y que mantengas tus datos actualizados para que la continuación más probable sobre ti sea la verdadera. Quien te diga que esas dos últimas son medibles te está vendiendo una certeza que el mecanismo no ofrece.
+
+Por lo que vemos al construir herramientas para esto, las marcas que aparecen de forma constante en las respuestas de IA no son las que persiguen un dial de atención imaginario. Son las que resultan fáciles de alcanzar, se describen de forma coherente y son lo bastante precisas como para que la mejor conjetura del modelo sobre ellas sea la correcta. El formato sigue importando, solo que no como afirma el consejo de caja negra: estructurar una página para que un sistema de recuperación pueda extraer de ella una respuesta limpia es algo real y comprobable, y es la mayor parte de lo que en realidad trata [cómo optimizar para la búsqueda con IA](https://geotoolbox.ai/blog/how-to-optimize-for-ai-search).
+
+<Callout type="note" title="Esto ya ocurre en España">
+A agosto de 2026, las «Vistas creadas con IA» de Google (AI Overviews) llevan activas en España desde marzo de 2025: la máquina que ahora responde por encima de los resultados es el mismo mecanismo que explica este artículo. No es una novedad futura que debas esperar, sino un hecho presente. La misma lógica de las dos puertas se aplica: si tus páginas son accesibles y describen tu tema con claridad, tienes algo que comprobar hoy; si no, la respuesta sobre ti se construye a partir de lo que otros escribieron.
+</Callout>
+
+<Callout type="note" title="¿Aprende mi marca entre chats?">
+No. Hablar con ChatGPT no enseña nada al modelo actual sobre tu marca: sus pesos están congelados y la [ventana de contexto](https://geotoolbox.ai/glossary/context-window) de la que lee se borra cuando termina el chat. La función de «memoria» es una libreta por usuario, no entrenamiento. Así que no tiene sentido intentar «contarle» al modelo quién eres dentro de un chat. Las únicas vías de entrada son el corpus de entrenamiento y la recuperación en vivo, ambas cubiertas más arriba.
+</Callout>
+
+## Lo que te deja el mecanismo
+
+Todo lo que ChatGPT hace bien y todo lo que hace mal, los párrafos fluidos y las invenciones seguras por igual, sale de esa única conjetura repetida. El valor de saberlo está en lo que descarta: no hay un dial oculto que ajustar, ni una entrada de marca que editar, ni una ranura que comprar.
+
+Lo que te deja es más concreto que cualquiera de esas cosas. No puedes meter la mano en los pesos, pero sí puedes decidir si los rastreadores que hay detrás de ChatGPT tienen siquiera permiso para acercarse a tus páginas. Nuestra [comprobación gratuita de preparación para la IA](https://geotoolbox.ai/tools/ai-readiness) lee tu robots.txt y la configuración de tu sitio y señala qué está dejando fuera a esos rastreadores. Saber cómo lee la máquina es una mitad. Si tiene permiso para leerte a ti es la mitad que puedes comprobar en dos minutos.
+
+## Preguntas frecuentes
+
+### ¿De dónde saca ChatGPT su información?
+
+De dos sitios distintos. La mayor parte del tiempo se apoya en el conocimiento paramétrico, los patrones congelados en sus pesos durante el entrenamiento, que es amplio pero está fijado en una fecha de corte. Cuando hace una búsqueda web, además obtiene y resume páginas actuales. No mantiene una base de datos en vivo de ningún sitio web concreto; sin recuperación, todo sale de lo que absorbió durante el entrenamiento.
+
+### ¿ChatGPT lo sabe todo, incluida mi web?
+
+No. Solo «conoce» patrones de textos que estuvieran en sus datos de entrenamiento, más lo que obtenga en vivo cuando la recuperación está activa. Si tu sitio se describió con precisión y a menudo en las fuentes de las que aprendió, puede responder bien sobre ti. Si no, responderá igualmente, adivinando las palabras más probables, que es como aparecen las afirmaciones seguras pero falsas sobre una marca.
+
+### ¿Por qué ChatGPT da una respuesta distinta cada vez?
+
+Porque muestrea de una distribución de probabilidad sobre los posibles tokens siguientes en lugar de tomar siempre el más probable. Ajustes de decodificación como la [temperatura y el top-p](https://geotoolbox.ai/blog/ai-temperature) controlan cuánta aleatoriedad se permite; las API los exponen, mientras que la app de ChatGPT no revela los suyos. Parte de la variación que ves también viene de cambios en la recuperación, del enrutado entre modelos y de actualizaciones silenciosas del producto, no solo del muestreo. La consecuencia práctica para quien prueba la visibilidad en IA es que una ejecución es una anécdota, no una medición; necesitas muestrear varias veces a lo largo del tiempo.
+
+### ¿ChatGPT se acuerda de mí entre chats?
+
+No por defecto. El modelo subyacente no tiene estado, y sus pesos no cambian porque hayas hablado con él. Dentro de una misma conversación trabaja con la ventana de contexto, que lee de nuevo cada vez y olvida cuando el chat termina. La función de «memoria» aparte de ChatGPT guarda datos concretos y los vuelve a inyectar en chats futuros, pero eso es un registro añadido, no el modelo actualizándose a sí mismo.
+
+### ¿ChatGPT es solo autocompletar?
+
+Literalmente, sí: predice el siguiente token a partir del texto que tiene, el mismo tipo de tarea que el texto predictivo de tu teléfono. La diferencia es la escala. Hacer eso bien a escala de todo internet obliga al modelo a captar hechos, gramática y modelos aproximados del mundo, de ahí que el resultado sea mucho más capaz de lo que sugiere la palabra «autocompletar», aunque el mecanismo sea así de simple.
+
+### ¿ChatGPT busca en internet cuando responde?
+
+Solo cuando hace una búsqueda web, algo que las versiones modernas ahora hacen de forma automática para muchas preguntas y no solo cuando lo activas. Sin eso, el modelo responde desde el conocimiento congelado del entrenamiento y no se conecta. Cuando la búsqueda se ejecuta, obtiene páginas en vivo y puede citarlas, y los dos modos se comportan de formas lo bastante distintas como para que valga la pena saber cuál produjo la cita que tienes delante.
+
+## Fuentes
+
+- Vaswani et al. (2017): Attention Is All You Need (el artículo del Transformer) - `arxiv.org/abs/1706.03762`
+- Ouyang et al. (2022): Training language models to follow instructions with human feedback (RLHF / InstructGPT) - `arxiv.org/abs/2203.02155`
+- Stephen Wolfram: What Is ChatGPT Doing and Why Does It Work? - `writings.stephenwolfram.com/2023/02/what-is-chatgpt-doing-and-why-does-it-work`
+- OpenAI Help: ¿Dice ChatGPT la verdad? - `help.openai.com/en/articles/8313428-does-chatgpt-tell-the-truth`
+- Wikipedia: GPT-3 (175.000 millones de parámetros, 96 capas) - `en.wikipedia.org/wiki/GPT-3`
+- OpenAI: documentación de bots (GPTBot, OAI-SearchBot, ChatGPT-User) - `developers.openai.com/api/docs/bots`
+- OpenAI Help: Anuncios en ChatGPT - `help.openai.com/en/articles/20001047`
+- Google: llegada de las «Vistas creadas con IA» a España (2025) - `blog.google/intl/es-es`
