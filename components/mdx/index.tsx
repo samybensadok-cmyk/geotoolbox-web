@@ -7,6 +7,7 @@ import { YouTube } from "./youtube"
 import { AffiliateDisclosure } from "./affiliate-disclosure"
 import { BlogImage } from "./blog-image"
 import { VerdictBox } from "./verdict-box"
+import { AffiliatePicks } from "./affiliate-picks"
 import { AiCrawlerCheckerWidget } from "@/components/tools/ai-crawler-checker-widget"
 import { slugify } from "@/lib/utils"
 import { makeLocalizer } from "@/lib/i18n/siblings"
@@ -29,7 +30,7 @@ function childrenToText(children: ReactNode): string {
 }
 
 // Components with no locale-dependent output, shared across every locale's map.
-// NOTE: AffiliateDisclosure and VerdictBox are NOT here — they render their own
+// NOTE: AffiliateDisclosure, VerdictBox, and AffiliatePicks are NOT here — they render their own
 // chrome (headings, field labels, the affiliate note) and so must be bound to a
 // locale in getMdxComponents below. Adding a component with any user-visible
 // English string to this map is how a localized article ends up shipping English
@@ -71,6 +72,7 @@ export function getMdxComponents(locale: string): MDXComponents {
     // come from.
     AffiliateDisclosure: (props) => <AffiliateDisclosure {...props} locale={locale} />,
     VerdictBox: (props) => <VerdictBox {...props} locale={locale} />,
+    AffiliatePicks: (props) => <AffiliatePicks {...props} locale={locale} />,
     a: ({ href, children, ...props }) => {
       // Affiliate redirect links (/go/<slug>) — sponsored, open in a new tab,
       // and NOT client-routed (server 302 redirect handler, not a page). Never
