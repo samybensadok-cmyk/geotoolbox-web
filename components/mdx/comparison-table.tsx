@@ -63,6 +63,10 @@ type ComparisonTableProps = {
   rows: string
   /** Optional footer note; defaults to the locale disclosure. Pass "" to omit. */
   note?: string
+  /** Optional header for the status column; defaults to the locale "AI-search
+   *  visibility". Override for pages whose last column is a different axis
+   *  (e.g. "AI-citation tracking" on content-optimization roundups). */
+  visLabel?: string
   /** Bound by getMdxComponents(locale). */
   locale?: string
 }
@@ -104,11 +108,12 @@ function chipClasses(status: Status): string {
   }
 }
 
-export function ComparisonTable({ refBase, rows, note, locale }: ComparisonTableProps) {
+export function ComparisonTable({ refBase, rows, note, visLabel, locale }: ComparisonTableProps) {
   const t = CHROME[locale as keyof typeof CHROME] ?? CHROME.en
   const data = parseRows(rows)
   if (data.length === 0) return null
   const footer = note === undefined ? t.note : note
+  const visHeader = visLabel || t.vis
   const chipLabel = (s: Status) => (s === "ok" ? t.ok : s === "addon" ? t.addon : s === "ours" ? t.builtin : t.none)
 
   const Chip = ({ r }: { r: Row }) => (
@@ -119,7 +124,7 @@ export function ComparisonTable({ refBase, rows, note, locale }: ComparisonTable
   )
 
   const Cta = ({ r }: { r: Row }) => {
-    if (!r.goSlug) return <span className="text-[12.5px] text-gray-400">—</span>
+    if (!r.goSlug) return <span className="text-[12.5px] text-gray-500">—</span>
     const affiliate = !r.goSlug.startsWith("/")
     const href = affiliate ? `/go/${r.goSlug}?ref=${refBase}-${r.goSlug}` : r.goSlug
     const label = r.ctaLabel || `${t.visit} ${r.name}`
@@ -142,10 +147,10 @@ export function ComparisonTable({ refBase, rows, note, locale }: ComparisonTable
         <table className="w-full border-collapse text-left align-middle">
           <thead>
             <tr className="bg-[var(--surface-warm)]">
-              <th className="px-5 py-3.5 text-[11.5px] font-semibold uppercase tracking-wider text-gray-500">{t.tool}</th>
-              <th className="px-5 py-3.5 text-[11.5px] font-semibold uppercase tracking-wider text-gray-500">{t.job}</th>
-              <th className="px-5 py-3.5 text-[11.5px] font-semibold uppercase tracking-wider text-gray-500">{t.price}</th>
-              <th className="px-5 py-3.5 text-[11.5px] font-semibold uppercase tracking-wider text-gray-500">{t.vis}</th>
+              <th scope="col" className="px-5 py-3.5 text-[11.5px] font-semibold uppercase tracking-wider text-gray-500">{t.tool}</th>
+              <th scope="col" className="px-5 py-3.5 text-[11.5px] font-semibold uppercase tracking-wider text-gray-500">{t.job}</th>
+              <th scope="col" className="px-5 py-3.5 text-[11.5px] font-semibold uppercase tracking-wider text-gray-500">{t.price}</th>
+              <th scope="col" className="px-5 py-3.5 text-[11.5px] font-semibold uppercase tracking-wider text-gray-500">{visHeader}</th>
               <th className="px-5 py-3.5" aria-label={t.visit}></th>
             </tr>
           </thead>
@@ -164,11 +169,11 @@ export function ComparisonTable({ refBase, rows, note, locale }: ComparisonTable
                 <td className="px-5 py-4 align-middle text-[14px] text-gray-600">{r.job}</td>
                 <td className="px-5 py-4 align-middle text-[14px] text-gray-900 [font-variant-numeric:tabular-nums] whitespace-nowrap">
                   {r.price}
-                  {r.priceSub && <span className="block text-[12px] text-gray-400">{r.priceSub}</span>}
+                  {r.priceSub && <span className="block text-[12px] text-gray-500">{r.priceSub}</span>}
                 </td>
                 <td className="px-5 py-4 align-middle">
                   <Chip r={r} />
-                  {r.statusNote && <span className="mt-1 block text-[11.5px] text-gray-400">{r.statusNote}</span>}
+                  {r.statusNote && <span className="mt-1 block text-[11.5px] text-gray-500">{r.statusNote}</span>}
                 </td>
                 <td className="px-5 py-4 align-middle text-right whitespace-nowrap"><Cta r={r} /></td>
               </tr>
@@ -191,14 +196,14 @@ export function ComparisonTable({ refBase, rows, note, locale }: ComparisonTable
               </span>
               <span className="text-[14px] font-semibold text-gray-900 [font-variant-numeric:tabular-nums] whitespace-nowrap text-right">
                 {r.price}
-                {r.priceSub && <span className="block text-[11.5px] font-normal text-gray-400">{r.priceSub}</span>}
+                {r.priceSub && <span className="block text-[11.5px] font-normal text-gray-500">{r.priceSub}</span>}
               </span>
             </div>
             <div className="mt-0.5 text-[13.5px] text-gray-600">{r.job}</div>
             <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
               <span className="flex flex-col gap-0.5">
                 <Chip r={r} />
-                {r.statusNote && <span className="text-[11.5px] text-gray-400">{r.statusNote}</span>}
+                {r.statusNote && <span className="text-[11.5px] text-gray-500">{r.statusNote}</span>}
               </span>
               <Cta r={r} />
             </div>
