@@ -2,7 +2,7 @@
 title: "DeepSeek V4: What It Actually Is Now (GA, Pricing, and the Catches)"
 description: "DeepSeek V4 explained, current to August 2026: what changed at GA, Flash vs Pro, the real API cost, self-hosting, and how honest the benchmarks really are."
 date: "2026-08-01"
-updated: "2026-08-19"
+updated: "2026-08-23"
 recheckBy: "2026-09-15"  # the warned price increase landed 2026-08-16 as peak/off-peak pricing (verified live api-docs.deepseek.com 08-18); V4-Flash build (0731) + independent benchmarks still moving
 author: "Samy BEN SADOK"
 tags: ["deepseek-v4", "deepseek", "open-weights", "mixture-of-experts", "chinese-ai", "llm", "ai-models", "guide"]
@@ -11,17 +11,17 @@ draft: false
 
 Ask the major AI assistants what DeepSeek V4 is and you get a different answer from each, most of them wrong. With web search switched off, ChatGPT calls it "rumors and roadmap speculation," Gemini dates itself to 2025 and says no such model exists, and Claude declines to answer. Turn search on and it barely improves: ChatGPT lands on the April preview announcement and concludes V4 has not left the preview stage, which stopped being true weeks ago.
 
-In one line: DeepSeek V4 is Chinese lab DeepSeek's current open-weight model family, a fast Flash model and a flagship Pro, generally available since July 2026 under an MIT license. Here is the fuller version, checked against primary sources as of August 2026: what DeepSeek V4 actually is now that it has shipped, what it genuinely costs once you account for the parts the sticker price hides, whether the benchmark claims survive an independent look, and whether you can put it anywhere near real work. Where a number is DeepSeek's own claim rather than an outside measurement, we say so, because on a model this new that distinction is most of the story.
+In one line: DeepSeek V4 is Chinese lab DeepSeek's current open-weight model family, a fast Flash model and a flagship Pro, generally available since August 2026 under an MIT license. Here is the fuller version, checked against primary sources as of August 2026: what DeepSeek V4 actually is now that it has shipped, what it genuinely costs once you account for the parts the sticker price hides, whether the benchmark claims survive an independent look, and whether you can put it anywhere near real work. Where a number is DeepSeek's own claim rather than an outside measurement, we say so, because on a model this new that distinction is most of the story.
 
 ## What DeepSeek V4 Is (and What Changed at GA)
 
-**DeepSeek V4 is the current family of open-weight models from [DeepSeek](https://geotoolbox.ai/blog/what-is-deepseek), the Chinese lab in Hangzhou, and it reached general availability on July 20, 2026** after a months-long preview that opened on April 24. If you read an explainer that still calls V4 a preview, it is out of date, and so is DeepSeek's own V4-Pro model card, which still carries preview wording (more on that under the benchmarks).
+**DeepSeek V4 is the current family of open-weight models from [DeepSeek](https://geotoolbox.ai/blog/what-is-deepseek), the Chinese lab in Hangzhou, and its flagship V4-Pro reached general availability on August 13, 2026** after a months-long preview that opened on April 24. If you read an explainer that still calls V4 a preview, it is out of date, and so is DeepSeek's own V4-Pro model card, which still carries preview wording (more on that under the benchmarks).
 
 V4 is not a single model. **DeepSeek-V4-Pro** is the flagship, built for hard reasoning, agentic work, and demanding code. **DeepSeek-V4-Flash** is the fast, cheap workhorse for everything else. Both are [mixture-of-experts](https://geotoolbox.ai/glossary/mixture-of-experts) models, both ship a one-million-token context window, and both are released as [open weights](https://geotoolbox.ai/blog/open-weights-vs-open-source) under the MIT License, so you can download and run them yourself.
 
 Several things changed when V4 moved from preview to GA, and each one trips people up. It retired the old `deepseek-chat` and `deepseek-reasoner` model names on July 24. It quietly refreshed Flash to a new build, DeepSeek-V4-Flash-0731, on July 31, so the model you call today is not quite the one reviewers tested in May. And on August 16, 2026 it made good on months of warnings about a "significant" price increase, replacing the flat all-day rate with the peak/off-peak split covered below.
 
-One limit to set expectations early: V4 is text in, text out. There is no image, audio, or video input, which is the clearest single gap against ChatGPT, Gemini, and Claude. If your work needs to read a screenshot or a chart, V4 is not the tool.
+One limit to set expectations early: V4 is text in, text out. There is no image, audio, or video input on the mainline models, which is the clearest single gap against ChatGPT, Gemini, and Claude (DeepSeek shipped an experimental V4-Flash-Vision-Exp on August 21, 2026, but it is a test model, not the GA release). If your work needs to read a screenshot or a chart, V4 is not the tool.
 
 ## The V4 Lineup: Flash vs Pro
 
@@ -102,7 +102,7 @@ The web and mobile apps are free. The money question starts on the API, and this
 
 A few catches separate that sticker price from your actual bill.
 
-**The price increase DeepSeek was signaling has landed.** On August 16, 2026, DeepSeek replaced its flat all-day rate with the peak/off-peak split shown above: peak hours (01:00-04:00 and 06:00-10:00 UTC) bill at exactly double the off-peak rate across every column. In a market where these prices mostly fall, that is a rare reversal, and it is worth building your budget around the peak share of your actual traffic rather than assuming off-peak applies to everything.
+**The price increase DeepSeek was signaling has landed.** On August 16, 2026, DeepSeek replaced its flat all-day rate with the peak/off-peak split shown above: peak hours (01:00-04:00 and 06:00-10:00 UTC, Monday to Friday, with weekends billed at off-peak) bill at exactly double the off-peak rate across every column. In a market where these prices mostly fall, that is a rare reversal, and it is worth building your budget around the peak share of your actual traffic rather than assuming off-peak applies to everything.
 
 **Thinking mode is on by default, and it bills at the output rate.** Before it answers, V4 generates internal reasoning tokens, and those count as output even though you never see them. A short reply can quietly produce thousands of billed tokens first. If your bill is higher than the sticker suggested, this is almost always why. Turn thinking off for routine work (classification, extraction, short replies) and leave it on only where the reasoning earns its cost.
 
@@ -171,7 +171,7 @@ Stale answers come from stale or unreachable sources, so the first move is makin
 ## Frequently Asked Questions
 
 ### Is DeepSeek V4 out yet, or is it a preview?
-It is out. V4 reached general availability on July 20, 2026, ending a preview that ran from April 24. Explainers and AI answers that still call it a preview are out of date, and so is DeepSeek's own V4-Pro model card, which still carries preview wording.
+It is out. V4-Pro reached general availability on August 13, 2026, ending a preview that ran from April 24. Explainers and AI answers that still call it a preview are out of date, and so is DeepSeek's own V4-Pro model card, which still carries preview wording.
 
 ### Should I use V4 Flash or V4 Pro?
 Start with Flash for almost everything: chat, extraction, summarization, high-volume agent loops, and most coding. Move to Pro only for hard reasoning, complex multi-step analysis, or demanding code, where the quality gain is worth roughly triple the output cost.

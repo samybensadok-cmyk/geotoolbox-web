@@ -1,0 +1,247 @@
+---
+title: "DeepSeek V4: qué es, precios y las trampas (2026)"
+description: "DeepSeek V4 al día en agosto de 2026: qué cambió con la versión general, Flash frente a Pro, el precio real de la API y qué tan honestos son los benchmarks."
+date: "2026-08-23"
+author: "Samy BEN SADOK"
+tags: ["deepseek-v4", "deepseek", "open-weights", "mixture-of-experts", "chinese-ai", "llm", "ai-models", "guide"]
+draft: false
+locale: "es"
+donorSlug: "deepseek-v4"
+donorCommit: "44ef0b5"
+noindex: false
+---
+
+Pregunta a los grandes asistentes de IA qué es DeepSeek V4 y cada uno te dará una respuesta distinta, casi todas equivocadas. Sin búsqueda web, ChatGPT lo despacha como «rumores y especulación sobre la hoja de ruta», Gemini se sitúa en 2025 y afirma que ese modelo no existe, y Claude prefiere no responder. Con la búsqueda activada apenas mejora: ChatGPT aterriza en el anuncio de la vista previa de abril y concluye que V4 no ha salido de esa fase, algo que dejó de ser cierto hace semanas. En español el problema es peor: las páginas mejor posicionadas para «deepseek v4» siguen con precios de la vista previa de abril, o son sitios clon que prometen el modelo «sin registro».
+
+En una línea: DeepSeek V4 es la familia actual de modelos de pesos abiertos del laboratorio chino DeepSeek, un modelo Flash rápido y un buque insignia Pro, con licencia MIT y disponible de forma general desde el 13 de agosto de 2026. Aquí tienes la versión completa, contrastada con fuentes primarias a agosto de 2026: qué es V4 ahora que se ha lanzado, cuánto cuesta realmente una vez que tienes en cuenta lo que oculta el precio de catálogo, si las cifras de rendimiento aguantan una mirada independiente y si puedes usarlo en un trabajo real. Cuando un número es una afirmación de DeepSeek y no una medición externa, lo decimos, porque en un modelo tan nuevo esa distinción lo es casi todo.
+
+## Lo que debes saber
+
+- **DeepSeek V4 es la familia de modelos de pesos abiertos de DeepSeek con licencia MIT**, en dos versiones: V4-Flash (rápido y barato) y V4-Pro (el buque insignia), ambas con una ventana de contexto de 1 millón de tokens.
+- **El buque insignia V4-Pro alcanzó la disponibilidad general el 13 de agosto de 2026**, tras una vista previa abierta el 24 de abril. Curiosamente, la propia ficha del modelo V4-Pro sigue describiéndolo como «una versión de vista previa».
+- **En la API, V4 es barato: desde 0,22 $ de entrada y 0,66 $ de salida por millón de tokens** (V4-Flash, tarifa valle), aunque el 16 de agosto de 2026 DeepSeek subió los precios con un esquema de horas valle y horas pico. La app web y móvil es gratis.
+- **En rendimiento medido es un modelo casi de frontera, no de frontera.** El organismo estadounidense CAISI midió 74 % en SWE-bench frente al 80,6 % que declara DeepSeek, y calcula un retraso de unos ocho meses respecto a los líderes.
+- **Usar la API o la app alojada envía tus prompts a servidores en China**, una transferencia internacional que, bajo el RGPD, obliga a pensárselo dos veces. Los pesos abiertos permiten autoalojar el modelo y esquivar esa cuestión.
+
+## Qué es DeepSeek V4 (y qué cambió con la versión general)
+
+**DeepSeek V4 es la familia actual de modelos de pesos abiertos de [DeepSeek](https://geotoolbox.ai/blog/what-is-deepseek), el laboratorio chino con sede en Hangzhou, y su buque insignia V4-Pro alcanzó la disponibilidad general el 13 de agosto de 2026**, tras una vista previa que se abrió el 24 de abril. Si lees una explicación que todavía llama «vista previa» a V4, está desactualizada; y también lo está la propia ficha del modelo V4-Pro de DeepSeek, que sigue con esa etiqueta (volvemos a ello en la sección de rendimiento).
+
+V4 no es un único modelo. **DeepSeek-V4-Pro** es el buque insignia, pensado para razonamiento difícil, trabajo con agentes y programación exigente. **DeepSeek-V4-Flash** es el caballo de batalla rápido y barato para todo lo demás. Ambos son modelos de [mezcla de expertos (MoE)](https://geotoolbox.ai/glossary/mixture-of-experts), ambos traen una ventana de contexto de un millón de tokens y ambos se publican como [pesos abiertos](https://geotoolbox.ai/blog/open-weights-vs-open-source) bajo licencia MIT: puedes descargarlos y ejecutarlos tú mismo.
+
+Varias cosas cambiaron al pasar V4 de vista previa a versión general, y cada una despista a alguien. DeepSeek retiró los antiguos alias `deepseek-chat` y `deepseek-reasoner` el 24 de julio. Actualizó Flash discretamente a una nueva compilación, DeepSeek-V4-Flash-0731, el 31 de julio, de modo que el modelo que llamas hoy no es exactamente el que probaron los primeros análisis en mayo. Y el 16 de agosto de 2026 hizo efectiva la subida de precios «significativa» que venía anunciando, sustituyendo la tarifa plana de todo el día por la división entre horas valle y horas pico que verás más abajo.
+
+Un límite que conviene fijar pronto: la línea principal de V4 solo admite texto, no imágenes, audio ni video como entrada, la diferencia más clara frente a ChatGPT, Gemini y Claude. DeepSeek publicó el 21 de agosto de 2026 una variante experimental con visión (V4-Flash-Vision-Exp), pero es un modelo en pruebas, no la versión general. Si tu trabajo necesita leer una captura o un gráfico, V4 no es la herramienta.
+
+## La gama V4: Flash frente a Pro
+
+Flash y Pro no son simplemente una versión reducida y otra de mayor tamaño; son configuraciones de mezcla de expertos distintas y con precios muy diferentes. La regla práctica sobre cuál usar también cambió tras la versión general, cuando el Flash renovado se volvió lo bastante capaz para asumir trabajo que antes se mandaba a Pro.
+
+<table>
+<thead>
+<tr><th>Modelo</th><th>Tamaño (total / activo)</th><th>Mejor para</th><th>Precio API (por 1M de tokens)</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>V4-Flash</strong></td><td>284 000 M / 13 000 M activos</td><td>Chat, extracción, clasificación, resumen, bucles de agente de gran volumen, casi toda la programación</td><td>0,22 $ entrada / 0,66 $ salida en horas valle, hasta 0,44 $ / 1,32 $ en pico</td></tr>
+<tr><td><strong>V4-Pro</strong></td><td>1,6 billones / 49 000 M activos</td><td>Razonamiento difícil, análisis complejo de varios pasos, la programación más exigente</td><td>0,66 $ entrada / 1,98 $ salida en horas valle, hasta 1,32 $ / 3,96 $ en pico</td></tr>
+</tbody>
+</table>
+
+Ambos usan un diseño de mezcla de expertos, y por eso el número de parámetros activos es una fracción del total: el modelo guarda una cantidad enorme de parámetros, pero solo enciende una porción pequeña para cada [token](https://geotoolbox.ai/blog/what-are-tokens-in-ai). Ese es el truco detrás de su bajo costo de funcionamiento.
+
+Por defecto, **usa Flash para casi todo.** Es tan barato que, a volúmenes normales, la factura es un error de redondeo, y según las propias cifras de DeepSeek del 31 de julio el Flash renovado se pone a la altura de la anterior vista previa de Pro, o la supera, en pruebas de agentes y de programación. **Reserva Pro** para el trabajo que de verdad lo necesita, razonamiento difícil y la programación más exigente, donde la mejora de calidad compensa un costo de salida unas tres veces mayor. Si no sabes si una tarea necesita Pro, seguramente no; empieza en Flash y sube solo cuando choques con un muro.
+
+La actualización del 31 de julio importa aquí. Esa compilación, DeepSeek-V4-Flash-0731, es la que provocó la oleada de análisis del tipo «Flash acaba de mejorar»: una variante de alto razonamiento se colocó séptima en la clasificación general, y tercera entre modelos de pesos abiertos, en el Frontend Code Arena a finales de julio. El nombre con el que lo llamas (`deepseek-v4-flash`) no cambió, por lo que nada se rompe, pero el modelo que hay detrás sí cambió. Si mediste Flash antes de agosto, vuelve a medirlo.
+
+## La ventana de 1 millón de tokens es real, pero con pérdidas
+
+La función estrella es la ventana de contexto de un millón de tokens, y lo interesante no es la cifra, sino cómo DeepSeek la hizo asequible. V4 usa un diseño de atención híbrida que combina lo que DeepSeek llama Compressed Sparse Attention y Heavily Compressed Attention. Al máximo del millón de tokens, el informe técnico indica que V4-Pro requiere alrededor del 27 % del cómputo de inferencia por token y alrededor del 10 % de la memoria de caché KV de la generación anterior, DeepSeek-V3.2. Es una victoria de ingeniería real, y por eso V4 puede ofrecer una ventana de 1M a un precio que un modelo denso no alcanzaría.
+
+Hay un segundo cambio que interesa a quien construye agentes: en las conversaciones con herramientas, V4 conserva su razonamiento de un turno a otro en lugar de descartarlo cuando llega un mensaje nuevo, y los flujos de varios pasos se sostienen mejor. Esto impone una obligación a quien usa la API: tienes que devolver ese razonamiento anterior en cada petición, o la API rechaza la llamada.
+
+Y aquí está la trampa que la ficha técnica se calla. **Una ventana barata de ejecutar se comporta como si tuviera pérdidas, y lo notas como si el modelo «ignorara» cosas.** Quien ejecuta V4 con entradas largas informa, de forma constante, de que el modelo parece olvidar instrucciones colocadas cerca del principio de un prompt largo, y algunos dicen que la caída empieza bastante antes del tope del millón. DeepSeek no ha publicado un desglose de recuperación por posición, y el informe técnico no llama «con pérdidas» a la compresión, pero la explicación más plausible es esa misma compresión de atención que abarata la ventana.
+
+En cualquier caso, la solución es un hábito de trabajo, no un informe de errores. Coloca tus instrucciones importantes cerca del final del prompt, no enterradas al principio, y repite cualquier condición que deba cumplirse sí o sí. Trata la ventana de 1M como una memoria de trabajo grande, fuerte para «encuentra el pasaje relevante» y más débil para sostener una regla que enunciaste decenas de miles de tokens antes. Usada así, la ventana de contexto es una ventaja real; confiar en ella a ciegas es donde V4 decepciona.
+
+## ¿Es tan bueno como dicen?
+
+Las cifras propias de DeepSeek son buenas. Su ficha del modelo V4-Pro, la misma que aún lo etiqueta como vista previa, declara un 80,6 % en SWE-bench Verified, un 93,5 % en LiveCodeBench y un 90,1 % en GPQA Diamond, y enmarca sus resultados de conocimiento como un récord entre modelos de código abierto. Conviene conocerlas. También son cifras del propio fabricante, con un modo «Max» de alto esfuerzo, y son justo las que deberías contrastar con alguien independiente.
+
+Las evaluaciones independientes cuentan una historia más matizada. [Artificial Analysis](https://artificialanalysis.ai/models/deepseek-v4-pro), que aplica su propia batería, sitúa a V4-Pro en un Intelligence Index de 44, en el sexto puesto entre los modelos que sigue, por encima de la mediana de sus comparables pero no en la frontera. El organismo de normas de IA del Gobierno de EE. UU., CAISI, fue más lejos: repitió las pruebas estrella de DeepSeek y añadió otras reservadas.
+
+<table>
+<thead>
+<tr><th>Prueba (evaluación de CAISI)</th><th>DeepSeek V4-Pro</th><th>GPT-5.5</th></tr>
+</thead>
+<tbody>
+<tr><td>SWE-Bench Verified</td><td>74 %</td><td>81 %</td></tr>
+<tr><td>PortBench (programación reservada)</td><td>44 %</td><td>78 %</td></tr>
+<tr><td>CTF-Archive (ciberseguridad)</td><td>32 %</td><td>71 %</td></tr>
+<tr><td>GPQA-Diamond</td><td>90 %</td><td>96 %</td></tr>
+</tbody>
+</table>
+
+Un par de cosas saltan a la vista. Primera, CAISI midió a V4-Pro en un 74 % en SWE-bench Verified, frente al 80,6 % que publica DeepSeek, y afirmó sin rodeos que «DeepSeek V4 puntúa mejor en las evaluaciones que DeepSeek se hace a sí misma que en las de CAISI». Es la brecha entre benchmark de fabricante y medición independiente en una sola frase. Segunda, la lectura general de CAISI es que las capacidades de V4 van por detrás de la frontera unos ocho meses, con las mayores diferencias en programación reservada y ciberseguridad, donde la contaminación de los datos de entrenamiento no puede inflar la nota.
+
+Un par de matices para ser justos. Los resultados de matemáticas de CAISI van en sentido contrario, con V4-Pro en un 97 % en OTIS-AIME-2025, casi a la par de los modelos estadounidenses. Y CAISI hizo sus pruebas en abril, sobre la compilación de vista previa, no sobre el modelo general; las propias cifras de DeepSeek de vista previa a versión general muestran mejoras notables solo por reentrenamiento, y parte de la brecha probablemente sea deriva entre compilaciones y no pura inflación, y todavía nadie ha publicado una repetición independiente del modelo lanzado.
+
+<figure>
+<BlogImage src="/blog/deepseek-v4/caisi-benchmark-gap-es.png" alt="Gráfico de barras del test independiente del NIST CAISI que muestra a DeepSeek V4-Pro por detrás de GPT-5.5 en cuatro pruebas: SWE-Bench Verified 74 frente a 81, PortBench 44 frente a 78, CTF-Archive 32 frente a 71 y GPQA-Diamond 90 frente a 96." w="1425" h="837" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+<figcaption className="mt-3 text-center text-sm text-gray-500">DeepSeek V4-Pro frente a GPT-5.5 en las pruebas independientes del NIST CAISI. La brecha es mayor en programación reservada y ciberseguridad, y el 74 % medido en SWE-bench queda por debajo del 80,6 % que declara DeepSeek.</figcaption>
+</figure>
+
+Nada de esto convierte a V4 en un mal modelo. En costo por tarea, CAISI lo comparó con GPT-5.4 mini, el modelo barato estadounidense más cercano, y lo encontró más barato en cinco de siete pruebas, aunque entre un 53 % menos y un 41 % más caro según la tarea, una ilustración directa del impuesto de los tokens de razonamiento que vemos más abajo. Una evaluación independiente y puntuada de Kilo, fabricante de herramientas de programación, colocó a V4-Pro en 77 sobre 100, entre Claude Opus 4.7 (91) y Kimi K2.6 (68), aunque ese test es anterior a los buques insignia actuales de Claude y Kimi.
+
+El resumen honesto: **V4 es un modelo de la clase de frontera en precio y casi de frontera en capacidad, más fuerte en matemáticas, razonamiento y recuperación en contexto largo, y claramente por detrás de los líderes cerrados en la programación más difícil del mundo real, la ciberseguridad, el trabajo multimodal y los bucles de agente más largos.** Si una página te dice que sencillamente supera a GPT-5.5 y a Claude, te está vendiendo las cifras del fabricante, no las mediciones independientes.
+
+## Cuánto cuesta DeepSeek V4 de verdad
+
+La app web y la móvil son gratis. La cuestión del dinero empieza en la API, y es donde V4 se gana su fama de «el barato». Estas son las tarifas actuales por millón de tokens. Para un desglose de costos más completo, consulta nuestra guía de [precios de DeepSeek](https://geotoolbox.ai/blog/deepseek-pricing).
+
+<table>
+<thead>
+<tr><th>Modelo</th><th>Entrada (sin caché)</th><th>Entrada (con caché)</th><th>Salida</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>V4-Flash</strong> (valle)</td><td>0,22 $</td><td>0,007 $</td><td>0,66 $</td></tr>
+<tr><td><strong>V4-Flash</strong> (pico)</td><td>0,44 $</td><td>0,014 $</td><td>1,32 $</td></tr>
+<tr><td><strong>V4-Pro</strong> (valle)</td><td>0,66 $</td><td>0,022 $</td><td>1,98 $</td></tr>
+<tr><td><strong>V4-Pro</strong> (pico)</td><td>1,32 $</td><td>0,044 $</td><td>3,96 $</td></tr>
+</tbody>
+</table>
+
+Los precios están en dólares, la moneda de facturación de la API. Es un cobro entre empresas, con lo que el IVA (21 % en España, 16 % en México y variable en el resto de Latinoamérica) se gestiona por inversión del sujeto pasivo o se deduce: lo que un desarrollador paga de verdad es la cifra en dólares de arriba. Un par de trampas separan ese precio de catálogo de tu factura real.
+
+**La subida que DeepSeek venía anunciando ya llegó.** El 16 de agosto de 2026, a las 16:00 UTC, DeepSeek sustituyó su tarifa plana de todo el día por la división valle/pico de la tabla: las horas pico (de 01:00 a 04:00 y de 06:00 a 10:00 UTC, de lunes a viernes) se facturan al doble exacto de la tarifa valle en todas las columnas, mientras que los fines de semana se cobran siempre a tarifa valle. En un mercado donde estos precios casi siempre bajan, es una rara marcha atrás, y conviene calcular el presupuesto según la parte de tu tráfico real que caiga en pico, no dando por hecho que todo va a tarifa valle. Si has leído que «DeepSeek sube un 1.100 %», ese titular se refiere a una sola casilla (la entrada con caché de V4-Pro en pico), no a la factura entera: la tabla de arriba es el cuadro real.
+
+**El modo de razonamiento está activado por defecto, y se factura a la tarifa de salida.** Antes de responder, V4 genera tokens de razonamiento internos, y cuentan como salida aunque nunca los veas. Una respuesta corta puede producir en silencio miles de tokens facturados antes de la primera palabra visible. Si tu factura es más alta de lo que sugería el catálogo, casi siempre es por esto. Desactiva el razonamiento para el trabajo rutinario (clasificación, extracción, respuestas cortas) y déjalo activado solo donde el razonamiento se gane su costo.
+
+**Los aciertos de caché son donde está el verdadero ahorro.** Cuando el principio de una petición coincide con algo procesado hace poco (un prompt de sistema reutilizado, un documento que envías una y otra vez), esos tokens se facturan a la tarifa con caché, y la entrada de Flash cae de 0,22 $ a 0,007 $ en horas valle (o de 0,44 $ a 0,014 $ en pico). El uso de caché es automático y gratis: no marcas nada como cacheable, solo mantienes la parte estable de tu prompt al principio. Estructura los prompts para reutilizar un prefijo común y la misma carga de trabajo puede costar una fracción de la cifra anunciada. Tampoco hay un recargo aparte por contexto largo: un prompt de un millón de tokens se factura a la misma tarifa por token que uno corto, a la hora que sea.
+
+## Cómo acceder a V4: app, API o autoalojamiento
+
+Hay varias vías de entrada, y la más barata no siempre es la obvia.
+
+La **app web y móvil gratuita** de chat.deepseek.com te da el chat completo de V4 con búsqueda web incluida. La **API directa** es la vía de pago más barata y la que conviene para construir. **OpenRouter** y otros revendedores son cómodos, pero enrutan a servidores de terceros cuyas tarifas difieren de las oficiales, por lo que el precio que veas ahí puede no coincidir con el de la tabla. Si el costo es la prioridad, ve directo, aunque la propia API de DeepSeek puede saturarse bajo carga, parte de la razón por la que existen los revendedores.
+
+Antes de construir sobre la API, ojo con los clones. En la búsqueda en español, la primera posición para «deepseek v4» suele ocuparla una página no oficial que promete el modelo «sin registro», y varias de esas páginas mostraban precios de la vista previa ya caducados. Empresas de seguridad han documentado además campañas de malware con sitios web falsos de DeepSeek. El acceso oficial es chat.deepseek.com y api-docs.deepseek.com: verifica la dirección, y trata como desactualizada cualquier página que muestre una tarifa plana sin distinguir valle y pico.
+
+Si construyes sobre la API, la migración es lo que te va a dar problemas. Los antiguos alias de modelo se retiraron el 24 de julio de 2026 a las 15:59 UTC, y el código que aún los llama ahora falla.
+
+<table>
+<thead>
+<tr><th>Alias antiguo (retirado)</th><th>Llama ahora a</th><th>A qué corresponde</th></tr>
+</thead>
+<tbody>
+<tr><td><code>deepseek-chat</code></td><td><code>deepseek-v4-flash</code></td><td>Flash, modo sin razonamiento</td></tr>
+<tr><td><code>deepseek-reasoner</code></td><td><code>deepseek-v4-flash</code></td><td>Flash, modo de razonamiento</td></tr>
+</tbody>
+</table>
+
+<Callout type="warning">
+El cambio directo tiene una trampa. Mucha gente da por hecho que `deepseek-reasoner` era el modelo de razonamiento de la gama Pro y que cambiarlo conserva esa potencia. No lo era, y no la conserva: `deepseek-reasoner` correspondía a Flash en modo de razonamiento, no a Pro. Si quieres razonamiento del nivel de Pro tienes que pedir `deepseek-v4-pro` de forma explícita, o estarás ejecutando en silencio un modelo más pequeño.
+</Callout>
+
+**El autoalojamiento (ejecutar el modelo en tu propio hardware) es la verdadera vía de escape, con una salvedad de hardware.** Como los pesos tienen licencia MIT, puedes ejecutar V4 en tus propias máquinas, la respuesta más limpia a cualquier duda sobre residencia de datos. En la práctica, V4-Pro, con 1,6 billones de parámetros, queda fuera del alcance de un particular y es difícil incluso para equipos bien financiados; pide un servidor multi-GPU con cientos de gigabytes de memoria incluso cuantizado. V4-Flash, con 284 000 millones, es el objetivo realista de autoalojamiento (la compilación 0731 es algo mayor una vez cuentas su módulo de decodificación especulativa), y es de lo que trata casi toda la conversación sobre [ejecutar el modelo en local](https://geotoolbox.ai/blog/run-llm-locally). Cuenta con un nodo multi-GPU de mucha memoria servido con vLLM o SGLang, no con la vía de aficionado de llama.cpp o LM Studio. Las herramientas locales estaban verdes en el lanzamiento; las compilaciones cuantizadas y el soporte de los frameworks mejoraron durante el verano; comprueba el estado actual de tu entorno antes de comprometerte. Si has ejecutado [Kimi K3 en local](https://geotoolbox.ai/blog/how-to-run-kimi-k3-locally), las limitaciones te sonarán.
+
+## ¿Se puede usar en el trabajo?
+
+Esta es la pregunta que decide la mayoría de las adopciones profesionales, y la respuesta realmente es «depende», no un sí o un no.
+
+Si usas la API o la app alojadas de DeepSeek, tus prompts van a servidores en China. Para muchas empresas, contratistas públicos y sectores regulados, eso por sí solo es un freno absoluto, y no pocos lo restringen del todo. Es una decisión de enrutamiento y jurisdicción, separada de cualquier cosa sobre la calidad del modelo.
+
+Hay una vía intermedia que hacen posible los pesos abiertos: contratar V4 con un proveedor occidental. Azure AI Foundry, Fireworks y Together sirven V4-Flash y V4-Pro desde su infraestructura, algunos con regiones en la UE: tus prompts nunca tocan los servidores de DeepSeek y obtienes un contrato de empresa y un compromiso de residencia de datos sin tener que montar un clúster de GPU. Pagas un margen sobre las tarifas directas de DeepSeek; ese es el precio de la jurisdicción.
+
+O autoaloja. Como V4 tiene licencia MIT, un equipo que no pueda enviar datos a ningún sitio que no controle puede ejecutar el modelo en su propia infraestructura, de modo que los prompts nunca salen de la organización y no se aplican el registro de datos ni las condiciones de la app alojada. Un matiz que el autoalojamiento no resuelve: los rechazos políticos y el sesgo de alineación están entrenados en los pesos, de ahí que un V4 autoalojado siga esquivando o desviando las preguntas sensibles igual que el alojado. El autoalojamiento resuelve la cuestión de la residencia de los datos, no la de si el modelo responderá con franqueza. El cuadro más amplio de confianza, incluido cómo trata DeepSeek los datos en sus propios servidores, lo cubrimos en nuestra [explicación de DeepSeek](https://geotoolbox.ai/blog/what-is-deepseek).
+
+<Callout>
+**Y en España, ¿qué dice el RGPD?** Enviar datos personales a la API o la app alojadas de DeepSeek es una transferencia internacional a China sin decisión de adecuación de la UE, exactamente el terreno que regulan los artículos 44 a 49 del RGPD. No hay prohibición general: hasta la fecha, ningún gobierno de España ni de Latinoamérica ha vetado DeepSeek a los particulares. En España, la organización de consumidores OCU trasladó en febrero de 2025 una reclamación a la Agencia Española de Protección de Datos (AEPD), que no ha publicado ninguna resolución; en Europa, Italia sí bloqueó la app y Alemania pidió su retirada de las tiendas por el traslado de datos. Para un uso profesional con datos de clientes, el criterio prudente es el de siempre con cualquier IA de consumo: no metas ahí datos personales o confidenciales, o ejecuta los pesos abiertos en tu propia infraestructura.
+</Callout>
+
+## DeepSeek V4 frente a la competencia
+
+El marco que mantiene las ideas claras es que V4 es un modelo que puedes descargar, mientras que ChatGPT, Gemini y [Claude](https://geotoolbox.ai/blog/claude-vs-chatgpt) son productos que te alquilan acceso a un modelo cerrado. En precio bruto por token, V4 juega en otra liga: cuesta alrededor de un orden de magnitud menos que los buques insignia occidentales, aunque la diferencia se estrecha en el costo por tarea completada una vez cuentas los tokens de razonamiento.
+
+Frente a los líderes cerrados actuales de OpenAI, Google y Anthropic (incluido [Claude Opus 5](https://geotoolbox.ai/blog/claude-opus-5)), la disyuntiva es la de siempre: costo y apertura a cambio de pulido, alcance multimodal, confiabilidad ante tareas variadas y ventaja en la programación con agentes más difícil. Frente a los otros modelos chinos de pesos abiertos, V4 es el especialista en razonamiento y precio, [Kimi K3](https://geotoolbox.ai/blog/what-is-kimi-k3) tira más hacia lo agéntico y [Qwen](https://geotoolbox.ai/blog/what-is-qwen) juega la carta de la amplitud y la cobertura multilingüe. Para un cara a cara, nuestra guía sobre [los modelos chinos comparados](https://geotoolbox.ai/blog/chinese-ai-models-compared) los pone en una sola tabla, y el ranking de los [mejores LLM open source](https://geotoolbox.ai/blog/best-open-source-llms) lo compara con el resto del campo.
+
+## Rarezas y trampas que conviene conocer
+
+Algunas cosas que los benchmarks nunca mencionan siguen sorprendiendo a la gente.
+
+**V4 no siempre sabe que es V4.** Pregúntale qué modelo es y puede responder V3; lo que dice de sí mismo no es de fiar. No uses la respuesta del propio modelo para comprobar qué versión ejecutas; comprueba el nombre de API que llamaste.
+
+**El trabajo creativo y exploratorio retrocedió un poco.** Quien escribe ficción o hace generación de ideas sin un rumbo fijo informa de un sesgo de positividad más marcado y un tono más difícil de dirigir que el de V3.2. Es una queja concreta de un público concreto, no un fallo de los que acaban en titulares, pero si tu caso de uso es la escritura creativa, pruébalo antes de cambiarte.
+
+**El seguimiento de instrucciones en agentes está en disputa.** Algunos desarrolladores dicen que V4 rebasa los límites definidos explícitamente en arquitecturas de agente; otros no ven nada. El arreglo consensuado es de arquitectura: dale un orquestador claro y definiciones de herramientas precisas y acotadas, en lugar de confiar en una instrucción libre y larga.
+
+**R2 sigue sin llegar.** El modelo de razonamiento por el que la gente sigue preguntando, DeepSeek-R2, se esperaba en 2025 por informaciones de prensa y no ha aparecido; el modo de razonamiento integrado de V4 es la respuesta de DeepSeek por ahora. Trata cualquier afirmación sobre R2 como un rumor hasta que exista una ficha del modelo.
+
+## Qué significa DeepSeek V4 para tu visibilidad en la IA
+
+Vuelve al principio. La razón por la que esos asistentes dieron respuestas contradictorias y casi todas erróneas sobre V4 no es que V4 sea oscuro; es un lanzamiento de sobra cubierto. Es que los asistentes solo están tan al día como las fuentes que pueden alcanzar, y la mayoría no se había puesto al corriente.
+
+Ese es el juego entero para cualquiera que quiera que la IA lo represente con precisión. Cuando un modelo, un producto o un dato son nuevos, los motores recurren al material desfasado que encuentran. En la práctica, que te citen bien se reduce a las disciplinas poco glamurosas que esta página intenta encarnar: fecha tus afirmaciones, atribuye cada cifra a su fuente, pon la respuesta directa junto al encabezado y revisa con regularidad los datos volátiles. Ese es el [fundamento de la optimización para motores generativos (GEO)](https://geotoolbox.ai/glossary/generative-engine-optimization).
+
+Y no es teoría en este caso. A fecha del 23 de agosto de 2026, la búsqueda en Google en España para «deepseek v4» muestra un resumen «Vistas creadas con IA» que se apoya, entre otras fuentes, en esa página clon «sin registro» de la primera posición y en videos de la vista previa de abril. El propio motor está citando material obsoleto porque es lo que encuentra bien estructurado. Las respuestas desactualizadas vienen de fuentes desfasadas o inalcanzables, de ahí que el primer movimiento sea asegurarte de que los motores puedan siquiera alcanzar e interpretar tus páginas. Haz una [comprobación gratuita de preparación para la IA](https://geotoolbox.ai/tools/ai-readiness) para ver dónde se bloquean o tropiezan los rastreadores de IA en tu sitio, antes de que el próximo lanzamiento vuelva a hacer urgente la pregunta.
+
+## Preguntas frecuentes
+
+### ¿DeepSeek V4 ya salió o sigue en vista previa?
+
+Salió. El buque insignia V4-Pro alcanzó la disponibilidad general el 13 de agosto de 2026, cerrando una vista previa que arrancó el 24 de abril. Las explicaciones y respuestas de IA que todavía lo llaman vista previa están desactualizadas; curiosamente, también lo está la propia ficha del modelo V4-Pro de DeepSeek, que sigue con esa etiqueta.
+
+### ¿Uso V4 Flash o V4 Pro?
+
+Empieza con Flash para casi todo: chat, extracción, resumen, bucles de agente de gran volumen y casi toda la programación. Pasa a Pro solo para razonamiento difícil, análisis complejo de varios pasos o programación exigente, donde la mejora de calidad compensa un costo de salida unas tres veces mayor.
+
+### ¿Cuánto cuesta DeepSeek V4 al mes?
+
+La app es gratis. En la API tu factura sigue tu volumen de tokens, por lo que la respuesta honesta es calcularla con la tabla de arriba: multiplica tus tokens mensuales de entrada y salida por las tarifas de Flash, y recuerda que el modo de razonamiento añade tokens facturados de más. El uso individual suele quedar en unos pocos dólares al mes y escala desde ahí; Pro cuesta unas tres veces Flash para el mismo volumen. Nuestra guía de [precios de DeepSeek](https://geotoolbox.ai/blog/deepseek-pricing) tiene ejemplos resueltos. Los aciertos de caché y desactivar el razonamiento para tareas simples son lo que más mueve la factura.
+
+### ¿DeepSeek V4 está a punto de encarecerse?
+
+Ya lo hizo. El 16 de agosto de 2026 DeepSeek sustituyó su tarifa plana por una división valle/pico: en valle, V4-Flash cuesta 0,22 $ de entrada / 0,66 $ de salida por millón de tokens y V4-Pro 0,66 $ / 1,98 $, y en las horas pico (de 01:00 a 04:00 y de 06:00 a 10:00 UTC, de lunes a viernes) cada tarifa se duplica; los fines de semana se cobran a tarifa valle. Era la «subida significativa» que la página de precios venía anunciando desde finales de julio; presupuesta sobre las tarifas valle y añade el sobrecosto de pico para la parte de tu tráfico que caiga en esas franjas. Los precios de DeepSeek se han movido dos veces este año; revisa la [página oficial](https://api-docs.deepseek.com/quick_start/pricing) antes de comprometer un presupuesto.
+
+### ¿Por qué mi factura de DeepSeek es más alta que el precio de catálogo?
+
+Casi siempre porque el modo de razonamiento está activado por defecto y sus tokens de razonamiento se facturan a la tarifa de salida, aunque nunca los veas. Desactiva el razonamiento para tareas rutinarias y estructura los prompts para reutilizar un prefijo común, de modo que más tokens caigan en la tarifa con caché, más barata.
+
+### Usaba deepseek-chat o deepseek-reasoner. ¿A qué cambio?
+
+Ambos se retiraron el 24 de julio de 2026. Llama a `deepseek-v4-flash` para el comportamiento antiguo de chat y de reasoner. Ten en cuenta que `deepseek-reasoner` correspondía a Flash en modo de razonamiento, no a Pro, por lo que si quieres razonamiento del nivel de Pro debes llamar a `deepseek-v4-pro` de forma explícita.
+
+### ¿Cuál es la forma más barata de usar DeepSeek V4?
+
+La API directa de DeepSeek, no un revendedor. OpenRouter y otros mercados añaden su propio margen sobre las tarifas de DeepSeek. Usar la API directa y aprovechar los aciertos de caché es la vía de menor costo.
+
+### ¿La ventana de contexto de 1M es real?
+
+Sí, pero funciona con pérdidas. La compresión que hace asequible un millón de tokens implica que el detalle del principio de un prompt largo se resume, y puede parecer que el modelo ignora instrucciones colocadas al principio. Coloca las instrucciones críticas cerca del final y repite lo que deba cumplirse sí o sí.
+
+### ¿Funciona bien en español?
+
+Sí para el trabajo cotidiano, con un matiz. Las fuentes en español coinciden en que V4 se desenvuelve con soltura en español para tareas de todos los días, aunque el inglés y el chino son sus puntos fuertes, y para una redacción profesional pulida en español muchos usuarios siguen dando una ligera ventaja a ChatGPT o Claude. Es una impresión de uso, no un resultado de benchmark, así que tómala como orientación y pruébalo con tu propio caso.
+
+### ¿Puedo usar DeepSeek V4 en el trabajo?
+
+A través de la API o la app alojadas, tus datos van a servidores en China, algo que muchas empresas y sectores regulados prohíben, y que en la UE cae bajo las reglas de transferencia internacional del RGPD (artículos 44 a 49). Los pesos abiertos con licencia MIT te permiten autoalojar el modelo y mantener los datos en casa, que es la vía habitual para el trabajo sensible.
+
+### ¿DeepSeek V4 es open source?
+
+Los pesos son abiertos bajo licencia MIT: puedes descargarlo, ejecutarlo y ajustarlo libremente. No es lo mismo que ser totalmente de código abierto, ya que no se publican los datos ni la receta de entrenamiento.
+
+### ¿Qué pasó con DeepSeek R2?
+
+No ha salido. R2 se esperaba en 2025 y sigue sin lanzarse; el modo de razonamiento integrado de V4 es la oferta de razonamiento actual de DeepSeek. Trata cualquier afirmación sobre R2 como un rumor hasta que exista una ficha del modelo.
+
+## Fuentes
+
+- Modelos y precios de la API de DeepSeek (tarifas, nombres de modelo, aviso de subida) - DeepSeek, consultado en agosto de 2026 - `api-docs.deepseek.com/quick_start/pricing`
+- Lanzamiento de la versión general de DeepSeek-V4-Pro (13 de agosto de 2026) - DeepSeek - `api-docs.deepseek.com/news/news260813`
+- Ficha del modelo DeepSeek-V4-Pro (arquitectura, parámetros, benchmarks del fabricante, licencia) - DeepSeek en Hugging Face - `huggingface.co/deepseek-ai/DeepSeek-V4-Pro`
+- Informe técnico de DeepSeek-V4 (atención híbrida, eficiencia en contexto largo) - arXiv - `arxiv.org/abs/2606.19348`
+- Evaluación de DeepSeek V4 Pro por el CAISI (benchmarks independientes, retraso respecto a la frontera) - NIST, mayo de 2026 - `nist.gov/news-events/news/2026/05/caisi-evaluation-deepseek-v4-pro`
+- DeepSeek V4 Pro, análisis de inteligencia, rendimiento y precio (índice independiente) - Artificial Analysis - `artificialanalysis.ai/models/deepseek-v4-pro`
+- Probamos DeepSeek V4 Pro y Flash (análisis puntuado independiente) - Kilo - `blog.kilo.ai/p/we-tested-deepseek-v4-pro-and-flash`
+- DeepSeek V4 Flash y V4 Pro en Microsoft Foundry (alojamiento occidental, residencia en EE. UU. y la UE) - Microsoft - `techcommunity.microsoft.com/blog/azure-ai-foundry-blog/introducing-deepseek-v4-flash-and-v4-pro-in-microsoft-foundry/4515174`
+- La OCU pide a la AEPD que investigue DeepSeek - Infobae, febrero de 2025 - `infobae.com/espana/agencias/2025/02/03/ocu-denuncia-los-posibles-riesgos-de-deepseek-y-pide-a-proteccion-de-datos-que-investigue`
