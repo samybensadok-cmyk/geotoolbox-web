@@ -31,21 +31,21 @@ export default function middleware(request: NextRequest) {
       res.headers.set("Vary", "Accept")
       return res
     }
-    // The HTML variant must ALSO vary on Accept, or the edge can hand an agent
-    // that asked for markdown the cached HTML it stored for a browser. Verified
-    // live 2026-08-24: `/` was returning `x-vercel-cache: HIT` with
-    // `vary: rsc, next-router-state-tree, ...` and no Accept — the `Vary: Accept`
-    // configured in next.config.ts `headers()` is overwritten by Next's own Vary
-    // on the document response, so it has to be added here instead.
-    // APPEND, never set: replacing Vary would drop the rsc/next-router-* keys and
-    // break RSC navigation caching for every human visitor.
-    //
-    // And route through handleI18nRouting, NOT NextResponse.next(): `/` has to
-    // enter next-intl routing to be served as the `en` segment (see the comment
-    // above). Returning next() here renders the homepage without a locale.
-    const res = handleI18nRouting(request)
-    res.headers.append("Vary", "Accept")
-    return res
+    // KNOWN LIMITATION, do not retry without changing the rendering mode.
+    // The HTML variant of `/` does NOT carry `Vary: Accept`; only the markdown
+    // variant does (set on the rewrite above). So a shared cache that stored the
+    // HTML for a browser can in principle hand it to an agent that asked for
+    // markdown. Two fixes were tried and BOTH are inert, measured on the live
+    // deploy 2026-08-24:
+    //   - `Vary: Accept` in next.config.ts `headers()` for source "/" — present
+    //     in config, absent from the response.
+    //   - appending it here via handleI18nRouting()'s response — same.
+    // Cause: `/` is a STATICALLY PRERENDERED page, so Vercel serves it from the
+    // static cache with its own headers (`vary: rsc, next-router-*`,
+    // `x-vercel-cache: HIT` even on a cache-busted URL) and neither middleware
+    // nor the config header reaches it. The only real fix is making `/` dynamic,
+    // which trades every visitor's TTFB for an edge case — not worth it.
+    // Left as a fallthrough into next-intl routing, which is what `/` needs.
   }
 
   const twin = MD_TWIN.exec(pathname)
