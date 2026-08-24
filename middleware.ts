@@ -31,6 +31,21 @@ export default function middleware(request: NextRequest) {
       res.headers.set("Vary", "Accept")
       return res
     }
+    // The HTML variant must ALSO vary on Accept, or the edge can hand an agent
+    // that asked for markdown the cached HTML it stored for a browser. Verified
+    // live 2026-08-24: `/` was returning `x-vercel-cache: HIT` with
+    // `vary: rsc, next-router-state-tree, ...` and no Accept — the `Vary: Accept`
+    // configured in next.config.ts `headers()` is overwritten by Next's own Vary
+    // on the document response, so it has to be added here instead.
+    // APPEND, never set: replacing Vary would drop the rsc/next-router-* keys and
+    // break RSC navigation caching for every human visitor.
+    //
+    // And route through handleI18nRouting, NOT NextResponse.next(): `/` has to
+    // enter next-intl routing to be served as the `en` segment (see the comment
+    // above). Returning next() here renders the homepage without a locale.
+    const res = handleI18nRouting(request)
+    res.headers.append("Vary", "Accept")
+    return res
   }
 
   const twin = MD_TWIN.exec(pathname)

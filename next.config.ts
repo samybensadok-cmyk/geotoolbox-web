@@ -27,7 +27,14 @@ const nextConfig: NextConfig = {
             value:
               '</llms.txt>; rel="alternate"; type="text/plain"; title="llms.txt", ' +
               '</llms-full.txt>; rel="alternate"; type="text/plain"; title="llms-full.txt", ' +
+              '</llms-blog.txt>; rel="alternate"; type="text/plain"; title="Complete article index", ' +
+              '</llms-glossary.txt>; rel="alternate"; type="text/plain"; title="Complete glossary index", ' +
               '</home.md>; rel="alternate"; type="text/markdown", ' +
+              // rel="help", not rel="alternate": /agents.md is site-level guidance
+              // (when to use us, how to call us), NOT an alternate representation
+              // of the homepage. Advertising it as an alternate would be a lie an
+              // agent could act on.
+              '</agents.md>; rel="help"; type="text/markdown"; title="Agent instructions", ' +
               '</sitemap.xml>; rel="sitemap"; type="application/xml", ' +
               '</feed.xml>; rel="alternate"; type="application/rss+xml"',
           },

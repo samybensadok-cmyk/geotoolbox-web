@@ -35,7 +35,32 @@ export async function generateMetadata({
     // absolute opts out of the "%s | GEO Toolbox" template (brand is in-string).
     title: { absolute: t("title") },
     description: t("description"),
-    alternates: marketingAlternatesFor("", locale),
+    // A page-level `alternates` REPLACES the root metadata's alternates wholesale,
+    // which is how the homepage silently lost the root `types` block (llms.txt,
+    // home.md, agents.md) from its <head> — verified live 2026-08-24: only the
+    // hreflang links were emitted. The HTTP Link header still advertised them, but
+    // an agent that parses the <head> and never reads response headers saw nothing.
+    // Merge the site-level machine-readable surfaces back in.
+    //
+    // ONLY on the default locale: `/home.md` is the twin of `/`, not of `/fr` or
+    // `/es` (the middleware rewrite is keyed to the bare `/`). Advertising it on a
+    // localized homepage would point an agent at the wrong language.
+    alternates: {
+      ...marketingAlternatesFor("", locale),
+      ...(locale === routing.defaultLocale
+        ? {
+            types: {
+              "text/plain": [
+                { url: "/llms.txt", title: "llms.txt" },
+                { url: "/llms-full.txt", title: "llms-full.txt" },
+                { url: "/llms-blog.txt", title: "Complete article index" },
+                { url: "/llms-glossary.txt", title: "Complete glossary index" },
+              ],
+              "text/markdown": [{ url: "/home.md", title: "Homepage (markdown)" }],
+            },
+          }
+        : {}),
+    },
   }
 }
 
