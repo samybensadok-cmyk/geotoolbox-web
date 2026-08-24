@@ -52,9 +52,14 @@ const HOME_MIN_LEVELS = 3
  * flight payload is already 61% of the bytes. The floor is set slightly above 5%
  * to leave room before the check actually regresses.
  *
- * NECESSARY, NOT SUFFICIENT — do not read a pass here as a guarantee: one scanned
- * site sits at 26.6% and is still marked "flat", so the full discriminator is not
- * identified. This gate protects the part we measured; it does not model the check.
+ * The 5% line is measured, not guessed: jarrettstanley.com 9,307 chars / 198,604
+ * bytes = 4.69% fails, is-agentic.com 4,191 / 85,613 = 4.90% fails, zephior.com
+ * 1,659 / 32,927 = 5.04% passes. A 0.14pp separation across the boundary.
+ *
+ * One caveat that matters if you ever re-derive this: Ora runs a SECOND check,
+ * `content-efficiency`, that reports the same quantity with a DIFFERENT text
+ * extractor — 10,597 chars for the same page where content-no-js counted 9,307.
+ * Never carry a char count between the two; it manufactures a false counterexample.
  */
 const HOME_MIN_CONTENT_RATIO = 0.052
 const HOMEPAGES = ["en.html", "fr.html", "es.html"]
