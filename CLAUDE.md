@@ -76,3 +76,46 @@ Frontmatter `title:` and `description:` support date tokens, the Yoast
 - **To preview locally** (only if truly needed): run backgrounded with output redirected to a file, then kill it — `npm run dev > /tmp/next-dev.log 2>&1 &` (use `run_in_background`), tail the log file for the port, and `kill` the PID when done. Never leave it running across turns.
 - **Preferred verification = the Vercel deploy, not a local server.** This repo auto-deploys on push to `main`; a failed build simply doesn't deploy (current site stays live), so committing + pushing + checking the live URL is zero-risk and avoids the dev-server trap entirely.
 - `next build` is acceptable when you must validate locally (it terminates — not a loop), but it's memory-heavy on 16GB; cap it with `NODE_OPTIONS=--max-old-space-size=4096` and prefer it over `next dev`.
+
+## Agent readiness (the machine-readable surfaces)
+
+Two gates, both mandatory before pushing anything that touches page structure,
+`lib/config.ts`, `lib/seo-schema.ts`, or any of the generated index files:
+
+- **`npm run check:agents`** — reads the REAL builders in `lib/llms-index.ts`
+  (the four route handlers are thin wrappers over them, and the gate asserts they
+  still are). It enforces: `/llms.txt` stays under 30,000 characters; the
+  `## When to use GEO Toolbox` and `## How an agent should call…` sections exist
+  and are byte-identical in `/llms.txt` and `/agents.md`; the 404 recovery body
+  links to every recovery target; the Organization JSON-LD carries a complete
+  contactPoint and either a complete `PostalAddress` or none at all; the footer
+  introduces no heading-level skip; `LLMS_LOCALES` matches `routing.locales`.
+- **`npm run build && npm run check:headings`** — walks all ~420 prerendered
+  pages in `.next/server/app` and fails on any content page with more than one
+  `<h1>`, a first heading that isn't `<h1>`, or a heading-level skip. It reads
+  RENDERED HTML on purpose: heading level is a property of the composed page, and
+  both real defects found so far (footer `<h4>` under a page `<h2>`; GrowthCharts
+  `<h3>` directly under the services `<h1>`) were invisible in any single file.
+  It exits 1 if the build output is missing rather than passing silently.
+
+Rules that keep these honest:
+
+- **`sameAs` on the Organization node is an identity assertion.** Open every
+  profile before adding it. `twitter.com/geotoolbox` was published as `sameAs`
+  until 2026-08-24; that handle belongs to a Brazilian geology-equipment retailer
+  (`geotoolbox.com.br`), so the site was telling AI engines we were that company
+  — while `brand-search-accuracy` was failing for brand confusion. Founder
+  profiles belong on the Person node (`lib/authors.ts`), not here.
+- **Fix the heading LEVEL, never the classes.** Visual size is styling; `h2` with
+  the same className renders identically. A shared component used at two depths
+  takes a `headingLevel` prop (see `GrowthCharts`).
+- **`/llms.txt` is an index, not a corpus.** It hit ~77KB by inlining 250+
+  articles. Bulk lists live in `/llms-blog.txt` and `/llms-glossary.txt`; full
+  text lives in `/llms-full.txt`. If it grows again, lower `RECENT_LIMIT` — never
+  raise `LLMS_TXT_MAX_CHARS`.
+- **Agent guidance has exactly one source**, `lib/agent-guidance.ts`. A second
+  hand-maintained copy drifts, and a stale instruction file is worse than none:
+  an agent acts on a capability we no longer have.
+- **A postal address is all-or-nothing.** `postalAddressSchema()` returns `null`
+  unless both locality and country are set. Set them in `lib/config.ts` to close
+  `org-schema-completeness`; a half-filled `PostalAddress` is worse than none.

@@ -77,13 +77,24 @@ export function GrowthCharts({
   variant = "dark",
   panels = "both",
   frameless = false,
+  headingLevel = 3,
 }: {
   variant?: Variant
   panels?: "both" | "queries"
   /** Drop the card border/background — for embedding inside an existing frame (e.g. the browser mockup). */
   frameless?: boolean
+  /**
+   * Heading level for the panel titles. Defaults to 3, which is right when the
+   * charts sit under a section <h2>. Pass 2 when they are rendered directly
+   * under a page <h1> (the /services/ai-automation-agency hero does this) —
+   * otherwise the panel titles are an h1 → h3 level skip, which is the exact
+   * "flat / malformed heading structure" signal agent-readiness scanners flag.
+   * Visual size comes from `t.title`, so the level is semantics only.
+   */
+  headingLevel?: 2 | 3
 }) {
   const t = frameless ? { ...theme[variant], card: "p-4 pb-2" } : theme[variant]
+  const PanelTitle = (headingLevel === 2 ? "h2" : "h3") as "h2" | "h3"
   // Cap at the last 8 months so bars stay readable as the series grows.
   const months = proofStats.monthly.slice(-8)
   const [tip, setTip] = useState<TipState>(null)
@@ -142,7 +153,7 @@ export function GrowthCharts({
       <div className={panels === "both" ? "grid grid-cols-1 gap-5 md:grid-cols-2" : ""}>
         {/* Panel 1 — total unique queries */}
         <div className={t.card}>
-          <h3 className={t.title}>Queries ranked in Google</h3>
+          <PanelTitle className={t.title}>Queries ranked in Google</PanelTitle>
           <p className={t.src}>Search Console API · unique queries / month{partialNote}</p>
           <svg
             viewBox={`0 0 ${W} ${H}`}
@@ -183,7 +194,7 @@ export function GrowthCharts({
         {/* Panel 2 — first-page split */}
         {panels === "both" && (
           <div className={t.card}>
-            <h3 className={t.title}>Queries on Google&apos;s first page</h3>
+            <PanelTitle className={t.title}>Queries on Google&apos;s first page</PanelTitle>
             <p className={t.src}>Search Console API · avg. position ≤ 10{partialNote}</p>
             <div className={`mt-2 flex gap-4 text-xs ${t.legend}`}>
               <span className="flex items-center gap-1.5">

@@ -11,8 +11,46 @@ export const siteConfig = {
   // Entry points that cannot express a billing choice must say monthly.
   appSignupUrl: "/app/?page=signup&interval=monthly",
   author: "Samy Ben Sadok",
+  // Machine-readable contact + postal identity for the homepage Organization
+  // JSON-LD. Agent-readiness scanners (Ora / Is Agentic `org-schema-completeness`)
+  // look for BOTH a contactPoint and a PostalAddress on the Organization node
+  // before they treat the business identity as verifiable.
+  contactEmail: "samy@geotoolbox.ai",
+  // Operator decision 2026-08-24: no postal address is published. Set
+  // `addressLocality` + `addressCountry` (city + ISO-3166-1 alpha-2 country, no
+  // street needed) to emit a PostalAddress and take that check to full credit.
+  // Leave both empty and the address block is omitted entirely — never emit a
+  // half-filled PostalAddress, which reads as worse than none.
+  address: {
+    addressLocality: "",
+    addressRegion: "",
+    postalCode: "",
+    streetAddress: "",
+    addressCountry: "",
+  } as {
+    addressLocality?: string
+    addressRegion?: string
+    postalCode?: string
+    streetAddress?: string
+    addressCountry?: string
+  },
+  // ORGANIZATION-level profiles only. These are emitted verbatim as
+  // `sameAs` on the homepage Organization JSON-LD, which is an ASSERTION OF
+  // IDENTITY: "the entity at this URL is us". Never add a profile here that has
+  // not been opened and confirmed to be ours.
+  //
+  // 2026-08-24 — `twitter: "https://twitter.com/geotoolbox"` was REMOVED. That
+  // handle is not ours: @Geotoolbox on X is a Brazilian geology-equipment
+  // retailer (bio "equipamentos para geólogos", links geotoolbox.com.br, joined
+  // November 2013, 0 posts). Publishing it as sameAs told every AI engine that
+  // GEO Toolbox and that company are one entity — actively feeding the brand
+  // confusion we are trying to resolve, since "geo toolbox" already resolves to
+  // geocaching/GIS/geodetics meanings in search. Restore a handle here only
+  // after claiming one we control.
+  //
+  // The FOUNDER's profiles (LinkedIn, Malt, Semrush) are not Organization
+  // identity — they live on the Person node via lib/authors.ts.
   links: {
-    twitter: "https://twitter.com/geotoolbox",
     github: "https://github.com/samybensadok-cmyk/geotoolbox-web",
   },
   nav: [

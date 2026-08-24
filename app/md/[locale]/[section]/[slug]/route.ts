@@ -2,6 +2,7 @@ import { getPostBySlug, getGlossaryTermBySlug } from "@/lib/content"
 import { siteConfig } from "@/lib/config"
 import { mdxToMarkdown } from "@/lib/markdown"
 import { contentLocales } from "@/i18n/routing"
+import { markdown404Body, markdown404Headers } from "@/lib/agent-404"
 
 // Internal target of the middleware markdown rewrites (/blog/<slug>.md and
 // Accept: text/markdown). Serves the article as clean markdown — same URL
@@ -14,7 +15,10 @@ export async function GET(
 ) {
   const { locale, section, slug } = await params
   if (!(contentLocales as readonly string[]).includes(locale) || !["blog", "glossary"].includes(section)) {
-    return new Response("Not found", { status: 404 })
+    return new Response(markdown404Body(`/${locale}/${section}/${slug}.md`), {
+      status: 404,
+      headers: markdown404Headers(),
+    })
   }
 
   const prefix = locale === "en" ? "" : `/${locale}`
@@ -60,7 +64,10 @@ export async function GET(
   }
 
   if (!markdown) {
-    return new Response("Not found", { status: 404 })
+    return new Response(markdown404Body(`/${locale}/${section}/${slug}.md`), {
+      status: 404,
+      headers: markdown404Headers(),
+    })
   }
 
   return new Response(markdown, {

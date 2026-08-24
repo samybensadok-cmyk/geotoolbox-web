@@ -40,8 +40,16 @@ export const rootMetadata: Metadata = {
       "text/plain": [
         { url: "/llms.txt", title: "llms.txt" },
         { url: "/llms-full.txt", title: "llms-full.txt" },
+        { url: "/llms-blog.txt", title: "Complete article index" },
+        { url: "/llms-glossary.txt", title: "Complete glossary index" },
       ],
-      "text/markdown": [{ url: "/home.md", title: "Homepage (markdown)" }],
+      // /agents.md is the cold-discovery path: an agent that lands on a page
+      // from web search sees these <head> alternates without ever fetching
+      // /llms.txt, so the when-to-use guidance has to be reachable from here.
+      "text/markdown": [
+        { url: "/home.md", title: "Homepage (markdown)" },
+        { url: "/agents.md", title: "Agent instructions" },
+      ],
     },
   },
   robots: {

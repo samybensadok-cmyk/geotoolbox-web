@@ -2,19 +2,70 @@ import { siteConfig } from "./config"
 import { getAuthorByName, PRIMARY_AUTHOR, type Author } from "./authors"
 
 /**
+ * PostalAddress node for the Organization — omitted entirely unless siteConfig
+ * carries a real locality/country pair. A half-filled PostalAddress (a country
+ * with no locality, say) is worse than none: validators flag it and agents that
+ * read it for a contact answer get a dead end. See the `address` comment in
+ * lib/config.ts for the operator switch.
+ */
+export function postalAddressSchema() {
+  const a = siteConfig.address
+  const filled = Object.entries(a).filter(([, v]) => Boolean(v && v.trim()))
+  if (!a.addressCountry?.trim() || !a.addressLocality?.trim()) return null
+  return { "@type": "PostalAddress", ...Object.fromEntries(filled) }
+}
+
+/**
+ * ContactPoint node for the Organization — the machine-readable "how to reach a
+ * human" record. Agent-readiness scanners look for contactType + a reachable
+ * channel on the Organization node itself, not only on /contact.
+ */
+export function organizationContactPoint() {
+  return {
+    "@type": "ContactPoint",
+    contactType: "customer support",
+    email: siteConfig.contactEmail,
+    url: `${siteConfig.url}/contact`,
+    availableLanguage: ["English", "French", "Spanish"],
+    areaServed: "Worldwide",
+  }
+}
+
+/**
  * Organization schema — homepage identity card for AI / knowledge panels.
  */
 export function organizationSchema() {
   const founder = PRIMARY_AUTHOR
+  const address = postalAddressSchema()
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
     "@id": `${siteConfig.url}/#organization`,
     name: siteConfig.name,
+    alternateName: ["GeoToolBox", "geotoolbox.ai", "GEO Toolbox AI"],
+    // Entity disambiguation. "GEO Toolbox" is a heavily contested string: an
+    // unqualified search for it returns geocaching toolboxes, GIS/geospatial
+    // toolkits, MATLAB's Mapping Toolbox and geodetic software — none of them
+    // us. disambiguatingDescription exists precisely for this case and gives an
+    // engine one sentence to separate the entities.
+    disambiguatingDescription:
+      "GEO Toolbox (geotoolbox.ai) is a generative engine optimization (GEO) analytics platform that measures brand visibility and citations in AI answer engines. It is unrelated to geocaching toolboxes, GIS and geospatial toolkits, and geodetic or GPS software that share the 'geo toolbox' name.",
+    knowsAbout: [
+      "Generative engine optimization",
+      "AI search visibility",
+      "AI citation tracking",
+      "Answer engine optimization",
+      "Large language model search",
+      "Agent readiness",
+      "Search engine optimization",
+    ],
     url: siteConfig.url,
     logo: `${siteConfig.url}/opengraph-image`,
     description: siteConfig.description,
     foundingDate: "2026-04",
+    email: siteConfig.contactEmail,
+    contactPoint: [organizationContactPoint()],
+    ...(address ? { address } : {}),
     sameAs: Object.values(siteConfig.links),
     founder: {
       "@type": "Person",

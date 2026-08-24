@@ -62,6 +62,8 @@ export function GET() {
     "# Markdown versions: append .md to any /blog or /glossary URL (homepage: /home.md),",
     "# or request the canonical URL with Accept: text/markdown.",
     "# Index: /llms.txt \u00b7 full content: /llms-full.txt",
+    "# Agent instructions (when to use this site, how to call it): /agents.md",
+    "# Complete indexes: /llms-blog.txt \u00b7 /llms-glossary.txt",
     "",
     group(["*"]),
     "",

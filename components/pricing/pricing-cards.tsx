@@ -306,7 +306,11 @@ export function PricingCards({ copy, locale }: { copy: PricingCardsCopy; locale:
                 </span>
               )}
 
-              <h3 className="text-[15px] font-bold tracking-tight text-gray-900">{plan.name}</h3>
+              {/* h2, not h3: PricingCards is rendered directly under the /pricing
+                  <h1> with no intervening section heading, so an <h3> here was a
+                  level skip (h1 → h3) on the page. The classes carry the visual
+                  size, so this is a semantics-only change. */}
+              <h2 className="text-[15px] font-bold tracking-tight text-gray-900">{plan.name}</h2>
 
               <div className="mt-3 flex items-baseline gap-1">
                 <span className="text-3xl font-bold tracking-tight text-gray-900">{p.big}</span>

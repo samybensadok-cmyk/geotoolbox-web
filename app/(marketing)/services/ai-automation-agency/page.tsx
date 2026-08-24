@@ -395,7 +395,7 @@ export default function AiAutomationAgencyPage() {
                       </span>
                     </div>
                     <div className="bg-white">
-                      <GrowthCharts variant="light" panels="queries" frameless />
+                      <GrowthCharts variant="light" panels="queries" frameless headingLevel={2} />
                     </div>
                   </div>
                   <figcaption className="mt-3 font-mono text-[12px] text-gray-500">

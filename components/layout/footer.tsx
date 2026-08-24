@@ -34,7 +34,7 @@ export function Footer({
             per-placement conversion is visible in newsletter_subscribers. */}
         <div className="mb-10 grid gap-5 border-b border-gray-200 pb-10 lg:grid-cols-2 lg:items-center lg:gap-10">
           <div>
-            <h4 className="text-[15px] font-bold tracking-tight text-gray-900">{nlCopy.title}</h4>
+            <h2 className="text-[15px] font-bold tracking-tight text-gray-900">{nlCopy.title}</h2>
             <p className="mt-1 text-sm leading-relaxed text-gray-600">{nlCopy.description}</p>
           </div>
           <NewsletterSignup source="footer" compact copy={nlCopy} />
@@ -56,7 +56,7 @@ export function Footer({
           {/* Product */}
           {/* Scan & Analyze */}
           <div>
-            <h4 className="text-xs font-semibold text-gray-900 uppercase tracking-wider">{footer?.scanAnalyze ?? "Scan & Analyze"}</h4>
+            <h2 className="text-xs font-semibold text-gray-900 uppercase tracking-wider">{footer?.scanAnalyze ?? "Scan & Analyze"}</h2>
             <ul className="mt-3 space-y-2">
               <li><Link href={L("/features/ai-visibility-tracker")} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">AI Visibility Tracker</Link></li>
               <li><Link href={L("/features/geo-scan")} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">GEO Scan</Link></li>
@@ -67,7 +67,7 @@ export function Footer({
 
           {/* Intelligence & Reporting */}
           <div>
-            <h4 className="text-xs font-semibold text-gray-900 uppercase tracking-wider">{footer?.intelligence ?? "Intelligence"}</h4>
+            <h2 className="text-xs font-semibold text-gray-900 uppercase tracking-wider">{footer?.intelligence ?? "Intelligence"}</h2>
             <ul className="mt-3 space-y-2">
               <li><Link href={L("/features/domain-overview")} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Domain Overview</Link></li>
               <li><Link href={L("/features/competitor-intel")} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Competitor Intel</Link></li>
@@ -79,7 +79,7 @@ export function Footer({
 
           {/* Tools */}
           <div>
-            <h4 className="text-xs font-semibold text-gray-900 uppercase tracking-wider">{footer?.tools ?? "Tools"}</h4>
+            <h2 className="text-xs font-semibold text-gray-900 uppercase tracking-wider">{footer?.tools ?? "Tools"}</h2>
             <ul className="mt-3 space-y-2">
               {tools.map((t) => (
                 <li key={t.slug}>
@@ -92,7 +92,7 @@ export function Footer({
 
           {/* Resources */}
           <div>
-            <h4 className="text-xs font-semibold text-gray-900 uppercase tracking-wider">{footer?.resources ?? "Resources"}</h4>
+            <h2 className="text-xs font-semibold text-gray-900 uppercase tracking-wider">{footer?.resources ?? "Resources"}</h2>
             <ul className="mt-3 space-y-2">
               <li><Link href={L("/blog")} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">{nav?.blog ?? "Blog"}</Link></li>
               <li><Link href={L("/glossary")} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">{nav?.glossary ?? "Glossary"}</Link></li>
@@ -103,7 +103,7 @@ export function Footer({
 
           {/* Company */}
           <div>
-            <h4 className="text-xs font-semibold text-gray-900 uppercase tracking-wider">{footer?.company ?? "Company"}</h4>
+            <h2 className="text-xs font-semibold text-gray-900 uppercase tracking-wider">{footer?.company ?? "Company"}</h2>
             <ul className="mt-3 space-y-2">
               <li><Link href={L("/pricing")} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">{nav?.pricing ?? "Pricing"}</Link></li>
               {/* EN-only service pages — no L(), same convention as /features/<slug> */}

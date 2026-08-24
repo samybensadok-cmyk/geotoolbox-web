@@ -1,6 +1,8 @@
 import Link from "next/link"
 import enMessages from "@/messages/en.json"
 import { RootShell } from "@/components/layout/root-shell"
+import { markdown404Body, recoveryLinks } from "@/lib/agent-404"
+import { siteConfig } from "@/lib/config"
 
 // This is the TRUE top-level not-found.tsx, outside both root layouts
 // ((marketing) and [locale] — see the comment in app/(marketing)/layout.tsx).
@@ -110,6 +112,51 @@ function NotFoundContent() {
               </p>
             </div>
           </div>
+        </div>
+
+        {/* Agent recovery block.
+            An agent that hits a 404 has no cheap way to re-plan: the status code
+            alone says "not here" but not "here is where things are". This renders
+            the SAME markdown body that /404.md and the .md twin 404s return, so a
+            text extraction of this page yields a usable recovery document rather
+            than a dead end. Humans get a readable list; the <pre> keeps the
+            markdown link syntax intact for anything parsing the text. */}
+        <div className="mt-16 border-t border-gray-200 pt-10">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-500">
+            For agents and crawlers
+          </p>
+          <p className="mt-2 max-w-2xl text-[13px] leading-relaxed text-gray-600">
+            This is a real HTTP 404, not an app shell — the page is genuinely absent. The same
+            recovery document is served as markdown at{" "}
+            <a href="/404.md" className="font-mono text-accent-700 underline underline-offset-2">
+              /404.md
+            </a>
+            .
+          </p>
+          <div className="mt-5 grid gap-6 lg:grid-cols-2">
+            <ul className="space-y-2">
+              {recoveryLinks.map((l) => (
+                <li key={l.href} className="text-[13px] leading-relaxed text-gray-600">
+                  {/* Plain <a>, not next/link: half of these are route handlers
+                      (/sitemap.xml, /llms.txt, /agents.md), which the client
+                      router cannot navigate to. */}
+                  <a
+                    href={l.href}
+                    className="font-mono font-semibold text-gray-900 underline underline-offset-2 hover:text-accent-700"
+                  >
+                    {l.href}
+                  </a>{" "}
+                  — {l.what}
+                </li>
+              ))}
+            </ul>
+            <pre className="overflow-x-auto rounded-2xl border border-gray-200 bg-gray-50 p-5 font-mono text-[11px] leading-relaxed text-gray-700">
+{markdown404Body()}
+            </pre>
+          </div>
+          <p className="mt-5 font-mono text-[11px] text-gray-500">
+            Contact: {siteConfig.contactEmail}
+          </p>
         </div>
       </div>
     </div>
