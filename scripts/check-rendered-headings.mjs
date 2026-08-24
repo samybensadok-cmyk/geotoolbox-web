@@ -36,6 +36,27 @@ const BUILD_DIR = ".next/server/app"
 const MIN_CONTENT_CHARS = 500
 const HOME_MIN_CHARS = 2000
 const HOME_MIN_LEVELS = 3
+/**
+ * Minimum text-to-HTML "content ratio" on the EN homepage: extracted <main> text
+ * characters divided by raw HTML bytes.
+ *
+ * This is the metric that decides Ora's `content-no-js` check, and it is the one
+ * that took geotoolbox.ai from 87 to 94. It is invisible in their failing message
+ * — that message says "flat heading structure", which is misleading: 51 of 71
+ * scanned sites sit at the same partial WITH correct heading trees, wikipedia.org
+ * and github.com among them. Only the full-credit message reports the ratio, and
+ * every passing target clears 5%.
+ *
+ * We ship at ~5.4%, so the margin is thin and it erodes in one direction only:
+ * the denominator grows every time the homepage gains markup, and the Next.js RSC
+ * flight payload is already 61% of the bytes. The floor is set slightly above 5%
+ * to leave room before the check actually regresses.
+ *
+ * NECESSARY, NOT SUFFICIENT — do not read a pass here as a guarantee: one scanned
+ * site sits at 26.6% and is still marked "flat", so the full discriminator is not
+ * identified. This gate protects the part we measured; it does not model the check.
+ */
+const HOME_MIN_CONTENT_RATIO = 0.052
 const HOMEPAGES = ["en.html", "fr.html", "es.html"]
 
 /**
@@ -118,6 +139,21 @@ for (const file of files) {
     const distinct = new Set(levels).size
     if (distinct < HOME_MIN_LEVELS) {
       problems.push(`${rel}: only ${distinct} distinct heading levels (need ${HOME_MIN_LEVELS}+ for a non-flat structure)`)
+    }
+    if (rel === "en.html") {
+      const bytes = Buffer.byteLength(html, "utf8")
+      const ratio = text.length / bytes
+      if (ratio < HOME_MIN_CONTENT_RATIO) {
+        problems.push(
+          `${rel}: content ratio ${(ratio * 100).toFixed(2)}% is below the ${(HOME_MIN_CONTENT_RATIO * 100).toFixed(1)}% floor ` +
+            `(${text.length.toLocaleString()} chars of text / ${bytes.toLocaleString()} HTML bytes). ` +
+            `This is the metric behind the content-no-js check. Raise it by adding server-rendered TEXT, not markup — ` +
+            `note that FAQ copy is the least efficient way to do it (it lands 4x: markup, JSON-LD, and twice in the RSC payload), ` +
+            `while plain section prose lands 2x.`
+        )
+      } else {
+        console.log(`  ✓ ${rel} content ratio ${(ratio * 100).toFixed(2)}% (floor ${(HOME_MIN_CONTENT_RATIO * 100).toFixed(1)}%)`)
+      }
     }
   }
 }
