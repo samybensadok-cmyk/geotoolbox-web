@@ -16,17 +16,22 @@ export const siteConfig = {
   // look for BOTH a contactPoint and a PostalAddress on the Organization node
   // before they treat the business identity as verifiable.
   contactEmail: "samy@geotoolbox.ai",
-  // Operator decision 2026-08-24: no postal address is published. Set
-  // `addressLocality` + `addressCountry` (city + ISO-3166-1 alpha-2 country, no
-  // street needed) to emit a PostalAddress and take that check to full credit.
-  // Leave both empty and the address block is omitted entirely — never emit a
-  // half-filled PostalAddress, which reads as worse than none.
+  // Operator decision 2026-08-24 (revised, same day): publish CITY + COUNTRY only.
+  // No street address, no postal code — those stay empty deliberately, and
+  // postalAddressSchema() emits only the keys that are filled.
+  //
+  // This discloses nothing new: /author/samy-ben-sadok already states "Barcelona,
+  // Spain" publicly. It is what takes `org-schema-completeness` to full credit,
+  // because that check wants a contactPoint AND a PostalAddress on the same node.
+  //
+  // If you ever add a street address, add postalCode with it — a street with no
+  // postal code is the half-filled shape postalAddressSchema() exists to prevent.
   address: {
-    addressLocality: "",
+    addressLocality: "Barcelona",
     addressRegion: "",
     postalCode: "",
     streetAddress: "",
-    addressCountry: "",
+    addressCountry: "ES",
   } as {
     addressLocality?: string
     addressRegion?: string

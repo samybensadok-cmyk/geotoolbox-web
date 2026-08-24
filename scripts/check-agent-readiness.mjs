@@ -159,7 +159,14 @@ if (!failures) pass("all generated docs: H1, markdown links, balanced fences, no
     if (!addr.addressLocality || !addr.addressCountry) {
       fail("PostalAddress is emitted but missing addressLocality or addressCountry — emit a complete address or none")
     } else pass(`Organization carries a complete PostalAddress (${addr.addressLocality}, ${addr.addressCountry})`)
-    if (org.address !== addr) fail("postalAddressSchema() output is not attached to the Organization node")
+    // Deep-compare, NOT identity: postalAddressSchema() returns a fresh object every
+    // call, so `!==` is always true and this assertion fired the first time an
+    // address was actually configured. It had never executed before that, because
+    // the address was empty from the day the gate was written — a latent
+    // false-positive sitting in a branch no run had reached.
+    if (JSON.stringify(org.address) !== JSON.stringify(addr)) {
+      fail("postalAddressSchema() output is not attached to the Organization node")
+    }
   } else {
     if ("address" in org) fail("Organization has an `address` key with no address configured")
     // Not a failure: the operator may deliberately publish no postal address.
