@@ -25,7 +25,8 @@
  * code fences (CommonMark swallows the rest of the document), literal
  * "undefined" leaking from a template, and heading-level skips.
  */
-import { readFileSync } from "node:fs"
+import { readFileSync, readdirSync } from "node:fs"
+import { join } from "node:path"
 import {
   buildLlmsIndex,
   buildBlogIndex,
@@ -38,6 +39,7 @@ import { whenToUseLines, howToCallLines } from "../lib/agent-guidance.ts"
 import { markdown404Body, recoveryLinks } from "../lib/agent-404.ts"
 import { organizationSchema, postalAddressSchema } from "../lib/seo-schema.ts"
 import { siteConfig } from "../lib/config.ts"
+import { KNOWN_TOP_LEVEL, isDefinitelyUnknownPath, prefersNonHtml } from "../lib/known-routes.ts"
 
 let failures = 0
 const fail = (msg) => {
@@ -202,6 +204,70 @@ if (!failures) pass("all generated docs: H1, markdown links, balanced fences, no
     }
   }
   if (!failures) pass("all four routes render from the builders this gate measures")
+}
+
+// ── 9. the markdown-404 route allowlist covers every real top-level route ───
+{
+  // Derive the truth from the app/ directory rather than trusting the constant.
+  // A missing segment is invisible in a browser and only breaks agents, which is
+  // exactly the failure mode nobody notices — so it gets a mechanical check.
+  const seg = []
+  const isRouteDir = (dir) => {
+    try {
+      return readdirSync(dir).some((f) => f === "page.tsx" || f === "route.ts")
+    } catch {
+      return false
+    }
+  }
+  for (const entry of readdirSync("app", { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue
+    const name = entry.name
+    if (name.startsWith("(") || name === "[locale]") {
+      // Route groups add no path segment; [locale] children are served at the root
+      // for the default locale. Either way, their children ARE top-level segments.
+      for (const child of readdirSync(join("app", name), { withFileTypes: true })) {
+        if (child.isDirectory() && !child.name.startsWith("(") && !child.name.startsWith("[")) {
+          seg.push(child.name)
+        }
+      }
+      continue
+    }
+    if (name.startsWith("[") || name.startsWith("_")) continue
+    if (isRouteDir(join("app", name)) || name.includes(".")) seg.push(name)
+  }
+  // Next.js metadata FILE conventions resolve to extensionless routes with no
+  // directory of their own (app/opengraph-image.tsx -> /opengraph-image), so the
+  // directory walk above cannot see them.
+  for (const f of readdirSync("app")) {
+    const m = /^(opengraph-image|twitter-image|apple-icon|icon)\.(tsx|ts|jsx|js)$/.exec(f)
+    if (m) seg.push(m[1])
+  }
+  // Segments carrying a file extension never reach the rule (the extension guard
+  // returns first), so they do not need to be listed.
+  const missing = [...new Set(seg)].filter((x) => !x.includes(".") && !KNOWN_TOP_LEVEL.has(x))
+  if (missing.length) {
+    fail(
+      `lib/known-routes.ts KNOWN_TOP_LEVEL is missing: ${missing.join(", ")}. ` +
+        `Those routes work in a browser but return a markdown 404 to any client that does not ask for text/html — i.e. to AI agents, silently. Add them.`
+    )
+  } else {
+    pass(`markdown-404 allowlist covers all ${new Set(seg).size} top-level routes found in app/`)
+  }
+
+  // Behavioural spot-checks on the rule itself.
+  const cases = [
+    ["/", false], ["/pricing", false], ["/blog/some-post", false], ["/fr/blog/x", false],
+    ["/tools/ai-readiness", false], ["/app/?page=login", false], ["/opengraph-image", false],
+    ["/blog/post/diagram.png", false], ["/definitely-not-real-xyz", true], ["/nope/deeper", true],
+  ]
+  for (const [path, expected] of cases) {
+    if (isDefinitelyUnknownPath(path) !== expected) {
+      fail(`isDefinitelyUnknownPath(${path}) should be ${expected} — the markdown-404 rule would ${expected ? "miss a 404" : "hijack a real page"}`)
+    }
+  }
+  if (!prefersNonHtml("*/*") || !prefersNonHtml(null) || prefersNonHtml("text/html,application/xhtml+xml")) {
+    fail("prefersNonHtml() is misclassifying clients — browsers must keep the HTML 404")
+  }
 }
 
 console.log("")
