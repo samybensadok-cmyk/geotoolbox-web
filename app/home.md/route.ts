@@ -27,7 +27,7 @@ export function GET() {
     ...features,
     "## Free tools",
     "",
-    `- [AI Crawler Access Checker](${base}/tools/ai-crawler-checker)`,
+    `- [AI Crawler Checker](${base}/tools/ai-crawler-checker)`,
     `- [AI-Readiness Score](${base}/tools/ai-readiness)`,
     `- [llms.txt Checker](${base}/tools/llms-txt-checker)`,
     `- [Keyword to AI Prompts](${base}/tools/keyword-to-prompts)`,

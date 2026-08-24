@@ -79,7 +79,12 @@ export default function AiCrawlerCheckerPage() {
         <JsonLd
           data={[
             softwareApplicationSchema({
-              name: "AI Crawler Access Checker",
+              // Must match the page title, the breadcrumb below, and the name in
+              // lib/tools.ts. This node told engines the product was called
+              // "AI Crawler Access Checker" while every human-visible surface said
+              // "AI Crawler Checker" — a second name for one product is exactly the
+              // kind of thing that splits an entity in an AI engine's index.
+              name: "AI Crawler Checker",
               description:
                 "A free server-side tool that checks any domain's robots.txt against 34 AI crawler user-agents and reports which are allowed or blocked for the homepage, with the exact blocking rule.",
               url: `${siteConfig.url}/tools/ai-crawler-checker`,
