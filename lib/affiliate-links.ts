@@ -81,6 +81,17 @@ export const AFFILIATE_LINKS: Record<string, AffiliateLink> = {
   "semrush-one": { url: "https://semrush.sjv.io/c/7438816/3082487/13053?u=https%3A%2F%2Fwww.semrush.com%2Fpricing%2F", program: "Semrush One (bundles pricing)", cluster: "c3-seo-suite", noUtm: true, subIdParam: "sharedid" },
   "semrush-content": { url: "https://semrush.sjv.io/c/7438816/3082487/13053?u=https%3A%2F%2Fwww.semrush.com%2Ffeatures%2Fcontent-marketing%2F", program: "Semrush Content Toolkit", cluster: "c1-content", noUtm: true, subIdParam: "sharedid" },
   "semrush-ai": { url: "https://semrush.sjv.io/c/7438816/3082487/13053?u=https%3A%2F%2Fwww.semrush.com%2Flp%2Fai-toolkit%2Fen%2F", program: "Semrush AI Visibility Toolkit", cluster: "c3-seo-suite", noUtm: true, subIdParam: "sharedid" },
+  // Deep-link variants: same programs, different landing pages. Added 2026-08-25 because
+  // articles were linking these destinations RAW (earning $0) — /go/ resolves one URL per
+  // slug, so a deep destination needs its own slug rather than being pointed at a generic one.
+  "semrush-checker": { url: "https://semrush.sjv.io/c/7438816/3082487/13053?u=https%3A%2F%2Fwww.semrush.com%2Ffree-tools%2Fai-search-visibility-checker%2F", program: "Semrush free AI visibility checker", cluster: "c3-seo-suite", noUtm: true, subIdParam: "sharedid" },
+  // NOTE: SE Ranking's partner param is ?ga= on the main domain; whether it carries across to
+  // the visible.* subdomain is UNCONFIRMED with the affiliate manager. Destination is correct
+  // either way, so this is non-negative vs the raw link it replaces. Confirm attribution.
+  "seranking-visible": { url: "https://visible.seranking.com/?ga=5177285&source=link", program: "SE Visible (standalone)", cluster: "c3-seo-suite", noUtm: true },
+  // NOTE: Mangools tracks via the #ref fragment; unconfirmed whether it is read on pages other
+  // than plans-and-pricing. Same non-negative reasoning as above. Confirm attribution.
+  "mangools-grader": { url: "https://mangools.com/ai-search-grader#a5c67fb19feebf86deb273724", program: "Mangools AI Search Grader", cluster: "c3-seo-suite", noUtm: true },
   spyfu: { url: "https://www.spyfu.com/", program: "SpyFu", cluster: "c3-seo-suite", pending: true },
   seranking: { url: "https://seranking.com/?ga=5177285&source=link", program: "SE Ranking", cluster: "c3-seo-suite", noUtm: true },
   mangools: { url: "https://mangools.com/plans-and-pricing#a5c67fb19feebf86deb273724", program: "Mangools", cluster: "c3-seo-suite", noUtm: true },
