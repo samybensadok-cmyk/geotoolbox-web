@@ -84,6 +84,8 @@ export const AFFILIATE_LINKS: Record<string, AffiliateLink> = {
   // Deep-link variants: same programs, different landing pages. Added 2026-08-25 because
   // articles were linking these destinations RAW (earning $0) — /go/ resolves one URL per
   // slug, so a deep destination needs its own slug rather than being pointed at a generic one.
+  "semrush-enterprise": { url: "https://semrush.sjv.io/c/7438816/3082487/13053?u=https%3A%2F%2Fwww.semrush.com%2Fpricing%2Fenterprise%2F", program: "Semrush Enterprise pricing", cluster: "c3-seo-suite", noUtm: true, subIdParam: "sharedid" },
+  "semrush-ai-pricing": { url: "https://semrush.sjv.io/c/7438816/3082487/13053?u=https%3A%2F%2Fwww.semrush.com%2Fpricing%2Fai%2F", program: "Semrush AI Toolkit pricing", cluster: "c3-seo-suite", noUtm: true, subIdParam: "sharedid" },
   "semrush-checker": { url: "https://semrush.sjv.io/c/7438816/3082487/13053?u=https%3A%2F%2Fwww.semrush.com%2Ffree-tools%2Fai-search-visibility-checker%2F", program: "Semrush free AI visibility checker", cluster: "c3-seo-suite", noUtm: true, subIdParam: "sharedid" },
   // NOTE: SE Ranking's partner param is ?ga= on the main domain; whether it carries across to
   // the visible.* subdomain is UNCONFIRMED with the affiliate manager. Destination is correct
