@@ -264,28 +264,34 @@ export function GrowthCharts({
         )}
       </div>
 
-      {/* Screen-reader table view of the same data */}
-      <table className="sr-only">
-        <caption>Monthly unique Google queries for geotoolbox.ai, from the Search Console API</caption>
-        <thead>
-          <tr>
-            <th scope="col">Month</th>
-            <th scope="col">Queries ranked</th>
-            <th scope="col">Top 10</th>
-            <th scope="col">Top 3</th>
-          </tr>
-        </thead>
-        <tbody>
-          {months.map((m) => (
-            <tr key={m.month}>
-              <th scope="row">{m.label + (m.partial ? " (month to date)" : "")}</th>
-              <td>{fmt(m.queries)}</td>
-              <td>{fmt(m.top10)}</td>
-              <td>{fmt(m.top3)}</td>
+      {/* Screen-reader table view of the same data. The sr-only class lives on a
+          WRAPPER, not the <table>: under automatic table layout a table's used
+          width is max(specified, min-content), so `width:1px` never shrinks it —
+          the table stayed ~577px wide and only escaped the page's scroll box
+          because the parent section happens to be overflow-hidden. */}
+      <div className="sr-only">
+        <table>
+          <caption>Monthly unique Google queries for geotoolbox.ai, from the Search Console API</caption>
+          <thead>
+            <tr>
+              <th scope="col">Month</th>
+              <th scope="col">Queries ranked</th>
+              <th scope="col">Top 10</th>
+              <th scope="col">Top 3</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {months.map((m) => (
+              <tr key={m.month}>
+                <th scope="row">{m.label + (m.partial ? " (month to date)" : "")}</th>
+                <td>{fmt(m.queries)}</td>
+                <td>{fmt(m.top10)}</td>
+                <td>{fmt(m.top3)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       {tip && (
         <div
