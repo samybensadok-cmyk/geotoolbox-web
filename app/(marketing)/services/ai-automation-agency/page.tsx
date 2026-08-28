@@ -616,9 +616,9 @@ export default function AiAutomationAgencyPage() {
             {[
               {
                 chrome: "Bing WMT · AI Performance",
-                src: "/services/automation/bing-ai-citations-2026-08-21.png",
-                width: 1568,
-                height: 681,
+                src: "/services/automation/bing-ai-citations-2026-08-28.png",
+                width: 1700,
+                height: 556,
                 alt: `Bing Webmaster Tools AI Performance report: ~${fmt(proofStats.aiCitations.total)} total AI-citation appearances and ${proofStats.aiCitations.avgCitedPages} average cited pages over a trailing ${proofStats.aiCitations.windowDays}-day window.`,
                 caption: `~${fmt(proofStats.aiCitations.total)} AI-citation appearances · trailing ${proofStats.aiCitations.windowDays}-day Bing sample (Copilot + partners) · not unique citations.`,
               },
