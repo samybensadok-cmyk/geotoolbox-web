@@ -38,6 +38,7 @@
  *    near-zero traffic until publishing began).
  */
 import generated from "./proof-stats.generated.json"
+import contentGenerated from "./content-counts.generated.json"
 
 export const proofStats = {
   // Automated — regenerated every 48h from the Search Console API.
@@ -116,7 +117,20 @@ export const proofStats = {
 
 export type ProofStats = typeof proofStats
 
-// Published content counts — counted on disk (content/blog, content/fr/blog,
-// content/glossary). Shared by /services/ai-automation-agency (page + OG image)
-// so the figures can't drift between surfaces. Re-count when bumping.
-export const contentCounts = { en: 137, fr: 60, glossary: 57, asOf: "28 Aug 2026" } as const
+// Published content counts — AUTOMATED as of 2026-08-28: `scripts/count-content
+// .mjs` runs on npm `prebuild` (so every Vercel build recounts) and writes
+// `content-counts.generated.json`. Counting rule mirrors `getAllPosts()`:
+// .mdx minus draft minus noindex — what a visitor can actually reach.
+// DO NOT hand-edit these numbers; fix the script if a count looks wrong.
+// `glossary` is the EN glossary, `glossaryFr` the FR one; `totalArticles`
+// is the blog total across all three locales.
+export const contentCounts = {
+  en: contentGenerated.en,
+  fr: contentGenerated.fr,
+  es: contentGenerated.es,
+  glossary: contentGenerated.glossary,
+  glossaryFr: contentGenerated.glossaryFr,
+  totalArticles: contentGenerated.en + contentGenerated.fr + contentGenerated.es,
+  totalGlossary: contentGenerated.glossary + contentGenerated.glossaryFr,
+  asOf: contentGenerated.asOf,
+} as const

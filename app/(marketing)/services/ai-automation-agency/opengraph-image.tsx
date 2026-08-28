@@ -10,7 +10,7 @@ export default function OGImage() {
   const fmt = (n: number) => n.toLocaleString("en-US")
 
   const stats = [
-    { value: fmt(contentCounts.en + contentCounts.fr), label: "Articles written by one skill" },
+    { value: fmt(contentCounts.totalArticles), label: "Articles written by one skill" },
     { value: fmt(google.rankedKeywords), label: "Keywords in Google" },
     { value: fmt(google.top10), label: "On Google's first page" },
     { value: `~${fmt(aiCitations.total)}`, label: "Bing AI appearances · 30-day sample" },
