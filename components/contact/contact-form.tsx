@@ -121,7 +121,7 @@ export function ContactForm() {
         </div>
         <h2 className="mt-4 text-xl font-bold tracking-tight text-gray-900">Message sent.</h2>
         <p className="mt-2 text-[15px] leading-relaxed text-gray-700">
-          Thanks, {name.split(" ")[0] || "there"} — we&apos;ve got it and typically reply within one business day. A copy
+          Thanks, {name.split(" ")[0] || "there"}{" "}— we&apos;ve got it and typically reply within one business day. A copy
           of your message is on its way to {email}.
         </p>
       </div>

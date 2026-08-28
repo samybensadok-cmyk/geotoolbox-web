@@ -37,7 +37,7 @@ export default function ReviewMethodologyPage() {
               reports, and the specific inputs we ran, so claims are checkable rather than asserted.
             </li>
             <li>
-              <strong className="text-gray-900">We verify pricing on the day.</strong> Prices and
+              <strong className="text-gray-900">We verify pricing on the day.</strong>{" "}Prices and
               plan limits are confirmed against the vendor&apos;s site and dated. We re-check on
               update.
             </li>

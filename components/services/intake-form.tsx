@@ -156,7 +156,7 @@ export function IntakeForm() {
           <a href="mailto:samy.bensadok@gmail.com" className="font-medium text-accent-700 underline">
             samy.bensadok@gmail.com
           </a>{" "}
-          or via <a href="/contact" className="font-medium text-accent-700 underline">the contact page</a> and I&apos;ll get you started.
+          or via <a href="/contact" className="font-medium text-accent-700 underline">the contact page</a>{" "}and I&apos;ll get you started.
         </p>
       </Shell>
     )

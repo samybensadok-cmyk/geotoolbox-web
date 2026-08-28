@@ -116,7 +116,7 @@ export function TermsContent({ localeNote }: { localeNote?: React.ReactNode }) {
         <section>
           <H2 id="acceptance">2. Acceptance and business use</H2>
           <P>
-            <strong>2.1 Acceptance.</strong> You accept these Terms by creating an account, ticking the acceptance box at signup or checkout, clicking a button that references them, or by using the Service. If you do not agree, do not use the Service. If you accept on behalf of a company or other entity, you confirm that you have authority to bind it, and &quot;you&quot; means that entity.
+            <strong>2.1 Acceptance.</strong>{" "}You accept these Terms by creating an account, ticking the acceptance box at signup or checkout, clicking a button that references them, or by using the Service. If you do not agree, do not use the Service. If you accept on behalf of a company or other entity, you confirm that you have authority to bind it, and &quot;you&quot; means that entity.
           </P>
           <P>
             <strong>2.2 Business use only.</strong> The Service is a professional tool for marketers, SEO/GEO consultants, agencies and businesses. <strong>You confirm that you are obtaining and using the Service for the purposes of carrying on a trade, business, craft or profession, and not for personal, family or household purposes.</strong> We rely on this representation. If you nevertheless qualify as a consumer under the mandatory law of your country of residence, §8.6 and §20.4 apply to you.
@@ -169,7 +169,7 @@ export function TermsContent({ localeNote }: { localeNote?: React.ReactNode }) {
           </P>
           <P>
             <strong>5.4 How to cancel a trial.</strong> Cancel at any time before the trial ends from <strong>Account → Manage subscription</strong> (Stripe customer portal), or by emailing{" "}
-            <a href="mailto:samy@geotoolbox.ai" className={link}>samy@geotoolbox.ai</a> from the account owner&apos;s address before the trial end date and time shown in your account and in the confirmation email. A trial cancelled before it ends is never charged. Cancellation is confirmed by email.
+            <a href="mailto:samy@geotoolbox.ai" className={link}>samy@geotoolbox.ai</a>{" "}from the account owner&apos;s address before the trial end date and time shown in your account and in the confirmation email. A trial cancelled before it ends is never charged. Cancellation is confirmed by email.
           </P>
           <P>
             <strong>5.5 No refund for a missed cancellation.</strong> Because the conversion terms are disclosed at checkout and confirmed by email at enrollment, <strong>a charge that results from your not cancelling before the trial end is a valid charge and is non-refundable</strong> (subject only to §8.6); the additional reminders in §5.3 do not change this. This applies equally to monthly and annual subscriptions.
@@ -208,7 +208,7 @@ export function TermsContent({ localeNote }: { localeNote?: React.ReactNode }) {
           <H2 id="cancellation">7. Cancellation</H2>
           <P>
             <strong>7.1 Cancel any time, online.</strong> You may cancel your subscription at any time from <strong>Account → Manage subscription</strong>, which opens the Stripe customer portal (&quot;Cancel subscription&quot;), or by emailing{" "}
-            <a href="mailto:samy@geotoolbox.ai" className={link}>samy@geotoolbox.ai</a> from the account owner&apos;s address. We confirm every cancellation by email, stating the date on which the subscription ends.
+            <a href="mailto:samy@geotoolbox.ai" className={link}>samy@geotoolbox.ai</a>{" "}from the account owner&apos;s address. We confirm every cancellation by email, stating the date on which the subscription ends.
           </P>
           <P>
             <strong>7.2 Effect.</strong> Cancellation stops future renewals. <strong>It takes effect at the end of the current billing period</strong> (or at the end of the trial, if you are trialing) and you keep access until then. <strong>No prorated or partial refund is given for the remainder of a period already paid</strong>, including annual periods, subject to §8.6.
@@ -272,14 +272,14 @@ export function TermsContent({ localeNote }: { localeNote?: React.ReactNode }) {
             <strong>10.4 Retention and export.</strong> Analysis outputs are retained as described in the Privacy Policy. After termination you may export your data for 30 days, after which we may delete it (billing records are kept as required by law).
           </P>
           <P>
-            <strong>10.5 Confidentiality.</strong> Each party will keep the other&apos;s non-public information confidential and use it only to perform the Agreement, for the term and three years after, except for information that is or becomes public without breach, was already lawfully known or independently developed by the receiving party, or must be disclosed by law (with prior notice where permitted).
+            <strong>10.5 Confidentiality.</strong>{" "}Each party will keep the other&apos;s non-public information confidential and use it only to perform the Agreement, for the term and three years after, except for information that is or becomes public without breach, was already lawfully known or independently developed by the receiving party, or must be disclosed by law (with prior notice where permitted).
           </P>
         </section>
 
         <section>
           <H2 id="ip">11. Intellectual property and licence</H2>
           <P>
-            <strong>11.1</strong> The Service, its software, methodology, scoring, databases, designs and content are owned by us or our licensors and protected by intellectual-property laws. We grant you a limited, non-exclusive, non-transferable licence (revocable only under §18) to access and use the Service and to use the reports and outputs you generate for your own business or your clients&apos; business, during the term and within your plan limits.
+            <strong>11.1</strong>{" "}The Service, its software, methodology, scoring, databases, designs and content are owned by us or our licensors and protected by intellectual-property laws. We grant you a limited, non-exclusive, non-transferable licence (revocable only under §18) to access and use the Service and to use the reports and outputs you generate for your own business or your clients&apos; business, during the term and within your plan limits.
           </P>
           <P>
             <strong>11.2 White-label reports</strong> (where included in your plan) may be presented under your brand to your clients; you remain responsible for their use and for any claims you make on the basis of them.
@@ -288,7 +288,7 @@ export function TermsContent({ localeNote }: { localeNote?: React.ReactNode }) {
             <strong>11.3 Feedback</strong> you give us may be used freely by us without obligation.
           </P>
           <P>
-            <strong>11.4 Trademarks.</strong> &quot;GEO Toolbox&quot; and our logos are our marks. Third-party marks (including AI-engine names) belong to their owners and are used for identification only; we are not affiliated with or endorsed by them.
+            <strong>11.4 Trademarks.</strong>{" "}&quot;GEO Toolbox&quot; and our logos are our marks. Third-party marks (including AI-engine names) belong to their owners and are used for identification only; we are not affiliated with or endorsed by them.
           </P>
         </section>
 
@@ -369,7 +369,7 @@ export function TermsContent({ localeNote }: { localeNote?: React.ReactNode }) {
             <strong>18.3 Termination for breach.</strong> Either party may terminate the Agreement if the other materially breaches it and does not cure within 15 days of notice (immediately for breaches of §12 or non-payment persisting after reminder). On termination for your breach, fees for the current period remain due and are not refunded.
           </P>
           <P>
-            <strong>18.4 Termination by us for convenience or discontinuation.</strong> We may terminate the Agreement or discontinue the Service on at least 30 days&apos; notice by email. In that case we will refund the prepaid fees for the unused part of your then-current period.
+            <strong>18.4 Termination by us for convenience or discontinuation.</strong>{" "}We may terminate the Agreement or discontinue the Service on at least 30 days&apos; notice by email. In that case we will refund the prepaid fees for the unused part of your then-current period.
           </P>
           <P>
             <strong>18.5 Effect.</strong> On termination your licence ends; §10.4 governs data export and deletion; §§8, 10.5, 11, 15–17, 20 and 21 survive.

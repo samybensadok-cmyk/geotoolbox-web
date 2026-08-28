@@ -272,7 +272,7 @@ export function RobotsTxtTesterWidget() {
                 ))}
               </ul>
               <p className="mt-2 text-[12.5px] leading-relaxed text-gray-500">
-                A named group <strong>replaces</strong> the <code className="rounded bg-gray-200 px-1">*</code> group for
+                A named group <strong>replaces</strong> the <code className="rounded bg-gray-200 px-1">*</code>{" "}group for
                 that crawler — the rules aren&apos;t combined. That&apos;s the mistake we see most often.
               </p>
             </div>

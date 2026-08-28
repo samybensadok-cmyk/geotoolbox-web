@@ -136,7 +136,7 @@ export function RobotsTxtGeneratorWidget() {
             placeholder="seconds"
           />
           <p className="mt-1.5 text-[12.5px] leading-relaxed text-gray-500">
-            <strong>Bing honours this.</strong> Googlebot never has, and Yandex dropped it in 2018 — so today it&apos;s
+            <strong>Bing honours this.</strong>{" "}Googlebot never has, and Yandex dropped it in 2018 — so today it&apos;s
             really a Bing setting.
           </p>
         </div>
@@ -176,7 +176,7 @@ export function RobotsTxtGeneratorWidget() {
           </div>
           <p className="mt-2 text-[12.5px] leading-relaxed text-gray-500">
             Blocking a <strong>training</strong> crawler keeps your content out of model training. Blocking a{" "}
-            <strong>search</strong> one removes you from that engine&apos;s answers. They&apos;re different decisions and
+            <strong>search</strong>{" "}one removes you from that engine&apos;s answers. They&apos;re different decisions and
             people conflate them constantly.
           </p>
         </div>

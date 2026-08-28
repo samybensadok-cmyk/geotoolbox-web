@@ -129,7 +129,7 @@ export default function QueryFanoutToolPage() {
               hidden sub-questions, the fan-out, are what actually decide which pages get cited.
             </p>
             <p>
-              <strong className="text-gray-900">This shows you the real ones.</strong> Not an LLM imagining what people might
+              <strong className="text-gray-900">This shows you the real ones.</strong>{" "}Not an LLM imagining what people might
               ask, but the genuine queries Gemini grounded its answer in, pulled live from its own grounding metadata, plus
               Perplexity&apos;s related questions if you add a key.
             </p>

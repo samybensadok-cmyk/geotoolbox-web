@@ -117,7 +117,7 @@ export async function PricingTeaser() {
               href={siteConfig.appSignupUrl} prefetch={false}
               className="rounded-sm text-[13px] font-medium text-gray-400 transition-colors hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950"
             >
-              {t("startFree")} &rarr;
+              {t("startFree")}{" "}&rarr;
             </Link>
           </div>
         </div>

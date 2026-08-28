@@ -140,7 +140,7 @@ export default function RobotsTxtGeneratorPage() {
               people treat them as one category when they&apos;re two.
             </p>
             <p>
-              <strong className="text-gray-900">Training crawlers</strong> — GPTBot, ClaudeBot, CCBot —
+              <strong className="text-gray-900">Training crawlers</strong>{" "}— GPTBot, ClaudeBot, CCBot —
               collect content to train models. Blocking them keeps you out of training data and costs you nothing in
               any answer given today, because they aren&apos;t what answers a user&apos;s question — the trade is that
               future models know less about you natively, which surfaces when an assistant replies without browsing.
@@ -332,9 +332,9 @@ Disallow: /`}
 
           <p className="mt-8 text-[15px] leading-relaxed text-gray-700">
             Removing a file is a different question from writing one. On a hosted platform like Shopify or Wix you
-            can&apos;t delete <code className="rounded bg-gray-100 px-1 text-gray-700">/robots.txt</code> — every store
+            can&apos;t delete <code className="rounded bg-gray-100 px-1 text-gray-700">/robots.txt</code>{" "}— every store
             gets a generated default. Shopify&apos;s official mechanism for changing it is the{" "}
-            <code className="rounded bg-gray-100 px-1 text-gray-700">robots.txt.liquid</code> theme template, though
+            <code className="rounded bg-gray-100 px-1 text-gray-700">robots.txt.liquid</code>{" "}theme template, though
             worth knowing before you start: Shopify classes edits to that file as an unsupported customization, so
             their support team won&apos;t help you with them. Serving a 404 there wouldn&apos;t be an improvement
             anyway — a missing robots.txt and one that allows everything mean the same thing to a crawler.

@@ -23,7 +23,7 @@ export function CheckoutStatusBanner() {
   return (
     <div role="status" className="border-b border-gray-200 bg-gray-50 px-6 py-4">
       <p className="mx-auto max-w-7xl text-[14px] leading-relaxed text-gray-700">
-        <span className="font-semibold">Checkout cancelled — nothing was charged.</span> If something
+        <span className="font-semibold">Checkout cancelled — nothing was charged.</span>{" "}If something
         didn&apos;t look right or you have a question first, book a free call and ask me directly.
       </p>
     </div>

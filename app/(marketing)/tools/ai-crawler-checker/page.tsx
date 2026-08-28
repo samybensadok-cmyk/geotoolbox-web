@@ -137,7 +137,7 @@ export default function AiCrawlerCheckerPage() {
           </h2>
           <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-gray-700">
             <p>
-              <strong className="text-gray-900">It checks permission, not visibility.</strong> robots.txt tells crawlers what
+              <strong className="text-gray-900">It checks permission, not visibility.</strong>{" "}robots.txt tells crawlers what
               they may fetch. Allowing GPTBot or ClaudeBot does not mean ChatGPT or Claude will cite you; that depends on
               your content and each engine&apos;s own ranking, which no robots file controls. Anyone selling &quot;unblock
               the bots and get cited&quot; is overstating it.

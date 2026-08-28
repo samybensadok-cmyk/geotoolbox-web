@@ -257,7 +257,7 @@ function ResultCard({
 
         {!robotsPresent && (
           <p className="mt-3 rounded-lg border border-gray-100 bg-gray-50 px-3 py-2 text-[13px] text-gray-600">
-            No robots.txt was found, so all {total} crawlers are allowed by default. That means nothing is blocked — but also
+            No robots.txt was found, so all {total}{" "}crawlers are allowed by default. That means nothing is blocked — but also
             that crawler access isn&apos;t explicitly managed.
           </p>
         )}
@@ -270,7 +270,7 @@ function ResultCard({
             {blocked.length} blocked by robots.txt
           </p>
           <p className="mt-2 text-[13px] leading-relaxed text-gray-600">
-            These AI crawlers are <strong className="text-gray-900">disallowed</strong> from your homepage. If that&apos;s not
+            These AI crawlers are <strong className="text-gray-900">disallowed</strong>{" "}from your homepage. If that&apos;s not
             intentional, the exact line to change is shown for each.
           </p>
           <ul className="mt-4 space-y-2.5">

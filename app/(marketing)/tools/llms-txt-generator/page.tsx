@@ -134,15 +134,15 @@ export default function LlmsTxtGeneratorPage() {
           </h2>
           <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-gray-700">
             <p>
-              <strong className="text-gray-900">It is not a ranking or citation signal.</strong> Google&apos;s Search
+              <strong className="text-gray-900">It is not a ranking or citation signal.</strong>{" "}Google&apos;s Search
               Central docs say you don&apos;t need to create any AI-specific file or markup to appear in AI features, and
               Googlers have said llms.txt specifically isn&apos;t used — John Mueller, June 2025:{" "}
-              <em>&quot;FWIW no AI system currently uses llms.txt.&quot;</em> Worth being precise: that&apos;s an informal
+              <em>&quot;FWIW no AI system currently uses llms.txt.&quot;</em>{" "}Worth being precise: that&apos;s an informal
               comment, not a documented policy, and Google&apos;s official pages never name the file. Either way, anyone
               selling it as a shortcut to getting cited is guessing.
             </p>
             <p>
-              <strong className="text-gray-900">It is a real convention with real readers.</strong> Chrome&apos;s
+              <strong className="text-gray-900">It is a real convention with real readers.</strong>{" "}Chrome&apos;s
               Lighthouse 13.3 added an agentic-browsing audit that validates your llms.txt&apos;s format — it wants an H1
               and at least one markdown link, and fails the audit outright if the file returns a 5xx. Not having one at
               all is marked not-applicable rather than failed. Some IDE assistants and custom agents read it too.
@@ -152,7 +152,7 @@ export default function LlmsTxtGeneratorPage() {
               Chrome ships an audit that grades it.
             </p>
             <p>
-              <strong className="text-gray-900">So: cheap hygiene, not a growth lever.</strong> A clean, curated file
+              <strong className="text-gray-900">So: cheap hygiene, not a growth lever.</strong>{" "}A clean, curated file
               with working links costs you ten minutes and can&apos;t hurt. That&apos;s the honest case for it, and it&apos;s
               why this tool is free and takes one input — spending an afternoon hand-writing one would be the actual
               mistake.

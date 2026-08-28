@@ -250,7 +250,7 @@ const serviceSchema = {
 
 export default function AiAutomationAgencyPage() {
   const fmt = (n: number) => n.toLocaleString("en-US")
-  const totalArticles = CONTENT_COUNTS.en + CONTENT_COUNTS.fr
+  const totalArticles = CONTENT_COUNTS.totalArticles
 
   return (
     <>
@@ -486,7 +486,7 @@ export default function AiAutomationAgencyPage() {
 
           <p className="mt-10 max-w-3xl text-[clamp(1.15rem,2vw,1.5rem)] font-semibold leading-snug tracking-tight text-gray-600">
             One cause: automation shipped without{" "}
-            <span className="text-accent-700">engineering discipline</span> — no test cases, no approval
+            <span className="text-accent-700">engineering discipline</span>{" "}— no test cases, no approval
             gates, no one accountable when the output is wrong. That&apos;s the part I actually sell.
           </p>
         </div>
@@ -559,8 +559,10 @@ export default function AiAutomationAgencyPage() {
                   Every article on this site is produced by a Claude skill I built: a 14-phase pipeline that
                   runs keyword and SERP research, competitor analysis, a multi-model fact panel, drafting,
                   independent fact-checking and a scored QA gate — before a human ever hits publish. It has
-                  produced {CONTENT_COUNTS.en} English articles, {CONTENT_COUNTS.fr} French localizations and{" "}
-                  {CONTENT_COUNTS.glossary} glossary entries as of {CONTENT_COUNTS.asOf}.
+                  produced {CONTENT_COUNTS.en} English articles, {CONTENT_COUNTS.fr} French and{" "}
+                  {CONTENT_COUNTS.es} Spanish localizations, and {CONTENT_COUNTS.totalGlossary} glossary
+                  entries ({CONTENT_COUNTS.glossary} EN + {CONTENT_COUNTS.glossaryFr} FR) as of{" "}
+                  {CONTENT_COUNTS.asOf}.
                 </p>
                 <p>
                   The output holds up under the only test that matters — public performance data. The domain
@@ -589,13 +591,18 @@ export default function AiAutomationAgencyPage() {
                 </p>
                 <dl className="mt-6 space-y-5">
                   <div className="flex items-baseline justify-between gap-4 border-b border-gray-100 pb-5">
-                    <dt className="text-[13px] font-medium text-gray-600">Articles published (EN + FR)</dt>
+                    <dt className="text-[13px] font-medium text-gray-600">Articles published (EN + FR + ES)</dt>
                     <dd className="font-mono text-2xl font-bold tabular-nums text-gray-900">{totalArticles}</dd>
                   </div>
                   <div className="flex items-baseline justify-between gap-4 border-b border-gray-100 pb-5">
-                    <dt className="text-[13px] font-medium text-gray-600">Glossary entries</dt>
+                    <dt className="text-[13px] font-medium text-gray-600">
+                      Glossary entries
+                      <span className="mt-0.5 block font-mono text-[10px] font-semibold uppercase tracking-widest text-gray-400">
+                        {CONTENT_COUNTS.glossary} EN · {CONTENT_COUNTS.glossaryFr} FR
+                      </span>
+                    </dt>
                     <dd className="font-mono text-2xl font-bold tabular-nums text-gray-900">
-                      {CONTENT_COUNTS.glossary}
+                      {CONTENT_COUNTS.totalGlossary}
                     </dd>
                   </div>
                   <div className="flex items-baseline justify-between gap-4">

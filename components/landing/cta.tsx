@@ -56,7 +56,7 @@ export async function CTA() {
                 href={localizeNavHref("/blog", locale)}
                 className="text-[13px] font-medium text-gray-400 transition-colors hover:text-white"
               >
-                {t("readResearch")} &rarr;
+                {t("readResearch")}{" "}&rarr;
               </Link>
             </div>
             <p className="mt-1 text-xs text-gray-400">

@@ -49,7 +49,7 @@ export default function PrivacyPage() {
         <section>
           <h2 className="text-lg font-semibold text-gray-900">3. Data Storage and Retention</h2>
           <p className="mt-2">
-            <strong>We do not store your raw Google Search Console or Google Analytics 4 data on our servers.</strong> All GSC and GA4 API responses are cached in your browser&apos;s localStorage for up to 6 hours and then automatically cleared. Clearing browser storage removes them immediately.
+            <strong>We do not store your raw Google Search Console or Google Analytics 4 data on our servers.</strong>{" "}All GSC and GA4 API responses are cached in your browser&apos;s localStorage for up to 6 hours and then automatically cleared. Clearing browser storage removes them immediately.
           </p>
           <p className="mt-3">
             Server-side storage is limited to:
@@ -121,7 +121,7 @@ export default function PrivacyPage() {
         <section>
           <h2 className="text-lg font-semibold text-gray-900">7. International Data Transfers</h2>
           <p className="mt-2">
-            We are based in the European Union, and several of the subprocessors listed in Section 4 (including Google, Microsoft, Vercel, Neon, Stripe, and Sentry) process data in the United States. Where personal data of individuals in the EEA, the United Kingdom, or Switzerland is transferred to the United States, we rely on the <strong>EU&ndash;U.S. Data Privacy Framework</strong> (and its UK and Swiss extensions) where the provider holds an active certification, and on the European Commission&apos;s <strong>Standard Contractual Clauses</strong> incorporated into the provider&apos;s data processing agreement otherwise. Analytics data (Google Analytics, Microsoft Clarity) is only processed at all for EEA/UK/Swiss visitors after explicit consent (see Section 6).
+            We are based in the European Union, and several of the subprocessors listed in Section 4 (including Google, Microsoft, Vercel, Neon, Stripe, and Sentry) process data in the United States. Where personal data of individuals in the EEA, the United Kingdom, or Switzerland is transferred to the United States, we rely on the <strong>EU&ndash;U.S. Data Privacy Framework</strong> (and its UK and Swiss extensions) where the provider holds an active certification, and on the European Commission&apos;s <strong>Standard Contractual Clauses</strong>{" "}incorporated into the provider&apos;s data processing agreement otherwise. Analytics data (Google Analytics, Microsoft Clarity) is only processed at all for EEA/UK/Swiss visitors after explicit consent (see Section 6).
           </p>
         </section>
 

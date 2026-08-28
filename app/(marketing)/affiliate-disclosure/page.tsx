@@ -55,7 +55,7 @@ export default function AffiliateDisclosurePage() {
           <h2 className="text-lg font-semibold text-gray-900">How the links work</h2>
           <p className="mt-2">
             Affiliate links route through our own <code>/go/</code> redirect so we can keep them
-            current and measure clicks. They are tagged <code>rel=&quot;sponsored&quot;</code> and
+            current and measure clicks. They are tagged <code>rel=&quot;sponsored&quot;</code>{" "}and
             open in a new tab, in line with Google&apos;s guidance for qualifying paid and affiliate
             links. These redirects are excluded from search indexing.
           </p>

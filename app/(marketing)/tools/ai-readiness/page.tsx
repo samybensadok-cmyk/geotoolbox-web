@@ -132,7 +132,7 @@ export default function AiReadinessPage() {
           </h2>
           <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-gray-700">
             <p>
-              <strong className="text-gray-900">It measures infrastructure, not visibility.</strong> Whether AI agents can
+              <strong className="text-gray-900">It measures infrastructure, not visibility.</strong>{" "}Whether AI agents can
               reach, crawl, and parse your site. Fail these and you can be invisible to AI by accident, but passing them is
               the floor, not a guarantee of citations. Anyone selling a &quot;readiness score&quot; as a ranking shortcut is overstating it.
             </p>

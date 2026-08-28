@@ -95,7 +95,7 @@ export async function LatestPosts() {
                 href={`${blogBase}/blog`}
                 className="group block pt-6 text-sm font-semibold text-gray-700 transition-colors hover:text-accent-700 sm:hidden"
               >
-                {t("allPosts")} &rarr;
+                {t("allPosts")}{" "}&rarr;
               </Link>
             </div>
           </div>
@@ -138,7 +138,7 @@ export async function LatestPosts() {
             href={`${blogBase}/blog`}
             className="mt-8 inline-flex items-center gap-1.5 text-sm font-semibold text-gray-700 transition-colors hover:text-accent-700 sm:hidden"
           >
-            {t("allPosts")} &rarr;
+            {t("allPosts")}{" "}&rarr;
           </Link>
         )}
       </div>

@@ -122,12 +122,12 @@ export default function KeywordToPromptsPage() {
           </h2>
           <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-gray-700">
             <p>
-              <strong className="text-gray-900">A keyword is a fragment; a prompt is a question.</strong> Nobody types
+              <strong className="text-gray-900">A keyword is a fragment; a prompt is a question.</strong>{" "}Nobody types
               &quot;standing desk&quot; into ChatGPT. They ask &quot;what&apos;s the best standing desk for a small home office under $300?&quot;
               Longer, conversational, with context baked in. If you only know your keywords, you don&apos;t know what to track.
             </p>
             <p>
-              <strong className="text-gray-900">Not every prompt is worth tracking.</strong> Only some make an AI answer
+              <strong className="text-gray-900">Not every prompt is worth tracking.</strong>{" "}Only some make an AI answer
               by recommending brands, and those are where you can win or lose visibility. We flag them deterministically, so you
               spend your tracking on the prompts that actually define your brand&apos;s presence.
             </p>

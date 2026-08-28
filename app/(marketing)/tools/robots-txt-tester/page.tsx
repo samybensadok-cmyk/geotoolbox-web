@@ -140,7 +140,7 @@ export default function RobotsTxtTesterPage() {
           </h2>
           <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-gray-700">
             <p>
-              A crawler follows <strong className="text-gray-900">exactly one group</strong> — the most specific one
+              A crawler follows <strong className="text-gray-900">exactly one group</strong>{" "}— the most specific one
               that names it. The rules aren&apos;t combined. So this file does not do what it looks like it does:
             </p>
             <pre className="overflow-x-auto rounded-xl border border-gray-200 bg-gray-950 p-5 font-mono text-[12.5px] leading-relaxed text-gray-200">
@@ -180,14 +180,14 @@ Disallow: /private/`}
             robots.txt controls crawling, not indexing
           </h2>
           <p className="mt-4 text-[15px] leading-relaxed text-gray-700">
-            Blocking a URL asks crawlers not to <em>fetch</em> it. It does not remove it from search results. A blocked
+            Blocking a URL asks crawlers not to <em>fetch</em>{" "}it. It does not remove it from search results. A blocked
             page that&apos;s linked from elsewhere can still be listed — typically as a bare URL with no description,
             because the crawler was never allowed to read the page it&apos;s describing.
           </p>
           <p className="mt-4 text-[15px] leading-relaxed text-gray-700">
             The trap: to deindex a page you need{" "}
             <code className="rounded bg-gray-200 px-1 text-gray-700">noindex</code>, and Google has to{" "}
-            <em>crawl the page</em> to see it. Blocking the page in robots.txt prevents that. If you want something gone
+            <em>crawl the page</em>{" "}to see it. Blocking the page in robots.txt prevents that. If you want something gone
             from the index, allow crawling and add noindex — then block it later if you like, once it&apos;s dropped.
           </p>
           <p className="mt-4 text-[15px] leading-relaxed text-gray-700">

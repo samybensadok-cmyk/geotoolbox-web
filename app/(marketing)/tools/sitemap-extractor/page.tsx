@@ -144,7 +144,7 @@ export default function SitemapExtractorPage() {
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
               Paste an XML sitemap URL — or just a domain — and get every page URL out. Index files are walked to their
-              children, <code className="rounded bg-gray-200/70 px-1 text-[0.9em] text-gray-700">.xml.gz</code> is
+              children, <code className="rounded bg-gray-200/70 px-1 text-[0.9em] text-gray-700">.xml.gz</code>{" "}is
               decompressed, and then it does what the others don&apos;t: it doubles as a sitemap checker, validating the
               file against the spec, flagging URLs your own robots.txt blocks, and testing whether the URLs still
               resolve. Free, no sign-up.
@@ -174,7 +174,7 @@ export default function SitemapExtractorPage() {
             </p>
             <p>
               Paste that index into most free extractors and you get back a tidy list of{" "}
-              <em>five sitemap URLs</em> instead of your five thousand pages. The tool did what it was told; it just
+              <em>five sitemap URLs</em>{" "}instead of your five thousand pages. The tool did what it was told; it just
               didn&apos;t do the job you wanted. You then extract each child by hand and paste the results together.
             </p>
             <p>
@@ -189,7 +189,7 @@ export default function SitemapExtractorPage() {
               you binary garbage. We check for the gzip signature and inflate it before parsing.
             </p>
             <p>
-              <strong className="text-gray-900">And then it keeps going.</strong> Extraction answers &ldquo;what URLs are
+              <strong className="text-gray-900">And then it keeps going.</strong>{" "}Extraction answers &ldquo;what URLs are
               in here.&rdquo; The more useful question is what&apos;s wrong with them — so the same run audits the file
               against the spec, cross-checks robots.txt for URLs you&apos;re submitting and blocking simultaneously, and
               will fire live status checks at the URLs on request. We tested the free extractors ranking for this term in
@@ -240,7 +240,7 @@ export default function SitemapExtractorPage() {
               </li>
             </ol>
             <p>
-              Don&apos;t bother with a <code className="rounded bg-gray-100 px-1 text-gray-700">site:</code> search.
+              Don&apos;t bother with a <code className="rounded bg-gray-100 px-1 text-gray-700">site:</code>{" "}search.
               Sitemaps are XML files rather than pages, and they&apos;re rarely surfaced that way, so an empty result
               tells you nothing about whether one exists. Paste the bare domain above and the tool runs steps 1 and 2
               for you, then tells you which method found the file.
@@ -271,7 +271,7 @@ export default function SitemapExtractorPage() {
             Worth knowing: Google has said it ignores{" "}
             <code className="rounded bg-gray-200 px-1 text-gray-700">changefreq</code> and{" "}
             <code className="rounded bg-gray-200 px-1 text-gray-700">priority</code> entirely, and treats{" "}
-            <code className="rounded bg-gray-200 px-1 text-gray-700">lastmod</code> as a signal only when it&apos;s
+            <code className="rounded bg-gray-200 px-1 text-gray-700">lastmod</code>{" "}as a signal only when it&apos;s
             demonstrably accurate. If every URL in a sitemap carries today&apos;s date, that&apos;s a CMS writing
             timestamps rather than a site reporting real changes — and it&apos;s a useful thing to spot in the export.
           </p>

@@ -704,11 +704,12 @@ export default function GeoServicePage() {
             </p>
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
               {addons.map((a) => (
-                <div key={a.name} className="flex flex-col rounded-xl border border-gray-100 bg-gray-50/50 p-4">
-                  <div className="flex items-baseline justify-between gap-3">
+                <div key={a.name} className="flex min-w-0 flex-col rounded-xl border border-gray-100 bg-gray-50/50 p-4">
+                  <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-3">
                     <span className="text-sm font-semibold text-gray-900">{a.name}</span>
-                    <span className="whitespace-nowrap text-sm font-semibold text-gray-900">
-                      {a.price} <span className="font-normal text-gray-500">{a.unit}</span>
+                    <span className="text-sm font-semibold text-gray-900 sm:text-right">
+                      <span className="whitespace-nowrap">{a.price}</span>{" "}
+                      <span className="font-normal text-gray-500">{a.unit}</span>
                     </span>
                   </div>
                   <p className="mt-1.5 text-[13px] leading-relaxed text-gray-600">{a.detail}</p>

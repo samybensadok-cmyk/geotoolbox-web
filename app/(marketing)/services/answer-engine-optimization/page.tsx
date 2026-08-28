@@ -678,7 +678,7 @@ export default function AeoServicePage() {
           <div>
             <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
               Every question in your market already has an answer slot.
-              <br className="hidden sm:block" /> Someone&apos;s text is in it. Make it yours.
+              <br className="hidden sm:block" />{" "}Someone&apos;s text is in it. Make it yours.
             </h2>
             <p className="mt-3 max-w-lg text-base leading-relaxed text-gray-300">
               Book a call. I&apos;ll read your answer-slot baseline with you and tell you straight whether

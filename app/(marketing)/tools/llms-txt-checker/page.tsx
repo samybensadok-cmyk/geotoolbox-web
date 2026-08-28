@@ -131,17 +131,17 @@ export default function LlmsTxtCheckerPage() {
           </h2>
           <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-gray-700">
             <p>
-              <strong className="text-gray-900">It is not a ranking or citation signal.</strong> Google has stated llms.txt
+              <strong className="text-gray-900">It is not a ranking or citation signal.</strong>{" "}Google has stated llms.txt
               is not used for Search or AI Overviews, and no major AI provider confirms using it. Google&apos;s John Mueller:
               <em> &quot;no AI system currently uses llms.txt.&quot;</em> Anyone selling it as a ranking or citation shortcut is guessing.
             </p>
             <p>
-              <strong className="text-gray-900">It is a recognized convention.</strong> Google&apos;s Chrome Lighthouse (v13.3)
+              <strong className="text-gray-900">It is a recognized convention.</strong>{" "}Google&apos;s Chrome Lighthouse (v13.3)
               added an &quot;Agentic browsing&quot; audit that checks your llms.txt loads without a server error. Some IDE
               assistants and custom agents read it when pointed at your docs.
             </p>
             <p>
-              <strong className="text-gray-900">So treat it as cheap hygiene, not a growth lever.</strong> A clean, curated
+              <strong className="text-gray-900">So treat it as cheap hygiene, not a growth lever.</strong>{" "}A clean, curated
               llms.txt with working links costs little and can&apos;t hurt. This checker grades exactly that, technical hygiene,
               and is built to never overstate the payoff.
             </p>
