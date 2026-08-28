@@ -26,6 +26,12 @@
  *    this number to ChatGPT / Perplexity / Google. MANUAL: that report has no
  *    public API (confirmed 2026-07-31; on Microsoft's backlog) — bump it by hand
  *    and update `aiCitations.asOf` at the same time.
+ *  - `googleAiFeatures.impressions` → Google Search Console "Generative AI
+ *    features" (Beta) report: appearances of our links INSIDE AI Overviews /
+ *    AI Mode over a trailing 28 days. Google-side, Google-labelled — never
+ *    blended with the Bing sample and never called "citations". MANUAL: not
+ *    exposed by the Search Console API (searchAppearance returns no AI rows,
+ *    verified 2026-08-28).
  *  - `weeksToResult` → TIME TO FIRST MEANINGFUL AI CITATION only. It is NOT a
  *    label for the Bing appearance total, and the Google totals were produced by
  *    about 7 weeks of active content publishing (domain indexed since April 2026,
@@ -59,12 +65,50 @@ export const proofStats = {
     sampled: true,
     asOf: "28 Aug 2026",
   },
+  // Manual — Google Search Console "Generative AI features" (Beta) report:
+  // impressions where a geotoolbox.ai link appeared INSIDE a Google AI answer
+  // (AI Overviews + AI Mode). This is the Google-side counterpart to the Bing
+  // figure above and must never be merged with it or with `impressions.perDay`
+  // (which is all-of-Search, AI features included).
+  //   - An impression = the link was shown in the AI answer; for AI Overviews
+  //     Google only counts it once the link is actually visible (i.e. after the
+  //     user expands, when expansion is required). It is an APPEARANCE, not a
+  //     click, and not "unique citations".
+  //   - NOT available from the Search Console API: the `searchAppearance`
+  //     dimension returns no AI-feature rows for this property (verified
+  //     2026-08-28), so the automation script cannot pick it up. Hand-read from
+  //     the GSC UI; bump `asOf` in the same edit, like the Bing field.
+  //   - `prevImpressions` is the immediately preceding 28-day window, as shown
+  //     by the report's own Compare view — the growth multiple must be derived
+  //     from these two, never asserted separately.
+  googleAiFeatures: {
+    impressions: 91400,
+    prevImpressions: 5910,
+    windowDays: 28,
+    surfaces: "AI Overviews + AI Mode",
+    source: "Google Search Console · Generative AI features (Beta)",
+    asOf: "28 Aug 2026",
+  },
   // Top buying-intent grounding query from Bing WMT "AI Performance" — an
   // appearance count in Bing's AI Performance report, NOT unique citations.
   topGroundingQuery: {
     query: "evaluate AI visibility tracking platforms",
     appearances: 10400,
     source: "Bing WMT AI Performance",
+  },
+  // Manual — Google Analytics 4 Home card for geotoolbox.ai, "Last 30 days"
+  // against the preceding 30 days (the comparison GA4 itself renders). SITE
+  // ANALYTICS, not Search Console: `activeUsers` is all traffic sources, so it
+  // is never presented as organic, as Google-only, or next to the GSC figures
+  // as if it were the same funnel. Read by hand off the dashboard with the
+  // receipt screenshot; bump `asOf` and swap the PNG in the same edit.
+  ga4: {
+    activeUsers: "5.4k",
+    activeUsersChangePct: 114.3,
+    events: "24k",
+    keyEvents: 17,
+    windowDays: 30,
+    asOf: "28 Aug 2026",
   },
   // TIME TO FIRST MEANINGFUL AI CITATION only — NOT a label for the Bing total.
   weeksToResult: 7,

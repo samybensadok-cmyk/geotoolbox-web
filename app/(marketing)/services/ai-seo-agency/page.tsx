@@ -624,14 +624,19 @@ export default function AiSeoServicePage() {
               <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-gray-600">
                 <p>
                   I started geotoolbox.ai from nothing — no aged domain, no link package. The first
-                  meaningful AI citations arrived in about {proofStats.weeksToResult} weeks, and today
+                  meaningful AI citations arrived in about {proofStats.weeksToResult}{" "}
+                  weeks, and today
                   Google Search Console shows it ranking across thousands of keywords —{" "}
                   {fmt(proofStats.google.top10)} of them on page one over the trailing{" "}
-                  {proofStats.google.windowDays} days (real, unique, verifiable in GSC). And the part a
-                  normal SEO can&apos;t report: over a trailing{" "}
-                  {proofStats.aiCitations.windowDays}-day window, Bing&apos;s AI Performance report logged a
-                  large volume of AI-citation appearances across Copilot and partners — a sampled count,
-                  Bing&apos;s data, in the receipt.
+                  {proofStats.google.windowDays}{" "}
+                  days (real, unique, verifiable in GSC). And the part a
+                  normal SEO can&apos;t report: Google&apos;s own Generative AI features report counts{" "}
+                  {fmt(proofStats.googleAiFeatures.impressions)} appearances of this site inside AI
+                  Overviews and AI Mode in the last {proofStats.googleAiFeatures.windowDays} days — up from{" "}
+                  {fmt(proofStats.googleAiFeatures.prevImpressions)} the {proofStats.googleAiFeatures.windowDays}{" "}
+                  days before — while over a separate trailing {proofStats.aiCitations.windowDays}-day window
+                  Bing&apos;s AI Performance report logged a large volume of AI-citation appearances across
+                  Copilot and partners. Two engines, two reports, both in the receipts.
                 </p>
                 <p>
                   Why it matters commercially: the prompts we get cited for most aren&apos;t trivia — they&apos;re
@@ -665,6 +670,17 @@ export default function AiSeoServicePage() {
                       {fmt(proofStats.google.top3)}
                     </dd>
                   </div>
+                  <div className="flex items-baseline justify-between gap-4 border-b border-gray-100 pb-5">
+                    <dt className="text-[13px] font-medium text-gray-600">
+                      Inside Google&apos;s AI answers
+                      <span className="mt-0.5 block font-mono text-[10px] font-semibold uppercase tracking-widest text-gray-400">
+                        {proofStats.googleAiFeatures.windowDays}-day GSC impressions
+                      </span>
+                    </dt>
+                    <dd className="font-mono text-2xl font-bold tabular-nums text-gray-900">
+                      {fmt(proofStats.googleAiFeatures.impressions)}
+                    </dd>
+                  </div>
                   <div className="flex items-baseline justify-between gap-4">
                     <dt className="text-[13px] font-medium text-gray-600">
                       AI-citation appearances
@@ -678,10 +694,13 @@ export default function AiSeoServicePage() {
                   </div>
                 </dl>
                 <p className="mt-6 border-t border-gray-100 pt-4 text-[12px] leading-relaxed text-gray-500">
-                  Google figures are unique GSC data, as of {proofStats.asOf}. The AI-citation figure is
-                  a {proofStats.aiCitations.windowDays}-day sampled appearance count from Bing Webmaster
-                  Tools (Microsoft Copilot and partners), as of {proofStats.aiCitations.asOf} — not unique
-                  citations, not ChatGPT, Perplexity, or Google.
+                  Ranking figures are unique GSC data, as of {proofStats.asOf}. The AI-answer figure is
+                  impressions from Google&apos;s own Search Console &ldquo;Generative AI features&rdquo;
+                  report ({proofStats.googleAiFeatures.surfaces}), as of {proofStats.googleAiFeatures.asOf}.
+                  The AI-citation figure is a separate {proofStats.aiCitations.windowDays}-day sampled
+                  appearance count from Bing Webmaster Tools (Microsoft Copilot and partners), as of{" "}
+                  {proofStats.aiCitations.asOf} — not unique citations, and not ChatGPT, Perplexity or
+                  Google data. Neither figure counts clicks; the two are never added together.
                 </p>
               </div>
             </div>

@@ -14,12 +14,17 @@ import { GrowthCharts } from "@/components/services/growth-charts"
  * came from about `weeksToResult` weeks of publishing; the AI-citation number is
  * a sampled, non-unique appearance count from a SEPARATE `windowDays`-day
  * Bing Webmaster Tools window — never umbrella'd under the Google timeframe, and
- * never dressed up as ChatGPT / Perplexity / Google data.
+ * never dressed up as ChatGPT / Perplexity / Google data. The AI-answer figures
+ * are TWO separate stats from TWO engines — Google's "Generative AI features"
+ * impressions (AI Overviews + AI Mode) and the Bing sample — each labelled with
+ * its own engine and window, never summed and never blended.
  */
 export function ProofResults() {
-  const { google, aiCitations, impressions, weeksToResult, asOf } = proofStats
+  const { google, aiCitations, googleAiFeatures, impressions, weeksToResult, asOf } = proofStats
   const fmt = (n: number) => n.toLocaleString("en-US")
   const blended = impressions.source === "google+bing"
+  // Derived from the report's own Compare view — never hardcoded.
+  const aiGrowth = Math.round(googleAiFeatures.impressions / googleAiFeatures.prevImpressions)
 
   const stats: Array<{ value: string; label: string; source: string; tag?: string }> = [
     {
@@ -33,8 +38,14 @@ export function ProofResults() {
       source: `Google Search Console · ${google.windowDays}-day window`,
     },
     {
+      value: fmt(googleAiFeatures.impressions),
+      label: "Appearances inside Google's AI answers",
+      source: `Google Search Console · ${googleAiFeatures.surfaces} · ${googleAiFeatures.windowDays}-day window`,
+      tag: `${aiGrowth}× in ${googleAiFeatures.windowDays} days`,
+    },
+    {
       value: `~${fmt(aiCitations.total)}`,
-      label: "AI-citation appearances",
+      label: "AI-citation appearances in Bing",
       source: `Bing WMT · ${aiCitations.source} · ${aiCitations.windowDays}-day sample`,
       tag: `${aiCitations.windowDays}-day sample`,
     },
@@ -75,9 +86,11 @@ export function ProofResults() {
           </div>
           <p className="max-w-xl text-base leading-relaxed text-gray-300">
             These are the numbers, not a promise — the exact figures, stamped, and updated as they move.
-            The Google figures came from about {weeksToResult} weeks of publishing on a domain that drove
-            near-zero traffic before; the AI-citation count is a separate {aiCitations.windowDays}-day
-            Bing sample.
+            The Google ranking figures came from about {weeksToResult}{" "}
+            weeks of publishing on a domain
+            that drove near-zero traffic before. The two AI-answer figures are kept apart on purpose:
+            one is Google&apos;s own count of our links inside AI Overviews and AI Mode, the other a
+            separate {aiCitations.windowDays}-day Bing sample.
           </p>
         </div>
 
@@ -86,11 +99,11 @@ export function ProofResults() {
             `order` keeps the number visually first while <dt> precedes <dd> in
             the DOM. The Bing stat carries its own "N-day sample" tag so it
             reads separately from the Google figures. */}
-        <dl className="mt-14 grid grid-cols-2 gap-x-8 gap-y-12 lg:grid-cols-4">
+        <dl className="mt-14 grid grid-cols-2 gap-x-8 gap-y-12 md:grid-cols-3 lg:grid-cols-5">
           {stats.map((s) => (
             <div key={s.label} className="flex flex-col border-l border-white/10 pl-5">
               <dt className="order-2 mt-3 text-sm font-medium leading-snug text-gray-200">{s.label}</dt>
-              <dd className="order-1 font-mono text-[clamp(2rem,5vw,3.25rem)] font-bold leading-none tracking-tight tabular-nums text-white">
+              <dd className="order-1 font-mono text-[clamp(1.625rem,2.9vw,2.5rem)] font-bold leading-none tracking-tight tabular-nums text-white">
                 {s.value}
               </dd>
               <dd className="order-3 mt-2 flex flex-wrap items-center gap-2">
@@ -121,6 +134,15 @@ export function ProofResults() {
             {blended
               ? "Impressions per day is a combined Google Search Console + Bing Webmaster Tools daily figure."
               : `Impressions per day is a Google-only ${google.windowDays}-day average from Search Console.`}
+          </p>
+          <p className="mt-2 text-[13px] leading-relaxed text-gray-400">
+            The {fmt(googleAiFeatures.impressions)}{" "}
+            figure is Google&apos;s own — impressions from the
+            Search Console &ldquo;Generative AI features&rdquo; report ({googleAiFeatures.surfaces}),
+            trailing {googleAiFeatures.windowDays} days to {googleAiFeatures.asOf}, up from{" "}
+            {fmt(googleAiFeatures.prevImpressions)} in the previous {googleAiFeatures.windowDays} days.
+            It counts times a geotoolbox.ai link was shown inside an AI answer, not clicks and not
+            unique citations. That report is still in beta and has no API, so it is read by hand.
           </p>
           <p className="mt-2 text-[13px] leading-relaxed text-gray-400">
             The ~{fmt(aiCitations.total)} AI-citation figure is a {aiCitations.windowDays}-day sample

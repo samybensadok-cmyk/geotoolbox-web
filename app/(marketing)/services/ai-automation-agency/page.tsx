@@ -567,8 +567,13 @@ export default function AiAutomationAgencyPage() {
                   went from {fmt(proofStats.monthly[0].queries)} monthly Google queries in{" "}
                   {proofStats.monthly[0].label} to {fmt(latestMonth.queries)} in {latestMonth.label}
                   {latestMonth.partial ? " (month to date)" : ""}, with {fmt(latestMonth.top10)} on page one —
-                  and the first meaningful AI citations arrived in about {proofStats.weeksToResult} weeks of
-                  publishing. Separately, Bing&apos;s AI Performance report
+                  and the first meaningful AI citations arrived in about {proofStats.weeksToResult}{" "}
+                  weeks of publishing. It also shows up where the answer is written, not just where the links are:
+                  Google&apos;s own Generative AI features report counts{" "}
+                  {fmt(proofStats.googleAiFeatures.impressions)} impressions inside AI Overviews and AI Mode
+                  over the last {proofStats.googleAiFeatures.windowDays} days, against{" "}
+                  {fmt(proofStats.googleAiFeatures.prevImpressions)} in the {proofStats.googleAiFeatures.windowDays}{" "}
+                  days before. Separately, Bing&apos;s AI Performance report
                   logs ~{fmt(proofStats.aiCitations.total)} AI-citation appearances over its own trailing{" "}
                   {proofStats.aiCitations.windowDays}-day window. That&apos;s what a production AI system
                   looks like: measurable output, quality gates, a paper trail.
@@ -611,9 +616,20 @@ export default function AiAutomationAgencyPage() {
             </div>
           </div>
 
-          {/* Receipts strip — the two dashboards behind the claims above */}
+          {/* Receipts strip — the three dashboards behind the claims above. The
+              Google AI-features shot leads full-width (md:col-span-2 via `span`),
+              so the two half-width shots sit cleanly on the row beneath it. */}
           <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2">
             {[
+              {
+                chrome: "Google Search Console · Generative AI features (Beta)",
+                src: "/services/automation/gsc-ai-features-2026-08-28.png",
+                width: 2703,
+                height: 1120,
+                span: true,
+                alt: `Google Search Console Generative AI features report: ${fmt(proofStats.googleAiFeatures.impressions)} impressions inside Google's AI answers over the last ${proofStats.googleAiFeatures.windowDays} days, up from ${fmt(proofStats.googleAiFeatures.prevImpressions)} in the previous ${proofStats.googleAiFeatures.windowDays} days, on a rising daily curve.`,
+                caption: `${fmt(proofStats.googleAiFeatures.impressions)} impressions inside Google's AI answers (${proofStats.googleAiFeatures.surfaces}) · trailing ${proofStats.googleAiFeatures.windowDays} days vs ${fmt(proofStats.googleAiFeatures.prevImpressions)} the ${proofStats.googleAiFeatures.windowDays} days before · Google's own report, not clicks.`,
+              },
               {
                 chrome: "Bing WMT · AI Performance",
                 src: "/services/automation/bing-ai-citations-2026-08-28.png",
@@ -624,16 +640,18 @@ export default function AiAutomationAgencyPage() {
               },
               {
                 chrome: "Google Analytics 4",
-                src: "/services/automation/ga4-users-growth-2026-08.png",
-                width: 1648,
-                height: 774,
-                alt: "Google Analytics 4 chart: 4.6K active users over the last 30 days to 21 August 2026, up 166% on the previous period, with 21K events and 13 key events.",
-                caption: "4.6K active users, +166% vs the previous period · GA4, last 30 days to 21 Aug 2026 · all traffic sources.",
+                src: "/services/automation/ga4-users-growth-2026-08-28.png",
+                width: 1588,
+                height: 712,
+                alt: `Google Analytics 4 chart: ${proofStats.ga4.activeUsers} active users over the last ${proofStats.ga4.windowDays} days to ${proofStats.ga4.asOf}, up ${proofStats.ga4.activeUsersChangePct}% on the previous period, with ${proofStats.ga4.events} events and ${proofStats.ga4.keyEvents} key events.`,
+                caption: `${proofStats.ga4.activeUsers} active users, +${proofStats.ga4.activeUsersChangePct}% vs the previous period · GA4, last ${proofStats.ga4.windowDays} days to ${proofStats.ga4.asOf} · all traffic sources.`,
               },
             ].map((r) => (
               <figure
                 key={r.src}
-                className="overflow-hidden rounded-2xl border border-[var(--surface-mint-border)] bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)]"
+                className={`overflow-hidden rounded-2xl border border-[var(--surface-mint-border)] bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)]${
+                  "span" in r && r.span ? " md:col-span-2" : ""
+                }`}
               >
                 <div aria-hidden="true" className="flex items-center gap-2 border-b border-gray-100 bg-gray-50 px-4 py-2.5">
                   <span className="h-2 w-2 rounded-full bg-gray-300" />
@@ -649,7 +667,7 @@ export default function AiAutomationAgencyPage() {
                     width={r.width}
                     height={r.height}
                     alt={r.alt}
-                    sizes="(min-width: 768px) min(46vw, 640px), 100vw"
+                    sizes={"span" in r && r.span ? "(min-width: 768px) min(92vw, 1280px), 100vw" : "(min-width: 768px) min(46vw, 640px), 100vw"}
                     className="h-auto w-full"
                   />
                 </div>
