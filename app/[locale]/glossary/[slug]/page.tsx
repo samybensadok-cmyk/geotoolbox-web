@@ -39,7 +39,10 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: "glossary" })
   const title = t("metaTitle", { term: term.term })
   return {
-    title,
+    // `absolute` opts out of the root "%s | GEO Toolbox" template — same
+    // rationale as the blog route (Google strips it and supplies the site name
+    // itself). See TITLE-BRAND-SUFFIX-AUDIT-2026-08-30.md.
+    title: { absolute: title },
     description: term.definition,
     openGraph: { title, description: term.definition, type: "article" },
     twitter: { card: "summary", title, description: term.definition },

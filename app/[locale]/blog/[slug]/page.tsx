@@ -45,7 +45,14 @@ export async function generateMetadata({
   if (!post) return {}
 
   return {
-    title: post.title,
+    // `absolute` opts out of the root "%s | GEO Toolbox" template. Google strips
+    // that suffix from 38 of 40 sampled SERP appearances and re-adds the site
+    // name on its own terms, while the +14 chars pushed 87% of posts past the
+    // ~60-char display budget — truncating the differentiating half of the
+    // title instead. Brand attribution in AI Overviews rides the citation's
+    // own `source` field, never the title tag. See
+    // seo-audits/geotoolbox-main/TITLE-BRAND-SUFFIX-AUDIT-2026-08-30.md
+    title: { absolute: post.title },
     description: post.description,
     robots: post.noindex ? { index: false, follow: true } : undefined,
     openGraph: {
