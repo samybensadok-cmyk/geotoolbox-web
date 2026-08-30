@@ -3,7 +3,7 @@ title: "What Is Kimi K3? Moonshot AI's 2.8T Open Model, Explained"
 description: "What is Kimi K3? Moonshot AI's open-weight model explained: real specs, which benchmarks to trust, pricing, whether you can run it, and K2 vs DeepSeek."
 date: "2026-07-17"
 recheckBy: "2026-08-31"  # weights public (July 27); reasoning_effort low/high/max landed (confirmed 2026-08-08). Qwen3.8-Max open-weights (08-12) and Qwen3.8-27B (~08-14) both resolved and live elsewhere in the corpus; this file DOES reference Qwen3.8-Max at the K3-launch-timing line (updated 08-19 to note the 08-12 text-weights opening; the earlier 'doesn't reference Qwen' note was wrong and caused a sweep to skip it) — recheck for independent K3 benchmarks
-updated: "2026-08-25"
+updated: "2026-08-30"
 author: "Samy BEN SADOK"
 tags: ["kimi-k3", "kimi-ai", "moonshot-ai", "open-weights", "mixture-of-experts", "chinese-ai", "llm", "guide"]
 draft: false
@@ -42,11 +42,11 @@ The practical specs matter more than the internals for most readers. Kimi K3 tak
 Here is the part most launch coverage skips. On a launch-week model, nearly every eye-catching number comes from the lab that built it, run under conditions the lab chose. That does not make the numbers wrong, but it does mean you should sort them by who measured them before you draw conclusions.
 
 <figure className="not-prose my-8">
-  <BlogImage src="/blog/what-is-kimi-k3/kimi-k3-benchmarks-vendor-vs-independent.png" alt="Table sorting Kimi K3 benchmarks by who measured them: independent results (AA Intelligence Index 57, Frontend Code Arena #1, hallucination rate 51%) versus Moonshot's vendor-reported scores (GPQA Diamond 93.5, Terminal-Bench 88.3, BrowseComp 91.2)." w="1100" h="773" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <BlogImage src="/blog/what-is-kimi-k3/kimi-k3-benchmarks-vendor-vs-independent.png" alt="Table sorting Kimi K3 benchmarks by who measured them, as reported July 17, 2026: independent results (AA Intelligence Index 57, Frontend Code Arena #1, hallucination rate 51%) versus Moonshot's vendor-reported scores (GPQA Diamond 93.5, Terminal-Bench 88.3, BrowseComp 91.2)." w="1100" h="773" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
   <figcaption className="mt-3 text-center text-sm text-gray-500">On a launch-week model, the split between independently verified and vendor-reported numbers is most of the story.</figcaption>
 </figure>
 
-The results worth leaning on today are the independently checked ones. [Artificial Analysis](https://artificialanalysis.ai/models/kimi-k3) puts K3's overall Intelligence Index at 57. That ranked it fourth of 189 models at launch; as of July 25, 2026 it sits seventh of 190, behind Claude Opus 5, Fable 5 and GPT-5.6 Sol, having been passed by the newer Anthropic and OpenAI configurations rather than by any drop in its own score. Notably it still edges the legacy Opus 4.8, which scores 56. Its long-horizon knowledge-work Elo of 1547 trailed only Fable 5 when measured at launch. Separately, the Frontend Code Arena, a human-preference leaderboard, ranks it first, ahead of Fable 5 and GPT-5.6 Sol, though critics note that leaderboard leans heavily on frontend and 3D-demo tasks, so read it as coding-flavor strength rather than general capability. Read together, those say something specific: K3 is at the frontier on narrow coding and agent tasks, and merely competitive on general intelligence.
+The results worth leaning on today are the independently checked ones. At launch, [Artificial Analysis](https://artificialanalysis.ai/models/kimi-k3) scored K3's overall Intelligence Index at 57 (the figure in the chart above, as reported July 17). The August rescore to index v4.1.1 lifted every model a few points and put K3 at 60, still the top open-weight model, tied with GLM-5.3 and sitting just behind the closed frontier of Claude Opus 5, Fable 5, and GPT-5.6 Sol. Its long-horizon knowledge-work Elo of 1547 trailed only Fable 5 when measured at launch. Separately, the Frontend Code Arena, a human-preference leaderboard, ranks it first, ahead of Fable 5 and GPT-5.6 Sol, though critics note that leaderboard leans heavily on frontend and 3D-demo tasks, so read it as coding-flavor strength rather than general capability. Read together, those say something specific: K3 is at the frontier on narrow coding and agent tasks, and merely competitive on general intelligence.
 
 Everything else in the headline tables is Moonshot's own reporting, and the caveats are real. The company ran different benchmarks through different agent harnesses (its own Kimi Code, Claude Code, or Codex) at maximum thinking effort, so the comparisons are not strictly apples to apples, and the author of one benchmark Moonshot cited publicly objected that the metric can inflate partial-credit scores. There is also a result the vendor page does not headline: on Artificial Analysis's hallucination test, K3's fabrication rate rose to 51% from the previous model's 39%, even as its accuracy improved. It answers more questions correctly and makes up more of the ones it gets wrong.
 
@@ -55,7 +55,7 @@ Everything else in the headline tables is Moonshot's own reporting, and the cave
 <tr><th>Benchmark</th><th>Kimi K3</th><th>Fable 5</th><th>GPT-5.6 Sol</th><th>Measured by</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>AA Intelligence Index</strong></td><td>57 (#7 of 190, July 25)</td><td>higher</td><td>higher</td><td><strong>Independent</strong> (Artificial Analysis)</td></tr>
+<tr><td><strong>AA Intelligence Index</strong></td><td>60 (top open model, Aug 2026)</td><td>higher</td><td>higher</td><td><strong>Independent</strong> (Artificial Analysis)</td></tr>
 <tr><td><strong>Frontend Code Arena</strong></td><td>1,679 (#1)</td><td>1,631</td><td>1,618</td><td><strong>Independent</strong> (Arena)</td></tr>
 <tr><td><strong>GPQA Diamond</strong></td><td>93.5</td><td>92.6</td><td>94.1</td><td>Vendor-reported</td></tr>
 <tr><td><strong>Terminal-Bench 2.1</strong></td><td>88.3</td><td>84.6</td><td>88.8</td><td>Vendor-reported</td></tr>
@@ -162,7 +162,7 @@ Realistically, no. The weights are public now, but at 2.8 trillion parameters K3
 
 ### Is Kimi K3 better than Claude or GPT?
 
-On narrow coding and agent benchmarks, K3 competes at or near the top, and it ranks first on a human-preference frontend leaderboard. On general intelligence, independent testing now puts it seventh of 190, behind Claude Opus 5, Fable 5 and GPT-5.6 Sol, and reviewers report it is weaker on non-coding work. It is a strong specialist, not a clear overall winner. Our [Kimi K3 vs Claude](https://geotoolbox.ai/blog/kimi-k3-vs-claude) comparison breaks the head-to-head down by task, cost, and speed.
+On narrow coding and agent benchmarks, K3 competes at or near the top, and it ranks first on a human-preference frontend leaderboard. On general intelligence, independent testing puts it at the top of the open field but behind the closed frontier (Claude Opus 5, Fable 5, GPT-5.6 Sol), and reviewers report it is weaker on non-coding work. It is a strong specialist, not a clear overall winner. Our [Kimi K3 vs Claude](https://geotoolbox.ai/blog/kimi-k3-vs-claude) comparison breaks the head-to-head down by task, cost, and speed.
 
 ### Does Kimi K3 hallucinate?
 
