@@ -1,0 +1,179 @@
+---
+title: "AI Token Cost in $YEAR: LLM API Pricing, Reconciled and Dated"
+description: "AI token cost, reconciled and current as of $UPDATED_MONTH_YEAR: what every major LLM API charges per million tokens, the hidden costs that wreck your estimate, and which is cheapest for your job."
+date: "2026-08-30"
+updated: "2026-08-30"
+recheckBy: "2026-09-15"  # DeepSeek peak/off-peak re-check (nearest cliff); GPT-5.6 Sol promo runs to Nov 21 2026; GLM-5.3 Flash promo ends Sep 9. Price-dense page: re-verify every row monthly.
+author: "Samy BEN SADOK"
+tags: ["ai-token-cost", "llm-api-pricing", "token-pricing", "ai-pricing", "openai-api-pricing", "pricing"]
+draft: false
+---
+
+A single AI token costs a fraction of a cent. That is why the number feels harmless, and why the bills surprise people. The **AI token cost** you actually pay runs many times higher on the priciest current model than on the cheapest, moves again every few weeks, and is quoted wrong on many of the pages you will find, because they scraped a rate that has since changed.
+
+This page fixes both problems. Below is the current per-token price for the major APIs, verified against each provider's own pricing page and dated, then the hidden costs that make your real bill several times the sticker price, and a formula to turn a headline rate into your actual monthly spend. For what a token is and why models count them the way they do, start with our guide to [tokens in AI](https://geotoolbox.ai/blog/what-are-tokens-in-ai); this page is about what they cost.
+
+## How Much Does an AI Token Cost?
+
+Providers do not price per token. They price per **million tokens** (written MTok), split into an input rate (everything you send, including the system prompt and history) and an output rate (everything the model writes back). Output is the expensive half, for reasons covered in the next section.
+
+Here is the current rate card. Every figure is per million tokens, standard tier, checked against the provider's own page on 30 August 2026.
+
+<table>
+<thead>
+<tr><th>Model</th><th>Input / 1M</th><th>Output / 1M</th><th>Max context</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>OpenAI GPT-5.6 Sol</strong></td><td>$4.00</td><td>$20.00</td><td>1.05M</td></tr>
+<tr><td><strong>OpenAI GPT-5.6 Terra</strong></td><td>$2.00</td><td>$12.00</td><td>1.05M</td></tr>
+<tr><td><strong>OpenAI GPT-5.6 Luna</strong></td><td>$0.20</td><td>$1.20</td><td>1.05M</td></tr>
+<tr><td><strong>Anthropic Claude Opus 5</strong></td><td>$5.00</td><td>$25.00</td><td>1M</td></tr>
+<tr><td><strong>Anthropic Claude Sonnet 5</strong></td><td>$2.00</td><td>$10.00</td><td>1M</td></tr>
+<tr><td><strong>Anthropic Claude Haiku 4.5</strong></td><td>$1.00</td><td>$5.00</td><td>200K</td></tr>
+<tr><td><strong>Google Gemini 3.1 Pro</strong></td><td>$2.00</td><td>$12.00</td><td>1M+</td></tr>
+<tr><td><strong>Google Gemini 2.5 Flash</strong></td><td>$0.30</td><td>$2.50</td><td>1M</td></tr>
+<tr><td><strong>xAI Grok 4.6</strong></td><td>$2.00</td><td>$6.00</td><td>1M</td></tr>
+<tr><td><strong>DeepSeek V4 Pro</strong></td><td>$0.66</td><td>$1.98</td><td>1M</td></tr>
+<tr><td><strong>DeepSeek V4 Flash</strong></td><td>$0.22</td><td>$0.66</td><td>1M</td></tr>
+<tr><td><strong>Moonshot Kimi K3</strong></td><td>$3.00</td><td>$15.00</td><td>1M</td></tr>
+<tr><td><strong>Moonshot Kimi K2.7-code</strong></td><td>$0.95</td><td>$4.00</td><td>262K</td></tr>
+<tr><td><strong>Mistral Large 3</strong></td><td>$0.50</td><td>$1.50</td><td>256K</td></tr>
+<tr><td><strong>Z.ai GLM-5.3</strong></td><td>$1.40</td><td>$4.40</td><td>200K</td></tr>
+<tr><td><strong>Z.ai GLM-5.3 Flash</strong></td><td>$0.15</td><td>$0.50</td><td>200K</td></tr>
+</tbody>
+</table>
+
+A pair of numbers anchors the table. The floor is Z.ai GLM-5.3 Flash and DeepSeek V4 Flash, from about $0.50 to $0.66 per million on output. The ceiling is [Claude Opus 5](https://geotoolbox.ai/blog/claude-pricing) at $25 and GPT-5.6 Sol at $20. That gap, from $0.50 to $25 on output alone, makes **model choice usually the biggest single lever on an AI budget**, ahead of the optimizations below.
+
+A few rows carry an asterisk that the table cannot show. DeepSeek's figures are its off-peak rate; for several hours a day they double. GPT-5.6 Sol's $4 and $20 are a promotional cut, not the standing price. Anthropic's Sonnet 5 at $2 was almost $3. Those moving parts are the reason a flat table is never the whole answer, and we come back to them below. (Alibaba's Qwen3.8-Max is reportedly close to Grok 4.6's tier but is left off the table because we could not verify its dollar rate on an English vendor page.)
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/ai-token-cost/output-cost-per-1m.png" alt="Horizontal bar chart, drawn to scale, of API output price per million tokens in August 2026, from cheapest to priciest: GLM-5.3 Flash $0.50, DeepSeek V4 Flash $0.66, Mistral Large 3 $1.50, Gemini 2.5 Flash $2.50, Grok 4.6 $6, Gemini 3.1 Pro $12, Kimi K3 $15, GPT-5.6 Sol $20 on its promotional rate, and Claude Opus 5 $25." w="2188" h="1520" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Output tokens per 1M, to scale. GLM-5.3 Flash is shown at list price, DeepSeek at its off-peak rate (it doubles during peak hours), and GPT-5.6 Sol at its promotional rate (guaranteed through 21 November 2026).</figcaption>
+</figure>
+
+## Why Output Tokens Cost More Than Input
+
+Output runs several times the input rate on almost every model. Look down the table: Sonnet 5 is $2 in and $10 out, Gemini 3.1 Pro is $2 in and $12 out, Opus 5 is $5 in and $25 out, and [Grok 4.6](https://geotoolbox.ai/blog/grok-pricing) is $2 in and $6 out. The gap is not arbitrary. Reading your prompt is one pass over a fixed block of text. Writing a reply means predicting each token one at a time, and every new token is another full run through the model.
+
+The practical takeaway flips most people's mental model. Long prompts are cheap; long answers are not. A verbose model that pads every response burns your budget faster than a large document you paste in once. So the ratio that predicts your bill is not how many tokens you send, it is how many the model writes back.
+
+This matters most in agent and coding workloads, where the loop hides the cost. Each step re-sends the growing context as input and generates new output, so a single task can quietly rack up far more tokens than the request that started it. Capping response length is often the cheapest optimization you can make, because it acts on the expensive half of the bill.
+
+## OpenAI API Pricing
+
+OpenAI is the most-searched of these rate cards, so it deserves its own read. The current GPT-5.6 family splits into a flagship, a mid, and a budget tier, all sharing a context window above a million tokens. Sol is the flagship at $4 input and $20 output. Terra sits in the middle at $2 and $12. Luna is the budget tier at $0.20 and $1.20, which undercuts almost everything except DeepSeek.
+
+The catch on Sol is that $4 and $20 is a **promotional rate**, cut from $5 and $30 in late August 2026. OpenAI has guaranteed the promo through 21 November 2026 and has not said what follows. Plan on it if you like, but know it can revert then. This is also why comparison pages disagree about OpenAI: many still quote the old $5 and $30, and some quote a batch rate as if it were standard. If a table shows Sol at $5/$30 or $2/$10, it is reading a different week or a different tier.
+
+A couple more OpenAI-specific rules move real bills. Very long prompts, past a few hundred thousand input tokens, bill the whole request at double the input rate and half again on output, so a single long-context call on Sol effectively costs $8 and $30. And a Batch API runs asynchronous work at a steep discount for results you can wait up to 24 hours to get back. For the consumer side, the ChatGPT subscriptions and their limits, see our [ChatGPT pricing](https://geotoolbox.ai/blog/chatgpt-pricing) breakdown; this section is the developer API only.
+
+## The Cheapest AI API, by Job
+
+"Cheapest" has no single answer, because the cheapest token and the cheapest finished task are different things. A budget model that needs several attempts, a longer prompt, or a human to clean up its output costs more than a mid-tier model that gets it right once. So match the model to the job, not to the sticker price.
+
+<table>
+<thead>
+<tr><th>Job</th><th>Sensible pick</th><th>Why</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>High-volume chat, classification, extraction</strong></td><td>DeepSeek V4 Flash, Gemini 2.5 Flash, GLM-5.3 Flash</td><td>Output from $0.50 to $2.50 per 1M; quality is enough for structured, repetitive work</td></tr>
+<tr><td><strong>Coding agents</strong></td><td>Kimi K2.7-code, DeepSeek V4 Pro</td><td>Strong on code at a fraction of frontier output rates</td></tr>
+<tr><td><strong>Hard reasoning, complex code</strong></td><td>Claude Sonnet 5, GPT-5.6 Terra</td><td>The $2 input tier: near-frontier quality on many tasks without the flagship premium</td></tr>
+<tr><td><strong>Long-context RAG</strong></td><td>Claude Sonnet 5 or Opus 5</td><td>Their 1M context carries no long-context surcharge, which OpenAI and Gemini both apply above a threshold</td></tr>
+</tbody>
+</table>
+
+Is DeepSeek really the cheapest? On the sticker, close to it: V4 Flash at $0.22 and $0.66 undercuts every US frontier lab. The caveats are that its default thinking mode generates extra output tokens, and its rates double during a defined daily peak window. Our [DeepSeek pricing](https://geotoolbox.ai/blog/deepseek-pricing) page has the full peak and cache math, and our [Chinese AI models compared](https://geotoolbox.ai/blog/chinese-ai-models-compared) guide puts it next to [Kimi](https://geotoolbox.ai/blog/kimi-api-pricing), Qwen, and GLM on quality, not just price. For Google's own budget-to-flagship split, see our [Gemini API pricing](https://geotoolbox.ai/blog/gemini-api-pricing) breakdown.
+
+## The Hidden Costs That Wreck Your Estimate
+
+The rate card is the part everyone reads and the part that misleads them. Real bills run several times a naive estimate because of costs the table never shows. Four matter most.
+
+**Reasoning tokens bill as output.** Models with a thinking step generate internal reasoning before the visible answer, and you pay the output rate for all of it, whether or not you ever see the tokens. On reasoning-heavy tasks the invisible reasoning can dwarf the visible reply, so a short answer sits on top of a much larger billed total.
+
+**Caching is a discount with a trap.** Cached input reads often cost around a tenth of the standard rate on the big providers, though the exact discount varies, which is real money saved on a stable system prompt. But the cache write itself carries a premium over a normal input token, so caching only pays off once the content is read back more than once. It can also fail quietly: reorder a prompt so the stable prefix changes, and every token that was billing at the cache rate reverts to full price, which is easy to miss without watching your cached-token usage.
+
+**Context re-bills every turn.** A conversation re-sends the entire history as input on each new message, so a long chat pays for its own transcript over and over. Add a system prompt, tool and function definitions, and retrieved RAG context, and a "short" request can carry thousands of hidden input tokens before the user types a word.
+
+**The tokenizer itself reprices you.** Different models split the same text into different token counts, so a per-token comparison can mislead. Some models tokenize a given text into more tokens than a rival does, which raises effective cost against a rate that looks lower, and both non-English text and code tend to tokenize less efficiently than plain English.
+
+Usefully, the same list points straight at the levers. Route simple work to a cheap model and reserve flagships for tasks that earn them; cap output length; cache stable prefixes and leave them stable; batch anything that can wait; and trim context instead of re-sending full history. Teams that route and cache well can cut a bill substantially, which is exactly what our guide to [reducing Claude Code token costs](https://geotoolbox.ai/blog/reduce-claude-code-token-costs) walks through for one common agent workload.
+
+## How to Estimate Your Monthly AI Bill
+
+Turning a rate card into a real number takes one formula:
+
+**Monthly cost = (input tokens per call / 1M x input rate) + (output tokens per call / 1M x output rate), times calls per month.**
+
+Then apply cache and batch discounts to the share of traffic that qualifies. The math is trivial. The honest part is estimating tokens per call, counting the system prompt, retrieved context, and history, not just the visible question.
+
+Work an example. Say a retrieval support assistant handles 10,000 conversations a day, each carrying about 800 input tokens (system prompt plus retrieved passages plus the question) and returning about 300 output tokens. That is 240 million input and 90 million output tokens a month. The same workload, priced across current models (rounded to the nearest dollar):
+
+<table>
+<thead>
+<tr><th>Model</th><th>Monthly cost</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>GPT-5.6 Sol</strong> (promo)</td><td>$2,760</td></tr>
+<tr><td><strong>Claude Sonnet 5</strong></td><td>$1,380</td></tr>
+<tr><td><strong>Claude Haiku 4.5</strong></td><td>$690</td></tr>
+<tr><td><strong>Gemini 2.5 Flash</strong></td><td>$297</td></tr>
+<tr><td><strong>Mistral Large 3</strong></td><td>$255</td></tr>
+<tr><td><strong>GPT-5.6 Luna</strong></td><td>$156</td></tr>
+<tr><td><strong>DeepSeek V4 Flash</strong></td><td>$112</td></tr>
+</tbody>
+</table>
+
+Same traffic, a spread of more than twenty times, decided entirely by which model answers. That is the case for routing: send the bulk of that volume to the bottom of the table and reserve Sol or Opus for the requests that genuinely need them. A couple more habits keep the estimate honest. Add a comfortable buffer for context growth and retries, and re-run the math after every price change, because the cheapest row moves. This math covers text generation only: embeddings for a retrieval index, fine-tuning, and image or audio tokens bill separately, though for most text apps generation is the dominant cost.
+
+## Why Every Price You Find Is Already Stale
+
+Search "AI token cost" and you will get a dozen tables that confidently disagree. For GPT-5.6 Sol alone, live comparison pages disagree by several times over within the same week, some still showing the old $5/$30 standard. They scraped different moments of a rate card that keeps moving, and some read a batch or promotional tier as if it were standard.
+
+The moves are constant. GPT-5.6 Sol was cut to its promotional $4 and $20 in late August 2026, guaranteed only through 21 November. DeepSeek switched to peak and off-peak pricing that doubles for several hours a day. Anthropic made Sonnet 5's $2 input permanent in August after a planned rise to $3 was cancelled. GLM-5.3 Flash is running a 50% promotion that ends in early September. Any of those makes a static table wrong within weeks.
+
+The defense is simple: trust a price with a date on it, treat anything undated as a guess, and re-check before you commit a production budget. That is why every row above is stamped to the day it was verified, and why this page carries a re-check date rather than pretending its numbers are permanent.
+
+Token cost is one side of your relationship with AI. The other is whether AI systems can actually read and cite your own content when someone asks them a question, which is the problem [geotoolbox](https://geotoolbox.ai) was built to measure. The same models you are pricing here are increasingly the front door to your site, and most owners have no idea whether those models can crawl it at all.
+
+If you are weighing what an AI feature will cost to run, it is worth knowing what your own site looks like to the engines on the other end. Our free [AI readiness check](https://geotoolbox.ai/tools/ai-readiness) shows whether the crawlers behind ChatGPT, Claude, and Gemini can reach your pages, in about a minute, no account needed.
+
+## Frequently Asked Questions
+
+### How much does an AI token cost?
+
+Tokens are priced per million, not one at a time, and split into input and output. As of August 2026, output ranges from about $0.50 per million on GLM-5.3 Flash to $25 on Claude Opus 5, with input several times cheaper. A single token is a fraction of a cent; the bill comes from volume.
+
+### Which AI API is the cheapest?
+
+For raw price, a cluster of budget models sits at the bottom: GLM-5.3 Flash, DeepSeek V4 Flash, OpenAI's GPT-5.6 Luna, and Mistral Large 3, with Google Gemini 2.5 Flash close behind. But cheapest per token is not cheapest per task: a budget model that needs retries or cleanup can cost more than a mid-tier model that answers once. Match the model to the job rather than defaulting to the lowest rate.
+
+### Why do output tokens cost more than input?
+
+Reading your prompt is a single pass over fixed text, while writing a reply predicts each token one at a time, running the full model for every word produced. That extra compute is why output runs several times the input rate on most models. It also means long answers are what drive most bills.
+
+### What are reasoning tokens, and why am I billed for tokens I cannot see?
+
+Models with a thinking step generate internal reasoning before the visible answer, and that reasoning is billed at the output rate even though it never reaches you. On complex tasks it can dwarf the visible response, so a 300-token answer might sit on top of several thousand billed reasoning tokens. It is the most common reason an estimate comes in low.
+
+### How do I estimate my monthly AI API bill?
+
+Multiply input tokens per call by the input rate and output tokens per call by the output rate, both per million, then multiply by monthly calls. Count the system prompt, retrieved context, and conversation history in your input estimate, not just the visible question, and add a margin for growth and retries. Then apply cache and batch discounts to the traffic that qualifies.
+
+### Is price per token a fair way to compare AI models?
+
+Only as a starting point. Different models tokenize the same text into different counts, so a lower per-token rate can still cost more in practice, and quality differences mean a pricier model can finish a task in fewer attempts. Compare on cost per finished task for your own workload, not on the headline rate alone.
+
+## Sources
+
+- GPT-5.6 API pricing (Sol, Terra, Luna) - OpenAI - `developers.openai.com/api/docs/pricing`
+- Claude models and pricing - Anthropic - `platform.claude.com`
+- Gemini API pricing - Google - `ai.google.dev/gemini-api/docs/pricing`
+- DeepSeek API pricing (peak/off-peak) - DeepSeek - `api-docs.deepseek.com/quick_start/pricing`
+- Grok models and pricing - xAI - `docs.x.ai`
+- Kimi API pricing - Moonshot AI - `platform.kimi.ai/docs/pricing`
+- La Plateforme API pricing - Mistral AI - `mistral.ai/pricing`
+- GLM model pricing - Z.ai - `z.ai`
+- Model and API pricing across providers - OpenRouter - `openrouter.ai/models`
+- Independent model quality benchmarks - Artificial Analysis - `artificialanalysis.ai`
