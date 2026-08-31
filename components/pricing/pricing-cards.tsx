@@ -87,7 +87,7 @@ export type PricingCardsCopy = {
     string,
     {
       tagline: string
-      quotas: { credits: string; domains: string; prompts: string; engines: string; scans: string }
+      quotas: { domains: string; prompts: string; engines: string; scans: string }
       highlights: string[]
       /** optional overrides used when the card renders under the Agencies tab */
       agency?: { tagline?: string; highlights?: string[] }
@@ -354,7 +354,7 @@ export function PricingCards({ copy, locale }: { copy: PricingCardsCopy; locale:
                 <p className="mt-2 text-center text-[11px] leading-snug text-gray-500">{copy.trialNote}</p>
               )}
 
-              {/* Quota block — same 5 rows, same order, every card */}
+              {/* Quota block — same 4 rows, same order, every card */}
               <dl className="mt-6 space-y-2 border-t border-gray-100 pt-5 text-[13px]">
                 {Object.values(c.quotas).map((q, i) => (
                   <div key={i} className="flex items-center gap-2 text-gray-700">

@@ -58,9 +58,8 @@ export type Plan = {
   trialDays?: number
   /** who it's for, one line (default; per-segment copy may override in messages) */
   tagline: string
-  /** the five aligned quota rows shown on every card, in fixed order */
+  /** the four aligned quota rows shown on every card, in fixed order */
   quotas: {
-    credits: string
     domains: string
     prompts: string
     engines: string
@@ -92,7 +91,6 @@ export const PLANS: Plan[] = [
     trialDays: 7,
     tagline: "One brand, tracked properly.",
     quotas: {
-      credits: "12,000 credits/mo",
       domains: "1 brand",
       prompts: "50 prompts/brand",
       engines: "3 engines",
@@ -116,7 +114,6 @@ export const PLANS: Plan[] = [
     priceYearly: 1908,
     tagline: "A second brand, more engines, one shared prompt pool.",
     quotas: {
-      credits: "30,000 credits/mo",
       domains: "Up to 3 brands",
       prompts: "100 prompts, pooled",
       engines: "Pick 5 of 8 engines",
@@ -148,7 +145,6 @@ export const PLANS: Plan[] = [
     // unlimited seats so it cannot cannibalize Growth.
     tagline: "Every engine, full depth — fully funded weekly.",
     quotas: {
-      credits: "50,000 credits/mo",
       domains: "Up to 5 brands",
       prompts: "150 prompts, pooled",
       engines: "All 8 engines",
@@ -159,7 +155,7 @@ export const PLANS: Plan[] = [
       "All 8 AI engines on every prompt, every week",
       "150 pooled prompts — split across brands or all on one",
       "Ask GeoToolBox — 50 AI analyst questions/mo",
-      "Article writing — ~30 articles/mo from your credits",
+      "Article writing — ~30 articles/mo",
       "3 team seats",
     ],
     cta: { label: "Get started", href: SIGNUP },
@@ -173,7 +169,6 @@ export const PLANS: Plan[] = [
     trialDays: 7,
     tagline: "Agencies scaling across a client roster.",
     quotas: {
-      credits: "80,000 credits/mo",
       domains: "15 client brands",
       prompts: "50 prompts/brand",
       engines: "Pick 5 of 8 engines",
@@ -187,7 +182,7 @@ export const PLANS: Plan[] = [
       "White-label client reports",
       "Ask GeoToolBox — 100 AI analyst questions/mo",
       "Content Studio, Citation Interceptor, Community & Actions",
-      "Article writing — ~30 articles/mo from your credits",
+      "Article writing — ~30 articles/mo",
       "Unlimited team seats · unlimited history",
     ],
     featured: ["agency"],
@@ -201,7 +196,6 @@ export const PLANS: Plan[] = [
     priceYearly: 9588,
     tagline: "Every engine, every prompt, at full depth.",
     quotas: {
-      credits: "130,000 credits/mo",
       domains: "25 brands",
       prompts: "50 prompts/brand",
       engines: "All 8 engines",
@@ -210,7 +204,7 @@ export const PLANS: Plan[] = [
     inheritsFrom: { brand: null, agency: "Growth" },
     highlights: [
       "All 8 AI engines available on every client brand",
-      "Article writing — ~60 articles/mo from your credits",
+      "Article writing — ~60 articles/mo",
       "Ask GeoToolBox (300 questions/mo) + white-label reports",
       "PR Coverage Tracker — which earned placements AI engines cite",
       "API & MCP access (coming soon)",
@@ -227,7 +221,6 @@ export const PLANS: Plan[] = [
     priceYearly: null,
     tagline: "Custom contract, premium models, SSO and SLA for large orgs.",
     quotas: {
-      credits: "Custom credit volume",
       domains: "Unlimited brands",
       prompts: "Unlimited prompts",
       engines: "All 8 + premium models",

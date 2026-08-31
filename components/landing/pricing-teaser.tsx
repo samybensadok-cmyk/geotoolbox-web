@@ -7,7 +7,7 @@ import { siteConfig } from "@/lib/config"
  * PricingTeaser — the transparency wedge, on the homepage.
  *
  * Most platforms in this category gate pricing behind a demo call; ours is
- * public down to the credit counts. Prices are read from lib/plans.ts (the
+ * public down to the per-tier capacity. Prices are read from lib/plans.ts (the
  * single source of truth) — only the copy lives in messages. Three of the paid
  * tiers on the card row; the full ladder lives on /pricing.
  */
@@ -32,7 +32,7 @@ export async function PricingTeaser() {
       tagline: t(`tiles.${id}.tagline`),
       quotas: [
         t(`tiles.${id}.engines`),
-        t(`tiles.${id}.credits`),
+        t(`tiles.${id}.capacity`),
         t(`tiles.${id}.scans`),
       ],
     }
