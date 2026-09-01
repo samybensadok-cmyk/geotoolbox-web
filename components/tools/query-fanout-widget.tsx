@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import { ToolResultCapture } from "@/components/tools/tool-result-capture"
 
 /**
  * Free "AI Query Fan-Out" demo — BYOK (bring your own key), 100% client-side.
@@ -378,6 +379,7 @@ export function QueryFanoutWidget() {
       )}
 
       {result && !loading && <FanResultView result={result} />}
+      {result && !loading && <ToolResultCapture slug="query-fanout" what="fan-out" />}
     </div>
   )
 }

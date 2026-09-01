@@ -3,6 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { siteConfig } from "@/lib/config"
+import { ToolResultCapture } from "@/components/tools/tool-result-capture"
 
 /**
  * Free AI-Readiness Score widget. POSTs to the hardened Replit endpoint
@@ -184,6 +185,7 @@ export function AiReadinessWidget() {
       )}
 
       {result && !loading && <ResultCard result={result} copied={copied} setCopied={setCopied} />}
+      {result && !loading && <ToolResultCapture slug="ai-readiness" what="readiness score" />}
     </div>
   )
 }

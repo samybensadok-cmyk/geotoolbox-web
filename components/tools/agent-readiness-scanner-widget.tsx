@@ -18,6 +18,7 @@ import {
   type Tone,
 } from "@/lib/agent-readiness-scan"
 import { trackEvent } from "@/lib/analytics"
+import { ToolResultCapture } from "@/components/tools/tool-result-capture"
 
 /**
  * Agent Readiness Scanner — the public widget for the FULL v2 scan.
@@ -387,6 +388,7 @@ export function AgentReadinessScannerWidget() {
 
       {/* The scored report. */}
       {scanData && <ScanReport data={scanData} />}
+      {scanData && <ToolResultCapture slug="agent-readiness-scanner" what="agent readiness report" />}
 
       {scan.status === "timeout" && (
         <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-[14px] leading-relaxed text-amber-900">

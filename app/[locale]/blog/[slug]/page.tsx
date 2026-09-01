@@ -18,7 +18,8 @@ import { getAuthorByName } from "@/lib/authors"
 import { AuthorBio } from "@/components/blog/author-bio"
 import { RelatedPosts } from "@/components/blog/related-posts"
 import { InlineCta } from "@/components/blog/inline-cta"
-import { injectInlineCta, isCommercialIntent } from "@/lib/inline-cta"
+import { ArticleEndCta } from "@/components/blog/article-end-cta"
+import { injectInlineCta, isCommercialIntentPost } from "@/lib/inline-cta"
 import { NewsletterSignup } from "@/components/newsletter/newsletter-signup"
 import { newsletterCopyFrom } from "@/components/newsletter/copy"
 import { Avatar } from "@/components/ui/avatar"
@@ -361,7 +362,7 @@ export default async function BlogPost({
                 components={{
                   ...getMdxComponents(locale),
                   InlineCta: (props: { target?: Parameters<typeof InlineCta>[0]["target"] }) => (
-                    <InlineCta {...props} locale={locale} />
+                    <InlineCta {...props} locale={locale} slug={slug} />
                   ),
                 }}
                 options={{
@@ -409,19 +410,19 @@ export default async function BlogPost({
               </p>
             </div>
             <div className="flex shrink-0 flex-col items-start gap-2 sm:items-end">
-              <Link
-                href="/app"
-                prefetch={false}
+              <ArticleEndCta
+                label={tc("tryForFree")}
+                slug={slug}
+                locale={locale}
                 className="inline-flex shrink-0 items-center gap-2 rounded-full bg-accent-900 px-6 py-3 text-[14.5px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
-              >
-                {tc("tryForFree")}
-                <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </Link>
+              />
               {/* Commercial-intent articles: the reader is tool-shopping — give
-                  them the pricing page, and (EN) the done-for-you route too. */}
-              {isCommercialIntent(slug) && (
+                  them the pricing page, and (EN) the done-for-you route too.
+                  Resolved through `post.donorSlug`, not the locale slug: the
+                  hand-maintained twin list had drifted to 1 of 10, so 9
+                  localized commercial-intent articles rendered no pricing
+                  link at all. */}
+              {isCommercialIntentPost(post) && (
                 <p className="text-[13px] text-gray-600">
                   <Link
                     href={locale === routing.defaultLocale ? "/pricing" : `/${locale}/pricing`}

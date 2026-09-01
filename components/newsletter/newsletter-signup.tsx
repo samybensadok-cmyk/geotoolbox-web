@@ -1,6 +1,7 @@
 "use client"
 
 import { useRef, useState } from "react"
+import { trackEvent } from "@/lib/analytics"
 
 /**
  * Newsletter signup. POSTs to api/subscribe.php (same-origin via the /api/*
@@ -98,6 +99,12 @@ export function NewsletterSignup({
       })
       const data: { success?: boolean; error?: string } = await res.json().catch(() => ({}))
       if (data.success) {
+        // SG_TOOL_CAPTURE_V1 (2026-09-01): `newsletter_signup` was declared in
+        // lib/analytics.ts but fired by nothing, so the only email-capture
+        // surface on the site was invisible in GA4. `source` carries the
+        // placement ("footer", "article:<slug>", "tool:<slug>") so placements
+        // are comparable to each other. Not a key event — see lib/analytics.ts.
+        trackEvent("newsletter_signup", { capture_source: source })
         setDone(true)
       } else {
         setErrorMsg(t.errors[data.error ?? "internal_error"] ?? t.errors.internal_error)

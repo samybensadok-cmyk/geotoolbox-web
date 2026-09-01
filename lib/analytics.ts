@@ -41,6 +41,16 @@ export type AnalyticsEvent =
   | "newsletter_signup"
   | "select_item"
   | "app_cta_click"
+  // SG_BLOG_CTA_V2 (2026-09-01): blog → product path. NOT a key event. The blog
+  // is the only surface with real traffic (~1,400 organic clicks in Aug 2026)
+  // and until now NOTHING recorded whether any of it reached the product: the
+  // CTAs carried no attribution, and `/app/*` is a rewrite to the Replit PHP
+  // backend, which sets no client-side analytics and stores no landing params
+  // (verified 2026-09-01 — no `$_GET['ref']` reader, no utm capture on signup).
+  // This event is fired on the Next.js side, BEFORE that hop, so the click is
+  // countable even though the destination is not.
+  // Params: placement ("inline" | "article_end"), cta_target, article, locale.
+  | "blog_cta_click"
   // SG_PROMO_V2 (2026-08-15): sitewide offer banner funnel. NOT key events —
   // they exist so banner variants can be judged on view→click→dismiss and
   // joined to begin_checkout/purchase via the `promo_variant` param.

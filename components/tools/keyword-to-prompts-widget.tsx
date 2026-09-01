@@ -4,6 +4,7 @@ import { useState } from "react"
 
 import { trackEvent } from "@/lib/analytics"
 import Link from "next/link"
+import { ToolResultCapture } from "@/components/tools/tool-result-capture"
 
 /**
  * Free "Keyword → AI Prompts" generator widget. POSTs to the hardened Replit endpoint
@@ -227,6 +228,7 @@ export function KeywordToPromptsWidget() {
       )}
 
       {result && !loading && <ResultDeck result={result} />}
+      {result && !loading && <ToolResultCapture slug="keyword-to-prompts" what="prompt set" />}
     </div>
   )
 }

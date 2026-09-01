@@ -9,6 +9,7 @@ import {
   RESERVATION_CODE_RE,
   fmtPromoAmount,
   formatCountdown,
+  forgetPromo,
   getReservation,
   isPromoLive,
   normalizePromoCode,
@@ -227,8 +228,15 @@ export function PricingCards({ copy, locale }: { copy: PricingCardsCopy; locale:
     // them. Setting the public code makes `isPersonal` false on the next pass,
     // so this effect settles in one extra render and cannot loop.
     const fallback = isPromoLive() ? { code: PROMO.code, variant: ORGANIC_VARIANT } : null
-    if (isPersonal && !resMatches) setPromo(fallback)
-    else if (resMatches && msLeft !== null && msLeft <= 0) setPromo(fallback)
+    if (isPersonal && !resMatches) {
+      // Purge the carrier as well as the state. `getReservation()`'s own
+      // cleanup only runs when RESERVATION_KEY exists and has expired; a code
+      // that arrived from someone ELSE's shared link leaves no reservation in
+      // this browser at all, so nothing ever clears `sg_promo` and every later
+      // visit re-enters this branch. Clearing it makes the repair permanent.
+      forgetPromo()
+      setPromo(fallback)
+    } else if (resMatches && msLeft !== null && msLeft <= 0) setPromo(fallback)
   }, [isPersonal, resMatches, msLeft])
   const promoOn = !!promo
   const promoUi = PROMO_UI[(locale === "fr" || locale === "es" ? locale : "en") as PromoLocale]

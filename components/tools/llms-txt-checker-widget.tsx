@@ -4,6 +4,7 @@ import { useState } from "react"
 
 import { trackEvent } from "@/lib/analytics"
 import Link from "next/link"
+import { ToolResultCapture } from "@/components/tools/tool-result-capture"
 
 /**
  * Free llms.txt checker — the interactive widget. POSTs the user's URL to the
@@ -219,6 +220,7 @@ export function LlmsTxtCheckerWidget() {
       )}
 
       {result && !loading && <ResultCard result={result} copyFix={copyFix} copied={copied} />}
+      {result && !loading && <ToolResultCapture slug="llms-txt-checker" what="llms.txt report" />}
     </div>
   )
 }

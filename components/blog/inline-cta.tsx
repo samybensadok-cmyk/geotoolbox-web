@@ -1,58 +1,138 @@
+"use client"
+
 import Link from "next/link"
 import type { InlineCtaTarget } from "@/lib/inline-cta"
+import { trackEvent } from "@/lib/analytics"
 
 type Variant = { text: string; button: string; href: string }
 
+/**
+ * SG_BLOG_CTA_V2 (2026-09-01) — every target is now a destination that DOES
+ * something on the reader's own domain.
+ *
+ * What changed and why: until today the two non-commercial targets were
+ * `ai-readiness` (a real free tool) and `content-analyzer`, which pointed at
+ * `/features/content-analyzer` — a brochure page with no form, no input and no
+ * fetch, whose own single CTA is `/app`. `content-analyzer` was served on 143
+ * of the 260 published articles, so 55% of the corpus asked the reader to
+ * click through to a page that does nothing. That target is gone; the routing
+ * table in lib/inline-cta.ts now picks the free tool that matches what the
+ * article is about.
+ *
+ * ⚠️ Hrefs are UNPREFIXED in every locale. The free tools live under
+ * app/(marketing)/tools, outside the next-intl `[locale]` tree — verified live
+ * 2026-09-01 that `/fr/tools/ai-readiness` returns 404 while `/tools/...` is
+ * 200. `/app/*` is a rewrite to the Replit backend and has no locale segment
+ * either.
+ *
+ * ⚠️ Attribution is `?ref=`, never `utm_*`. `/tools/*` is the same site on the
+ * same GA4 property, and a `utm_source` on an internal link makes GA4 start a
+ * new session attributed to "blog", overwriting the visitor's real acquisition
+ * source. The countable signal is the `blog_cta_click` GA4 event below (which
+ * only fires once the visitor has accepted the consent banner, since that is
+ * what mounts gtag); `ref` is a human-readable breadcrumb in `page_location`.
+ * Never `sg_checkout`/`sg_billing` — js/auth.js:192-204 fires a checkout resume
+ * on any page carrying those.
+ */
+
+const REF = "ref=blog-inline"
+const SIGNUP_HREF = `/app/?page=signup&interval=monthly&${REF}`
+
 const variants: Record<string, Record<InlineCtaTarget, Variant>> = {
   en: {
-    "ai-readiness": {
-      text: "Curious how your own site stacks up? Run the free AI-Readiness check — five live checks on your domain, no signup.",
-      button: "Check your site free",
-      href: "/tools/ai-readiness",
-    },
-    "content-analyzer": {
-      text: "Want this analysis for your own pages? Content Analyzer grades any URL A–F across 21 AI-citability signals.",
-      button: "Grade a page",
-      href: "/features/content-analyzer",
-    },
     signup: {
       text: "Comparing tools? See it on your own domain first — one scan across all eight engines, 7-day free trial.",
       button: "Start free trial",
-      href: "/app/?page=signup&interval=monthly",
+      href: SIGNUP_HREF,
+    },
+    "ai-readiness": {
+      text: "Curious how your own site stacks up? Run the free AI-Readiness check — five live checks on your domain, no signup.",
+      button: "Check your site free",
+      href: `/tools/ai-readiness?${REF}`,
+    },
+    "ai-crawler-checker": {
+      text: "Which AI crawlers does your robots.txt let in? Check it against every major AI bot — free, no signup.",
+      button: "Check your crawlers",
+      href: `/tools/ai-crawler-checker?${REF}`,
+    },
+    "llms-txt-checker": {
+      text: "Does your own llms.txt validate? Check it against the spec in seconds — free, no signup.",
+      button: "Check your llms.txt",
+      href: `/tools/llms-txt-checker?${REF}`,
+    },
+    "query-fanout": {
+      text: "See the real sub-queries an AI engine fires for your topic — free and in your browser, using your own Gemini key.",
+      button: "Run a fan-out",
+      href: `/tools/query-fanout?${REF}`,
+    },
+    "keyword-to-prompts": {
+      text: "Turn one keyword into ~15 conversational prompts across six intents, with the brand-surfacing ones flagged — free, no signup.",
+      button: "Turn a keyword into prompts",
+      href: `/tools/keyword-to-prompts?${REF}`,
     },
   },
   fr: {
-    "ai-readiness": {
-      text: "Envie de savoir ce que vaut votre site ? Lancez le score de préparation IA gratuit : cinq vérifications en direct sur votre domaine, sans inscription.",
-      button: "Tester mon site gratuitement",
-      href: "/tools/ai-readiness",
-    },
-    "content-analyzer": {
-      text: "Vous voulez cette analyse pour vos propres pages ? L’Analyseur de contenu note chaque URL de A à F sur 21 signaux de citabilité IA.",
-      button: "Évaluer une page",
-      href: "/features/content-analyzer",
-    },
     signup: {
       text: "Vous comparez les outils ? Voyez d’abord le vôtre à l’œuvre : un scan sur les huit moteurs, 7 jours d’essai gratuit.",
       button: "Démarrer l’essai gratuit",
-      href: "/app/?page=signup&interval=monthly",
+      href: SIGNUP_HREF,
+    },
+    "ai-readiness": {
+      text: "Envie de savoir ce que vaut votre site ? Lancez le score de préparation IA gratuit : cinq vérifications en direct sur votre domaine, sans inscription.",
+      button: "Tester mon site gratuitement",
+      href: `/tools/ai-readiness?${REF}`,
+    },
+    "ai-crawler-checker": {
+      text: "Quels robots d’IA votre robots.txt laisse-t-il passer ? Confrontez-le à tous les grands crawlers IA — gratuit, sans inscription.",
+      button: "Vérifier mes crawlers",
+      href: `/tools/ai-crawler-checker?${REF}`,
+    },
+    "llms-txt-checker": {
+      text: "Votre llms.txt est-il valide ? Vérifiez-le face à la spécification en quelques secondes — gratuit, sans inscription.",
+      button: "Vérifier mon llms.txt",
+      href: `/tools/llms-txt-checker?${REF}`,
+    },
+    "query-fanout": {
+      text: "Découvrez les vraies sous-requêtes qu’un moteur d’IA lance sur votre sujet — gratuit, dans votre navigateur, avec votre propre clé Gemini.",
+      button: "Lancer un fan-out",
+      href: `/tools/query-fanout?${REF}`,
+    },
+    "keyword-to-prompts": {
+      text: "Transformez un mot-clé en ~15 prompts conversationnels répartis sur six intentions, ceux qui font apparaître les marques étant signalés — gratuit, sans inscription.",
+      button: "Convertir un mot-clé",
+      href: `/tools/keyword-to-prompts?${REF}`,
     },
   },
   es: {
-    "ai-readiness": {
-      text: "¿Quieres saber cómo se posiciona tu propio sitio? Ejecuta el análisis de preparación IA gratis: cinco comprobaciones en vivo sobre tu dominio, sin registro.",
-      button: "Analiza tu sitio gratis",
-      href: "/tools/ai-readiness",
-    },
-    "content-analyzer": {
-      text: "¿Quieres este mismo análisis para tus propias páginas? El Analizador de contenido califica cualquier URL de A a F en 21 señales de citabilidad IA.",
-      button: "Evaluar una página",
-      href: "/features/content-analyzer",
-    },
     signup: {
       text: "¿Estás comparando herramientas? Compruébalo primero en tu propio dominio: un escaneo en los ocho motores, 7 días de prueba gratis.",
       button: "Empezar prueba gratis",
-      href: "/app/?page=signup&interval=monthly",
+      href: SIGNUP_HREF,
+    },
+    "ai-readiness": {
+      text: "¿Quieres saber cómo se posiciona tu propio sitio? Ejecuta el análisis de preparación IA gratis: cinco comprobaciones en vivo sobre tu dominio, sin registro.",
+      button: "Analiza tu sitio gratis",
+      href: `/tools/ai-readiness?${REF}`,
+    },
+    "ai-crawler-checker": {
+      text: "¿Qué rastreadores de IA deja pasar tu robots.txt? Contrástalo con todos los bots de IA importantes: gratis y sin registro.",
+      button: "Revisar mis rastreadores",
+      href: `/tools/ai-crawler-checker?${REF}`,
+    },
+    "llms-txt-checker": {
+      text: "¿Tu llms.txt es válido? Compruébalo contra la especificación en segundos: gratis y sin registro.",
+      button: "Revisar mi llms.txt",
+      href: `/tools/llms-txt-checker?${REF}`,
+    },
+    "query-fanout": {
+      text: "Descubre las subconsultas reales que lanza un motor de IA sobre tu tema: gratis, en tu navegador y con tu propia clave de Gemini.",
+      button: "Lanzar un fan-out",
+      href: `/tools/query-fanout?${REF}`,
+    },
+    "keyword-to-prompts": {
+      text: "Convierte una palabra clave en ~15 prompts conversacionales repartidos en seis intenciones, con los que sacan marcas señalados: gratis y sin registro.",
+      button: "Convertir una palabra clave",
+      href: `/tools/keyword-to-prompts?${REF}`,
     },
   },
 }
@@ -65,9 +145,11 @@ const variants: Record<string, Record<InlineCtaTarget, Variant>> = {
 export function InlineCta({
   target = "ai-readiness",
   locale = "en",
+  slug,
 }: {
   target?: InlineCtaTarget
   locale?: string
+  slug?: string
 }) {
   const table = variants[locale] ?? variants.en
   const v = table[target] ?? table["ai-readiness"]
@@ -77,6 +159,7 @@ export function InlineCta({
       <Link
         href={v.href}
         prefetch={false}
+        onClick={() => trackEvent("blog_cta_click", { placement: "inline", cta_target: target, article: slug ?? "", locale })}
         className="inline-flex shrink-0 items-center gap-2 rounded-full bg-accent-900 px-5 py-2.5 text-[13.5px] font-semibold text-white no-underline transition-all duration-200 hover:bg-accent-800 hover:shadow-lg hover:shadow-accent-900/20 active:translate-y-[1px] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
       >
         {v.button}

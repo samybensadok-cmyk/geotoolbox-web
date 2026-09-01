@@ -207,3 +207,24 @@ export function recallPromo(): { code: string; variant: string } | null {
     return null
   }
 }
+
+/**
+ * SG_PROMO_ORGANIC_V1 (2026-09-01): drop the stored offer carrier.
+ *
+ * Needed because a personal `FOUND-` code can reach a browser that holds no
+ * matching reservation — someone shares their `?promo=FOUND-XXXXXX` link, or
+ * the reservation was minted on another device. `recallPromo()` accepts the
+ * code on shape alone, so without a purge that visitor's `sg_promo` stays
+ * poisoned forever: the pricing page withdraws the personal offer on every
+ * visit and never falls through to the public one, leaving list-price cards
+ * under a "30% off" banner — the exact mismatch the organic fallback exists to
+ * remove. `getReservation()`'s own cleanup cannot cover this: it only runs when
+ * RESERVATION_KEY is present AND expired.
+ */
+export function forgetPromo(): void {
+  try {
+    localStorage.removeItem(PROMO_STORAGE_KEY)
+  } catch {
+    /* storage may be blocked; the page still falls back in memory */
+  }
+}

@@ -5,6 +5,7 @@ import { useState } from "react"
 import { trackEvent } from "@/lib/analytics"
 import Link from "next/link"
 import { siteConfig } from "@/lib/config"
+import { ToolResultCapture } from "@/components/tools/tool-result-capture"
 
 /**
  * Free AI Crawler Access Checker — the interactive widget. POSTs the user's URL
@@ -190,6 +191,7 @@ export function AiCrawlerCheckerWidget() {
       )}
 
       {result && !loading && <ResultCard result={result} copy={copy} copied={copied} />}
+      {result && !loading && <ToolResultCapture slug="ai-crawler-checker" what="crawler report" />}
     </div>
   )
 }
