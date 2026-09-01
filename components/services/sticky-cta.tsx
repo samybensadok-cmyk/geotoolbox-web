@@ -48,7 +48,7 @@ export function StickyServiceCta({
         <p className="hidden text-[13px] font-medium text-gray-700 sm:block">
           {message ?? (
             <>
-              We take <span className="font-semibold text-gray-900">4 clients</span> at a time — book an intro call.
+              <span className="font-semibold text-gray-900">Founder-led</span> AI-visibility work — book an intro call.
             </>
           )}
         </p>

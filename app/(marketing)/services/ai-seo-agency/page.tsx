@@ -15,7 +15,7 @@ import { proofStats } from "@/lib/proof-stats"
 const PAGE_URL = `${siteConfig.url}/services/ai-seo-agency`
 // Every call books an intro/teardown call — no free-tool CTA anywhere on this page.
 const TEARDOWN_HREF = "https://calendly.com/samy-bensadok/30min-call"
-// The $925 Report, the Flagship citable article, and the Content cluster
+// The $1,250 Report, the Flagship citable article, and the Content cluster
 // sprint are direct purchases — wired to the live Stripe checkout endpoint
 // (Vercel rewrites /app/* to the Replit app; the handler 303-redirects to
 // Stripe Checkout). The 30-Day Sprint/retainer stay book-a-call (variable scope).
@@ -85,19 +85,19 @@ type Tier = {
 const tiers: Tier[] = [
   {
     name: "AI + SEO Visibility Report",
-    price: "$925",
+    price: "$1,250",
     billing: "One-off",
     summary: "The full AI + SEO baseline: prompts, engines, competitors, and the pages worth building.",
     detail:
       "A one-off diagnostic that maps the buying-intent prompts in your market, who gets cited today, and the specific pages to build.",
-    cta: { label: "Buy the Report — $925", href: CHECKOUT.report },
+    cta: { label: "Buy the Report — $1,250", href: CHECKOUT.report },
     kind: "buy",
     chip: "One-off",
   },
   {
     name: "30-Day AI Visibility Sprint",
     pricePrefix: "From",
-    price: "$4,500",
+    price: "$6,500",
     billing: "One-off · scoped to project size",
     summary: "Thirty days of building: fixes shipped, priority pages rebuilt to be cited.",
     detail:
@@ -110,12 +110,38 @@ const tiers: Tier[] = [
   {
     name: "Ongoing GEO + SEO Growth",
     pricePrefix: "From",
-    price: "$3,500",
+    price: "$5,000",
     cadence: "/mo",
     billing: "90-day initial commitment",
     summary: "The compounding version: new pages, new prompts, tracked every month.",
     detail:
       "Continuous GEO and SEO work — new citable pages, more buying-intent prompts taken one by one, and the monthly tracker report. Then month to month.",
+    cta: { label: "Book a call", href: TEARDOWN_HREF },
+    kind: "call",
+    chip: "Retainer",
+  },
+  {
+    name: "Priority Growth",
+    pricePrefix: "From",
+    price: "$7,500",
+    cadence: "/mo",
+    billing: "90-day initial commitment",
+    summary: "Everything in Growth, at a faster cadence — weekly builds, more pages taken each month.",
+    detail:
+      "For teams treating AI search as a primary channel: weekly cadence, more priority pages rebuilt per month, and multi-market tracking. One brand, maximum push.",
+    cta: { label: "Book a call", href: TEARDOWN_HREF },
+    kind: "call",
+    chip: "Retainer",
+  },
+  {
+    name: "Scale Retainer",
+    pricePrefix: "From",
+    price: "$10,000",
+    cadence: "/mo",
+    billing: "Multi-brand / enterprise · scoped on a call",
+    summary: "Multi-brand or enterprise — weekly cadence, multi-market, priority build capacity.",
+    detail:
+      "For agencies, portfolios, or companies past $20M revenue running several brands. Weekly cadence, multi-market tracking, and priority build capacity across brands — scoped on a call.",
     cta: { label: "Book a call", href: TEARDOWN_HREF },
     kind: "call",
     chip: "Retainer",
@@ -251,7 +277,7 @@ const faqs = [
   {
     question: "Why you and not a big agency?",
     answer:
-      "I built GEO Toolbox — the platform the industry uses to measure AI visibility — and I lead the work on your account, with a small team alongside me. Not a strategist on a sales call handing off to a junior, not three departments: the founder who built the measurement tool, in the code of your pages. Trade-off, stated plainly: we take 4 active clients at a time, so there's sometimes a wait. What you get: founder-level execution in the one channel where your problem lives.",
+      "I built GEO Toolbox — the platform the industry uses to measure AI visibility — and I lead the work on your account, with a small senior team on delivery. Not a strategist on a sales call handing off to a junior, not three departments: the founder who built the measurement tool, in the code of your pages. What you get: founder-level execution in the one channel where your problem lives.",
   },
   {
     question: "Is my industry too niche?",
@@ -283,29 +309,46 @@ const serviceSchema = {
     {
       "@type": "Offer",
       name: "AI + SEO Visibility Report",
-      price: "925",
+      price: "1250",
       priceCurrency: "USD",
       description: "One-off diagnostic mapping buying-intent prompts, current citations, and the pages to build.",
     },
     {
       "@type": "Offer",
       name: "30-Day AI Visibility Sprint",
-      description: "Thirty days of technical fixes and priority pages rebuilt to be citable. From $4,500, scoped to project size.",
+      description: "Thirty days of technical fixes and priority pages rebuilt to be citable. From $6,500, scoped to project size.",
       priceSpecification: {
         "@type": "PriceSpecification",
-        // Displayed as "from $4,500" — a floor, scoped on the call.
-        minPrice: "4500",
+        // Displayed as "from $6,500" — a floor, scoped on the call.
+        minPrice: "6500",
         priceCurrency: "USD",
       },
     },
     {
       "@type": "Offer",
       name: "Ongoing GEO + SEO Growth",
-      description: "Continuous GEO and SEO work with a monthly citation report. From $3,500/mo, 90-day initial commitment.",
+      description: "Continuous GEO and SEO work with a monthly citation report. From $5,000/mo, 90-day initial commitment.",
       priceSpecification: {
         "@type": "UnitPriceSpecification",
-        // Displayed as "from $3,500/mo" — represent as a floor, not an exact price.
-        minPrice: "3500",
+        // Displayed as "from $5,000/mo" — represent as a floor, not an exact price.
+        minPrice: "5000",
+        priceCurrency: "USD",
+        unitText: "MONTH",
+        referenceQuantity: {
+          "@type": "QuantitativeValue",
+          value: "1",
+          unitText: "MONTH",
+        },
+      },
+    },
+    {
+      "@type": "Offer",
+      name: "Priority Growth",
+      description: "Weekly-cadence GEO + SEO retainer: more priority pages per month plus multi-market tracking. From $7,500/mo, 90-day initial commitment.",
+      priceSpecification: {
+        "@type": "UnitPriceSpecification",
+        // Displayed as "from $7,500/mo" — a floor, not an exact price.
+        minPrice: "7500",
         priceCurrency: "USD",
         unitText: "MONTH",
         referenceQuantity: {
@@ -319,11 +362,11 @@ const serviceSchema = {
       "@type": "Offer",
       name: "Scale Retainer",
       description:
-        "Multi-brand or enterprise GEO + SEO retainer: weekly cadence, multi-market tracking, priority build capacity. From $8,000/mo, scoped on a call.",
+        "Multi-brand or enterprise GEO + SEO retainer: weekly cadence, multi-market tracking, priority build capacity. From $10,000/mo, scoped on a call.",
       priceSpecification: {
         "@type": "UnitPriceSpecification",
-        // Displayed as "from $8,000/mo" — a floor, scoped on the call.
-        minPrice: "8000",
+        // Displayed as "from $10,000/mo" — a floor, scoped on the call.
+        minPrice: "10000",
         priceCurrency: "USD",
         unitText: "MONTH",
         referenceQuantity: {
@@ -438,7 +481,7 @@ export default function AiSeoServicePage() {
                   See the results
                 </Link>
               </div>
-              <p className="mt-4 text-xs text-gray-500">20-min intro call · no obligation · we take 4 active clients at a time.</p>
+              <p className="mt-4 text-xs text-gray-500">20-min intro call · no obligation · founder-led delivery.</p>
 
               {/* Risk-reversal cue surfaced at the hero CTA (not just buried in
                   pricing) — the two guarantees a skeptic wants before scrolling. */}
@@ -906,11 +949,10 @@ export default function AiSeoServicePage() {
           </div>
 
           <p className="mt-6 text-[13px] font-medium text-gray-500">
-            The Report fee is credited toward a Sprint or retainer if you continue within 14 days. We take 4
-            active clients at a time, so there&apos;s sometimes a short wait.
+            The Report fee is credited toward a Sprint or retainer if you continue within 14 days.
           </p>
           <p className="mt-2 text-[13px] leading-relaxed text-gray-500">
-            The $925 Report is a fixed price, payable by card — buy it above and you&apos;ll go straight to secure checkout. The Sprint and retainer are scoped to your project on the call. Focused on one surface? See the{" "}
+            The $1,250 Report is a fixed price, payable by card — buy it above and you&apos;ll go straight to secure checkout. The Sprint and retainer are scoped to your project on the call. Focused on one surface? See the{" "}
             <Link href="/services/generative-engine-optimization" className="font-medium text-accent-700 underline decoration-accent-200 underline-offset-2 hover:decoration-accent-500">
               generative engine optimization
             </Link>{" "}
@@ -956,7 +998,7 @@ export default function AiSeoServicePage() {
             </div>
             <p className="mt-5 text-[13px] leading-relaxed text-gray-600">
               Running multiple brands, or revenue past $20M? The{" "}
-              <span className="font-semibold text-gray-900">Scale retainer (from $8,000/mo)</span> adds weekly cadence,
+              <span className="font-semibold text-gray-900">Scale retainer (from $10,000/mo)</span> adds weekly cadence,
               multi-market tracking and priority build capacity — scoped on a call.
             </p>
             <p className="mt-2 text-[13px] leading-relaxed text-gray-500">

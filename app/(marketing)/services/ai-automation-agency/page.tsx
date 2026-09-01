@@ -218,7 +218,7 @@ const faqs = [
   {
     question: "Why you and not a dev shop?",
     answer:
-      `Proof of work. I built geotoolbox.ai solo — scan engine, tracker, billing, admin — and the AI systems that run it: a 14-phase skill that has written all ${contentCounts.en + contentCounts.fr} of its published articles, plus the QA pipeline that reviews them. Dev shops show you a portfolio of other people's logos; I can show you the systems, running, on the site you're reading. The trade-off, stated plainly: I'm one operator with limited build slots, so scope is deliberately narrow and there's sometimes a wait.`,
+      `Proof of work. I built geotoolbox.ai solo — scan engine, tracker, billing, admin — and the AI systems that run it: a 14-phase skill that has written all ${contentCounts.en + contentCounts.fr} of its published articles, plus the QA pipeline that reviews them. Dev shops show you a portfolio of other people's logos; I can show you the systems, running, on the site you're reading. Scope is deliberately narrow — I take on the builds I can personally lead, with a small senior team on delivery.`,
   },
 ]
 
@@ -345,7 +345,7 @@ export default function AiAutomationAgencyPage() {
                 </Link>
               </div>
               <p className="mt-4 text-xs text-gray-500">
-                Free 30-min intro call · fixed quotes, no hourly billing · limited build slots.
+                Free 30-min intro call · fixed quotes, no hourly billing · founder-led delivery.
               </p>
 
               <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2">
@@ -844,8 +844,8 @@ export default function AiAutomationAgencyPage() {
           </div>
 
           <p className="mt-6 text-[13px] font-medium text-gray-500">
-            The Blueprint fee is credited toward its Pilot Build if you continue within 30 days. Limited
-            build slots — one operator, deliberately narrow scope.
+            The Blueprint fee is credited toward its Pilot Build if you continue within 30 days. Deliberately
+            narrow scope — founder-led delivery with a small senior team.
           </p>
           <p className="mt-2 text-[13px] leading-relaxed text-gray-500">
             Is your problem visibility rather than workflow? That&apos;s the other half of this business — see{" "}
@@ -937,7 +937,7 @@ export default function AiAutomationAgencyPage() {
         pricingHref="#pricing"
         message={
           <>
-            Limited <span className="font-semibold text-gray-900">founder-led build slots</span> — book an
+            <span className="font-semibold text-gray-900">Founder-led builds</span> — book an
             intro call.
           </>
         }
