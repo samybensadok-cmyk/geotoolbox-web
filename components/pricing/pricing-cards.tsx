@@ -95,6 +95,14 @@ export type PricingCardsCopy = {
   >
 }
 
+/**
+ * SG_PROMO_ORGANIC_V1: banner-variant id used when the founding offer is shown
+ * to a visitor who did NOT arrive via the banner. Must match the `bv` allowlist
+ * shape in js/auth.js (`[a-z0-9_-]`, ≤16 chars) so it survives into Stripe
+ * metadata as `promo_variant`.
+ */
+const ORGANIC_VARIANT = "organic"
+
 const fill = (tpl: string, vars: Record<string, string>) =>
   tpl.replace(/\{(\w+)\}/g, (m, k) => vars[k] ?? m)
 
@@ -168,7 +176,36 @@ export function PricingCards({ copy, locale }: { copy: PricingCardsCopy; locale:
       setPromo({ code: fromUrl, variant })
       return
     }
-    setPromo(recallPromo())
+    const recalled = recallPromo()
+    if (recalled) {
+      setPromo(recalled)
+      return
+    }
+    // SG_PROMO_ORGANIC_V1 (2026-09-01): a visitor who reaches /pricing WITHOUT
+    // the banner — organic search, a blog link, a bookmark — used to read the
+    // sitewide banner's "30% off" and then scroll to cards quoting full list
+    // price. That mismatch reads as a bait. The offer is sitewide and public
+    // (the banner prints the code itself), so the cards honour it for everyone
+    // while `isPromoLive()` says it is live.
+    //
+    // ⚠️ Deliberately NO `rememberPromo` here. The card CTA already carries
+    // `?promo=…&bv=organic` in its href, and js/auth.js persists a `?promo=`
+    // arrival on the signup page, so the code reaches Stripe without this page
+    // writing anything. Persisting on mere PAGE VIEW would (a) write campaign
+    // attribution to storage before the visitor has interacted or consented,
+    // which the consent UI's "strictly necessary only" promise does not cover,
+    // and (b) stamp `variant:"organic"` over a banner variant the A/B test
+    // depends on. The banner writes on CLICK; viewing a page is not a click.
+    //
+    // Residual risk, accepted and logged: `isPromoLive()` knows the deadline,
+    // not the 20-seat cap. If the cap fills before 2026-09-15 an organic
+    // visitor could see 139.30 here and then be quoted 199 on the Stripe
+    // Checkout page (stripe_checkout.php re-validates the code live and falls
+    // back to list price, logging `promo_requested`). Stripe always shows the
+    // amount before the buyer confirms, so nobody is CHARGED more than they
+    // were shown — but they would be disappointed. Verified live 2026-09-01:
+    // FOUNDING30 is active with 0/20 redeemed. Revisit if redemptions climb.
+    setPromo({ code: PROMO.code, variant: ORGANIC_VARIANT })
   }, [])
   // SG_PROMO_RESERVE_V1: a personal FOUND- code with a stored reservation gets a
   // live countdown; when it hits zero the offer is withdrawn on this page too.
@@ -180,8 +217,18 @@ export function PricingCards({ copy, locale }: { copy: PricingCardsCopy; locale:
     // A personal code is only honoured on this page while ITS reservation is
     // live in this browser (expired, unknown or another device → no slashed
     // prices; checkout re-validates anyway and falls back to list price).
-    if (isPersonal && !resMatches) setPromo(null)
-    else if (resMatches && msLeft !== null && msLeft <= 0) setPromo(null)
+    //
+    // SG_PROMO_ORGANIC_V1: withdrawing a dead personal code no longer drops the
+    // visitor to list price — it falls back to the PUBLIC offer, which is what
+    // every other visitor sees. Without this, someone who once opened a shared
+    // `?promo=FOUND-XXXXXX` link (the reservation lives in the sharer's
+    // browser, not theirs) kept a poisoned `sg_promo` carrier that `recallPromo`
+    // happily returns forever, so the organic branch above could never run for
+    // them. Setting the public code makes `isPersonal` false on the next pass,
+    // so this effect settles in one extra render and cannot loop.
+    const fallback = isPromoLive() ? { code: PROMO.code, variant: ORGANIC_VARIANT } : null
+    if (isPersonal && !resMatches) setPromo(fallback)
+    else if (resMatches && msLeft !== null && msLeft <= 0) setPromo(fallback)
   }, [isPersonal, resMatches, msLeft])
   const promoOn = !!promo
   const promoUi = PROMO_UI[(locale === "fr" || locale === "es" ? locale : "en") as PromoLocale]

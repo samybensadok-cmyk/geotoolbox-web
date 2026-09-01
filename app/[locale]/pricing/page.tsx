@@ -4,6 +4,7 @@ import { setRequestLocale, getTranslations } from "next-intl/server"
 import { routing } from "@/i18n/routing"
 import { PricingCards, type PricingCardsCopy } from "@/components/pricing/pricing-cards"
 import { ComparisonTable, type ComparisonCopy } from "@/components/pricing/comparison-table"
+import { TryFreeBand, type TryFreeCopy } from "@/components/pricing/try-free-band"
 import { FeatureFaq } from "@/components/features/feature-faq"
 import { JsonLd } from "@/components/seo/json-ld"
 import { siteConfig } from "@/lib/config"
@@ -76,6 +77,7 @@ export default async function PricingPage({
   const compareCopy = t.raw("compare") as ComparisonCopy
   const included = t.raw("included.items") as string[]
   const creditCards = t.raw("credits.cards") as { t: string; d: string }[]
+  const tryFreeCopy = t.raw("tryFree") as TryFreeCopy
   const faq = t.raw("faq.items") as { question: string; answer: string }[]
 
   const breadcrumb = {
@@ -160,6 +162,11 @@ export default async function PricingPage({
             is REMOVED (it advertised the retired $39/$49 pricing); the
             `pricing.strip.*` keys were deleted from messages/*.json in v2.1. */}
       </section>
+
+      {/* SG_PRICING_TRYFREE_V1: the no-card way in — sits between the cards and
+          the credits explainer, so a visitor who balks at the card requirement
+          meets the free tools before the billing mechanics. */}
+      <TryFreeBand copy={tryFreeCopy} />
 
       {/* How credits work — the make-or-break explainer */}
       <section className="border-t border-gray-100 bg-accent-50/40 px-6 py-16">
