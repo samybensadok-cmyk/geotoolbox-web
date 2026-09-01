@@ -285,14 +285,14 @@ export default function SitemapExtractorPage() {
             job: the sitemap says what exists, robots.txt says what may be fetched, and the damage happens where they
             disagree. If this audit flags a conflict, the{" "}
             <Link
-              href="/tools/robots-txt-tester?utm_source=sitemap-extractor"
+              href="/tools/robots-txt-tester?ref=sitemap-extractor"
               className="font-semibold text-accent-700 underline-offset-2 hover:underline"
             >
               robots.txt tester
             </Link>{" "}
             shows which rule is responsible, and the{" "}
             <Link
-              href="/tools/robots-txt-generator?utm_source=sitemap-extractor"
+              href="/tools/robots-txt-generator?ref=sitemap-extractor"
               className="font-semibold text-accent-700 underline-offset-2 hover:underline"
             >
               robots.txt generator
@@ -317,7 +317,7 @@ export default function SitemapExtractorPage() {
             </p>
           </div>
           <Link
-            href="/tools/ai-crawler-checker?utm_source=sitemap-extractor"
+            href="/tools/ai-crawler-checker?ref=sitemap-extractor"
             prefetch={false}
             className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]"
           >

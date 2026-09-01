@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import Link from "next/link"
+import { ArticleEndCta } from "@/components/blog/article-end-cta"
 import { MDXRemote } from "next-mdx-remote/rsc"
 import rehypeShiki from "@shikijs/rehype"
 import {
@@ -199,16 +200,18 @@ export default async function GlossaryEntry({
               </svg>
               {t("allTerms")}
             </Link>
-            <Link
-              href="/app"
-              prefetch={false}
+            {/* SG_BLOG_CTA_V2 (2026-09-01): same defect the blog had, same fix. This button says
+                "Run a free scan" and pointed at bare /app — the full logged-out application shell,
+                ~25 sidebar tabs, no framing, the signup affordance a small sidebar-footer link.
+                It now lands on the signup form the label promises, carries a ref breadcrumb, and
+                fires the same GA4 event so the glossary is measurable alongside the blog. */}
+            <ArticleEndCta
+              label={t("runScan")}
+              slug={slug}
+              locale={locale}
+              surface="glossary"
               className="inline-flex shrink-0 items-center gap-2 rounded-full bg-accent-900 px-5 py-2.5 text-[13.5px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
-            >
-              {t("runScan")}
-              <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </Link>
+            />
           </div>
         </div>
       </section>

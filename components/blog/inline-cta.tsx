@@ -3,6 +3,7 @@
 import Link from "next/link"
 import type { InlineCtaTarget } from "@/lib/inline-cta"
 import { trackEvent } from "@/lib/analytics"
+import { promoQuery, resolveOfferFromLocation } from "@/lib/promo"
 
 type Variant = { text: string; button: string; href: string }
 
@@ -36,14 +37,33 @@ type Variant = { text: string; button: string; href: string }
  */
 
 const REF = "ref=blog-inline"
-const SIGNUP_HREF = `/app/?page=signup&interval=monthly&${REF}`
+const SIGNUP_BASE = "/app/?page=signup&interval=monthly"
+
+// The sitewide banner advertises 30% off on these pages. A reader who saw it but did not click
+// it used to reach checkout at list price — the read-30%-get-list mismatch that was fixed on
+// /pricing, re-created on the highest-traffic surface. Same precedence /pricing uses, same
+// isPromoLive() gate, so it self-expires. FR passes the checkout currency explicitly rather than
+// letting js/auth.js fall through to navigator.language (SG_EUR_CHECKOUT_V1).
+let cacheKey: string | null = null
+let cacheVal = ""
+function offerSuffix(): string {
+  const key = typeof window === "undefined" ? "" : window.location.search
+  if (cacheKey !== key) {
+    cacheKey = key
+    cacheVal = promoQuery(resolveOfferFromLocation())
+  }
+  return cacheVal
+}
+function signupHref(locale: string): string {
+  return `${SIGNUP_BASE}${locale === "fr" ? "&currency=eur" : ""}&${REF}${offerSuffix()}`
+}
 
 const variants: Record<string, Record<InlineCtaTarget, Variant>> = {
   en: {
     signup: {
-      text: "Comparing tools? See it on your own domain first — one scan across all eight engines, 7-day free trial.",
+      text: "Comparing tools? See it on your own domain first — one scan across up to 8 AI engines, 7-day free trial.",
       button: "Start free trial",
-      href: SIGNUP_HREF,
+      href: SIGNUP_BASE,   // replaced per-render by signupHref(locale) — see InlineCta below
     },
     "ai-readiness": {
       text: "Curious how your own site stacks up? Run the free AI-Readiness check — five live checks on your domain, no signup.",
@@ -73,9 +93,9 @@ const variants: Record<string, Record<InlineCtaTarget, Variant>> = {
   },
   fr: {
     signup: {
-      text: "Vous comparez les outils ? Voyez d’abord le vôtre à l’œuvre : un scan sur les huit moteurs, 7 jours d’essai gratuit.",
+      text: "Vous comparez les outils ? Voyez d’abord le vôtre à l’œuvre : un scan sur jusqu’à 8 moteurs d’IA, 7 jours d’essai gratuit.",
       button: "Démarrer l’essai gratuit",
-      href: SIGNUP_HREF,
+      href: SIGNUP_BASE,   // replaced per-render by signupHref(locale) — see InlineCta below
     },
     "ai-readiness": {
       text: "Envie de savoir ce que vaut votre site ? Lancez le score de préparation IA gratuit : cinq vérifications en direct sur votre domaine, sans inscription.",
@@ -105,9 +125,9 @@ const variants: Record<string, Record<InlineCtaTarget, Variant>> = {
   },
   es: {
     signup: {
-      text: "¿Estás comparando herramientas? Compruébalo primero en tu propio dominio: un escaneo en los ocho motores, 7 días de prueba gratis.",
+      text: "¿Estás comparando herramientas? Compruébalo primero en tu propio dominio: un escaneo en hasta 8 motores de IA, 7 días de prueba gratis.",
       button: "Empezar prueba gratis",
-      href: SIGNUP_HREF,
+      href: SIGNUP_BASE,   // replaced per-render by signupHref(locale) — see InlineCta below
     },
     "ai-readiness": {
       text: "¿Quieres saber cómo se posiciona tu propio sitio? Ejecuta el análisis de preparación IA gratis: cinco comprobaciones en vivo sobre tu dominio, sin registro.",
@@ -152,7 +172,10 @@ export function InlineCta({
   slug?: string
 }) {
   const table = variants[locale] ?? variants.en
-  const v = table[target] ?? table["ai-readiness"]
+  const raw = table[target] ?? table["ai-readiness"]
+  // The signup href is locale- and offer-dependent, so it is built at render time rather than
+  // baked into the static variant table.
+  const v = target === "signup" ? { ...raw, href: signupHref(locale) } : raw
   return (
     <aside className="not-prose my-10 flex flex-col items-start gap-4 rounded-2xl border border-[var(--surface-mint-border)] bg-[var(--surface-mint)] p-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
       <p className="text-[14.5px] leading-relaxed text-gray-800">{v.text}</p>

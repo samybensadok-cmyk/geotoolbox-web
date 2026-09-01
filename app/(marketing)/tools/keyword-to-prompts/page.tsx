@@ -178,7 +178,7 @@ export default function KeywordToPromptsPage() {
             </p>
           </div>
           <Link
-            href="/app?utm_source=keyword-to-prompts"
+            href="/app/?page=signup&interval=monthly&ref=tool-keyword-to-prompts"
             prefetch={false}
             className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]"
           >

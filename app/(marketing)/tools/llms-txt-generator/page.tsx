@@ -219,7 +219,7 @@ export default function LlmsTxtGeneratorPage() {
             </p>
           </div>
           <Link
-            href="/tools/ai-crawler-checker?utm_source=llms-generator"
+            href="/tools/ai-crawler-checker?ref=llms-generator"
             prefetch={false}
             className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]"
           >
