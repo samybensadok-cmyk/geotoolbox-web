@@ -5,6 +5,7 @@ import { routing } from "@/i18n/routing"
 import { PricingCards, type PricingCardsCopy } from "@/components/pricing/pricing-cards"
 import { ComparisonTable, type ComparisonCopy } from "@/components/pricing/comparison-table"
 import { TryFreeBand, type TryFreeCopy } from "@/components/pricing/try-free-band"
+import { PromoSignupLink } from "@/components/pricing/promo-signup-link"
 import { FeatureFaq } from "@/components/features/feature-faq"
 import { JsonLd } from "@/components/seo/json-ld"
 import { siteConfig } from "@/lib/config"
@@ -241,15 +242,16 @@ export default async function PricingPage({
           <p className="mx-auto mt-4 max-w-lg text-[15px] leading-relaxed text-gray-600">
             {t("finalCta.body")}
           </p>
-          <Link
+          <PromoSignupLink
             // FR checkout bills EUR — pass the currency explicitly so
             // js/auth.js's sgCheckoutCurrency() doesn't have to guess.
+            // SG_PROMO_ORGANIC_V1: and carry the founding offer, so the page's LAST CTA does
+            // not quietly drop the discount its cards just advertised.
             href={`${siteConfig.appSignupUrl}${locale === "fr" ? "&currency=eur" : ""}`}
-            prefetch={false}
             className="mt-8 inline-flex items-center justify-center rounded-full bg-accent-900 px-8 py-4 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25"
           >
             {t("finalCta.cta")}
-          </Link>
+          </PromoSignupLink>
         </div>
       </section>
     </>

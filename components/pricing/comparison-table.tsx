@@ -1,5 +1,6 @@
 import { Fragment } from "react"
 import Link from "next/link"
+import { PromoSignupLink } from "@/components/pricing/promo-signup-link"
 import { cn } from "@/lib/utils"
 import { COMPARE_COLUMNS, COMPARE_GROUPS } from "@/lib/plans"
 
@@ -93,7 +94,10 @@ export function ComparisonTable({ copy, locale = "en" }: { copy: ComparisonCopy;
                     )}
                   >
                     <div className="text-[14px] font-bold text-gray-900">{col.name}</div>
-                    <Link
+                    <PromoSignupLink
+                      // SG_PROMO_ORGANIC_V1 (2026-09-01): carries whatever founding offer the
+                      // visitor is entitled to. Without it this column sent a visitor who had
+                      // just read $69.30 on a card to checkout at list price.
                       // Plan-aware deep link (SG_SIGNUP_V2). SG_SIGNUP_INTERVAL_DEFAULT
                       // (2026-08-20): this table has no billing toggle, and OMITTING the
                       // interval does not withhold an assertion — the server normalises a
@@ -103,7 +107,6 @@ export function ComparisonTable({ copy, locale = "en" }: { copy: ComparisonCopy;
                       // (The old `col.id === "free"` bare-link branch was removed with the
                       // Free tier, SG_PRICING_V2.)
                       href={`${SIGNUP}&plan=${col.id}&interval=monthly${currencyParam}`}
-                      prefetch={false}
                       className={cn(
                         "mt-2 inline-flex items-center justify-center rounded-full px-3 py-1 text-[12px] font-semibold transition-colors",
                         col.id === FEATURED
@@ -112,7 +115,7 @@ export function ComparisonTable({ copy, locale = "en" }: { copy: ComparisonCopy;
                       )}
                     >
                       {copy.choose}
-                    </Link>
+                    </PromoSignupLink>
                   </th>
                 ))}
               </tr>

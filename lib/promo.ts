@@ -87,6 +87,13 @@ export function normalizePromoCode(raw: string | null | undefined): string | nul
 /* After expiry the visitor simply sees the standard sitewide offer.          */
 /* ------------------------------------------------------------------------ */
 
+/**
+ * SG_PROMO_ORGANIC_V1: banner-variant id used when the founding offer is shown to a visitor who
+ * did NOT arrive via the banner. Must match the `bv` allowlist shape in js/auth.js
+ * (`[a-z0-9_-]`, <=16 chars) so it survives into Stripe metadata as `promo_variant`.
+ */
+export const ORGANIC_VARIANT = "organic"
+
 export const RESERVATION_KEY = "sg_promo_res"
 export const RESERVATION_HOURS = 48
 
@@ -227,4 +234,53 @@ export function forgetPromo(): void {
   } catch {
     /* storage may be blocked; the page still falls back in memory */
   }
+}
+
+/**
+ * SG_PROMO_ORGANIC_V1 (2026-09-01): the offer the CURRENT visitor is entitled to, resolved
+ * client-side, in the same precedence the pricing cards use — URL `?promo=` wins, then the
+ * banner's stored click, then the live public offer.
+ *
+ * Extracted because /pricing had THREE signup surfaces and only one of them carried the code.
+ * Verified live in a browser on 2026-09-01: the cards showed $69.30 / $139.30 / $279.30 with
+ * `promo=FOUNDING30` on their CTAs, while the comparison table's "Choose" links and the closing
+ * "Start free trial" carried nothing. Once the cards started showing the discount to EVERY
+ * visitor (not just banner-clickers, who also had it in localStorage), that gap became the exact
+ * advertised-below-charged shape lib/promo.ts's own header warns about: see $69.30, click
+ * "Choose" 400px lower, get billed $99.
+ *
+ * A personal `FOUND-` code is honoured only while ITS reservation is live in THIS browser;
+ * otherwise the public offer is returned. Without that check a shared reservation link would put
+ * a dead code on every signup URL on the page.
+ */
+export function resolveOfferFromLocation(): { code: string; variant: string } | null {
+  if (!isPromoLive()) return null
+  let qs: URLSearchParams | null = null
+  try {
+    qs = new URLSearchParams(window.location.search)
+  } catch {
+    qs = null
+  }
+  const publicOffer = { code: PROMO.code, variant: ORGANIC_VARIANT }
+  const honourPersonal = (code: string, variant: string) => {
+    const res = getReservation()
+    return res && res.code === code ? { code, variant } : publicOffer
+  }
+
+  const fromUrl = normalizePromoCode(qs?.get("promo"))
+  if (fromUrl) {
+    const variant = (qs?.get("bv") ?? "").replace(/[^a-z0-9_-]/gi, "").slice(0, 16)
+    return RESERVATION_CODE_RE.test(fromUrl) ? honourPersonal(fromUrl, variant) : { code: fromUrl, variant }
+  }
+  const recalled = recallPromo()
+  if (recalled) {
+    return RESERVATION_CODE_RE.test(recalled.code) ? honourPersonal(recalled.code, recalled.variant) : recalled
+  }
+  return publicOffer
+}
+
+/** `&promo=CODE&bv=VARIANT`, or "" — appended to an already-parameterised signup href. */
+export function promoQuery(p: { code: string; variant: string } | null): string {
+  if (!p) return ""
+  return `&promo=${encodeURIComponent(p.code)}${p.variant ? `&bv=${encodeURIComponent(p.variant)}` : ""}`
 }
