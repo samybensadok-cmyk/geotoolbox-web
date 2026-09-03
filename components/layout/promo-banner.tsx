@@ -8,6 +8,7 @@ import {
   PROMO,
   fmtPromoAmount,
   formatCountdown,
+  getReservation,
   isPromoLive,
   promoDaysLeft,
   promoDeadlineLabel,
@@ -46,6 +47,23 @@ import { useCountdown } from "@/components/promo/use-countdown"
  *             Stripe expiry (SG_PROMO_RESERVE_V1). Never re-minted after expiry;
  *             falls back to the `price` copy if the backend refuses (rate limit,
  *             sold out, closed) — logged with reserved:false.
+ *
+ * SG_PROMO_RESERVE_V2 (2026-09-03) — MINT ON INTENT, NOT ON VIEW.
+ * v1 minted from a `useEffect` the moment the `reserve` variant was drawn, so a
+ * page view was enough to create a real Stripe promotion code. On 2026-09-03 a
+ * datacenter bot pool (Alibaba Cloud SG AS45102 + Huawei Cloud SG AS136907, ~1
+ * request per IP to stay under the 3/h 5/day per-IP limit) rendered the site at
+ * scale and saturated the campaign's 300-per-rolling-24h global mint cap by
+ * 11:27 UTC — genuine visitors then got {error:"capacity"} and silently fell
+ * back to the sitewide offer. 2,320 codes had been minted since 08-15 against a
+ * Stripe coupon `times_redeemed` of 1. See INCIDENT-SG-BOT-WAVE-2026-09-03.md.
+ * Now: mount only READS an existing reservation from localStorage (no network),
+ * and the mint happens in the CTA click handler. A visitor who never clicks
+ * never mints, so the cap once again measures interested humans. First-time
+ * visitors therefore see the `price` fallback copy (no countdown claim we have
+ * not yet backed with a real Stripe expiry); the countdown appears from the
+ * next page view on, and /pricing already renders the personal code via
+ * getReservation() in components/pricing/pricing-cards.tsx.
  *   bonus   — INACTIVE: adds a founder onboarding call. Needs operator sign-off
  *             because it commits operator time; flip `active` to test it.
  *
@@ -211,8 +229,10 @@ function pickVariant(variants: Variant[]): Variant {
 export function PromoBanner({ locale = "en" }: { locale?: string }) {
   const [dismissed, setDismissed] = useState(true)
   const [variant, setVariant] = useState<Variant | null>(null)
-  // SG_PROMO_RESERVE_V1: null = not asked yet / not this variant; false = refused.
+  // SG_PROMO_RESERVE_V1: null = not read yet / not this variant; false = none held.
   const [reservation, setReservation] = useState<Reservation | null | false>(null)
+  // SG_PROMO_RESERVE_V2: a mint is in flight from the CTA click.
+  const [minting, setMinting] = useState(false)
   const pathname = usePathname()
   const loc: PromoLocale = locale === "fr" || locale === "es" ? locale : "en"
   const ui = UI[loc]
@@ -243,20 +263,15 @@ export function PromoBanner({ locale = "en" }: { locale?: string }) {
       /* ignore */
     }
     setDismissed(isDismissed)
-    if (!isDismissed) setVariant(pickVariant(variants))
-  }, [variants])
-
-  // Mint the personal reservation once the `reserve` variant is assigned.
-  useEffect(() => {
-    if (!variant || variant.id !== "reserve" || dismissed) return
-    let cancelled = false
-    reservePromo(variant.id).then((r) => {
-      if (!cancelled) setReservation(r ?? false)
-    })
-    return () => {
-      cancelled = true
+    if (!isDismissed) {
+      const chosen = pickVariant(variants)
+      setVariant(chosen)
+      // SG_PROMO_RESERVE_V2: read-only. Surfaces a reservation this visitor
+      // already minted on an earlier click; never creates one. Pure
+      // localStorage, no fetch — a crawler that renders the page costs nothing.
+      if (chosen.id === "reserve") setReservation(getReservation() ?? false)
     }
-  }, [variant, dismissed])
+  }, [variants])
   const msLeft = useCountdown(reservation ? reservation.expiresAt : null)
   const reservationLive = !!reservation && msLeft !== null && msLeft > 0
 
@@ -297,6 +312,10 @@ export function PromoBanner({ locale = "en" }: { locale?: string }) {
   }
   const activeCode = isReserve && reservation ? reservation.code : PROMO.code
   const pricingPath = loc === "en" ? "/pricing" : `/${loc}/pricing`
+  // SG_PROMO_RESERVE_V2: reserve variant, no live reservation held → the click
+  // is what mints one. `href` stays the sitewide-code URL so the link is valid
+  // for middle-click, "open in new tab", and JS-off; the handler upgrades it.
+  const mintsOnClick = variant.id === "reserve" && !isReserve
   const href = `${pricingPath}?promo=${activeCode}&bv=${variant.id}`
   const daysLeft = promoDaysLeft()
 
@@ -321,9 +340,31 @@ export function PromoBanner({ locale = "en" }: { locale?: string }) {
         </span>
         <a
           href={href}
-          onClick={() => {
-            rememberPromo(activeCode, variant.id)
-            trackEvent("promo_banner_click", { promo_variant: variant.id, promo_code: activeCode, reserved: isReserve ? true : variant.id === "reserve" ? false : undefined, locale: loc, page_path: pathname })
+          aria-busy={minting || undefined}
+          onClick={(e) => {
+            trackEvent("promo_banner_click", { promo_variant: variant.id, promo_code: activeCode, reserved: isReserve ? true : variant.id === "reserve" ? false : undefined, mint_on_click: mintsOnClick || undefined, locale: loc, page_path: pathname })
+            // SG_PROMO_RESERVE_V2: the reserve variant mints HERE, on a real
+            // click, and only then navigates. reservePromo() returns any code
+            // this visitor already holds and null once it is spent or refused —
+            // either way we fall through to the sitewide code, never blocking
+            // the visitor on a backend that says no.
+            if (!mintsOnClick) {
+              rememberPromo(activeCode, variant.id)
+              return
+            }
+            e.preventDefault()
+            if (minting) return
+            setMinting(true)
+            reservePromo(variant.id)
+              .then((r) => {
+                const code = r?.code ?? PROMO.code
+                rememberPromo(code, variant.id)
+                window.location.assign(`${pricingPath}?promo=${code}&bv=${variant.id}`)
+              })
+              .catch(() => {
+                rememberPromo(PROMO.code, variant.id)
+                window.location.assign(`${pricingPath}?promo=${PROMO.code}&bv=${variant.id}`)
+              })
           }}
           className="inline-flex shrink-0 items-center rounded-full bg-white px-3.5 py-1 text-[13px] font-semibold text-accent-800 shadow-sm transition-colors hover:bg-accent-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
         >
