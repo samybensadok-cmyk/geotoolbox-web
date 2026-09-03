@@ -348,7 +348,12 @@ export function PromoBanner({ locale = "en" }: { locale?: string }) {
             // this visitor already holds and null once it is spent or refused —
             // either way we fall through to the sitewide code, never blocking
             // the visitor on a backend that says no.
-            if (!mintsOnClick) {
+            // A modifier- or non-primary click is opening this somewhere else —
+            // let the browser have the href (the sitewide code, always valid)
+            // rather than preventDefault-ing it into the current tab. Middle
+            // click never reaches here; it fires auxclick.
+            const opensElsewhere = e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0
+            if (!mintsOnClick || opensElsewhere) {
               rememberPromo(activeCode, variant.id)
               return
             }
