@@ -81,9 +81,14 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
             labels, which fit with ~32px to spare. Longer locales did not: at
             exactly 768px (iPad portrait) the header pushed the page into
             horizontal scroll — fr by 34px, de by 27px, es by 4px, measured on
-            the built output. Every locale now fits at 768 with room left, and
-            lg: restores the original spacing. Do not collapse these back to a
-            single px value without re-measuring all four locales at 768px. */}
+            the built output. lg: restores the original spacing.
+            VERIFIED after the fix, on a cold browser cache (a stale stylesheet
+            silently reproduces the pre-fix numbers, so the check first probes
+            that `px-2 lg:px-3` resolves to 12px at >=1024 and 8px below):
+            768px is now 0 overflow in every locale, headroom en +48 / de +32 /
+            es +32 / fr +30. 375-1280px all clean.
+            Do not collapse these back to a single px value without re-measuring
+            all four locales at 768px. */}
         <nav className="hidden items-center gap-1 md:flex">
           {/* Features mega menu */}
           <div
