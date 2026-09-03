@@ -92,6 +92,16 @@ function buildCopy(deadline: Record<PromoLocale, string>): Record<PromoLocale, C
       daysLeft: (n) => (n === 1 ? "queda 1 día" : `quedan ${n} días`),
       dismissAria: "Cerrar",
     },
+    de: {
+      eyebrow: "Bevor du gehst",
+      headline: `${PROMO.percentOff} % Rabatt — geschenkt`,
+      body: `Der Plus-Tarif für ${fmtPromoAmount(PLUS_PROMO, "de")} €/Monat statt ${PLUS_FULL} € — festgeschrieben für ${PROMO.months} Monate. Nur noch ${PROMO.seats} Gründerplätze, bis ${deadline.de}.`,
+      cta: "Gründerpreis sichern",
+      secondary: "Nein danke, ich zahle später den vollen Preis",
+      code: "Code",
+      daysLeft: (n) => (n === 1 ? "noch 1 Tag" : `noch ${n} Tage`),
+      dismissAria: "Schließen",
+    },
   }
 }
 
@@ -103,7 +113,7 @@ function isSuppressedPath(pathname: string | null): boolean {
   return (
     pathname.startsWith("/services") ||
     pathname.startsWith("/app") ||
-    /^\/(fr|es)?\/?pricing/.test(pathname)
+    /^\/(fr|es|de)?\/?pricing/.test(pathname)
   )
 }
 
@@ -111,7 +121,7 @@ export function ExitIntentPopup({ locale = "en" }: { locale?: string }) {
   const [open, setOpen] = useState(false)
   const [armed, setArmed] = useState(false)
   const pathname = usePathname()
-  const loc: PromoLocale = locale === "fr" || locale === "es" ? locale : "en"
+  const loc: PromoLocale = locale === "fr" || locale === "es" || locale === "de" ? locale : "en"
   const dialogRef = useRef<HTMLDivElement>(null)
   const ctaRef = useRef<HTMLAnchorElement>(null)
 
@@ -177,6 +187,7 @@ export function ExitIntentPopup({ locale = "en" }: { locale?: string }) {
       en: promoDeadlineLabel("en"),
       fr: promoDeadlineLabel("fr"),
       es: promoDeadlineLabel("es"),
+      de: promoDeadlineLabel("de"),
     })
   }
   const t = copy.current[loc]

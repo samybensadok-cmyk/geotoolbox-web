@@ -20,6 +20,7 @@ import {
   type PromoLocale,
 } from "@/lib/promo"
 import { useCountdown } from "@/components/promo/use-countdown"
+import { currencyParam } from "@/lib/i18n/currency"
 
 // SG_PROMO_V2 (2026-08-15): offer continuity. When the visitor arrives from the
 // founding banner (?promo=FOUNDING30&bv=<variant>) — or clicked it earlier and
@@ -49,6 +50,13 @@ const PROMO_UI: Record<PromoLocale, { strip: string; stripReserved: string; pill
     pill: `−${PROMO.percentOff} % · ${PROMO.months} meses`,
     then: `durante ${PROMO.months} meses, luego {full}`,
     firstYear: `el primer año, luego {full}/año`,
+  },
+  de: {
+    strip: `Gründerpreis — ${PROMO.percentOff} % Rabatt auf deine ersten ${PROMO.months} Monate mit dem Code ${PROMO.code}. ${PROMO.seats} Plätze · bis {deadline}.`,
+    stripReserved: `Dein Gründerplatz ist reserviert — ${PROMO.percentOff} % Rabatt auf deine ersten ${PROMO.months} Monate. Die Reservierung läuft in {cd} ab (Code {code}, wird beim Checkout angewendet).`,
+    pill: `−${PROMO.percentOff} % · ${PROMO.months} Monate`,
+    then: `für ${PROMO.months} Monate, danach {full}`,
+    firstYear: `im ersten Jahr, danach {full}/Jahr`,
   },
 }
 
@@ -114,7 +122,7 @@ function priceDisplay(plan: Plan, annual: boolean, copy: PricingCardsCopy, local
     // SG_PROMO_V2: the 12-month repeating coupon covers 12 monthly invoices,
     // or the FIRST annual invoice — after that the plan reverts to list price.
     // Say so on the card; the signup chip and the Stripe disclosure repeat it.
-    const ui = PROMO_UI[(locale === "fr" || locale === "es" ? locale : "en") as PromoLocale]
+    const ui = PROMO_UI[(locale === "fr" || locale === "es" || locale === "de" ? locale : "en") as PromoLocale]
     if (annual && plan.priceYearly) {
       const perMo = Math.round(plan.priceYearly / 12)
       const promoYear = promoPrice(plan.priceYearly)
@@ -239,7 +247,7 @@ export function PricingCards({ copy, locale }: { copy: PricingCardsCopy; locale:
     } else if (resMatches && msLeft !== null && msLeft <= 0) setPromo(fallback)
   }, [isPersonal, resMatches, msLeft])
   const promoOn = !!promo
-  const promoUi = PROMO_UI[(locale === "fr" || locale === "es" ? locale : "en") as PromoLocale]
+  const promoUi = PROMO_UI[(locale === "fr" || locale === "es" || locale === "de" ? locale : "en") as PromoLocale]
 
   return (
     <div>
@@ -344,7 +352,7 @@ export function PricingCards({ copy, locale }: { copy: PricingCardsCopy; locale:
           const promoQs = promoOn && promo ? `&promo=${promo.code}${promo.variant ? `&bv=${promo.variant}` : ""}` : ""
           const ctaHref = isExternal
             ? plan.cta.href
-            : `${plan.cta.href}&plan=${plan.id}&interval=${annual ? "annual" : "monthly"}${locale === "fr" ? "&currency=eur" : ""}${promoQs}`
+            : `${plan.cta.href}&plan=${plan.id}&interval=${annual ? "annual" : "monthly"}${currencyParam(locale)}${promoQs}`
           return (
             <div
               key={plan.id}

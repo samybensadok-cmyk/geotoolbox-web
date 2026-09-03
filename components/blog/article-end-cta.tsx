@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { trackEvent } from "@/lib/analytics"
 import { promoQuery, resolveOfferFromLocation } from "@/lib/promo"
+import { currencyParam } from "@/lib/i18n/currency"
 
 /**
  * SG_BLOG_CTA_V2 (2026-09-01) — the page-closing CTA for articles and glossary terms.
@@ -59,7 +60,7 @@ export function ArticleEndCta({
   // FR checkout bills EUR (SG_EUR_CHECKOUT_V1). /pricing passes the currency explicitly rather
   // than letting js/auth.js's sgCheckoutCurrency() fall through to navigator.language; these
   // links now do the same, so a French-page reader on an English browser is not quoted USD.
-  const currency = locale === "fr" ? "&currency=eur" : ""
+  const currency = currencyParam(locale)
   const href = `/app/?page=signup&interval=monthly${currency}&ref=${surface}-end`
 
   return (

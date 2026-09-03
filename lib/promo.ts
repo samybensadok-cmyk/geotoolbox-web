@@ -25,7 +25,7 @@ export const PROMO = {
   deadline: "2026-09-15",
 } as const
 
-export type PromoLocale = "en" | "fr" | "es"
+export type PromoLocale = "en" | "fr" | "es" | "de"
 
 /**
  * Discounted price, exact to the cent ($199 → 139.3, $948 → 663.6). Never round
@@ -38,7 +38,8 @@ export function promoPrice(price: number): number {
 
 /** "139.30" / "139,30" — 2 decimals only when there are cents. */
 export function fmtPromoAmount(n: number, locale: string): string {
-  const loc = locale === "fr" ? "fr-FR" : locale === "es" ? "es-ES" : "en-US"
+  const loc =
+    locale === "fr" ? "fr-FR" : locale === "es" ? "es-ES" : locale === "de" ? "de-DE" : "en-US"
   const cents = Math.round(n * 100) % 100 !== 0
   return n.toLocaleString(loc, { minimumFractionDigits: cents ? 2 : 0, maximumFractionDigits: 2 })
 }
@@ -58,7 +59,8 @@ export function promoDaysLeft(now: Date = new Date()): number {
 /** "Sep 15" / "15 sept." / "15 sept" — short, locale-aware deadline label. */
 export function promoDeadlineLabel(locale: string): string {
   const d = new Date(`${PROMO.deadline}T12:00:00Z`)
-  const loc = locale === "fr" ? "fr-FR" : locale === "es" ? "es-ES" : "en-US"
+  const loc =
+    locale === "fr" ? "fr-FR" : locale === "es" ? "es-ES" : locale === "de" ? "de-DE" : "en-US"
   // Strip the abbreviation dot ("15 sept." → "15 sept") so sentence-final
   // punctuation in banner copy never doubles up.
   return new Intl.DateTimeFormat(loc, { month: "short", day: "numeric", timeZone: "UTC" }).format(d).replace(/\.$/, "")

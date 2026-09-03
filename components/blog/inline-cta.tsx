@@ -4,6 +4,7 @@ import Link from "next/link"
 import type { InlineCtaTarget } from "@/lib/inline-cta"
 import { trackEvent } from "@/lib/analytics"
 import { promoQuery, resolveOfferFromLocation } from "@/lib/promo"
+import { currencyParam } from "@/lib/i18n/currency"
 
 type Variant = { text: string; button: string; href: string }
 
@@ -55,7 +56,7 @@ function offerSuffix(): string {
   return cacheVal
 }
 function signupHref(locale: string): string {
-  return `${SIGNUP_BASE}${locale === "fr" ? "&currency=eur" : ""}&${REF}${offerSuffix()}`
+  return `${SIGNUP_BASE}${currencyParam(locale)}&${REF}${offerSuffix()}`
 }
 
 const variants: Record<string, Record<InlineCtaTarget, Variant>> = {

@@ -93,6 +93,11 @@ function buildVariants(deadline: Record<PromoLocale, string>): Variant[] {
           body: `El plan Plus por $${fmtPromoAmount(PLUS_PROMO, "es")}/mes en lugar de $${PLUS_FULL} — ${PROMO.percentOff} % de descuento durante ${PROMO.months} meses. ${PROMO.seats} plazas, hasta el ${deadline.es}.`,
           cta: "Conseguir la tarifa",
         },
+        de: {
+          lead: "Gründerpreis",
+          body: `Der Plus-Tarif für ${fmtPromoAmount(PLUS_PROMO, "de")} €/Monat statt ${PLUS_FULL} € — ${PROMO.percentOff} % Rabatt für ${PROMO.months} Monate. Nur ${PROMO.seats} Plätze, bis ${deadline.de}.`,
+          cta: "Gründerpreis sichern",
+        },
       },
     },
     {
@@ -113,6 +118,11 @@ function buildVariants(deadline: Record<PromoLocale, string>): Variant[] {
           lead: "¿Qué IA te citan?",
           body: `Mira dónde te citan ChatGPT, Perplexity, Gemini y cía. — y a tus competidores. −${PROMO.percentOff} % durante ${PROMO.months} meses, hasta el ${deadline.es}.`,
           cta: "Ver mi visibilidad IA",
+        },
+        de: {
+          lead: "Welche KI zitiert dich?",
+          body: `Sieh nach, wo ChatGPT, Perplexity, Gemini & Co. dich zitieren — und deine Wettbewerber. Gründerpreis: ${PROMO.percentOff} % Rabatt für ${PROMO.months} Monate, bis ${deadline.de}.`,
+          cta: "KI-Sichtbarkeit prüfen",
         },
       },
     },
@@ -135,6 +145,11 @@ function buildVariants(deadline: Record<PromoLocale, string>): Variant[] {
           body: `${PROMO.percentOff} % menos durante un año para los primeros ${PROMO.seats} clientes que nos den feedback sin filtros. $0 hoy en planes con prueba. Cierra el ${deadline.es}.`,
           cta: "Reservar plaza fundadora",
         },
+        de: {
+          lead: `${PROMO.seats} Gründerplätze`,
+          body: `${PROMO.percentOff} % Rabatt für ein Jahr — für die ersten ${PROMO.seats} Kunden, die uns ehrliches Feedback geben. Heute 0 € dank Testphase. Endet am ${deadline.de}.`,
+          cta: "Gründerplatz sichern",
+        },
       },
     },
     {
@@ -156,6 +171,11 @@ function buildVariants(deadline: Record<PromoLocale, string>): Variant[] {
           lead: "Plaza fundadora reservada para ti",
           body: `${PROMO.percentOff} % de descuento durante ${PROMO.months} meses — tu reserva caduca en {cd}, luego la plaza vuelve al cupo.`,
           cta: "Reclamar mi plaza",
+        },
+        de: {
+          lead: "Gründerplatz für dich reserviert",
+          body: `${PROMO.percentOff} % Rabatt für ${PROMO.months} Monate — deine Reservierung läuft in {cd} ab, danach geht der Platz zurück in den Pool.`,
+          cta: "Reservierten Platz sichern",
         },
       },
     },
@@ -180,6 +200,11 @@ function buildVariants(deadline: Record<PromoLocale, string>): Variant[] {
           body: `${PROMO.percentOff} % de descuento durante ${PROMO.months} meses + una llamada de onboarding de 30 min con el fundador. ${PROMO.seats} plazas, hasta el ${deadline.es}.`,
           cta: "Reservar mi plaza",
         },
+        de: {
+          lead: "Gründerangebot",
+          body: `${PROMO.percentOff} % Rabatt für ${PROMO.months} Monate + ein 30-minütiges Onboarding-Gespräch mit dem Gründer. ${PROMO.seats} Plätze, bis ${deadline.de}.`,
+          cta: "Platz sichern",
+        },
       },
     },
   ]
@@ -191,6 +216,7 @@ const UI = {
   en: { dismiss: "Dismiss", code: "Code", daysLeft: (n: number) => (n === 1 ? "1 day left" : `${n} days left`) },
   fr: { dismiss: "Fermer", code: "Code", daysLeft: (n: number) => (n === 1 ? "1 jour restant" : `${n} jours restants`) },
   es: { dismiss: "Cerrar", code: "Código", daysLeft: (n: number) => (n === 1 ? "queda 1 día" : `quedan ${n} días`) },
+  de: { dismiss: "Schließen", code: "Code", daysLeft: (n: number) => (n === 1 ? "noch 1 Tag" : `noch ${n} Tage`) },
 } as const
 
 function pickVariant(variants: Variant[]): Variant {
@@ -214,7 +240,7 @@ export function PromoBanner({ locale = "en" }: { locale?: string }) {
   // SG_PROMO_RESERVE_V1: null = not asked yet / not this variant; false = refused.
   const [reservation, setReservation] = useState<Reservation | null | false>(null)
   const pathname = usePathname()
-  const loc: PromoLocale = locale === "fr" || locale === "es" ? locale : "en"
+  const loc: PromoLocale = locale === "fr" || locale === "es" || locale === "de" ? locale : "en"
   const ui = UI[loc]
 
   const variants = useMemo(
@@ -223,6 +249,7 @@ export function PromoBanner({ locale = "en" }: { locale?: string }) {
         en: promoDeadlineLabel("en"),
         fr: promoDeadlineLabel("fr"),
         es: promoDeadlineLabel("es"),
+        de: promoDeadlineLabel("de"),
       }),
     []
   )

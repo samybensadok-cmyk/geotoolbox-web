@@ -126,11 +126,18 @@ for (const locale of locales) {
   if (/\d/.test(money)) {
     errors.push(`[${locale}] cards.money "${money}" contains a literal digit — it would alter every displayed price`)
   }
-  // SG_EUR_CHECKOUT_V1 2026-07-27: FR quotes EUR at IDENTICAL numeric amounts
-  // ($299 = 299 €) and the Stripe Prices carry currency_options[eur] to match,
-  // so "€" is correct for fr. Any other symbol is still a mistake.
+  // SG_EUR_CHECKOUT_V1 2026-07-27: euro locales quote EUR at IDENTICAL numeric
+  // amounts ($299 = 299 €) and the Stripe Prices carry currency_options[eur] to
+  // match, so "€" is correct for them. Any other symbol is still a mistake.
+  // The euro set is EUR_LOCALES in lib/i18n/currency.ts (fr, de as of 2026-09);
+  // read from there rather than re-listing, so display can't drift from billing.
   const symbols = money.replace("{amount}", "").replace(/[\s  ]/g, "")
-  const expectedSymbol = locale === "fr" ? "€" : "$"
+  const eurLocales = new Set(
+    [...readFileSync(join(root, "lib/i18n/currency.ts"), "utf8")
+      .match(/EUR_LOCALES: ReadonlySet<string> = new Set\(\[([^\]]+)\]\)/)[1]
+      .matchAll(/"([^"]+)"/g)].map((m) => m[1]),
+  )
+  const expectedSymbol = eurLocales.has(locale) ? "€" : "$"
   if (symbols !== expectedSymbol) {
     errors.push(
       `[${locale}] cards.money "${money}" renders currency "${symbols}", expected "${expectedSymbol}" — ` +

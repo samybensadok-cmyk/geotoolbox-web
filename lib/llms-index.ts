@@ -24,12 +24,13 @@ import { whenToUseLines, howToCallLines } from "./agent-guidance"
  * two lists match, so a new locale fails the gate instead of silently vanishing
  * from every index.
  */
-export const LLMS_LOCALES = ["en", "fr", "es"] as const
+export const LLMS_LOCALES = ["en", "fr", "es", "de"] as const
 
 export const LOCALE_LABEL: Record<string, string> = {
   en: "English",
   fr: "Français",
   es: "Español",
+  de: "Deutsch",
 }
 
 /** How many recent items /llms.txt inlines before deferring to a section index. */

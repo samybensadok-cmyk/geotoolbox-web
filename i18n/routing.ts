@@ -9,7 +9,7 @@ import { defineRouting } from "next-intl/routing"
 // (blog, glossary) live under app/[locale]/. Marketing/feature/tool
 // pages stay at root (EN-only) until they're translated (spec §10 P3).
 export const routing = defineRouting({
-  locales: ["en", "fr", "es"],
+  locales: ["en", "fr", "es", "de"],
   defaultLocale: "en",
   localePrefix: "as-needed",
   // Crawler-safe + deep-link-safe: never auto-redirect on Accept-Language.
@@ -41,6 +41,7 @@ export const bcp47: Record<Locale, string> = {
   en: "en-US",
   fr: "fr",
   es: "es",
+  de: "de",
 }
 
 // Locales whose BLOG content tree is wired under content/{locale}/blog.
@@ -49,6 +50,9 @@ export const bcp47: Record<Locale, string> = {
 // (a wired locale with zero posts still 404s its index and stays out of the
 // sitemap/feed), so /es/blog goes live automatically with the first ES
 // article, with no flag to flip at ship time. KEEP IN SYNC with content/.
+// de is DELIBERATELY absent: the DE launch (2026-09) covers marketing/feature/
+// pricing pages only. There is no content/de/blog, so /de/blog must 404 rather
+// than render an empty index. Add "de" here the day the first DE article ships.
 export const contentLocales: readonly Locale[] = ["en", "fr", "es"]
 
 // The glossary is a separate, narrower policy: en is live, fr deliberately

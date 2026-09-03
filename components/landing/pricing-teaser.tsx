@@ -2,6 +2,7 @@ import Link from "next/link"
 import { getTranslations, getLocale } from "next-intl/server"
 import { PLANS, type PlanId } from "@/lib/plans"
 import { siteConfig } from "@/lib/config"
+import { formatPrice } from "@/lib/i18n/currency"
 
 /**
  * PricingTeaser — the transparency wedge, on the homepage.
@@ -20,7 +21,7 @@ export async function PricingTeaser() {
   // FR writes prices postfix, EN prefix. SG_PRICING_V2 2026-07-27: FR now quotes
   // EUR with the SAME numbers, no FX conversion ($299 -> 299 €) — the Stripe tier
   // Prices carry currency_options[eur] at identical amounts to match.
-  const fmtPrice = (n: number) => (locale === "fr" ? `${n} €` : `$${n}`)
+  const fmtPrice = (n: number) => formatPrice(n, locale)
   const tiles = TEASER_IDS.map((id) => {
     const plan = PLANS.find((p) => p.id === id)!
     return {

@@ -3,6 +3,7 @@ import Link from "next/link"
 import { PromoSignupLink } from "@/components/pricing/promo-signup-link"
 import { cn } from "@/lib/utils"
 import { COMPARE_COLUMNS, COMPARE_GROUPS } from "@/lib/plans"
+import { currencyParam } from "@/lib/i18n/currency"
 
 const SIGNUP = "/app/?page=signup"
 // Growth is the featured column — matches the "Most popular" badge on the
@@ -41,7 +42,7 @@ function Cell({ value, copy }: { value: string | boolean; copy: ComparisonCopy }
 export function ComparisonTable({ copy, locale = "en" }: { copy: ComparisonCopy; locale?: string }) {
   // FR checkout bills EUR at identical amounts (SG_EUR_CHECKOUT_V1) — the
   // signup deep link carries the currency so js/auth.js needn't guess.
-  const currencyParam = locale === "fr" ? "&currency=eur" : ""
+  const currency = currencyParam(locale)
   // Merge structural truth (plans.ts) with localized labels (catalog). If the
   // catalog ever falls out of shape, we fall back to the plans.ts value rather
   // than rendering a hole.
@@ -106,7 +107,7 @@ export function ComparisonTable({ copy, locale = "en" }: { copy: ComparisonCopy;
                       // buyer can still switch to annual on the pricing cards or in-app.
                       // (The old `col.id === "free"` bare-link branch was removed with the
                       // Free tier, SG_PRICING_V2.)
-                      href={`${SIGNUP}&plan=${col.id}&interval=monthly${currencyParam}`}
+                      href={`${SIGNUP}&plan=${col.id}&interval=monthly${currency}`}
                       className={cn(
                         "mt-2 inline-flex items-center justify-center rounded-full px-3 py-1 text-[12px] font-semibold transition-colors",
                         col.id === FEATURED

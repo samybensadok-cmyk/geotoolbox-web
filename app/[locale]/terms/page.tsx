@@ -7,7 +7,7 @@ import { TermsContent } from "@/components/legal/terms-content"
 // SG_LEGAL_V2 (2026-08-15): /fr/terms and /es/terms previously 404'd while the
 // footer linked to them. Until a native translation ships, both render the EN
 // Terms with a locale banner; §21.6 of the Terms states the EN text prevails.
-const SUPPORTED = ["fr", "es"] as const
+const SUPPORTED = ["fr", "es", "de"] as const
 
 const NOTE: Record<(typeof SUPPORTED)[number], { title: string; body: string }> = {
   fr: {
@@ -17,6 +17,10 @@ const NOTE: Record<(typeof SUPPORTED)[number], { title: string; body: string }> 
   es: {
     title: "Términos del servicio",
     body: "Estos términos están disponibles actualmente en inglés. Se está preparando una versión en español; en caso de divergencia prevalece la versión inglesa (art. 21.6). Preguntas: samy@geotoolbox.ai.",
+  },
+  de: {
+    title: "Allgemeine Geschäftsbedingungen",
+    body: "Diese Bedingungen liegen derzeit auf Englisch vor. Eine deutsche Fassung ist in Arbeit; bei Abweichungen ist die englische Fassung maßgeblich (Art. 21.6). Fragen: samy@geotoolbox.ai.",
   },
 }
 
@@ -32,6 +36,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
         en: `${siteConfig.url}/terms`,
         fr: `${siteConfig.url}/fr/terms`,
         es: `${siteConfig.url}/es/terms`,
+        de: `${siteConfig.url}/de/terms`,
         "x-default": `${siteConfig.url}/terms`,
       },
     },

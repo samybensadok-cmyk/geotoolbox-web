@@ -11,6 +11,7 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { siteConfig } from "@/lib/config"
 import { PLANS } from "@/lib/plans"
 import { marketingAlternatesFor } from "@/lib/i18n/siblings"
+import { priceCurrency, currencyParam } from "@/lib/i18n/currency"
 
 // Localized pricing page: en at /pricing, fr at /fr/pricing. Relocated from
 // app/(marketing)/pricing/page.tsx (Next forbids a (marketing) route colliding
@@ -106,7 +107,7 @@ export default async function PricingPage({
       // (SG_EUR_CHECKOUT_V1), so the schema currency follows the locale.
       // offerCount counts only self-serve priced tiers — Enterprise is
       // custom-quoted and sits outside the low/high range.
-      priceCurrency: locale === "fr" ? "EUR" : "USD",
+      priceCurrency: priceCurrency(locale),
       lowPrice: String(Math.min(...priced)),
       highPrice: String(Math.max(...priced)),
       offerCount: priced.length,
@@ -247,7 +248,7 @@ export default async function PricingPage({
             // js/auth.js's sgCheckoutCurrency() doesn't have to guess.
             // SG_PROMO_ORGANIC_V1: and carry the founding offer, so the page's LAST CTA does
             // not quietly drop the discount its cards just advertised.
-            href={`${siteConfig.appSignupUrl}${locale === "fr" ? "&currency=eur" : ""}`}
+            href={`${siteConfig.appSignupUrl}${currencyParam(locale)}`}
             className="mt-8 inline-flex items-center justify-center rounded-full bg-accent-900 px-8 py-4 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25"
           >
             {t("finalCta.cta")}

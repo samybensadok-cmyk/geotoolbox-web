@@ -6,7 +6,7 @@ import { LegalNoticeContent } from "@/components/legal/legal-notice-content"
 
 // SG_LEGAL_V2 (2026-08-15): locale route so footer links resolve; renders the
 // canonical content (bilingual for the legal notice, EN for the policy).
-const SUPPORTED = ["fr", "es"]
+const SUPPORTED = ["fr", "es", "de"]
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params
@@ -20,6 +20,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
         en: `${siteConfig.url}/legal`,
         fr: `${siteConfig.url}/fr/legal`,
         es: `${siteConfig.url}/es/legal`,
+        de: `${siteConfig.url}/de/legal`,
         "x-default": `${siteConfig.url}/legal`,
       },
     },
