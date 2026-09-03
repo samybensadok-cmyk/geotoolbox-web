@@ -55,6 +55,26 @@ const ALLOWED_IDENTICAL = new Set([
 const EXEMPT_PREFIXES = ["featurePages.common.engines"]
 const MIN_SUSPECT = 25
 
+// Product, plan and engine names are identical in every language, so a string
+// built ONLY out of them plus connectors ("GEO Scan, Agent Readiness & Content
+// Analyzer") is correctly byte-identical to EN — not an untranslated leftover.
+// Keep in sync with lib/config.ts featureGroups and lib/plans.ts.
+const PROPER_NOUNS = [
+  "AI Visibility Tracker", "GEO Scan", "Geo Scan", "Agent Readiness", "Query Fan-Out",
+  "Content Analyzer", "Content Studio", "Domain Overview", "Competitor Intel",
+  "Citation Interceptor", "Ask GeoToolBox", "Ask GEO Toolbox", "PR Coverage Tracker",
+  "White-Label Reports", "Community", "Analytics", "Actions", "GEO Toolbox",
+  "ChatGPT", "Gemini", "Perplexity", "Claude", "Grok", "Copilot", "Bing",
+  "Google AI Overviews", "Google AI Mode", "AI Overviews", "AI Mode",
+  "Starter", "Growth", "Plus", "Pro", "Scale", "Enterprise",
+]
+// True when nothing but proper nouns, connectors and punctuation remains.
+function isOnlyProperNouns(str) {
+  let rest = str
+  for (const n of PROPER_NOUNS) rest = rest.split(n).join(" ")
+  return !/[A-Za-zÀ-ÿ]{3,}/.test(rest.replace(/\b(and|&|the|of|für|und)\b/gi, " "))
+}
+
 const errors = []
 const warnings = []
 
@@ -77,6 +97,7 @@ function walk(refNode, locNode, path, locale) {
       refNode === locNode &&
       refNode.length >= MIN_SUSPECT &&
       !ALLOWED_IDENTICAL.has(refNode.trim()) &&
+      !isOnlyProperNouns(refNode) &&
       !EXEMPT_PREFIXES.some((p) => path.startsWith(p))
     ) {
       errors.push(`[${locale}] ${path}: value is byte-identical to ${defaultLocale} — untranslated? ${JSON.stringify(refNode.slice(0, 70))}`)
