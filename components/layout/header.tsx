@@ -75,7 +75,15 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
           <span className="text-[15px] font-bold tracking-tight text-gray-900">GEO Toolbox</span>
         </Link>
 
-        {/* Desktop Nav */}
+        {/* Desktop Nav.
+            Horizontal padding tightens between md and lg on purpose. The nav
+            first appears at md (768px) and the spacing was tuned to the ENGLISH
+            labels, which fit with ~32px to spare. Longer locales did not: at
+            exactly 768px (iPad portrait) the header pushed the page into
+            horizontal scroll — fr by 34px, de by 27px, es by 4px, measured on
+            the built output. Every locale now fits at 768 with room left, and
+            lg: restores the original spacing. Do not collapse these back to a
+            single px value without re-measuring all four locales at 768px. */}
         <nav className="hidden items-center gap-1 md:flex">
           {/* Features mega menu */}
           <div
@@ -89,7 +97,7 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
               onClick={() => setFeaturesOpen(!featuresOpen)}
               aria-expanded={featuresOpen}
               aria-haspopup="true"
-              className="flex min-h-[40px] items-center gap-1 rounded-md px-3 text-[13px] font-medium text-gray-700 transition-colors hover:text-gray-900 hover:bg-gray-50"
+              className="flex min-h-[40px] items-center gap-1 rounded-md px-2 lg:px-3 text-[13px] font-medium text-gray-700 transition-colors hover:text-gray-900 hover:bg-gray-50"
             >
               {nav?.features ?? "Features"}
               <svg
@@ -160,7 +168,7 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
               onClick={() => setToolsOpen(!toolsOpen)}
               aria-expanded={toolsOpen}
               aria-haspopup="true"
-              className="flex min-h-[40px] items-center gap-1 rounded-md px-3 text-[13px] font-medium text-gray-700 transition-colors hover:text-gray-900 hover:bg-gray-50"
+              className="flex min-h-[40px] items-center gap-1 rounded-md px-2 lg:px-3 text-[13px] font-medium text-gray-700 transition-colors hover:text-gray-900 hover:bg-gray-50"
             >
               {nav?.tools ?? "Tools"}
               <svg
@@ -211,21 +219,21 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
 
           <Link
             href={L("/pricing")}
-            className="flex min-h-[40px] items-center rounded-md px-3 text-[13px] font-medium text-gray-700 transition-colors hover:text-gray-900 hover:bg-gray-50"
+            className="flex min-h-[40px] items-center rounded-md px-2 lg:px-3 text-[13px] font-medium text-gray-700 transition-colors hover:text-gray-900 hover:bg-gray-50"
           >
             {nav?.pricing ?? "Pricing"}
           </Link>
 
           <Link
             href={L("/services/ai-seo-agency")}
-            className="flex min-h-[40px] items-center rounded-md px-3 text-[13px] font-medium text-gray-700 transition-colors hover:text-gray-900 hover:bg-gray-50"
+            className="flex min-h-[40px] items-center rounded-md px-2 lg:px-3 text-[13px] font-medium text-gray-700 transition-colors hover:text-gray-900 hover:bg-gray-50"
           >
             {nav?.services ?? "Services"}
           </Link>
 
           <Link
             href={L("/blog")}
-            className="flex min-h-[40px] items-center rounded-md px-3 text-[13px] font-medium text-gray-700 transition-colors hover:text-gray-900 hover:bg-gray-50"
+            className="flex min-h-[40px] items-center rounded-md px-2 lg:px-3 text-[13px] font-medium text-gray-700 transition-colors hover:text-gray-900 hover:bg-gray-50"
           >
             {nav?.blog ?? "Blog"}
           </Link>
@@ -241,18 +249,18 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
             </svg>
           </Link>
 
-          <div className="ml-3 flex items-center gap-2">
+          <div className="ml-1 lg:ml-3 flex items-center gap-2">
             <Link
               href={siteConfig.appLoginUrl}
               prefetch={false}
-              className="flex min-h-[40px] items-center rounded-full border border-gray-200 px-3.5 text-[13px] font-medium text-gray-700 transition-colors hover:border-gray-400 hover:text-gray-900"
+              className="flex min-h-[40px] items-center rounded-full border border-gray-200 px-3 lg:px-3.5 text-[13px] font-medium text-gray-700 transition-colors hover:border-gray-400 hover:text-gray-900"
             >
               {nav?.login ?? "Log in"}
             </Link>
             <Link
               href={L("/pricing")}
               prefetch={false}
-              className="flex min-h-[40px] items-center rounded-full bg-accent-900 px-3.5 text-[13px] font-medium text-white transition-colors hover:bg-accent-800"
+              className="flex min-h-[40px] items-center rounded-full bg-accent-900 px-3 lg:px-3.5 text-[13px] font-medium text-white transition-colors hover:bg-accent-800"
             >
               {nav?.startFree ?? "Get started"}
             </Link>
