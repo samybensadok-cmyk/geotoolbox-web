@@ -1,0 +1,146 @@
+---
+title: "Claude Fable 5.1: Benchmarks, Real Cost, and the Catch (2026)"
+description: "Claude Fable 5.1 is out. Real benchmarks, the cost math the '45% cheaper' claim hides, how it compares to Opus 5 and GPT-5.6 Sol, and why AI search can't see it."
+date: "2026-09-03"
+updated: "2026-09-03"
+author: "Samy BEN SADOK"
+tags: ["claude-fable-5-1", "claude", "anthropic", "fable-5-1", "llm", "ai-news", "guide"]
+draft: false
+---
+
+Anthropic released Claude Fable 5.1 on September 1, 2026, alongside a restricted twin called Mythos 5.1. The headline is that it is cheaper: up to 45% cheaper for agentic work, on Anthropic's own numbers. The honest version is more interesting. The base token prices did not move, one specific cost dropped by 75%, and early users are finding the real per-task bill can actually go *up*.
+
+There is a second catch that matters more if you care about being found by AI. Two days after launch, ask a web-connected model like ChatGPT or Perplexity about Fable 5.1 and it answers in detail. Ask a model running on its training data alone, including Anthropic's own [Claude Opus 5](https://geotoolbox.ai/blog/claude-opus-5), and it tells you the model does not exist. That gap is the whole story for anyone publishing content that AI engines are supposed to cite.
+
+## What Is Claude Fable 5.1?
+
+Claude Fable 5.1 is Anthropic's top-reasoning model, built for its most demanding, long-horizon agentic work: huge-codebase debugging, multi-step research, and agents that run for a long time without losing the thread. It is a Fable-class model, the top tier Anthropic positions above [Claude Opus](https://geotoolbox.ai/blog/what-is-claude-ai), and it replaces Fable 5 at the same headline price.
+
+One thing surprises people: Fable 5.1 is *not* the model Anthropic tells most users to reach for. Its own documentation says to start with Opus 5 for most workloads and move up to Fable 5.1 only when a task is genuinely demanding or Opus 5 at high effort still falls short. Fable is the specialist you call when the problem is hard enough that you care more about getting the answer than about the bill.
+
+<table>
+<thead>
+<tr><th>Spec</th><th>Claude Fable 5.1</th><th>Claude Opus 5</th><th>Claude Sonnet 5</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>API ID</strong></td><td>claude-fable-5-1</td><td>claude-opus-5</td><td>claude-sonnet-5</td></tr>
+<tr><td><strong>Context window</strong></td><td>1M tokens</td><td>1M tokens</td><td>1M tokens</td></tr>
+<tr><td><strong>Max output</strong></td><td>128K tokens</td><td>128K tokens</td><td>128K tokens</td></tr>
+<tr><td><strong>Knowledge cutoff</strong></td><td>Jun 2026</td><td>May 2026</td><td>Jan 2026</td></tr>
+<tr><td><strong>Price (input / output)</strong></td><td>$10 / $50</td><td>$5 / $25</td><td>$2 / $10</td></tr>
+<tr><td><strong>Thinking</strong></td><td>Adaptive, always on</td><td>Adaptive</td><td>Adaptive</td></tr>
+</tbody>
+</table>
+
+Mythos 5.1 is the same underlying model with a different rulebook. It is available only through Anthropic's trusted-access programs and carries *more permissive* safeguards for vetted cybersecurity and life-sciences organizations, not stronger ones. More on why that distinction exists below.
+
+## What Changed vs Fable 5
+
+Three things. The knowledge cutoff moved forward to June 2026, so the model knows more recent events. The safety classifiers were loosened, which we cover in its own section because it is tied to the [Fable 5 US ban](https://geotoolbox.ai/blog/fable-5-ban) earlier this year. And the pricing changed in one narrow but important way: cache reads now cost $0.25 per million tokens, down 75% from Fable 5's $1. Everything else about the price stayed the same.
+
+That single change is the entire basis for the "up to 45% cheaper" claim, and understanding it is the difference between saving money and being surprised by a bigger bill.
+
+## The Benchmarks: What's Verified vs Vendor-Reported
+
+Fable 5.1 posts clear gains over Fable 5, especially on science and terminal-style agentic work. The numbers in the table below come from Anthropic's launch benchmarks, so treat them as vendor-reported until third parties reproduce them.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/claude-fable-5-1/benchmark-comparison.png" alt="Bar chart comparing Claude Fable 5.1, Fable 5, Opus 5 and GPT-5.6 Sol on Terminal-Bench-Science, CursorBench and AutomationBench" w="1200" h="700" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Fable 5.1's largest jumps are on science and terminal-agent work, where it more than doubles Fable 5's Terminal-Bench-Science score.</figcaption>
+</figure>
+
+<table>
+<thead>
+<tr><th>Benchmark</th><th>Fable 5.1</th><th>Fable 5</th><th>Opus 5</th><th>GPT-5.6 Sol</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Terminal-Bench-Science</strong></td><td>52.6%</td><td>24.7%</td><td>29.0%</td><td>22.4%</td></tr>
+<tr><td><strong>Terminal-Bench 4.0</strong> (agentic coding)</td><td>55.8%</td><td>42.0%</td><td>52.3%</td><td>37.3%</td></tr>
+<tr><td><strong>CursorBench 3.2</strong></td><td>73.4%</td><td>70.5%</td><td>70.0%</td><td>67.2%</td></tr>
+<tr><td><strong>AutomationBench</strong></td><td>31.4%</td><td>17.1%</td><td>26.9%</td><td>19.6%</td></tr>
+<tr><td><strong>GDPval-AA v2</strong> (knowledge work)</td><td>1853</td><td>1723</td><td>1824</td><td>1711</td></tr>
+<tr><td><strong>Humanity's Last Exam</strong> (with tools)</td><td>65.0%</td><td>63.8%</td><td>63.6%</td><td>-</td></tr>
+</tbody>
+</table>
+
+The one independent number to anchor on comes from Artificial Analysis, whose Intelligence Index put Fable 5.1 at 66, the top score in its class and ahead of GPT-5.6 Sol. That is a third-party aggregate rather than a vendor benchmark, which makes it the most useful single figure in the launch.
+
+The customer quotes point the same way. Every's CEO Dan Shipper reported Fable 5.1 running about twice as fast as Opus 5 while using half the tokens in their tests, and a portfolio manager at Millennium described it finding a one-in-a-million crash that had gone unexplained for four to five years, by disassembling an external library and matching it against a core dump. Datadog said it out-reasoned Opus 5 on real production-incident investigations. These are impressive, and they are also cherry-picked wins from partners with early access.
+
+## Pricing and the Real Cost Math
+
+This is where the headline needs unpacking. Fable 5.1 costs the same $10 per million input tokens and $50 per million output tokens as Fable 5. The only price that fell is the cache read: reusing context the model has already processed now costs $0.25 per million tokens instead of $1. Anthropic's batch API also keeps its 50% discount.
+
+Cache reads dominate the cost of agentic work, where the same large context gets re-read on every step of a long loop. So for a workload that is mostly cached context, the 75% cut compounds into the 25% typical and up to 45% agentic savings Anthropic quotes. That math is real, but it only applies when your cache hit rate is high.
+
+<Callout type="warning">
+The catch: [independent testing by Artificial Analysis](https://artificialanalysis.ai/models/claude-fable-5-1) found Fable 5.1 uses meaningfully more output to reach an answer, roughly 1.7 times more output tokens than Fable 5 on its Intelligence Index evaluation. Because output is the most expensive token at $50 per million, that extra volume can erase the cache savings and push the actual per-task bill higher, not lower, on work that does not lean heavily on cache hits. Cheaper per cached token does not automatically mean cheaper per finished task.
+</Callout>
+
+So the answer to "is Fable 5.1 cheaper?" is: only for the right workload. Long-running agents that re-read a big fixed context and produce concise output win big. Chat-style or one-shot tasks that produce long answers can cost more, not less. If you are trying to control agent spend, our guide to [reducing Claude Code token costs](https://geotoolbox.ai/blog/reduce-claude-code-token-costs) covers the levers that actually move the bill.
+
+## Fable 5.1 vs Opus 5: When to Pay Double
+
+Fable 5.1 costs exactly twice as much per token as Opus 5 ($10/$50 versus $5/$25), and Anthropic still recommends Opus 5 as the default. That is not false modesty; it is a real decision.
+
+Reach for Opus 5 for everyday coding, writing, reasoning, and any cost-sensitive work. Escalate to Fable 5.1 when the task is genuinely at the frontier: a 500,000-line codebase you need investigated, an intermittent production failure to reproduce and root-cause, a long autonomous agent run, or multi-step scientific research where sustained reasoning matters more than the token price. If Opus 5 at high effort keeps falling short on your evals, that is the signal to move up. If it does not, paying double buys you very little. See our [Claude Opus 5 breakdown](https://geotoolbox.ai/blog/claude-opus-5) for where that model lands on its own.
+
+## Claude Fable 5.1 vs GPT-5.6 Sol
+
+GPT-5.6 Sol is the natural rival, and the two win on different axes. On the published benchmarks, Fable 5.1 leads: it took the top score (66) on the Artificial Analysis Intelligence Index, ahead of Sol, and it leads across the coding and science evals in the table above, from Terminal-Bench-Science (52.6% versus 22.4%) to CursorBench (73.4% versus 67.2%).
+
+Price runs the other way. Sol's current pricing is roughly $4 input and $20 output per million tokens on a promotional rate, less than half Fable 5.1's per-token cost. For teams doing high-volume work where Sol is "good enough," that gap matters.
+
+The real-world reviews are split in a way the benchmarks miss. Some developers comparing the two on live coding report that Sol broke through on tasks where Fable got stuck, and that Fable's precision and pedantry sometimes made it harder to collaborate with in a back-and-forth. Those are user impressions, not measured results, but they line up with a recurring theme in the launch reaction: Fable 5.1 is strong, and it can be exhausting to work with. If you want the broader picture of how these models trade off, our [Claude vs ChatGPT comparison](https://geotoolbox.ai/blog/claude-vs-chatgpt) covers the wider matchup.
+
+## The Safety Loosening (and the Fable 5 Ban It Answers)
+
+If you searched for Fable 5.1, half the related questions Google shows are about Fable *5* being disabled: "Why did Claude disable Fable 5?", "Is Fable 5 still blocked?" That is not confusion, it is history. Fable 5 was pulled globally for 19 days in June 2026 under a US export-control order, then returned with a tightened classifier that started blocking a lot of benign work. The full story is in our [Fable 5 ban explainer](https://geotoolbox.ai/blog/fable-5-ban).
+
+Fable 5.1 is Anthropic's answer to that over-blocking. Anthropic frames it as more precise safeguards rather than weaker ones, but the practical effect is looser in the places that were catching benign work: its cybersecurity safeguards now produce about 60% fewer interventions per Claude Code session, and its biology safeguards fire 85% less often on benign elementary-biology and medical questions. Fable 5.1 can now be used to *discover* software vulnerabilities for defensive work, though generating exploits and full penetration testing stay gated to the more permissive Mythos 5.1 for vetted organizations. The point is restoring usability the ban response broke, not reopening the exploit path.
+
+## The Catch: What Early Users Are Reporting
+
+Launch-day enthusiasm aside, the first wave of hands-on reports flags real friction. The top-voted complaint in the r/ClaudeAI launch thread calls Fable 5.1 "an absolute resource hog" that burns through the five-hour session limit in as little as 15 to 20 minutes. Early reports collected by AI-news roundups describe a 20x Max plan's quota vanishing in under an hour from heavy cache activity, and some users saying rate limits feel worse than Fable 5 despite Anthropic resetting all limits at launch.
+
+Two other patterns show up repeatedly in early reports. Users say Fable 5.1 tends to overachieve, returning more than you asked for, which lines up with the extra output-token volume behind the cost math above. And its default writing voice is mannered enough that Anthropic published its own "de-flavoring" prompt to strip the tells out of Fable 5.1's prose, an unusual thing to ship on launch day. None of this makes Fable 5.1 bad. It makes it a high-effort specialist that is easy to point at the wrong job.
+
+## What Fable 5.1 Means for AI Search Visibility
+
+Here is the part most launch coverage skips, and it is the one that matters if you are trying to get cited by AI. When we put the same question to ChatGPT, Perplexity, Gemini 3.6 Flash and Claude's own Opus 5 on September 3, 2026, two days after launch, the split was clean. ChatGPT and Perplexity, which search the live web, described Fable 5.1 accurately and cited Anthropic. Gemini running on its training data called it "very likely fictional, misremembered, or hallucinated." Anthropic's own Claude Opus 5, running without web access, said plainly: "I'm not aware of any Anthropic model called Claude Fable 5.1, and I don't believe it exists." One spot check is not a study, but the pattern is the point.
+
+That is the mechanism behind AI visibility in one test. A model answers from what was in its training data plus whatever it can retrieve at answer time. Fable 5.1 has a June 2026 cutoff, so it will not know about anything after that until a retrieval hands it the information. A model with an earlier cutoff has no idea Fable 5.1 exists unless a live search puts a page in front of it. Whether that page is *yours* starts with whether an AI crawler can reach and parse your content in the first place.
+
+This is why we build [geotoolbox](https://geotoolbox.ai) around reachability first. A new frontier model does not just change which answers you get; it resets which sources get pulled into those answers, and it does so on a rolling basis every time a cutoff moves forward. Reachability is not the whole story, relevance and authority still decide what gets cited, but if the engines cannot fetch your pages you are not in the running at all with the exact models people are switching to this week. You can check whether AI crawlers can actually read your site with our free [AI crawler checker](https://geotoolbox.ai/tools/ai-crawler-checker), and see where you stand overall with the [AI readiness scan](https://geotoolbox.ai/tools/ai-readiness). If you want the conceptual grounding, our [GEO vs SEO explainer](https://geotoolbox.ai/blog/geo-vs-seo) covers why retrieval, not just ranking, drives AI visibility.
+
+One open question to watch: Fable 5.1, like other Anthropic models released after August 2, 2026, now carries an invisible watermark on its text output under Anthropic's EU AI Act commitments. Whether search engines eventually treat watermarked, AI-generated content differently for trust and ranking is unknown, but it is the kind of signal to track if you publish machine-assisted content at scale.
+
+## Frequently Asked Questions
+
+### Is Claude Fable 5 still available?
+Yes. Fable 5 returned globally on July 1, 2026 after its 19-day export-control suspension, and it remains available at the same $10/$50 pricing. With Fable 5.1 out at the same headline price and a newer knowledge cutoff, there is little reason to choose Fable 5 over 5.1 for a new project, unless you have already validated Fable 5's output behavior and per-task cost for a specific workload and do not want to re-test.
+
+### Why was Claude Fable 5 disabled?
+It was not disabled for quality reasons. In June 2026 the US government issued an export-control order restricting Fable 5 and Mythos 5 for foreign nationals, and because Anthropic could not verify nationality per request, it switched both models off for everyone to comply. The order was lifted on July 1, 2026. The rest of the Claude lineup ran normally throughout.
+
+### When should I use Fable 5.1 instead of Opus 5?
+Use Opus 5 by default. Move to Fable 5.1 when the task is genuinely demanding, such as huge-codebase debugging, long autonomous agent runs, or multi-step research, or when Opus 5 at high effort still is not getting there. Fable 5.1 costs twice as much per token, so for routine work the upgrade rarely pays off.
+
+### Is Fable 5.1 actually cheaper than Fable 5?
+It depends on the workload. The cache-read price dropped 75% to $0.25 per million tokens, which makes cache-heavy agentic loops noticeably cheaper. But independent testing found Fable 5.1 uses roughly 1.7 times more output tokens than Fable 5, and since output is billed at $50 per million, that can push the finished-task cost higher, not lower. It is cheaper for high-cache, concise-output work and can be pricier for long-answer work.
+
+### What is the difference between Fable 5.1 and Mythos 5.1?
+They are the same model with different safeguards. Fable 5.1 is generally available. Mythos 5.1 is offered only through Anthropic's trusted-access programs and has more permissive safeguards for vetted cybersecurity and life-sciences organizations, allowing work like exploit generation and penetration testing that the general model blocks.
+
+### Does ChatGPT or Gemini know about Fable 5.1?
+Only if they search the web. Web-connected engines like ChatGPT and Perplexity describe it accurately. Models answering from training data alone, including Gemini and Anthropic's own Opus 5, currently deny that Fable 5.1 exists, because it launched after their knowledge cutoffs.
+
+## Sources
+
+- Introducing Claude Fable 5.1 and Claude Mythos 5.1 - Anthropic, Sept 1 2026 - `anthropic.com/claude-fable-and-mythos-5-1`
+- Claude Fable 5.1 model overview - Anthropic (Claude Platform Docs), 2026 - `platform.claude.com/docs/en/models/fable-5-1/overview`
+- Intelligence Index (Claude Fable 5.1) - Artificial Analysis, 2026 - `artificialanalysis.ai`
+- Anthropic launches Claude Fable 5.1, up to 45 percent cheaper for agentic work - The Verge, Sept 1 2026 - `theverge.com/ai-artificial-intelligence/987830/anthropic-claude-fable-mythos-5-1`
+- Claude Fable 5.1 and Mythos 5.1 arrive with a 75% cost reduction for cache reads - VentureBeat, Sept 1 2026 - `venturebeat.com/technology/anthropics-claude-fable-5-1-and-mythos-5-1-arrive-with-a-75-cost-reduction-for-fable-cache-reads`
+- Anthropic enhances Claude: Fable 5.1 takes the benchmark lead - heise online, Sept 2026 - `heise.de/en/news/Anthropic-enhances-Claude-Fable-5-1-takes-the-benchmark-lead-11438053.html`
+
