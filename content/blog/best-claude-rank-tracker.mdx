@@ -1,0 +1,297 @@
+---
+title: "Best Claude Rank Trackers (2026): An Honest Comparison"
+description: "The best Claude rank trackers in 2026: which tools query Claude with web search on, which gate it behind an add-on, and what the number measures."
+date: "2026-09-03"
+updated: "2026-09-03"
+recheckBy: "2026-11-03"
+author: "Samy BEN SADOK"
+tags: ["claude", "ai-visibility", "rank-tracking", "tools"]
+draft: false
+---
+
+Pick a Claude rank tracker by reading the lists that rank for it and you will get a different answer every time. In September 2026 we put one question to ChatGPT, Gemini, Perplexity and Claude: what are the best tools for tracking whether Claude mentions your brand? Between them they named 26 products, and no product appeared in all four answers. Claude and Gemini shared exactly one product out of the seventeen they named between them.
+
+That was a single run of a single prompt, so read it as a snapshot rather than a measurement. The pattern it points at is easy to confirm though. All eight organic results on Google's first page are either a vendor's own product page or a list whose author's tool happens to win it. Cognizo's list opens with Cognizo. LPagery's number one is LPagery. Visby "is our top pick". xSeek "is the best Claude rank tracking tool". Those are their own words, in their own search snippets, checked on 3 September 2026 from a US desktop search.
+
+So this guide starts somewhere else. Before it compares anything it explains what a Claude number measures, using [Anthropic's own documentation](https://platform.claude.com/docs/en/docs/agents-and-tools/tool-use/web-search-tool), which none of those eight pages cite.
+
+One quick disambiguation, because the query is ambiguous: this is about tracking Claude, not about building a Google rank tracker with Claude's help. Two of the three forum results on this search are the second thing.
+
+<Callout type="note">
+Geotoolbox, the site you are reading this on, makes an AI-visibility tool that tracks Claude. It is in the table below, placed by what it does, and it is not first. We are not the cheapest way to track Claude and we name the tools that are. Pricing and Claude coverage were checked against each vendor's own pricing page in September 2026, and prices in this category move fast, so confirm before you buy.
+</Callout>
+
+## What a Claude Rank Tracker Actually Measures
+
+A Claude rank tracker is a tool that runs a fixed set of prompts through Claude on a schedule and records whether it mentions you, cites you, and how it describes you.
+
+The name is borrowed from SEO and it fits badly, because Claude does not rank pages in a numbered list. It reads a question, decides whether to search, and writes prose with inline citations attached to specific sentences. There is no position to track, which is why we treat this differently from a general [AI rank tracker](https://geotoolbox.ai/blog/ai-rank-tracker).
+
+What the useful tools measure is a small family of rates, sampled repeatedly:
+
+- **Mention rate** is how often Claude names you across a fixed prompt set.
+- [**Citations**](https://geotoolbox.ai/glossary/ai-citation) are the linked sources Claude attributes the answer to. They can send clicks.
+- [**Share of voice**](https://geotoolbox.ai/glossary/share-of-voice) is how often you appear against named competitors on the same prompts.
+- **Sentiment** is how Claude frames you when it does [mention](https://geotoolbox.ai/glossary/brand-mention) you, which matters as much as whether it does.
+
+Anthropic's documentation is unusually specific about the citation layer. Citations are [always enabled for web search](https://platform.claude.com/docs/en/docs/agents-and-tools/tool-use/web-search-tool), and each one carries the source URL, the page title, and up to 150 characters of the text Claude actually drew on. That 150-character cap is a practical drafting instruction: a self-contained factual sentence is extractable, a claim spread across a paragraph is not.
+
+If a dashboard reduces all of that to one "visibility score" with no published method behind it, treat it as marketing rather than a metric. It was the most repeated structural complaint in the practitioner threads we read.
+
+## Claude Chooses Whether to Search, and Almost No Guide Says So
+
+Claude decides for itself, per prompt, whether to search the web at all. Anthropic's documentation says it searches when a request depends on information that is "current, changing, or outside its training data", and answers directly when the request draws on "stable knowledge". Web search is a tool Claude elects to use, not a step it always runs.
+
+That makes a Claude zero ambiguous in a way a Google zero never is. It can mean Claude searched and did not pick you, which is addressable with better content and better citations. Or it can mean Claude never searched at all and answered from training data, in which case nothing you publish this quarter will move that answer. Almost no tool tells you which one happened.
+
+Users run into this. Between October 2025 and August 2026 there are at least six separate r/ClaudeAI and r/claude threads about Claude skipping search with search switched on, including one titled "Claude Pretending to Search".
+
+In one of them a user running extended thinking and web search reports Claude declining to search specifically on product reviews and comparisons. That is exactly the commercial question class this article is about.
+
+Google's own People Also Ask block for this topic still carries "Does Claude search the web?", and the related searches include "Claude web search not available". Buyers do not know.
+
+There is one usable proxy, and it comes out of our own tracker. On the path where we query Claude with the web search tool enabled, citations only ever arrive as structured data from the API, never scraped out of the prose. Anthropic's documentation says citations are always on when search runs. So a run that comes back with no citation at all is a run where Claude probably did not search.
+
+Probably, not certainly. A search that returned nothing worth citing would look the same from outside, and so would a failed retrieval. That is why the number below is an upper bound rather than a count.
+
+**Of 1,359 search-enabled Claude runs in our tracker, 51 came back with no citation at all: 3.8%.** That count covers only the runs that went through the live search path, so the fallback runs described later are excluded from it. That is our best available upper bound on how often Claude declines to search a commercial comparison question, measured on our own prompt set on 3 September 2026.
+
+Treat it as a ceiling for commercial comparison questions and a floor for anything else. Our prompts are exactly the kind that make Claude search, so a prompt set full of stable-knowledge questions would push the number far higher. But it is a real number from real runs, and it is more than any tool on this page will tell you.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/best-claude-rank-tracker/claude-searched-or-not.png" alt="Decision diagram: a Claude zero splits into two causes, Claude searched and did not pick you, or Claude never searched, each with a different fix." w="1300" h="783" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">One number, two situations. Most trackers report both of these identically, as a zero.</figcaption>
+</figure>
+
+One more knob sits underneath this. The API caps searches per request with `max_uses`, and Anthropic notes that simple factual queries typically use one to three searches while comparative research can use ten or more. A tracker that sets a low cap to control cost sees a thinner citation set than one that does not, and neither is wrong.
+
+## Live Search and Training Recall Are Two Different Numbers
+
+A tool can query Claude with the web search tool switched on, or without it. Neither is wrong, but they measure different things, and vendors almost never say which one they ran.
+
+With search off, you are measuring what the model remembers about you from training. That moves on Anthropic's model-release cadence, in months, and no amount of publishing shifts it before the next training run. With search on, you are measuring what Claude retrieves and cites today, which moves in days.
+
+Charting those two on one line produces a trend that means nothing. A practitioner on Hacker News put the whole category in one sentence: these tools charge two hundred to a thousand dollars a month for what is "fundamentally, a loop over the OpenAI Responses API and Anthropic Messages API with web_search enabled, plus citation parsing". The phrase doing the work there is **with web_search enabled**, and it is the part a buyer cannot see from the outside.
+
+So ask any vendor two questions. Do you query Claude with the web search tool on? And is that recorded on every measurement, or assumed?
+
+And be clear about the limit, because it applies to us too. No tool on this page can tell you, on a given run, whether Claude chose to use the search tool. What a good tool can tell you is whether the tool was switched on, and whether that run returned any citations. Those two together are the closest thing to an answer anyone currently sells.
+
+## Which Claude Are You Measuring?
+
+There is more than one Claude, and a tracker has to pick.
+
+The consumer app at claude.ai, the API, Claude Code, and Claude inside browser and desktop integrations do not all run with the same retrieval settings, and they do not always return the same answer to the same question. A tool that queries the API is measuring what Claude-powered products and agents see. A tool that scrapes a consumer session is measuring what a person typing into claude.ai sees. Both are legitimate. They are not interchangeable, and almost nobody says which one they sell.
+
+We saw the size of this effect by accident while researching this article. Asking the consumer ChatGPT surface for the best Claude rank tracker put Rankability first. Asking the same vendor's API the same question returned an answer that never mentioned Rankability at all. Same company, same day, two surfaces, different winner. If that gap exists on ChatGPT, assume it exists on Claude.
+
+This is also the most common reason a buyer loses trust in a tool. You run the prompt yourself, get a different answer than the dashboard reported, and conclude the tool is broken. Usually it is not broken, it is sampling a different surface than the one you just used. Ask which one before you buy, and pick the one your buyers actually use.
+
+## Why Two Good Trackers Disagree about You
+
+Two vendors can sample the same brand on the same day, both querying Claude live, and report different numbers without either one lying. Anthropic's API documents four settings that move the result.
+
+`user_location` localises search results by city, region, country and timezone. A tracker sampling from the US and one sampling from Germany are asking different questions. `allowed_domains` and `blocked_domains` let a deployment restrict Claude to a whitelist or exclude sites entirely, which means a brand can be structurally invisible inside a corporate Claude instance no matter how strong its SEO is. An organisation admin can switch web search off altogether in the Claude Console. And `max_uses` sets the search budget per request.
+
+On top of the settings sits the model itself. Anthropic ships new Claude versions often, and a tracker's twelve-month chart can silently span more than one of them without saying so. A tool that does not stamp the model version on each measurement cannot tell you whether your line moved because your content improved or because the model changed underneath it.
+
+Then there is plain non-determinism. Ask Claude the same question twice and the cited sources can differ. One before-and-after check is noise. Cadence and a fixed prompt set are the product, which is the same conclusion we reach for [every engine we measure](https://geotoolbox.ai/blog/how-to-track-ai-visibility).
+
+## Check This First: Can Claude Reach You at All?
+
+Before you pay anyone to tell you that Claude never cites you, rule out the free explanation.
+
+Anthropic's crawler documentation names exactly three agents. [**ClaudeBot**](https://geotoolbox.ai/glossary/claudebot) collects web content that may contribute to training. **Claude-User** fetches pages when a person asks Claude something. **Claude-SearchBot** crawls to improve search result quality. Blocking them has different consequences, and plenty of sites block all three by accident through a broad robots.txt rule or a bot-management preset.
+
+Worth flagging carefully, because two of the guides on page one for this query state that a crawler called `anthropic-ai` handles Claude's real-time retrieval. It does not, and it is not one of the three agents [Anthropic documents today](https://support.claude.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler). `anthropic-ai` is a real but deprecated Anthropic user agent that still sits in a great many robots.txt files, so leaving your existing rule in place is harmless. Just do not rely on it to control retrieval, because that is Claude-User and Claude-SearchBot.
+
+Our [AI crawler checker](https://geotoolbox.ai/tools/ai-crawler-checker) tests this for free without a signup, and the [wider bot list](https://geotoolbox.ai/blog/ai-crawlers) covers the rest. Fixing a bot you never meant to block is cheaper than any subscription on this page.
+
+## The Best Claude Rank Trackers, Compared
+
+Grouped by where Claude sits in the plan, and inside each group by entry price. Not ranked best to worst. Every price below came from the vendor's own pricing page in September 2026, not from another comparison article, because several of those are wrong.
+
+The column that matters most is not price. It is which plan actually includes Claude, because that is where the category hides its cost.
+
+<table>
+<thead>
+<tr><th>Tool</th><th>Best for</th><th>Claude on which plan</th><th>Entry price</th><th>Watch for</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Geoptie</strong> (free tool)</td><td>A one-off check, right now</td><td>Free tool, no account</td><td><strong>Free</strong></td><td>A single run is noise. Useful as a first look, not a trend.</td></tr>
+<tr><td><strong>Mangools AI Search Watcher</strong></td><td>Cheapest continuous tracking</td><td>Every plan, including the free one</td><td>Free, then <strong>€15.60/mo</strong> billed annually, <strong>€24</strong> monthly</td><td>The annual toggle is on by default. Weekly updates, small prompt allowance. Currency and price are region-served, so your number may differ.</td></tr>
+<tr><td><strong>LucidRank</strong></td><td>A one-time report with no subscription</td><td>$9 one-off report, or Pro upward</td><td><strong>$9</strong> one-time, or <strong>$49/mo</strong></td><td>The $19 Starter plan does not include Claude. Pro is the cheapest subscription that does.</td></tr>
+<tr><td><strong>LPagery</strong></td><td>Small sites on a fixed budget</td><td>All three tiers</td><td><strong>$19/mo</strong></td><td>All three tiers give the same 10 tracked keywords. Paying more buys prompts, not keywords.</td></tr>
+<tr><td><strong>Rankscale</strong></td><td>Wide engine coverage, cheap entry</td><td>All plans, ungated</td><td><strong>$20/mo</strong></td><td>A Claude query costs 2 credits against 0.25 for most other engines. The $20 tier's 120 credits buy about 60 Claude answers a month. Price is region-served.</td></tr>
+<tr><td><strong>Geoptie</strong> (paid)</td><td>Daily tracking at a low price</td><td>All plans, but Claude uses one of 4 engine slots</td><td><strong>$41/mo</strong> billed annually, <strong>$49</strong> monthly</td><td>The annual toggle is on by default. Every tier caps at any 4 of 7 AI engines, so Claude costs you a slot.</td></tr>
+<tr><td><strong>Ahrefs Brand Radar</strong></td><td>Teams already inside Ahrefs</td><td>Custom prompts only</td><td><strong>€46.7/mo</strong> custom-prompt pack</td><td>Each Claude check consumes eight checks. Ahrefs says this is down to cost. The free AI Visibility Checker does not cover Claude at all. Euro rate shown; region-served.</td></tr>
+<tr><td><strong>Otterly.AI</strong></td><td>Cheap entry, if you read the footnote</td><td>Any plan, but only as a paid add-on</td><td><strong>$29/mo</strong> plan <strong>+ $29/mo</strong> Claude add-on</td><td>Claude is not in the base engine list, so the $29 headline does not buy it.</td></tr>
+<tr><td><strong>Visby</strong></td><td>A simple three-engine view</td><td>All plans</td><td><strong>$79/mo</strong></td><td>Only three engine slots on every tier, Enterprise included. Adding Claude means dropping ChatGPT or Gemini.</td></tr>
+<tr><td><strong>LLMrefs</strong></td><td>Flat pricing with no engine games</td><td>The only plan</td><td><strong>$79/mo</strong></td><td>The cleanest pricing here: one price, no gating, no multiplier. Weekly cadence.</td></tr>
+<tr><td><strong>Sellm</strong></td><td>Keyword-shaped AI tracking</td><td>All paid plans</td><td><strong>$89/mo</strong></td><td>Two different free offers on the site that are easy to confuse. Check which one you signed up for.</td></tr>
+<tr><td><strong>Rankability</strong></td><td>Daily Claude tracking, best value</td><td>Starter, the entry tier</td><td><strong>$99/mo</strong></td><td>Sixty daily prompts on Starter, and one prompt runs across every enabled engine, so Claude costs no extra allowance. Perplexity and Gemini are gated above Claude, which is unusual.</td></tr>
+<tr><td><strong>Cairrot</strong></td><td>WordPress-centric workflows</td><td>Pro and Enterprise</td><td><strong>$99/mo</strong> for Claude</td><td>The $39 Starter tracks ChatGPT and Perplexity only. Its two pages disagree on the Pro prompt count.</td></tr>
+<tr><td><strong>Geotoolbox</strong> (us)</td><td>Multi-engine tracking with reachability checks</td><td>Plus upward; all eight on Pro</td><td><strong>$199/mo</strong> for Claude</td><td>Claude costs one of your five picks on the $199 Plus tier; all eight without spending a pick is $399. Not on our $99 plan, and self-serve scans weekly. Cheaper and more frequent options are above.</td></tr>
+<tr><td><strong>AthenaHQ</strong></td><td>Credit-based agency work</td><td>Starter and up</td><td><strong>$245/mo</strong> annual, $295 monthly</td><td>The free tier has no Claude. API access and extra credits are quote-only.</td></tr>
+<tr><td><strong>apiserpent</strong></td><td>Developers building their own</td><td>All tiers</td><td><strong>$20.00</strong> per 1,000 queries, down to $1.00</td><td>An API, not a dashboard. No scheduling or alerts. The $1.00 rate needs a $500 deposit up front.</td></tr>
+<tr><td><strong>Peec AI</strong></td><td>Clean analytics dashboards</td><td><strong>Enterprise tier only</strong></td><td>€70/mo entry, annual</td><td>Claude is not even on the paid add-on model list, so it is unbuyable below Enterprise. Pricing is geo-served: the same page shows different numbers in euros and dollars.</td></tr>
+<tr><td><strong>Writesonic</strong></td><td>Content plus visibility in one suite</td><td><strong>Enterprise tier only</strong></td><td>$79/mo entry, billed annually</td><td>Basic and Growth track ChatGPT, Gemini and AI Overviews. Claude needs Enterprise.</td></tr>
+<tr><td><strong>Profound</strong></td><td>Enterprise reporting</td><td><strong>Enterprise tier only</strong></td><td>$99/mo entry, billed yearly</td><td>The $99 Starter tracks ChatGPT only. Claude sits in the Enterprise column.</td></tr>
+<tr><td><strong>Scrunch AI</strong></td><td>Crawler analytics with enterprise reporting</td><td><strong>Enterprise tier only</strong></td><td><strong>$250/mo</strong> Core</td><td>Core covers four engines and Claude is not one of them.</td></tr>
+<tr><td><strong>SE Ranking</strong></td><td>SEO suite with AI tracking</td><td><strong>Not covered</strong></td><td>€109/mo Core</td><td>Its AI toolkit covers ChatGPT, Perplexity, Gemini, AI Mode and AI Overviews. There is no Claude at any price.</td></tr>
+<tr><td><strong>BrightEdge</strong></td><td>Large enterprise SEO programmes</td><td><strong>Not named</strong></td><td>No public pricing</td><td>Claude tracking is not named on its public pages and pricing is quote-only, so you cannot evaluate either before a sales call.</td></tr>
+</tbody>
+</table>
+
+**Claude is the engine vendors gate.** Profound, Peec, Scrunch and Writesonic all sell a reasonable entry plan and put Claude behind a quote. Otterly charges for it separately. Cairrot's Claude coverage starts a tier above its headline price, and LucidRank keeps Claude out of its $19 subscription while selling it as a $9 one-off. We do it too: Claude is not on our $99 plan. If you shortlist on entry price alone, you will shortlist tools that do not do the thing you are buying them for.
+
+**Where Claude is not gated, it is metered.** Rankscale and Ahrefs both charge roughly eight times as much for a Claude check as for their other engines, which the next section unpacks.
+
+**The cheapest useful answers are the smallest ones.** A free Geoptie check, a $9 LucidRank report, or the free Mangools tier will tell you whether Claude knows you exist. That is a different and much cheaper question than tracking a trend, and for a lot of sites it is the only question worth answering this quarter.
+
+## Which Tools Actually Run Claude Live, and Which Just Say They Do
+
+This is the question the category is worst at answering.
+
+We put it to three engines directly: which AI-visibility tools actually query Claude live. ChatGPT, Gemini and Perplexity named 24 tools between them and agreed on only two. Then the engines disagreed about those two: one called a tool a live Claude querier, another said the claim was asserted but never demonstrated. If the engines cannot tell from the public record, a buyer reading a features page certainly cannot.
+
+Checking twenty vendors' own pricing and documentation pages turned up something sharper. **Five of them say anything at all about how they query Claude. Fifteen say nothing.**
+
+Of the five, [Ahrefs](https://help.ahrefs.com/en/articles/11064852-what-is-brand-radar-and-how-to-use-it) is the most precise, describing Claude in its help centre as "tracked via API (Claude Sonnet 4.6 with web search)". That is the only vendor of the twenty that names the model it queries. Peec tags Claude with "API" in its plan table while leaving its six self-serve engines untagged. LucidRank says each model uses its native web search rather than "hypotheticals". Geoptie mentions "Claude's web-connected responses when available", which is a hedge doing real work.
+
+The most revealing is Sellm, because it discloses the opposite of what most buyers assume. It states plainly that it scrapes a real Claude session rather than calling the API: "This is different from simulated responses - we show you what real Claude users would see."
+
+That is a defensible choice with real trade-offs, and it is a completely different measurement from an API query. Sellm is not doing anything wrong here. The problem is that you can only learn this about one vendor in four.
+
+That silence matters because there are cheaper ways to produce a Claude number than paying Anthropic for one.
+
+Anthropic charges [**$10 per 1,000 searches**](https://platform.claude.com/docs/en/docs/agents-and-tools/tool-use/web-search-tool) on the API, on top of token costs. That is a cent per search, so at low volumes the arithmetic closes comfortably: fifty prompts checked weekly is two hundred prompt runs a month, and at the ten or more searches a comparative question can trigger that is around twenty dollars of search cost.
+
+It stops closing as volume and frequency rise, which is why the cheap tiers on this page cap prompts rather than advertising unlimited use. When you evaluate a plan, price it at the volume you will actually run, not the headline. And where a vendor does promise a lot of Claude for very little, the question is what is giving: cached results, infrequent batches, a shared sample across customers, or a model queried without the search tool. None of those is fraud, and all of them change what your number means.
+
+Two vendors independently price Claude as though it is expensive, which is a more honest signal than any features page. Ahrefs charges eight checks for a single Claude check, and its changelog explains why: "Due to significantly increased costs, Claude is only available to monitor for custom prompts, rather than the entire Ahrefs dataset."
+
+Rankscale prices a Claude query at 2 credits against 0.25 for ChatGPT, Perplexity, Gemini and AI Mode, the same eight-to-one ratio. When two unrelated vendors land on the same multiplier, that is the cost of the engine showing through the pricing page.
+
+It is not universal, though, and the exception is instructive. apiserpent bills Claude at the same rate as every other engine it supports. So "Claude costs more" is a pattern among the tools that meter by engine, not a law. What it does mean is that when a vendor charges you the same for Claude as for ChatGPT and never says how it queries Claude, that combination is worth a question.
+
+There are also integrations that read like Claude support and are not. Beamtrace lists Claude as coming soon while shipping ChatGPT today. Profound publishes a Claude connector that runs the other direction: it lets Claude consume Profound's data, rather than Profound querying Claude. Both are accurate product pages. Neither means what a skimming buyer thinks it means.
+
+And the published comparisons disagree with each other on plain facts. Cognizo's table states that LLMrefs supports up to three engines and excludes Claude from its base plan. LLMrefs sells a single plan at $79 a month covering all its supported engines, Anthropic included. One of those is a page-one result and it is wrong about a rival.
+
+For fairness: Cognizo and xSeek appear here as evidence rather than as options, because neither publishes a Claude tier and price we could verify the way we verified the twenty vendors in the table. That is why they are not rated, and it is not a verdict on the tools.
+
+## Where Geotoolbox Fits, and Where It Doesn't
+
+We built one of these, so here is how we answer the first, fourth and fifth of the vendor questions below. The other five you should put to us the same way you put them to everyone else.
+
+We query Claude through DataForSEO's Claude endpoint with the web search tool enabled, not through Anthropic's API directly. On that path citations arrive as structured data, which is what makes the 3.8% figure above computable at all. Every Claude measurement on that live search path records which model answered and what citations came back.
+
+What we cannot do, and nor can anyone else, is tell you whether Claude chose to use the search tool on a given run. What we record is that we switched it on, and what we publish is the proxy: a search-enabled run that returns no citation at all probably did not search, and on our own data that is 3.8% of runs.
+
+Two more things, neither of which you can audit from outside, which is the position every vendor on this page puts you in. About one Claude measurement in twenty falls back to a secondary provider when the primary call fails, and that fallback path runs without the search tool, so those rows are recall rather than live retrieval. And our Claude rows span more than one Claude model build, which is the same segmentation problem this article tells you to ask vendors about.
+
+Now the pricing, which is where we lose. **Claude is not on our $99 plan.** It starts at **$199 a month** on [Plus](https://geotoolbox.ai/pricing), where Claude costs one of your five engine picks, and all eight engines without spending a pick is **$399** on Pro. Self-serve plans scan weekly, not daily.
+
+So if budget or frequency is your constraint, buy someone else's. **Rankability is $99 a month, includes Claude on its entry tier, and runs daily prompts**, which is cheaper and more frequent than us on both counts. **Mangools AI Search Watcher starts free and runs €15.60 a month annually** if you want a light continuous check rather than a workflow.
+
+Where we are worth the difference is the cross-engine picture on one prompt set, with the search-tool setting and the model recorded on every live-path measurement, and the reachability side handled in the same place. Start with the [AI readiness check](https://geotoolbox.ai/tools/ai-readiness) or the [crawler checker](https://geotoolbox.ai/tools/ai-crawler-checker). Both are free, neither needs a signup, and they answer the crawler question above before you spend anything.
+
+## Is There a Free Way to Track Claude?
+
+Yes, and more of them than in most tool categories.
+
+Geoptie runs a free Claude rank check with no account at all: enter a domain, get mentions and competitors back. Sellm has a similar no-signup tool. Mangools includes Claude on its free tier with a small prompt allowance. LucidRank sells a one-time baseline report covering Claude for $9. Not free, but not a subscription either.
+
+The free version is doing it yourself. Write down the ten questions a buyer would ask before choosing something in your category, ask Claude those questions on the same day each week, and log whether you appear and who appears instead. That is what the paid tools automate, and for a single brand with a small prompt set it is entirely reasonable to keep doing by hand.
+
+Free stops working at one specific point, and it is narrower than the paid tools would like. A single run tells you almost nothing, because the same prompt returns different sources on different days, so you need repetition on a schedule before a change means anything. That is what you are actually buying.
+
+What you are not buying is an end to the ambiguity described earlier. Paying more does not resolve it.
+
+## What to Ask a Vendor Before You Pay
+
+Most buying guides list features. These are the questions that separate tools that measure Claude from tools that report a number, and they come straight out of what Anthropic documents.
+
+1. Do you query Claude with the web search tool enabled, and is that recorded on every measurement or assumed? Three of the twenty vendors we checked state the first half in public. On the second half, at most one does.
+2. Which market do you sample from, and can I change it? Claude localises search results, so a global average can hide a weak home market.
+3. How many runs per prompt per period, and is the run count visible to me? Without it, a visibility score cannot be interpreted.
+4. Do you stamp the Claude model version on each measurement, so I can segment the chart when Anthropic ships a new model? One vendor of the twenty names its model publicly.
+5. Does a measurement record whether the answer came back with citations, so I can tell a run where Claude searched from one where it did not? Enabling the search tool and Claude choosing to use it are different things, and citations are the only visible proxy for the second.
+6. Do you separate mentions from citations, or fold both into one score?
+7. Do you show me the third-party domains Claude cited, not just whether my own site appeared? A large share of what AI answers cite is not your own site, so a tool that only reports your own domain hides most of the work.
+8. What is your minimum detectable change? Practitioners report AI citations moving 40 to 60% month to month for the same queries, so a tool that cannot say what counts as signal is selling you noise.
+
+A vendor that answers all eight is unusual. A vendor that answers none of them is asking you to trust a number whose method you cannot inspect.
+
+## When You Don't Need a Claude Rank Tracker
+
+Skip it if the crawler check above failed. Fix reachability first, then measure. Paying to watch an absence you already understand is money spent on a diagnosis you have.
+
+Skip it if you have one brand and ten prompts. Do that by hand each month and spend the money on the content the measurement would have told you to write.
+
+Be realistic about the engine, too. Look at your own analytics before you buy: if referrals from claude.ai are a rounding error next to ChatGPT, and for most sites they are, then Claude should not be the first engine you pay to track. We cover the [Perplexity](https://geotoolbox.ai/blog/best-perplexity-rank-tracker) and [Copilot](https://geotoolbox.ai/blog/best-copilot-rank-tracker) trackers separately.
+
+Claude earns a budget line when your buyers are developers, technical teams, or the kind of professional audience that lives in it, or when you already track the bigger engines and want the cross-engine picture.
+
+## The Verdict
+
+There is no single best Claude rank tracker, and any list that names one is selling you something. There is a best tool per job.
+
+For a first look, use Geoptie's free check or the free Mangools tier and spend nothing.
+
+For the cheapest continuous tracking, Mangools at €15.60 a month billed annually, or LPagery at $19. Rankscale's $20 tier also carries Claude, but budget for it costing eight times the base credit rate, which works out to roughly sixty Claude answers a month.
+
+For daily Claude tracking with a full dashboard, Rankability at $99 is the strongest value here. For flat, ungated pricing with no engine games, LLMrefs at $79. For developers, apiserpent. For enterprise reporting where Claude is one line in a bigger deck, Profound, Peec, Scrunch or Writesonic, and expect to talk to sales. AthenaHQ sits between the self-serve tools and the enterprise tier if you want credit-based agency work, at $245.
+
+Choose us when you want the cross-engine view on one prompt set, with the search-tool setting and the model recorded on every live-path measurement, and you are past the point where the free check answers your question.
+
+Whatever you buy, the first number it shows you is a sample, not a rank.
+
+## Frequently Asked Questions
+
+### Does Claude search the web?
+Yes, when it decides the question needs it. Anthropic launched web search for Claude in March 2025, and the documentation says Claude searches for information that is current, changing, or outside its training data, and answers from training data otherwise. It is a tool the model elects to use, not a step that always runs.
+
+### Can I track Claude rankings in Google Search Console?
+No. Search Console reports Google Search, and Anthropic publishes no equivalent. There is no prompt report, no impression count and no public index for Claude, which is why sampled prompting is the only method available to any tool on this page, ours included.
+
+### How is tracking Claude different from tracking ChatGPT or Perplexity?
+Three ways. Claude decides per prompt whether to retrieve at all, so a zero is ambiguous. Two of the vendors we checked meter it at roughly eight times the rate of their other engines, though a third prices it identically, so treat that as a pattern rather than a rule. And Claude referrals tend to be small enough that you cannot cross-check a tool's numbers against your analytics the way you partly can with Perplexity.
+
+### How does Claude decide which sources to cite?
+Anthropic does not publish a ranking method. What the documentation does tell you is the shape of the output: citations are always on when search runs, each one carries a URL, a title and up to 150 characters of the text Claude drew on. Writing claims as self-contained, checkable sentences makes them extractable.
+
+### Does Claude use Brave Search?
+The evidence points that way, and Anthropic has never confirmed it.
+
+Anthropic added Brave Search to its own subprocessor list on 19 March 2025, one day before announcing Claude web search. Claude's search function contains a parameter named `BraveSearchParams`. And Simon Willison, testing it the following day, found the ten citations Claude returned for one query were an exact match for that search on Brave.
+
+Treat it as strong circumstantial evidence rather than a confirmed fact, and be sceptical of guides that state it flatly.
+
+### Do these tools query the Claude app or the API?
+Mostly they do not say. Of twenty vendors we checked, five disclose anything about their method and only one names the model it queries. Where they do disclose, they disagree: Ahrefs and Peec query the API, while Sellm scrapes a real Claude session.
+
+They measure different things. If your buyers use the claude.ai app, a session-scraping tool is closer to your real exposure. If you care about Claude-powered products, agents and integrations, the API path is the right measurement. Ask which one before you buy.
+
+## Sources
+
+- Web search tool - Anthropic (Claude Platform Docs), checked 3 September 2026 - `platform.claude.com/docs/en/docs/agents-and-tools/tool-use/web-search-tool`
+- Does Anthropic crawl data from the web, and how can site owners block the crawler? - Anthropic (Claude Support), checked 3 September 2026 - `support.claude.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler`
+- Anthropic use Brave - Simon Willison's Weblog, 21 March 2025 - `simonwillison.net/2025/Mar/21/anthropic-use-brave/`
+- Anthropic adds web search to its Claude chatbot - TechCrunch, 20 March 2025 - `techcrunch.com/2025/03/20/anthropic-adds-web-search-to-its-claude-chatbot/`
+- What is Brand Radar and how to use it - Ahrefs Help Center, checked 3 September 2026 - `help.ahrefs.com/en/articles/11064852-what-is-brand-radar-and-how-to-use-it`
+- Brand Radar Claude changelog - Ahrefs, checked 3 September 2026 - `ahrefs.com/blog/new-features/`
+- Best Claude rank tracker tools, the comparison table cited for LLMrefs - Cognizo, checked 3 September 2026 - `cognizo.ai/blog/best-claude-rank-tracker`
+- Free Claude rank tracker, the session-scraping disclosure - Sellm, checked 3 September 2026 - `sellm.io/claude-rank-tracker-free-tool`
+- Claude AI rank tracker - Rankability, checked 3 September 2026 - `rankability.com/claude-ai-rank-tracker/`
+- Pricing and credit costs - Rankscale, checked 3 September 2026 - `rankscale.ai/pricing`
+- Pricing, including the Claude add-on - Otterly.AI, checked 3 September 2026 - `otterly.ai/pricing`
+- Pricing - Peec AI, checked 3 September 2026 - `peec.ai/pricing`
+- Pricing - Scrunch AI, checked 3 September 2026 - `scrunchai.com/pricing`
+- Pricing - Profound, checked 3 September 2026 - `tryprofound.com/pricing`
+- AI Rank Tracker pricing - LPagery, checked 3 September 2026 - `lpagery.io/ai-rank-tracker/pricing/`
+- Claude coming soon on a shipped ChatGPT tracker - Beamtrace, checked 3 September 2026 - `beamtrace.com/claude-rank-tracker`
+- AI Search Watcher plans and pricing - Mangools, checked 3 September 2026 - `mangools.com/ai-search-watcher/plans-and-pricing`
+- Pricing - Sellm, checked 3 September 2026 - `sellm.io/pricing`
+- Pricing pages for LLMrefs, Visby, Geoptie, Cairrot, LucidRank, AthenaHQ, Writesonic, SE Ranking, BrightEdge and apiserpent, each read on the vendor's own site on 3 September 2026
