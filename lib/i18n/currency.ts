@@ -10,7 +10,9 @@
  *
  * KEEP IN SYNC with the currencies the Replit billing app accepts
  * (`?currency=eur`) and with the `money` template in messages/<locale>.json —
- * a locale listed here must render "{amount} €", not "${amount}".
+ * a locale listed here must render euros, not "${amount}". WHICH SIDE the symbol
+ * sits on is per-locale: fr/de write "{amount} €", nl writes "€ {amount}" — see
+ * EUR_PREFIX_LOCALES below.
  */
 export const EUR_LOCALES: ReadonlySet<string> = new Set(["fr", "de", "nl"])
 

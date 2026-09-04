@@ -129,8 +129,11 @@ for (const locale of locales) {
   // SG_EUR_CHECKOUT_V1 2026-07-27: euro locales quote EUR at IDENTICAL numeric
   // amounts ($299 = 299 €) and the Stripe Prices carry currency_options[eur] to
   // match, so "€" is correct for them. Any other symbol is still a mistake.
-  // The euro set is EUR_LOCALES in lib/i18n/currency.ts (fr, de as of 2026-09);
+  // The euro set is EUR_LOCALES in lib/i18n/currency.ts (fr, de, nl as of 2026-09);
   // read from there rather than re-listing, so display can't drift from billing.
+  // NOTE this checks WHICH symbol a locale renders, never WHERE it sits. Dutch puts
+  // the euro first ("€ 99") where fr/de put it last — placement lives in
+  // EUR_PREFIX_LOCALES and is gated outside this repo (nl-lint.mjs).
   const symbols = money.replace("{amount}", "").replace(/[\s  ]/g, "")
   const eurLocales = new Set(
     [...readFileSync(join(root, "lib/i18n/currency.ts"), "utf8")
