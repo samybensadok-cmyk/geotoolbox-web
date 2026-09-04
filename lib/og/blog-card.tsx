@@ -55,8 +55,11 @@ const PANEL_HEADER: Record<Cluster, string> = {
   default: "Inside this guide",
 }
 
+// KEEP IN SYNC with the FAQ-trim tail H2 (faq-trim-2026-08-31/scripts/21-apply-demote.mjs `H2`
+// map): demoted FAQ questions live under a "More Questions" H2, which is tail matter, not a
+// section of the guide. Without it a short article prints "More Questions" as a card bullet.
 const GENERIC_H2 =
-  /(frequently asked|^faqs?\b|conclusion|bottom line|final thoughts|key takeaways|takeaways|^sources|further reading|tl;?dr|^summary$|wrapping up|what'?s next|^get started|the verdict|at a glance)/i
+  /(frequently asked|^faqs?\b|^more questions|^other questions|conclusion|bottom line|final thoughts|key takeaways|takeaways|^sources|further reading|tl;?dr|^summary$|wrapping up|what'?s next|^get started|the verdict|at a glance)/i
 
 export function classifyCluster(post: Pick<Post, "slug" | "title" | "tags">): Cluster {
   const slug = (post.slug || "").toLowerCase()

@@ -71,8 +71,11 @@ const TARGET_DEPTH = 0.66
 // these. KEEP IN SYNC with contentLocales: a locale missing from this pattern
 // silently loses the guard and can take an InlineCta injected inside its FAQ.
 // (es was missing until 2026-08-07, so every ES article shipped unguarded.)
+// "more questions" is the FAQ-trim tail H2 (faq-trim-2026-08-31/scripts/21-apply-demote.mjs
+// `H2` map). It always follows the FAQ H2, so it is already excluded transitively — listed
+// anyway, because a pattern missing from here fails silently rather than loudly.
 const TERMINAL_H2 =
-  /^(frequently asked|faqs?\b|sources|references|further reading|foire aux questions|questions fr[ée]quentes|preguntas frecuentes|fuentes|referencias|m[áa]s informaci[óo]n)/i
+  /^(frequently asked|faqs?\b|more questions|sources|references|further reading|foire aux questions|questions fr[ée]quentes|preguntas frecuentes|fuentes|referencias|m[áa]s informaci[óo]n)/i
 // any in-body link to a product/tool surface counts as an existing CTA
 const CTA_LINK = /\(\/(app|features|tools)([/)#?]|$)/
 
