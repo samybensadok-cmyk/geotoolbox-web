@@ -24,7 +24,7 @@ import { routing } from "@/i18n/routing"
  * French visitor to an empty page is worse than sending them to the populated
  * EN glossary. Add it here the moment content/fr/glossary/ is populated.
  */
-// Marketing routes are 1:1 same-path across ALL routing.locales (en/fr/es).
+// Marketing routes are 1:1 same-path across ALL routing.locales (en/fr/es/de/nl).
 const MARKETING_ROOTS = new Set([
   "/",
   "/features",
