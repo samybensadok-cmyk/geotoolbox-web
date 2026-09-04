@@ -116,6 +116,11 @@ function buildVariants(deadline: Record<PromoLocale, string>): Variant[] {
           body: `Der Plus-Tarif für ${fmtPromoAmount(PLUS_PROMO, "de")} €/Monat statt ${PLUS_FULL} € — ${PROMO.percentOff} % Rabatt für ${PROMO.months} Monate. Nur ${PROMO.seats} Plätze, bis ${deadline.de}.`,
           cta: "Gründerpreis sichern",
         },
+        nl: {
+          lead: "Oprichtersprijs",
+          body: `Het Plus-abonnement voor € ${fmtPromoAmount(PLUS_PROMO, "nl")}/maand in plaats van € ${PLUS_FULL} — ${PROMO.percentOff}% korting gedurende ${PROMO.months} maanden. Nog ${PROMO.seats} plekken, tot ${deadline.nl}.`,
+          cta: "Oprichtersprijs vastzetten",
+        },
       },
     },
     {
@@ -141,6 +146,11 @@ function buildVariants(deadline: Record<PromoLocale, string>): Variant[] {
           lead: "Welche KI zitiert dich?",
           body: `Sieh nach, wo ChatGPT, Perplexity, Gemini & Co. dich zitieren — und deine Wettbewerber. Gründerpreis: ${PROMO.percentOff} % Rabatt für ${PROMO.months} Monate, bis ${deadline.de}.`,
           cta: "KI-Sichtbarkeit prüfen",
+        },
+        nl: {
+          lead: "Welke AI citeert jou?",
+          body: `Kijk waar ChatGPT, Perplexity, Gemini en co. jou citeren — en je concurrenten. Oprichtersprijs: ${PROMO.percentOff}% korting gedurende ${PROMO.months} maanden, tot ${deadline.nl}.`,
+          cta: "AI-zichtbaarheid checken",
         },
       },
     },
@@ -168,6 +178,11 @@ function buildVariants(deadline: Record<PromoLocale, string>): Variant[] {
           body: `${PROMO.percentOff} % Rabatt für ein Jahr — für die ersten ${PROMO.seats} Kunden, die uns ehrliches Feedback geben. Heute 0 € dank Testphase. Endet am ${deadline.de}.`,
           cta: "Gründerplatz sichern",
         },
+        nl: {
+          lead: `${PROMO.seats} oprichtersplekken`,
+          body: `${PROMO.percentOff}% korting voor een jaar — voor de eerste ${PROMO.seats} klanten die ons eerlijke feedback geven. Vandaag € 0 dankzij de proefperiode. Loopt af op ${deadline.nl}.`,
+          cta: "Oprichtersplek reserveren",
+        },
       },
     },
     {
@@ -194,6 +209,11 @@ function buildVariants(deadline: Record<PromoLocale, string>): Variant[] {
           lead: "Gründerplatz für dich reserviert",
           body: `${PROMO.percentOff} % Rabatt für ${PROMO.months} Monate — deine Reservierung läuft in {cd} ab, danach geht der Platz zurück in den Pool.`,
           cta: "Reservierten Platz sichern",
+        },
+        nl: {
+          lead: "Oprichtersplek voor je gereserveerd",
+          body: `${PROMO.percentOff}% korting gedurende ${PROMO.months} maanden — je reservering verloopt over {cd}, daarna gaat de plek terug in de pool.`,
+          cta: "Gereserveerde plek vastzetten",
         },
       },
     },
@@ -223,6 +243,11 @@ function buildVariants(deadline: Record<PromoLocale, string>): Variant[] {
           body: `${PROMO.percentOff} % Rabatt für ${PROMO.months} Monate + ein 30-minütiges Onboarding-Gespräch mit dem Gründer. ${PROMO.seats} Plätze, bis ${deadline.de}.`,
           cta: "Platz sichern",
         },
+        nl: {
+          lead: "Oprichtersaanbod",
+          body: `${PROMO.percentOff}% korting gedurende ${PROMO.months} maanden + een onboardinggesprek van 30 minuten met de oprichter. ${PROMO.seats} plekken, tot ${deadline.nl}.`,
+          cta: "Plek reserveren",
+        },
       },
     },
   ]
@@ -235,6 +260,7 @@ const UI = {
   fr: { dismiss: "Fermer", code: "Code", daysLeft: (n: number) => (n === 1 ? "1 jour restant" : `${n} jours restants`) },
   es: { dismiss: "Cerrar", code: "Código", daysLeft: (n: number) => (n === 1 ? "queda 1 día" : `quedan ${n} días`) },
   de: { dismiss: "Schließen", code: "Code", daysLeft: (n: number) => (n === 1 ? "noch 1 Tag" : `noch ${n} Tage`) },
+  nl: { dismiss: "Sluiten", code: "Code", daysLeft: (n: number) => (n === 1 ? "nog 1 dag" : `nog ${n} dagen`) },
 } as const
 
 function pickVariant(variants: Variant[]): Variant {
@@ -260,7 +286,8 @@ export function PromoBanner({ locale = "en" }: { locale?: string }) {
   // SG_PROMO_RESERVE_V2: a mint is in flight from the CTA click.
   const [minting, setMinting] = useState(false)
   const pathname = usePathname()
-  const loc: PromoLocale = locale === "fr" || locale === "es" || locale === "de" ? locale : "en"
+  const loc: PromoLocale =
+    locale === "fr" || locale === "es" || locale === "de" || locale === "nl" ? locale : "en"
   const ui = UI[loc]
 
   const variants = useMemo(
@@ -270,6 +297,7 @@ export function PromoBanner({ locale = "en" }: { locale?: string }) {
         fr: promoDeadlineLabel("fr"),
         es: promoDeadlineLabel("es"),
         de: promoDeadlineLabel("de"),
+        nl: promoDeadlineLabel("nl"),
       }),
     []
   )

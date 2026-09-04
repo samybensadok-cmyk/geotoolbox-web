@@ -58,6 +58,13 @@ const PROMO_UI: Record<PromoLocale, { strip: string; stripReserved: string; pill
     then: `für ${PROMO.months} Monate, danach {full}`,
     firstYear: `im ersten Jahr, danach {full}/Jahr`,
   },
+  nl: {
+    strip: `Oprichtersprijs — ${PROMO.percentOff}% korting op je eerste ${PROMO.months} maanden met de code ${PROMO.code}. ${PROMO.seats} plekken · tot {deadline}.`,
+    stripReserved: `Je oprichtersplek is gereserveerd — ${PROMO.percentOff}% korting op je eerste ${PROMO.months} maanden. De reservering verloopt over {cd} (code {code}, wordt bij het afrekenen toegepast).`,
+    pill: `−${PROMO.percentOff}% · ${PROMO.months} maanden`,
+    then: `gedurende ${PROMO.months} maanden, daarna {full}`,
+    firstYear: `het eerste jaar, daarna {full}/jaar`,
+  },
 }
 
 // SG_LADDER_V3 2026-07-28: segment-pure tabs. Each tab shows exactly the
@@ -122,7 +129,7 @@ function priceDisplay(plan: Plan, annual: boolean, copy: PricingCardsCopy, local
     // SG_PROMO_V2: the 12-month repeating coupon covers 12 monthly invoices,
     // or the FIRST annual invoice — after that the plan reverts to list price.
     // Say so on the card; the signup chip and the Stripe disclosure repeat it.
-    const ui = PROMO_UI[(locale === "fr" || locale === "es" || locale === "de" ? locale : "en") as PromoLocale]
+    const ui = PROMO_UI[(locale === "fr" || locale === "es" || locale === "de" || locale === "nl" ? locale : "en") as PromoLocale]
     if (annual && plan.priceYearly) {
       const perMo = Math.round(plan.priceYearly / 12)
       const promoYear = promoPrice(plan.priceYearly)
@@ -247,7 +254,7 @@ export function PricingCards({ copy, locale }: { copy: PricingCardsCopy; locale:
     } else if (resMatches && msLeft !== null && msLeft <= 0) setPromo(fallback)
   }, [isPersonal, resMatches, msLeft])
   const promoOn = !!promo
-  const promoUi = PROMO_UI[(locale === "fr" || locale === "es" || locale === "de" ? locale : "en") as PromoLocale]
+  const promoUi = PROMO_UI[(locale === "fr" || locale === "es" || locale === "de" || locale === "nl" ? locale : "en") as PromoLocale]
 
   return (
     <div>

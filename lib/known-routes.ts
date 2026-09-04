@@ -24,7 +24,7 @@ export const KNOWN_TOP_LEVEL: ReadonlySet<string> = new Set([
   // app/[locale]/* — served at the root for the default locale
   "blog", "features", "glossary",
   // locale prefixes
-  "en", "fr", "es", "de",
+  "en", "fr", "es", "de", "nl",
   // app/* route handlers and special files
   "consent", "go", "md",
   // Next.js metadata file conventions that resolve to EXTENSIONLESS routes

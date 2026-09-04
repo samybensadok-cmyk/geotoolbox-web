@@ -12,7 +12,18 @@
  * (`?currency=eur`) and with the `money` template in messages/<locale>.json —
  * a locale listed here must render "{amount} €", not "${amount}".
  */
-export const EUR_LOCALES: ReadonlySet<string> = new Set(["fr", "de"])
+export const EUR_LOCALES: ReadonlySet<string> = new Set(["fr", "de", "nl"])
+
+/**
+ * Euro locales that write the symbol BEFORE the amount ("€ 99"), not after.
+ *
+ * This is NOT cosmetic and NOT a preference: Dutch convention (Taaladvies/Onze
+ * Taal, and every Dutch-native SaaS we checked — moneybird.nl 25/25, mollie.com/nl
+ * 181/181, zero postfix occurrences) puts "€" first with a space, the exact
+ * opposite of French and German ("99 €"). check:pricing only asserts WHICH symbol
+ * a locale renders, never where it sits, so nothing else catches a wrong-side euro.
+ */
+const EUR_PREFIX_LOCALES: ReadonlySet<string> = new Set(["nl"])
 
 export function isEuroLocale(locale: string): boolean {
   return EUR_LOCALES.has(locale)
@@ -29,10 +40,12 @@ export function currencyParam(locale: string): string {
 }
 
 /**
- * Bare price formatter for teaser copy: "99\u00a0€" vs "$99".
+ * Bare price formatter for teaser copy: "99\u00a0€" (fr/de) · "€\u00a099" (nl) · "$99" (en/es).
  * The euro form uses a NON-BREAKING space (DIN 5008 / French typography) so the
  * amount never wraps away from its symbol — matching the existing FR output.
  */
 export function formatPrice(n: number, locale: string): string {
-  return isEuroLocale(locale) ? `${n} €` : `$${n}`
+  if (!isEuroLocale(locale)) return `$${n}`
+  return EUR_PREFIX_LOCALES.has(locale) ? `€ ${n}` : `${n} €`
 }
+
