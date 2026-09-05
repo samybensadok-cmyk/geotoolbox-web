@@ -80,7 +80,7 @@ export const TOPICS: Topic[] = [
       "perplexity", "deepseek", "deepseek-r1", "deepseek-v4", "kimi-ai", "kimi-k2", "kimi-k3",
       "inkling", "inkling-ai", "thinking-machines-lab", "mira-murati",
       "moonshot-ai", "qwen", "qwen3", "qwen3-8-max", "tongyi-qianwen", "alibaba",
-      "glm", "glm-5-2", "zhipu-ai", "z-ai", "openai", "anthropic", "gpt-5-6",
+      "glm", "glm-5-2", "zhipu-ai", "z-ai", "openai", "anthropic", "gpt-5-6", "gpt-6", "astra",
       "copilot", "microsoft-copilot", "copilot-ai", "copilot-seo",
       "copilot-studio", "microsoft-copilot-studio", "copilot-agents",
       "meta-ai", "meta", "llama", "muse-spark", "meta-ai-vs-chatgpt",
