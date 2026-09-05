@@ -17,17 +17,18 @@ This page fixes both problems. Below is the current per-token price for the majo
 
 Providers do not price per token. They price per **million tokens** (written MTok), split into an input rate (everything you send, including the system prompt and history) and an output rate (everything the model writes back). Output is the expensive half, for reasons covered in the next section.
 
-Here is the current rate card. Every figure is per million tokens, standard tier, checked against the provider's own page on 30 August 2026.
+Here is the current rate card. Every figure is per million tokens, standard tier, checked against the provider's own page. The OpenAI and Anthropic rows were re-verified on 5 September 2026 after the GPT-6 Astra and Claude Fable 5.1 launches; the rest were checked on 30 August 2026.
 
 <table>
 <thead>
 <tr><th>Model</th><th>Input / 1M</th><th>Output / 1M</th><th>Max context</th></tr>
 </thead>
 <tbody>
-<tr><td><strong><a href="https://geotoolbox.ai/blog/gpt-6-astra">OpenAI GPT-6 Astra</a></strong></td><td>$10.00</td><td>$50.00</td><td>Not published</td></tr>
+<tr><td><strong><a href="https://geotoolbox.ai/blog/gpt-6-astra">OpenAI GPT-6 Astra</a></strong></td><td>$10.00</td><td>$50.00</td><td>1.05M</td></tr>
 <tr><td><strong>OpenAI GPT-5.6 Sol</strong></td><td>$4.00</td><td>$20.00</td><td>1.05M</td></tr>
 <tr><td><strong>OpenAI GPT-5.6 Terra</strong></td><td>$2.00</td><td>$12.00</td><td>1.05M</td></tr>
 <tr><td><strong>OpenAI GPT-5.6 Luna</strong></td><td>$0.20</td><td>$1.20</td><td>1.05M</td></tr>
+<tr><td><strong><a href="https://geotoolbox.ai/blog/claude-fable-5-1">Anthropic Claude Fable 5.1</a></strong></td><td>$10.00</td><td>$50.00</td><td>1M</td></tr>
 <tr><td><strong>Anthropic Claude Opus 5</strong></td><td>$5.00</td><td>$25.00</td><td>1M</td></tr>
 <tr><td><strong>Anthropic Claude Sonnet 5</strong></td><td>$2.00</td><td>$10.00</td><td>1M</td></tr>
 <tr><td><strong>Anthropic Claude Haiku 4.5</strong></td><td>$1.00</td><td>$5.00</td><td>200K</td></tr>
@@ -44,13 +45,15 @@ Here is the current rate card. Every figure is per million tokens, standard tier
 </tbody>
 </table>
 
-A pair of numbers anchors the table. The floor is Z.ai GLM-5.3 Flash and DeepSeek V4 Flash, from about $0.50 to $0.66 per million on output. The ceiling is [Claude Opus 5](https://geotoolbox.ai/blog/claude-pricing) at $25 and GPT-5.6 Sol at $20. That gap, from $0.50 to $25 on output alone, makes **model choice usually the biggest single lever on an AI budget**, ahead of the optimizations below.
+A pair of numbers anchors the table. The floor is Z.ai GLM-5.3 Flash and DeepSeek V4 Flash, from about $0.50 to $0.66 per million on output. The ceiling is the two September 2026 frontier models, [GPT-6 Astra](https://geotoolbox.ai/blog/gpt-6-astra) and [Claude Fable 5.1](https://geotoolbox.ai/blog/claude-fable-5-1), both at $50 on output. [Claude Opus 5](https://geotoolbox.ai/blog/claude-pricing) at $25 and GPT-5.6 Sol at $20 now sit a tier below.
+
+That gap, from $0.50 to $50 on output alone, is a hundred to one. It makes **model choice usually the biggest single lever on an AI budget**, ahead of the optimizations below.
 
 A few rows carry an asterisk that the table cannot show. DeepSeek's figures are its off-peak rate; for several hours a day they double. GPT-5.6 Sol's $4 and $20 are a promotional cut, not the standing price. Anthropic's Sonnet 5 at $2 was almost $3. Those moving parts are the reason a flat table is never the whole answer, and we come back to them below. (Alibaba's Qwen3.8-Max is reportedly close to Grok 4.6's tier but is left off the table because we could not verify its dollar rate on an English vendor page.)
 
 <figure className="not-prose my-8">
   <BlogImage src="/blog/ai-token-cost/output-cost-per-1m.png" alt="Horizontal bar chart, drawn to scale, of API output price per million tokens in August 2026, from cheapest to priciest: GLM-5.3 Flash $0.50, DeepSeek V4 Flash $0.66, Mistral Large 3 $1.50, Gemini 2.5 Flash $2.50, Grok 4.6 $6, Gemini 3.1 Pro $12, Kimi K3 $15, GPT-5.6 Sol $20 on its promotional rate, and Claude Opus 5 $25." w="2188" h="1520" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
-  <figcaption className="mt-3 text-center text-sm text-gray-500">Output tokens per 1M, to scale. GLM-5.3 Flash is shown at list price, DeepSeek at its off-peak rate (it doubles during peak hours), and GPT-5.6 Sol at its promotional rate (guaranteed through 21 November 2026).</figcaption>
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Output tokens per 1M, to scale. GLM-5.3 Flash is shown at list price, DeepSeek at its off-peak rate (it doubles during peak hours), and GPT-5.6 Sol at its promotional rate (guaranteed through 21 November 2026). The chart reflects the 30 August rate card, so the two $50 models released in early September, GPT-6 Astra and Claude Fable 5.1, are not shown.</figcaption>
 </figure>
 
 ## Why Output Tokens Cost More Than Input
@@ -63,7 +66,9 @@ This matters most in agent and coding workloads, where the loop hides the cost. 
 
 ## OpenAI API Pricing
 
-OpenAI is the most-searched of these rate cards, so it deserves its own read. The current GPT-5.6 family splits into a flagship, a mid, and a budget tier, all sharing a context window above a million tokens. Sol is the flagship at $4 input and $20 output. Terra sits in the middle at $2 and $12. Luna is the budget tier at $0.20 and $1.20, which undercuts almost everything except DeepSeek.
+OpenAI is the most-searched of these rate cards, so it deserves its own read. At the top sits [GPT-6 Astra](https://geotoolbox.ai/blog/gpt-6-astra), released 3 September 2026 at $10 input and $50 output. That is exactly 2.5 times GPT-5.6 Sol in every cell of OpenAI's table, and prompts above 272,000 input tokens move to a long-context band at $20 and $75.
+
+Below it, the GPT-5.6 family splits into a working flagship, a mid, and a budget tier, all sharing a context window above a million tokens. Sol is the working tier under Astra at $4 input and $20 output. Terra sits in the middle at $2 and $12. Luna is the budget tier at $0.20 and $1.20, which undercuts almost everything except DeepSeek.
 
 The catch on Sol is that $4 and $20 is a **promotional rate**, cut from $5 and $30 in late August 2026. OpenAI has guaranteed the promo through 21 November 2026 and has not said what follows. Plan on it if you like, but know it can revert then. This is also why comparison pages disagree about OpenAI: many still quote the old $5 and $30, and some quote a batch rate as if it were standard. If a table shows Sol at $5/$30 or $2/$10, it is reading a different week or a different tier.
 
@@ -116,6 +121,7 @@ Work an example. Say a retrieval support assistant handles 10,000 conversations 
 <tr><th>Model</th><th>Monthly cost</th></tr>
 </thead>
 <tbody>
+<tr><td><strong>GPT-6 Astra</strong></td><td>$6,900</td></tr>
 <tr><td><strong>GPT-5.6 Sol</strong> (promo)</td><td>$2,760</td></tr>
 <tr><td><strong>Claude Sonnet 5</strong></td><td>$1,380</td></tr>
 <tr><td><strong>Claude Haiku 4.5</strong></td><td>$690</td></tr>
@@ -126,7 +132,7 @@ Work an example. Say a retrieval support assistant handles 10,000 conversations 
 </tbody>
 </table>
 
-Same traffic, a spread of more than twenty times, decided entirely by which model answers. That is the case for routing: send the bulk of that volume to the bottom of the table and reserve Sol or Opus for the requests that genuinely need them. A couple more habits keep the estimate honest. Add a comfortable buffer for context growth and retries, and re-run the math after every price change, because the cheapest row moves. This math covers text generation only: embeddings for a retrieval index, fine-tuning, and image or audio tokens bill separately, though for most text apps generation is the dominant cost.
+Same traffic, a spread of more than sixty times, decided entirely by which model answers. That is the case for routing: send the bulk of that volume to the bottom of the table and reserve Astra, Sol or Opus for the requests that genuinely need them. A couple more habits keep the estimate honest. Add a comfortable buffer for context growth and retries, and re-run the math after every price change, because the cheapest row moves. This math covers text generation only: embeddings for a retrieval index, fine-tuning, and image or audio tokens bill separately, though for most text apps generation is the dominant cost.
 
 ## Why Every Price You Find Is Already Stale
 
@@ -168,7 +174,7 @@ Only as a starting point. Different models tokenize the same text into different
 
 ## Sources
 
-- GPT-5.6 API pricing (Sol, Terra, Luna) - OpenAI - `developers.openai.com/api/docs/pricing`
+- GPT-6 Astra and GPT-5.6 API pricing - OpenAI, verified 5 September 2026 - `developers.openai.com/api/docs/pricing`
 - Claude models and pricing - Anthropic - `platform.claude.com`
 - Gemini API pricing - Google - `ai.google.dev/gemini-api/docs/pricing`
 - DeepSeek API pricing (peak/off-peak) - DeepSeek - `api-docs.deepseek.com/quick_start/pricing`
