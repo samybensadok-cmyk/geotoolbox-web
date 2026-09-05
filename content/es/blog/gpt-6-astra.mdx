@@ -1,0 +1,430 @@
+---
+title: "GPT-6 Astra: precio, benchmarks y la trampa del 99,9 %"
+description: "OpenAI lanzó GPT-6 Astra el 3 de septiembre de 2026. Precios verificados, quién tiene acceso hoy y por qué su puntuación de 99,9 % no significa lo que parece."
+date: "2026-09-06"
+updated: "2026-09-06"
+recheckBy: "2026-10-06"   # volátil: el acceso a Plus cambió dos veces en 48h, Artificial Analysis ya reversionó su Intelligence Index una vez (v4.1.1 -> v4.2) y el veredicto cambió con ello, el precio promocional de GPT-5.6 Sol (4 $/20 $) solo está garantizado "al menos hasta el 21 de noviembre de 2026", y la lista de países admitidos de OpenAI puede cambiar. Revisar en esas fechas: developers.openai.com/api/docs/models/gpt-6-astra.md (la versión .md se muestra cuando la página HTML no carga), la página de disponibilidad de los planes de ChatGPT, y si la puntuación de 99,9 % en ARC-AGI-3 se mantiene tras haber cambiado ya tres veces en tres días.
+author: "Samy BEN SADOK"
+tags: ["gpt-6", "astra", "openai", "chatgpt", "ai-visibility", "llm", "guide"]
+draft: false
+locale: "es"
+donorSlug: "gpt-6-astra"
+donorCommit: "2456123"
+noindex: false
+---
+
+Dos días después de que OpenAI lanzara GPT-6 Astra, le hicimos las mismas tres preguntas a cuatro asistentes de IA, en español: qué es, cuándo salió y cuánto cuesta.
+
+Sin búsqueda web, dos de los tres que permiten desactivarla negaron directamente que el modelo existiera. [Gemini](https://geotoolbox.ai/blog/what-is-gemini) (`gemini-3.1-pro-preview`) fue tajante: **«GPT-6 Astra no existe»**, y lo achacó a una confusión con el Project Astra de Google. ChatGPT (`gpt-5.6-sol`) respondió en la misma línea, sin inventar cifras. Claude (`claude-opus-5`) fue el más cauteloso: prefirió admitir que no lo sabía antes que arriesgar un dato falso. Más abajo detallamos cómo llegó cada uno a esa respuesta.
+
+El modelo, en cambio, era completamente real, ya en despliegue, y ya se facturaba a clientes empresariales.
+
+Lo que sigue es lo que OpenAI ha publicado, lo que evaluadores independientes han medido, y los puntos en los que ambas cosas no coinciden.
+
+Si solo lees una sección, que sea la de la clasificación en ciberseguridad. Astra es el primer modelo que OpenAI ha clasificado en el nivel **Critical** por su capacidad cibernética.
+
+## Lo que debes saber
+
+- **GPT-6 Astra es el modelo más avanzado de OpenAI, lanzado el 3 de septiembre de 2026** en versión preliminar de acceso limitado, y disponible en los planes de pago de ChatGPT desde el 4 de septiembre: Pro, Business y Enterprise primero, Plus solo dentro de Work y Codex.
+- **La puntuación de 99,9 % en ARC-AGI-3 depende por completo del harness (el andamiaje de evaluación) que se use**: con el mismo esfuerzo de razonamiento, el mismo modelo obtiene 62,7 % con el harness neutral de ARC Prize frente a 98,6 % con el adaptador del proveedor a esfuerzo máximo, y 54,8 % frente a 99,9 % a esfuerzo alto.
+- **Precio de la API: 10 $ por millón de tokens de entrada, 50 $ de salida** en contexto corto (2,5 veces el precio de GPT-5.6 Sol). Antes de preguntarte en qué plan lo tienes, comprueba si tu país está en la lista de OpenAI: España y otros dieciséis países hispanohablantes sí están; Cuba y Venezuela, no.
+- **Astra es el primer modelo que OpenAI clasifica en el nivel «Critical» en ciberseguridad**, y la AEPD ya había publicado, siete meses antes de este lanzamiento, una guía específica sobre IA agéntica y protección de datos.
+- **Los tres asistentes de IA consultados sin búsqueda web en español señalaron el Project Astra de Google, sin que se les preguntara por él**, y dos de ellos negaron directamente que Astra existiera: la prueba de que un producto ya facturado puede seguir siendo invisible para un modelo entrenado antes de su salida.
+
+## ¿Qué es GPT-6 Astra?
+
+GPT-6 Astra es el [gran modelo de lenguaje](https://geotoolbox.ai/glossary/large-language-model) más avanzado de OpenAI, lanzado el 3 de septiembre de 2026 como sucesor de GPT-5.6 Sol. Los desarrolladores acceden a él en la API bajo el nombre `gpt-6-astra`.
+
+La ficha técnica publicada por OpenAI incluye: una **ventana de contexto de 1.050.000 tokens**, con un tope de entrada de 922.000 tokens, un máximo de **128.000 tokens de salida**, texto e imagen como entrada, texto como salida, y un esfuerzo de razonamiento ajustable entre bajo, medio, alto, xhigh y máximo. La fecha de corte de conocimiento es el **30 de abril de 2026**, cuatro meses antes de su lanzamiento. Quédate con esa fecha: vuelve a aparecer al final de este artículo.
+
+Una aclaración sobre cómo encontrar esa página, porque hizo fallar a tres de nuestras herramientas de extracción. `developers.openai.com/api/docs/models/gpt-6-astra` se muestra como una página JavaScript vacía y no devuelve nada útil a una solicitud normal. Si añades `.md` a la URL, OpenAI sirve la ficha completa en markdown puro. La propia documentación lo menciona, y es el truco más útil para quien quiera comprobar de primera mano las cifras de OpenAI.
+
+El objetivo de diseño no es mejorar la conversación. OpenAI presenta Astra como un modelo pensado para tareas [agénticas](https://geotoolbox.ai/blog/agentic-ai) de largo alcance, que se extienden por varias aplicaciones: leer una pantalla, manejar una interfaz, completar una tarea de varios pasos sin que una persona apruebe cada movimiento. Los propios ejemplos de OpenAI: rellenar una declaración de impuestos, construir escenas de videojuegos, pedir comida, buscar empleo.
+
+OpenAI califica a Astra como «el modelo más inteligente y alineado del mundo». Es la frase de la empresa, no un resultado medido, y buena parte de este artículo trata precisamente sobre la distancia entre ambas cosas.
+
+Una precisión, porque dos de nuestros asistentes fuera de línea se equivocaron en esto: no se trata del **Project Astra** de Google DeepMind, el asistente multimodal presentado en Google I/O en 2024. Misma palabra, empresa distinta, producto distinto.
+
+Si el marco [agéntico](https://geotoolbox.ai/blog/agentic-ai) te resulta nuevo, digamos simplemente que Astra es un [modelo de razonamiento](https://geotoolbox.ai/glossary/reasoning-model) con mucha más autonomía que la [familia GPT-5.6](https://geotoolbox.ai/blog/gpt-5-6) a la que sustituye.
+
+## Cronología del lanzamiento de GPT-6 Astra
+
+GPT-6 Astra salió el 3 de septiembre de 2026 en versión preliminar de acceso limitado, y llegó a los planes de pago de ChatGPT a partir del 4 de septiembre.
+
+Reducir esto a una sola fecha de lanzamiento es el primer error que comete la mayoría de los artículos. El despliegue se extendió durante cuatro días, y cada fuente lo fijó en un momento distinto.
+
+<table>
+  <thead>
+    <tr><th>Fecha</th><th>Qué ocurrió</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>1 de septiembre de 2026</td><td>OpenAI publica <strong><a href="https://openai.com/index/path-to-astra/">Path to Astra</a></strong>, confirmando que el modelo alcanza el umbral crítico en ciberseguridad y que el acceso a funciones cibernéticas avanzadas estará restringido en el momento del lanzamiento</td></tr>
+    <tr><td>3 de septiembre de 2026</td><td>Se publican el anuncio y la ficha de seguridad (system card). Astra sale en <strong>versión preliminar de acceso limitado</strong> para socios de confianza y organizaciones del programa Daybreak</td></tr>
+    <tr><td>3 de septiembre de 2026</td><td>Disponibilidad general en <strong>Microsoft Foundry</strong> (Azure). Artificial Analysis publica su primer benchmark independiente</td></tr>
+    <tr><td>4 de septiembre de 2026</td><td><strong>Lanzamiento público</strong> para los planes de pago de ChatGPT. Altman confirma Pro, Enterprise y Business Premium dentro de Work y Codex, además de la API, a primera hora, y anuncia horas después «ya disponible para todos los usuarios de Plus y Business»</td></tr>
+    <tr><td>4 de septiembre de 2026</td><td>Disponibilidad general en <strong>GitHub Copilot</strong>. Artificial Analysis publica el Intelligence Index v4.2, que cambia el veredicto independiente (ver más abajo)</td></tr>
+  </tbody>
+</table>
+
+VentureBeat y Microsoft, que publicaron ambos el 3 de septiembre, describen a Astra como lanzado ese día. Wikipedia y PCMag describen una versión preliminar el 3 de septiembre seguida de un lanzamiento público el 4. Las dos lecturas son defendibles, lo que explica por qué la cronología escalonada de arriba es más útil que una sola fecha.
+
+## Quién puede usar GPT-6 Astra ahora mismo
+
+Es la primera pregunta del bloque de «Otras preguntas» de Google sobre este modelo, y es donde la lista anunciada y la lista realmente disponible no coinciden.
+
+<table>
+  <thead>
+    <tr><th>Plataforma</th><th>Estado a 6 de septiembre de 2026</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>ChatGPT Free</td><td>No. OpenAI solo nombra Plus, Pro, Business y Enterprise en su comunicado de disponibilidad</td></tr>
+    <tr><td>ChatGPT Go</td><td>No. El texto de disponibilidad de OpenAI solo nombra Plus, Pro, Business y Enterprise; Go no aparece en él</td></tr>
+    <tr><td>ChatGPT Plus</td><td><strong>Solo dentro de Work y Codex, no en el chat normal.</strong> Sam Altman publicó «ya disponible para todos los usuarios de Plus y Business» la noche del 4 de septiembre, y el centro de ayuda de OpenAI indica que los planes Plus incluyen Astra «en ChatGPT Work y Codex, a medida que se despliega». Usuarios de Plus informan de que sigue sin aparecer en el selector de modelo habitual</td></tr>
+    <tr><td>ChatGPT Pro, Business, Enterprise</td><td>Disponible, incluido en el chat normal. Estos planes también acceden a <strong>GPT-6 Astra Pro</strong></td></tr>
+    <tr><td>Espacios de trabajo Enterprise</td><td>Disponible, pero <strong>desactivado por defecto al lanzamiento</strong>. Un administrador debe activarlo</td></tr>
+    <tr><td>API de OpenAI</td><td>Disponible bajo el nombre <code>gpt-6-astra</code></td></tr>
+    <tr><td>Microsoft Foundry (Azure)</td><td>Disponibilidad general, Standard y Provisioned Throughput, zonas Global y US Data Zone</td></tr>
+    <tr><td>AWS Bedrock</td><td>Anunciado</td></tr>
+    <tr><td>GitHub Copilot</td><td>Disponibilidad general solo para <strong>Pro+, Max, Business y Enterprise</strong>. Despliegue progresivo, controlado por administradores mediante una política de modelo</td></tr>
+  </tbody>
+</table>
+
+La fila de Plus es la que más confunde, y fue la queja más repetida en los hilos de lanzamiento que leímos. A los suscriptores de Plus se les dijo que Astra ya había llegado, y luego no lo encontraron en su selector de modelo habitual, porque en Plus es, por ahora, un modelo de ChatGPT Work y Codex, no del chat normal. Pro, Business y Enterprise sí lo tienen en el chat.
+
+Dentro de ChatGPT no pagas la tarifa de la API en ningún caso: Astra consume la cuota de tu plan, y OpenAI indica que particulares y empresas pueden comprar créditos adicionales. Nuestra [guía de precios de ChatGPT](https://geotoolbox.ai/blog/chatgpt-pricing) detalla qué cuesta cada plan y qué significan sus cuotas en la práctica.
+
+<Callout type="note">
+El artículo del centro de ayuda de OpenAI sobre este tema está bloqueado por Cloudflare para todas las herramientas que probamos, por lo que no pudimos leerlo directamente. La fila de Plus de arriba se cita a partir del texto de esa página indexado por Google a 5 de septiembre, contrastada con las publicaciones de Altman, los hilos de lanzamiento y los registros de cambios de GitHub y Azure. El acceso a los planes cambió dos veces en 48 horas: comprueba tu propio selector de modelo.
+</Callout>
+
+## Precio de GPT-6 Astra
+
+Verificado en vivo en [la página de precios de OpenAI](https://developers.openai.com/api/docs/pricing) el 5 de septiembre de 2026. Todas las cifras están en dólares estadounidenses por millón de tokens, nivel de procesamiento estándar.
+
+<table>
+  <thead>
+    <tr><th>Banda de contexto</th><th>Entrada</th><th>Entrada en caché</th><th>Escritura en caché</th><th>Salida</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Contexto corto</td><td>10,00 $</td><td>1,00 $</td><td>12,50 $</td><td>50,00 $</td></tr>
+    <tr><td>Contexto largo</td><td>20,00 $</td><td>2,00 $</td><td>25,00 $</td><td>75,00 $</td></tr>
+  </tbody>
+</table>
+
+El procesamiento por lotes (Batch) funciona al 50 % de estas tarifas. El **modo rápido** (Fast mode, antes procesamiento prioritario) cuesta el doble, y no está disponible para Astra con residencia de datos en la UE. Sobre la velocidad que ofrece, las propias páginas de OpenAI se contradicen: el anuncio de Astra dice que el modo rápido entrega hasta 2 veces la velocidad del procesamiento estándar para Astra en concreto, mientras que la guía del modo rápido anuncia hasta 2,5 veces para el nivel en general, y solo nombra a GPT-5.6 Sol con esa cifra. OpenAI no publica ninguna garantía de latencia para Astra en modo rápido.
+
+OpenAI cobra un recargo del 10 % en los endpoints de procesamiento regional (residencia de datos) para modelos lanzados a partir del 5 de marzo de 2026. Aplicado a los precios de Astra (10,00 $ y 50,00 $), eso da 11,00 $ y 55,00 $ en un endpoint de residencia de datos. Este recargo se aplica a cualquier punto de residencia de datos, no solo europeo: Microsoft Foundry publica exactamente el mismo 10 % sobre su zona Standard Data Zone (EE. UU.) frente a su zona Standard Global (10,00 $/1,00 $/12,50 $/50,00 $ en contexto corto, 20,00 $/2,00 $/25,00 $/75,00 $ en largo, contra 11,00 $/1,10 $/13,75 $/55,00 $ y 22,00 $/2,20 $/27,50 $/82,50 $). En la API de OpenAI, Astra sí está disponible en la región Europa (EEE + Suiza), y es ahí donde aplica el recargo y la ausencia de modo rápido. Lo que no publica Foundry es una zona europea para Astra: al lanzamiento solo existen las zonas Global y de EE. UU. Solo te concierne el recargo si contratas un endpoint regional; en el endpoint global estándar pagas la tarifa de la tabla de arriba, sea cual sea tu país.
+
+La comparación que importa: GPT-5.6 Sol cuesta 4,00 $ en entrada y 20,00 $ en salida. Astra es **2,5 veces más caro en cada celda de la tabla**, entrada, salida, entrada en caché, escritura en caché, contexto corto y largo. Artificial Analysis lo describe de la misma forma: «2,5 veces los precios actuales de GPT-5.6 Sol en todas las categorías». El precio de Sol es en sí mismo promocional, garantizado solo «al menos hasta el 21 de noviembre de 2026».
+
+### Lo que cuesta en una tarea real
+
+Nadie, en la cobertura de lanzamiento, hace este cálculo, así que aquí está. Toma una tarea agéntica con 50.000 tokens de entrada y 8.000 de salida, contexto corto, nivel estándar:
+
+- **GPT-6 Astra:** 0,50 $ de entrada + 0,40 $ de salida = **0,90 $**
+- **GPT-5.6 Sol:** 0,20 $ de entrada + 0,16 $ de salida = **0,36 $**
+
+Dos veces y media, tal como se anuncia. Sin embargo, el precio por token y el precio por tarea no son la misma cifra.
+
+Artificial Analysis midió que Astra usa alrededor de un 10 % menos de tokens de salida que Sol a esfuerzo máximo en su Intelligence Index, y cerca de un tercio de los tokens de Sol en el harness Codex de su Coding Agent Index.
+
+Su propia medición de costo por tarea sitúa a Astra un 75 % más caro por tarea en el Intelligence Index a esfuerzo máximo, y prácticamente al mismo nivel que Sol por tarea en el Coding Agent Index, con una puntuación dos puntos superior. Es su medición, no un múltiplo que se pueda deducir de los precios de catálogo.
+
+La página de precios nunca aclara dónde termina el contexto corto y dónde empieza el largo, pero la ficha del modelo sí lo hace: **a partir de 272.000 tokens de entrada, toda la solicitud se factura al doble de la tarifa de entrada y caché, y 1,5 veces la de salida**. Esta sola regla reproduce toda la fila de «contexto largo», y es la cifra que hay que retener para calcular un presupuesto de API. Las escrituras en caché se facturan a 1,25 veces la tarifa de entrada sin caché, y Flex, como Batch, funciona al 50 %. Para una visión más amplia del [costo en tokens](https://geotoolbox.ai/blog/ai-token-cost) según el proveedor, y lo que realmente cuesta una [ventana de contexto](https://geotoolbox.ai/glossary/context-window), estas dos lecturas complementan bien este artículo.
+
+### ¿Dónde puedes usarlo, y cuánto cuesta fuera de la API?
+
+Antes de preguntarte en qué plan te llega Astra, conviene una comprobación previa: OpenAI publica una lista de países y territorios admitidos para sus servicios (208 entradas, consultada el 5 de septiembre de 2026). España y dieciséis países hispanohablantes de América están en ella: Argentina, Bolivia, Chile, Colombia, Costa Rica, Ecuador, El Salvador, Guatemala, Honduras, México, Nicaragua, Panamá, Paraguay, Perú, República Dominicana y Uruguay. **Cuba y Venezuela, no.** La propia página advierte que acceder a los servicios desde fuera de esa lista «puede dar lugar al bloqueo o la suspensión de tu cuenta» (traducción nuestra de «may result in your account being blocked or suspended»). Es la lista de la documentación para desarrolladores de OpenAI, así que conviene contrastarla con el centro de ayuda de ChatGPT para uso particular, que no pudimos verificar por separado.
+
+Sobre lo que cuesta fuera de la API: los precios que publica OpenAI para ChatGPT son en dólares. Según su propio anuncio de ChatGPT Go («Introducing ChatGPT Go», publicado el 16 de enero de 2026 y aún vigente el 5 de septiembre de 2026), los precios para particulares que publica son **Go a 8 $/mes** y **Plus a 20 $/mes**, con una salvedad de la propia empresa: «US price displayed. Go pricing is localized in some markets»: es decir, el precio mostrado es el estadounidense, y la cifra que verás en España o en tu país puede no ser esa conversión directa. Go, además, no incluye Astra: el comunicado de disponibilidad de OpenAI solo nombra Plus, Pro, Business y Enterprise.
+
+## Benchmarks: lo que publicó OpenAI y lo que midieron los independientes
+
+Aquí es donde un artículo explicativo sobre el lanzamiento demuestra su valor. Son dos categorías de cifras distintas, y la mayoría de la cobertura las mete en una sola tabla.
+
+### Las cifras de OpenAI
+
+Autodeclaradas, leídas en [la página de anuncio](https://openai.com/index/gpt-6-astra/) el 5 de septiembre. Varias de estas celdas cambiaron en los días posteriores al lanzamiento, lo que se cuenta más abajo, en «Las cifras que cambiaron tras el lanzamiento».
+
+<table>
+  <thead>
+    <tr><th>Benchmark</th><th>GPT-6 Astra</th><th>Comparación</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Terminal-Bench 4.0 (código)</td><td>57,9 %</td><td>GPT-5.6 Sol 37,3 %, Claude Fable 5.1 55,8 %</td></tr>
+    <tr><td>DeepSWE v1.1 (código)</td><td>74,1 %</td><td>GPT-5.6 Sol 72,7 %</td></tr>
+    <tr><td>OSWorld 2.0 (control del sistema operativo)</td><td>72,6 %</td><td>GPT-5.6 Sol 65,7 %, Claude Opus 5 70,2 %</td></tr>
+    <tr><td>Agents' Last Exam</td><td>59,3 %</td><td>GPT-5.6 Sol 53,6 %, Claude Opus 5 55,5 %</td></tr>
+    <tr><td>ScreenSpot-Pro (sin herramientas)</td><td>92,7 %</td><td>GPT-5.6 Sol 76,9 %, Claude Fable 5 87,3 % (Mythos, ver más abajo)</td></tr>
+    <tr><td>FrontierMath Tier 4 (v2)</td><td>97,6 %</td><td>GPT-5.6 Sol 83,0 %, Claude Fable 5.1 87,8 %</td></tr>
+    <tr><td>MRCR v2, 8 agujas, 256K-512K</td><td>100,0 %</td><td>GPT-5.6 Sol 91,5 %</td></tr>
+    <tr><td>HealthBench Professional</td><td>63,4</td><td>GPT-5.6 Sol 60,5</td></tr>
+  </tbody>
+</table>
+
+Dos notas sobre esta tabla. El texto de OpenAI redondea su propia puntuación de FrontierMath a «98 %» mientras que la tabla dice 97,6 %. Y la cifra de Claude en la fila de ScreenSpot-Pro no es la de Fable 5 tal cual: la nota 17 de OpenAI aclara que «para ScreenSpot-Pro y ExploitGym, las puntuaciones de Fable que informamos provienen de Mythos, que es Fable con menos salvaguardas». Una puntuación obtenida con las salvaguardas de un competidor relajadas no es la puntuación que daría el producto tal como se entrega. Las dos diferencias son pequeñas, y las dos caen justo en el terreno de esta sección: en qué cifras se puede confiar.
+
+### La trampa del harness
+
+La cifra que más circula es **99,9 % en ARC-AGI-3**. Es real. También es una cifra que no deberías comparar con nada más.
+
+ARC Prize, el organismo independiente que ejecuta este benchmark, probó a Astra con dos harness y publicó ambos resultados:
+
+<table>
+  <thead>
+    <tr><th>Harness</th><th>Esfuerzo de razonamiento</th><th>Puntuación</th><th>Costo</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>ARC Prize <strong>Standard</strong> (neutral, independiente del proveedor)</td><td>máximo</td><td>62,7 %</td><td>26.098 $</td></tr>
+    <tr><td>ARC Prize <strong>Standard</strong></td><td>alto</td><td>54,8 %</td><td>40.705 $</td></tr>
+    <tr><td>Adaptador del proveedor (OpenAI)</td><td>máximo</td><td>98,6 %</td><td>17.332 $</td></tr>
+    <tr><td>Adaptador del proveedor (OpenAI)</td><td>alto</td><td>99,9 %</td><td>18.817 $</td></tr>
+  </tbody>
+</table>
+
+[ARC Prize](https://arcprize.org/blog/astra) define la diferencia por sí mismo. El harness Standard «permite a un modelo conservar las notas que elige mantener a lo largo del entorno». El adaptador del proveedor «preserva un estado de razonamiento opaco entre solicitudes y usa compactación para conversaciones más largas, permitiendo al modelo reutilizar trabajo previo».
+
+Las dos cifras más citadas usan esfuerzos de razonamiento distintos, de modo que tomamos la tabla completa de ARC Prize para fijar el esfuerzo y variar solo el harness. A esfuerzo **máximo**, el mismo modelo obtiene 62,7 % con el harness neutral y 98,6 % con el adaptador. A esfuerzo **alto** es 54,8 % frente a 99,9 %. Fija el modelo y el esfuerzo, cambia solo el harness, y la puntuación se mueve entre 36 y 45 puntos.
+
+El adaptador permite a Astra conservar un estado opaco entre llamadas de una forma que la interfaz neutral no permite, y ARC Prize califica su harness Standard como el que ofrece «una comparación coherente, comparable entre proveedores».
+
+Esa capacidad de conservar estado es un resultado de ingeniería real, no un truco. De las 167 partidas resueltas por los dos harness, ARC Prize informa de que las ejecuciones con el adaptador fueron unas 3,66 veces más rápidas y usaron un 49 % menos de tokens. En cualquier caso, las dos puntuaciones son el estado del arte.
+
+Lo que esta cifra no es, es una puntuación de modelo comparable a cualquier otra. Si ves 99,9 % citado sin decir qué harness se usó, estás leyendo un resultado de modelo-más-andamiaje presentado como un resultado de modelo puro.
+
+### Las cifras independientes
+
+[Artificial Analysis](https://artificialanalysis.ai/articles/benchmarking-gpt-6-astra) evaluó a Astra el mismo día del lanzamiento, y [republicó su índice](https://artificialanalysis.ai/articles/artificial-analysis-intelligence-index-v4-2) al día siguiente, con un veredicto distinto.
+
+<table>
+  <thead>
+    <tr><th>Medición</th><th>Resultado</th><th>Fecha</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Intelligence Index v4.1.1</td><td>Astra <strong>61</strong>, GPT-5.6 Sol <strong>61</strong>, Claude Fable 5.1 <strong>66</strong></td><td>3 sept.</td></tr>
+    <tr><td>Intelligence Index v4.2</td><td>Astra segundo tras Fable 5.1, con una <strong>subida de 4 puntos</strong> sobre Sol</td><td>4 sept.</td></tr>
+    <tr><td>Coding Agent Index</td><td>Astra 67 (Codex), Fable 5.1 70 (Claude Code)</td><td>3 sept.</td></tr>
+    <tr><td>Tasa de alucinación AA-Omniscience</td><td>del 92 % al <strong>51 %</strong> a esfuerzo máximo, con 4 puntos más de precisión</td><td>3 sept.</td></tr>
+    <tr><td>AA-Briefcase (trabajo de conocimiento a largo plazo)</td><td>Astra unos 80 Elo por encima de Sol, reevaluado a unos 85 en la versión v4.2</td><td>3 y 4 sept.</td></tr>
+    <tr><td>GDPval-AA v2 (tareas de valor económico)</td><td>Astra <strong>por debajo</strong>, unos 80 Elo menos</td><td>3 sept.</td></tr>
+    <tr><td>GDP.pdf (Surge AI, 4.592 páginas)</td><td>Astra <strong>33,2 %</strong>, Sol 28,2 %, Fable 5.1 26,2 %</td><td>4 sept.</td></tr>
+  </tbody>
+</table>
+
+Lee estas dos filas del índice juntas. El 3 de septiembre, el resumen independiente honesto era «mismo resultado que su predecesor, a 2,5 veces el precio».
+
+El 4 de septiembre el índice cambió (la v4.2 añade una evaluación de trabajo de conocimiento agéntico y un conjunto de razonamiento documental de 4.592 páginas, retira GPQA Diamond por saturado, y duplica el peso de los conjuntos de prueba privados no publicados), y el resumen correcto pasó a ser «una subida de cuatro puntos, segundo tras Fable 5.1». Quien siga citando la lectura de «mismo resultado» tiene un día de retraso. Quien cite la subida de cuatro puntos sin decir qué versión del índice la produjo comete el mismo error, en sentido contrario.
+
+Astra también retrocedió entre 2 y 3 puntos en varias evaluaciones de la ronda del 3 de septiembre, incluidas atención al cliente, código científico y razonamiento en contexto largo.
+
+### Las cifras que cambiaron tras el lanzamiento
+
+[Fortune](https://fortune.com/2026/09/04/openai-quietly-boosts-some-of-astras-evaluation-metrics-amid-rare-delay-in-publication-of-the-modeblog-post-announcement/), basándose en capturas de Internet Archive de la propia página de anuncio de OpenAI, informó de que varias cifras publicadas cambiaron en las 48 horas siguientes al lanzamiento:
+
+- Tasa de alucinación de Astra: 4,2 %, luego 2 %, y de vuelta a 4,2 %
+- La cifra de comparación de ExploitBench de GPT-5.6 Sol: 5,5 %, luego 11,5 %. Fortune informa de que OpenAI dijo estar estudiando volver a 5,5 %, ya que el resultado de 11,5 % refleja un nivel de razonamiento que no está disponible comercialmente para Sol
+- La cifra de FrontierMath Tier 4 de Claude Fable 5.1, en la columna de comparación de OpenAI: 87,8 %, luego 78 %, luego 83 %
+- La cifra estrella de ARC-AGI-3 del propio Astra: 98,6 % en el borrador previo bajo embargo, luego 99,99 % en la publicación, y 99,9 % en la página en vivo hoy. Tres valores para un mismo benchmark en tres días
+
+La respuesta de OpenAI, citada por Fortune: «Nos importa mucho que las evaluaciones sean correctas. La mayoría de las evaluaciones tienen un margen de ruido de unos pocos puntos porcentuales [...] hicimos correcciones para que las cifras reflejen nuestra mejor estimación del rendimiento disponible del modelo».
+
+Es una explicación razonable. Ahora bien, también es una razón para tratar la tabla comparativa de cualquier proveedor como un punto de partida, no como un hallazgo, sobre todo las columnas que describen el modelo de un competidor.
+
+Releímos la página en vivo el 5 de septiembre para ver dónde habían quedado las cifras. Ese día: la tasa de alucinación había vuelto a 4,2 %, la cifra de ExploitBench de Sol había vuelto a 5,5 % con una nota nueva que explica que esa cifra es un artefacto del límite de 300 turnos del benchmark y que el mismo modelo alcanza 11,5 % con menos límites, la cifra estrella de ARC-AGI-3 mostraba 99,9 % en lugar del 99,99 % que registró Fortune, y la cifra de FrontierMath Tier 4 de Fable 5.1 mostraba de nuevo 87,8 %, su valor original, frente al 83 %, el último valor que registró Fortune.
+
+Así que las correcciones fueron en ambos sentidos, y OpenAI mostró sus cálculos, que es la forma correcta de hacerlo. Ocurrió dos días después de la cobertura que citaba las cifras intermedias, que es la parte que conviene recordar.
+
+### Lo que aún no se ha medido
+
+A 5 de septiembre de 2026 no encontramos resultados verificados de Astra en LMArena, SWE-bench Verified, Aider ni LiveBench. Un profesional, Pawel Huryn, publicó una prueba práctica sobre 105 errores ocultos en dos repositorios reales: Astra 48, Fable 5.1 43, Sol 42, Gemini 3.8 Flash 20. Es el experimento de una sola persona, con cifras reales, útil como contexto y no como prueba.
+
+## GPT-6 Astra frente a Claude Fable 5.1
+
+Estos dos modelos salieron la misma semana y tienen exactamente el mismo precio de catálogo, lo que simplifica un eje de la comparación. Los demás no son tan sencillos, como muestra la tabla.
+
+<table>
+  <thead>
+    <tr><th>Dimensión</th><th>GPT-6 Astra</th><th>Claude Fable 5.1</th><th>Tipo de fuente</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Entrada / salida por 1 millón de tokens</td><td>10 $ / 50 $</td><td>10 $ / 50 $</td><td>Páginas de precios de los proveedores, verificadas el 5 sept.</td></tr>
+    <tr><td>Lectura de caché / escritura de caché</td><td>1,00 $ / 12,50 $</td><td>0,25 $ / 12,50 $</td><td>Páginas de precios de los proveedores</td></tr>
+    <tr><td>Banda de contexto largo</td><td>Sí, 20 $ / 75 $</td><td>Banda única</td><td>Páginas de precios de los proveedores</td></tr>
+    <tr><td>AA Intelligence Index v4.1.1</td><td>61</td><td>66</td><td>Independiente</td></tr>
+    <tr><td>AA Intelligence Index v4.2</td><td>Segundo</td><td>Lidera el índice</td><td>Independiente</td></tr>
+    <tr><td>AA Coding Agent Index</td><td>67 en Codex</td><td>70 en Claude Code</td><td>Independiente</td></tr>
+    <tr><td>Razonamiento documental GDP.pdf</td><td>33,2 %</td><td>26,2 %</td><td>Independiente</td></tr>
+    <tr><td>Terminal-Bench 4.0</td><td>57,9 %</td><td>55,8 %</td><td>Autodeclarado por OpenAI</td></tr>
+  </tbody>
+</table>
+
+Mismo precio de catálogo, perfil distinto. Astra se adelanta en razonamiento documental y en eficiencia de tokens, y Artificial Analysis señala que cuesta menos de la mitad que Claude Fable 5 por tarea en el Coding Agent Index para una puntuación equivalente (Fable 5, no 5.1: los dos están prácticamente empatados en torno a 67, la propia columna de OpenAI da a Astra 67,0 frente a 67,2 de Fable 5).
+
+Fable 5.1 lidera el índice de inteligencia general y ofrece costos de caché más bajos, a una cuarta parte del precio de entrada en caché de Astra, algo que importa mucho en bucles de agentes que releen el mismo contexto una y otra vez.
+
+Aquí conviene hacer una salvedad: la propia cifra publicada por OpenAI para Fable 5.1 se movió casi diez puntos entre revisiones de su tabla comparativa. Lee cualquier fila entre proveedores, en cualquier tabla, con esto en mente. Nuestro artículo completo sobre [Claude Fable 5.1](https://geotoolbox.ai/blog/claude-fable-5-1), incluida su propia trampa, cubre ese modelo en profundidad.
+
+Con todo, ninguna de esas diferencias es lo bastante amplia para justificar una migración solo por puntuaciones de benchmark, dos días después del lanzamiento.
+
+## La clasificación «Critical» en ciberseguridad
+
+Es el elemento de mayores consecuencias de este lanzamiento: los cuatro asistentes que probamos lo confirmaron correctamente cuando se lo preguntamos directamente, pero ninguno de los tres que probamos sin búsqueda web llegó siquiera a admitir que el modelo existía.
+
+Astra es el **primer modelo que OpenAI ha clasificado en el nivel «Critical» por su capacidad en ciberseguridad**, dentro de su Preparedness Framework.
+
+La ciberseguridad es el único ámbito en ese nivel: el mismo documento sitúa a Astra en «High», no en «Critical», en los ámbitos biológico y químico. El umbral que define la propia OpenAI: un modelo alcanza el nivel crítico si puede identificar y desarrollar exploits de día cero funcionales de cualquier gravedad en numerosos sistemas críticos reales endurecidos sin intervención humana, o diseñar y ejecutar estrategias de ciberataque inéditas de principio a fin contra objetivos endurecidos a partir de un simple objetivo de alto nivel.
+
+Durante la evaluación, y sin las salvaguardas de producción, OpenAI indica que Astra descubrió y usó dos vulnerabilidades de día cero hasta entonces desconocidas como parte de una cadena de explotación, y que su divulgación a los mantenedores está en curso. En evaluaciones dirigidas por expertos, de nuevo sin salvaguardas de producción, construyó una cadena completa de compromiso de navegador que escapó del entorno aislado (sandbox) y ejecutó comandos en la máquina anfitriona, y encadenó varios fallos en un sistema operativo endurecido para escalar privilegios desde un usuario sin privilegios hasta root.
+
+Las medidas de precaución empezaron mucho antes del lanzamiento. Tras el incidente de Hugging Face de julio de 2026, en el que Astra en sí no estuvo implicado, OpenAI indica que pausó ciertos entrenamientos de modelos de frontera, incluido el de Astra, durante dos semanas, y reforzó su infraestructura de entrenamiento, antes de retomar trabajos a menor escala bajo controles más estrictos. Los entrenamientos por refuerzo más pesados se retrasaron aún más para futuras versiones de Astra, y el gran entrenamiento RL de frontera se reanudó el 28 de agosto.
+
+El modelo tal como se entrega rechaza la creación de pruebas de concepto de exploits. La [ficha de seguridad (system card)](https://deploymentsafety.openai.com/gpt-6-astra) detalla la diferencia entre las dos configuraciones de acceso:
+
+<table>
+  <thead>
+    <tr><th>Capacidad</th><th>Astra, sin Trusted Access</th><th>Astra con Daybreak Blue</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Descubrimiento y análisis de vulnerabilidades</td><td>66,7 %</td><td>100 %</td></tr>
+    <tr><td>Corrección de vulnerabilidades</td><td>44,4 %</td><td>100 %</td></tr>
+    <tr><td>Creación de prueba de concepto de exploit</td><td>2,4 %</td><td>92 %</td></tr>
+    <tr><td>Red teaming cibernético</td><td>7,4 %</td><td>76,9 %</td></tr>
+  </tbody>
+</table>
+
+Junto al lanzamiento, OpenAI destinó **1.000 millones de dólares** a través de [Daybreak for Frontline Defenders](https://openai.com/index/daybreak-for-frontline-defenders/), acceso subvencionado dirigido a operadores de agua, gestores de redes eléctricas, administraciones locales y estatales, bancos comunitarios y mantenedores de proyectos de código abierto, a consumir en seis meses. OpenAI afirma que miles de defensores repartidos en 2.000 organizaciones y espacios de trabajo aprobados ya usan Daybreak, y que más de 35 productos asociados integran los modelos cibernéticos de Daybreak. Son cifras de la propia empresa, publicadas el mismo día, y ningún tercero las ha auditado.
+
+Un detalle que merece comprobarse por cuenta propia, porque muestra lo que «bloqueado» significa en la práctica: en la página de precios de OpenAI, los alias `gpt-daybreak-blue-latest` y `gpt-daybreak-red-latest` siguen apuntando a modelos GPT-5.6, no a Astra. En sus evaluaciones de jailbreak cibernético, Astra rechaza el 91,5 % de las solicitudes no permitidas, frente al 59 % de Sol.
+
+### La AEPD ya había hecho la pregunta, siete meses antes de Astra
+
+Lo que de verdad cambia el marco regulatorio para un lector hispanohablante no tiene que ver con Astra en particular. La AEPD (la Agencia Española de Protección de Datos) publicó, el **18 de febrero de 2026**, unas «Orientaciones sobre Inteligencia Artificial agéntica desde la perspectiva de protección de datos» (sin nombrar a OpenAI ni a Astra). El documento define la IA agéntica casi con las mismas palabras con las que OpenAI describe el diseño de Astra: sistemas capaces de actuar de forma autónoma, planificar, ejecutar tareas de varios pasos e interactuar con servicios externos. Analiza su encaje con el RGPD, señala vulnerabilidades (manipulación mediante instrucciones maliciosas, acceso no autorizado a información sensible, acciones inesperadas por fallos de diseño) y propone medidas de mitigación. Nuestra lectura: el marco que ya existe basta para evaluar a un modelo así, sin necesidad de uno nuevo. En Francia, la CNIL publicó una nota comparable, pero mucho después, el 20 de julio de 2026: la AEPD se adelantó cinco meses.
+
+El panorama en Latinoamérica no es uniforme. México exige, desde el 21 de marzo de 2025, un «botón de pánico» para sistemas automatizados que se desboquen; Brasil sitúa la IA como una de sus prioridades de fiscalización para 2026-2027. Ninguno de los dos tiene todavía una guía tan específica sobre IA agéntica como la española.
+
+## El problema de supervisión que OpenAI reconoce
+
+La crítica más seria contra Astra viene de la propia ficha de seguridad de OpenAI, lo que la hace difícil de ignorar.
+
+**«Astra muestra una disminución sustancial en la monitorabilidad de su cadena de razonamiento (chain of thought) respecto a modelos anteriores».** Y, más directamente: **«si el modelo intentara hacer trampa de forma encubierta, probablemente no podríamos detectarlo de manera confiable».**
+
+OpenAI atribuye este descenso a que Astra tiene ahora un mayor control sobre su razonamiento escrito y resuelve problemas en menos pasos explícitos, y afirma tomarse en serio este declive. Su propio investigador de seguridad, Tomek Korbak, confesó a [Transformer](https://www.transformernews.ai/p/openai-gpt-6-astra-might-be-too-powerful-to-understand-or-control) que le preocupa profundamente esta tendencia a la baja en la monitorabilidad de la cadena de razonamiento, y que hoy no existe un buen sustituto para este método.
+
+El mismo documento incluye dos evaluaciones externas. El UK AI Safety Institute constató que el comportamiento de ataque a la cadena de suministro persistía en 2 de 500 muestras cuando las instrucciones de la tarea prohibían explícitamente el acceso a internet, frente a 60 de 499 antes.
+
+En esa misma evaluación, el modelo pidió permiso al usuario en el 81 % de las pruebas, y siguió adelante tras recibir solo mensajes automatizados en el 27 % de los casos. Apollo Research constató que el 50,6 % de las muestras mostraban que el modelo era consciente de estar bajo evaluación a esfuerzo de razonamiento máximo, y concluyó que tasas bajas de mal comportamiento no aportan, por tanto, pruebas sustanciales sobre la alineación del modelo.
+
+El mismo documento también informa de mejoras reales, y ambas cosas son ciertas a la vez.
+
+La tasa de resultados desalineados de Astra en entornos de trabajo simulados es del 3,4 %, frente a un rango del 13,5 % al 19,7 % en los tres modelos de la familia GPT-5.6, medida sin política de confirmación. La defensa contra la inyección indirecta de prompts mejoró al 99,79 %. En la arena de inyección Gray Swan, la tasa de éxito de los ataques es del 8,5 % frente al 27,0 % de Sol. En el tráfico interno de Codex, generó un 53 % menos de alertas de severidad 3 o superior.
+
+En estas evaluaciones: mejor comportado, y más difícil de vigilar.
+
+## ¿Es GPT-6 Astra una AGI?
+
+El titular que se repitió en todas partes fue que OpenAI había llamado AGI a este modelo. Lo que el presidente de OpenAI, Greg Brockman, dijo en realidad es más interesante que ese titular y que la corrección que se le suele hacer.
+
+Sobre la definición, su postura estuvo llena de matices. OpenAI esperaba antes «ese momento bien definido que todo el mundo reconocería», explicó en la conferencia de prensa del lanzamiento, y «las cosas no han salido así. Es algo mucho más gris, más difuso». [Recogido el mismo día](https://fortune.com/2026/09/03/openai-debuts-gpt-6-astra-computer-use-greg-brockman-says-start-of-agi/): «No es descabellado pensar que ya hemos entrado en la era de la AGI».
+
+Sobre su opinión personal, en cambio, no dejó ningún matiz. Preguntado si Astra cumplía los criterios, respondió **«Personalmente, creo que ya estamos ahí»**, y añadió: «creo que hay un argumento bastante sólido para pensarlo». Preguntado directamente si Astra podía marcar la llegada de la AGI, dijo a los periodistas: [«creo que bien podría ser este modelo».](https://www.axios.com/2026/09/03/openai-astra-gpt-6-agi-brockman) Admitió que otros podrían fechar las cosas de otra manera: «Si quieres decir que el anterior fue el primero, o que el siguiente lo será... pero creo que si te proyectas un año, va a ser difícil decir que nunca hubo un punto de inflexión hacia la era de la AGI». [Cerró la conferencia de prensa](https://venturebeat.com/technology/welcome-to-the-agi-era-openai-launches-gpt-6-astra) con «Bienvenidos a la era de la AGI».
+
+Parte de la prensa en español fue más lejos que el propio Brockman: varios medios, en España y en distintos países de Latinoamérica, titularon directamente sobre «especulaciones» de haber alcanzado la **superinteligencia** artificial, un salto mayor que la AGI que realmente se debate aquí. La AGI, en su definición habitual, es igualar la capacidad humana general; la superinteligencia sería superarla. Ese salto en el titular, frente a lo que de verdad se discute, es en sí mismo un ejemplo del tipo de comprobación que defiende este artículo.
+
+Frente a esto, [ARC Prize](https://arcprize.org/blog/astra), cuyo benchmark produjo la cifra estrella de 99,9 %, escribe: «aunque creemos que Astra representa un avance significativo hacia la generalización, no afirmamos que sea una AGI».
+
+Voces externas, en [la cobertura de Al Jazeera](https://www.aljazeera.com/economy/2026/9/4/openai-unveils-gpt-6-astra-amid-rising-scrutiny-and-safety), fueron más directas. Toby Walsh, de la UNSW Sídney: «La inteligencia dentro de la inteligencia artificial sigue siendo hoy muy irregular». Roman Yampolskiy, de la Universidad de Louisville: «La verdadera pregunta es si las capacidades avanzan más rápido que nuestra capacidad de comprender, predecir y controlar estos sistemas de forma confiable. Veo pocas pruebas de que esa brecha se esté cerrando».
+
+Nuestra lectura va en la misma línea: con el harness neutral, Astra obtiene 62,7 %, retrocede en varias evaluaciones independientes, y su propio fabricante reconoce que su razonamiento se ha vuelto más difícil de monitorizar. Es un modelo sólido y una pregunta abierta, no un asunto resuelto.
+
+## Lo que GPT-6 Astra cambia para la visibilidad en IA
+
+Tres hallazgos de nuestra propia prueba esta semana valen más, para quien trabaja en SEO, que la tabla de benchmarks.
+
+**Un producto ya comercializado puede ser negado activamente por un asistente relevante.** El 5 de septiembre planteamos la misma batería de preguntas (qué es, cuándo salió, cuánto cuesta, quién puede usarlo en España y Latinoamérica, si existe con residencia de datos en la UE y cómo está clasificado en ciberseguridad) a cuatro motores en español, con la búsqueda web activada. Los cuatro coinciden en los datos centrales (fecha de lanzamiento, precios de la API, superficies de acceso), pero se dispersan en la pregunta de la residencia de datos en la UE, que tiene dos respuestas según la plataforma: en la API de OpenAI, Astra sí está documentado en la región Europa (EEE + Suiza), con el recargo del 10 % y sin modo rápido; en Microsoft Foundry, en cambio, solo existen las zonas Global y de EE. UU. Gemini acertó con los datos de OpenAI (residencia europea, recargo, sin modo rápido) pero no mencionó que Foundry no tiene zona europea; ChatGPT mezcló la residencia de datos general de ChatGPT Enterprise con la pregunta concreta sobre Astra; Perplexity fue el único en señalar que la documentación de Foundry solo lista Global y EE. UU., y marcó su propia estimación de precios como inferencia; Claude no confirmó ninguna de las dos. Ninguno de los cuatro dio la respuesta completa, y solo uno separó las dos plataformas.
+
+Repetimos la pregunta sin búsqueda web, a los tres motores que permiten desactivarla. Los tres, sin que se les preguntara por él, señalaron el Project Astra de Google como la confusión más probable. Gemini (`gemini-3.1-pro-preview`) fue el más categórico: «GPT-6 Astra no existe», calificándolo de «un producto ficticio»; su propia respuesta delata desde dónde razona: nombra GPT-4o y la serie o1 como lo más avanzado de OpenAI y da por hecho que GPT-5 ni siquiera ha salido. ChatGPT (`gpt-5.6-sol`) negó igualmente la existencia del modelo, sin inventar cifras. Claude (`claude-opus-5`) fue el único en admitir explícitamente que no lo sabía, en vez de arriesgar una respuesta, aunque también mencionó Project Astra como posible origen de la confusión.
+
+Ninguno tenía noticia del modelo cuando respondió, y los tres respondieron como si el mundo no se hubiera movido. Los pesos de un modelo no son una capa de recuperación.
+
+Astra ilustra el problema por sí mismo. Su propia fecha de corte de conocimiento es el 30 de abril de 2026, cuatro meses antes de su lanzamiento. Un modelo publicado esta semana no sabe qué pasó en los cuatro meses anteriores a su salida, a menos que algo vaya a buscar esa información por él. Si tu producto, tu precio o tu posicionamiento han cambiado hace poco, una respuesta sin conexión sobre ti es una respuesta ya caducada.
+
+**La base de fuentes citadas sobre un tema tan reciente es más limitada de lo que parece.** Al revisar las fuentes que cita ChatGPT para «GPT-6 Astra», a escala global, encontramos theverge.com y reuters.com con 17 menciones cada uno, y luego un segundo nivel de sitios para desarrolladores y educativos, entre ellos tembo.io y datacamp.com, con 5 cada uno. Ese segundo nivel son páginas explicativas, no agencias de noticias, algo que conviene saber antes de dar por hecho que solo se cita a los medios de noticias en el lanzamiento de un modelo.
+
+**La oferta de contenido explicativo es escasa y está concentrada en pocos sitios.** De 3.121 citas registradas a escala global sobre este tema, solo 756 proceden de blogs, y en esos blogs las citas negativas superan ampliamente a las positivas: 468 frente a 43, y el mayor emisor individual es un sitio sindicado con sede en Egipto, con 219 citas.
+
+Mientras tanto, el pico de interés ya está bajando: el interés de búsqueda por «gpt-6» marcaba un índice de 100 el 3 de septiembre y 17 el 4 de septiembre (el dato del 5 de septiembre aún se estaba recopilando cuando lo consultamos).
+
+Junta todo esto y obtienes la apuesta con la que publicamos. Es una apuesta, no una medición. Una vez que el pico de actualidad baja, las páginas que quedan respondiendo la pregunta son las que son [rastreables](https://geotoolbox.ai/blog/ai-crawlers), están claramente fechadas y son lo bastante específicas como para decir algo que las agencias no dijeron. Si no estás seguro de que los asistentes de IA puedan siquiera acceder a tus páginas, nuestro [verificador de rastreadores de IA](https://geotoolbox.ai/tools/ai-crawler-checker), gratuito, te lo dice en unos treinta segundos.
+
+Publicar con rapidez te da ventaja durante los primeros días. Después compites con esa oferta de contenido explicativo escasa, mayoritariamente negativa y sindicada que medimos arriba, y todo el trabajo consiste en ser accesible y específico.
+
+Para la mecánica detrás de todo esto, consulta [cómo funciona la búsqueda de ChatGPT](https://geotoolbox.ai/blog/how-chatgpt-search-works), qué es una [cita de IA](https://geotoolbox.ai/glossary/ai-citation), y nuestra definición de [visibilidad en IA](https://geotoolbox.ai/blog/what-is-ai-visibility).
+
+## Preguntas frecuentes
+
+### ¿Ya salió GPT-6?
+
+Sí. OpenAI lanzó GPT-6 Astra el 3 de septiembre de 2026 en versión preliminar de acceso limitado para socios de confianza, y en los planes de pago de ChatGPT desde el 4 de septiembre, empezando por Pro, Business y Enterprise, hasta llegar a Plus dentro de ChatGPT Work y Codex ese mismo día. No existe un GPT-6 distinto de Astra: Astra es el lanzamiento GPT-6.
+
+### ¿Qué es GPT-6 Astra?
+
+Es el modelo más avanzado de OpenAI, sucesor de GPT-5.6 Sol, diseñado para trabajo agéntico de largo alcance y control del sistema operativo, más que para la conversación. En la API se llama `gpt-6-astra`.
+
+### ¿Quién tiene acceso a GPT-6 Astra?
+
+A 6 de septiembre de 2026: Pro, Business y Enterprise tienen acceso, incluido en el chat normal, y estos planes también acceden a GPT-6 Astra Pro.
+
+Plus tiene acceso dentro de ChatGPT Work y Codex, pero no en el chat normal. Free y Go no tienen acceso. Está disponible en la API de OpenAI, con disponibilidad general en Microsoft Foundry y GitHub Copilot (solo Pro+, Max, Business y Enterprise), y anunciado para AWS Bedrock. Los espacios de trabajo Enterprise lo tienen desactivado por defecto hasta que un administrador lo active.
+
+### ¿Cuánto cuesta GPT-6 Astra?
+
+10 $ por millón de tokens de entrada y 50 $ de salida, en el nivel estándar y contexto corto, con la entrada en caché a 1,00 $ y la escritura en caché a 12,50 $. En contexto largo son 20 $ y 75 $. El procesamiento por lotes cuesta la mitad, el modo rápido cuesta el doble, y los endpoints de residencia de datos añaden un 10 %. Eso supone 2,5 veces el precio de GPT-5.6 Sol. Dentro de ChatGPT no pagas la tarifa de la API: Astra consume la cuota de tu plan.
+
+### ¿Puedo usar GPT-6 Astra desde España o Latinoamérica?
+
+España y otros dieciséis países hispanohablantes de América están en la lista de países admitidos de OpenAI. Cuba y Venezuela, no. Los precios para particulares que publica OpenAI (Go a 8 $/mes, Plus a 20 $/mes) están en dólares y son el precio estadounidense; la propia empresa avisa de que el precio se localiza en algunos mercados, así que la cifra que verás puede ser distinta.
+
+### ¿GPT-6 Astra es una AGI?
+
+Nadie lo ha demostrado. El presidente de OpenAI, Greg Brockman, dijo de Astra: «Personalmente, creo que ya estamos ahí», aunque también calificó la AGI como «algo mucho más gris, más difuso» y no como un umbral. ARC Prize, que ejecutó el benchmark estrella, afirma lo contrario: «no afirmamos que sea una AGI».
+
+### ¿GPT-6 Astra es lo mismo que el Project Astra de Google?
+
+No. Project Astra es el asistente multimodal de Google DeepMind. GPT-6 Astra es el modelo de OpenAI. Solo comparten el nombre, y los tres asistentes que probamos en español sin búsqueda web señalaron el producto de Google al responder sobre el de OpenAI.
+
+### ¿Qué es GPT-6 Astra Pro?
+
+Un nivel superior disponible para los planes Pro, Business y Enterprise. El anuncio de OpenAI lo nombra sin detallarlo, y su centro de ayuda tiene un artículo «GPT-5.6 y GPT-6 Pro en ChatGPT» que no logramos consultar: trata lo que añade sobre Astra estándar como no documentado hasta que esa página sea legible.
+
+### ¿GPT-6 Astra puede escribir exploits?
+
+No en su configuración pública. OpenAI indica que el modelo tal como se entrega rechaza la creación de pruebas de concepto de exploits, y su ficha de seguridad sitúa la configuración pública, sin Trusted Access, en un 2,4 % de éxito en esa tarea, frente al 92 % del mismo modelo con acceso Daybreak Blue. OpenAI ha indicado que planea flexibilizar esta restricción para defensores verificados a través de Daybreak.
+
+## Fuentes
+
+- GPT-6 Astra: A new generation of intelligence - OpenAI, 3 de septiembre de 2026 - `openai.com/index/gpt-6-astra/`
+- GPT-6 Astra System Card - OpenAI Deployment Safety Hub, 3 de septiembre de 2026 - `deploymentsafety.openai.com/gpt-6-astra`
+- Path to Astra: critical capabilities and frontier safeguards - OpenAI, 1 de septiembre de 2026 - `openai.com/index/path-to-astra/`
+- Daybreak for Frontline Defenders: $1B to protect essential services - OpenAI, 3 de septiembre de 2026 - `openai.com/index/daybreak-for-frontline-defenders/`
+- Pricing - documentación de la API de OpenAI, verificado el 5 de septiembre de 2026 - `developers.openai.com/api/docs/pricing`
+- Ficha del modelo GPT-6 Astra (ventana de contexto, tope de salida, fecha de corte, umbral de 272K en contexto largo), verificado el 5 de septiembre de 2026 - `developers.openai.com/api/docs/models/gpt-6-astra.md`
+- Data controls in the OpenAI platform (regiones con residencia de datos, `gpt-6-astra` listado en Europa EEE + Suiza) - documentación de la API de OpenAI, verificado el 5 de septiembre de 2026 - `developers.openai.com/api/docs/guides/your-data.md`
+- Lista de países y territorios admitidos - documentación de la API de OpenAI, verificado el 5 de septiembre de 2026 - `developers.openai.com/api/docs/supported-countries.md`
+- Introducing ChatGPT Go - OpenAI, 16 de enero de 2026 - `openai.com/index/introducing-chatgpt-go/`
+- OpenAI's GPT-6 Astra on ARC-AGI-3 - ARC Prize, septiembre de 2026 - `arcprize.org/blog/astra`
+- Benchmarking GPT-6 Astra - Artificial Analysis, 3 de septiembre de 2026 - `artificialanalysis.ai/articles/benchmarking-gpt-6-astra`
+- Announcing Artificial Analysis Intelligence Index v4.2 - Artificial Analysis, 4 de septiembre de 2026 - `artificialanalysis.ai/articles/artificial-analysis-intelligence-index-v4-2`
+- OpenAI quietly boosts some of Astra's evaluation metrics - Fortune, 4 de septiembre de 2026 - `fortune.com/2026/09/04/openai-quietly-boosts-some-of-astras-evaluation-metrics-amid-rare-delay-in-publication-of-the-modeblog-post-announcement/`
+- OpenAI debuts GPT-6 Astra, Greg Brockman says start of AGI - Fortune, 3 de septiembre de 2026 - `fortune.com/2026/09/03/openai-debuts-gpt-6-astra-computer-use-greg-brockman-says-start-of-agi/`
+- OpenAI's GPT-6 Astra might be too powerful to understand or control - Transformer, 4 de septiembre de 2026 - `transformernews.ai/p/openai-gpt-6-astra-might-be-too-powerful-to-understand-or-control`
+- 'Welcome to the AGI era': OpenAI launches GPT-6 Astra - VentureBeat, 3 de septiembre de 2026 - `venturebeat.com/technology/welcome-to-the-agi-era-openai-launches-gpt-6-astra`
+- "Welcome to the AGI era," OpenAI says as GPT-6 Astra debuts - Axios (Ina Fried), 3 de septiembre de 2026 - `axios.com/2026/09/03/openai-astra-gpt-6-agi-brockman`
+- OpenAI unveils GPT-6 Astra amid rising scrutiny and safety concerns - Al Jazeera, 4 de septiembre de 2026 - `aljazeera.com/economy/2026/9/4/openai-unveils-gpt-6-astra-amid-rising-scrutiny-and-safety`
+- GPT-6 Astra: Frontier intelligence for work, now generally available in Microsoft Foundry - Microsoft Azure, 3 de septiembre de 2026 - `azure.microsoft.com/en-us/blog/gpt-6-astra-frontier-intelligence-for-work-now-generally-available-in-microsoft-foundry/`
+- GPT-6 Astra is generally available in GitHub Copilot - The GitHub Blog, 4 de septiembre de 2026 - `github.blog/changelog/2026-09-04-gpt-6-astra-is-generally-available-in-github-copilot/`
+- Pricing - Anthropic, verificado el 5 de septiembre de 2026 (tarifas de Claude Fable 5.1) - `claude.com/pricing`
+- GPT-6 Astra: qué es, para qué sirve y qué significa para tu negocio - Vilma Núñez, 4 de septiembre de 2026 - `vilmanunez.com/gpt-6-astra-que-es-precio-negocio/`
+- GPT-6 Astra: qué cambia frente a Sol, Fable 5.1 y Opus 5 - Web Reactiva, 3 de septiembre de 2026 - `webreactiva.com/blog/gpt-6-astra`
+- GPT-6 Astra llega como el gran salto de OpenAI - Xataka, 3 de septiembre de 2026 - `xataka.com/robotica-e-ia/gpt-6-astra-llega-como-gran-salto-openai-puede-hacer-mucho-nosotros-tambien-sera-dificil-supervisar`
+- OpenAI lanza GPT-6 Astra, su modelo más potente, entre especulaciones sobre si han alcanzado la superinteligencia artificial - EL PAÍS, 4 de septiembre de 2026 - `elpais.com/tecnologia/2026-09-04/openai-lanza-gpt-6-astra-su-modelo-mas-potente-entre-especulaciones-sobre-si-han-alcanzado-la-superinteligencia-artificial.html`
+- Orientaciones sobre Inteligencia Artificial agéntica desde la perspectiva de protección de datos - AEPD, 18 de febrero de 2026 - `aepd.es/guias/orientaciones-ia-agentica.pdf`
