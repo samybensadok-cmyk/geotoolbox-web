@@ -55,7 +55,7 @@ const PARTIAL_ROOTS: Record<string, ReadonlySet<string>> = {
   // ⚠️ ADD "es" to /blog the day the first ES article ships — the blog route,
   // sitemap and feed self-gate on posts existing, but this nav map is static
   // (client Header can't check content), so it's the one manual flip.
-  "/blog": new Set(["fr", "es"]),
+  "/blog": new Set(["fr", "es", "de", "nl"]),
   "/privacy": new Set(["fr"]),
 }
 

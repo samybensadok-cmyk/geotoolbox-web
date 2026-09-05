@@ -55,7 +55,7 @@ export const bcp47: Record<Locale, string> = {
 // pricing pages only. There is no content/de/blog, so /de/blog must 404 rather
 // than render an empty index. Add "de" here the day the first DE article ships.
 // nl (2026-09-04) is the same case: marketing/feature/pricing only, no content/nl/blog.
-export const contentLocales: readonly Locale[] = ["en", "fr", "es"]
+export const contentLocales: readonly Locale[] = ["en", "fr", "es", "de", "nl"]
 
 // The glossary is a separate, narrower policy: en is live, fr deliberately
 // rendered a "definitions on the way" placeholder until FR entries shipped 2026-08-11,
