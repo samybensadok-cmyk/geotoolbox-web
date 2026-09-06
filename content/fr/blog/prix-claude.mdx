@@ -2,8 +2,8 @@
 title: "Prix de Claude en $YEAR : formules, tarifs en euros et API"
 description: "Tous les prix de Claude en $MONTH_YEAR : Free, Pro (environ 21 € TTC), Max, Team et API. Le vrai tarif en euros, TVA comprise, et la formule à choisir."
 date: "2026-07-15"
-updated: "2026-09-03"
-recheckBy: "2026-09-17"  # backfilled 2026-08-18 freshness audit hygiene pass (no prior recheckBy guard); generic 30-day pricing/ranking volatility check
+updated: "2026-09-06"
+recheckBy: "2026-10-04"  # bumped 2026-09-06: EN-donor REACTIVE CASE patch sync (Opus/Fable weekly-limit fix, Mythos 5.1, GPT-6 Astra, Enterprise repricing)
 author: "Samy BEN SADOK"
 tags: ["claude-pricing", "claude", "anthropic", "claude-code", "pricing", "ai-pricing"]
 draft: false
@@ -150,7 +150,7 @@ L'essentiel : les deux types de sièges donnent le même produit, la différence
 **La TVA n'est pas une fatalité pour un professionnel.** Anthropic propose un champ « Tax ou VAT ID » à l'inscription et dans Réglages puis Facturation. Un numéro de TVA intracommunautaire valide déclenche en principe l'autoliquidation prévue pour un fournisseur hors UE : la TVA française n'est plus facturée, vous la déclarez vous-même, et Pro revient à environ 17,50 € HT au lieu d'environ 21 € TTC (Max 5x à environ 87,50 €, Max 20x à environ 175 €). Réserve importante : Anthropic documente le champ mais pas le traitement fiscal qui en découle, et un changement ne vaut que pour les cycles suivants, sans rattrapage des factures émises. Vérifiez votre première facture.
 </Callout>
 
-Enterprise vise les grandes structures et les secteurs régulés. La page tarifaire n'affiche plus qu'un prix par siège auquel s'ajoute l'usage facturé aux tarifs de l'API : le chiffre de 20 $ par siège qui circule n'y est plus visible, et les conditions réelles se négocient avec le service commercial. Ce que vous payez, c'est la couche de gouvernance absente de Team : contrôle d'accès par rôles, provisionnement SCIM, journaux d'audit, API de conformité, rétention personnalisée, restriction par adresse IP, option compatible HIPAA et Claude Security.
+Enterprise vise les grandes structures et les secteurs régulés. La page tarifaire n'affiche plus qu'un prix par siège auquel s'ajoute l'usage facturé aux tarifs de l'API : le chiffre de 20 $ par siège qui circule n'y est plus visible, et les conditions réelles se négocient avec le service commercial. Cette structure est plus récente qu'il n'y paraît : Anthropic a fait basculer Enterprise de ses anciennes formules par siège, qui incluaient un forfait d'usage dans un tarif fixe, vers un siège unique où le forfait n'achète plus que l'accès à la plateforme — chaque token est facturé en plus, au tarif API. Les anciens sièges Standard, Premium et Chat-only sont fermés aux nouveaux contrats et basculent au renouvellement, et la facturation à l'usage ne peut plus être désactivée. Ce que vous payez, c'est la couche de gouvernance absente de Team : contrôle d'accès par rôles, provisionnement SCIM, journaux d'audit, API de conformité, rétention personnalisée, restriction par adresse IP, option compatible HIPAA et Claude Security.
 
 ### RGPD : pourquoi Team est un achat de conformité, pas de confort
 
@@ -183,7 +183,7 @@ Quelques lectures de ce tableau. [Claude Sonnet 5](https://geotoolbox.ai/blog/cl
 **Une subtilité de facturation sur Fable 5 que les guides ont ratée.** Rétabli le 1er juillet 2026 après la levée des contrôles américains à l'exportation, Fable 5 a d'abord été inclus à hauteur de 50 % des limites hebdomadaires sur Pro, Max et Team, avant de basculer sur des crédits d'usage le 7 juillet. Depuis cette date, Fable 5 n'est donc pas « inclus » dans un abonnement au même titre que Sonnet ou Opus : son usage se facture à part, en crédits.
 </Callout>
 
-Deux nuances pèsent lourd sur la facture. D'abord, moins cher au token ne veut pas dire moins cher à la tâche : le tarif de Sonnet 5 est nettement sous celui d'Opus 5, mais il mobilise plus de raisonnement et d'appels d'outils sur les tâches agentiques lourdes, ce qui resserre l'écart au point qu'une tâche d'agent lourde peut coûter presque autant que sur Opus. Ensuite, les modèles récents (Sonnet 5, Opus 4.8, Fable 5) comptent les tokens avec un tokeniseur qui produit environ 30 % de tokens en plus pour un même texte, là où Sonnet 4.6 et les générations antérieures utilisent l'ancien : si vous montez depuis un ancien Sonnet, budgétez selon votre volume réel de tokens plutôt que le seul tarif au token.
+Deux nuances pèsent lourd sur la facture. D'abord, moins cher au token ne veut pas dire moins cher à la tâche : le tarif de Sonnet 5 est nettement sous celui d'Opus 5, mais il mobilise plus de raisonnement et d'appels d'outils sur les tâches agentiques lourdes, ce qui resserre l'écart au point qu'une tâche d'agent lourde peut coûter presque autant que sur Opus. Ensuite, les modèles Claude 4.7 et ultérieurs — donc tous les modèles actuels, Sonnet 5, Opus 5 et Fable 5.1 compris — comptent les tokens avec un tokeniseur qui produit environ 30 % de tokens en plus pour un même texte, là où Sonnet 4.6 et les générations antérieures utilisent l'ancien : si vous montez depuis un ancien Sonnet, budgétez selon votre volume réel de tokens plutôt que le seul tarif au token.
 
 Deux remises taillent ensuite dans la facture : l'API Batch retire 50 % en entrée comme en sortie pour ce qui peut tourner en asynchrone, et la mise en cache des prompts ramène le contexte répété à environ 10 % du tarif d'entrée, soit jusqu'à 90 % d'économie. Les outils côté serveur se facturent en plus : la recherche web coûte 10 $ pour 1 000 requêtes, et le mode rapide d'Opus 5 et d'Opus 4.8 est facturé 10 $ en entrée et 50 $ en sortie par million de tokens, soit le double du tarif standard, pour une latence réduite (fonctionnalité encore en préversion).
 
@@ -197,7 +197,7 @@ Ce dernier point mérite qu'on s'y arrête, parce qu'il a failli changer en 2026
 
 Les montants ci-dessus sont les plus simples à comprendre. Ce qui décide vraiment si une formule vous convient, ce sont les limites d'usage, et elles sont moins visibles que l'étiquette. Claude en applique deux à la fois, la fenêtre de cinq heures déjà évoquée et un plafond hebdomadaire. Ce dernier n'est pas publié sous forme de chiffre ferme, et aucun compteur en direct ne vous dit ce qu'il vous reste : il vous tombe donc dessus en pleine tâche.
 
-Il y a aussi une limite dans la limite, et elle ne fonctionne plus comme avant. Opus n'a plus de plafond distinct : Anthropic a supprimé la limite hebdomadaire propre à Opus, qui puise désormais dans l'enveloppe globale. C'est Sonnet qui porte le plafond supplémentaire — les formules Max appliquent « deux limites hebdomadaires : une pour tous les modèles et une réservée aux modèles Sonnet ». Si un guide plus ancien décrit un quota Opus étroit, il est antérieur à ce changement.
+Il y a aussi une limite dans la limite, et elle concerne Fable, pas Opus. Sur Max et les sièges Team/Enterprise premium, la page Paramètres > Utilisation affiche deux barres distinctes : « Tous les modèles » et « Fable ». Opus, Sonnet et Haiku puisent tous dans la même enveloppe globale ; Fable est suivi à part, plafonné à 50 % maximum de votre limite hebdomadaire, ce qui peut épuiser sa propre barre bien avant le reste de votre formule.
 
 La bonne nouvelle tient à la direction prise. Le 6 mai 2026, Anthropic [a doublé les limites de cinq heures de Claude Code](https://www.anthropic.com/news/higher-limits-spacex) sur Pro, Max et Team, supprimé la pénalité aux heures de pointe et relevé nettement les limites de débit de l'API pour Opus, grâce à un accord de calcul avec SpaceX. Au moment de choisir, gardez ceci en tête : la formule qu'on regrette n'est presque jamais la plus chère. C'est la formule bon marché, prise pour économiser, qui finit par brider le travail, ou l'abonnement Pro dont personne n'ouvre jamais les fonctions censées en justifier le prix.
 
@@ -273,7 +273,7 @@ Claude Code est inclus dans Pro, à environ 21 € par mois : il n'a pas été r
 
 ### Claude est-il moins cher que ChatGPT ?
 
-En France, oui, légèrement, et c'est contre-intuitif. Aux États-Unis, les deux offres sont affichées à 20 $, mais elles ne sont pas facturées de la même façon en France : ChatGPT Plus est vendu 23 € TTC via la filiale irlandaise d'OpenAI, avec une grille en euros, tandis que Claude Pro revient à environ 21 € TTC. Soit environ 2 € d'écart par mois en faveur de Claude. Côté API, cela dépend du modèle : Claude Opus 5 est à 5 $ et 25 $ par million de tokens, ce qui le place, depuis le 21 août 2026, au-dessus de [GPT-5.6 Sol](https://geotoolbox.ai/fr/blog/gpt-5-6) à 4 $ et 20 $ — un tarif promotionnel qu'OpenAI ne garantit que jusqu'au 21 novembre. Sonnet 5, à 2 $ et 10 $, passe sous les deux pour l'essentiel de la production.
+En France, oui, légèrement, et c'est contre-intuitif. Aux États-Unis, les deux offres sont affichées à 20 $, mais elles ne sont pas facturées de la même façon en France : ChatGPT Plus est vendu 23 € TTC via la filiale irlandaise d'OpenAI, avec une grille en euros, tandis que Claude Pro revient à environ 21 € TTC. Soit environ 2 € d'écart par mois en faveur de Claude. Côté API, cela dépend du modèle : Claude Opus 5 est à 5 $ et 25 $ par million de tokens, ce qui le place, depuis le 21 août 2026, au-dessus de [GPT-5.6 Sol](https://geotoolbox.ai/fr/blog/gpt-5-6) à 4 $ et 20 $ — un tarif promotionnel qu'OpenAI garantit au moins jusqu'au 21 novembre. Le nouveau modèle phare d'OpenAI, GPT-6 Astra, est plus cher que les deux, à 10 $ et 50 $. Sonnet 5, à 2 $ et 10 $, passe sous les deux pour l'essentiel de la production.
 
 ### Peut-on payer Claude hors taxes avec un numéro de TVA ?
 
@@ -285,7 +285,7 @@ Non. Aucune réduction étudiante individuelle n'existe, en France comme ailleur
 
 ### Comment fonctionnent les limites d'usage de Claude ?
 
-Deux limites s'appliquent en même temps : une fenêtre glissante de cinq heures et un plafond hebdomadaire. Anthropic ne publie pas de chiffres exacts et aucun compteur en direct n'indique le solde restant. Opus n'a plus de plafond propre et puise dans l'enveloppe globale ; c'est Sonnet qui porte une limite hebdomadaire distincte sur les formules Max. Passer à un modèle plus léger est une action manuelle (`/model`), pas un basculement automatique. Anthropic a doublé les limites de cinq heures de Claude Code le 6 mai 2026.
+Deux limites s'appliquent en même temps : une fenêtre glissante de cinq heures et un plafond hebdomadaire. Anthropic ne publie pas de chiffres exacts, mais la page Paramètres > Utilisation affiche des barres de progression pour la session et la semaine. Opus, Sonnet et Haiku partagent tous la même enveloppe globale ; Fable fait exception, avec sa propre barre hebdomadaire (plafonnée à 50 % de la limite) sur Max et les sièges Team/Enterprise premium. Passer à un modèle plus léger est une action manuelle (`/model`), pas un basculement automatique. Anthropic a doublé les limites de cinq heures de Claude Code le 6 mai 2026.
 
 ## Sources
 
