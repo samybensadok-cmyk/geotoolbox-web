@@ -11,7 +11,7 @@ import {
 } from "@/lib/content"
 import { getMdxComponents } from "@/components/mdx"
 import { formatDate } from "@/lib/utils"
-import { routing } from "@/i18n/routing"
+import { routing, bcp47, type Locale } from "@/i18n/routing"
 import { rehypeLocalizeLinks } from "@/lib/i18n/rehype-localize-links"
 import { alternatesFor, urlFor, makeLocalizer } from "@/lib/i18n/siblings"
 import { localePath } from "@/lib/i18n/paths"
@@ -81,7 +81,7 @@ export default async function GlossaryEntry({
         <JsonLd
           data={[
             definedTermSchema({ slug: term.slug, term: term.term, definition: term.definition, locale, setName: t("definedTermSetName") }),
-            faqPageSchema([{ question: t("faqQuestion", { term: term.term }), answer: term.definition }]),
+            faqPageSchema([{ question: t("faqQuestion", { term: term.term }), answer: term.definition }], bcp47[locale as Locale]),
           ]}
         />
         <div className="mx-auto max-w-3xl">
