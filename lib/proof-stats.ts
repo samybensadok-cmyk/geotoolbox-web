@@ -59,12 +59,12 @@ export const proofStats = {
   // Manual — Bing WMT "AI Performance" has no public API; bump by hand and
   // update `asOf` here in the same edit.
   aiCitations: {
-    total: 108300,
-    avgCitedPages: 34,
+    total: 135700,
+    avgCitedPages: 49,
     windowDays: 30,
     source: "Microsoft Copilot and partners",
     sampled: true,
-    asOf: "28 Aug 2026",
+    asOf: "08 Sep 2026",
   },
   // Manual — Google Search Console "Generative AI features" (Beta) report:
   // impressions where a geotoolbox.ai link appeared INSIDE a Google AI answer
@@ -83,12 +83,12 @@ export const proofStats = {
   //     by the report's own Compare view — the growth multiple must be derived
   //     from these two, never asserted separately.
   googleAiFeatures: {
-    impressions: 91400,
-    prevImpressions: 5910,
-    windowDays: 28,
+    impressions: 129000,
+    prevImpressions: 7120,
+    windowDays: 31,
     surfaces: "AI Overviews + AI Mode",
     source: "Google Search Console · Generative AI features (Beta)",
-    asOf: "28 Aug 2026",
+    asOf: "08 Sep 2026",
   },
   // Top buying-intent grounding query from Bing WMT "AI Performance" — an
   // appearance count in Bing's AI Performance report, NOT unique citations.
