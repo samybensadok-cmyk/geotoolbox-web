@@ -319,6 +319,26 @@ export const SCORE_TIERS: { band: string; label: string; tone: ScoreTone }[] = [
 /** Scored engines first, then the measured-but-unscored pair. */
 export const ENGINE_ORDER: LgsEngineKey[] = ["chatgpt", "aio", "gemini", "perplexity"]
 
+/**
+ * The engines this scan actually ASKED. An engine with zero dispatched calls was never
+ * queried, so it must not get a grid column: `cellState` would return "unmeasured" for
+ * every prompt and the table would report five failed measurements that never happened.
+ * Perplexity is budget-gated to 0 per-prompt calls (LGS_PPLX_PROMPT_CALLS) while the
+ * account sits at a rate limit of 1, so this shipped on every report — under a footnote
+ * reading "that call failed", and contradicting the report's own "2 of 16" footer.
+ * Data-driven on purpose: this is not a hardcoded perplexity drop.
+ */
+export function gridEngines(engines: LgsPublicV1["engines"]): LgsEngineKey[] {
+  // A SCORED engine (chatgpt, aio) keeps its column unconditionally: it feeds the composite
+  // score, so dropping it would leave "ChatGPT 15/30" above a table with no ChatGPT column.
+  // For a scored engine at 0 dispatched, "couldn't measure" is the honest cell. Unscored
+  // engines (gemini, perplexity) are dropped when the scan never asked them. This also means
+  // the result is never empty.
+  return ENGINE_ORDER.filter(
+    (k) => ENGINE_META[k].scored || (engines[k]?.dispatched_calls ?? 0) > 0
+  )
+}
+
 export const ENGINE_META: Record<LgsEngineKey, { name: string; mark: EngineId; scored: boolean }> = {
   chatgpt: { name: "ChatGPT", mark: "chatgpt", scored: true },
   aio: { name: "Google AI Overviews", mark: "aio", scored: true },

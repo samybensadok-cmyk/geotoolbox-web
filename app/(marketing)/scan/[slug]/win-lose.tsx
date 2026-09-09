@@ -11,7 +11,7 @@ import {
   weaknesses,
   CELL_TEXT,
   ENGINE_META,
-  ENGINE_ORDER,
+  gridEngines,
   type CellState,
   type LgsCheck,
   type LgsCheckState,
@@ -92,6 +92,8 @@ export function WinLose({ data }: { data: LgsPublicV1 }) {
       (readiness.coverage_ratio != null && readiness.coverage_ratio < 0.6))
   const byKey = indexResults(results, prompts)
   const rivals = competitorHosts(engines, data.domain)
+  // Only engines this scan actually asked get a column. See gridEngines().
+  const cols = gridEngines(engines)
   const quotes = pullQuotes(results)
 
   return (
@@ -174,7 +176,7 @@ export function WinLose({ data }: { data: LgsPublicV1 }) {
                     >
                       Prompt
                     </th>
-                    {ENGINE_ORDER.map((key) => (
+                    {cols.map((key) => (
                       <th
                         key={key}
                         scope="col"
@@ -197,7 +199,7 @@ export function WinLose({ data }: { data: LgsPublicV1 }) {
                       <td className="max-w-[280px] px-4 py-3 align-top text-[13px] leading-relaxed text-gray-800">
                         {prompt}
                       </td>
-                      {ENGINE_ORDER.map((key) => {
+                      {cols.map((key) => {
                         const state = cellState(byKey.get(`${key}#${i}`), key)
                         return (
                           <td key={key} className="px-4 py-3 align-top">

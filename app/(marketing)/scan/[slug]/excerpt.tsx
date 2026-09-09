@@ -11,9 +11,12 @@ export function cleanLlmExcerpt(raw: string): string {
   let s = String(raw).replace(/\r\n/g, "\n")
 
   /* Table rows and |---| separators can't read as prose; drop the lines. */
+  /* A table row is any line with 2+ pipes. Engines emit BOTH "| a | b |" and the
+     outer-pipe-less "Software | Best for | Why" variant; matching only the first left whole
+     comparison tables sitting in the prose (found across 190 prod excerpts, 2026-09-09). */
   s = s
     .split("\n")
-    .filter((line) => !/^\s*\|.*\|\s*$/.test(line) && !/^\s*[-|:\s]+\s*$/.test(line.replace(/\|/g, "")))
+    .filter((line) => (line.match(/\|/g) ?? []).length < 2 && !/^\s*[-|:\s]+\s*$/.test(line))
     .join("\n")
 
   /* Headings: "### My recommendations" → "My recommendations". */
@@ -30,9 +33,13 @@ export function cleanLlmExcerpt(raw: string): string {
   /* Markdown links: a bare-hostname label ("[www.g2.com](https://…)") is an
      inline citation — the report's Cited chips already carry the sources, so
      drop it. A worded label keeps its text. Spacing is normalized below. */
-  s = s.replace(/\[([^\]]+)\]\((?:[^)]*)\)/g, (_m, label: string) =>
-    /^[\w-]+(?:\.[\w-]+)+$/.test(label.trim()) ? " " : ` ${label} `
-  )
+  /* NOTE [^\]]* not [^\]]+ : engines emit a bare "[](https://…)" with an EMPTY label as an
+     inline citation marker. Requiring 1+ label chars left those entirely unhandled, so raw
+     "[](url)" shipped in 128 places across 61 of 190 prod excerpts (32%) — 2026-09-09. */
+  s = s.replace(/\[([^\]]*)\]\((?:[^)]*)\)/g, (_m, label: string) => {
+    const l = label.trim()
+    return l === "" || /^[\w-]+(?:\.[\w-]+)+$/.test(l) ? " " : ` ${l} `
+  })
 
   /* Numeric citation runs "[1][2][13]" point at footnotes we don't show. */
   s = s.replace(/(?:\[\d{1,3}\])+/g, "")
