@@ -1620,7 +1620,11 @@ async function fetchReal(domain, opts){
   // lostdeal's own server-side curl timeout is 30s (lgs_req_sonar); 30s client-side gave it ZERO
   // buffer for the DB counter round-trip + network before curl even starts (2026-09-11 QA fix) —
   // same bug class as the visibility timeout above, just not caught the first time.
-  const t = setTimeout(()=>ctrl.abort(), longCall ? (opts.only==='visibility'?170000:45000) : 20000);
+  // 2026-09-11 v2: lostdeal now also fetches the homepage (cache miss) + one brief LLM call + one
+  // name-filter LLM call around the sonar call; visibility adds the brief on a cache miss. Server
+  // worst case moved ~+40s, so the aborts move with it — an abort that fires while the server is
+  // still finishing the paid call makes the retry spend twice (same class as this morning's fix).
+  const t = setTimeout(()=>ctrl.abort(), longCall ? (opts.only==='visibility'?210000:90000) : 20000);
   // lostdeal/visibility spend real money and require POST + an allowlisted Origin server-side
   // (2026-09-11 QA fix — a plain GET here was a zero-JS, no-CORS-needed cost-exhaustion hole: any
   // <img src="..."> or link-unfurler bot could fire the paid work from a visitor's own browser).
