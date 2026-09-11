@@ -1,0 +1,2288 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>AI Visibility Check</title>
+<!--
+  Alchemy Leads — AI Visibility Checker (embeddable widget)
+  Self-contained: host this single file on Cloudflare, embed in Framer via <iframe>.
+  Theme   -> edit the :root CSS variables below (brand colours/font/logo).
+  Wire up  -> edit the GAK_CONFIG block in <script> (API_BASE, MAKE_WEBHOOK_URL, ENGINES, GATE).
+  Demo now -> GAK_CONFIG.DEMO_MODE = true renders realistic results with NO backend (for showing the client).
+  PDF      -> "Download PDF" (dual CTA, shown after the full report) builds an 8-page branded PDF
+              client-side via html2pdf.js (lazy-loaded; falls back to window.print() on load failure/timeout).
+              PRODUCTION: self-host the bundle SAME-ORIGIN (see GAK_PDF.BUNDLE_URL in <script>) — Framer /
+              Cloudflare-Pages host-page CSP `script-src` frequently blocks CDN origins, which would force the
+              print fallback every run. The report never leaves the browser (no backend / no per-PDF cost).
+  FRAMER   -> the embed iframe MUST keep  sandbox="allow-scripts allow-same-origin allow-downloads allow-popups allow-modals"
+              (or no sandbox attribute at all). Without `allow-downloads` the Blob-anchor save is SILENTLY dropped.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&family=Fragment+Mono&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* ---- Alchemy Leads brand (PLACEHOLDER palette — swap for their real brand kit) ---- */
+  --gak-navy:#151b2e;        /* authority: headings, dark sections */
+  --gak-orange:#0d9488;      /* signature accent — FILLS / CTAs only (placeholder teal accent) */
+  --gak-orange-600:#0f766e;  /* accent hover */
+  --gak-orange-ink:#0f6f68;  /* accent as TEXT on light (AA-safe, ≥4.5:1) */
+  --gak-mint:#2e9e6f;        /* pass (fills) — darkened so white glyphs clear ≥3:1 */
+  --gak-amber:#c47d16;       /* warn (fills) — darkened for white-on-fill contrast */
+  --gak-red:#d63b42;         /* fail (fills) */
+  /* surfaces — neutrals tinted toward navy for subconscious cohesion */
+  --gak-bg:#fbfbf9;
+  --gak-card:#ffffff;
+  --gak-inset:#f5f6f8;       /* recessed wells (navy-tinted) */
+  --gak-ink:#16202e;         /* near-navy body text (not cool gray) */
+  --gak-muted:#5d6b7d;       /* navy-tinted secondary (AA on light) */
+  --gak-faint:#636f7e;       /* tertiary — AA-safe (≥4.5:1) for small/mono labels */
+  --gak-line:#e9ebf0;        /* hairline (navy-tinted) */
+  --gak-line-2:#dde1e9;      /* stronger hairline */
+  /* semantic text + tint pairs (ONE green/amber/red/blue/violet — used everywhere) */
+  --gak-ok:#0f7a52;   --gak-ok-bg:#e7f5ee;   --gak-ok-line:#c2e6d4;
+  --gak-warn:#a5651a; --gak-warn-bg:#fbf1e1; --gak-warn-line:#f0d6a8;
+  --gak-bad:#c0353c;  --gak-bad-bg:#fcebec;  --gak-bad-line:#f3ccce;
+  --gak-info:#1e5fa8; --gak-info-bg:#eaf2fc; --gak-info-line:#c8ddf5;
+  --gak-violet:#6b3fa0; --gak-violet-bg:#f3edfb; --gak-violet-line:#ddccef;
+  --gak-accent-bg:#fff1ea; --gak-accent-line:#f7cdb5;
+  --gak-lock:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill-rule='evenodd' d='M12 17a2 2 0 0 0 2-2 2 2 0 0 0-2-2 2 2 0 0 0-2 2 2 2 0 0 0 2 2m6-9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2h1V6a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2zm-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3z'/%3E%3C/svg%3E");
+  --gak-font:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --gak-mono:'Fragment Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --gak-r-sm:9px; --gak-r:13px; --gak-r-lg:18px; --gak-radius:13px;
+  /* elevation: near-flat by default (crisp hairline does the work); reserve real depth for hero/CTA */
+  --gak-shadow:0 1px 2px rgba(16,32,54,.05);
+  --gak-shadow-lift:0 2px 4px rgba(16,32,54,.05),0 12px 28px -14px rgba(16,32,54,.18);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  font-family:var(--gak-font);color:var(--gak-ink);background:var(--gak-bg);
+  -webkit-font-smoothing:antialiased;line-height:1.5;
+}
+.gak-wrap{max-width:1080px;margin:0 auto;padding:36px 22px 48px}
+/* the INPUT stage stays a comfortable centered column even though the results use the full width */
+#gak-stage-input{max-width:620px;margin:0 auto}
+.gak-hide{display:none!important}
+@keyframes gak-rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* ---------- hero / input ---------- */
+.gak-hero{text-align:center;margin-bottom:26px}
+.gak-eyebrow{display:inline-block;font:600 12px/1 var(--gak-mono);letter-spacing:.16em;text-transform:uppercase;color:var(--gak-orange-ink);margin-bottom:14px}
+.gak-h1{font-size:clamp(28px,5vw,40px);line-height:1.05;font-weight:800;color:var(--gak-navy);margin:0 0 12px;letter-spacing:-.034em}
+.gak-sub{color:var(--gak-muted);font-size:16px;line-height:1.5;margin:0 auto;max-width:46ch}
+/* refined input panel — required action up top (prominent), optional inputs demoted below */
+.gak-panel{max-width:540px;margin:28px auto 0;display:flex;flex-direction:column;gap:14px;text-align:left}
+.gak-form{display:grid;grid-template-columns:1.55fr 1fr;gap:10px}
+.gak-field{position:relative;min-width:0}
+.gak-field-industry{grid-column:1 / -1}
+/* confident, unmissable primary CTA spanning the full panel width */
+.gak-btn-go{grid-column:1 / -1;width:100%;height:56px;display:inline-flex;align-items:center;justify-content:center;gap:10px;font-size:16.5px;font-weight:800;letter-spacing:-.012em;
+  box-shadow:0 2px 5px rgba(16,32,54,.12),0 16px 34px -14px rgba(255,88,0,.62)}
+.gak-go-arrow{font-size:18px;line-height:1;transition:transform .18s cubic-bezier(.2,.7,.3,1)}
+.gak-btn-go:hover .gak-go-arrow{transform:translateX(4px)}
+.gak-btn-go[disabled] .gak-go-arrow{opacity:0}
+/* OPTIONAL row — visually subordinate (smaller, recessed wells, mono tag) so required vs optional reads instantly */
+.gak-form-opt{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:4px}
+.gak-opt-tag{grid-column:1 / -1;font:600 10.5px/1 var(--gak-mono);letter-spacing:.15em;text-transform:uppercase;color:var(--gak-faint);margin:2px 0 -3px}
+.gak-form-opt .gak-input{height:46px;font-size:14px;padding:0 16px;background:var(--gak-inset);border-color:var(--gak-line)}
+.gak-form-opt select.gak-input{padding-right:38px;background-position:right 14px center}
+.gak-input{
+  width:100%;height:54px;padding:0 22px;font-size:16px;font-family:inherit;color:var(--gak-ink);
+  background:var(--gak-card);border:1.5px solid var(--gak-line-2);border-radius:12px;outline:none;transition:border-color .16s,box-shadow .16s;
+}
+.gak-input::placeholder{color:var(--gak-faint)}
+.gak-input:focus{border-color:var(--gak-orange);box-shadow:0 0 0 4px rgba(255,88,0,.14)}
+select.gak-input{appearance:none;-webkit-appearance:none;-moz-appearance:none;cursor:pointer;padding-right:44px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' fill='none' stroke='%230C1A2E' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 18px center;background-size:12px}
+.gak-btn{
+  height:54px;padding:0 30px;font-size:16px;font-weight:700;font-family:inherit;color:var(--gak-navy);cursor:pointer;letter-spacing:-.01em;
+  background:var(--gak-orange);border:none;border-radius:12px;box-shadow:0 1px 1px rgba(16,32,54,.1),0 6px 16px -8px rgba(255,88,0,.5);
+  transition:transform .12s cubic-bezier(.2,.7,.3,1),background .16s,opacity .16s;white-space:nowrap;
+}
+.gak-btn:hover{background:var(--gak-orange-600);transform:translateY(-2px)}
+.gak-btn[disabled]:hover{transform:none;background:var(--gak-orange)}
+.gak-btn:active{transform:translateY(0)}
+.gak-btn[disabled]{opacity:.5;cursor:not-allowed;box-shadow:none}
+.gak-btn-cta{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:15px 30px;font:700 16px/1 var(--gak-font);letter-spacing:-.01em;color:var(--gak-navy);text-decoration:none;border-radius:12px;background:var(--gak-orange);box-shadow:0 2px 6px rgba(16,32,54,.18),0 14px 30px -12px rgba(255,88,0,.6);transition:transform .12s cubic-bezier(.2,.7,.3,1),background .16s}
+.gak-btn-cta:hover{background:var(--gak-orange-600);transform:translateY(-2px)}
+.gak-btn-cta:active{transform:translateY(0)}
+.gak-ghost{background:transparent;color:var(--gak-muted);border:1px solid var(--gak-line-2);box-shadow:none;font-weight:600}
+.gak-ghost:hover{background:var(--gak-inset);color:var(--gak-navy);transform:none}
+.gak-booking{margin:22px 0 6px;border-radius:var(--gak-r-lg);padding:26px 28px;background:radial-gradient(120% 140% at 0% 0%,#16294a 0%,var(--gak-navy) 60%);box-shadow:var(--gak-shadow-lift);animation:gak-rise .45s cubic-bezier(.2,.7,.3,1) both}
+.gak-booking-in{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.gak-booking-txt{flex:1 1 240px;min-width:0}
+.gak-booking-h{font-size:20px;font-weight:800;letter-spacing:-.02em;margin:0 0 5px;color:#fff}
+.gak-booking-sub{font-size:14px;line-height:1.55;color:#aebfd6;margin:0}
+.gak-note{display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--gak-faint);margin-top:4px;line-height:1.4}
+.gak-note-dot{width:7px;height:7px;border-radius:50%;background:var(--gak-mint);box-shadow:0 0 0 3px rgba(46,158,111,.16);flex:0 0 auto}
+@media(max-width:560px){
+  .gak-form{grid-template-columns:1fr}
+  .gak-form-opt{grid-template-columns:1fr}
+}
+.gak-err{color:var(--gak-bad);font-size:14px;text-align:center;margin-top:10px;min-height:18px}
+
+/* ---------- loading ---------- */
+.gak-loading{text-align:center;padding:44px 0}
+.gak-spin{width:36px;height:36px;border:3px solid var(--gak-line-2);border-top-color:var(--gak-orange);border-radius:50%;margin:0 auto 20px;animation:gak-rot .8s linear infinite}
+@keyframes gak-rot{to{transform:rotate(360deg)}}
+.gak-steps{list-style:none;padding:0;margin:0;display:inline-block;text-align:left;color:var(--gak-muted);font-size:15px}
+.gak-steps li{padding:6px 0 6px 26px;position:relative;opacity:.4;transition:opacity .3s,color .3s}
+.gak-steps li.on{opacity:1;color:var(--gak-ink)}
+.gak-steps li.done{opacity:1;color:var(--gak-navy)}
+.gak-steps li::before{content:'';position:absolute;left:0;top:9px;width:10px;height:10px;border-radius:50%;border:2px solid var(--gak-line-2)}
+.gak-steps li.on::before{border-color:var(--gak-orange);animation:gak-pulse 1s ease-in-out infinite}
+.gak-steps li.done::before{border-color:var(--gak-mint);background:var(--gak-mint)}
+@keyframes gak-pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,88,0,.4)}50%{box-shadow:0 0 0 5px rgba(255,88,0,0)}}
+
+/* ---------- result cards ---------- */
+.gak-results{display:flex;flex-direction:column;gap:14px}
+.gak-card{background:var(--gak-card);border:1px solid var(--gak-line);border-radius:var(--gak-radius);box-shadow:var(--gak-shadow);padding:24px;animation:gak-rise .45s cubic-bezier(.2,.7,.3,1) both}
+/* staggered cascade on the free-report load (gated cards 7+ rise immediately on unlock, no long wait) */
+.gak-results>:nth-child(2){animation-delay:.04s}
+.gak-results>:nth-child(3){animation-delay:.08s}
+.gak-results>:nth-child(4){animation-delay:.12s}
+.gak-results>:nth-child(5){animation-delay:.16s}
+.gak-results>:nth-child(6){animation-delay:.2s}
+.gak-card-h{display:flex;align-items:center;gap:9px;margin:0 0 14px;font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--gak-faint)}
+.gak-card-h .dot{width:6px;height:14px;border-radius:3px;background:var(--gak-orange);flex:0 0 auto}
+
+/* score gauge */
+.gak-score{display:flex;align-items:center;gap:28px;flex-wrap:wrap}
+.gak-gauge{position:relative;width:140px;height:140px;flex:0 0 auto}
+.gak-gauge svg{transform:rotate(-90deg)}
+.gak-gauge .val{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.gak-gauge .num{font-size:42px;font-weight:800;color:var(--gak-navy);line-height:1;letter-spacing:-.03em}
+.gak-gauge .den{font-size:13px;color:var(--gak-faint);margin-top:3px}
+.gak-score-txt{flex:1 1 220px;min-width:200px}
+.gak-grade{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;letter-spacing:.01em;padding:5px 12px;border-radius:999px;margin-bottom:10px}
+.gak-grade.g-a{background:var(--gak-ok-bg);color:var(--gak-ok)}
+.gak-grade.g-b{background:var(--gak-ok-bg);color:var(--gak-ok)}
+.gak-grade.g-c{background:var(--gak-warn-bg);color:var(--gak-warn)}
+.gak-grade.g-d{background:var(--gak-bad-bg);color:var(--gak-bad)}
+.gak-verdict{font-size:16px;line-height:1.5;color:var(--gak-ink);margin:0}
+
+/* check rows */
+.gak-checks{list-style:none;margin:4px 0 0;padding:0;display:flex;flex-direction:column;gap:0}
+.gak-checks li{display:flex;gap:13px;padding:13px 0;border-top:1px solid var(--gak-line)}
+.gak-checks li:first-child{border-top:none;padding-top:2px}
+.gak-pill{flex:0 0 auto;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;margin-top:1px}
+.gak-pill.pass{background:var(--gak-mint)}
+.gak-pill.warn{background:var(--gak-amber)}
+.gak-pill.fail{background:var(--gak-red)}
+.gak-pill.na{background:#7e8a99}
+.gak-check-b{flex:1}
+.gak-check-t{font-weight:600;color:var(--gak-navy)}
+.gak-check-e{font-size:14px;line-height:1.45;color:var(--gak-muted);margin-top:3px}
+
+/* crawler grid */
+.gak-crawl-sum{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.gak-stat{flex:1 1 120px;background:var(--gak-inset);border:1px solid var(--gak-line);border-radius:11px;padding:14px 16px}
+.gak-stat .n{font-size:27px;font-weight:800;color:var(--gak-navy);line-height:1;letter-spacing:-.02em}
+.gak-stat .l{font-size:12px;color:var(--gak-muted);margin-top:4px}
+.gak-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:8px}
+.gak-bot{display:flex;align-items:center;gap:9px;padding:10px 12px;border-radius:9px;background:var(--gak-inset);border:1px solid var(--gak-line);font-size:14px}
+.gak-bot .b-dot{width:8px;height:8px;border-radius:50%;flex:0 0 auto}
+.gak-bot.ok .b-dot{background:var(--gak-mint)}
+.gak-bot.no .b-dot{background:var(--gak-red)}
+.gak-bot .b-name{font-weight:600;color:var(--gak-navy)}
+
+/* email gate */
+.gak-gate{position:relative;overflow:hidden;background:var(--gak-navy);border-radius:var(--gak-r-lg);box-shadow:var(--gak-shadow-lift);padding:30px 28px;text-align:center}
+.gak-gate::before{content:'';position:absolute;inset:0;background:radial-gradient(90% 120% at 100% 0%,rgba(255,88,0,.16),transparent 55%);pointer-events:none}
+.gak-gate h3{position:relative;font-size:21px;line-height:1.25;color:#fff;margin:0 0 8px;font-weight:800;letter-spacing:-.02em}
+.gak-gate p{position:relative;color:#aebfd6;margin:0 auto 18px;max-width:42ch;line-height:1.55}
+.gak-gate .gak-form{position:relative}
+.gak-gate .gak-input{border-color:transparent;background:rgba(255,255,255,.97)}
+.gak-gate .gak-terms{position:relative;display:inline-flex;align-items:center;gap:9px;margin:14px auto 2px;color:#aebfd6;font-size:13px;line-height:1.45;cursor:pointer;text-align:left}
+.gak-gate .gak-terms input{width:16px;height:16px;margin:0;flex:0 0 auto;accent-color:var(--gak-orange);cursor:pointer}
+.gak-gate .gak-terms input:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.gak-gate .gak-terms a{color:#dbe6f5;text-decoration:underline;text-underline-offset:2px}
+.gak-gate .gak-terms a:hover{color:#fff}
+.gak-locked{position:relative}
+.gak-locked .gak-blur{filter:blur(6px);opacity:.55;pointer-events:none;user-select:none}
+
+/* visibility scan */
+.gak-prompt{border:1px solid var(--gak-line);border-radius:11px;padding:15px 17px;margin-top:10px;background:var(--gak-inset)}
+.gak-prompt-q{font-weight:600;color:var(--gak-navy);font-size:15px;line-height:1.4}
+.gak-engines{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}
+.gak-eng{display:flex;align-items:center;gap:7px;font-size:13px;padding:5px 11px;border-radius:999px;background:var(--gak-card);border:1px solid var(--gak-line)}
+.gak-eng .e-dot{width:7px;height:7px;border-radius:50%}
+.gak-eng.cited .e-dot{background:var(--gak-mint)}
+.gak-eng.absent .e-dot{background:var(--gak-red)}
+.gak-eng b{color:var(--gak-navy)}
+.gak-comp{font-size:14px;color:var(--gak-muted);margin-top:9px}
+.gak-comp b{color:var(--gak-ink)}
+
+/* ---------- Lost-Deal Quote (free hero) ---------- */
+.gak-lostdeal{position:relative;background:var(--gak-card);border:1px solid var(--gak-line);border-left:3px solid var(--gak-red);border-radius:var(--gak-radius);box-shadow:var(--gak-shadow);padding:24px;animation:gak-rise .45s cubic-bezier(.2,.7,.3,1) both}
+.gak-lostdeal.win{border-left-color:var(--gak-mint)}
+.gak-ld-badge{display:inline-flex;align-items:center;gap:7px;font:700 11px/1 var(--gak-mono);letter-spacing:.06em;text-transform:uppercase;padding:6px 11px;border-radius:7px;margin-bottom:14px}
+.gak-ld-badge.lose{background:var(--gak-bad-bg);color:var(--gak-bad)}
+.gak-ld-badge.win{background:var(--gak-ok-bg);color:var(--gak-ok)}
+.gak-ld-q{font-size:13px;color:var(--gak-muted);margin:0 0 9px}
+.gak-ld-quote{font-size:18px;line-height:1.55;color:var(--gak-navy);font-weight:500;border-radius:11px;background:var(--gak-inset);border:1px solid var(--gak-line);padding:15px 17px;margin:0}
+.gak-ld-quote .src{display:block;font:600 12px/1 var(--gak-mono);color:var(--gak-faint);margin-top:11px;letter-spacing:.02em}
+.gak-ld-rival{margin-top:13px;font-size:15px;color:var(--gak-ink)}
+.gak-ld-rival b{color:var(--gak-bad)}
+.gak-lostdeal.win .gak-ld-rival b{color:var(--gak-navy)}
+
+/* ---------- Reach / Read / Result matrix (free; Result locked) ---------- */
+.gak-matrix-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}  /* last-resort: scroll, never clip (the client 2026-07-02 mobile spillover) */
+.gak-matrix{width:100%;border-collapse:collapse;margin-top:4px;font-size:14px}
+.gak-matrix th,.gak-matrix td{padding:12px 8px;text-align:center;border-top:1px solid var(--gak-line)}
+.gak-matrix th{font:700 11px/1.2 var(--gak-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--gak-faint);border-top:none;padding-bottom:10px}
+.gak-matrix th:first-child,.gak-matrix td:first-child{text-align:left}
+.gak-matrix tbody tr:hover td{background:var(--gak-inset)}
+.gak-matrix td.eng{font-weight:700;color:var(--gak-navy);white-space:nowrap}
+.gak-cell{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;font-size:12px;font-weight:800;color:#fff}
+.gak-cell.yes{background:var(--gak-mint)}
+.gak-cell.no{background:var(--gak-red)}
+.gak-cell.unk{background:#93a0af;color:#fff}
+.gak-res{font-weight:700;font-size:13px}
+.gak-res.present{color:var(--gak-ok)}
+.gak-res.absent{color:var(--gak-bad)}
+.gak-res.competitor{color:var(--gak-warn)}
+.gak-res-lock{display:inline-flex;align-items:center;gap:5px;color:var(--gak-faint);font-size:13px;font-weight:600}
+.gak-res-lock::before{content:'';width:11px;height:12px;background:currentColor;-webkit-mask:var(--gak-lock) center/contain no-repeat;mask:var(--gak-lock) center/contain no-repeat}
+.gak-res-prem{font:700 11px/1 var(--gak-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--gak-orange-ink);background:var(--gak-accent-bg);padding:4px 7px;border-radius:6px}
+.gak-matrix-note{font-size:13px;color:var(--gak-faint);margin-top:14px;text-align:center;line-height:1.5}
+
+/* ---------- teaser chips (free counts) ---------- */
+.gak-teasers{display:flex;gap:10px;flex-wrap:wrap;margin-top:0}
+.gak-teaser{flex:1 1 160px;display:flex;gap:12px;align-items:center;background:var(--gak-inset);border:1px solid var(--gak-line);border-radius:11px;padding:14px 16px}
+.gak-teaser .tn{font-size:25px;font-weight:800;line-height:1;color:var(--gak-navy);letter-spacing:-.02em}
+.gak-teaser.alert .tn{color:var(--gak-bad)}
+.gak-teaser .tl{font-size:13px;color:var(--gak-muted);line-height:1.35}
+.gak-teaser.locked{position:relative}
+.gak-teaser.locked .tn{filter:blur(7px);user-select:none}
+.gak-teaser.locked::after{content:'';position:absolute;left:16px;top:15px;width:14px;height:15px;background:var(--gak-navy);-webkit-mask:var(--gak-lock) center/contain no-repeat;mask:var(--gak-lock) center/contain no-repeat}
+
+/* gated: losing headline + causal join */
+.gak-losing{display:inline-flex;align-items:baseline;gap:8px;background:var(--gak-bad-bg);color:var(--gak-bad);font-weight:700;border-radius:9px;padding:9px 14px;margin:0 0 14px;font-size:14px}
+.gak-losing b{font-size:20px}
+.gak-causal{font-size:13px;line-height:1.5;color:var(--gak-warn);background:var(--gak-warn-bg);border:1px solid var(--gak-warn-line);border-radius:8px;padding:8px 12px;margin-top:9px}
+.gak-causal b{color:var(--gak-navy)}
+
+/* gated: chips (competitors) */
+.gak-chips{display:flex;flex-wrap:wrap;gap:8px}
+.gak-chip{display:inline-flex;align-items:center;gap:8px;background:var(--gak-inset);border:1px solid var(--gak-line);border-radius:999px;padding:7px 14px 7px 7px;font-size:14px;font-weight:600;color:var(--gak-navy)}
+.gak-chip .rank{display:inline-flex;align-items:center;justify-content:center;width:19px;height:19px;border-radius:50%;background:var(--gak-bad);color:#fff;font-size:11px;font-weight:800;flex:0 0 auto}
+
+/* gated: source map */
+.gak-src-grp{margin-top:6px}
+.gak-src-grp+.gak-src-grp{margin-top:16px}
+.gak-src-lbl{font:700 11px/1 var(--gak-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--gak-faint);margin-bottom:9px}
+.gak-src-lbl .tag{color:var(--gak-orange-ink)}
+.gak-src-list{display:flex;flex-wrap:wrap;gap:6px}
+.gak-src{font-size:13px;color:var(--gak-ink);background:var(--gak-inset);border:1px solid var(--gak-line);border-radius:7px;padding:5px 10px;font-family:var(--gak-mono)}
+.gak-src-note{font-size:13px;line-height:1.55;color:var(--gak-muted);margin-top:12px}
+/* gated: citation target list */
+.gak-src-sub{margin-top:0;margin-bottom:14px;color:var(--gak-muted);line-height:1.55}
+.gak-src-empty{font-size:14px;line-height:1.5;color:var(--gak-navy);background:var(--gak-accent-bg);border:1px solid var(--gak-accent-line);border-radius:11px;padding:14px 16px;margin-top:4px}
+.gak-tg-list{display:flex;flex-direction:column;gap:0;margin-top:4px;border:1px solid var(--gak-line);border-radius:12px;overflow:hidden}
+.gak-tg-row{display:flex;align-items:center;gap:11px;background:var(--gak-card);padding:12px 14px;flex-wrap:wrap;border-top:1px solid var(--gak-line);transition:background .14s}
+.gak-tg-row:first-child{border-top:none}
+.gak-tg-row:hover{background:var(--gak-inset)}
+.gak-tg-rank{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:6px;background:var(--gak-inset);border:1px solid var(--gak-line);color:var(--gak-faint);font:700 11px/1 var(--gak-mono)}
+.gak-tg-badge{flex:0 0 auto;font:700 11px/1 var(--gak-mono);letter-spacing:.05em;text-transform:uppercase;padding:4px 7px;border-radius:6px;border:1px solid var(--gak-line);color:var(--gak-muted);background:var(--gak-inset)}
+.gak-tg-badge.b-listicle{color:var(--gak-orange-ink);background:var(--gak-accent-bg);border-color:var(--gak-accent-line)}
+.gak-tg-badge.b-directory{color:var(--gak-info);background:var(--gak-info-bg);border-color:var(--gak-info-line)}
+.gak-tg-badge.b-review{color:var(--gak-ok);background:var(--gak-ok-bg);border-color:var(--gak-ok-line)}
+.gak-tg-badge.b-community{color:var(--gak-violet);background:var(--gak-violet-bg);border-color:var(--gak-violet-line)}
+.gak-tg-main{flex:1 1 200px;min-width:0;display:flex;flex-direction:column;gap:2px}
+.gak-tg-main a{color:var(--gak-navy);font-weight:600;font-size:14px;text-decoration:none;word-break:break-word}
+.gak-tg-main a:hover{color:var(--gak-orange-ink);text-decoration:underline}
+.gak-tg-host{font:500 12px/1.2 var(--gak-mono);color:var(--gak-faint)}
+.gak-tg-meta{flex:0 0 auto;display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap}
+.gak-tg-pill{font:700 11px/1 var(--gak-mono);padding:5px 9px;border-radius:999px;white-space:nowrap}
+.gak-tg-pill.ok{color:var(--gak-ok);background:var(--gak-ok-bg);border:1px solid var(--gak-ok-line)}
+.gak-tg-pill.no{color:var(--gak-orange-ink);background:var(--gak-accent-bg);border:1px solid var(--gak-accent-line)}
+.gak-tg-hard{font:600 11px/1 var(--gak-mono);color:var(--gak-faint);text-transform:uppercase;letter-spacing:.04em}
+.gak-tg-freq{font:500 11px/1 var(--gak-mono);color:var(--gak-faint)}
+.gak-owned-grp{margin-top:16px;opacity:.9}
+
+/* gated: fix list */
+.gak-fixes{margin:4px 0 0;padding:0;list-style:none;counter-reset:gakfix;display:flex;flex-direction:column;gap:0}
+.gak-fixes li{position:relative;counter-increment:gakfix;color:var(--gak-ink);font-size:15px;line-height:1.55;padding:14px 0 14px 40px;border-top:1px solid var(--gak-line)}
+.gak-fixes li:first-child{border-top:none}
+.gak-fixes li::before{content:counter(gakfix);position:absolute;left:0;top:13px;width:24px;height:24px;border-radius:7px;background:var(--gak-navy);color:#fff;font:800 12px/24px var(--gak-mono);text-align:center}
+.gak-fixes li b{color:var(--gak-navy)}
+.gak-fix-tag{display:inline-block;font:700 11px/1 var(--gak-mono);letter-spacing:.05em;text-transform:uppercase;padding:3px 7px;border-radius:5px;margin-right:8px;vertical-align:1px}
+.gak-fix-tag.reach{background:var(--gak-bad-bg);color:var(--gak-bad)}
+.gak-fix-tag.read{background:var(--gak-warn-bg);color:var(--gak-warn)}
+
+/* gated: offering gap */
+.gak-og-row{display:flex;gap:12px;align-items:flex-start;margin-top:10px}
+.gak-og-k{flex:0 0 78px;font:700 11px/1.5 var(--gak-mono);letter-spacing:.05em;text-transform:uppercase}
+.gak-og-k.miss{color:var(--gak-bad)}.gak-og-k.ok{color:var(--gak-ok)}
+.gak-og-v{flex:1;font-size:14px;line-height:1.5;color:var(--gak-ink)}
+
+/* ====== BRIEF: AI Visibility Score report cards ====== */
+/* composite-score caption + 5th grade band (A+ green) */
+.gak-score-cov{font-size:13px;line-height:1.45;color:var(--gak-faint);margin:10px 0 0}
+.gak-grade.g-aplus{background:var(--gak-ok-bg);color:var(--gak-ok)}
+.gak-score-h-txt{display:inline}
+
+/* scoring framework — weighted category bars */
+.gak-fw-row{padding:11px 0;border-top:1px solid var(--gak-line)}
+.gak-fw-row:first-child{border-top:none;padding-top:2px}
+.gak-fw-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:8px}
+.gak-fw-label{font-weight:600;color:var(--gak-navy);font-size:14px}
+.gak-fw-weight{font:700 11px/1 var(--gak-mono);letter-spacing:.04em;color:var(--gak-faint);background:var(--gak-inset);border:1px solid var(--gak-line);padding:4px 8px;border-radius:6px;white-space:nowrap}
+.gak-fw-barwrap{display:flex;align-items:center;gap:10px}
+.gak-fw-track{flex:1;height:9px;border-radius:999px;background:var(--gak-inset);border:1px solid var(--gak-line);overflow:hidden;min-width:0}
+.gak-fw-fill{height:100%;border-radius:999px;transition:width 1s cubic-bezier(.2,.7,.2,1)}
+.gak-fw-score{font:700 13px/1 var(--gak-mono);color:var(--gak-navy);min-width:26px;text-align:right;flex:0 0 auto}
+.gak-fw-nodata{font-size:13px;color:var(--gak-faint);font-style:italic}
+
+/* brand performance — band chips */
+.gak-bp-grid{display:flex;flex-wrap:wrap;gap:8px}
+.gak-bp-chip{display:inline-flex;align-items:center;gap:9px;border-radius:11px;padding:9px 13px;border:1px solid var(--gak-line);background:var(--gak-inset)}
+.gak-bp-label{font-weight:600;font-size:13px;color:var(--gak-navy)}
+.gak-bp-band{font:700 10px/1 var(--gak-mono);letter-spacing:.05em;text-transform:uppercase;padding:3px 7px;border-radius:5px;white-space:nowrap}
+.gak-bp-score{font:700 13px/1 var(--gak-mono);color:var(--gak-navy)}
+.gak-bp-chip.b-strong{background:var(--gak-ok-bg);border-color:var(--gak-ok-line)} .gak-bp-chip.b-strong .gak-bp-band{color:var(--gak-ok);background:#fff}
+.gak-bp-chip.b-good{background:var(--gak-ok-bg);border-color:var(--gak-ok-line)} .gak-bp-chip.b-good .gak-bp-band{color:var(--gak-ok);background:#fff}
+.gak-bp-chip.b-fair{background:var(--gak-warn-bg);border-color:var(--gak-warn-line)} .gak-bp-chip.b-fair .gak-bp-band{color:var(--gak-warn);background:#fff}
+.gak-bp-chip.b-weak{background:var(--gak-bad-bg);border-color:var(--gak-bad-line)} .gak-bp-chip.b-weak .gak-bp-band{color:var(--gak-bad);background:#fff}
+.gak-bp-chip.b-no-data{background:var(--gak-inset);border-color:var(--gak-line)} .gak-bp-chip.b-no-data .gak-bp-band{color:var(--gak-faint);background:#fff}
+
+/* strengths & weaknesses — two columns */
+.gak-sw-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.gak-sw-h{font:700 12px/1 var(--gak-mono);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
+.gak-sw-h.good{color:var(--gak-ok)} .gak-sw-h.bad{color:var(--gak-bad)}
+.gak-sw-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.gak-sw-item{display:flex;gap:9px}
+.gak-sw-dot{flex:0 0 auto;width:8px;height:8px;border-radius:50%;margin-top:6px}
+.gak-sw-item.good .gak-sw-dot{background:var(--gak-mint)} .gak-sw-item.bad .gak-sw-dot{background:var(--gak-red)}
+.gak-sw-t{font-size:14px;color:var(--gak-navy);font-weight:600;line-height:1.4}
+.gak-sw-e{font-size:12px;color:var(--gak-muted);margin-top:2px;line-height:1.4}
+.gak-sw-empty{font-size:14px;color:var(--gak-muted);line-height:1.5;margin:0}
+
+/* recommendations — quick wins + strategic actions */
+.gak-rec-grp+.gak-rec-grp{margin-top:18px}
+.gak-rec-gh{font:700 12px/1 var(--gak-mono);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px;display:inline-block;padding:5px 9px;border-radius:6px}
+.gak-rec-gh.qw{color:var(--gak-orange-ink);background:var(--gak-accent-bg);border:1px solid var(--gak-accent-line)}
+.gak-rec-gh.sa{color:var(--gak-info);background:var(--gak-info-bg);border:1px solid var(--gak-info-line)}
+.gak-rec-list{list-style:none;margin:0;padding:0;counter-reset:gakrec;display:flex;flex-direction:column;gap:0}
+.gak-rec-item{position:relative;counter-increment:gakrec;padding:12px 0 12px 38px;border-top:1px solid var(--gak-line)}
+.gak-rec-item:first-child{border-top:none}
+.gak-rec-item::before{content:counter(gakrec);position:absolute;left:0;top:12px;width:23px;height:23px;border-radius:7px;background:var(--gak-navy);color:#fff;font:800 12px/23px var(--gak-mono);text-align:center}
+.gak-rec-t{font-weight:700;color:var(--gak-navy);font-size:15px;line-height:1.4}
+.gak-rec-d{font-size:13px;color:var(--gak-muted);margin-top:3px;line-height:1.5}
+
+/* ChatGPT visibility — per-prompt rows */
+.gak-cg-row{border:1px solid var(--gak-line);border-radius:11px;padding:14px 16px;margin-top:10px;background:var(--gak-inset)}
+.gak-cg-row:first-child{margin-top:2px}
+.gak-cg-q{font-weight:600;color:var(--gak-navy);font-size:15px;line-height:1.4}
+.gak-cg-state{display:inline-flex;align-items:center;font:700 13px/1 var(--gak-font);margin-top:9px;padding:5px 11px;border-radius:999px}
+.gak-cg-state.yes{color:var(--gak-ok);background:var(--gak-ok-bg)}
+.gak-cg-state.no{color:var(--gak-bad);background:var(--gak-bad-bg)}
+.gak-cg-comp{font-size:13px;color:var(--gak-muted);margin-top:9px}
+.gak-cg-comp b{color:var(--gak-ink)}
+
+/* Google AI Overview readiness — likelihood band */
+.gak-aio-main{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.gak-aio-band{font:800 16px/1 var(--gak-font);letter-spacing:-.01em;padding:8px 14px;border-radius:10px}
+.gak-aio-band.b-high{color:var(--gak-ok);background:var(--gak-ok-bg);border:1px solid var(--gak-ok-line)}
+.gak-aio-band.b-medium{color:var(--gak-warn);background:var(--gak-warn-bg);border:1px solid var(--gak-warn-line)}
+.gak-aio-band.b-low{color:var(--gak-bad);background:var(--gak-bad-bg);border:1px solid var(--gak-bad-line)}
+.gak-aio-lbl{font-size:14px;color:var(--gak-muted);flex:1 1 auto;min-width:140px}
+.gak-aio-tag{font:700 10px/1 var(--gak-mono);letter-spacing:.05em;text-transform:uppercase;padding:4px 8px;border-radius:5px}
+.gak-aio-tag.obs{color:var(--gak-ok);background:var(--gak-ok-bg);border:1px solid var(--gak-ok-line)}
+.gak-aio-tag.est{color:var(--gak-faint);background:var(--gak-inset);border:1px solid var(--gak-line)}
+.gak-aio-deriv{font-size:13px;color:var(--gak-muted);line-height:1.5;margin:12px 0 0}
+
+/* sample-data notice (synthetic demo domains) */
+.gak-sample-note{background:var(--gak-warn-bg);border:1px solid var(--gak-warn-line);color:var(--gak-warn);font-size:13px;line-height:1.5;border-radius:10px;padding:11px 15px;text-align:center}
+.gak-sample-note b{color:var(--gak-navy)}
+
+.gak-cta-final{text-align:center;padding:10px 0 0}
+.gak-foot{text-align:center;font-size:12px;color:var(--gak-faint);margin-top:28px}
+.gak-foot a{color:var(--gak-orange-ink);text-decoration:none;font-weight:600}
+.gak-foot a:hover{text-decoration:underline}
+
+/* ---- accessibility: visible keyboard focus everywhere ---- */
+.gak-btn:focus-visible,.gak-btn-cta:focus-visible,.gak-ghost:focus-visible{outline:3px solid var(--gak-navy);outline-offset:3px}
+.gak-gate .gak-btn:focus-visible{outline-color:#fff}
+.gak-tg-main a:focus-visible,.gak-foot a:focus-visible{outline:2px solid var(--gak-orange);outline-offset:2px;border-radius:3px}
+.gak-input:focus-visible{outline:none}
+
+/* ---------- dual CTA (Book a call + Download PDF) ---------- */
+.gak-booking-cta-group{display:flex;gap:10px;flex-wrap:wrap;flex:0 0 auto;align-items:center}
+/* PDF button loading state — report takes 20-75s after email; never allow a half-empty PDF download */
+.gak-btn-cta.gak-btn-loading{opacity:.75;cursor:default;display:inline-flex;align-items:center;gap:9px}
+.gak-spin{width:14px;height:14px;border-radius:50%;border:2px solid rgba(255,255,255,.28);border-top-color:var(--gak-orange);animation:gak-spin .7s linear infinite;flex:0 0 auto}
+@keyframes gak-spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.gak-spin{animation-duration:1.6s}}
+.gak-btn-cta.gak-cta-ghost{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.42);box-shadow:none}
+.gak-btn-cta.gak-cta-ghost:hover{background:rgba(255,255,255,.09);border-color:#fff;transform:translateY(-2px)}
+.gak-btn-cta.gak-cta-ghost:active{transform:translateY(0)}
+.gak-btn-cta.gak-cta-ghost[disabled]{opacity:.55;cursor:wait;transform:none}
+.gak-btn-cta.gak-cta-ghost:focus-visible{outline:3px solid #fff;outline-offset:3px}
+
+/* ---------- PDF render root (off-screen A4 print DOM) ---------- */
+#gak-pdf-root{position:fixed;left:-10000px;top:0;width:794px;background:#0c1a2e;color:#fff;font-family:'Inter',var(--gak-font);font-weight:300;z-index:-1}
+/* pagination uses html2pdf's pagebreak{mode:['avoid-all','css']} — it keeps each .pdf-page from splitting WITHOUT a
+   forced per-element break. We deliberately do NOT force a break before each section (neither JS `before:'.pdf-page'`
+   nor a CSS break-before rule): html2pdf inserts a blank page when a forced break lands near a page boundary
+   (the 16-pages-8-blank bug, 2026-06-26).
+   CRITICAL: each .pdf-page must be EXACTLY one printable A4 page tall so sections map 1:1 to physical pages — a
+   taller/shorter page de-syncs every following break. 794x1123 is A4 @96dpi; jsPDF rounds to 1122.5, and html2canvas
+   needs the +16px fudge (1139) so the LAST page's bottom padding isn't clipped. Do not change these numbers casually.
+   BRAND (2026-07-02, the client's deck): navy #0c1a2e pages, white text, Manrope-medium headings, Inter-light body,
+   accent #90afcf, CTA #ff5800, error #c25d5d. */
+#gak-pdf-root .pdf-page{width:794px;height:1139px;overflow:hidden;padding:48px 52px 64px;background:#0c1a2e;box-sizing:border-box;position:relative}
+#gak-pdf-root .pdf-brandbar{position:relative;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.55);padding-bottom:14px;margin-bottom:26px}
+#gak-pdf-root .pdf-brandbar::after{content:'';position:absolute;left:0;bottom:-2.5px;width:46px;height:4px;background:#ff5800}
+#gak-pdf-root .pdf-kicker{font:600 11px/1 var(--gak-mono);letter-spacing:.14em;text-transform:uppercase;color:#90afcf}
+#gak-pdf-root .pdf-pageno{font:600 11px/1 var(--gak-mono);color:#90afcf}
+#gak-pdf-root .pdf-h1{font-family:'Manrope',var(--gak-font);font-size:34px;line-height:1.12;font-weight:500;color:#fff;letter-spacing:-.02em;margin:0 0 8px}
+#gak-pdf-root .pdf-h2{font-family:'Manrope',var(--gak-font);font-size:21px;font-weight:500;color:#fff;letter-spacing:-.01em;margin:0 0 16px}
+#gak-pdf-root .pdf-meta{font:500 13px/1.5 var(--gak-mono);color:#90afcf;margin:0 0 26px}
+#gak-pdf-root .pdf-lead{font-size:14px;line-height:1.6;color:#e6edf5;font-weight:300;margin:0 0 16px}
+#gak-pdf-root .pdf-lead b{font-weight:600;color:#fff}
+#gak-pdf-root .pdf-sub{font:600 12px/1 var(--gak-mono);letter-spacing:.06em;text-transform:uppercase;color:#90afcf;margin:24px 0 12px}
+#gak-pdf-root .pdf-score-row{display:flex;align-items:center;gap:30px;margin:8px 0 22px}
+#gak-pdf-root .pdf-grade{display:inline-block;font-size:13px;font-weight:700;letter-spacing:.02em;padding:6px 14px;border-radius:999px;margin-bottom:10px}
+#gak-pdf-root .pdf-cov{font-size:12px;line-height:1.5;color:#90afcf;margin:6px 0 0}
+#gak-pdf-root .pdf-quote{font-size:15px;line-height:1.55;color:#fff;font-weight:400;border-left:3px solid #c25d5d;background:#13233c;border-radius:0 10px 10px 0;padding:16px 18px;margin:6px 0 0}
+#gak-pdf-root .pdf-quote .src{display:block;font:500 11px/1 var(--gak-mono);color:#90afcf;margin-top:10px}
+#gak-pdf-root .pdf-quote.win{border-left-color:#5dc39b}
+#gak-pdf-root .pdf-rival{font-size:13px;color:#e6edf5;margin-top:10px}
+#gak-pdf-root .pdf-rival b{color:#e08f8f;font-weight:600}
+#gak-pdf-root .pdf-bar-row{padding:11px 0;border-top:1px solid #24354e}
+#gak-pdf-root .pdf-bar-row:first-child{border-top:none}
+#gak-pdf-root .pdf-bar-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+#gak-pdf-root .pdf-bar-label{font-weight:500;color:#fff;font-size:13px}
+#gak-pdf-root .pdf-bar-weight{font:600 11px/1 var(--gak-mono);color:#90afcf;background:#13233c;border:1px solid #24354e;padding:4px 8px;border-radius:6px}
+#gak-pdf-root .pdf-bar-barwrap{display:flex;align-items:center;gap:10px}
+#gak-pdf-root .pdf-bar-track{flex:1;height:9px;border-radius:999px;background:#1c2e47;border:1px solid #24354e;overflow:hidden}
+#gak-pdf-root .pdf-bar-fill{height:100%;border-radius:999px}
+#gak-pdf-root .pdf-bar-score{font:600 13px/1 var(--gak-mono);color:#fff;min-width:42px;text-align:right}
+#gak-pdf-root .pdf-bar-nodata{font-size:13px;color:#90afcf;font-style:italic}
+#gak-pdf-root .pdf-bands{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+#gak-pdf-root .pdf-band{display:inline-flex;align-items:center;gap:9px;border-radius:11px;padding:9px 13px;border:1px solid #24354e;background:#13233c}
+#gak-pdf-root .pdf-band-label{font-weight:500;font-size:12px;color:#fff}
+#gak-pdf-root .pdf-band-tag{font:600 10px/1 var(--gak-mono);letter-spacing:.05em;text-transform:uppercase;padding:3px 7px;border-radius:5px;background:#0c1a2e}
+#gak-pdf-root .pdf-band-score{font:600 12px/1 var(--gak-mono);color:#fff}
+#gak-pdf-root .pdf-prompt{border:1px solid #24354e;border-radius:10px;padding:13px 15px;margin-top:10px;background:#13233c}
+#gak-pdf-root .pdf-prompt-q{font-weight:500;color:#fff;font-size:14px;line-height:1.4}
+#gak-pdf-root .pdf-state{display:inline-block;font:600 12px/1 var(--gak-font);margin-top:9px;padding:5px 11px;border-radius:999px}
+#gak-pdf-root .pdf-state.yes{color:#7fd7b2;background:#0f2b26}
+#gak-pdf-root .pdf-state.no{color:#e08f8f;background:#331a1c}
+#gak-pdf-root .pdf-prompt-comp{font-size:12px;color:#90afcf;margin-top:8px}
+#gak-pdf-root .pdf-prompt-comp b{color:#e6edf5;font-weight:600}
+#gak-pdf-root .pdf-aio-band{display:inline-block;font:600 16px/1 var(--gak-font);padding:8px 14px;border-radius:10px;margin-right:10px}
+#gak-pdf-root .pdf-aio-band.b-high{color:#7fd7b2;background:#0f2b26;border:1px solid #1d4a3d}
+#gak-pdf-root .pdf-aio-band.b-medium{color:#e6b566;background:#2f2415;border:1px solid #57431f}
+#gak-pdf-root .pdf-aio-band.b-low{color:#e08f8f;background:#331a1c;border:1px solid #5c2f33}
+#gak-pdf-root .pdf-aio-deriv{font-size:13px;line-height:1.55;color:#90afcf;margin:14px 0 0}
+#gak-pdf-root .pdf-cols{display:flex;gap:26px}
+#gak-pdf-root .pdf-col{flex:1;min-width:0}
+#gak-pdf-root .pdf-col-h{font:600 12px/1 var(--gak-mono);letter-spacing:.05em;text-transform:uppercase;margin-bottom:12px}
+#gak-pdf-root .pdf-col-h.good{color:#7fd7b2} #gak-pdf-root .pdf-col-h.bad{color:#e08f8f}
+#gak-pdf-root .pdf-item{display:flex;gap:9px;margin-bottom:11px}
+#gak-pdf-root .pdf-item-dot{flex:0 0 auto;width:8px;height:8px;border-radius:50%;margin-top:6px}
+#gak-pdf-root .pdf-item.good .pdf-item-dot{background:#5dc39b} #gak-pdf-root .pdf-item.bad .pdf-item-dot{background:#c25d5d}
+#gak-pdf-root .pdf-item-t{font-size:13px;color:#fff;font-weight:500;line-height:1.4}
+#gak-pdf-root .pdf-item-e{font-size:11px;color:#90afcf;margin-top:2px;line-height:1.4}
+#gak-pdf-root .pdf-empty{font-size:13px;color:#90afcf;line-height:1.5}
+#gak-pdf-root .pdf-rec-grp{margin-bottom:18px}
+#gak-pdf-root .pdf-rec-gh{font:600 11px/1 var(--gak-mono);letter-spacing:.05em;text-transform:uppercase;padding:5px 9px;border-radius:6px;display:inline-block;margin-bottom:10px}
+#gak-pdf-root .pdf-rec-gh.qw{color:#ffb38a;background:#33200f;border:1px solid #66401e}
+#gak-pdf-root .pdf-rec-gh.sa{color:#90afcf;background:#13233c;border:1px solid #24354e}
+#gak-pdf-root .pdf-rec{position:relative;padding:10px 0 10px 34px;border-top:1px solid #24354e}
+#gak-pdf-root .pdf-rec:first-child{border-top:none}
+#gak-pdf-root .pdf-rec-n{position:absolute;left:0;top:10px;width:22px;height:22px;border-radius:7px;background:#ff5800;color:#fff;font:700 11px/22px var(--gak-mono);text-align:center}
+#gak-pdf-root .pdf-rec-t{font-weight:600;color:#fff;font-size:14px;line-height:1.4}
+#gak-pdf-root .pdf-rec-d{font-size:12px;color:#90afcf;margin-top:3px;line-height:1.5}
+#gak-pdf-root .pdf-src-grp{margin-bottom:16px}
+#gak-pdf-root .pdf-src-lbl{font:600 11px/1 var(--gak-mono);letter-spacing:.06em;text-transform:uppercase;color:#90afcf;margin-bottom:9px}
+#gak-pdf-root .pdf-src-row{display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid #24354e;border-radius:8px;margin-top:6px;background:#13233c;flex-wrap:wrap}
+#gak-pdf-root .pdf-src-badge{font:600 10px/1 var(--gak-mono);letter-spacing:.04em;text-transform:uppercase;padding:4px 7px;border-radius:5px;border:1px solid #24354e;color:#90afcf;background:#0c1a2e}
+#gak-pdf-root .pdf-src-url{flex:1;min-width:0;font:400 12px/1.4 var(--gak-mono);color:#e6edf5;word-break:break-all}
+#gak-pdf-root .pdf-src-pill{font:600 10px/1 var(--gak-mono);padding:4px 8px;border-radius:999px}
+#gak-pdf-root .pdf-src-pill.ok{color:#7fd7b2;background:#0f2b26;border:1px solid #1d4a3d}
+#gak-pdf-root .pdf-src-pill.no{color:#ffb38a;background:#33200f;border:1px solid #66401e}
+#gak-pdf-root .pdf-seg{display:inline-block;font-size:15px;font-weight:600;letter-spacing:-.01em;padding:8px 16px;border-radius:10px;margin-bottom:16px}
+#gak-pdf-root .pdf-seg.hot{color:#e08f8f;background:#331a1c;border:1px solid #5c2f33}
+#gak-pdf-root .pdf-seg.warm{color:#e6b566;background:#2f2415;border:1px solid #57431f}
+#gak-pdf-root .pdf-seg.nurture{color:#90afcf;background:#13233c;border:1px solid #24354e}
+#gak-pdf-root .pdf-cta-box{border:1.5px solid #ff5800;border-radius:12px;padding:22px 24px;margin:6px 0 18px;background:#13233c}
+#gak-pdf-root .pdf-cta-box .t{font-family:'Manrope',var(--gak-font);font-size:17px;font-weight:500;color:#fff;margin:0 0 6px}
+#gak-pdf-root .pdf-cta-box .d{font-size:13px;line-height:1.55;color:#c7d3e2;margin:0 0 12px}
+#gak-pdf-root .pdf-cta-box .u{display:inline-block;font:600 13px/1 var(--gak-font);color:#fff;background:#ff5800;padding:11px 20px;border-radius:9px;text-decoration:none}
+#gak-pdf-root .pdf-cta-box .u.sec{color:#fff;background:transparent;border:1.5px solid rgba(255,255,255,.7);margin-left:8px}
+#gak-pdf-root .pdf-honesty{font-size:11px;line-height:1.55;color:#90afcf;font-style:italic;margin-top:18px;border-top:1px solid #24354e;padding-top:14px}
+#gak-pdf-root .pdf-foot{position:absolute;left:52px;right:52px;bottom:22px;display:flex;justify-content:space-between;font:500 10px/1 var(--gak-mono);color:#90afcf;border-top:1px solid #24354e;padding-top:12px}
+
+/* ---------- print fallback (window.print() when html2pdf can't load) ---------- */
+/* ===== Suso-style score hero + breakdown grid (Alchemy Leads brand) ===== */
+/* free-first ordering: SCORE hero on top (the client: "score comes up straight away"), free teasers collapsed below,
+   email gate next, everything gated (incl. AI-crawler) below the gate. */
+#gak-sample-note{order:-5}
+#gak-hero{order:-4}
+#gak-free-extra{order:-3}
+#gak-gate{order:-2}
+.gak-scorehero{background:var(--gak-card);border:1px solid var(--gak-line);border-radius:var(--gak-r-lg);box-shadow:var(--gak-shadow-lift);padding:30px 30px 32px;display:grid;grid-template-columns:minmax(220px,300px) 1fr;gap:34px;align-items:start;animation:gak-rise .45s cubic-bezier(.2,.7,.3,1) both}
+@media(max-width:680px){.gak-scorehero{grid-template-columns:1fr;gap:24px;padding:24px 20px 26px}}
+.gak-hero-h{font-size:20px;font-weight:800;color:var(--gak-navy);letter-spacing:-.025em;margin:0 0 18px}
+.gak-hero-l{display:flex;flex-direction:column;align-items:center;text-align:center}
+.gak-hero-l .gak-gauge{width:170px;height:170px;margin:2px 0 4px}
+.gak-hero-l .gak-gauge .num{font-size:50px}
+.gak-hero-pill{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:800;letter-spacing:.01em;padding:7px 16px;border-radius:999px;margin:14px 0 12px}
+.gak-hero-pill.b-strong,.gak-hero-pill.b-good{background:var(--gak-ok-bg);color:var(--gak-ok)}
+.gak-hero-pill.b-fair{background:var(--gak-warn-bg);color:var(--gak-warn)}
+.gak-hero-pill.b-weak,.gak-hero-pill.b-no-data{background:var(--gak-bad-bg);color:var(--gak-bad)}
+.gak-hero-verdict{font-size:14px;line-height:1.55;color:var(--gak-muted);margin:0;max-width:34ch}
+.gak-hero-cov{font-size:12px;line-height:1.5;color:var(--gak-faint);margin:10px 0 0}
+.gak-hero-r{position:relative}
+.gak-hero-lead{font-size:13.5px;line-height:1.55;color:var(--gak-muted);margin:0 0 16px}
+.gak-hero-lead b{color:var(--gak-navy)}
+.gak-bd-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}
+@media(max-width:560px){.gak-bd-grid{grid-template-columns:repeat(2,1fr)}}
+.gak-bd{border-radius:var(--gak-r);padding:14px 14px 15px;border:1px solid transparent;text-align:left;background:var(--gak-inset);border-color:var(--gak-line)}   /* informational cards — no cursor:pointer (codex: not interactive) */
+.gak-bd.b-strong,.gak-bd.b-good{background:var(--gak-ok-bg);border-color:var(--gak-ok-line)}
+.gak-bd.b-fair{background:var(--gak-warn-bg);border-color:var(--gak-warn-line)}
+.gak-bd.b-weak{background:var(--gak-bad-bg);border-color:var(--gak-bad-line)}
+.gak-bd.b-no-data{background:var(--gak-inset);border-color:var(--gak-line)}
+.gak-bd-lbl{font:700 10.5px/1.25 var(--gak-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--gak-faint)}
+.gak-bd-num{font:800 24px/1 var(--gak-mono);color:var(--gak-navy);margin:9px 0 6px;letter-spacing:-.02em}
+.gak-bd-num .den{font-size:13px;color:var(--gak-faint);font-weight:600}
+.gak-bd-tag{font-size:11.5px;font-weight:600;color:var(--gak-muted)}
+/* locked breakdown (free state): blur the grid + lock overlay */
+.gak-bd-wrap{position:relative}
+.gak-bd-wrap.locked .gak-bd-grid{filter:blur(5px);opacity:.55;pointer-events:none;user-select:none}
+.gak-bd-overlay{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6px;padding:16px}
+.gak-bd-wrap.locked .gak-bd-overlay{display:flex}
+.gak-bd-overlay .lk{width:26px;height:26px;background:var(--gak-navy);-webkit-mask:var(--gak-lock) center/18px no-repeat;mask:var(--gak-lock) center/18px no-repeat}
+.gak-bd-overlay .t{font-size:13.5px;font-weight:700;color:var(--gak-navy)}
+.gak-bd-overlay .s{font-size:12px;color:var(--gak-muted);max-width:30ch}
+/* single accessibility (crawler) score card */
+.gak-acc{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.gak-acc-num{font:800 38px/1 var(--gak-mono);letter-spacing:-.02em}
+.gak-acc-num.b-strong,.gak-acc-num.b-good{color:var(--gak-ok)} .gak-acc-num.b-fair{color:var(--gak-warn)} .gak-acc-num.b-weak{color:var(--gak-bad)}
+.gak-acc-meta .t{font-weight:700;color:var(--gak-navy);font-size:15px} .gak-acc-meta .s{font-size:13px;color:var(--gak-muted);margin-top:3px}
+/* collapsible deep-dive sections (Suso "Expand analysis") */
+details.gak-collapse{background:var(--gak-card);border:1px solid var(--gak-line);border-radius:var(--gak-radius);box-shadow:var(--gak-shadow);overflow:hidden;animation:gak-rise .45s cubic-bezier(.2,.7,.3,1) both}
+details.gak-collapse>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 22px;font-size:14px;font-weight:700;color:var(--gak-navy);letter-spacing:-.01em}
+details.gak-collapse>summary::-webkit-details-marker{display:none}
+details.gak-collapse>summary .gak-cl-chev{font-size:13px;color:var(--gak-faint);font-weight:600;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+details.gak-collapse>summary .gak-cl-chev::after{content:'▾';transition:transform .2s}
+details.gak-collapse[open]>summary .gak-cl-chev::after{transform:rotate(180deg)}
+details.gak-collapse>summary .gak-cl-mini{margin-left:auto;font:700 12px/1 var(--gak-mono);color:var(--gak-faint)}
+details.gak-collapse .gak-cl-body{padding:0 22px 22px}
+@media print{details.gak-collapse{border:1px solid #d9dde4}details.gak-collapse>summary .gak-cl-chev{display:none}details.gak-collapse .gak-cl-body{display:block!important}}
+/* PDF capture veil — while html2pdf renders the pages IN-FLOW (so html2canvas can measure them), cover the viewport. */
+body.gak-capturing::before{content:'';position:fixed;inset:0;background:var(--gak-bg);z-index:2147483646}
+body.gak-capturing::after{content:'Preparing your PDF…';position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:2147483647;font:700 16px/1 var(--gak-font);color:var(--gak-navy);letter-spacing:-.01em}
+@media print{
+  /* PDF-blank backup: when the Download button falls back to window.print() (html2pdf unavailable), print ONLY the
+     formatted 8-page #gak-pdf-root (built just before), not the live widget. body.gak-printing is toggled in downloadPdf. */
+  body.gak-printing #gak-app{display:none!important}
+  body.gak-printing #gak-pdf-root{display:block!important;position:static!important;left:0!important;top:0!important;z-index:auto!important;width:100%!important}
+  body.gak-printing #gak-pdf-root .pdf-page{break-after:page;page-break-after:always;break-inside:avoid}
+  /* manual Ctrl+P (no gak-printing class): print the live report, hide chrome + the off-screen pdf-root */
+  body:not(.gak-printing) #gak-pdf-root{display:none!important}
+  #gak-stage-input,#gak-stage-loading,#gak-gate,#gak-booking,#gak-final,#gak-pdf-btn,.gak-foot,
+  #gak-teasers,#gak-matrix-card .gak-matrix-note{display:none!important}
+  html,body{background:#fff!important}
+  .gak-wrap{max-width:none;padding:0}
+  .gak-card,.gak-lostdeal,.gak-scorehero{box-shadow:none!important;border:1px solid #d9dde4!important;break-inside:avoid;page-break-inside:avoid;animation:none!important}
+  .gak-results{gap:12px}
+  .gak-gauge svg{transform:rotate(-90deg)!important}
+  a[href]{color:#0c1a2e!important;text-decoration:none}
+}
+
+@media(max-width:560px){
+  .gak-wrap{padding:24px 16px 36px}
+  .gak-form{flex-direction:column}
+  .gak-btn{width:100%}
+  .gak-card{padding:20px}
+  .gak-matrix{font-size:13px}
+  .gak-matrix th,.gak-matrix td{padding:10px 4px}
+  .gak-matrix td.eng{white-space:normal}
+  /* the client 2026-07-02: at iPhone widths the 4-col table's min-content width beat the card and the third
+     column clipped mid-word ("RECOMMEN | Locke"). Shrink the mono headers + chips so all 4 columns fit
+     at 320px; the .gak-matrix-scroll wrapper is the never-clip backstop below that. */
+  .gak-matrix th{font-size:9.5px;letter-spacing:.03em}
+  .gak-matrix th,.gak-matrix td{padding:10px 3px}
+  .gak-res,.gak-res-lock{font-size:12px}
+  .gak-res-prem{font-size:10px;padding:3px 5px}
+  .gak-booking-in{flex-direction:column;align-items:stretch}
+  .gak-btn-cta{width:100%}
+  .gak-booking-cta-group{flex-direction:column;width:100%}
+  .gak-sw-grid{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+}
+</style>
+</head>
+<body>
+<div class="gak-wrap" id="gak-app">
+
+  <!-- ===== INPUT ===== -->
+  <section id="gak-stage-input">
+    <div class="gak-hero">
+      <div class="gak-eyebrow" id="gak-eyebrow">Alchemy Leads · AI visibility</div>
+      <h1 class="gak-h1">Can AI find &amp; recommend your brand?</h1>
+      <p class="gak-sub">Get an instant AI-readiness score, see which AI crawlers reach your site, and check whether ChatGPT &amp; Google AI mention you — free.</p>
+    </div>
+    <div class="gak-panel">
+      <form class="gak-form" id="gak-form" autocomplete="off">
+        <div class="gak-field gak-field-url"><input class="gak-input" id="gak-url" type="text" inputmode="url" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="yourwebsite.com" aria-label="Your website" maxlength="255" required></div>
+        <div class="gak-field"><input class="gak-input" id="gak-company" type="text" placeholder="Company name" aria-label="Company name" maxlength="80" required></div>
+        <div class="gak-field gak-field-industry"><input class="gak-input" id="gak-industry" type="text" placeholder="Your industry, e.g. family law, skincare, SaaS" aria-label="Your industry" maxlength="80" required></div>
+        <button class="gak-btn gak-btn-go" id="gak-go" type="submit">Run free AI check<span class="gak-go-arrow" aria-hidden="true">→</span></button>
+      </form>
+      <form class="gak-form gak-form-opt" id="gak-form2" autocomplete="off">
+        <span class="gak-opt-tag">Optional · sharpens your results</span>
+        <div class="gak-field"><input class="gak-input" id="gak-brand" type="text" placeholder="Brand name" aria-label="Brand name (if different from company)" maxlength="80"></div>
+        <div class="gak-field"><select class="gak-input" id="gak-country" aria-label="Target market">
+          <option value="">Market</option>
+          <option value="United Kingdom">United Kingdom</option>
+          <option value="United States">United States</option>
+          <option value="Canada">Canada</option>
+          <option value="Australia">Australia</option>
+          <option value="Ireland">Ireland</option>
+          <option value="New Zealand">New Zealand</option>
+          <option value="Global">Global (no country)</option>
+        </select></div>
+      </form>
+      <div class="gak-note"><span class="gak-note-dot"></span>No signup to see your score · results in seconds</div>
+    </div>
+    <div class="gak-err" id="gak-err" role="alert"></div>
+  </section>
+
+  <!-- ===== LOADING ===== -->
+  <section id="gak-stage-loading" class="gak-hide">
+    <div class="gak-loading">
+      <div class="gak-spin"></div>
+      <ul class="gak-steps" id="gak-steps">
+        <li data-step="0">Mapping your brand across AI search</li>
+        <li data-step="1">Analysing ChatGPT visibility</li>
+        <li data-step="2">Analysing Google AI Overview readiness</li>
+        <li data-step="3">Checking AI accessibility</li>
+        <li data-step="4">Discovering citations &amp; mentions</li>
+        <li data-step="5">Building your report</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== RESULTS ===== -->
+  <section id="gak-stage-results" class="gak-hide">
+    <div class="gak-results">
+
+      <!-- Sample-data notice (DEMO synthetic domains only) -->
+      <div class="gak-sample-note gak-hide" id="gak-sample-note">These figures are <b>sample data</b> for preview — run the live tool, or try a pilot domain, for real results.</div>
+
+      <!-- SCORE HERO (Suso-style): gauge + verdict (left) · breakdown grid (right; locked until email) -->
+      <div class="gak-scorehero" id="gak-hero">
+        <div class="gak-hero-l">
+          <h2 class="gak-hero-h" id="gak-score-h-txt">Your AI Readiness Score</h2>
+          <div class="gak-gauge">
+            <svg width="170" height="170" viewBox="0 0 148 148">
+              <circle cx="74" cy="74" r="64" fill="none" stroke="#eef0f2" stroke-width="14"></circle>
+              <circle id="gak-arc" cx="74" cy="74" r="64" fill="none" stroke="var(--gak-orange)" stroke-width="14" stroke-linecap="round" stroke-dasharray="402" stroke-dashoffset="402"></circle>
+            </svg>
+            <div class="val"><span class="num" id="gak-score-num">0</span><span class="den">/ 100</span></div>
+          </div>
+          <span class="gak-hero-pill" id="gak-grade">—</span>
+          <p class="gak-hero-verdict" id="gak-verdict"></p>
+          <p class="gak-hero-cov gak-hide" id="gak-score-cov"></p>
+        </div>
+        <div class="gak-hero-r">
+          <h2 class="gak-hero-h">Score Breakdown</h2>
+          <p class="gak-hero-lead" id="gak-bd-lead">Your AI Visibility Score is built from <b>6 components</b> of how AI engines find, read &amp; recommend you. Unlock your full report to see each one.</p>
+          <div class="gak-bd-wrap locked" id="gak-bd-wrap">
+            <div class="gak-bd-grid" id="gak-bd-grid"></div>
+            <div class="gak-bd-overlay"><span class="lk"></span><span class="t">Your 6-part breakdown is ready</span><span class="s">Enter your email below to unlock your full AI Visibility Score &amp; breakdown.</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FREE supporting detail — collapsed so the SCORE is the hero (the client: "make them clickable, hidden first") -->
+      <details class="gak-collapse gak-hide" id="gak-free-extra">
+        <summary>See what AI answers about you today <span class="gak-cl-chev">View</span></summary>
+        <div class="gak-cl-body" style="display:flex;flex-direction:column;gap:14px">
+          <!-- Lost-Deal Quote (FREE hero — the bait) -->
+          <div class="gak-lostdeal gak-hide" id="gak-lostdeal"></div>
+          <!-- Reach / Read / Result matrix (FREE; Result column locked) -->
+          <div class="gak-card gak-hide" id="gak-matrix-card" style="box-shadow:none;border-color:var(--gak-line)">
+            <div class="gak-card-h"><span class="dot"></span> Can AI reach, read &amp; recommend you?</div>
+            <div class="gak-matrix-scroll"><table class="gak-matrix"><thead><tr>
+              <th>AI engine</th><th>Reach</th><th>Read</th><th>Recommends you</th>
+            </tr></thead><tbody id="gak-matrix-body"></tbody></table></div>
+            <div class="gak-matrix-note" id="gak-matrix-note">Reach = can its crawler access your site · Read = is your site machine-readable · Recommends = does it name you in buying answers</div>
+          </div>
+          <!-- Teaser counts (FREE) -->
+          <div class="gak-teasers gak-hide" id="gak-teasers"></div>
+        </div>
+      </details>
+
+      <!-- BRIEF: Executive Summary -->
+      <!-- GATED deep-dives — Suso-style collapsibles (Brand Performance removed; the hero grid is the breakdown) -->
+      <details class="gak-collapse gak-hide" id="gak-exec">
+        <summary>Executive Summary <span class="gak-cl-chev">Read</span></summary>
+        <div class="gak-cl-body"><p class="gak-verdict" id="gak-exec-body" style="font-size:15px;margin:0"></p></div>
+      </details>
+
+      <details class="gak-collapse gak-hide" id="gak-framework">
+        <summary>Scoring Framework <span class="gak-cl-chev">Expand analysis</span></summary>
+        <div class="gak-cl-body"><div id="gak-framework-body"></div></div>
+      </details>
+
+      <details class="gak-collapse gak-hide" id="gak-sw">
+        <summary>Strengths &amp; Weaknesses <span class="gak-cl-chev">Expand analysis</span></summary>
+        <div class="gak-cl-body"><div id="gak-sw-body" class="gak-sw-grid"></div></div>
+      </details>
+
+      <details class="gak-collapse gak-hide" id="gak-recs">
+        <summary>Recommendations <span class="gak-cl-chev">Expand analysis</span></summary>
+        <div class="gak-cl-body"><div id="gak-recs-body"></div></div>
+      </details>
+
+      <details class="gak-collapse gak-hide" id="gak-chatgpt">
+        <summary>ChatGPT Visibility <span class="gak-cl-chev">Expand analysis</span></summary>
+        <div class="gak-cl-body"><div id="gak-chatgpt-body"></div></div>
+      </details>
+
+      <details class="gak-collapse gak-hide" id="gak-aio">
+        <summary>Google AI Overview Readiness <span class="gak-cl-chev">Expand analysis</span></summary>
+        <div class="gak-cl-body"><div id="gak-aio-body"></div></div>
+      </details>
+
+      <!-- AI Crawler Accessibility (GATED; score only, no bot grid — the client: "hide the breakdown, just show the score, display after gate") -->
+      <div class="gak-card gak-hide" id="gak-crawler">
+        <div class="gak-card-h"><span class="dot"></span> AI Crawler Accessibility</div>
+        <div class="gak-acc" id="gak-crawl-acc"></div>
+        <details class="gak-collapse" id="gak-crawl-details" style="margin-top:14px;box-shadow:none">
+          <summary>See all AI crawlers checked <span class="gak-cl-chev">View</span></summary>
+          <div class="gak-cl-body"><div class="gak-grid" id="gak-crawl-grid"></div></div>
+        </details>
+      </div>
+
+      <!-- EMAIL GATE -->
+      <div class="gak-gate" id="gak-gate">
+        <h3>Unlock the live “Recommends you” result for ChatGPT, Perplexity &amp; Google AI</h3>
+        <p>See the live result for ChatGPT &amp; Google AI (not just Perplexity), your full readiness breakdown, and exactly who AI names instead of you across your category's buying questions.</p>
+        <form class="gak-form" id="gak-gate-form" style="margin-top:4px" autocomplete="on">
+          <div class="gak-field"><input class="gak-input" id="gak-email" type="email" placeholder="you@company.com" aria-label="Your email" required></div>
+          <button class="gak-btn" id="gak-unlock" type="submit">Get my full report</button>
+        </form>
+        <label class="gak-terms" for="gak-terms">
+          <input type="checkbox" id="gak-terms">
+          <span>By submitting, you agree to our <a href="https://REPLACE-WITH-ALCHEMY-DOMAIN.com/privacy-policy" target="_blank" rel="noopener">privacy policy</a>.</span>
+        </label>
+        <div class="gak-note" id="gak-gate-consent">We'll email your report. No spam — unsubscribe anytime.</div>
+        <div class="gak-err" id="gak-gate-err" role="alert"></div>
+      </div>
+
+      <!-- GATED: the Lost-Deal Map (prompts x engines) -->
+      <div class="gak-card gak-hide" id="gak-visibility">
+        <div class="gak-card-h"><span class="dot"></span> Lost-Deal Map — your buying questions across AI</div>
+        <p class="gak-verdict" id="gak-vis-summary" style="font-size:15px"></p>
+        <div id="gak-prompts"></div>
+      </div>
+
+      <!-- GATED: competitors winning your category -->
+      <div class="gak-card gak-hide" id="gak-competitors">
+        <div class="gak-card-h"><span class="dot"></span> Who AI recommends instead of you</div>
+        <div id="gak-comp-list" class="gak-chips"></div>
+      </div>
+
+      <!-- GATED: where AI gets its answers (owned vs earned) -->
+      <div class="gak-card gak-hide" id="gak-sources">
+        <div class="gak-card-h"><span class="dot"></span> Where AI gets its answers</div>
+        <div id="gak-sources-body"></div>
+      </div>
+
+      <!-- GATED: offering gap (hidden unless available) -->
+      <div class="gak-card gak-hide" id="gak-offering">
+        <div class="gak-card-h"><span class="dot"></span> Categories AI didn't mention for you</div>
+        <div id="gak-offering-body"></div>
+      </div>
+
+      <!-- GATED: ranked fix list -->
+      <div class="gak-card gak-hide" id="gak-fixlist">
+        <div class="gak-card-h"><span class="dot"></span> Why AI skips you — your ordered fix list</div>
+        <ol id="gak-fix-body" class="gak-fixes"></ol>
+      </div>
+
+      <!-- GATED: full readiness breakdown -->
+      <div class="gak-card gak-hide" id="gak-full-checks">
+        <div class="gak-card-h"><span class="dot"></span> Full Readiness Breakdown</div>
+        <ul class="gak-checks" id="gak-checks"></ul>
+      </div>
+
+      <!-- Book-a-call CTA (warm-lead conversion, revealed after the full report) -->
+      <div class="gak-booking gak-hide" id="gak-booking">
+        <div class="gak-booking-in">
+          <div class="gak-booking-txt">
+            <div class="gak-booking-h" id="gak-booking-h">Want Alchemy Leads to fix this?</div>
+            <p class="gak-booking-sub" id="gak-booking-sub">Book a 20-minute call — we'll show you how to get named by ChatGPT, Perplexity &amp; Google AI in your category.</p>
+          </div>
+          <div class="gak-booking-cta-group">
+            <a class="gak-btn-cta" id="gak-book-cta" href="https://REPLACE-WITH-ALCHEMY-DOMAIN.com/contact" target="_blank" rel="noopener">Book a call →</a>
+            <button class="gak-btn-cta gak-cta-ghost" id="gak-pdf-btn" type="button" aria-label="Download your branded PDF report">Download PDF</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="gak-cta-final gak-hide" id="gak-final">
+        <button class="gak-btn gak-ghost" id="gak-restart" type="button">Check another site</button>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="gak-foot">Powered by <a href="#" id="gak-foot-link">Alchemy Leads</a> · AI search visibility</div>
+</div>
+
+<!-- ===== PDF RENDER ROOT (off-screen; built on demand from LAST, captured by html2pdf.js) =====
+     A4 @96dpi = 794px wide. One .pdf-page per section; html2pdf page-breaks BEFORE each .pdf-page.
+     This is a dedicated print DOM (NOT a screenshot of the responsive on-screen report) so the export
+     is fixed-width, paginated and brand-consistent regardless of the live viewport. -->
+<div id="gak-pdf-root" aria-hidden="true"></div>
+
+<script>
+/* ============================================================
+   GAK_CONFIG — everything the client provides plugs in here.
+   ============================================================ */
+const GAK_CONFIG = {
+  DEMO_MODE: true,                       // true = ALL domains mock/baked (no backend). false = live backend, gated by HYBRID below.
+  HYBRID: true,                          // true = REAL_VIS domains load baked/instant; every OTHER domain runs a LIVE backend scan. (Ignored when DEMO_MODE=true.)
+  PREVIEW: true,                         // preview mode: shows "Preview" badge. false for production embed.
+  API_BASE: "https://sg-geo-tool.replit.app",  // our backend (Vercel rewrites /api/* -> Replit). CORS-allowed for the embed origin.
+  API_ACTION: "alchemy_ai_check",        // ?action= handler — dedicated Alchemy Leads handler (own CORS + daily caps), see DEPLOY notes.
+  MAKE_WEBHOOK_URL: "",                  // <-- Alchemy Leads' lead-capture webhook (Make/Zapier/CRM). Empty = skip POST.
+  ENGINES: ["chatgpt","perplexity","google_aio"],  // ChatGPT+Perplexity (DataForSEO) + Google AI Overviews (SerpAPI)
+  BRAND: { name: "Alchemy Leads", url: "https://REPLACE-WITH-ALCHEMY-DOMAIN.com", cta_url: "https://REPLACE-WITH-ALCHEMY-DOMAIN.com/contact", cta_label: "Book a call →", cta_sub: "Book a 20-minute call — we'll show you how to get named by ChatGPT, Perplexity & Google AI in your category." },
+  GATE: { freeChecksVisible: true, mode: "upfront", requireCompany: true }      // score + crawler shown free; full breakdown + visibility behind email. mode:"upfront" = score/report come back in the main payload (brief model).
+};
+
+/* No baked showcase domains yet for Alchemy Leads (pending their own site + a pilot client to scan for real).
+   DEMO_MODE=true above means every domain typed renders realistic SYNTHETIC data for this preview. */
+const REAL_VIS = {
+};
+
+/* ---------- tiny helpers ---------- */
+const $ = (id) => document.getElementById(id);
+const show = (id) => { const e=$(id); if(e) e.classList.remove('gak-hide'); };   // null-safe (codex: restart hid the removed #gak-brandperf -> threw)
+const hide = (id) => { const e=$(id); if(e) e.classList.add('gak-hide'); };
+/* HTML-escape ALL dynamic/third-party values before innerHTML (LLM/SerpAPI text is untrusted).
+   Decode HTML entities FIRST so already-encoded source text (baked data or an LLM that emits "&amp;",
+   "&#39;", "&rsquo;" etc.) is NOT double-escaped into a literal "&amp;" in the output (PDF + on-page).
+   Decode-then-escape is XSS-safe: we still re-escape <>&"' afterwards, so any decoded markup is neutralised. */
+const ENT_MAP={amp:'&',lt:'<',gt:'>',quot:'"',apos:"'",nbsp:' ',rsquo:'’',lsquo:'‘',ldquo:'“',rdquo:'”',ndash:'–',mdash:'—',hellip:'…'};
+const decodeEnt = (s) => String(s==null?'':s).replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (m,e)=>{
+  if(e[0]==='#'){ const n=(e[1]==='x'||e[1]==='X')?parseInt(e.slice(2),16):parseInt(e.slice(1),10); return (isNaN(n)||n<1||n>0x10FFFF)?m:String.fromCodePoint(n); }
+  const k=e.toLowerCase(); return Object.prototype.hasOwnProperty.call(ENT_MAP,k)?ENT_MAP[k]:m;
+});
+const esc = (s) => decodeEnt(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+/* hybrid routing: baked (instant, no backend) for showcase domains in REAL_VIS; live backend scan for every other domain.
+   DEMO_MODE=true forces baked for ALL domains (offline demo). */
+const isBaked = (domain) => GAK_CONFIG.DEMO_MODE || (GAK_CONFIG.HYBRID && !!REAL_VIS[domain]);
+function normUrl(raw){
+  // strip protocol, path, AND leading www. — so www/https variants resolve to the same canonical
+  // key (REAL_VIS is keyed on bare domains; without this, www.example-alchemy-client.com would render as synthetic sample data).
+  let s = (raw||'').trim().replace(/^https?:\/\//i,'').replace(/\/.*$/,'').replace(/^www\./i,'').toLowerCase();
+  if(!s || !/^[a-z0-9.-]+\.[a-z]{2,}$/.test(s)) return null;
+  return s;
+}
+function frameHeight(){ // tell Framer the iframe height
+  try{ parent.postMessage({type:'gak-resize', height: document.body.scrollHeight}, '*'); }catch(e){}
+}
+const ro = new ResizeObserver(frameHeight); ro.observe(document.body);
+
+/* ---------- apply branding from config ---------- */
+(function brand(){
+  $('gak-eyebrow').textContent = GAK_CONFIG.BRAND.name + " · AI Visibility";
+  if (GAK_CONFIG.PREVIEW) {
+    var b = document.createElement('div');
+    b.textContent = 'PREVIEW for Alchemy Leads · sample data — type any domain to see the tool in action';
+    b.style.cssText = 'background:#1a1a2e;color:#fff;font:600 12px/1.4 var(--gak-mono);text-align:center;padding:8px 12px;border-radius:8px;margin:0 0 18px;letter-spacing:.02em';
+    var app = $('gak-app'); app.insertBefore(b, app.firstChild);
+  }
+  $('gak-foot-link').textContent = GAK_CONFIG.BRAND.name;
+  $('gak-foot-link').href = gakSafeUrl(GAK_CONFIG.BRAND.url || '', null);   // route white-label config URLs through the scheme guard too
+  // book-a-call CTA (config-driven; white-label safe)
+  var _cta=$('gak-book-cta'); if(_cta){ _cta.href = gakSafeUrl(GAK_CONFIG.BRAND.cta_url || GAK_CONFIG.BRAND.url || '', null); if(GAK_CONFIG.BRAND.cta_label) _cta.textContent = GAK_CONFIG.BRAND.cta_label; }
+  var _ch=$('gak-booking-h'); if(_ch) _ch.textContent = 'Want ' + GAK_CONFIG.BRAND.name + ' to fix this?';
+  var _cs=$('gak-booking-sub'); if(_cs && GAK_CONFIG.BRAND.cta_sub) _cs.textContent = GAK_CONFIG.BRAND.cta_sub;
+})();
+
+/* ---------- stage control ---------- */
+function stage(s){
+  ['input','loading','results'].forEach(x=>hide('gak-stage-'+x));
+  show('gak-stage-'+s); frameHeight();
+}
+
+/* ---------- loading animation ---------- */
+let stepTimer;
+function runSteps(){
+  const lis = [...$('gak-steps').querySelectorAll('li')];
+  lis.forEach(li=>li.className='');
+  let i=0; lis[0].classList.add('on');
+  stepTimer = setInterval(()=>{
+    if(i<lis.length){ lis[i].classList.remove('on'); lis[i].classList.add('done'); i++; if(lis[i]) lis[i].classList.add('on'); }
+    else clearInterval(stepTimer);
+  }, 1100);
+}
+
+/* ---------- score gauge ---------- */
+function paintScore(score){
+  const C=402, off = C - (C*Math.max(0,Math.min(100,score))/100);
+  const arc=$('gak-arc');
+  arc.style.transition='stroke-dashoffset 1.1s cubic-bezier(.2,.7,.2,1)';
+  requestAnimationFrame(()=>{ arc.style.strokeDashoffset=off; });
+  // animate number
+  let n=0; const t=setInterval(()=>{ n+=Math.ceil(score/28)||1; if(n>=score){n=score;clearInterval(t);} $('gak-score-num').textContent=n; },35);
+  // grade + colour
+  let g,cls,col;
+  if(score>=85){g='Excellent';cls='g-a';col='var(--gak-mint)';}
+  else if(score>=70){g='Good';cls='g-b';col='var(--gak-mint)';}
+  else if(score>=50){g='Needs work';cls='g-c';col='var(--gak-amber)';}
+  else {g='At risk';cls='g-d';col='var(--gak-red)';}
+  const gr=$('gak-grade'); gr.textContent=g; gr.className='gak-grade '+cls;
+  arc.style.stroke=col;
+}
+
+/* ---------- render ---------- */
+function render(data){
+  const ok = (x) => x==='pass'||x==='warn'||x==='fail'||x==='na' ? x : 'na';   // whitelist status for class
+  // honesty labels for the demo preview: full sample (synthetic domains) vs scoped (real pilot domains)
+  const note=$('gak-sample-note');
+  if(data._synthetic){ note.innerHTML='These figures are <b>sample data</b> for preview — run the live tool, or try a pilot domain, for real results.'; show('gak-sample-note'); }
+  else if(data._illustrative){ note.innerHTML='Your <b>AI-visibility result below is live</b> for this brand; the readiness score &amp; crawler grid shown here are illustrative.'; show('gak-sample-note'); }
+  else hide('gak-sample-note');
+  // 1. score (free) — when the brief payload carries data.score, renderBrief() repaints this gauge as the
+  // composite AI Visibility Score; otherwise it stays the AI Readiness preview gauge.
+  if(!data.score){
+    const rs = Number(data.readiness && data.readiness.score) || 0;
+    paintScore(rs);
+    setHeroPill(rs, true);                  // readiness band ("Well prepared for AI" etc.)
+    $('gak-verdict').textContent = (data.readiness && data.readiness.verdict) || '';
+    renderBreakdownLocked();                // breakdown stays locked until email
+  }
+
+  // 2. AI Crawler Accessibility is a single GATED score card (rendered by renderCrawler() once unlocked). Keep it
+  //    hidden on the free render; show the collapsed "what AI answers today" section.
+  if(!GATE_UNLOCKED) hide('gak-crawler');
+  show('gak-free-extra');
+
+  // 3. gated readiness breakdown (built now, revealed after email)
+  $('gak-checks').innerHTML = ((data.readiness && data.readiness.checks) || []).map(c=>{
+    const sym = c.status==='pass'?'✓':c.status==='warn'?'!':c.status==='na'?'–':'✕';
+    return `<li><span class="gak-pill ${ok(c.status)}">${sym}</span><div class="gak-check-b"><div class="gak-check-t">${esc(c.label)}</div><div class="gak-check-e">${esc(c.evidence)}</div></div></li>`;
+  }).join('');
+
+  renderLostDeal(data.lost_deal);
+  renderMatrix(data.matrix);
+  renderTeasers(data.teasers);
+  renderVisibility(data.visibility);
+  renderBrief(data);
+  stage('results');
+}
+
+/* ============================================================
+   BRIEF: AI Visibility Score report (score / report / signals).
+   Every fn no-ops cleanly when its data is absent, so the free-only
+   path (live only=fast with no score yet) still renders fine.
+   ALL backend strings go through esc()/textContent — never raw innerHTML.
+   ============================================================ */
+const GRADE_CLASS = (g)=> g==='A+'?'g-aplus':g==='A'?'g-a':g==='B'?'g-b':g==='C'?'g-c':g==='D'?'g-d':'g-c';
+const FRAMEWORK_CATS = [
+  ['chatgpt_visibility','ChatGPT Visibility',30],
+  ['google_aio_visibility','Google AI Overview Visibility',30],
+  ['ai_accessibility','AI Accessibility',20],
+  ['technical_readiness','Technical Readiness',10],
+  ['ai_cited_authority','AI-Cited Authority',10]
+];
+const BAND_LABEL = {strong:'Strong',good:'Good',fair:'Fair',weak:'Weak','no-data':'No data'};
+const barColor = (s)=> s>=70?'var(--gak-mint)':s>=50?'var(--gak-amber)':'var(--gak-red)';
+const prettyKey = (k)=> String(k||'').replace(/_/g,' ').replace(/\b\w/g, m=>m.toUpperCase());
+
+/* ---- Suso-style score hero: verbal band pill + 6-card breakdown grid ---- */
+const BD_LABELS = {brand_clarity:'Brand Clarity', ai_cited_authority:'AI-Cited Authority', ai_accessibility:'AI Accessibility', trust_signals:'Trust Signals', citation_strength:'Citation Strength', content_coverage:'Content Coverage'};
+const BD_ORDER = ['brand_clarity','ai_cited_authority','ai_accessibility','trust_signals','citation_strength','content_coverage'];
+const BD_TAG = {strong:'Strong', good:'Good', fair:'Fair', weak:'Needs work', 'no-data':'Not enough data'};
+const bandOf = (s)=> s==null?'no-data':(s>=70?'strong':s>=50?'good':s>=30?'fair':'weak');
+function scoreBand(s, readiness){ s=Number(s)||0;
+  if(readiness){ return s>=70?{cls:'b-strong',label:'Well prepared for AI'}:s>=50?{cls:'b-fair',label:'Partly AI-ready'}:{cls:'b-weak',label:'AI may struggle to read you'}; }
+  return s>=80?{cls:'b-strong',label:'Strong AI presence'}:s>=60?{cls:'b-good',label:'Good AI visibility'}:s>=40?{cls:'b-fair',label:'Limited visibility'}:{cls:'b-weak',label:'Barely visible'};
+}
+function setHeroPill(score, readiness){ const gr=$('gak-grade'); if(!gr) return; const b=scoreBand(score, readiness); gr.textContent=b.label; gr.className='gak-hero-pill '+b.cls;
+  const g=document.querySelector('#gak-hero .gak-gauge');   // a11y (codex): the gauge is a graphic — give it a spoken label
+  if(g){ g.setAttribute('role','img'); g.setAttribute('aria-label', (readiness?'AI Readiness Score: ':'AI Visibility Score: ')+(Number(score)||0)+' out of 100 — '+b.label); }
+}
+function renderBreakdownLocked(){ const grid=$('gak-bd-grid'); if(!grid) return;
+  grid.innerHTML = BD_ORDER.map(k=>'<div class="gak-bd b-no-data"><div class="gak-bd-lbl">'+esc(BD_LABELS[k])+'</div><div class="gak-bd-num">—</div><div class="gak-bd-tag">Locked</div></div>').join('');
+  grid.setAttribute('aria-hidden','true');   // a11y (swarm): don't let screen readers read the blurred "Locked" placeholders
+  const w=$('gak-bd-wrap'); if(w) w.classList.add('locked');
+}
+function renderBreakdown(sc){ const grid=$('gak-bd-grid'); if(!grid) return;
+  if(!GATE_UNLOCKED){ renderBreakdownLocked(); return; }   // defence-in-depth: never reveal the breakdown before the gate
+  const byKey={}; ((sc&&sc.sub_scores)||[]).forEach(s=>{ if(s&&s.key) byKey[s.key]=s; });
+  // 2026-07-02: ai_accessibility fallback — mirror renderCrawler(). If the gated score call couldn't compute it
+  // but the free call's crawler summary exists in LAST, derive allowed/total so this card can NEVER show
+  // "N/A Not enough data" beside a crawler card saying "34 of 34 allowed" (operator bug report).
+  const _acc=byKey.ai_accessibility, _cs=(typeof LAST!=='undefined'&&LAST&&LAST.crawlers&&LAST.crawlers.summary)||null;
+  if((!_acc||_acc.score==null) && _cs && Number(_cs.total)){
+    const _v=Math.round(100*(Number(_cs.allowed)||0)/Number(_cs.total));
+    byKey.ai_accessibility={key:'ai_accessibility', score:_v, band:bandOf(_v)};
+  }
+  grid.innerHTML = BD_ORDER.map(k=>{ const s=byKey[k]; const sv=(s&&s.score!=null)?Number(s.score):null; const band=(s&&s.band&&s.band!=='no-data')?s.band:bandOf(sv);
+    const num = sv==null ? '<span style="color:var(--gak-faint);font-size:18px">N/A</span>' : sv+'<span class="den"> /100</span>';
+    return '<div class="gak-bd b-'+band+'"><div class="gak-bd-lbl">'+esc(BD_LABELS[k]||prettyKey(k))+'</div><div class="gak-bd-num">'+num+'</div><div class="gak-bd-tag">'+esc(BD_TAG[band]||'')+'</div></div>';
+  }).join('');
+  grid.removeAttribute('aria-hidden');   // unlocked: screen readers read the real breakdown
+  const w=$('gak-bd-wrap'); if(w) w.classList.remove('locked');
+  const lead=$('gak-bd-lead'); if(lead) lead.innerHTML='Your AI Visibility Score across <b>6 components</b> of how AI engines find, read &amp; recommend you.';
+}
+/* GATED AI-Crawler Accessibility — a single score card (the client: "hide the breakdown, just show the score"); the full
+   bot list lives in a nested collapsible. Reads from LAST (crawlers from the free call + ai_accessibility from the gated score). */
+function renderCrawler(){
+  if(!GATE_UNLOCKED){ hide('gak-crawler'); return; }   // gated — never reveal before the email gate (and re-hide if a prior render showed it)
+  const data = LAST || {}; const accEl=$('gak-crawl-acc'); if(!accEl) return;
+  const cr = data.crawlers || {summary:{},bots:[]}; const s = cr.summary || {allowed:0,blocked:0,total:0};
+  const cat = data.score && data.score.categories && data.score.categories.ai_accessibility;
+  let acc = (cat && cat.state==='ok' && cat.score!=null) ? Number(cat.score) : (Number(s.total)? Math.round(100*(Number(s.allowed)||0)/Number(s.total)) : null);
+  const band = bandOf(acc);
+  if(acc==null){ accEl.innerHTML = '<div class="gak-acc-meta"><div class="t">Not enough data to assess crawler access</div></div>'; }
+  else {
+    accEl.innerHTML = '<div class="gak-acc-num b-'+band+'">'+acc+'<span style="font-size:18px;color:var(--gak-faint);font-weight:600"> /100</span></div>'
+      + '<div class="gak-acc-meta"><div class="t">'+(Number(s.allowed)||0)+' of '+(Number(s.total)||0)+' AI crawlers can reach your site</div>'
+      + '<div class="s">'+(Number(s.blocked)||0 ? (Number(s.blocked)+' blocked in robots.txt — they can’t read or cite you') : 'All checked AI crawlers are allowed')+'</div></div>';
+  }
+  const g=$('gak-crawl-grid'); if(g) g.innerHTML = (cr.bots||[]).map(function(b){ return '<div class="gak-bot '+(b.allowed?'ok':'no')+'"><span class="b-dot"></span><span class="b-name">'+esc(b.name)+'</span></div>'; }).join('');
+  show('gak-crawler');
+}
+
+function renderBrief(data){
+  // R2 (defence-in-depth): if the visibility scan came back unverified (wrong-entity homonym), NEVER repaint the
+  // headline gauge with a composite — renderVisibility already blanked it to '—'. Backend suppresses `score` here
+  // today, so this only fires if that contract ever regresses; it's the last guard before a prospect's eyes.
+  if(data && data.visibility && data.visibility.state==='unverified') return;
+  const sc = data && data.score, rep = data && data.report;
+  const hTxt = $('gak-score-h-txt'), cov = $('gak-score-cov');
+  if(sc){
+    renderCrawler();   // gated AI-crawler accessibility score card (reveals #gak-crawler)
+    if(hTxt) hTxt.textContent = 'AI Visibility Score';
+    const honest = (rep && rep.executive_summary && rep.executive_summary.text) || sc.na_note || '';
+    if(sc.state==='ok' && sc.composite!=null){
+      paintScore(Number(sc.composite)||0);
+      setHeroPill(Number(sc.composite)||0, false);   // composite band ("Strong AI presence" etc.)
+      // honest lead only when the composite is floor-capped (so we don't imply confidence we don't have)
+      $('gak-verdict').textContent = sc.visibility_floor_capped ? honest : '';
+      renderBreakdown(sc);                            // unlock + fill the 6-card grid
+    } else {
+      // insufficient data — show the gauge but never imply an "X% visible" number
+      const arc=$('gak-arc'); if(arc){ arc.style.strokeDashoffset=402; arc.style.stroke='var(--gak-amber)'; }
+      $('gak-score-num').textContent = '—';
+      const gr=$('gak-grade'); if(gr){ gr.textContent='Limited data'; gr.className='gak-hero-pill b-fair'; }
+      $('gak-verdict').textContent = honest;
+      renderBreakdown(sc);                            // unlock the grid (N/A cards) so it doesn't stay locked post-gate
+    }
+    if(cov){ if(sc.coverage){ cov.textContent = sc.coverage; cov.classList.remove('gak-hide'); } else cov.classList.add('gak-hide'); }
+  } else {
+    if(hTxt) hTxt.textContent = 'AI Readiness (preview)';
+    if(cov) cov.classList.add('gak-hide');
+  }
+  renderExecSummary(rep);
+  renderFramework(sc);
+  renderBrandPerf(sc, rep);
+  renderStrengthsWeak(rep);
+  renderRecs(rep);
+  renderChatgptVis(data && data.visibility);
+  renderAioReadiness(sc);
+}
+function renderExecSummary(rep){
+  const text = rep && rep.executive_summary && rep.executive_summary.text;
+  if(!text){ hide('gak-exec'); return; }
+  $('gak-exec-body').textContent = text;   // plain text — safe
+  show('gak-exec');
+}
+function renderFramework(sc){
+  const cats = sc && sc.categories;
+  if(!cats){ hide('gak-framework'); return; }
+  $('gak-framework-body').innerHTML = FRAMEWORK_CATS.map(([key,label,weight])=>{
+    const c = cats[key] || {};
+    const head = `<div class="gak-fw-head"><span class="gak-fw-label">${esc(label)}</span><span class="gak-fw-weight">${Number(weight)||0}%</span></div>`;
+    if(!(c.state==='ok' && c.score!=null)){
+      return `<div class="gak-fw-row">${head}<div class="gak-fw-nodata">Not enough data</div></div>`;
+    }
+    const score = Math.max(0,Math.min(100,Number(c.score)||0));
+    const bar = `<div class="gak-fw-track"><div class="gak-fw-fill" style="width:${score}%;background:${barColor(score)}"></div></div><span class="gak-fw-score">${score}</span>`;
+    return `<div class="gak-fw-row">${head}<div class="gak-fw-barwrap">${bar}</div></div>`;
+  }).join('');
+  show('gak-framework');
+}
+function renderBrandPerf(sc, rep){
+  if(!$('gak-brandperf-body')) return;   // iter: Brand Performance card removed — the hero breakdown grid IS the sub-score view
+  const subs = sc && sc.sub_scores;
+  if(!subs || !subs.length){ hide('gak-brandperf'); return; }
+  const labels = {}; ((rep&&rep.brand_performance)||[]).forEach(x=>{ if(x&&x.key) labels[x.key]=x.label; });
+  $('gak-brandperf-body').innerHTML = subs.map(s=>{
+    const band = ['strong','good','fair','weak','no-data'].indexOf(s.band)>=0 ? s.band : 'no-data';
+    const label = labels[s.key] || prettyKey(s.key);
+    const scoreTag = (s.score!=null && band!=='no-data') ? `<span class="gak-bp-score">${Number(s.score)||0}</span>` : '';
+    return `<div class="gak-bp-chip b-${band}"><span class="gak-bp-label">${esc(label)}</span><span class="gak-bp-band">${esc(BAND_LABEL[band]||'—')}</span>${scoreTag}</div>`;
+  }).join('');
+  show('gak-brandperf');
+}
+function renderStrengthsWeak(rep){
+  if(!rep || (!rep.strengths && !rep.weaknesses)){ hide('gak-sw'); return; }
+  const str = (rep.strengths||[]).filter(Boolean), weak = (rep.weaknesses||[]).filter(Boolean);
+  const list = (items, emptyMsg, cls)=> items.length
+    ? `<ul class="gak-sw-list">`+items.map(it=>`<li class="gak-sw-item ${cls}"><span class="gak-sw-dot"></span><div><div class="gak-sw-t">${esc(it.text)}</div>${it.evidence?`<div class="gak-sw-e">${esc(it.evidence)}</div>`:''}</div></li>`).join('')+`</ul>`
+    : `<p class="gak-sw-empty">${esc(emptyMsg)}</p>`;
+  $('gak-sw-body').innerHTML =
+    `<div class="gak-sw-col"><div class="gak-sw-h good">Strengths</div>${list(str,"We'll surface strengths as your visibility grows.",'good')}</div>`+
+    `<div class="gak-sw-col"><div class="gak-sw-h bad">Weaknesses</div>${list(weak,"No major weaknesses — you're ahead of most.",'bad')}</div>`;
+  show('gak-sw');
+}
+function renderRecs(rep){
+  const recs = rep && rep.recommendations;
+  if(!recs){ hide('gak-recs'); return; }
+  const qw = (recs.quick_wins||[]).filter(Boolean), sa = (recs.strategic_actions||[]).filter(Boolean);
+  if(!qw.length && !sa.length){ hide('gak-recs'); return; }
+  const grp = (title, items, tag)=> items.length
+    ? `<div class="gak-rec-grp"><div class="gak-rec-gh ${tag}">${esc(title)}</div><ol class="gak-rec-list">`
+      + items.map(it=>`<li class="gak-rec-item"><div class="gak-rec-t">${esc(it.title)}</div>${it.detail?`<div class="gak-rec-d">${esc(it.detail)}</div>`:''}</li>`).join('')
+      + `</ol></div>`
+    : '';
+  $('gak-recs-body').innerHTML = grp('Quick Wins', qw, 'qw') + grp('Strategic Actions', sa, 'sa');
+  show('gak-recs');
+}
+function renderChatgptVis(vis){
+  const prompts = vis && vis.prompts;
+  if(!prompts || !prompts.length){ hide('gak-chatgpt'); return; }
+  const rows = prompts.map(p=>{
+    const eng = (p.engines||[]).find(e=> String(e.label||'').toLowerCase().indexOf('chatgpt')===0);
+    if(!eng) return '';
+    const cited = !!eng.cited;
+    const comps = (p.competitors_cited||[]).filter(Boolean);
+    const compLine = comps.length ? `<div class="gak-cg-comp">${cited?'Also named':'Named instead'}: <b>${comps.map(esc).join(', ')}</b></div>` : '';
+    return `<div class="gak-cg-row"><div class="gak-cg-q">“${esc(p.query)}”</div>`
+      + `<div class="gak-cg-state ${cited?'yes':'no'}">${cited?'✓ ChatGPT names you':'✕ Not mentioned'}</div>`
+      + compLine + `</div>`;
+  }).filter(Boolean).join('');
+  if(!rows){ hide('gak-chatgpt'); return; }
+  $('gak-chatgpt-body').innerHTML = rows;
+  show('gak-chatgpt');
+}
+function renderAioReadiness(sc){
+  const aio = sc && sc.aio_likelihood;
+  if(!aio || !aio.band){ hide('gak-aio'); return; }
+  const band = ['high','medium','low'].indexOf(String(aio.band).toLowerCase())>=0 ? String(aio.band).toLowerCase() : 'low';
+  const bandTxt = band.charAt(0).toUpperCase()+band.slice(1);
+  const observed = aio.label==='observed';
+  const tagTxt = observed ? 'observed' : 'estimated';
+  $('gak-aio-body').innerHTML =
+    `<div class="gak-aio-main">`
+    + `<span class="gak-aio-band b-${band}">${esc(bandTxt)}</span>`
+    + `<span class="gak-aio-lbl">likelihood of appearing in Google AI Overviews</span>`
+    + `<span class="gak-aio-tag ${observed?'obs':'est'}">${esc(tagTxt)}</span></div>`
+    + (aio.derivation ? `<p class="gak-aio-deriv">${esc(aio.derivation)}</p>` : '');
+  show('gak-aio');
+}
+/* ---------- Lost-Deal Quote (free hero) ---------- */
+function renderLostDeal(ld){
+  const el = $('gak-lostdeal');
+  if(!ld || !ld.quote){ el.className='gak-lostdeal gak-hide'; el.innerHTML=''; return; }
+  // Sample/demo quote: never assert a live ✓/✕ verdict about a real brand — label it clearly.
+  if(ld._synthetic){
+    el.className='gak-lostdeal';
+    el.innerHTML =
+      `<span class="gak-ld-badge lose" style="background:rgba(100,117,118,.14);color:var(--gak-muted)">Sample preview</span>`+
+      `<p class="gak-ld-q">Example of what you'll see — for a category prompt like “<b>${esc(ld.query)}</b>”:</p>`+
+      `<p class="gak-ld-quote">“${esc(ld.quote)}”<span class="src">— Sample data, not a live result · run the live tool for your real Perplexity answer</span></p>`;
+    el.classList.remove('gak-hide'); return;
+  }
+  const inQuote = !!ld.mentioned_in_quote;   // named in the visible sentence(s) vs only cited as a source
+  const win = !!ld.mentioned;
+  el.className = 'gak-lostdeal'+(win?' win':'');
+  const badge = inQuote ? '✓ AI recommends you' : (win ? '✓ AI cites your site' : '✕ AI skipped you');
+  const more = (ld.competitors && ld.competitors.length>1) ? ` (and ${ld.competitors.length-1} more)` : '';
+  const rival = ld.top_competitor
+    ? `<div class="gak-ld-rival">${win?'Also named:':'Recommended in your place:'} <b>${esc(ld.top_competitor)}</b>${esc(more)}</div>` : '';
+  const src = ld._asof ? `${esc(ld.engine||'Perplexity')}, captured ${esc(ld._asof)}`
+                       : `${esc(ld.engine||'Perplexity')}, live web answer`;
+  el.innerHTML =
+    `<span class="gak-ld-badge ${win?'win':'lose'}">${badge}</span>`+
+    `<p class="gak-ld-q">When buyers ask AI “<b>${esc(ld.query)}</b>”, here's what it answers today:</p>`+
+    `<p class="gak-ld-quote">“${esc(ld.quote)}”<span class="src">— ${src}</span></p>`+
+    rival;
+  el.classList.remove('gak-hide');
+}
+/* ---------- Reach / Read / Result matrix ---------- */
+function renderMatrix(mx){
+  const card = $('gak-matrix-card');
+  if(!mx || !mx.rows || !mx.rows.length){ card.classList.add('gak-hide'); return; }
+  const cell = (v)=> v===true?'<span class="gak-cell yes">✓</span>': v===false?'<span class="gak-cell no">✕</span>':'<span class="gak-cell unk" title="not detected">–</span>';
+  const result = (r)=>{
+    if(r.result==='premium') return '<span class="gak-res-prem" title="Claude tracking — coming soon">Soon</span>';
+    if(r.result_locked || r.result==null) return '<span class="gak-res-lock">Locked</span>';
+    const rc = ['present','absent','competitor'].indexOf(r.result)>=0 ? r.result : 'absent';
+    const lbl = rc==='present'?'Yes':rc==='competitor'?'Rival':'No';
+    return `<span class="gak-res ${rc}">${lbl}</span>`;
+  };
+  $('gak-matrix-body').innerHTML = mx.rows.map(r=>
+    `<tr><td class="eng">${esc(r.engine)}</td><td>${cell(r.reach)}</td><td>${cell(r.read)}</td><td>${result(r)}</td></tr>`).join('');
+  card.classList.remove('gak-hide');
+}
+/* roll up the email-gated scan into the matrix Result column (unlock) */
+function matrixEngineKey(label){
+  const l = String(label||'').toLowerCase();
+  if(l.indexOf('perplex')>=0) return 'Perplexity';
+  if(l.indexOf('chatgpt')>=0 || l.indexOf('gpt')>=0) return 'ChatGPT';
+  if(l.indexOf('google')>=0) return 'Google AI Overviews';
+  if(l.indexOf('claude')>=0) return 'Claude';
+  return null;
+}
+function updateMatrixFromVisibility(vis){
+  // M5: `[]` is truthy, so `!vis.prompts` let an empty/unverified scan past the guard and leave the matrix stuck on
+  // "Locked". Guard on .length so a prompt-less result returns cleanly (the unverified path handles its own render).
+  if(!LAST || !LAST.matrix || !LAST.matrix.rows || !vis || !vis.prompts || !vis.prompts.length) return;
+  const agg = {};
+  vis.prompts.forEach(p=>{
+    const hasComp = !!(p.competitors_cited && p.competitors_cited.length);
+    (p.engines||[]).forEach(e=>{
+      const k = matrixEngineKey(e.label); if(!k) return;
+      agg[k] = agg[k] || {cited:false, comp:false};
+      if(e.cited) agg[k].cited = true; else if(hasComp) agg[k].comp = true;
+    });
+  });
+  LAST.matrix.rows.forEach(r=>{
+    if(r.result==='premium') return;          // Claude stays "Soon"
+    if(!r.result_locked) return;              // already revealed (Perplexity from the free hero) -> keep it consistent with the hero, don't flip it
+    const a = agg[r.engine];
+    if(a){ delete r.result_locked; r.result = a.cited?'present':(a.comp?'competitor':'absent'); }
+  });
+  renderMatrix(LAST.matrix);
+}
+/* ---------- teaser counts (free) ---------- */
+function renderTeasers(t){
+  const el = $('gak-teasers');
+  if(!t){ el.classList.add('gak-hide'); el.innerHTML=''; return; }
+  const chips = [];
+  // count == the exact ordered fix-list we reveal on unlock (no number without a list behind it)
+  const fixN = computeFixes().length;
+  if(fixN>0)
+    chips.push(`<div class="gak-teaser alert"><div class="tn">${fixN}</div><div class="tl">fixable issue${fixN>1?'s':''} stopping AI trusting you — your ordered fix-list unlocks below</div></div>`);
+  if(t.competitor_recommended)
+    chips.push(`<div class="gak-teaser alert"><div class="tn">1+</div><div class="tl">competitor recommended where you're absent — see exactly who on unlock</div></div>`);
+  // NB: the "offerings AI gets wrong" teaser was removed — that feature is deferred, and we never tease what we can't reveal.
+  if(!chips.length){ el.classList.add('gak-hide'); el.innerHTML=''; return; }
+  el.innerHTML = chips.join('');
+  el.classList.remove('gak-hide');
+}
+function renderVisibility(vis){
+  if(!vis){ $('gak-visibility').dataset.empty='1'; return; }
+  delete $('gak-visibility').dataset.empty;
+  // C-D: backend marks state:'unverified' when AI answers describe a DIFFERENT company sharing the name (homonym).
+  // Render the honest message ONLY — no score, no competitor card, no map — and BLANK the headline gauge so a prior
+  // readiness number can't read as a confident AI-visibility score on the wrong entity. Missing state -> 'ok' (demo).
+  if(vis.state==='unverified'){
+    $('gak-vis-summary').textContent = vis.message || "We couldn't confirm this is your company in AI answers.";
+    $('gak-prompts').innerHTML = '';
+    var _n=$('gak-score-num'); if(_n) _n.textContent='—';
+    var _arc=$('gak-arc'); if(_arc){ _arc.style.strokeDashoffset=402; _arc.style.stroke='var(--gak-amber)'; }
+    var _gr=$('gak-grade'); if(_gr){ _gr.textContent='Unverified'; _gr.className='gak-grade g-c'; }
+    var _vd=$('gak-verdict'); if(_vd) _vd.textContent = vis.message || '';
+    return;
+  }
+  const losing = (typeof vis.losing==='number' && vis.total_cells) ? `<div class="gak-losing"><b>${Number(vis.losing)}</b> of ${Number(vis.total_cells)} AI answers don't mention you</div>` : '';
+  $('gak-vis-summary').innerHTML = losing + esc(vis.summary||'');
+  $('gak-prompts').innerHTML = (vis.prompts||[]).map(p=>{
+    const engs = (p.engines||[]).map(e=>`<span class="gak-eng ${e.cited?'cited':'absent'}"><span class="e-dot"></span><b>${esc(e.label)}</b> ${e.cited?'mentions you':'no mention'}</span>`).join('');
+    const comp = (p.competitors_cited&&p.competitors_cited.length) ? `<div class="gak-comp">Cited instead: <b>${p.competitors_cited.map(esc).join(', ')}</b></div>`:'';
+    return `<div class="gak-prompt"><div class="gak-prompt-q">“${esc(p.query)}”</div><div class="gak-engines">${engs}</div>${comp}${causalNote(p)}</div>`;
+  }).join('');
+}
+/* Blocked-Bot -> Lost-Citation (our signature): if an engine shows "no mention" AND its crawler is
+   blocked (from the matrix we already computed), name the cause. The competitor has no technical layer to draw this. */
+const BOT_OF={ChatGPT:'GPTBot / OAI-SearchBot',Perplexity:'PerplexityBot','Google AI Overviews':'Googlebot / Google-Extended',Claude:'ClaudeBot'};
+function engineReach(label){
+  if(!LAST||!LAST.matrix||!LAST.matrix.rows) return null;
+  const k=matrixEngineKey(label); if(!k) return null;
+  const row=LAST.matrix.rows.find(r=>r.engine===k);
+  return row?row.reach:null;
+}
+function causalNote(p){
+  if(LAST && (LAST._illustrative || LAST._synthetic)) return '';   // never assert a technical cause from non-real (preview/sample) reach
+  const blocked=(p.engines||[]).filter(e=>!e.cited && engineReach(e.label)===false)
+    .map(e=>matrixEngineKey(e.label)).filter((v,i,a)=>v&&a.indexOf(v)===i);
+  if(!blocked.length) return '';
+  return `<div class="gak-causal">${blocked.map(eng=>`<b>${esc(BOT_OF[eng]||eng)}</b> blocked → ${esc(eng)} can't crawl you to recommend you`).join('; ')}.</div>`;
+}
+/* render + reveal the whole gated layer (called on unlock) */
+function renderGated(vis){
+  renderVisibility(vis);
+  // C-D: on an unverified (wrong-entity) result there's no honest card/source/offering to show, and we must NOT flip
+  // the matrix Result off a wrong-company scan. Render the message only (renderVisibility did it) and hide the rest.
+  if(vis && vis.state==='unverified'){ hide('gak-competitors'); hide('gak-sources'); hide('gak-offering'); renderFixList(); return; }
+  updateMatrixFromVisibility(vis);
+  renderCompetitors(vis&&vis.competitors);
+  renderSources(vis&&vis.sources);
+  renderOffering(vis&&vis.offering_gap);
+  renderFixList();
+}
+function renderCompetitors(list){
+  list=(list||[]).filter(Boolean);
+  if(!list.length){ hide('gak-competitors'); return; }
+  $('gak-comp-list').innerHTML = list.slice(0,6).map((c,i)=>`<span class="gak-chip"><span class="rank">${i+1}</span>${esc(c)}</span>`).join('');
+  show('gak-competitors');
+}
+/* Citation Target List: the 3rd-party PAGES AI pulls from for the prospect's buying questions, with
+   competitors subtracted out (they live on the competitors card). Three states: AI cites you / AI cites
+   rivals+platforms but no neutral media yet / AI cites nobody. ✗-rows are the action list. */
+function gakSafeUrl(u, host){
+  const v = String(u||'');
+  if(/^https?:\/\//i.test(v)) return v;                 // already an http(s) page URL
+  return host ? 'https://'+String(host).replace(/^https?:\/\//i,'') : '#';  // never emit a non-http scheme (no javascript:/data:)
+}
+function srcTargetRow(t,i){
+  const host = esc(t.host||'');
+  const url  = gakSafeUrl(t.url, t.host);
+  const type = String(t.type||'Media');
+  const label = esc(t.title || t.host || '');
+  const showHost = t.title && t.host && String(t.title).toLowerCase()!==String(t.host).toLowerCase();
+  const pill = t.cited
+    ? `<span class="gak-tg-pill ok" title="this page appeared in an AI answer that named you (answer-level, not a per-page scrape)">✓ in an answer that names you</span>`
+    : `<span class="gak-tg-pill no">✗ not yet</span>`;
+  const hard = t.hard_to_pitch ? `<span class="gak-tg-hard">hard to pitch</span>` : '';
+  const freq = (Number(t.count)>1) ? `<span class="gak-tg-freq">pulled ${Number(t.count)}×</span>` : '';
+  return `<div class="gak-tg-row">`
+    + `<span class="gak-tg-rank">${i+1}</span>`
+    + `<span class="gak-tg-badge b-${esc(type.toLowerCase())}">${esc(type)}</span>`
+    + `<span class="gak-tg-main"><a href="${esc(url)}" target="_blank" rel="noopener nofollow">${label}</a>`
+    + (showHost?`<span class="gak-tg-host">${host}</span>`:'')+`</span>`
+    + `<span class="gak-tg-meta">${pill}${hard}${freq}</span>`
+    + `</div>`;
+}
+function srcOwnedRow(owned){
+  if(!owned.length) return '';
+  return `<div class="gak-src-grp gak-owned-grp"><div class="gak-src-lbl">Your own pages AI uses <span class="tag">owned</span></div>`
+    + `<div class="gak-src-list">${owned.slice(0,8).map(s=>`<span class="gak-src">${esc(s)}</span>`).join('')}</div></div>`;
+}
+function renderSources(src){
+  src = src || {};
+  const owned   = (src.owned||[]).filter(Boolean);
+  let   targets = (src.targets||[]).filter(Boolean);
+  // back-compat: an older backend sends a flat `earned` host list with no `targets`
+  if(!targets.length && (src.earned||[]).length){
+    targets = src.earned.filter(Boolean).map(h=>({host:h,url:gakSafeUrl('',h),title:'',type:'Media',count:1,cited:false,hard_to_pitch:false}));
+  }
+  const rivals = (src.competitor_sources||[]).filter(Boolean);
+  const subLine = `The 3rd-party sources AI pulls from to answer your buyers' questions`
+    + (rivals.length?` — your rivals' own sites are listed separately above` : ``)
+    + `. These are sites you can realistically earn a place on.`;
+  const sub = `<p class="gak-src-note gak-src-sub">${subLine}</p>`;
+  const rivalPtr = rivals.length
+    ? `<div class="gak-src-note">AI also pulls straight from <b>${rivals.length}</b> rival ${rivals.length>1?'sites':'site'} → see “Who AI recommends instead of you” above. Those aren't placements you can win.</div>` : '';
+
+  // State C — AI cited no source at all (a URL-citing engine ran and returned nothing)
+  if(src.ai_cites_nobody){
+    $('gak-sources-body').innerHTML = sub
+      + `<div class="gak-src-empty">AI isn't citing any source for these questions yet — a genuine first-mover opportunity. Publish the definitive answer and you can own the citation before anyone else.</div>`;
+    show('gak-sources'); return;
+  }
+  if(!targets.length && !owned.length && !rivals.length){ hide('gak-sources'); return; }
+
+  // State B — no winnable 3rd-party media in the answer. Two honest sub-cases: rivals/platforms vs owned-only.
+  if(!targets.length){
+    const msg = rivals.length
+      ? `AI is answering these questions from your competitors' own sites and a few locked platforms — there's no independent 3rd-party source in the answer yet. The opening: become the first neutral source AI can cite.`
+      : `AI is answering these questions without citing any independent 3rd-party source yet${owned.length?` — it leans on your own pages and locked platforms`:``}. The opening: get named on the review sites, directories and listicles your buyers trust.`;
+    $('gak-sources-body').innerHTML = sub + `<div class="gak-src-empty">${msg}</div>` + rivalPtr + srcOwnedRow(owned);
+    show('gak-sources'); return;
+  }
+
+  // State A — ranked citation target list
+  const rows = targets.slice(0,12).map((t,i)=>srcTargetRow(t,i)).join('');
+  const note = `<div class="gak-src-note">Ranked by how often AI pulls from each source. <b>✗ not yet</b> = AI uses this source in an answer that didn't name you — getting cited there is the move. <b>✓</b> = it appeared in an answer that already names you (answer-level, not a per-page check).</div>`;
+  $('gak-sources-body').innerHTML = sub + `<div class="gak-tg-list">${rows}</div>` + note + rivalPtr + srcOwnedRow(owned);
+  show('gak-sources');
+}
+function renderOffering(og){
+  if(!og || !((og.missing||[]).length)){ hide('gak-offering'); return; }
+  const row=(k,cls,items)=>(items&&items.length)?`<div class="gak-og-row"><div class="gak-og-k ${cls}">${k}</div><div class="gak-og-v">${items.map(esc).join(', ')}</div></div>`:'';
+  $('gak-offering-body').innerHTML = `<p class="gak-src-note">Based on ${esc(og.basis||'what AI returned when asked what you offer, vs. your own site')}:</p>`+row('Not mentioned','miss',og.missing)+row('AI mentions','ok',og.correct);
+  show('gak-offering');
+}
+// Order matters — SPECIFIC patterns first; the generic robots.txt catch-all is LAST so a label like
+// "Content Signals in robots.txt" doesn't wrongly resolve to "add a robots.txt".
+const FIX_RULES=[
+  [/content.?signals?/i,'<b>Add a Content-Signal directive</b> in <code>robots.txt</code> to state your AI-use preferences explicitly.'],
+  [/bot discover|ai bot|crawler/i,'<b>Allow the AI search bots.</b> In <code>robots.txt</code>, explicitly allow GPTBot, OAI-SearchBot, PerplexityBot, ClaudeBot &amp; Google-Extended.'],
+  [/sitemap/i,'<b>Publish a valid XML sitemap</b> at <code>/sitemap.xml</code> and reference it from <code>robots.txt</code>.'],
+  [/markdown/i,'<b>Serve Markdown on content negotiation</b> (<code>Accept: text/markdown</code>) — Perplexity &amp; some Claude flows prefer it.'],
+  [/schema|structured/i,'<b>Add Organization + Product schema</b> (JSON-LD) so engines can parse what you sell.'],
+  [/robots\.txt/i,'<b>Add a robots.txt</b> that explicitly allows AI crawlers — a missing file makes engines guess.'],
+];
+function FIX_FOR(label){ for(const r of FIX_RULES) if(r[0].test(label||'')) return r[1]; return null; }
+/* The ACTUAL list of issues we'll show on unlock. The teaser count uses this same list, so the
+   "N reasons" tease delivers exactly N fixes — never a number with nothing behind it. */
+function computeFixes(){
+  if(!LAST||!LAST.readiness) return [];
+  const fixes=[];
+  const blockedBots=((LAST.crawlers&&LAST.crawlers.bots)||[]).filter(b=>!b.allowed).map(b=>b.name);
+  if(blockedBots.length) fixes.push({tag:'reach',html:`<b>Unblock AI crawlers.</b> Remove the <code>Disallow</code> rules for ${esc(blockedBots.slice(0,5).join(', '))} in your <code>robots.txt</code> — blocked bots can't cite you.`});
+  // OPTIONAL checks (e.g. Content-Signal) are recommendations, not things "stopping AI trusting you" —
+  // don't count them as fixable issues (a 100/100 site shouldn't show "1 fixable issue").
+  ((LAST.readiness.checks)||[]).filter(c=>(c.status==='fail'||c.status==='warn') && !/optional/i.test(c.evidence||'')).forEach(c=>{ const f=FIX_FOR(c.label); if(f) fixes.push({tag:'read',html:f}); });
+  const seen={}; return fixes.filter(f=>seen[f.html]?false:(seen[f.html]=true)).slice(0,6);
+}
+function renderFixList(){
+  const fixes=computeFixes();
+  if(!fixes.length){ hide('gak-fixlist'); return; }
+  $('gak-fix-body').innerHTML = fixes.map(f=>`<li><span class="gak-fix-tag ${f.tag}">${f.tag}</span>${f.html}</li>`).join('');
+  show('gak-fixlist');
+}
+
+/* PDF button gate: 'loading' (spinner, disabled) while the report is still being built, 'ready' once the
+   full report rendered, 'failed' if it never arrived — a user must never download a half-empty branded PDF. */
+function pdfBtnState(state){
+  const b=$('gak-pdf-btn'); if(!b) return;
+  if(state==='loading'){ b.disabled=true; b.classList.add('gak-btn-loading'); b.innerHTML='<span class="gak-spin" aria-hidden="true"></span>Preparing your report…'; }
+  else if(state==='ready'){ b.disabled=false; b.classList.remove('gak-btn-loading'); b.textContent='Download PDF'; }
+  else { b.disabled=true; b.classList.remove('gak-btn-loading'); b.textContent='Full report unavailable'; }
+}
+/* ---------- email gate unlock (live: fetch the visibility scan as the 2nd call) ---------- */
+async function unlock(){
+  GATE_UNLOCKED=true;   // email captured -> the gated breakdown grid + crawler card may now reveal
+  hide('gak-gate'); show('gak-full-checks'); show('gak-booking'); show('gak-final');
+  if(LAST && LAST.visibility){ pdfBtnState('ready'); show('gak-visibility'); renderGated(LAST.visibility); frameHeight(); return; }
+  if(GAK_CONFIG.DEMO_MODE){ pdfBtnState('ready'); frameHeight(); return; }
+  // live: run the (expensive) full Lost-Deal Map now, only after the email is captured
+  pdfBtnState('loading');
+  show('gak-visibility'); delete $('gak-visibility').dataset.empty;
+  $('gak-vis-summary').textContent = 'Mapping your buying questions across ChatGPT, Perplexity & Google AI…';
+  $('gak-prompts').innerHTML = '<div class="gak-prompt"><div class="gak-prompt-q">Running your live Lost-Deal Map across ChatGPT, Perplexity &amp; Google… (~20–30s)</div></div>';
+  frameHeight();
+  const myDomain = CTX.domain;   // bail if the user restarts / re-checks while this scan is in flight
+  // RETRY (2026-07-02): one cold-start/timeout on this single call used to strand a user who had already
+  // given their email (error message + breakdown stays locked). Attempt 1 warms the instance; attempt 2
+  // then typically answers in ~15-25s. Same lesson as the Lost-Deal lazy-fill retry.
+  let v = null, visErr = false;
+  for(let attempt=1; attempt<=2; attempt++){
+    try{
+      v = await fetchReal(CTX.domain, {brand:CTX.brand, industry:CTX.industry, country:CTX.country, email:CTX.email, only:'visibility'});
+      visErr = false; break;
+    }catch(e){
+      visErr = true;
+      if(CTX.domain !== myDomain) return;   // user moved on mid-flight
+      if(attempt === 1){ await new Promise(r=>setTimeout(r,1500)); }
+    }
+  }
+  if(CTX.domain !== myDomain || !LAST) return;   // moved on -> don't write a stale scan into the new report
+  if(visErr){ pdfBtnState('failed'); $('gak-vis-summary').textContent = "The Lost-Deal Map couldn't load — please try again."; frameHeight(); return; }
+  if(v && v.visibility){ LAST.visibility=v.visibility; renderGated(v.visibility); }
+  else { hide('gak-visibility'); }
+  // capture the brief layer (composite score + on-page signals + report) that came back with the visibility scan
+  if(v && (v.score||v.report||v.signals)){ if(v.score)LAST.score=v.score; if(v.signals)LAST.signals=v.signals; if(v.report)LAST.report=v.report; try{ renderBrief(v); }catch(_){ } }
+  pdfBtnState((v && (v.score || v.visibility)) ? 'ready' : 'failed');   // enable only once the full report actually rendered
+  postLead(buildLead('scored'));   // enriched lead with composite + segment (upsert on email in Make)
+  frameHeight();
+}
+
+/* ---------- backend ---------- */
+function gakApiUrl(domain, opts){
+  opts = opts || {};
+  let u = `${GAK_CONFIG.API_BASE}/?action=${GAK_CONFIG.API_ACTION}&url=${encodeURIComponent(domain)}&engines=${GAK_CONFIG.ENGINES.join(',')}`;
+  if(opts.brand)    u += `&brand=${encodeURIComponent(opts.brand)}`;
+  if(opts.industry) u += `&industry=${encodeURIComponent(opts.industry)}`;
+  if(opts.country)  u += `&country=${encodeURIComponent(opts.country)}`;   // market for prompt wording + DataForSEO/SerpAPI geo
+  if(opts.email)    u += `&email=${encodeURIComponent(opts.email)}`;   // backend requires a valid email for the visibility scan
+  if(opts.only)     u += `&only=${encodeURIComponent(opts.only)}`;
+  return u;
+}
+async function fetchReal(domain, opts){
+  const ctrl = new AbortController();
+  const longCall = opts && (opts.only==='visibility' || opts.only==='lostdeal');   // these run a paid LLM call (~8-15s)
+  const t = setTimeout(()=>ctrl.abort(), longCall ? (opts.only==='visibility'?48000:30000) : 20000);  // fail fast on cold-start/gateway hang
+  try{
+    const r = await fetch(gakApiUrl(domain, opts), {headers:{'Accept':'application/json'}, signal:ctrl.signal});
+    if(!r.ok) throw new Error('api_'+r.status);
+    return await r.json();
+  } finally { clearTimeout(t); }
+}
+async function postLead(payload){
+  if(!GAK_CONFIG.MAKE_WEBHOOK_URL) return;
+  // FORM-ENCODED send (2026-07-02): Make does NOT auto-parse text/plain JSON (whole body arrived as ONE
+  // blob field), but it DOES auto-parse application/x-www-form-urlencoded into separate mappable fields —
+  // and that content-type is also CORS-safelisted (no preflight). So the payload is a FLAT object and each
+  // key lands in Make as its own field, ready to map into HubSpot/Mailchimp with no Parse JSON module.
+  // sendBeacon(URLSearchParams) sends form-encoding natively; it is PRIMARY because Make's webhook returns
+  // no CORS headers (a cors-mode fetch can't read r.ok and would double-fire). no-cors keepalive fetch = fallback.
+  const params = new URLSearchParams(payload);
+  const fallback = () => { try{ fetch(GAK_CONFIG.MAKE_WEBHOOK_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},body:params.toString(),keepalive:true}).catch(()=>{}); }catch(_){} };
+  try{
+    if(navigator.sendBeacon && navigator.sendBeacon(GAK_CONFIG.MAKE_WEBHOOK_URL, params)) return;
+    fallback();
+  }catch(e){ fallback(); }
+}
+/* Lead segmentation by the brief's composite score: 80+ Hot · 60-79 Warm · <60 Nurture. */
+function gakSegment(c){ return (c>=80)?'Hot':((c>=60)?'Warm':'Nurture'); }
+/* Build the Make → HubSpot → Mailchimp payload (API_CONTRACT.md §v2 "Lead segmentation"). stage lets the client's Make
+   scenario UPSERT on email: a guaranteed 'captured' fires the instant the email is given (lead never lost), then a
+   'scored' event fires once the scan returns the composite + segment. (HMAC sig + report_url = go-live hardening.) */
+function buildLead(stage){
+  const sc = (LAST && LAST.score) || null;
+  const _rawC = Number(sc && sc.composite);   // Number.isFinite guard + clamp: a bad/NaN composite must NOT silently segment as Nurture
+  const composite = (sc && sc.state==='ok' && Number.isFinite(_rawC)) ? Math.max(0, Math.min(100, _rawC)) : null;
+  const cats = (sc && sc.categories) ? sc.categories : {};
+  const catScore = k => (cats[k] && cats[k].state==='ok' && cats[k].score!=null) ? Number(cats[k].score) : null;
+  const S = v => (v==null ? '' : String(v));   // FLAT form fields: null/undefined -> '' (Make maps empties cleanly)
+  return {
+    source:'alchemy-ai-visibility-tool', stage: stage||'scored', ts:new Date().toISOString(),
+    // stable idempotency key so Make/HubSpot can UPSERT the 'captured' then 'scored' events as ONE lead (no duplicates)
+    lead_key: ((CTX.email||'').toLowerCase()+'|'+(CTX.domain||'')+'|alchemy-ai-visibility-tool'),
+    email: (CTX.email||''), company_name: (CTX.company||CTX.brand||''), brand_name: (CTX.brandName||''),
+    website: (CTX.domain||''), terms_accepted: (CTX.terms ? 'true' : 'false'),
+    segment: (composite!=null ? gakSegment(composite) : ''),
+    score_composite: S(composite),
+    score_grade: (composite!=null && sc ? S(sc.grade) : ''),
+    score_state: (sc ? S(sc.state) : ''),
+    score_coverage: (sc ? S(sc.coverage) : ''),
+    cat_chatgpt_visibility: S(catScore('chatgpt_visibility')),
+    cat_google_aio_visibility: S(catScore('google_aio_visibility')),
+    cat_ai_accessibility: S(catScore('ai_accessibility')),
+    cat_technical_readiness: S(catScore('technical_readiness')),
+    cat_ai_cited_authority: S(catScore('ai_cited_authority')),
+    crawlers_blocked: S((LAST&&LAST.crawlers&&LAST.crawlers.summary&&LAST.crawlers.summary.blocked)||0),
+    readiness_score: S((LAST&&LAST.readiness&&LAST.readiness.score)!=null ? LAST.readiness.score : ''),
+    js_rendered: (!!(LAST&&LAST.signals&&LAST.signals.fetch_meta&&LAST.signals.fetch_meta.js_rendered)) ? 'true' : 'false',
+    industry: (CTX.industry||''), country: (CTX.country||'')
+  };
+}
+
+/* ---------- DEMO data (realistic, deterministic from domain) ---------- */
+function demoData(domain, brandIn, industry){
+  let h=0; for(const c of domain) h=(h*31+c.charCodeAt(0))>>>0;
+  const rnd=(seed)=>{ const x=Math.sin(h+seed)*10000; return x-Math.floor(x); };
+  const score = 42 + Math.floor(rnd(1)*46);                 // 42..88
+  const blocked = Math.floor(rnd(2)*5);                     // 0..4 blocked
+  const allowed = 34 - blocked;
+  const keyBots=['GPTBot','OAI-SearchBot','ChatGPT-User','ClaudeBot','Claude-SearchBot','PerplexityBot','Google-Extended','Googlebot','Bingbot','Amazonbot','Applebot-Extended','meta-externalagent'];
+  const bots = keyBots.map((n,i)=>({name:n, allowed: !(i<blocked)}));
+  const mk=(st,label,ev)=>({status:st,label,evidence:ev});
+  const checks=[
+    mk(score>55?'pass':'fail','robots.txt valid format', score>55?'robots.txt is present and well-formed.':'No robots.txt found — crawlers assume full access, but a file lets you state AI preferences.'),
+    mk(blocked?'warn':'pass','AI Bot Discoverability', blocked?`${blocked} AI crawler(s) are blocked in robots.txt.`:'All AI crawlers have access in robots.txt.'),
+    mk(rnd(3)>.3?'pass':'fail','Sitemap present + valid XML', rnd(3)>.3?'Sitemap found with valid entries.':'No valid sitemap found at /sitemap.xml.'),
+    mk(rnd(4)>.6?'pass':'fail','Content-Signal directive', rnd(4)>.6?'Content-Signal directive present.':'No Content-Signal directive (optional; reserves AI-use rights explicitly).'),
+    mk(rnd(5)>.7?'pass':'fail','Markdown content negotiation', rnd(5)>.7?'Server negotiates Accept: text/markdown.':'No markdown negotiation (Perplexity & some Claude flows prefer it).')
+  ];
+  const brand = (brandIn && brandIn.trim()) ? brandIn.trim() : domain.split('.')[0];
+  const comps=['Example Rival A','Example Rival B','an industry directory'];   // obvious sample names (synthetic demo only)
+  const vprompts=[
+    {query:`best ${brand} alternatives`, engines:[{label:'ChatGPT',cited:rnd(6)>.5},{label:'Google AI',cited:rnd(7)>.6},{label:'Perplexity',cited:rnd(8)>.5}]},
+    {query:`is ${brand} any good?`, engines:[{label:'ChatGPT',cited:rnd(9)>.4},{label:'Google AI',cited:rnd(10)>.7},{label:'Perplexity',cited:rnd(11)>.5}]}
+  ].map(p=>({...p, competitors_cited: p.engines.some(e=>!e.cited)?comps.slice(0,1+Math.floor(rnd(12)*2)):[]}));
+  const mentions = vprompts.flatMap(p=>p.engines).filter(e=>e.cited).length;
+  const tot = vprompts.flatMap(p=>p.engines).length;
+
+  // ---- free layer: Lost-Deal Quote + matrix + teasers (mirrors the backend shape) ----
+  const rv = ((GAK_CONFIG.PREVIEW || GAK_CONFIG.HYBRID) && REAL_VIS[domain]) ? REAL_VIS[domain] : null;
+  const synthetic = !rv;                                       // anything outside the real pilots = sample data
+  const fullReal = !!(rv && rv.readiness && rv.crawlers);      // entry ships its OWN real readiness+crawler (e.g. REPLACE-WITH-ALCHEMY-DOMAIN.com) -> NOT illustrative
+  const pplCited = rv ? !!(rv.lost_deal && rv.lost_deal.mentioned) : (rnd(13) > .5);
+  const lost_deal = (rv && rv.lost_deal) ? rv.lost_deal : {
+    _synthetic: true,
+    query: industry ? `best ${industry} companies` : `best ${brand} alternatives`,
+    engine: 'Perplexity', mentioned: pplCited, mentioned_in_quote: pplCited,
+    quote: pplCited
+      ? `${brand} is a well-regarded option here — it comes up alongside ${comps[0]} for choice and service.`
+      : `For the best ${industry||'options'} in the UK, the top picks include ${comps[0]} and ${comps[1]}, recommended for their range, pricing and reviews.`,
+    top_competitor: pplCited ? '' : comps[0],
+    competitors: pplCited ? [] : comps.slice(0,2),
+    result: pplCited ? 'present' : 'competitor'
+  };
+  // effective readiness/crawler: REAL (baked) for fullReal domains, synth otherwise
+  const synBlockers = checks.filter(c=>c.status==='fail'||c.status==='warn').slice(0,3);
+  const effReadiness = fullReal ? rv.readiness : { score, verdict: score>=70?'Your site is well-prepared for AI search engines.':score>=50?'Partly ready — a few fixes would meaningfully improve how AI sees you.':'AI engines may struggle to read and trust your site. Several quick wins below.', blockers: synBlockers, checks };
+  const effCrawlers  = fullReal ? rv.crawlers  : { summary:{allowed,blocked,total:34}, bots };
+  // Matrix Reach/Read: REAL for sample + fullReal; UNKNOWN ('–') for the 2 illustrative clients (real visibility, un-fetched crawler)
+  const reachOf = (arr,names)=>{ let seen=false; for(const b of (arr||[])){ const n=(b.name||'').toLowerCase(); for(const w of names){ if(n.indexOf(w)>=0){ seen=true; if(!b.allowed) return false; } } } return seen?true:null; };
+  const showRR = synthetic || fullReal;
+  const rch=(names)=> showRR ? reachOf(effCrawlers.bots, names) : null;
+  const rd  = showRR ? (effReadiness.score>=50) : null;
+  const matrix = { rows:[
+    {engine:'ChatGPT', reach:rch(['oai-searchbot']), read:rd, result_locked:true},
+    {engine:'Perplexity', reach:rch(['perplexitybot']), read:rd, result:lost_deal.result},
+    {engine:'Google AI Overviews', reach:rch(['googlebot']), read:rd, result_locked:true},
+    {engine:'Claude', reach:rch(['claude-searchbot','claude-user','claudebot']), read:rd, result:'premium'}
+  ]};
+  const teasers = { reasons_cant_find: (effReadiness.blockers||[]).length + ((effCrawlers.summary&&effCrawlers.summary.blocked)||0), competitor_recommended: (!lost_deal.mentioned && !!lost_deal.top_competitor), offering_gap_locked:false };
+
+  // ---- BRIEF: AI Visibility Score report objects (score / signals / report) ----
+  // Use the REAL baked objects when the pilot ships them (REPLACE-WITH-ALCHEMY-DOMAIN.com); otherwise synthesize from the
+  // data we already computed so ANY typed demo domain shows the new sections too.
+  // MUST match the backend (gak_grade_band / gak_band) so the demo grades a composite identically to the live tool.
+  const gradeFor = (v)=> v>=90?'A+':v>=80?'A':v>=60?'B':v>=40?'C':'D';
+  const bandForS = (v)=> v==null?'no-data':v>=80?'strong':v>=60?'good':v>=40?'fair':v>=1?'weak':'no-data';
+  const effPrompts = (rv && rv.prompts && rv.prompts.length) ? rv.prompts : vprompts;
+  const allEng = effPrompts.flatMap(p=>p.engines||[]);
+  const vMent = allEng.filter(e=>e.cited).length, vTot = allEng.length;
+  const cgArr = allEng.filter(e=>/chatgpt/i.test(e.label));
+  const ggArr = allEng.filter(e=>/google/i.test(e.label));
+  const catRatio = (arr)=>{ const c=arr.filter(e=>e.cited).length; return arr.length?Math.round((c/arr.length)*100):null; };
+  const cgS = cgArr.length?catRatio(cgArr):null;
+  const ggS = ggArr.length?catRatio(ggArr):null;
+  const accS = Math.round(((effCrawlers.summary.allowed||0)/(effCrawlers.summary.total||34))*100);
+  const techS = Number(effReadiness.score)||0;
+  const authS = 38 + Math.floor(rnd(21)*48);                 // 38..86
+  const wavg = (pairs)=>{ let s=0,w=0; pairs.forEach(([v,wt])=>{ if(v!=null){ s+=v*wt; w+=wt; } }); return w?Math.round(s/w):null; };
+  let compositeS = wavg([[cgS,30],[ggS,30],[accS,20],[techS,10],[authS,10]]); if(compositeS==null) compositeS=techS;
+  const gradeS = gradeFor(compositeS);
+  const topComp = (rv && rv.lost_deal && rv.lost_deal.top_competitor) || (rv && rv.competitors && rv.competitors[0]) || (comps && comps[0]) || '';
+  const PERF_LABELS = {brand_clarity:'Brand Clarity', ai_cited_authority:'AI-Cited Authority', ai_accessibility:'AI Accessibility', trust_signals:'Trust Signals', citation_strength:'Citation Strength', content_coverage:'Content Coverage'};
+  const subDefs = [
+    ['brand_clarity',      60+Math.floor(rnd(22)*38)],
+    ['ai_cited_authority', authS],
+    ['ai_accessibility',   accS],
+    ['trust_signals',      52+Math.floor(rnd(23)*40)],
+    ['citation_strength',  40+Math.floor(rnd(24)*45)],
+    ['content_coverage',   48+Math.floor(rnd(25)*42)]
+  ];
+  const subScores = subDefs.map(([k,v])=>({key:k, score:v, band:bandForS(v)}));
+  const weakestCat = (cgS!=null && ggS!=null) ? (cgS<=ggS?'chatgpt_visibility':'google_aio_visibility') : 'google_aio_visibility';
+  const synthScore = {
+    composite: compositeS, grade: gradeS, state:'ok', confidence:'medium',
+    coverage: `Based on ${effPrompts.length} buying-question prompt${effPrompts.length>1?'s':''} across ChatGPT + Google AI Overviews`,
+    weight_live: 100, visibility_floor_capped: false, na_note: '',
+    categories: {
+      chatgpt_visibility:    { score: cgS, state: cgS==null?'insufficient_data':'ok', confidence:'medium', n: cgArr.length },
+      google_aio_visibility: { score: ggS, state: ggS==null?'insufficient_data':'ok', confidence:'medium', n: ggArr.length },
+      ai_accessibility:      { score: accS, state:'ok', confidence:'high', n:(effCrawlers.bots||[]).length },
+      technical_readiness:   { score: techS, state:'ok', confidence:'medium', n:1 },
+      ai_cited_authority:    { score: authS, state:'ok', confidence:'low', n:0 }
+    },
+    sub_scores: subScores,
+    aio_likelihood: { band: ggS==null?'low':(ggS>=60?'high':ggS>=30?'medium':'low'),
+      derivation: ggS==null?'limited Google AI Overview data for your queries':'estimated from your structured data, indexing and citation signals', label:'estimated' }
+  };
+  const synthReport = {
+    executive_summary: { text:
+      `${brand}'s AI Visibility Score is ${compositeS}/100 (Grade ${gradeS}). You were named in ${vMent} of ${vTot} AI answers we tested`
+      + (topComp ? `, while ${topComp} appeared where you didn't` : '')
+      + `. Your weakest area is ${weakestCat==='chatgpt_visibility'?'ChatGPT Visibility':'Google AI Overview Visibility'}. The fastest win: add an FAQ section with FAQPage schema.`,
+      source:'deterministic', facts_used:{ mentioned_count:vMent, engines_tested:vTot, top_competitor:topComp, weakest_category:weakestCat } },
+    brand_performance: subScores.map(s=>({label:PERF_LABELS[s.key]||s.key, key:s.key, score:s.score, band:s.band})),
+    strengths: subScores.filter(s=>s.score>=70).slice(0,3).map(s=>({text:`${PERF_LABELS[s.key]} is a genuine strength`, evidence:`${PERF_LABELS[s.key]}: ${s.score}/100`})),
+    weaknesses: subScores.filter(s=>s.score<55).slice(0,3).map(s=>({text:`${PERF_LABELS[s.key]} needs work`, evidence:`${PERF_LABELS[s.key]}: ${s.score}/100`, tier:'medium'})),
+    recommendations: {
+      quick_wins: [
+        { title:'Add an FAQ section with FAQPage schema', detail:"Answer your buyers' top questions on-page in FAQ format with FAQPage schema — the format AI answers quote most.", linked_gap:'No FAQ content/schema detected', impact:0.15 },
+        { title:'Describe your services in plain text', detail:'Give each service a clearly named, text-described section so AI can enumerate what you offer.', linked_gap:'Services thinly described on-site', impact:0.08 }
+      ],
+      strategic_actions: [
+        { title:'Build third-party citations', detail:'Earn mentions on the review sites, directories and listicles AI already pulls from for your category.', linked_gap:'Few independent citations name you', impact:0.04 }
+      ]
+    },
+    offering_perception: { title:'How AI describes your offerings', correct:[], ai_missing:[], hidden:true },
+    sources: { on_site:[{row:'Your site', url:'https://'+domain, cited:vMent>0}], off_site:[], off_site_opportunities:[] },
+    _meta: { onpage_pass_ran:true, js_rendered:false, brand_known_to_ai:vMent>0, llm_polish:false }
+  };
+  const synthSignals = {
+    fetch_meta:{ source:'html', home_code:200, degraded:false, js_rendered:false, schema_unavailable:false, links_seen:0, visible_text_bytes:0, fetch_error:'' },
+    structured_data:{ types:{}, available_points:20, earned_points:0, unavailable:false },
+    entity:{ count_pass:0 }, content:{}, authority:{ earned_count:0, earned_hosts:[], pr_hosts:[], directory_hosts:[], social:[], ai_cites_nobody:false }
+  };
+
+  return {
+    domain, _synthetic: synthetic, _illustrative: !!(rv && !fullReal),   // illustrative ONLY for real-vis clients without baked readiness/crawler
+    readiness: effReadiness,
+    crawlers: effCrawlers,
+    lost_deal, matrix, teasers,
+    score:   (rv && rv.score)   ? rv.score   : synthScore,
+    signals: (rv && rv.signals) ? rv.signals : synthSignals,
+    report:  (rv && rv.report)  ? rv.report  : synthReport,
+    visibility: rv ? rv
+      : { summary:`Your brand was named in ${mentions} of ${tot} AI answers across ${vprompts.length} buying questions. ${mentions<tot?'Competitors are recommended where you are absent.':'Strong AI presence.'}`,
+          losing: tot-mentions, total_cells: tot, prompts:vprompts,
+          competitors: comps.slice(0,3),
+          sources: { owned:[domain], competitor_sources:[], cited_total:4, ai_cites_nobody:false,
+            earned:['clutch.co','trustpilot.com','reddit.com'],
+            targets:[
+              {host:'clutch.co', url:'https://clutch.co/', title:'Industry directory listing', type:'Directory', count:2, cited:false, hard_to_pitch:false},
+              {host:'trustpilot.com', url:'https://www.trustpilot.com/', title:'Trustpilot category page', type:'Review', count:1, cited:false, hard_to_pitch:false},
+              {host:'reddit.com', url:'https://www.reddit.com/', title:'Reddit recommendation thread', type:'Community', count:1, cited:false, hard_to_pitch:false}
+            ] },
+          offering_gap: null }
+  };
+}
+
+/* ---------- flow ---------- */
+let LAST=null, CTX={domain:'',brand:'',industry:'',country:''};
+let GATE_UNLOCKED=false;   // defence-in-depth (codex/swarm): the breakdown grid + crawler card only unlock when truly past the email gate (or a baked showcase domain) — never just because a score object appeared early.
+$('gak-form').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  $('gak-err').textContent='';
+  const domain = normUrl($('gak-url').value);
+  if(!domain){ $('gak-err').textContent='Please enter a valid website, e.g. yourcompany.com'; return; }
+  // Company name is the PRIMARY brand source (brief). Fall back to the optional gak-brand field if present.
+  const company = (($('gak-company')||{}).value||'').trim().slice(0,80);
+  const brandOpt = (($('gak-brand')||{}).value||'').trim().slice(0,80);
+  if(GAK_CONFIG.GATE && GAK_CONFIG.GATE.requireCompany && !company && !brandOpt){
+    $('gak-err').textContent='Please enter your company name.'; return;
+  }
+  const brand = (company || brandOpt).slice(0,80);
+  const industry = ($('gak-industry').value||'').trim().slice(0,80);
+  // Industry is REQUIRED — it drives the unbranded category prompts; without it results fall back to brand-only questions.
+  if(!industry){ $('gak-err').textContent='Please enter your industry — it decides which questions we ask the AI engines.'; return; }
+  const country = (($('gak-country')||{}).value||'').trim().slice(0,40);
+  CTX = {domain, brand, industry, country, company, brandName: brandOpt};   // keep RAW fields too — Make gets every field as typed
+  GATE_UNLOCKED=false;   // new scan -> re-lock until email (or baked showcase)
+  $('gak-go').disabled=true;
+  stage('loading'); runSteps();
+  const started=Date.now();
+  try{
+    if(isBaked(domain)){
+      GATE_UNLOCKED=true;   // baked showcase domains (the client's own/pilot sites) display the full report without a gate
+      const data = demoData(domain, brand, industry);
+      LAST=data;
+      if(!data.visibility) $('gak-visibility').dataset.empty='1';
+      const wait = Math.max(0, 4800-(Date.now()-started));   // let the step animation breathe
+      setTimeout(()=>{ clearInterval(stepTimer); render(data); $('gak-go').disabled=false; }, wait);
+    } else {
+      // LIVE: render the report FAST (only=fast — no paid call), then lazy-fill the Lost-Deal hero
+      // (only=lostdeal) so a slow/failed Perplexity never blocks or discards the readiness+crawler report.
+      const report = await fetchReal(domain, {brand, industry, country, only:'fast'});
+      // guard: a malformed / error-at-200 body (no readiness) must hit the catch, never render a fake 0/100 "At risk" scorecard
+      if(!report || !report.readiness || typeof report.readiness.score!=='number') throw new Error('api_empty');
+      LAST=report;
+      if(!report.visibility) $('gak-visibility').dataset.empty='1';
+      clearInterval(stepTimer); render(report); $('gak-go').disabled=false;
+      lazyFillLostDeal(domain, {brand, industry, country});
+    }
+  }catch(err){
+    clearInterval(stepTimer); $('gak-go').disabled=false; stage('input');
+    $('gak-err').textContent='Could not run the check right now. Please try again in a moment.';
+  }
+});
+/* lazy-fill the Lost-Deal hero + Perplexity matrix cell after the fast report (live mode only) */
+async function lazyFillLostDeal(domain, opts){
+  const myDomain = domain;   // bail on resolution if the user restarted / started a new check (no stale cross-domain write)
+  const el = $('gak-lostdeal');
+  el.className='gak-lostdeal';
+  el.innerHTML = `<span class="gak-ld-badge lose" style="background:rgba(100,117,118,.12);color:var(--gak-muted)">Asking Perplexity…</span><p class="gak-ld-q">Fetching the live AI answer for your category…</p>`;
+  el.classList.remove('gak-hide'); frameHeight();
+  // QA 2026-06-25: RETRY once before hiding. A single transient failure (cold Autoscale instance right after a
+  // deploy, a slow/timed-out Perplexity call, a network blip) used to hide the hero permanently for the whole
+  // session (unlock doesn't re-fetch it) -> "loading then vanished". A 2nd attempt hits a now-warm instance (~5s).
+  let r = null;
+  for(let attempt=0; attempt<2; attempt++){
+    try{
+      r = await fetchReal(domain, {brand:opts.brand, industry:opts.industry, country:opts.country, only:'lostdeal'});
+      if(CTX.domain !== myDomain || !LAST) return;   // user moved on -> never write onto a different report
+      if(r && r.lost_deal) break;                    // got it -> stop retrying
+    }catch(e){ r = null; if(CTX.domain !== myDomain || !LAST) return; }
+    if(attempt===0){ el.querySelector('.gak-ld-q') && (el.querySelector('.gak-ld-q').textContent='Fetching the live AI answer for your category…'); await new Promise(res=>setTimeout(res, 1200)); }  // brief pause, then one retry
+  }
+  if(CTX.domain !== myDomain || !LAST) return;
+  if(r && r.lost_deal){
+    LAST.lost_deal = r.lost_deal;
+    renderLostDeal(r.lost_deal);
+    fillPerplexityResult(r.lost_deal);
+    addCompetitorTeaser(r.lost_deal);
+  } else { el.className='gak-lostdeal gak-hide'; el.innerHTML=''; }   // both attempts failed/capped -> hide cleanly (never fake a result)
+  if(CTX.domain===myDomain) frameHeight();
+}
+function fillPerplexityResult(ld){
+  if(!LAST || !LAST.matrix || !LAST.matrix.rows || !ld) return;
+  const row = LAST.matrix.rows.find(r=>r.engine==='Perplexity');
+  if(row){ delete row.result_locked; row.result = ld.result || 'absent'; renderMatrix(LAST.matrix); }
+}
+function addCompetitorTeaser(ld){
+  if(!LAST || !LAST.teasers) return;
+  LAST.teasers.competitor_recommended = !!(ld && !ld.mentioned && ld.top_competitor);
+  renderTeasers(LAST.teasers);
+}
+
+$('gak-gate-form').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  $('gak-gate-err').textContent='';
+  const email = $('gak-email').value.trim();
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ $('gak-gate-err').textContent='Please enter a valid email address.'; return; }
+  // GDPR consent gate: no lead leaves the browser without an explicit tick (recorded in the Make payload).
+  if(!($('gak-terms') && $('gak-terms').checked)){ $('gak-gate-err').textContent='Please tick the box to agree to the privacy policy.'; return; }
+  CTX.email = email; CTX.terms = true;
+  postLead(buildLead('captured'));   // guaranteed lead-capture the instant the email is given (the 'scored' upsert follows from unlock())
+  await unlock();
+});
+
+$('gak-restart').addEventListener('click', ()=>{ ['gak-url','gak-company','gak-brand','gak-industry','gak-country','gak-email'].forEach(id=>{const e=$(id); if(e) e.value='';}); const tc=$('gak-terms'); if(tc) tc.checked=false; CTX.terms=false; const ge=$('gak-gate-err'); if(ge) ge.textContent=''; LAST=null; CTX={domain:'',brand:'',industry:'',country:''}; const go=$('gak-go'); if(go) go.disabled=false; show('gak-gate'); ['gak-full-checks','gak-visibility','gak-competitors','gak-sources','gak-offering','gak-fixlist','gak-final','gak-sample-note','gak-free-extra','gak-matrix-card','gak-teasers','gak-lostdeal','gak-booking','gak-crawler','gak-exec','gak-framework','gak-sw','gak-recs','gak-chatgpt','gak-aio'].forEach(hide); ['gak-matrix-body','gak-teasers','gak-lostdeal','gak-prompts','gak-vis-summary'].forEach(id=>{const e=$(id); if(e) e.innerHTML='';}); const pr=$('gak-pdf-root'); if(pr) pr.innerHTML=''; stage('input'); });
+
+/* ============================================================
+   PDF EXPORT — 8-page branded PDF built off-screen in #gak-pdf-root from LAST, captured by html2pdf.js.
+   ALL dynamic strings go through esc() (never raw innerHTML); URLs through gakSafeUrl(). The PDF gauge +
+   grade chips use LITERAL hex (html2canvas can't resolve CSS var()/currentColor), so they are a second,
+   self-contained gauge — NOT the live one. See spec.md §7.
+   ============================================================ */
+const GAK_PDF = {
+  // PRODUCTION (the client): self-host this bundle SAME-ORIGIN as the widget (e.g. /vendor/html2pdf.bundle.min.js) and
+  // update BUNDLE_URL + INTEGRITY. Framer / Cloudflare-Pages host-page CSP `script-src` frequently blocks CDN
+  // origins — when that happens the load fails and every export silently falls back to window.print(). The CDN
+  // URL below (SRI-pinned, crossorigin) is fine for our own preview/demo origin.
+  BUNDLE_URL: 'https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.3/dist/html2pdf.bundle.min.js',
+  INTEGRITY:  'sha384-1Rq385dzyHeeImKREXc2dTf1lhBKJHL8YR6phOUkikTCsUwGgDyWRoGv8KVG2+qY',
+  TIMEOUT_MS: 4000,
+  _loading: null
+};
+/* lazy-load the bundle on first click; reject on error OR after TIMEOUT_MS so the caller can print()-fallback. */
+function loadHtml2Pdf(){
+  if(window.html2pdf) return Promise.resolve(window.html2pdf);
+  if(GAK_PDF._loading) return GAK_PDF._loading;
+  // PDF-blank fix: try a SAME-ORIGIN self-hosted bundle FIRST (a host/Framer CSP can't block same-origin), then the
+  // configured CDN. A CSP-blocked CDN was silently falling back to window.print() -> a blank PDF in the client's iframe embed.
+  const sameOrigin = (function(){ try{ let b=location.href.split(/[?#]/)[0]; const last=b.split('/').pop(); if(last.indexOf('.')===-1 && !b.endsWith('/')) b+='/'; return new URL('html2pdf.bundle.min.js', b).href; }catch(e){ return ''; } })();
+  const urls = [sameOrigin, GAK_PDF.BUNDLE_URL].filter(function(u,i,a){ return u && a.indexOf(u)===i; });
+  GAK_PDF._loading = new Promise((resolve,reject)=>{
+    let done=false, idx=0;
+    const finish=(fn,arg)=>{ if(done) return; done=true; clearTimeout(to); fn(arg); };
+    const to=setTimeout(()=>{ GAK_PDF._loading=null; finish(reject, new Error('pdf_timeout')); }, GAK_PDF.TIMEOUT_MS);
+    function tryNext(){
+      if(idx>=urls.length){ GAK_PDF._loading=null; return finish(reject, new Error('pdf_load_error')); }
+      const _bu=gakSafeUrl(urls[idx++]||'', null);
+      if(_bu==='#') return tryNext();
+      const s=document.createElement('script'); s.src=_bu;
+      s.onload=()=>{ window.html2pdf ? finish(resolve, window.html2pdf) : tryNext(); };
+      s.onerror=()=>{ tryNext(); };
+      document.head.appendChild(s);
+    }
+    tryNext();
+  });
+  return GAK_PDF._loading;
+}
+
+/* literal-hex helpers (mirror barColor / GRADE_CLASS / BAND_LABEL but as hex, for html2canvas) */
+const PDF_BARHEX = (s)=> s>=70?'#5dc39b':s>=50?'#e6b566':'#c25d5d';
+const PDF_GAUGEHEX = (g)=> (g==='A+'||g==='A'||g==='B')?'#5dc39b':(g==='C'?'#e6b566':'#c25d5d');
+const PDF_GRADEHEX = (g)=> (g==='A+'||g==='A'||g==='B')?['#7fd7b2','#0f2b26']:(g==='C'?['#e6b566','#2f2415']:['#e08f8f','#331a1c']);
+const PDF_BANDHEX = (b)=> b==='strong'||b==='good' ? ['#7fd7b2','#0f2b26','#1d4a3d']
+  : b==='fair' ? ['#e6b566','#2f2415','#57431f']
+  : b==='weak' ? ['#e08f8f','#331a1c','#5c2f33']
+  : ['#90afcf','#13233c','#24354e'];
+let PDF_DATE='';
+/* inline-SVG wordmark (NOT a cross-origin <img>, so it never taints the html2canvas canvas) */
+const PDF_LOGO = '<svg width="168" height="24" viewBox="0 0 168 24" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Alchemy Leads">'
+  + '<text x="0" y="18" font-family="Manrope,Arial,Helvetica,sans-serif" font-size="15" font-weight="600" letter-spacing="4.2">'
+  + '<tspan fill="#0d9488">ALCHEMY LEADS</tspan></text></svg>';   /* placeholder text wordmark (swap for the client's logo file when supplied) */
+
+/* self-contained PDF gauge (literal hex, no var()/currentColor; arc rotated via SVG attribute) */
+function pdfGauge(score, color, numText){
+  const C=402, pct=Math.max(0,Math.min(100,Number(score)||0)), off=C-(C*pct/100);
+  return '<div style="position:relative;width:148px;height:148px;flex:0 0 auto">'
+    + '<svg width="148" height="148" viewBox="0 0 148 148">'
+    + '<circle cx="74" cy="74" r="64" fill="none" stroke="#1c2e47" stroke-width="14"></circle>'
+    + '<circle cx="74" cy="74" r="64" fill="none" stroke="'+color+'" stroke-width="14" stroke-linecap="round" stroke-dasharray="402" stroke-dashoffset="'+off+'" transform="rotate(-90 74 74)"></circle>'
+    + '</svg>'
+    + '<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">'
+    + '<span style="font-size:40px;font-weight:600;color:#ffffff;line-height:1;letter-spacing:-.03em">'+esc(numText)+'</span>'
+    + '<span style="font-size:12px;color:#90afcf;margin-top:3px">/ 100</span></div></div>';
+}
+function pdfData(){
+  const L=LAST||{};
+  return { domain:(CTX&&CTX.domain)||L.domain||'', brand:(CTX&&CTX.brand)||'', score:L.score||null,
+    report:L.report||null, signals:L.signals||null, visibility:L.visibility||null, lost_deal:L.lost_deal||null,
+    readiness:L.readiness||null };
+}
+function pdfPageWrap(kicker, n, total, inner){
+  const agency = (GAK_CONFIG.BRAND && GAK_CONFIG.BRAND.name) || 'Alchemy Leads';
+  // data-pdf-link -> a real clickable link annotation is overlaid after capture (html2canvas output is a flat image)
+  const brandUrl = gakSafeUrl((GAK_CONFIG.BRAND && GAK_CONFIG.BRAND.url) || '', null);
+  const logo = (brandUrl && brandUrl!=='#') ? '<span data-pdf-link="'+esc(brandUrl)+'">'+PDF_LOGO+'</span>' : PDF_LOGO;
+  return '<div class="pdf-page"><div class="pdf-brandbar">'+logo+'<span class="pdf-kicker">'+esc(kicker)+'</span></div>'
+    + inner
+    + '<div class="pdf-foot"><span>'+esc(agency)+' · AI Visibility Report</span><span>Page '+n+' of '+total+'</span></div></div>';
+}
+/* ---- page 1: cover + exec summary + gauge + grade + lost-deal quote ---- */
+function pdfCover(D){
+  const sc=D.score, grade=(sc&&sc.grade)||'';
+  const insufficient = !(sc && sc.state==='ok' && sc.composite!=null);
+  const numText = insufficient ? '—' : String(Number(sc.composite)||0);
+  const gColor  = insufficient ? '#e6b566' : PDF_GAUGEHEX(grade);
+  const gPair   = insufficient ? ['#e6b566','#2f2415'] : PDF_GRADEHEX(grade);
+  const gradeLabel = insufficient ? 'Limited data' : (grade||'—');
+  const exec = (D.report&&D.report.executive_summary&&D.report.executive_summary.text) || (sc&&sc.na_note) || '';
+  const cov  = (sc&&sc.coverage)||'';
+  let inner = '<div class="pdf-h1">AI Visibility Report</div>'
+    + '<p class="pdf-meta">'+esc(D.brand||GAK_CONFIG.BRAND.name||'')+(D.domain?(' · '+esc(D.domain)):'')+'<br>Prepared '+esc(PDF_DATE)+'</p>'
+    + '<div class="pdf-sub">Your composite AI Visibility Score</div>'
+    + '<div class="pdf-score-row">'+pdfGauge(insufficient?0:sc.composite, gColor, numText)
+    + '<div><span class="pdf-grade" style="color:'+gPair[0]+';background:'+gPair[1]+'">'+esc(gradeLabel)+'</span>'
+    + (cov?'<div class="pdf-cov">'+esc(cov)+'</div>':'')+'</div></div>';
+  if(exec) inner += '<div class="pdf-sub">Executive summary</div><p class="pdf-lead">'+esc(exec)+'</p>';
+  const ld=D.lost_deal;
+  if(ld && ld.quote && !ld._synthetic){
+    const win=!!ld.mentioned;
+    const src = ld._asof ? (esc(ld.engine||'Perplexity')+', captured '+esc(ld._asof)) : (esc(ld.engine||'Perplexity')+', live web answer');
+    inner += '<div class="pdf-sub">What AI tells your buyers today</div>'
+      + (ld.query?'<p class="pdf-lead" style="margin-bottom:8px">When buyers ask AI &ldquo;<b>'+esc(ld.query)+'</b>&rdquo;:</p>':'')
+      + '<p class="pdf-quote'+(win?' win':'')+'">&ldquo;'+esc(ld.quote)+'&rdquo;<span class="src">— '+src+'</span></p>'
+      + (ld.top_competitor?'<div class="pdf-rival">'+(win?'Also named:':'Recommended in your place:')+' <b>'+esc(ld.top_competitor)+'</b></div>':'');
+  }
+  return inner;
+}
+/* ---- page 2: weighted category bars + sub-score bands ---- */
+function pdfScorePage(D){
+  const sc=D.score; if(!sc) return null;
+  const cats=sc.categories||{};
+  const bars = FRAMEWORK_CATS.map(function(row){
+    const key=row[0], label=row[1], weight=row[2], c=cats[key]||{};
+    const head='<div class="pdf-bar-head"><span class="pdf-bar-label">'+esc(label)+'</span><span class="pdf-bar-weight">'+(Number(weight)||0)+'%</span></div>';
+    if(!(c.state==='ok' && c.score!=null)) return '<div class="pdf-bar-row">'+head+'<div class="pdf-bar-nodata">Not enough data</div></div>';
+    const s=Math.max(0,Math.min(100,Number(c.score)||0));
+    return '<div class="pdf-bar-row">'+head+'<div class="pdf-bar-barwrap"><div class="pdf-bar-track"><div class="pdf-bar-fill" style="width:'+s+'%;background:'+PDF_BARHEX(s)+'"></div></div><span class="pdf-bar-score">'+s+'</span></div></div>';
+  }).join('');
+  const subs=(sc.sub_scores||[]).filter(Boolean);
+  const labels={}; ((D.report&&D.report.brand_performance)||[]).forEach(function(x){ if(x&&x.key) labels[x.key]=x.label; });
+  const bands = subs.length ? subs.map(function(s){
+    const band=['strong','good','fair','weak','no-data'].indexOf(s.band)>=0?s.band:'no-data';
+    const h=PDF_BANDHEX(band), label=labels[s.key]||prettyKey(s.key);
+    const sct=(s.score!=null && band!=='no-data')?'<span class="pdf-band-score">'+(Number(s.score)||0)+'</span>':'';
+    return '<div class="pdf-band" style="background:'+h[1]+';border-color:'+h[2]+'"><span class="pdf-band-label">'+esc(label)+'</span><span class="pdf-band-tag" style="color:'+h[0]+'">'+esc(BAND_LABEL[band]||'—')+'</span>'+sct+'</div>';
+  }).join('') : '';
+  let inner='<div class="pdf-h2">AI Visibility Score breakdown</div><div class="pdf-sub">Weighted categories</div>'+bars;
+  if(bands) inner+='<div class="pdf-sub">Brand performance</div><div class="pdf-bands">'+bands+'</div>';
+  return inner;
+}
+/* ---- page 3: ChatGPT visibility (mentioned Y/N per prompt + competitors) ---- */
+function pdfChatgptPage(D){
+  const prompts=D.visibility&&D.visibility.prompts;
+  if(!prompts||!prompts.length) return null;
+  const rows=prompts.map(function(p){
+    const eng=(p.engines||[]).find(function(e){ return String(e.label||'').toLowerCase().indexOf('chatgpt')===0; });
+    if(!eng) return '';
+    const cited=!!eng.cited, comps=(p.competitors_cited||[]).filter(Boolean);
+    const compLine=comps.length?'<div class="pdf-prompt-comp">'+(cited?'Also named':'Named instead')+': <b>'+comps.map(esc).join(', ')+'</b></div>':'';
+    return '<div class="pdf-prompt"><div class="pdf-prompt-q">&ldquo;'+esc(p.query)+'&rdquo;</div><div class="pdf-state '+(cited?'yes':'no')+'">'+(cited?'✓ ChatGPT names you':'✕ Not mentioned')+'</div>'+compLine+'</div>';
+  }).filter(Boolean).join('');
+  if(!rows) return null;
+  const comps=(D.visibility.competitors||[]).filter(Boolean);
+  let inner='<div class="pdf-h2">ChatGPT Visibility</div><p class="pdf-lead">Whether ChatGPT names you when buyers ask your category&rsquo;s purchase questions.</p>'+rows;
+  if(comps.length) inner+='<div class="pdf-sub">Who ChatGPT recommends in your category</div><p class="pdf-lead">'+comps.map(esc).join(' · ')+'</p>';
+  return inner;
+}
+/* ---- page 4: Google AI Overview readiness (likelihood band + derivation + per-prompt presence) ---- */
+function pdfAioPage(D){
+  const sc=D.score, aio=sc&&sc.aio_likelihood;
+  let inner='<div class="pdf-h2">Google AI Overview Readiness</div>', has=false;
+  if(aio&&aio.band){
+    has=true;
+    const band=['high','medium','low'].indexOf(String(aio.band).toLowerCase())>=0?String(aio.band).toLowerCase():'low';
+    const bandTxt=band.charAt(0).toUpperCase()+band.slice(1);
+    const tag=aio.label==='observed'?'observed':'estimated';
+    inner+='<div style="margin:6px 0 4px"><span class="pdf-aio-band b-'+band+'">'+esc(bandTxt)+'</span><span style="font-size:13px;color:#90afcf">likelihood of appearing in Google AI Overviews · <b>'+esc(tag)+'</b></span></div>';
+    if(aio.derivation) inner+='<p class="pdf-aio-deriv">How we derived this: '+esc(aio.derivation)+'</p>';
+  }
+  const prompts=D.visibility&&D.visibility.prompts;
+  if(prompts&&prompts.length){
+    const rows=prompts.map(function(p){
+      const eng=(p.engines||[]).find(function(e){ return String(e.label||'').toLowerCase().indexOf('google')>=0; });
+      if(!eng) return '';
+      const cited=!!eng.cited;
+      return '<div class="pdf-prompt"><div class="pdf-prompt-q">&ldquo;'+esc(p.query)+'&rdquo;</div><div class="pdf-state '+(cited?'yes':'no')+'">'+(cited?'✓ Cited in AI Overview':'✕ Not in AI Overview')+'</div></div>';
+    }).filter(Boolean).join('');
+    if(rows){ has=true; inner+='<div class="pdf-sub">Per-question AI Overview presence</div>'+rows; }
+  }
+  return has?inner:null;
+}
+/* ---- page 5: strengths & weaknesses ---- */
+function pdfStrengthsPage(D){
+  const rep=D.report; if(!rep) return null;
+  const str=(rep.strengths||[]).filter(Boolean), weak=(rep.weaknesses||[]).filter(Boolean);
+  if(!str.length && !weak.length) return null;
+  const col=function(items,emptyMsg,cls){ return items.length
+    ? items.map(function(it){ return '<div class="pdf-item '+cls+'"><span class="pdf-item-dot"></span><div><div class="pdf-item-t">'+esc(it.text)+'</div>'+(it.evidence?'<div class="pdf-item-e">'+esc(it.evidence)+'</div>':'')+'</div></div>'; }).join('')
+    : '<p class="pdf-empty">'+esc(emptyMsg)+'</p>'; };
+  return '<div class="pdf-h2">Strengths &amp; Weaknesses</div><div class="pdf-cols">'
+    + '<div class="pdf-col"><div class="pdf-col-h good">Strengths</div>'+col(str,"We'll surface strengths as your visibility grows.",'good')+'</div>'
+    + '<div class="pdf-col"><div class="pdf-col-h bad">Weaknesses</div>'+col(weak,"No major weaknesses — you're ahead of most.",'bad')+'</div></div>';
+}
+/* ---- page 6: recommendations (quick wins + strategic actions) ---- */
+function pdfRecsPage(D){
+  const recs=D.report&&D.report.recommendations; if(!recs) return null;
+  const qw=(recs.quick_wins||[]).filter(Boolean), sa=(recs.strategic_actions||[]).filter(Boolean);
+  if(!qw.length && !sa.length) return null;
+  const grp=function(title,items,tag){ return items.length
+    ? '<div class="pdf-rec-grp"><div class="pdf-rec-gh '+tag+'">'+esc(title)+'</div>'
+      + items.map(function(it,i){ return '<div class="pdf-rec"><span class="pdf-rec-n">'+(i+1)+'</span><div class="pdf-rec-t">'+esc(it.title)+'</div>'+(it.detail?'<div class="pdf-rec-d">'+esc(it.detail)+'</div>':'')+'</div>'; }).join('')
+      + '</div>'
+    : ''; };
+  return '<div class="pdf-h2">Recommendations</div>'+grp('Quick Wins',qw,'qw')+grp('Strategic Actions',sa,'sa');
+}
+/* ---- page 7: sources (on-site + off-site + opportunities + rival sites) ---- */
+function pdfSourcesPage(D){
+  const src=D.report&&D.report.sources, visSrc=D.visibility&&D.visibility.sources;
+  const onSite=((src&&src.on_site)||[]).filter(Boolean);
+  const offSite=((src&&src.off_site)||[]).filter(Boolean);
+  const opps=((src&&src.off_site_opportunities)||[]).filter(Boolean);
+  const rivals=((visSrc&&visSrc.competitor_sources)||[]).filter(Boolean);
+  if(!onSite.length && !offSite.length && !opps.length && !rivals.length) return null;
+  const row=function(o,pill){
+    const badge=o.type?esc(o.type):esc(o.row||'Source');
+    return '<div class="pdf-src-row"><span class="pdf-src-badge">'+badge+'</span><span class="pdf-src-url">'+esc(gakSafeUrl(o.url,o.host))+'</span>'+(pill||'')+'</div>';
+  };
+  const grp=function(title,items,pillFn){ return items.length?'<div class="pdf-src-grp"><div class="pdf-src-lbl">'+esc(title)+'</div>'+items.map(function(o){ return row(o,pillFn?pillFn(o):''); }).join('')+'</div>':''; };
+  const citedPill=function(o){ return o.cited?'<span class="pdf-src-pill ok">cited</span>':'<span class="pdf-src-pill no">not yet</span>'; };
+  let inner='<div class="pdf-h2">Where AI gets its answers</div><p class="pdf-lead">The sources AI pulls from to answer your buyers&rsquo; questions — and the ones you can earn a place on.</p>';
+  inner+=grp('On-site (your own pages)', onSite, citedPill);
+  inner+=grp('Off-site sources AI already cites', offSite, citedPill);
+  inner+=grp('Opportunities — sources AI trusts where you are missing', opps, function(){ return '<span class="pdf-src-pill no">opportunity</span>'; });
+  if(rivals.length) inner+='<div class="pdf-src-grp"><div class="pdf-src-lbl">Rival sites AI pulls from directly</div><p class="pdf-empty">'+rivals.map(esc).join(' · ')+'</p></div>';
+  return inner;
+}
+/* ---- page 8: next steps (segment + dual CTA text+URL + honesty line) ---- */
+function pdfNextStepsPage(D){
+  const sc=D.score;
+  const composite=(sc&&sc.state==='ok'&&sc.composite!=null)?Number(sc.composite):null;
+  const seg=composite!=null?gakSegment(composite):null;
+  const B=GAK_CONFIG.BRAND||{};
+  const agency=B.name||'Alchemy Leads';
+  const ctaUrl=gakSafeUrl(B.cta_url||B.url||'', null);
+  const ctaLabel=(B.cta_label||'Book a call').replace(/[\s→]+$/,'');
+  const ctaSub=B.cta_sub||'';
+  const prompts=(D.visibility&&D.visibility.prompts)||[];
+  const n=prompts.length;
+  let inner='<div class="pdf-h2">Your next steps</div>';
+  if(seg){
+    const segCls=seg.toLowerCase();
+    const segCopy = seg==='Hot' ? 'You have momentum in AI search — now is the moment to consolidate it before a competitor does.'
+      : seg==='Warm' ? 'You are on the board in AI answers, with clear, winnable gaps to close.'
+      : 'AI rarely names you yet — the upside is large and most of the fixes are within your control.';
+    inner+='<span class="pdf-seg '+segCls+'">'+esc(seg)+' priority</span><p class="pdf-lead">'+esc(segCopy)+'</p>';
+  }
+  // data-pdf-link makes the CTA button + URL chip REAL links in the exported PDF (the client 2026-07-02:
+  // "the PDF button doesn't work" — the rasterised Book-a-call button was a dead image before this).
+  const ctaAttr=(ctaUrl&&ctaUrl!=='#')?' data-pdf-link="'+esc(ctaUrl)+'"':'';
+  inner+='<div class="pdf-cta-box"><div class="t">Want '+esc(agency)+' to fix this?</div>'
+    + (ctaSub?'<div class="d">'+esc(ctaSub)+'</div>':'')
+    + '<span class="u"'+ctaAttr+'>'+esc(ctaLabel)+'</span>'
+    + (ctaUrl&&ctaUrl!=='#'?'<span class="u sec"'+ctaAttr+'>'+esc(ctaUrl)+'</span>':'')
+    + '</div>';
+  const promptTxt = n ? (n+' buying-question prompt'+(n===1?'':'s')) : 'the buying-question prompts';
+  inner+='<p class="pdf-honesty">This report is based on '+esc(promptTxt)+' run '+esc(PDF_DATE)+'. AI answers are probabilistic — they vary between runs, engines and over time — so treat this as a directional snapshot, not a guarantee.</p>';
+  return inner;
+}
+/* build all 8 pages into #gak-pdf-root, auto-skipping any whose data is absent, then renumber Page X of N */
+function buildPdfRoot(){
+  PDF_DATE = (function(){ try{ return new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}); }catch(e){ return new Date().toISOString().slice(0,10); } })();
+  const D=pdfData();
+  const defs=[
+    ['Overview', pdfCover(D)],
+    ['Score', pdfScorePage(D)],
+    ['ChatGPT', pdfChatgptPage(D)],
+    ['Google AI Overviews', pdfAioPage(D)],
+    ['Strengths & Weaknesses', pdfStrengthsPage(D)],
+    ['Recommendations', pdfRecsPage(D)],
+    ['Sources', pdfSourcesPage(D)],
+    ['Next Steps', pdfNextStepsPage(D)]
+  ].filter(function(d){ return d[1]; });   // drop pages whose data was absent (cover + next-steps always present)
+  const total=defs.length;
+  const root=$('gak-pdf-root');
+  root.innerHTML = defs.map(function(d,i){ return pdfPageWrap(d[0], i+1, total, d[1]); }).join('');
+  // Calibration marker at each page's top-left corner: 1 shade off the page background (invisible to the eye,
+  // exact-matchable in the capture canvas). Lets the link-annotation pass measure the REAL canvas offset+scale
+  // instead of assuming html2canvas geometry (which shifts/scales with the embed's layout).
+  [].slice.call(root.querySelectorAll('.pdf-page')).forEach(function(pg){
+    const m=document.createElement('div');
+    m.style.cssText='position:absolute;left:0;top:0;width:4px;height:4px;background:#0d1b2f;pointer-events:none';
+    pg.appendChild(m);
+  });
+  // Same trick per LINK: a #0d1b30 marker at each [data-pdf-link] element's own corner. The annotation pass
+  // finds these in the rendered canvas and snaps each link rect to its marker — immune to the ~20px drift
+  // html2canvas's own text rasteriser introduces vs any DOM/clone measurement.
+  [].slice.call(root.querySelectorAll('[data-pdf-link]')).forEach(function(el){
+    el.style.position='relative';
+    if(getComputedStyle(el).display==='inline') el.style.display='inline-block';
+    const m=document.createElement('div');
+    m.style.cssText='position:absolute;left:0;top:0;width:4px;height:4px;background:#0d1b30;pointer-events:none';
+    el.appendChild(m);
+  });
+  frameHeight();
+  return root;
+}
+/* print fallback: isolate the formatted #gak-pdf-root (built just before) via body.gak-printing, then print. Cleanup
+   runs on afterprint (NOT a fixed delay) so we never clear the DOM mid-render and blank the print (codex BLOCKER). */
+function printPdfRoot(){
+  let done=false;
+  const cleanup=function(){ if(done) return; done=true; try{ window.removeEventListener('afterprint',cleanup); }catch(_){}
+    try{ document.body.classList.remove('gak-printing'); }catch(_){}
+    try{ const r=$('gak-pdf-root'); if(r) r.innerHTML=''; }catch(_){} };
+  try{ window.addEventListener('afterprint', cleanup); }catch(_){}
+  setTimeout(cleanup, 5000);   // fallback: some iframes never fire afterprint
+  try{ document.body.classList.add('gak-printing'); window.print(); }catch(_){ cleanup(); }
+}
+/* click handler: lazy-load html2pdf (4s budget) → build off-screen DOM → capture; print the pdf-root on any failure */
+async function downloadPdf(){
+  const btn=$('gak-pdf-btn');
+  if(btn){ if(btn.dataset.busy) return; btn.dataset.busy='1'; btn.disabled=true; btn._txt=btn.textContent; btn.textContent='Preparing PDF…'; }
+  let lib=null;
+  try{ lib=await loadHtml2Pdf(); }catch(e){ lib=null; }   // CDN blocked by host CSP / offline / >4s → print fallback
+  try{
+    buildPdfRoot();
+    if(document.fonts && document.fonts.ready){ try{ await document.fonts.ready; }catch(_){ } }
+    const root=$('gak-pdf-root');
+    if(lib && root && root.children.length){
+      const fname=('ai-visibility-'+(pdfData().domain||'report')).replace(/[^a-z0-9.-]+/gi,'-').replace(/^-+|-+$/g,'')+'.pdf';
+      // html2canvas CANNOT measure an off-screen (fixed/absolute left:-10000px) element -> 0-height canvas -> BLANK PDF.
+      // Render the pages IN-FLOW (position:static) during capture, behind a full-viewport veil, with the resize-observer
+      // paused so the embed iframe doesn't balloon to the 8-page height. Dynamic scale keeps the canvas < the 16384px limit.
+      const prevCss=root.style.cssText; let roPaused=false; try{ ro.disconnect(); roPaused=true; }catch(_){}
+      document.body.classList.add('gak-capturing');
+      root.style.position='static'; root.style.left='auto'; root.style.top='auto'; root.style.zIndex='auto'; root.style.visibility='visible';
+      const ph=root.getBoundingClientRect().height||1; const pscale=Math.max(1, Math.min(2, 15000/ph));
+      // Measure every [data-pdf-link] element (px, relative to its .pdf-page) while the root is in-flow, so real
+      // link annotations can be overlaid after capture — html2canvas output is a flat image, so without this the
+      // Book-a-call button in the PDF is dead pixels (the client 2026-07-02).
+      const pdfLinks=[];
+      window.__gakCloneLinks=null; window.__gakPdfCal=null;   // never reuse a prior run's geometry
+      [].slice.call(root.querySelectorAll('.pdf-page')).forEach(function(pg,pi){
+        const pr=pg.getBoundingClientRect();
+        [].slice.call(pg.querySelectorAll('[data-pdf-link]')).forEach(function(el){
+          const u=gakSafeUrl(el.getAttribute('data-pdf-link')||'', null); if(!u||u==='#') return;
+          const r=el.getBoundingClientRect();
+          if(r.width>0&&r.height>0) pdfLinks.push({page:pi+1, x:r.left-pr.left, y:r.top-pr.top, w:r.width, h:r.height, url:u});
+        });
+      });
+      try{
+        await lib().set({
+          margin:[28,28,40,28], filename:fname, image:{type:'jpeg', quality:0.96},
+          // x:0/scrollX:0/scrollY:0 anchor html2canvas's capture window to the document origin — without them the
+          // windowWidth:794 re-layout shifted the in-flow root ~50px right, clipping the left edge of every line.
+          // onclone: measure the [data-pdf-link] rects in html2canvas's OWN clone (windowWidth:794 layout) — the
+          // live DOM shifts vs the clone (QA: +38px x from wrap centering, ~20px y from reflow), so measuring in
+          // the exact layout being rasterised is the only drift-free source for the link-annotation overlay.
+          html2canvas:{scale:pscale, useCORS:true, backgroundColor:'#ffffff', logging:false, width:794, windowWidth:794, x:0, scrollX:0, scrollY:0,
+            onclone:function(doc){
+              window.__gakCloneLinks=null;
+              try{
+                var rt=doc.getElementById('gak-pdf-root'); if(!rt) return;
+                var rr=rt.getBoundingClientRect();   // clone coords are ROOT-relative (the clone's own viewport offset is irrelevant)
+                var out=[];
+                [].slice.call(rt.querySelectorAll('[data-pdf-link]')).forEach(function(el){
+                  var u=gakSafeUrl(el.getAttribute('data-pdf-link')||'', null); if(!u||u==='#') return;
+                  var r=el.getBoundingClientRect();
+                  if(r.width>0&&r.height>0) out.push({x:r.left-rr.left, y:r.top-rr.top, w:r.width, h:r.height, url:u});
+                });
+                window.__gakCloneLinks=out;
+              }catch(_){ }
+            }},
+          // pagebreak: 'avoid-all' keeps each .pdf-page intact without splitting. We do NOT use before:'.pdf-page' here —
+          // in this html2pdf build a forced per-element break (JS `before` OR a CSS break-before rule) inserts a FULL
+          // BLANK page before each section (16 pages, every odd one blank). avoid-all = clean 8-page report, zero blanks.
+          jsPDF:{unit:'pt', format:'a4', orientation:'portrait'}, pagebreak:{mode:['avoid-all','css']}
+        }).from(root).toCanvas().get('canvas').then(function(canvas){
+          // Locate the per-page calibration markers (#0d1b2f, planted by buildPdfRoot) in the capture canvas.
+          // This measures the REAL page origins + scale, so the link overlay below needs zero assumptions
+          // about html2canvas clone offsets (verified drifting +38px/+3.9% in QA when computed from the DOM).
+          window.__gakPdfCal=null; window.__gakSnapped=null;
+          try{
+            const ctx=canvas.getContext('2d'), colW=Math.min(canvas.width,200);
+            const img=ctx.getImageData(0,0,colW,canvas.height).data;
+            const at=function(x,y){ const o=(y*colW+x)*4; return img[o]===13&&img[o+1]===27&&img[o+2]===47; };
+            const marks=[]; let y=0;
+            while(y<canvas.height-1){
+              let hit=null;
+              for(let x=0;x<colW-1;x++){ if(at(x,y)&&at(x+1,y)&&at(x,y+1)&&at(x+1,y+1)){ hit={x:x,y:y}; break; } }
+              if(hit){ marks.push(hit); y+=200; } else y++;
+            }
+            window.__gakPdfCal={marks:marks, cw:canvas.width};
+            // snap each link to ITS OWN #0d1b30 marker: predict the position from the clone rects, then search
+            // ±100px in the canvas for the exact marker colour — the found pixel is raster ground truth.
+            // NOTE: this scans the RAW canvas (exact colours), BEFORE any JPEG encoding — JPEG only happens
+            // later inside toPdf()'s addImage, so lossy compression can never break the 1-shade markers.
+            const cl=window.__gakCloneLinks;
+            if(cl&&cl.length&&marks.length){
+              const s=marks.length>1 ? (marks[marks.length-1].y-marks[0].y)/((marks.length-1)*1139) : canvas.width/794;
+              const snapped=[];
+              cl.forEach(function(L){
+                let li=Math.max(0,Math.min(marks.length-1,Math.floor(L.y/1139)));
+                const ex=marks[li].x+L.x*s, ey=marks[li].y+(L.y-li*1139)*s;
+                let fx=ex, fy=ey, best=Infinity;
+                const x0=Math.max(0,Math.floor(ex-100)), x1=Math.min(canvas.width-2,Math.ceil(ex+100));
+                const y0=Math.max(0,Math.floor(ey-100)), y1=Math.min(canvas.height-2,Math.ceil(ey+100));
+                const win=ctx.getImageData(x0,y0,x1-x0+2,y1-y0+2), wd=win.data, ww=win.width;
+                for(let yy=0;yy<win.height-1;yy++) for(let xx=0;xx<ww-1;xx++){
+                  const o=(yy*ww+xx)*4;
+                  if(wd[o]===13&&wd[o+1]===27&&wd[o+2]===48&&wd[o+4]===13&&wd[o+5]===27&&wd[o+6]===48){
+                    const d=(xx+x0-ex)*(xx+x0-ex)+(yy+y0-ey)*(yy+y0-ey);
+                    if(d<best){ best=d; fx=xx+x0; fy=yy+y0; }
+                  }
+                }
+                snapped.push({cx:fx, cy:fy, w:L.w*s, h:L.h*s, url:L.url});
+              });
+              window.__gakSnapped=snapped;
+            }
+          }catch(_){ }
+        }).toPdf().get('pdf').then(function(pdf){
+          // Overlay REAL link annotations on the rasterised pages (html2canvas output is a flat image — the
+          // Book-a-call button in the PDF was dead pixels before this; the client 2026-07-02). Geometry mirrors
+          // html2pdf's own slicing: pxPage=floor(cw*innerH/innerW), each slice drawn at innerW pt wide.
+          try{
+            const cal=window.__gakPdfCal, cloneLinks=window.__gakCloneLinks, nLayout=root.querySelectorAll('.pdf-page').length;
+            const ML=28, MT=28, innerW=595.28-56, innerH=841.89-68;
+            const nP=pdf.internal.getNumberOfPages();
+            const snapped=window.__gakSnapped;
+            if(cal&&snapped&&snapped.length){
+              // primary: each link snapped to its own marker in the rendered canvas — raster ground truth
+              const k2=innerW/cal.cw, pxPage=Math.floor(cal.cw*innerH/innerW);
+              snapped.forEach(function(L){
+                const pg=Math.floor(L.cy/pxPage)+1; if(pg<1||pg>nP) return;
+                pdf.setPage(pg);
+                pdf.link(ML+L.cx*k2, MT+(L.cy-(pg-1)*pxPage)*k2, L.w*k2, L.h*k2, {url:L.url});
+              });
+            } else if(cal&&cal.marks.length===nLayout){
+              // secondary: live-DOM rects re-anchored to the per-page calibration markers found in the canvas
+              const s=cal.cw/794, k2=innerW/cal.cw, pxPage=Math.floor(cal.cw*innerH/innerW);
+              pdfLinks.forEach(function(L){
+                const m=cal.marks[L.page-1]; if(!m) return;
+                const cX=m.x+L.x*s, cY=m.y+L.y*s;
+                const pg=Math.floor(cY/pxPage)+1; if(pg<1||pg>nP) return;
+                pdf.setPage(pg);
+                pdf.link(ML+cX*k2, MT+(cY-(pg-1)*pxPage)*k2, L.w*s*k2, L.h*s*k2, {url:L.url});
+              });
+            } else {
+              // fallback (markers not found): constant-K mapping — close enough that generous targets still work
+              const K=innerW/794, PAGE_PX=innerH/K;
+              pdfLinks.forEach(function(L){
+                if(L.page<1||L.page>nP) return;
+                pdf.setPage(L.page);
+                pdf.link(ML+L.x*K, MT+(L.y-(L.page-1)*(PAGE_PX-1139))*K, L.w*K, L.h*K, {url:L.url});
+              });
+            }
+          }catch(_){ }
+        }).save();
+      } finally {
+        root.style.cssText=prevCss; try{ root.innerHTML=''; }catch(_){ }
+        document.body.classList.remove('gak-capturing');
+        if(roPaused){ try{ ro.observe(document.body); }catch(_){} } try{ frameHeight(); }catch(_){ }
+      }
+    } else {
+      printPdfRoot();   // bundle unavailable → print the formatted #gak-pdf-root; it self-cleans on afterprint (codex: don't race-clear)
+    }
+  }catch(e){
+    try{ printPdfRoot(); }catch(_){ }
+  } finally {
+    if(btn){ delete btn.dataset.busy; btn.disabled=false; if(btn._txt){ btn.textContent=btn._txt; } }
+    // NOTE: the print-fallback path clears #gak-pdf-root on afterprint (printPdfRoot), NOT here — clearing now would
+    // race the async print and re-blank the PDF (codex BLOCKER). The html2pdf path already cleared above.
+  }
+}
+(function(){ const b=$('gak-pdf-btn'); if(b) b.addEventListener('click', downloadPdf); })();
+
+frameHeight();
+</script>
+</body>
+</html>
