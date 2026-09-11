@@ -25,7 +25,7 @@ export const TOPICS: Topic[] = [
     label: "Comparisons",
     tags: [
       "ai-comparison", "comparison", "comparisons", "agency-vs-software", "chinese-ai-models",
-      "claude-vs-chatgpt", "claude-vs-gemini", "gemini-vs-chatgpt",
+      "claude-vs-chatgpt", "claude-vs-gemini", "gemini-vs-chatgpt", "mistral-vs-chatgpt",
       "grok-vs-chatgpt", "grok-vs-claude", "grok-vs-gemini", "chatgpt-vs-perplexity",
       "microsoft-copilot-vs-chatgpt", "copilot-vs-chatgpt", "copilot-vs-gemini",
       "claude-vs-copilot", "github-copilot", "copilot",
