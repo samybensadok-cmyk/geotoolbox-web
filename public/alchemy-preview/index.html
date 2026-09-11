@@ -24,11 +24,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&family=Fragment+Mono&display=swap" rel="stylesheet">
 <style>
 :root{
-  /* ---- Alchemy Leads brand (PLACEHOLDER palette — swap for their real brand kit) ---- */
+  /* ---- Alchemy Leads brand (2026-09-11: real palette, sampled live from their CTA button —
+     radial-gradient(#feb62d -> #f98600) with #111 bold text; verified via alchemyleads.com) ---- */
   --gak-navy:#151b2e;        /* authority: headings, dark sections */
-  --gak-orange:#0d9488;      /* signature accent — FILLS / CTAs only (placeholder teal accent) */
-  --gak-orange-600:#0f766e;  /* accent hover */
-  --gak-orange-ink:#0f6f68;  /* accent as TEXT on light (AA-safe, ≥4.5:1) */
+  --gak-orange:#f98600;      /* signature accent — FILLS / CTAs only (real Alchemy orange) */
+  --gak-orange-600:#dd6e00;  /* accent hover */
+  --gak-orange-ink:#a34a00;  /* accent as TEXT on light (AA-safe, ≥4.5:1 darkened from brand orange) */
   --gak-mint:#2e9e6f;        /* pass (fills) — darkened so white glyphs clear ≥3:1 */
   --gak-amber:#c47d16;       /* warn (fills) — darkened for white-on-fill contrast */
   --gak-red:#d63b42;         /* fail (fills) */
@@ -644,8 +645,7 @@ body.gak-capturing::after{content:'Preparing your PDF…';position:fixed;inset:0
       </form>
       <form class="gak-form gak-form-opt" id="gak-form2" autocomplete="off">
         <span class="gak-opt-tag">Optional · sharpens your results</span>
-        <div class="gak-field"><input class="gak-input" id="gak-brand" type="text" placeholder="Brand name" aria-label="Brand name (if different from company)" maxlength="80"></div>
-        <div class="gak-field"><select class="gak-input" id="gak-country" aria-label="Target market">
+        <div class="gak-field" style="grid-column:1/-1"><select class="gak-input" id="gak-country" aria-label="Target market">
           <option value="United States" selected>United States</option>
           <option value="United Kingdom">United Kingdom</option>
           <option value="Canada">Canada</option>
@@ -656,7 +656,6 @@ body.gak-capturing::after{content:'Preparing your PDF…';position:fixed;inset:0
         </select></div>
         <div class="gak-field gak-field-prompts" style="grid-column:1/-1"><textarea class="gak-input" id="gak-custom-prompts" rows="2" maxlength="600" aria-label="Prompts to test (optional)" placeholder="Optional: your own prompts, one per line — we'll fill in the rest"></textarea></div>
       </form>
-      <div class="gak-note"><span class="gak-note-dot"></span>No signup to see your score · results in seconds</div>
     </div>
     <div class="gak-err" id="gak-err" role="alert"></div>
   </section>
@@ -859,7 +858,7 @@ body.gak-capturing::after{content:'Preparing your PDF…';position:fixed;inset:0
 const GAK_CONFIG = {
   DEMO_MODE: false,                      // LIVE TEST 2026-09-11 (operator request) — flip back to true if left unattended. true = ALL domains mock/baked (no backend). false = live backend, gated by HYBRID below.
   HYBRID: true,                          // true = REAL_VIS domains load baked/instant; every OTHER domain runs a LIVE backend scan. (Ignored when DEMO_MODE=true.)
-  PREVIEW: true,                         // preview mode: shows "Preview" badge. false for production embed.
+  PREVIEW: false,                        // preview mode: shows "Preview" badge. false for production embed.
   API_BASE: "https://sg-geo-tool.replit.app",  // our backend (Vercel rewrites /api/* -> Replit). CORS-allowed for the embed origin.
   API_ACTION: "alchemy_ai_check",        // ?action= handler — dedicated Alchemy Leads handler (own CORS + daily caps), see DEPLOY notes.
   MAKE_WEBHOOK_URL: "",                  // <-- Alchemy Leads' lead-capture webhook (Make/Zapier/CRM). Empty = skip POST.
@@ -1577,7 +1576,7 @@ function buildLead(stage){
     source:'alchemy-ai-visibility-tool', stage: stage||'scored', ts:new Date().toISOString(),
     // stable idempotency key so Make/HubSpot can UPSERT the 'captured' then 'scored' events as ONE lead (no duplicates)
     lead_key: ((CTX.email||'').toLowerCase()+'|'+(CTX.domain||'')+'|alchemy-ai-visibility-tool'),
-    email: (CTX.email||''), company_name: (CTX.company||CTX.brand||''), brand_name: (CTX.brandName||''),
+    email: (CTX.email||''), company_name: (CTX.company||CTX.brand||''),
     website: (CTX.domain||''), terms_accepted: (CTX.terms ? 'true' : 'false'),
     segment: (composite!=null ? gakSegment(composite) : ''),
     score_composite: S(composite),
@@ -1761,13 +1760,14 @@ $('gak-form').addEventListener('submit', async (e)=>{
   $('gak-err').textContent='';
   const domain = normUrl($('gak-url').value);
   if(!domain){ $('gak-err').textContent='Please enter a valid website, e.g. yourcompany.com'; return; }
-  // Company name is the PRIMARY brand source (brief). Fall back to the optional gak-brand field if present.
+  // Company name is the single, required brand source (the standalone optional "Brand name"
+  // field was removed 2026-09-11 — it was dead code, since `brand = company || brandOpt` always
+  // resolved to `company` once Company name became required, so it never actually did anything).
   const company = (($('gak-company')||{}).value||'').trim().slice(0,80);
-  const brandOpt = (($('gak-brand')||{}).value||'').trim().slice(0,80);
-  if(GAK_CONFIG.GATE && GAK_CONFIG.GATE.requireCompany && !company && !brandOpt){
+  if(GAK_CONFIG.GATE && GAK_CONFIG.GATE.requireCompany && !company){
     $('gak-err').textContent='Please enter your company name.'; return;
   }
-  const brand = (company || brandOpt).slice(0,80);
+  const brand = company;
   const industry = ($('gak-industry').value||'').trim().slice(0,80);
   // Industry is REQUIRED — it drives the unbranded category prompts; without it results fall back to brand-only questions.
   if(!industry){ $('gak-err').textContent='Please enter your industry — it decides which questions we ask the AI engines.'; return; }
@@ -1775,7 +1775,7 @@ $('gak-form').addEventListener('submit', async (e)=>{
   // Custom questions (optional): one per line. 0-2 lines -> the backend tops these up with its own
   // seeded prompts so the scan still has enough to score; 3+ -> used as typed, no top-up needed.
   const prompts = (($('gak-custom-prompts')||{}).value||'').split('\n').map(s=>s.trim()).filter(Boolean).slice(0,5);
-  CTX = {domain, brand, industry, country, company, brandName: brandOpt, prompts};   // keep RAW fields too — Make gets every field as typed
+  CTX = {domain, brand, industry, country, company, prompts};   // keep RAW fields too — Make gets every field as typed
   GATE_UNLOCKED=false;   // new scan -> re-lock until email (or baked showcase)
   $('gak-go').disabled=true;
   stage('loading'); runSteps();
@@ -1855,7 +1855,7 @@ $('gak-gate-form').addEventListener('submit', async (e)=>{
   await unlock();
 });
 
-$('gak-restart').addEventListener('click', ()=>{ ['gak-url','gak-company','gak-brand','gak-industry','gak-country','gak-custom-prompts','gak-email'].forEach(id=>{const e=$(id); if(e) e.value='';}); const tc=$('gak-terms'); if(tc) tc.checked=false; CTX.terms=false; const ge=$('gak-gate-err'); if(ge) ge.textContent=''; LAST=null; CTX={domain:'',brand:'',industry:'',country:'',prompts:[]}; const go=$('gak-go'); if(go) go.disabled=false; show('gak-gate'); ['gak-full-checks','gak-visibility','gak-competitors','gak-sources','gak-offering','gak-fixlist','gak-final','gak-sample-note','gak-free-extra','gak-matrix-card','gak-teasers','gak-lostdeal','gak-booking','gak-crawler','gak-exec','gak-framework','gak-sw','gak-recs','gak-chatgpt','gak-aio'].forEach(hide); ['gak-matrix-body','gak-teasers','gak-lostdeal','gak-prompts','gak-vis-summary'].forEach(id=>{const e=$(id); if(e) e.innerHTML='';}); const pr=$('gak-pdf-root'); if(pr) pr.innerHTML=''; stage('input'); });
+$('gak-restart').addEventListener('click', ()=>{ ['gak-url','gak-company','gak-industry','gak-country','gak-custom-prompts','gak-email'].forEach(id=>{const e=$(id); if(e) e.value='';}); const tc=$('gak-terms'); if(tc) tc.checked=false; CTX.terms=false; const ge=$('gak-gate-err'); if(ge) ge.textContent=''; LAST=null; CTX={domain:'',brand:'',industry:'',country:'',prompts:[]}; const go=$('gak-go'); if(go) go.disabled=false; show('gak-gate'); ['gak-full-checks','gak-visibility','gak-competitors','gak-sources','gak-offering','gak-fixlist','gak-final','gak-sample-note','gak-free-extra','gak-matrix-card','gak-teasers','gak-lostdeal','gak-booking','gak-crawler','gak-exec','gak-framework','gak-sw','gak-recs','gak-chatgpt','gak-aio'].forEach(hide); ['gak-matrix-body','gak-teasers','gak-lostdeal','gak-prompts','gak-vis-summary'].forEach(id=>{const e=$(id); if(e) e.innerHTML='';}); const pr=$('gak-pdf-root'); if(pr) pr.innerHTML=''; stage('input'); });
 
 /* ============================================================
    PDF EXPORT — 8-page branded PDF built off-screen in #gak-pdf-root from LAST, captured by html2pdf.js.
