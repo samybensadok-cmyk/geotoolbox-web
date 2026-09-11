@@ -244,6 +244,8 @@ select.gak-input{appearance:none;-webkit-appearance:none;-moz-appearance:none;cu
 .gak-md-table th,.gak-md-table td{border:1px solid var(--gak-line);padding:6px 10px;text-align:left;white-space:normal;vertical-align:top}
 .gak-md-table th{font-weight:700;color:var(--gak-heading);background:var(--gak-card)}
 .gak-ld-rival{margin-top:13px;font-size:15px;color:var(--gak-ink)}
+.gak-ld-cat{margin-top:8px;font-size:12.5px;color:var(--gak-muted)}
+.gak-ld-cat b{color:var(--gak-heading)}
 .gak-ld-rival b{color:var(--gak-bad)}
 .gak-lostdeal.win .gak-ld-rival b{color:var(--gak-heading)}
 
@@ -655,7 +657,7 @@ body.gak-capturing::after{content:'Preparing your PDF…';position:fixed;inset:0
       <form class="gak-form" id="gak-form" autocomplete="off">
         <div class="gak-field gak-field-url"><input class="gak-input" id="gak-url" type="text" inputmode="url" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="yourwebsite.com" aria-label="Your website" maxlength="255" required></div>
         <div class="gak-field"><input class="gak-input" id="gak-company" type="text" placeholder="Company name" aria-label="Company name" maxlength="80" required></div>
-        <div class="gak-field gak-field-industry"><input class="gak-input" id="gak-industry" type="text" placeholder="Your industry, e.g. family law, skincare, SaaS" aria-label="Your industry" maxlength="80" required></div>
+        <div class="gak-field gak-field-industry"><input class="gak-input" id="gak-industry" type="text" placeholder="What do you sell? e.g. AI visibility tracking software, PPC agency, family law" aria-label="What do you sell" maxlength="80" required></div>
         <button class="gak-btn gak-btn-go" id="gak-go" type="submit">Run free AI check<span class="gak-go-arrow" aria-hidden="true">→</span></button>
       </form>
       <form class="gak-form gak-form-opt" id="gak-form2" autocomplete="off">
@@ -1282,11 +1284,16 @@ function renderLostDeal(ld){
     ? `<div class="gak-ld-rival">${win?'Also named:':'Recommended in your place:'} <b>${esc(ld.top_competitor)}</b>${esc(more)}</div>` : '';
   const src = ld._asof ? `${esc(ld.engine||'Perplexity')}, captured ${esc(ld._asof)}`
                        : `${esc(ld.engine||'Perplexity')}, live web answer`;
+  const hint = (LAST && LAST.industry_hint==='refined' && ld.category)
+    ? `<div class="gak-ld-cat">We tested you as <b>${esc(ld.category)}</b> (refined from “${esc(CTX.industry||'')}” using your homepage).</div>`
+    : (LAST && LAST.industry_hint==='too_generic' && ld.category)
+    ? `<div class="gak-ld-cat">Tested as <b>${esc(ld.category)}</b> — “${esc(CTX.industry||'')}” is broad; re-run with what you sell for sharper results.</div>`
+    : (ld.category ? `<div class="gak-ld-cat">Category tested: <b>${esc(ld.category)}</b></div>` : '');
   el.innerHTML =
     `<span class="gak-ld-badge ${win?'win':'lose'}">${badge}</span>`+
     `<p class="gak-ld-q">When buyers ask AI “<b>${esc(ld.query)}</b>”, here's what it answers today:</p>`+
     `<div class="gak-ld-quote">${mdLite(ld.quote)}<span class="src">— ${src}</span></div>`+
-    rival;
+    rival + hint;
   el.classList.remove('gak-hide');
 }
 /* ---------- Reach / Read / Result matrix ---------- */
@@ -1834,6 +1841,14 @@ function demoData(domain, brandIn, industry){
 
 /* ---------- flow ---------- */
 let LAST=null, CTX={domain:'',brand:'',industry:'',country:'',prompts:[]};
+let NUDGED_INDUSTRY='';
+const UMBRELLA_INDUSTRIES = new Set(['saas','software','tech','technology','it','agency','agencies','marketing','services','service','business','b2b','b2c','ecommerce','e-commerce','consulting','consultancy','startup','startups','ai','artificial intelligence','digital','online','company','solutions','platform','tools','tool','app','apps','products','product','retail','media','internet','web','cloud','data','enterprise','finance','healthcare','education','manufacturing','other','general','various','misc','n/a','na','none','test']);
+function isUmbrellaIndustry(s){
+  const i=(s||'').toLowerCase().replace(/\s+/g,' ').trim();
+  if(!i) return true;
+  if(UMBRELLA_INDUSTRIES.has(i)) return true;
+  return /^(saas|software|tech|technology|digital|online|internet|cloud|ai|b2b|b2c) (company|companies|startup|startups|business|businesses|provider|providers|agency|agencies|platform|firm|firms|vendor|vendors|solutions?|services?|tools?|products?)$/.test(i);
+}
 let GATE_UNLOCKED=false;   // defence-in-depth (codex/swarm): the breakdown grid + crawler card only unlock when truly past the email gate (or a baked showcase domain) — never just because a score object appeared early.
 $('gak-form').addEventListener('submit', async (e)=>{
   e.preventDefault();
@@ -1850,7 +1865,16 @@ $('gak-form').addEventListener('submit', async (e)=>{
   const brand = company;
   const industry = ($('gak-industry').value||'').trim().slice(0,80);
   // Industry is REQUIRED — it drives the unbranded category prompts; without it results fall back to brand-only questions.
-  if(!industry){ $('gak-err').textContent='Please enter your industry — it decides which questions we ask the AI engines.'; return; }
+  if(!industry){ $('gak-err').textContent='Please tell us what you sell — it decides which questions we ask the AI engines.'; return; }
+  // Umbrella terms ("SaaS", "software", "agency") make every test question generic — the AI then
+  // names Microsoft/Salesforce, not your rivals. Nudge ONCE with a concrete example; a second submit
+  // proceeds and the backend refines the category from the homepage (2026-09-11).
+  if(isUmbrellaIndustry(industry) && NUDGED_INDUSTRY !== industry.toLowerCase()){
+    NUDGED_INDUSTRY = industry.toLowerCase();
+    $('gak-err').textContent = `“${industry}” is broad — say what you actually sell so the AI names your real competitors (e.g. “AI visibility tracking software”, not “SaaS”). Click again to run with “${industry}” anyway.`;
+    return;
+  }
+  $('gak-err').textContent='';
   const country = (($('gak-country')||{}).value||'').trim().slice(0,40);
   // Custom questions (optional): one per line. 0-2 lines -> the backend tops these up with its own
   // seeded prompts so the scan still has enough to score; 3+ -> used as typed, no top-up needed.
@@ -1906,6 +1930,8 @@ async function lazyFillLostDeal(domain, opts){
   if(CTX.domain !== myDomain || !LAST) return;
   if(r && r.lost_deal){
     LAST.lost_deal = r.lost_deal;
+    if(r.industry_hint) LAST.industry_hint = r.industry_hint;
+    if(r.category) LAST.category = r.category;
     renderLostDeal(r.lost_deal);
     fillPerplexityResult(r.lost_deal);
     addCompetitorTeaser(r.lost_deal);
