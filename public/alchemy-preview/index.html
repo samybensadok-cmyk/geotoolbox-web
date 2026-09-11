@@ -221,6 +221,8 @@ select.gak-input{appearance:none;-webkit-appearance:none;-moz-appearance:none;cu
 .gak-eng .e-dot{width:7px;height:7px;border-radius:50%}
 .gak-eng.cited .e-dot{background:var(--gak-mint)}
 .gak-eng.absent .e-dot{background:var(--gak-red)}
+.gak-eng.unknown{opacity:.6}
+.gak-eng.unknown .e-dot{background:var(--gak-faint)}
 .gak-eng b{color:var(--gak-heading)}
 .gak-comp{font-size:14px;color:var(--gak-muted);margin-top:9px}
 .gak-comp b{color:var(--gak-ink)}
@@ -1307,8 +1309,21 @@ function renderVisibility(vis){
   }
   const losing = (typeof vis.losing==='number' && vis.total_cells) ? `<div class="gak-losing"><b>${Number(vis.losing)}</b> of ${Number(vis.total_cells)} AI answers don't mention you</div>` : '';
   $('gak-vis-summary').innerHTML = losing + esc(vis.summary||'');
+  // Every prompt is dispatched across the same fixed engine set — if one call failed
+  // server-side (transient timeout/error), the backend just omits that row rather than
+  // fabricating a result. Fill the gap with an explicit "no data" badge instead of
+  // silently rendering fewer badges than the other prompt cards (2026-09-11 QA fix —
+  // an operator live-test caught a missing Google AI Overviews badge on one card with
+  // no indication why it was absent).
+  const EXPECTED_ENGINES = ['ChatGPT','Gemini','Google AI Overviews'];
   $('gak-prompts').innerHTML = (vis.prompts||[]).map(p=>{
-    const engs = (p.engines||[]).map(e=>`<span class="gak-eng ${e.cited?'cited':'absent'}"><span class="e-dot"></span><b>${esc(e.label)}</b> ${e.cited?'mentions you':'no mention'}</span>`).join('');
+    const present = (p.engines||[]);
+    const seen = new Set(present.map(e=>e.label));
+    const missing = EXPECTED_ENGINES.filter(l=>!seen.has(l)).map(label=>({label, na:true}));
+    const engs = present.concat(missing).map(e=>e.na
+      ? `<span class="gak-eng unknown"><span class="e-dot"></span><b>${esc(e.label)}</b> no data</span>`
+      : `<span class="gak-eng ${e.cited?'cited':'absent'}"><span class="e-dot"></span><b>${esc(e.label)}</b> ${e.cited?'mentions you':'no mention'}</span>`
+    ).join('');
     const comp = (p.competitors_cited&&p.competitors_cited.length) ? `<div class="gak-comp">Cited instead: <b>${p.competitors_cited.map(esc).join(', ')}</b></div>`:'';
     return `<div class="gak-prompt"><div class="gak-prompt-q">“${esc(p.query)}”</div><div class="gak-engines">${engs}</div>${comp}${causalNote(p)}</div>`;
   }).join('');
@@ -1472,7 +1487,7 @@ async function unlock(){
   pdfBtnState('loading');
   show('gak-visibility'); delete $('gak-visibility').dataset.empty;
   $('gak-vis-summary').textContent = 'Mapping your buying questions across ChatGPT, Perplexity & Google AI…';
-  $('gak-prompts').innerHTML = '<div class="gak-prompt"><div class="gak-prompt-q">Running your live Lost-Deal Map across ChatGPT, Perplexity &amp; Google… (~20–30s)</div></div>';
+  $('gak-prompts').innerHTML = '<div class="gak-prompt"><div class="gak-prompt-q">Running your live Lost-Deal Map across ChatGPT, Perplexity &amp; Google… (usually 30–90s, sometimes longer)</div></div>';
   frameHeight();
   const myDomain = CTX.domain;   // bail if the user restarts / re-checks while this scan is in flight
   // RETRY (2026-07-02): one cold-start/timeout on this single call used to strand a user who had already
