@@ -94,6 +94,7 @@ body{
   background:var(--gak-card);border:1.5px solid var(--gak-line-2);border-radius:12px;outline:none;transition:border-color .16s,box-shadow .16s;
 }
 .gak-input::placeholder{color:var(--gak-faint)}
+textarea.gak-input{height:auto;min-height:64px;padding:12px 16px;resize:vertical;font-family:inherit;line-height:1.4}
 .gak-input:focus{border-color:var(--gak-orange);box-shadow:0 0 0 4px rgba(255,88,0,.14)}
 select.gak-input{appearance:none;-webkit-appearance:none;-moz-appearance:none;cursor:pointer;padding-right:44px;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' fill='none' stroke='%230C1A2E' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
@@ -645,15 +646,15 @@ body.gak-capturing::after{content:'Preparing your PDF…';position:fixed;inset:0
         <span class="gak-opt-tag">Optional · sharpens your results</span>
         <div class="gak-field"><input class="gak-input" id="gak-brand" type="text" placeholder="Brand name" aria-label="Brand name (if different from company)" maxlength="80"></div>
         <div class="gak-field"><select class="gak-input" id="gak-country" aria-label="Target market">
-          <option value="">Market</option>
+          <option value="United States" selected>United States</option>
           <option value="United Kingdom">United Kingdom</option>
-          <option value="United States">United States</option>
           <option value="Canada">Canada</option>
           <option value="Australia">Australia</option>
           <option value="Ireland">Ireland</option>
           <option value="New Zealand">New Zealand</option>
           <option value="Global">Global (no country)</option>
         </select></div>
+        <div class="gak-field gak-field-prompts" style="grid-column:1/-1"><textarea class="gak-input" id="gak-custom-prompts" rows="2" maxlength="600" aria-label="Questions to test (optional)" placeholder="Optional: questions to test, one per line (e.g. &quot;best mobility aids companies&quot;) — add one or a few, we'll fill in the rest"></textarea></div>
       </form>
       <div class="gak-note"><span class="gak-note-dot"></span>No signup to see your score · results in seconds</div>
     </div>
@@ -842,7 +843,7 @@ body.gak-capturing::after{content:'Preparing your PDF…';position:fixed;inset:0
     </div>
   </section>
 
-  <div class="gak-foot">Powered by <a href="#" id="gak-foot-link">Alchemy Leads</a> · AI search visibility</div>
+  <div class="gak-foot">Powered by <a href="https://geotoolbox.ai" id="gak-foot-link" target="_blank" rel="noopener">geotoolbox.ai</a> · AI search visibility</div>
 </div>
 
 <!-- ===== PDF RENDER ROOT (off-screen; built on demand from LAST, captured by html2pdf.js) =====
@@ -910,8 +911,8 @@ const ro = new ResizeObserver(frameHeight); ro.observe(document.body);
     b.style.cssText = 'background:#1a1a2e;color:#fff;font:600 12px/1.4 var(--gak-mono);text-align:center;padding:8px 12px;border-radius:8px;margin:0 0 18px;letter-spacing:.02em';
     var app = $('gak-app'); app.insertBefore(b, app.firstChild);
   }
-  $('gak-foot-link').textContent = GAK_CONFIG.BRAND.name;
-  $('gak-foot-link').href = gakSafeUrl(GAK_CONFIG.BRAND.url || '', null);   // route white-label config URLs through the scheme guard too
+  // "Powered by" always credits geotoolbox.ai (the tool provider) — deliberately NOT BRAND.name,
+  // which is the white-label client the CTA/eyebrow/booking heading below are about.
   // book-a-call CTA (config-driven; white-label safe)
   var _cta=$('gak-book-cta'); if(_cta){ _cta.href = gakSafeUrl(GAK_CONFIG.BRAND.cta_url || GAK_CONFIG.BRAND.url || '', null); if(GAK_CONFIG.BRAND.cta_label) _cta.textContent = GAK_CONFIG.BRAND.cta_label; }
   var _ch=$('gak-booking-h'); if(_ch) _ch.textContent = 'Want ' + GAK_CONFIG.BRAND.name + ' to fix this?';
@@ -1472,19 +1473,31 @@ async function unlock(){
   // RETRY (2026-07-02): one cold-start/timeout on this single call used to strand a user who had already
   // given their email (error message + breakdown stays locked). Attempt 1 warms the instance; attempt 2
   // then typically answers in ~15-25s. Same lesson as the Lost-Deal lazy-fill retry.
-  let v = null, visErr = false;
+  // NOT retried on 'scan_in_progress'/'daily_cap' (2026-09-11): the engine serializes ALL scans
+  // behind one global lease, so an immediate retry just collides with the still-running first
+  // attempt and both fail — waiting won't help within this page load either.
+  let v = null, visErr = false, errMsg = '';
   for(let attempt=1; attempt<=2; attempt++){
     try{
-      v = await fetchReal(CTX.domain, {brand:CTX.brand, industry:CTX.industry, country:CTX.country, email:CTX.email, only:'visibility'});
+      v = await fetchReal(CTX.domain, {brand:CTX.brand, industry:CTX.industry, country:CTX.country, email:CTX.email, prompts:CTX.prompts, only:'visibility'});
       visErr = false; break;
     }catch(e){
-      visErr = true;
+      visErr = true; errMsg = (e && e.body && e.body.message) || (e && e.message) || '';
       if(CTX.domain !== myDomain) return;   // user moved on mid-flight
-      if(attempt === 1){ await new Promise(r=>setTimeout(r,1500)); }
+      if(attempt === 1 && errMsg !== 'scan_in_progress' && errMsg !== 'daily_cap'){ await new Promise(r=>setTimeout(r,1500)); }
+      else if(attempt === 1) break;   // no point retrying a lease/cap conflict immediately
     }
   }
   if(CTX.domain !== myDomain || !LAST) return;   // moved on -> don't write a stale scan into the new report
-  if(visErr){ pdfBtnState('failed'); $('gak-vis-summary').textContent = "The Lost-Deal Map couldn't load — please try again."; frameHeight(); return; }
+  if(visErr){
+    pdfBtnState('failed');
+    $('gak-vis-summary').textContent = errMsg === 'scan_in_progress'
+      ? 'Another scan is already running — please wait about a minute and try again.'
+      : errMsg === 'daily_cap'
+      ? "We've hit today's scan limit — please try again tomorrow."
+      : "The Lost-Deal Map couldn't load — please try again.";
+    frameHeight(); return;
+  }
   if(v && v.visibility){ LAST.visibility=v.visibility; renderGated(v.visibility); }
   else { hide('gak-visibility'); }
   // capture the brief layer (composite score + on-page signals + report) that came back with the visibility scan
@@ -1503,16 +1516,23 @@ function gakApiUrl(domain, opts){
   if(opts.country)  u += `&country=${encodeURIComponent(opts.country)}`;   // market for prompt wording + DataForSEO/SerpAPI geo
   if(opts.email)    u += `&email=${encodeURIComponent(opts.email)}`;   // backend requires a valid email for the visibility scan
   if(opts.only)     u += `&only=${encodeURIComponent(opts.only)}`;
+  (opts.prompts||[]).forEach(p=>{ u += `&prompts[]=${encodeURIComponent(p)}`; });   // user-supplied questions (optional) — backend tops up if short
   return u;
 }
 async function fetchReal(domain, opts){
   const ctrl = new AbortController();
-  const longCall = opts && (opts.only==='visibility' || opts.only==='lostdeal');   // these run a paid LLM call (~8-15s)
-  const t = setTimeout(()=>ctrl.abort(), longCall ? (opts.only==='visibility'?48000:30000) : 20000);  // fail fast on cold-start/gateway hang
+  // The full paid wave (only=visibility) can legitimately take up to ~140s server-side (3
+  // sequential DFS batches, each with a 90s per-call timeout — see leadgen_snapshot_lib.php
+  // SG_LGS_DFS_TIMEOUT_FIX). A shorter client abort used to fire BEFORE the server finished,
+  // then the widget's own retry raced the still-running first attempt for the SAME global scan
+  // lease and both ended in "couldn't load" even though the first attempt was still working.
+  const longCall = opts && (opts.only==='visibility' || opts.only==='lostdeal');
+  const t = setTimeout(()=>ctrl.abort(), longCall ? (opts.only==='visibility'?170000:30000) : 20000);
   try{
     const r = await fetch(gakApiUrl(domain, opts), {headers:{'Accept':'application/json'}, signal:ctrl.signal});
-    if(!r.ok) throw new Error('api_'+r.status);
-    return await r.json();
+    let body = null; try{ body = await r.json(); }catch(_){ }
+    if(!r.ok){ const e = new Error((body && body.error) || ('api_'+r.status)); e.body = body; e.status = r.status; throw e; }
+    return body;
   } finally { clearTimeout(t); }
 }
 async function postLead(payload){
@@ -1723,7 +1743,7 @@ function demoData(domain, brandIn, industry){
 }
 
 /* ---------- flow ---------- */
-let LAST=null, CTX={domain:'',brand:'',industry:'',country:''};
+let LAST=null, CTX={domain:'',brand:'',industry:'',country:'',prompts:[]};
 let GATE_UNLOCKED=false;   // defence-in-depth (codex/swarm): the breakdown grid + crawler card only unlock when truly past the email gate (or a baked showcase domain) — never just because a score object appeared early.
 $('gak-form').addEventListener('submit', async (e)=>{
   e.preventDefault();
@@ -1741,7 +1761,10 @@ $('gak-form').addEventListener('submit', async (e)=>{
   // Industry is REQUIRED — it drives the unbranded category prompts; without it results fall back to brand-only questions.
   if(!industry){ $('gak-err').textContent='Please enter your industry — it decides which questions we ask the AI engines.'; return; }
   const country = (($('gak-country')||{}).value||'').trim().slice(0,40);
-  CTX = {domain, brand, industry, country, company, brandName: brandOpt};   // keep RAW fields too — Make gets every field as typed
+  // Custom questions (optional): one per line. 0-2 lines -> the backend tops these up with its own
+  // seeded prompts so the scan still has enough to score; 3+ -> used as typed, no top-up needed.
+  const prompts = (($('gak-custom-prompts')||{}).value||'').split('\n').map(s=>s.trim()).filter(Boolean).slice(0,5);
+  CTX = {domain, brand, industry, country, company, brandName: brandOpt, prompts};   // keep RAW fields too — Make gets every field as typed
   GATE_UNLOCKED=false;   // new scan -> re-lock until email (or baked showcase)
   $('gak-go').disabled=true;
   stage('loading'); runSteps();
@@ -1821,7 +1844,7 @@ $('gak-gate-form').addEventListener('submit', async (e)=>{
   await unlock();
 });
 
-$('gak-restart').addEventListener('click', ()=>{ ['gak-url','gak-company','gak-brand','gak-industry','gak-country','gak-email'].forEach(id=>{const e=$(id); if(e) e.value='';}); const tc=$('gak-terms'); if(tc) tc.checked=false; CTX.terms=false; const ge=$('gak-gate-err'); if(ge) ge.textContent=''; LAST=null; CTX={domain:'',brand:'',industry:'',country:''}; const go=$('gak-go'); if(go) go.disabled=false; show('gak-gate'); ['gak-full-checks','gak-visibility','gak-competitors','gak-sources','gak-offering','gak-fixlist','gak-final','gak-sample-note','gak-free-extra','gak-matrix-card','gak-teasers','gak-lostdeal','gak-booking','gak-crawler','gak-exec','gak-framework','gak-sw','gak-recs','gak-chatgpt','gak-aio'].forEach(hide); ['gak-matrix-body','gak-teasers','gak-lostdeal','gak-prompts','gak-vis-summary'].forEach(id=>{const e=$(id); if(e) e.innerHTML='';}); const pr=$('gak-pdf-root'); if(pr) pr.innerHTML=''; stage('input'); });
+$('gak-restart').addEventListener('click', ()=>{ ['gak-url','gak-company','gak-brand','gak-industry','gak-country','gak-custom-prompts','gak-email'].forEach(id=>{const e=$(id); if(e) e.value='';}); const tc=$('gak-terms'); if(tc) tc.checked=false; CTX.terms=false; const ge=$('gak-gate-err'); if(ge) ge.textContent=''; LAST=null; CTX={domain:'',brand:'',industry:'',country:'',prompts:[]}; const go=$('gak-go'); if(go) go.disabled=false; show('gak-gate'); ['gak-full-checks','gak-visibility','gak-competitors','gak-sources','gak-offering','gak-fixlist','gak-final','gak-sample-note','gak-free-extra','gak-matrix-card','gak-teasers','gak-lostdeal','gak-booking','gak-crawler','gak-exec','gak-framework','gak-sw','gak-recs','gak-chatgpt','gak-aio'].forEach(hide); ['gak-matrix-body','gak-teasers','gak-lostdeal','gak-prompts','gak-vis-summary'].forEach(id=>{const e=$(id); if(e) e.innerHTML='';}); const pr=$('gak-pdf-root'); if(pr) pr.innerHTML=''; stage('input'); });
 
 /* ============================================================
    PDF EXPORT — 8-page branded PDF built off-screen in #gak-pdf-root from LAST, captured by html2pdf.js.
