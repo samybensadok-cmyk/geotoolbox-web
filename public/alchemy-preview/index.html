@@ -779,7 +779,7 @@ body.gak-capturing::after{content:'Preparing your PDF…';position:fixed;inset:0
         </form>
         <label class="gak-terms" for="gak-terms">
           <input type="checkbox" id="gak-terms">
-          <span>By submitting, you agree to our <a href="https://REPLACE-WITH-ALCHEMY-DOMAIN.com/privacy-policy" target="_blank" rel="noopener">privacy policy</a>.</span>
+          <span>By submitting, you agree to our <a href="https://alchemyleads.com/privacy-policy/" target="_blank" rel="noopener">privacy policy</a>.</span>
         </label>
         <div class="gak-note" id="gak-gate-consent">We'll email your report. No spam — unsubscribe anytime.</div>
         <div class="gak-err" id="gak-gate-err" role="alert"></div>
@@ -830,7 +830,7 @@ body.gak-capturing::after{content:'Preparing your PDF…';position:fixed;inset:0
             <p class="gak-booking-sub" id="gak-booking-sub">Book a 20-minute call — we'll show you how to get named by ChatGPT, Perplexity &amp; Google AI in your category.</p>
           </div>
           <div class="gak-booking-cta-group">
-            <a class="gak-btn-cta" id="gak-book-cta" href="https://REPLACE-WITH-ALCHEMY-DOMAIN.com/contact" target="_blank" rel="noopener">Book a call →</a>
+            <a class="gak-btn-cta" id="gak-book-cta" href="https://alchemyleads.com/call/" target="_blank" rel="noopener">Book a call →</a>
             <button class="gak-btn-cta gak-cta-ghost" id="gak-pdf-btn" type="button" aria-label="Download your branded PDF report">Download PDF</button>
           </div>
         </div>
@@ -864,7 +864,7 @@ const GAK_CONFIG = {
   API_ACTION: "alchemy_ai_check",        // ?action= handler — dedicated Alchemy Leads handler (own CORS + daily caps), see DEPLOY notes.
   MAKE_WEBHOOK_URL: "",                  // <-- Alchemy Leads' lead-capture webhook (Make/Zapier/CRM). Empty = skip POST.
   ENGINES: ["chatgpt","perplexity","google_aio"],  // ChatGPT+Perplexity (DataForSEO) + Google AI Overviews (SerpAPI)
-  BRAND: { name: "Alchemy Leads", url: "https://REPLACE-WITH-ALCHEMY-DOMAIN.com", cta_url: "https://REPLACE-WITH-ALCHEMY-DOMAIN.com/contact", cta_label: "Book a call →", cta_sub: "Book a 20-minute call — we'll show you how to get named by ChatGPT, Perplexity & Google AI in your category." },
+  BRAND: { name: "Alchemy Leads", url: "https://alchemyleads.com", cta_url: "https://alchemyleads.com/call/", cta_label: "Book a call →", cta_sub: "Book a 20-minute call — we'll show you how to get named by ChatGPT, Perplexity & Google AI in your category." },
   GATE: { freeChecksVisible: true, mode: "upfront", requireCompany: true }      // score + crawler shown free; full breakdown + visibility behind email. mode:"upfront" = score/report come back in the main payload (brief model).
 };
 
@@ -1476,24 +1476,28 @@ async function unlock(){
   // NOT retried on 'scan_in_progress'/'daily_cap' (2026-09-11): the engine serializes ALL scans
   // behind one global lease, so an immediate retry just collides with the still-running first
   // attempt and both fail — waiting won't help within this page load either.
-  let v = null, visErr = false, errMsg = '';
+  let v = null, visErr = false, errCode = '';
   for(let attempt=1; attempt<=2; attempt++){
     try{
       v = await fetchReal(CTX.domain, {brand:CTX.brand, industry:CTX.industry, country:CTX.country, email:CTX.email, prompts:CTX.prompts, only:'visibility'});
       visErr = false; break;
     }catch(e){
-      visErr = true; errMsg = (e && e.body && e.body.message) || (e && e.message) || '';
+      // 2026-09-11 QA fix: this used to read e.body.message (the human-readable sentence, e.g.
+      // "Another snapshot is running...") and compare THAT against the literal code
+      // 'scan_in_progress' — never equal, so the "don't retry a lock conflict" logic below never
+      // actually fired. e.body.error is the machine-readable code; compare against that instead.
+      visErr = true; errCode = (e && e.body && e.body.error) || '';
       if(CTX.domain !== myDomain) return;   // user moved on mid-flight
-      if(attempt === 1 && errMsg !== 'scan_in_progress' && errMsg !== 'daily_cap'){ await new Promise(r=>setTimeout(r,1500)); }
+      if(attempt === 1 && errCode !== 'scan_in_progress' && errCode !== 'daily_cap'){ await new Promise(r=>setTimeout(r,1500)); }
       else if(attempt === 1) break;   // no point retrying a lease/cap conflict immediately
     }
   }
   if(CTX.domain !== myDomain || !LAST) return;   // moved on -> don't write a stale scan into the new report
   if(visErr){
     pdfBtnState('failed');
-    $('gak-vis-summary').textContent = errMsg === 'scan_in_progress'
+    $('gak-vis-summary').textContent = errCode === 'scan_in_progress'
       ? 'Another scan is already running — please wait about a minute and try again.'
-      : errMsg === 'daily_cap'
+      : errCode === 'daily_cap'
       ? "We've hit today's scan limit — please try again tomorrow."
       : "The Lost-Deal Map couldn't load — please try again.";
     frameHeight(); return;
@@ -1527,9 +1531,16 @@ async function fetchReal(domain, opts){
   // then the widget's own retry raced the still-running first attempt for the SAME global scan
   // lease and both ended in "couldn't load" even though the first attempt was still working.
   const longCall = opts && (opts.only==='visibility' || opts.only==='lostdeal');
-  const t = setTimeout(()=>ctrl.abort(), longCall ? (opts.only==='visibility'?170000:30000) : 20000);
+  // lostdeal's own server-side curl timeout is 30s (lgs_req_sonar); 30s client-side gave it ZERO
+  // buffer for the DB counter round-trip + network before curl even starts (2026-09-11 QA fix) —
+  // same bug class as the visibility timeout above, just not caught the first time.
+  const t = setTimeout(()=>ctrl.abort(), longCall ? (opts.only==='visibility'?170000:45000) : 20000);
+  // lostdeal/visibility spend real money and require POST + an allowlisted Origin server-side
+  // (2026-09-11 QA fix — a plain GET here was a zero-JS, no-CORS-needed cost-exhaustion hole: any
+  // <img src="..."> or link-unfurler bot could fire the paid work from a visitor's own browser).
+  const method = longCall ? 'POST' : 'GET';
   try{
-    const r = await fetch(gakApiUrl(domain, opts), {headers:{'Accept':'application/json'}, signal:ctrl.signal});
+    const r = await fetch(gakApiUrl(domain, opts), {method, headers:{'Accept':'application/json'}, signal:ctrl.signal});
     let body = null; try{ body = await r.json(); }catch(_){ }
     if(!r.ok){ const e = new Error((body && body.error) || ('api_'+r.status)); e.body = body; e.status = r.status; throw e; }
     return body;
