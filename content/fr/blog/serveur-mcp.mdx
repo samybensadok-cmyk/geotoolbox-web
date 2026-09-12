@@ -1,0 +1,168 @@
+---
+title: "Qu'est-ce qu'un serveur MCP ? Fonctionnement et sécurité"
+description: "Le MCP connecte les agents IA à vos outils et données via un protocole standard : fonctionnement, incidents réels documentés, impact pour votre site."
+date: "2026-09-12"
+updated: "2026-09-12"
+author: "Samy BEN SADOK"
+tags: ["mcp", "ai-agents", "model-context-protocol", "agent-readiness", "ai-visibility"]
+draft: false
+locale: "fr"
+donorSlug: "what-is-mcp-server"
+donorCommit: "ebac4c3"
+noindex: false
+---
+
+## Qu'est-ce qu'un serveur MCP ?
+
+Le MCP est partout dans les discussions sur l'IA, le plus souvent à propos de Claude, de Cursor ou d'un agent de code. Ce dont on parle moins : c'est aussi l'un des principaux moyens, pour les services d'un site, d'offrir à un agent IA autre chose que du texte à lire, quelque chose sur quoi agir.
+
+Un serveur MCP est un programme qui expose des outils, des données et des invites à un [agent IA](https://geotoolbox.ai/fr/glossary/agent-ia) via le **Model Context Protocol (MCP)**, une interface standardisée qui permet à l'IA de découvrir ce qui est disponible et de s'en servir, plutôt que de dépendre d'une intégration sur mesure pour chaque combinaison de modèle et de système. Anthropic a [créé le MCP et l'a publié en open source le 25 novembre 2024](https://www.anthropic.com/news/model-context-protocol). Ses auteurs sont les ingénieurs David Soria Parra et Justin Spahr-Summers.
+
+Le protocole n'appartient plus à Anthropic seule. Le 9 décembre 2025, Anthropic a [confié le MCP à l'Agentic AI Foundation](https://www.anthropic.com/news/donating-the-model-context-protocol-and-establishing-of-the-agentic-ai-foundation), un fonds dédié créé pour l'occasion au sein de la Linux Foundation, cofondé avec Block et OpenAI, et soutenu par Google, Microsoft, AWS, Cloudflare et Bloomberg.
+
+Le MCP rejoint ainsi goose (Block) et AGENTS.md (OpenAI) parmi les projets fondateurs, sous une gouvernance neutre qui ne dépend plus d'un seul éditeur ni de sa feuille de route.
+
+Le protocole a évolué vite en moins de deux ans. La spécification de novembre 2024 prenait déjà en charge un transport distant en plus de la connexion locale stdio, via HTTP avec Server-Sent Events. Une [mise à jour de mars 2025 a remplacé ce transport par Streamable HTTP](https://modelcontextprotocol.io/specification/2025-03-26/basic/transports), un modèle plus simple pour les connexions distantes.
+
+Une mise à jour de juin 2025 a ajouté l'élicitation (elicitation), un mécanisme qui permet à un serveur de demander une information supplémentaire à l'utilisateur en cours de tâche. Dans la spécification actuelle (datée du 28 juillet 2026), plusieurs mécanismes de la conception d'origine sont dépréciés, dont l'ancien canal de demande de complétion (sampling) et le canal de journalisation (logging). Toute explication du MCP vieille de plus de quelques mois décrit donc une version antérieure du protocole.
+
+## Ce qu'il faut retenir
+
+- **Un serveur MCP expose des outils, des données et des invites à un agent IA** via le Model Context Protocol, un standard ouvert créé par Anthropic le 25 novembre 2024 et confié depuis le 9 décembre 2025 à l'Agentic AI Foundation (Linux Foundation).
+- **Le mécanisme central est la découverte** : un client MCP interroge le serveur pour savoir ce qu'il propose, au lieu d'être codé en dur pour une intégration précise.
+- **Deux incidents réels et documentés** (Supabase, GitHub) montrent que le risque tient presque toujours aux droits d'accès confiés à l'agent, et non à une faille du protocole.
+- **En France**, la CNIL et le CIANum ont publié en juillet 2026 une note exploratoire sur l'IA agentique, et la DINUM exploite déjà un serveur MCP public en lecture seule pour data.gouv.fr.
+- **Pour un site**, un serveur MCP (ou une API documentée) est ce qui permet à un agent d'agir sur votre service, pas seulement de le lire et de le citer.
+
+## Un sigle, plusieurs sens
+
+Le sigle recouvre plusieurs réalités, et une clarification s'impose. Certains outils IA répondent encore avec un sens plus ancien, voire sans rapport : interrogé à froid, sans recherche web, le 8 septembre 2026 via l'API AI-response de DataForSEO, le modèle gpt-4o-mini d'OpenAI a renvoyé une liste de désambiguïsation allant de « Master Control Program » à un « Multi-Channel Protocol » télécom, sans jamais mentionner le Model Context Protocol.
+
+Même des sources qui écrivent spécifiquement sur le MCP s'y perdent. [L'explication de TrueFoundry](https://www.truefoundry.com/fr/blog/mcp-server) définit le MCP comme le « Model Context Protocol » tout au long de l'article, et la même page mentionne aussi, au passage, un « Modular Control Plane ». Elle se contredit pourtant dans sa propre FAQ : « Oui, un serveur MCP (Multi-Cloud Platform) est un véritable serveur, physique ou virtuel, qui gère les charges de travail dans plusieurs environnements cloud. »
+
+Si vous croisez MCP associé à l'infrastructure cloud, à la commutation télécom, ou à quoi que ce soit d'antérieur à 2024, c'est un autre MCP. Dans un contexte IA, MCP désigne le Model Context Protocol.
+
+## Comment fonctionne un serveur MCP ?
+
+Le fonctionnement repose sur trois rôles : un **hôte** (l'application IA, comme Claude Desktop ou un IDE), un **client MCP** à l'intérieur de cet hôte (un par serveur connecté, avec une connexion dédiée), et le **serveur MCP** lui-même, qui encapsule un système externe et expose ce qu'il sait faire. Les messages circulent en JSON-RPC 2.0, soit via stdio pour un serveur local tournant sur votre propre machine, soit via Streamable HTTP pour un serveur distant.
+
+Ce qu'un serveur peut proposer, et ce qu'il peut demander au client en retour, se résume à un petit ensemble de primitives, définies dans la [spécification officielle du protocole](https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture) :
+
+<table>
+<thead>
+<tr><th>Primitive</th><th>Exposée par</th><th>Ce que c'est</th><th>Statut</th></tr>
+</thead>
+<tbody>
+<tr><td>Outils</td><td>Serveur</td><td>Des fonctions exécutables que l'IA peut invoquer, comme une requête en base de données ou un appel API</td><td>En vigueur</td></tr>
+<tr><td>Ressources</td><td>Serveur</td><td>Des données contextuelles que le client peut lire, comme le contenu d'un fichier, des enregistrements en base ou une réponse d'API</td><td>En vigueur</td></tr>
+<tr><td>Invites</td><td>Serveur</td><td>Des modèles réutilisables (on parle aussi de « requêtes prédéfinies ») pour structurer une interaction précise</td><td>En vigueur</td></tr>
+<tr><td>Élicitation (elicitation)</td><td>Client</td><td>Permet à un serveur de demander une information supplémentaire à l'utilisateur en cours de tâche</td><td>En vigueur</td></tr>
+<tr><td>Roots</td><td>Client</td><td>Permet à un client d'indiquer à un serveur sur quels répertoires se concentrer</td><td>Déprécié (spec du 28/07/2026)</td></tr>
+<tr><td>Sampling</td><td>Client</td><td>Permet à un serveur de demander une complétion au modèle du client</td><td>Déprécié (spec du 28/07/2026)</td></tr>
+<tr><td>Logging</td><td>Serveur</td><td>Messages de débogage envoyés par le serveur au client</td><td>Déprécié (spec du 28/07/2026)</td></tr>
+</tbody>
+</table>
+
+Beaucoup d'explications du MCP présentent encore le sampling et le logging comme des capacités centrales et actuelles. Ces deux capacités l'ont été, mais la spécification a évolué depuis : les nouvelles implémentations sont censées appeler directement l'API du fournisseur de modèle plutôt que de passer par le sampling, et journaliser vers stderr ou OpenTelemetry plutôt que d'utiliser l'ancien canal de logging. Précision utile : déprécié ne veut pas dire supprimé. La [spécification garantit qu'une fonctionnalité dépréciée reste utilisable au moins douze mois](https://modelcontextprotocol.io/specification/2026-07-28/deprecated) ; pour le sampling, le logging et les roots, la suppression ne pourra donc pas intervenir avant la première révision publiée à compter du 28 juillet 2027, et aucune n'a encore été retirée.
+
+L'autre différence entre un serveur MCP et une intégration sur mesure, c'est la découverte. Un client n'a pas besoin de savoir à l'avance, en dur dans son code, ce qu'un serveur sait faire. Il peut vérifier les capacités prises en charge par le serveur, puis demander séparément la liste actuelle des outils, ressources ou invites, en mettant les résultats en cache plutôt qu'en les redemandant à chaque fois. Un développeur résume bien l'idée : une API classique ressemble à un menu imprimé, et si la cuisine change un plat, quelqu'un doit réimprimer le menu. Le MCP ressemble davantage à un maître d'hôtel capable de vous dire ce qui est disponible aujourd'hui, sans avoir à réimprimer quoi que ce soit, ce qui compte surtout pour un fournisseur d'outils qui évolue vite ou un client qui jongle avec de nombreux serveurs à la fois.
+
+Imaginez une entreprise qui exploite un serveur MCP devant sa base de commandes. Ce serveur pourrait exposer un outil `search_orders`, prenant un nom de client en paramètre. Quand quelqu'un demande à son assistant IA « qu'est-ce que Priya a commandé la semaine dernière », l'assistant découvre que `search_orders` est disponible, l'appelle avec le bon paramètre, et récupère un résultat structuré qu'il peut résumer en langage clair.
+
+L'IA ne touche jamais directement la base de données, n'a jamais accès aux identifiants de connexion, et n'a pas besoin de savoir si, derrière, il y a du Postgres, un tableur ou un vieux système historique avec ses particularités. C'est le serveur MCP qui porte cette complexité, pas le modèle.
+
+## Pourquoi le MCP existe : le problème du N-vers-M
+
+Avant le MCP, connecter des applications IA à des systèmes externes voulait dire écrire une intégration sur mesure pour chaque paire. Cinq applications IA et dix outils, cela représente jusqu'à cinquante intégrations distinctes dans le pire des cas, chacune maintenue à son propre rythme et pouvant casser indépendamment dès qu'un des deux côtés change.
+
+Le MCP est conçu pour ramener ce chiffre à N+M dans le cas idéal. Un éditeur d'outils écrit un seul serveur MCP pour son service. Une application IA implémente le client MCP une seule fois. À partir de là, n'importe quel client compatible MCP peut utiliser n'importe quel serveur compatible MCP avec beaucoup moins de code spécifique à chaque paire : cinq applications et dix outils tendent alors vers quinze implémentations plutôt que cinquante. Reste que la gestion des versions, l'authentification et la façon dont chaque serveur nomme ses outils peuvent encore demander un vrai travail d'intégration.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/serveur-mcp/probleme-n-vers-m.png" alt="Schéma comparant les intégrations nécessaires avant et après le MCP : jusqu'à 50 intégrations sur mesure pour 5 applications IA et 10 outils dans le pire des cas, contre environ 15 implémentations en N+M avec le MCP." w="1100" h="620" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Le problème N-vers-M : sans standard commun, chaque paire application-outil demande sa propre intégration.</figcaption>
+</figure>
+
+## MCP vs API vs RAG
+
+Ces trois notions se confondent souvent, ce qui se comprend puisque toutes trois acheminent des données vers un modèle. Le RAG (retrieval-augmented generation, ou génération augmentée par récupération), une API et le MCP répondent pourtant à des problèmes différents.
+
+<table>
+<thead>
+<tr><th></th><th>API classique</th><th>RAG</th><th>MCP</th></tr>
+</thead>
+<tbody>
+<tr><td>Découverte</td><td>En général manuelle : l'appelant connaît déjà les endpoints, sauf si l'API publie son propre schéma</td><td>Fixée par l'application, en général un index préconstruit</td><td>Dynamique : le client peut demander au serveur ce qu'il prend en charge</td></tr>
+<tr><td>Fraîcheur des données</td><td>Dépend de l'endpoint</td><td>Dépend de l'index ou de la source de récupération</td><td>Dépend du serveur, généralement construit pour un accès direct à une source vivante</td></tr>
+<tr><td>Peut agir, ou seulement récupérer ?</td><td>Ce que fait l'endpoint</td><td>En général, récupération seule</td><td>Les deux : les outils exécutent des actions, les ressources récupèrent des données</td></tr>
+<tr><td>Cas d'usage idéal</td><td>Intégration générale service à service</td><td>Grands corpus de contenu indexés pour une récupération sémantique rapide</td><td>Requêtes transactionnelles et actions dont un agent a besoin en cours de tâche</td></tr>
+</tbody>
+</table>
+
+Le RAG, les API et le MCP ne s'excluent pas : ce sont plutôt des couches qui se combinent, et la frontière entre elles dépend de la façon dont chaque système est construit. Une configuration courante utilise le RAG pour indexer un grand corpus de contenu pérenne, et le MCP pour les éléments vivants et transactionnels : vérifier un stock en temps réel, ouvrir un ticket, ou récupérer les chiffres de la semaine, là où un index statique serait déjà obsolète.
+
+## Un serveur MCP est-il sécurisé ?
+
+Pas automatiquement, et mieux vaut une réponse franche qu'une réponse rassurante. La spécification MCP de base laissait l'autorisation à la charge de chaque implémentation, jusqu'à l'ajout d'un cadre basé sur OAuth 2.1 en mars 2025. Même là où cette lacune a été comblée, les incidents réels et documentés continuent de venir d'ailleurs : un agent qui agit à partir de contenus non fiables avec des droits plus larges que ce que la tâche exigeait.
+
+Dans un premier cas, des chercheurs de [General Analysis ont montré comment le serveur MCP de Supabase pouvait faire fuiter une base de données privée entière](https://www.generalanalysis.com/blog/supabase-mcp-blog) : un attaquant a déposé des instructions cachées dans un ticket de support, et l'agent IA d'un développeur, en lisant ce ticket via la connexion MCP avec la clé `service_role`, qui contourne les règles RLS (row-level security), a suivi ces instructions et recopié le contenu de la table privée `integration_tokens` dans un nouveau message du même fil de ticket, où l'attaquant n'avait plus qu'à le lire.
+
+Dans un second cas, [Invariant Labs a documenté une attaque contre le serveur MCP de GitHub](https://invariantlabs.ai/blog/mcp-github-vulnerability) : une issue malveillante déposée sur un dépôt public portait des instructions cachées qui ont conduit un agent, lequel avait aussi accès aux dépôts privés de l'utilisateur, à en extraire des données et à les publier dans une pull request sur le dépôt public. Invariant Labs le souligne lui-même : il ne s'agit pas d'une faille du code du serveur MCP de GitHub, mais d'un problème d'architecture de fond, à traiter au niveau du système agentique.
+
+Aucune des deux attaques n'a nécessité de casser la logique du protocole MCP ou son authentification au niveau du transport. Les deux ont fonctionné en cachant des instructions dans des données que l'agent était déjà autorisé à lire.
+
+C'est le schéma à surveiller avec n'importe quel serveur MCP : le risque tient généralement à l'étendue des ressources accessibles avec une clé d'accès donnée, une fois qu'un agent est autorisé à agir sur des contenus non fiables, pas au protocole en lui-même. Les serveurs MCP locaux ajoutent une complication : un développeur peut en installer un directement sur sa propre machine. [Cyberhaven y voit une forme de shadow IT](https://www.cyberhaven.com/infosec-essentials/mcp-server) : les équipes sécurité ne peuvent pas encadrer un serveur dont elles ignorent l'existence.
+
+Rien de tout cela n'impose d'éviter le MCP. Il faut en revanche traiter un serveur MCP comme n'importe quel logiciel ayant accès à des systèmes de production : vérifier qui l'a construit et à quelle fréquence il est maintenu avant de le connecter, limiter les droits de chaque outil au strict nécessaire pour la tâche, et garder un humain dans la boucle avant qu'un agent n'engage une action aux conséquences réelles, plutôt que de faire confiance au modèle pour toujours distinguer une instruction légitime d'une instruction injectée.
+
+### Et en France ?
+
+La CNIL et le Conseil de l'IA et du Numérique (CIANum) ont publié le 20 juillet 2026 une [note exploratoire sur l'IA agentique](https://www.cnil.fr/fr/ia-agentique-cnil-cianum-note). Ce que la note décrit recoupe le risque exposé plus haut : un [système agentique](https://geotoolbox.ai/fr/blog/ia-agentique) agit sur son environnement à la place de son utilisateur et traite des données issues de sources multiples, ce qui complique la répartition des responsabilités RGPD entre services connectés. Accès multi-sources, zones grises sur la responsabilité : c'est exactement la situation d'un agent connecté à plusieurs serveurs MCP.
+
+Le [guide de l'ANSSI sur la sécurité des systèmes d'IA générative](https://cyber.gouv.fr/publications/recommandations-de-securite-pour-un-systeme-dia-generative) (ANSSI-PA-102, avril 2024) est antérieur au MCP, mais il décrit déjà la même famille de risques : les interactions d'un système d'IA avec les autres applications du système d'information « doivent être sécurisées, limitées au strict besoin opérationnel, et doivent pouvoir être contrôlées par un humain lorsque celles-ci sont critiques ». Le guide consacre même une section aux risques d'« injection de requête indirecte » et aux données non maîtrisées envoyées à un modèle, soit les scénarios Supabase et GitHub décrits plus haut, et en tire trois recommandations qui se transposent telles quelles à un serveur MCP : maîtriser et sécuriser ces interactions (R26), limiter les actions automatiques déclenchées à partir d'entrées non maîtrisées (R27), et proscrire l'exécution automatisée d'actions critiques sans validation humaine (R9).
+
+Enfin, l'AI Act européen ne cite pas davantage le MCP, mais le [projet d'orientations de la Commission sur la classification des systèmes d'IA à haut risque](https://digital-strategy.ec.europa.eu/en/library/draft-commission-guidelines-classification-high-risk-ai-systems), publié le 19 mai 2026 à l'état de projet, précise que les architectures éclatées s'apprécient dans leur ensemble : quand plusieurs briques d'IA concourent à une même finalité, le tout est traité comme un seul système, et les exemptions dont un module bénéficierait isolément tombent. Le texte étend explicitement ce principe aux « systèmes d'IA agentiques ». Pour un agent branché sur plusieurs serveurs MCP, c'est donc la chaîne entière qui s'évalue, pas chaque maillon pris à part.
+
+La DINUM, la direction interministérielle du numérique, en donne une illustration : elle exploite un [serveur MCP expérimental pour data.gouv.fr](https://www.data.gouv.fr/posts/experimentation-autour-dun-serveur-mcp-pour-datagouv), strictement encadré en lecture seule et sans clé d'API. Même une administration qui déploie son propre serveur MCP le limite volontairement à la consultation, pas à l'action.
+
+## Peut-on utiliser le MCP avec ChatGPT ?
+
+Oui. Le MCP n'est pas réservé à Claude, même si c'est Anthropic qui l'a créé. La [documentation officielle du protocole](https://modelcontextprotocol.io/docs/2026-07-28/getting-started/intro) cite ChatGPT aux côtés de Claude, Visual Studio Code, Cursor et MCPJam comme clients pris en charge, parmi bien d'autres, et l'adoption déborde largement les produits d'Anthropic depuis le lancement de 2024. En France, [Mistral AI](https://geotoolbox.ai/fr/blog/cest-quoi-mistral) prend lui aussi en charge le MCP, du côté client : ses [Connectors](https://docs.mistral.ai/agents/mcp/), pour l'instant en préversion publique, permettent à un agent Mistral d'utiliser des serveurs MCP externes comme outils.
+
+## Ce que le MCP change pour votre site, pas seulement pour votre IDE
+
+La majorité des contenus sur le MCP s'adressent à des développeurs qui branchent un agent sur des outils internes. Ce cadrage laisse de côté l'essentiel pour qui gère un site : un serveur MCP est l'un des deux moyens, avec une API documentée, par lesquels [un site devient lui-même actionnable par un agent](https://geotoolbox.ai/blog/agent-ready-website), pas seulement lisible.
+
+Nous avons construit le [scan Agent Readiness de geotoolbox](https://geotoolbox.ai/tools/agent-readiness-scanner) autour d'une échelle à cinq niveaux. Dans notre référentiel, le niveau 4, « Actionnable par un agent » (Agent-Operable dans l'outil, encore en anglais), consiste à exposer une surface de capacités vivante qu'un agent peut appeler : un serveur MCP ou une API documentée, et non plus seulement du contenu bien structuré qu'un agent peut extraire et citer. Nous le disons sans détour : le scanner n'évalue pas encore les surfaces de niveau 4. Nous préférons indiquer où il s'arrête plutôt que d'inventer un score qu'il ne pourrait pas justifier. Le MCP mérite la même franchise : utile et bien réel, mais sans surestimer sa fiabilité actuelle.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/serveur-mcp/echelle-agent-readiness-mcp.png" alt="L'échelle Agent Readiness à cinq niveaux de geotoolbox, d'Inatteignable à Actionnable par un agent, ce dernier niveau étant mis en évidence." w="1100" h="484" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Les surfaces actionnables comme les serveurs MCP et les API documentées se situent au sommet de l'échelle Agent Readiness de geotoolbox.</figcaption>
+</figure>
+
+Le serveur MCP de data.gouv.fr évoqué plus haut en est l'exemple français ([sa documentation de connexion](https://guides.data.gouv.fr/intelligence-artificielle/le-serveur-mcp-de-data.gouv.fr) est publique) : la surface exposée est bien celle du niveau 4, même si son périmètre reste volontairement limité à la lecture seule : exactement la prudence que nous recommandons à toute organisation qui se lance.
+
+À l'ère des moteurs de recherche, tout l'enjeu était qu'une page soit trouvée, puis citée. Un serveur MCP est un moyen de laisser un agent aller plus loin que la lecture et agir pour le compte d'un site : consulter un stock en temps réel, vérifier l'état d'une commande, déposer une demande, sans avoir à scraper une page en espérant que la réponse soit encore à jour. Une API documentée peut remplir le même rôle. Les sites qui exposent l'une ou l'autre surface se positionnent pour un type de trafic différent de celui que le SEO a été conçu pour capter.
+
+[Lancez dès aujourd'hui un scan Agent Readiness gratuit](https://geotoolbox.ai/tools/agent-readiness-scanner) pour situer votre site sur les niveaux 0 à 3 de cette échelle.
+
+## Foire aux questions
+
+### Ai-je besoin d'un serveur MCP ?
+
+Seulement si vous voulez qu'une application IA accède à un système externe précis pour votre compte, et qu'aucun serveur existant ne le couvre déjà. Le projet MCP maintient une poignée de serveurs de référence officiels, notamment pour le système de fichiers, Git et la récupération de pages web, et de plus en plus d'éditeurs publient et entretiennent les leurs, comme le serveur MCP officiel de GitHub. La plupart des utilisateurs se contentent donc de brancher un serveur existant plutôt que d'en développer un.
+
+### Qui a inventé le MCP ?
+
+Anthropic, plus précisément ses ingénieurs David Soria Parra et Justin Spahr-Summers, a publié le MCP comme standard ouvert fin 2024. La gouvernance ne relève plus d'Anthropic seule : le protocole a rejoint l'Agentic AI Foundation de la Linux Foundation en décembre 2025.
+
+### Quelle est la différence entre une API et un MCP ?
+
+Une API classique connecte deux systèmes selon un contrat fixé à l'avance : l'appelant doit déjà connaître les endpoints disponibles. Le MCP standardise plutôt la façon dont un agent IA découvre et appelle des outils, quel que soit le serveur en face : le client interroge le serveur pour savoir ce qu'il propose, au lieu d'être codé en dur pour une intégration précise. Le RAG, de son côté, sert surtout à la récupération dans un corpus indexé, alors que le MCP couvre aussi bien la récupération que l'action.
+
+### Quelle est la différence entre le MCP et un serveur MCP ?
+
+Le MCP est le protocole, le langage commun que les deux côtés d'une connexion acceptent de parler. Un serveur MCP est un programme précis qui implémente ce protocole pour exposer les outils, ressources ou invites d'un système donné. La relation est la même qu'entre HTTP et un serveur web en particulier.
+
+### Le MCP, c'est la même chose que le function calling ou le tool calling ?
+
+Non, même si les deux sont liés. Le function calling est la capacité, propre au modèle, de décider d'invoquer une fonction définie. Le MCP normalise ce qui vient se greffer autour de cette capacité, de sorte que n'importe quel client compatible MCP puisse découvrir et appeler des outils depuis n'importe quel serveur compatible MCP, sans code d'intégration sur mesure pour chaque paire.
