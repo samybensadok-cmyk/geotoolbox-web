@@ -1585,6 +1585,8 @@ function computeFixes(){
     const f = (c.fix && !/^no action/i.test(c.fix)) ? `<b>${esc(c.label)}.</b> ${esc(c.fix)}` : FIX_FOR(c.label);
     if(f) fixes.push({tag: c.id==='waf_consolidated' ? 'reach' : 'read', html:f});
   });
+  // the consolidated firewall finding (when present) is the single biggest win — it leads the list
+  fixes.sort((a,b)=> (/^<b>Firewall \(/.test(b.html)?1:0) - (/^<b>Firewall \(/.test(a.html)?1:0));
   const seen={}; return fixes.filter(f=>seen[f.html]?false:(seen[f.html]=true)).slice(0,6);
 }
 function renderFixList(){
