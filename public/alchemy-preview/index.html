@@ -181,7 +181,16 @@ select.gak-input{appearance:none;-webkit-appearance:none;-moz-appearance:none;cu
 .gak-pill.pass{background:var(--gak-mint)}
 .gak-pill.warn{background:var(--gak-amber)}
 .gak-pill.fail{background:var(--gak-red)}
-.gak-pill.na{background:#7e8a99}
+.gak-pill.na,.gak-pill.info{background:#7e8a99}
+.gak-pill.blocked{background:var(--gak-red);font-size:12px}
+.gak-pill.unverifiable{background:#7e8a99;font-size:14px}
+.gak-check-fix{font-size:13px;line-height:1.45;color:var(--gak-heading);margin-top:5px}
+.gak-check-fix b{color:var(--gak-orange)}
+.gak-checks-opt{margin-top:10px;border-top:1px solid var(--gak-line);padding-top:8px}
+.gak-checks-opt summary{cursor:pointer;font-size:13px;color:var(--gak-muted)}
+.gak-checks-opt .gak-checks li{padding:9px 0}
+.gak-acc-fetch{font-size:13px;line-height:1.5;color:var(--gak-warn);background:var(--gak-warn-bg);border:1px solid var(--gak-warn-line);border-radius:8px;padding:8px 12px;margin-top:12px}
+.gak-acc-fetch b{color:var(--gak-heading)}
 .gak-check-b{flex:1}
 .gak-check-t{font-weight:600;color:var(--gak-heading)}
 .gak-check-e{font-size:14px;line-height:1.45;color:var(--gak-muted);margin-top:3px}
@@ -716,10 +725,10 @@ body.gak-capturing::after{content:'Preparing your PDF…';position:fixed;inset:0
         </div>
         <div class="gak-hero-r">
           <h2 class="gak-hero-h">Score Breakdown</h2>
-          <p class="gak-hero-lead" id="gak-bd-lead">Your AI Visibility Score is built from <b>6 components</b> of how AI engines find, read &amp; recommend you. Unlock your full report to see each one.</p>
+          <p class="gak-hero-lead" id="gak-bd-lead">Your AI Visibility Score is built from <b>5 weighted components</b> of how AI engines find, read &amp; recommend you. Unlock your full report to see each one.</p>
           <div class="gak-bd-wrap locked" id="gak-bd-wrap">
             <div class="gak-bd-grid" id="gak-bd-grid"></div>
-            <div class="gak-bd-overlay"><span class="lk"></span><span class="t">Your 6-part breakdown is ready</span><span class="s">Enter your email below to unlock your full AI Visibility Score &amp; breakdown.</span></div>
+            <div class="gak-bd-overlay"><span class="lk"></span><span class="t">Your 5-part breakdown is ready</span><span class="s">Enter your email below to unlock your full AI Visibility Score &amp; breakdown.</span></div>
           </div>
         </div>
       </div>
@@ -878,7 +887,8 @@ const GAK_CONFIG = {
   PREVIEW: false,                        // preview mode: shows "Preview" badge. false for production embed.
   API_BASE: "https://sg-geo-tool.replit.app",  // our backend (Vercel rewrites /api/* -> Replit). CORS-allowed for the embed origin.
   API_ACTION: "alchemy_ai_check",        // ?action= handler — dedicated Alchemy Leads handler (own CORS + daily caps), see DEPLOY notes.
-  MAKE_WEBHOOK_URL: "",                  // <-- Alchemy Leads' lead-capture webhook (Make/Zapier/CRM). Empty = skip POST.
+  LEAD_RELAY: true,                      // SG_ALC_V3 (2026-09-13): leads POST to our own backend (only=lead) which stores them and forwards to Alchemy's HubSpot (portal 50356327). false = skip POST.
+  MAKE_WEBHOOK_URL: "",                  // legacy direct webhook (Make/Zapier). Ignored when LEAD_RELAY is true.
   ENGINES: ["chatgpt","perplexity","google_aio"],  // ChatGPT+Perplexity (DataForSEO) + Google AI Overviews (SerpAPI)
   BRAND: { name: "Alchemy Leads", url: "https://alchemyleads.com", cta_url: "https://alchemyleads.com/call/", cta_label: "Book a call →", cta_sub: "Book a 20-minute call — we'll show you how to get named by ChatGPT, Perplexity & Google AI in your category." },
   GATE: { freeChecksVisible: true, mode: "upfront", requireCompany: true }      // score + crawler shown free; full breakdown + visibility behind email. mode:"upfront" = score/report come back in the main payload (brief model).
@@ -1047,10 +1057,7 @@ function render(data){
   show('gak-free-extra');
 
   // 3. gated readiness breakdown (built now, revealed after email)
-  $('gak-checks').innerHTML = ((data.readiness && data.readiness.checks) || []).map(c=>{
-    const sym = c.status==='pass'?'✓':c.status==='warn'?'!':c.status==='na'?'–':'✕';
-    return `<li><span class="gak-pill ${ok(c.status)}">${sym}</span><div class="gak-check-b"><div class="gak-check-t">${esc(c.label)}</div><div class="gak-check-e">${esc(c.evidence)}</div></div></li>`;
-  }).join('');
+  renderChecks((data.readiness && data.readiness.checks) || []);
 
   renderLostDeal(data.lost_deal);
   renderMatrix(data.matrix);
@@ -1079,8 +1086,11 @@ const barColor = (s)=> s>=70?'var(--gak-mint)':s>=50?'var(--gak-amber)':'var(--g
 const prettyKey = (k)=> String(k||'').replace(/_/g,' ').replace(/\b\w/g, m=>m.toUpperCase());
 
 /* ---- Suso-style score hero: verbal band pill + 6-card breakdown grid ---- */
-const BD_LABELS = {brand_clarity:'Brand Clarity', ai_cited_authority:'AI-Cited Authority', ai_accessibility:'AI Accessibility', trust_signals:'Trust Signals', citation_strength:'Citation Strength', content_coverage:'Content Coverage'};
-const BD_ORDER = ['brand_clarity','ai_cited_authority','ai_accessibility','trust_signals','citation_strength','content_coverage'];
+/* SG_ALC_V3 (2026-09-13): the hero grid shows the SAME 5 weighted categories the score is built from
+   (score.categories) — the previous 6 gak-only keys were never produced by this backend, so the grid
+   rendered "N/A" six times after unlock. */
+const BD_LABELS = {chatgpt_visibility:'ChatGPT Visibility', google_aio_visibility:'Google AI Overviews', ai_accessibility:'AI Accessibility', technical_readiness:'Technical Readiness', ai_cited_authority:'AI-Cited Authority'};
+const BD_ORDER = FRAMEWORK_CATS.map(c=>c[0]);
 const BD_TAG = {strong:'Strong', good:'Good', fair:'Fair', weak:'Needs work', 'no-data':'Not enough data'};
 const bandOf = (s)=> s==null?'no-data':(s>=70?'strong':s>=50?'good':s>=30?'fair':'weak');
 function scoreBand(s, readiness){ s=Number(s)||0;
@@ -1091,6 +1101,26 @@ function setHeroPill(score, readiness){ const gr=$('gak-grade'); if(!gr) return;
   const g=document.querySelector('#gak-hero .gak-gauge');   // a11y (codex): the gauge is a graphic — give it a spoken label
   if(g){ g.setAttribute('role','img'); g.setAttribute('aria-label', (readiness?'AI Readiness Score: ':'AI Visibility Score: ')+(Number(score)||0)+' out of 100 — '+b.label); }
 }
+/* SG_ALC_V3 (2026-09-13, Sean: "issues stated in multiple ways"). The engine has 7 states; the old
+   render knew 3 and drew every other one (blocked / unverifiable / info / not_applicable) as a red ✕,
+   so 9 rows on a Cloudflare-fronted site read as failures. Now: one glyph per state, the optional /
+   not-applicable rows fold into a collapsed footer, and each warn/fail row carries the ENGINE's own
+   fix text (the regex table below used to turn "AI crawler reachability" into "add robots.txt"). */
+const CHECK_GLYPH = {pass:['✓','pass'], warn:['!','warn'], fail:['✕','fail'], blocked:['⊘','blocked'], unverifiable:['?','unverifiable'], info:['i','info'], not_applicable:['–','na'], na:['–','na']};
+function checkIsOptional(c){ return c.status==='info' || c.status==='not_applicable' || c.status==='na' || /\boptional\b/i.test(c.evidence||''); }
+function renderCheckLi(c){
+  const g = CHECK_GLYPH[c.status] || ['–','na'];
+  const showFix = (c.status==='fail'||c.status==='warn') && c.fix && !/^no action/i.test(c.fix);
+  return `<li><span class="gak-pill ${g[1]}">${g[0]}</span><div class="gak-check-b"><div class="gak-check-t">${esc(c.label)}${c.folded?` <span style="font-weight:500;color:var(--gak-muted)">· ${Number(c.folded)} related checks folded in</span>`:''}</div><div class="gak-check-e">${esc(c.evidence)}</div>${showFix?`<div class="gak-check-fix"><b>Fix:</b> ${esc(c.fix)}</div>`:''}</div></li>`;
+}
+function renderChecks(checks){
+  const main = checks.filter(c=>!checkIsOptional(c)), opt = checks.filter(checkIsOptional);
+  const ul = $('gak-checks'); ul.innerHTML = main.map(renderCheckLi).join('');
+  let optEl = $('gak-checks-opt');
+  if(!optEl){ optEl = document.createElement('details'); optEl.id='gak-checks-opt'; optEl.className='gak-checks-opt'; ul.insertAdjacentElement('afterend', optEl); }
+  if(opt.length){ optEl.innerHTML = `<summary>${opt.length} optional / not-applicable check${opt.length>1?'s':''} (not scored)</summary><ul class="gak-checks">${opt.map(renderCheckLi).join('')}</ul>`; optEl.classList.remove('gak-hide'); }
+  else { optEl.innerHTML=''; optEl.classList.add('gak-hide'); }
+}
 function renderBreakdownLocked(){ const grid=$('gak-bd-grid'); if(!grid) return;
   grid.innerHTML = BD_ORDER.map(k=>'<div class="gak-bd b-no-data"><div class="gak-bd-lbl">'+esc(BD_LABELS[k])+'</div><div class="gak-bd-num">—</div><div class="gak-bd-tag">Locked</div></div>').join('');
   grid.setAttribute('aria-hidden','true');   // a11y (swarm): don't let screen readers read the blurred "Locked" placeholders
@@ -1099,6 +1129,9 @@ function renderBreakdownLocked(){ const grid=$('gak-bd-grid'); if(!grid) return;
 function renderBreakdown(sc){ const grid=$('gak-bd-grid'); if(!grid) return;
   if(!GATE_UNLOCKED){ renderBreakdownLocked(); return; }   // defence-in-depth: never reveal the breakdown before the gate
   const byKey={}; ((sc&&sc.sub_scores)||[]).forEach(s=>{ if(s&&s.key) byKey[s.key]=s; });
+  // categories are the real source (backend sends state:'ok' + score per weighted category)
+  const cats=(sc&&sc.categories)||{};
+  Object.keys(cats).forEach(k=>{ const c=cats[k]; if(c && c.state==='ok' && c.score!=null && !byKey[k]) byKey[k]={key:k, score:Number(c.score), band:bandOf(Number(c.score))}; });
   // 2026-07-02: ai_accessibility fallback — mirror renderCrawler(). If the gated score call couldn't compute it
   // but the free call's crawler summary exists in LAST, derive allowed/total so this card can NEVER show
   // "N/A Not enough data" beside a crawler card saying "34 of 34 allowed" (operator bug report).
@@ -1113,7 +1146,7 @@ function renderBreakdown(sc){ const grid=$('gak-bd-grid'); if(!grid) return;
   }).join('');
   grid.removeAttribute('aria-hidden');   // unlocked: screen readers read the real breakdown
   const w=$('gak-bd-wrap'); if(w) w.classList.remove('locked');
-  const lead=$('gak-bd-lead'); if(lead) lead.innerHTML='Your AI Visibility Score across <b>6 components</b> of how AI engines find, read &amp; recommend you.';
+  const lead=$('gak-bd-lead'); if(lead) lead.innerHTML='Your AI Visibility Score across the <b>5 weighted components</b> of how AI engines find, read &amp; recommend you.';
 }
 /* GATED AI-Crawler Accessibility — a single score card (the client: "hide the breakdown, just show the score"); the full
    bot list lives in a nested collapsible. Reads from LAST (crawlers from the free call + ai_accessibility from the gated score). */
@@ -1128,7 +1161,16 @@ function renderCrawler(){
   else {
     accEl.innerHTML = '<div class="gak-acc-num b-'+band+'">'+acc+'<span style="font-size:18px;color:var(--gak-faint);font-weight:600"> /100</span></div>'
       + '<div class="gak-acc-meta"><div class="t">'+(Number(s.allowed)||0)+' of '+(Number(s.total)||0)+' AI crawlers can reach your site</div>'
-      + '<div class="s">'+(Number(s.blocked)||0 ? (Number(s.blocked)+' blocked in robots.txt — they can’t read or cite you') : 'All checked AI crawlers are allowed')+'</div></div>';
+      + '<div class="s">'+(Number(s.blocked)||0 ? (Number(s.blocked)+' blocked in robots.txt — they can’t read or cite you') : 'All checked AI crawlers are allowed in robots.txt')+'</div></div>';
+  }
+  // SG_ALC_V3: robots.txt permission is not the same as getting through — show what the live bot-UA fetches returned
+  const f = cr.fetch;
+  if(f && Number(f.tested)){
+    const blocked=(f.blocked||[]), okB=(f.ok||[]), partB=(f.partial||[]);
+    const partTxt = partB.length ? '; '+esc(partB.join(', '))+' got a 200 but only thin/JS-shell content' : '';
+    accEl.innerHTML += blocked.length
+      ? '<div class="gak-acc-fetch" style="flex-basis:100%"><b>But '+esc(f.vendor||'a firewall')+' blocked '+blocked.length+' of '+Number(f.tested)+' real crawler fetches</b> — '+esc(blocked.join(', '))+' got HTTP 403'+(okB.length?'; '+esc(okB.join(', '))+' got through':'')+partTxt+'. Fixing this one firewall rule is the single biggest win on this report.</div>'
+      : '<div class="gak-acc-fetch" style="flex-basis:100%;color:var(--gak-muted);background:transparent;border-color:var(--gak-line)">Live check: '+okB.length+' of '+Number(f.tested)+' AI crawler fetches we sent got real content'+partTxt+'.</div>';
   }
   const g=$('gak-crawl-grid'); if(g) g.innerHTML = (cr.bots||[]).map(function(b){ return '<div class="gak-bot '+(b.allowed?'ok':'no')+'"><span class="b-dot"></span><span class="b-name">'+esc(b.name)+'</span></div>'; }).join('');
   show('gak-crawler');
@@ -1300,7 +1342,7 @@ function renderLostDeal(ld){
 function renderMatrix(mx){
   const card = $('gak-matrix-card');
   if(!mx || !mx.rows || !mx.rows.length){ card.classList.add('gak-hide'); return; }
-  const cell = (v)=> v===true?'<span class="gak-cell yes">✓</span>': v===false?'<span class="gak-cell no">✕</span>':'<span class="gak-cell unk" title="not detected">–</span>';
+  const cell = (v,note)=> v===true?'<span class="gak-cell yes"'+(note?' title="'+esc(note)+'"':'')+'>✓</span>': v===false?'<span class="gak-cell no"'+(note?' title="'+esc(note)+'"':'')+'>✕</span>':'<span class="gak-cell unk" title="not detected">–</span>';
   const result = (r)=>{
     if(r.result==='premium') return '<span class="gak-res-prem" title="Claude tracking — coming soon">Soon</span>';
     if(r.result_locked || r.result==null) return '<span class="gak-res-lock">Locked</span>';
@@ -1309,7 +1351,7 @@ function renderMatrix(mx){
     return `<span class="gak-res ${rc}">${lbl}</span>`;
   };
   $('gak-matrix-body').innerHTML = mx.rows.map(r=>
-    `<tr><td class="eng">${esc(r.engine)}</td><td>${cell(r.reach)}</td><td>${cell(r.read)}</td><td>${result(r)}</td></tr>`).join('');
+    `<tr><td class="eng">${esc(r.engine)}</td><td>${cell(r.reach, r.reach_note)}</td><td>${cell(r.read)}</td><td>${result(r)}</td></tr>`).join('');
   card.classList.remove('gak-hide');
 }
 /* roll up the email-gated scan into the matrix Result column (unlock) */
@@ -1374,7 +1416,7 @@ function renderVisibility(vis){
     return;
   }
   const losing = (typeof vis.losing==='number' && vis.total_cells) ? `<div class="gak-losing"><b>${Number(vis.losing)}</b> of ${Number(vis.total_cells)} AI answers don't mention you</div>` : '';
-  $('gak-vis-summary').innerHTML = losing + esc(vis.summary||'');
+  $('gak-vis-summary').innerHTML = losing + esc(vis.summary||'') + causalNoteOnce(vis);
   // Every prompt is dispatched across the same fixed engine set — if one call failed
   // server-side (transient timeout/error), the backend just omits that row rather than
   // fabricating a result. Fill the gap with an explicit "no data" badge instead of
@@ -1391,7 +1433,7 @@ function renderVisibility(vis){
       : `<span class="gak-eng ${e.cited?'cited':'absent'}"><span class="e-dot"></span><b>${esc(e.label)}</b> ${e.cited?'mentions you':'no mention'}</span>`
     ).join('');
     const comp = (p.competitors_cited&&p.competitors_cited.length) ? `<div class="gak-comp">Cited instead: <b>${p.competitors_cited.map(esc).join(', ')}</b></div>`:'';
-    return `<div class="gak-prompt"><div class="gak-prompt-q">“${esc(p.query)}”</div><div class="gak-engines">${engs}</div>${comp}${causalNote(p)}</div>`;
+    return `<div class="gak-prompt"><div class="gak-prompt-q">“${esc(p.query)}”</div><div class="gak-engines">${engs}</div>${comp}</div>`;
   }).join('');
 }
 /* Blocked-Bot -> Lost-Citation (our signature): if an engine shows "no mention" AND its crawler is
@@ -1402,6 +1444,19 @@ function engineReach(label){
   const k=matrixEngineKey(label); if(!k) return null;
   const row=LAST.matrix.rows.find(r=>r.engine===k);
   return row?row.reach:null;
+}
+/* SG_ALC_V3: one causal line for the whole map (per-prompt repetition of the same WAF fact was exactly
+   the "stated in multiple ways" Sean flagged). */
+function causalNoteOnce(vis){
+  if(LAST && (LAST._illustrative || LAST._synthetic)) return '';
+  const blocked = new Set();
+  (vis.prompts||[]).forEach(p=>(p.engines||[]).forEach(e=>{ if(!e.cited && engineReach(e.label)===false){ const k=matrixEngineKey(e.label); if(k) blocked.add(k); } }));
+  if(!blocked.size) return '';
+  const rd = LAST && LAST.readiness && LAST.readiness.waf;
+  const wafOn = !!(rd && rd.detected);
+  const who = wafOn ? esc(rd.vendor||'Your firewall') : 'robots.txt';
+  const tail = wafOn ? ' Same root cause as the firewall finding above.' : ' Remove the Disallow rule for those bots.';
+  return `<div class="gak-causal" style="margin-top:10px">${who} blocks ${[...blocked].map(eng=>`<b>${esc(BOT_OF[eng]||eng)}</b>`).join(' and ')} → ${[...blocked].map(esc).join(' and ')} can't crawl you, so ${blocked.size>1?'those engines':'that engine'} can't recommend you.${tail}</div>`;
 }
 function causalNote(p){
   if(LAST && (LAST._illustrative || LAST._synthetic)) return '';   // never assert a technical cause from non-real (preview/sample) reach
@@ -1525,7 +1580,11 @@ function computeFixes(){
   if(blockedBots.length) fixes.push({tag:'reach',html:`<b>Unblock AI crawlers.</b> Remove the <code>Disallow</code> rules for ${esc(blockedBots.slice(0,5).join(', '))} in your <code>robots.txt</code> — blocked bots can't cite you.`});
   // OPTIONAL checks (e.g. Content-Signal) are recommendations, not things "stopping AI trusting you" —
   // don't count them as fixable issues (a 100/100 site shouldn't show "1 fixable issue").
-  ((LAST.readiness.checks)||[]).filter(c=>(c.status==='fail'||c.status==='warn') && !/optional/i.test(c.evidence||'')).forEach(c=>{ const f=FIX_FOR(c.label); if(f) fixes.push({tag:'read',html:f}); });
+  ((LAST.readiness.checks)||[]).filter(c=>(c.status==='fail'||c.status==='warn') && !/optional/i.test(c.evidence||'')).forEach(c=>{
+    // SG_ALC_V3: the engine's own fix (correct cause: "allow-list in Cloudflare") beats a label-regex guess ("add robots.txt")
+    const f = (c.fix && !/^no action/i.test(c.fix)) ? `<b>${esc(c.label)}.</b> ${esc(c.fix)}` : FIX_FOR(c.label);
+    if(f) fixes.push({tag: c.id==='waf_consolidated' ? 'reach' : 'read', html:f});
+  });
   const seen={}; return fixes.filter(f=>seen[f.html]?false:(seen[f.html]=true)).slice(0,6);
 }
 function renderFixList(){
@@ -1636,8 +1695,13 @@ async function fetchReal(domain, opts){
     return body;
   } finally { clearTimeout(t); }
 }
+function leadEndpoint(){
+  if(GAK_CONFIG.LEAD_RELAY) return `${GAK_CONFIG.API_BASE}/?action=${GAK_CONFIG.API_ACTION}&only=lead`;
+  return GAK_CONFIG.MAKE_WEBHOOK_URL || '';
+}
 async function postLead(payload){
-  if(!GAK_CONFIG.MAKE_WEBHOOK_URL) return;
+  const url = leadEndpoint();
+  if(!url) return;
   // FORM-ENCODED send (2026-07-02): Make does NOT auto-parse text/plain JSON (whole body arrived as ONE
   // blob field), but it DOES auto-parse application/x-www-form-urlencoded into separate mappable fields —
   // and that content-type is also CORS-safelisted (no preflight). So the payload is a FLAT object and each
@@ -1645,9 +1709,9 @@ async function postLead(payload){
   // sendBeacon(URLSearchParams) sends form-encoding natively; it is PRIMARY because Make's webhook returns
   // no CORS headers (a cors-mode fetch can't read r.ok and would double-fire). no-cors keepalive fetch = fallback.
   const params = new URLSearchParams(payload);
-  const fallback = () => { try{ fetch(GAK_CONFIG.MAKE_WEBHOOK_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},body:params.toString(),keepalive:true}).catch(()=>{}); }catch(_){} };
+  const fallback = () => { try{ fetch(url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},body:params.toString(),keepalive:true}).catch(()=>{}); }catch(_){} };
   try{
-    if(navigator.sendBeacon && navigator.sendBeacon(GAK_CONFIG.MAKE_WEBHOOK_URL, params)) return;
+    if(navigator.sendBeacon && navigator.sendBeacon(url, params)) return;
     fallback();
   }catch(e){ fallback(); }
 }
@@ -1682,7 +1746,12 @@ function buildLead(stage){
     crawlers_blocked: S((LAST&&LAST.crawlers&&LAST.crawlers.summary&&LAST.crawlers.summary.blocked)||0),
     readiness_score: S((LAST&&LAST.readiness&&LAST.readiness.score)!=null ? LAST.readiness.score : ''),
     js_rendered: (!!(LAST&&LAST.signals&&LAST.signals.fetch_meta&&LAST.signals.fetch_meta.js_rendered)) ? 'true' : 'false',
-    industry: (CTX.industry||''), country: (CTX.country||'')
+    industry: (CTX.industry||''), country: (CTX.country||''),
+    // SG_ALC_V3: what the relay packs into HubSpot's message field
+    top_competitor: S((LAST&&LAST.lost_deal&&LAST.lost_deal.top_competitor)||((LAST&&LAST.visibility&&LAST.visibility.competitors&&LAST.visibility.competitors[0])||'')),
+    waf_vendor: S((LAST&&LAST.readiness&&LAST.readiness.waf&&LAST.readiness.waf.detected) ? LAST.readiness.waf.vendor : ''),
+    waf_blocked_bots: S((LAST&&LAST.readiness&&LAST.readiness.waf&&LAST.readiness.waf.blocked_bots||[]).join(', ')),
+    page_url: (function(){ try{ return (document.referrer && /alchemyleads\.com/.test(document.referrer)) ? document.referrer.split('?')[0] : 'https://alchemyleads.com/ai-visibility-checker/'; }catch(_){ return ''; } })()
   };
 }
 
