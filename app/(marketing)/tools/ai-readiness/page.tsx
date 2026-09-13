@@ -9,11 +9,11 @@ import { softwareApplicationSchema, howToSchema } from "@/lib/seo-schema"
 import { AiReadinessWidget } from "@/components/tools/ai-readiness-widget"
 
 export const metadata: Metadata = {
-  title: "AI Visibility Checker: Free Readiness Score",
+  title: "AI Readiness Checker: Free 5-Check Score",
   description:
-    "Run a free AI visibility check on any domain: robots.txt, AI crawler access, sitemap, content signals, markdown. Scored the same way our full Agent Readiness scan scores them.",
+    "Free AI readiness checker for any domain: robots.txt, AI crawler access, sitemap, content signals, markdown. Scored the same way our full Agent Readiness scan scores them.",
   openGraph: {
-    title: "AI Visibility Checker: Free 5-Check Readiness Score",
+    title: "AI Readiness Checker: Free 5-Check Score",
     description:
       "Score your site on the 5 foundational AI-readiness checks: robots, crawler access, content signals, sitemap, markdown. Free, server-side, honest.",
   },
@@ -40,9 +40,9 @@ const steps: Step[] = [
 
 const faqs = [
   {
-    question: "Is this an AI visibility checker or a readiness score?",
+    question: "Is this the same as your AI Visibility Tracker?",
     answer:
-      "Both, honestly labeled. AI visibility has two layers: whether AI systems can read you, and whether they mention you. This free tool checks and scores the first layer, the infrastructure. Measuring the second layer (mentions, citations, competitors across 8 AI engines) is what the paid AI Visibility Tracker does. If the plumbing fails here, no tracking result will flatter you.",
+      "No, they measure different layers. AI visibility has two layers: whether AI systems can read you, and whether they mention you. This free tool checks and scores the first layer, the infrastructure: specifically whether AI agents and crawlers can reach and parse your website, not organizational \"AI readiness\" (staff training, adoption strategy). Measuring the second layer (mentions, citations, competitors across 8 AI engines) is what the paid AI Visibility Tracker does. If the plumbing fails here, no tracking result will flatter you.",
   },
   {
     question: "Why only 5 checks?",
@@ -88,7 +88,7 @@ export default function AiReadinessPage() {
               description:
                 "A free server-side tool that scores any domain on 5 foundational AI-readiness checks (robots.txt, AI-crawler access, content signals, sitemap, markdown negotiation), a fixed subset of the full Agent Readiness rubric.",
               url: `${siteConfig.url}/tools/ai-readiness`,
-              applicationSubCategory: "AI readiness and agent-readiness checker",
+              applicationSubCategory: "AI readiness checker",
             }),
             howToSchema({
               name: "How to check if your site is ready for AI agents",
@@ -108,10 +108,10 @@ export default function AiReadinessPage() {
           <div className="mx-auto max-w-3xl text-center">
             <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">Free AI-readiness tool</p>
             <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-              Free AI Visibility Checker: Is Your Site Ready for AI?
+              Free AI Readiness Checker: Is Your Site Ready for AI Agents?
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
-              Before AI can mention you, it has to reach you. This free AI visibility checker scores any domain on the five
+              Before AI can mention you, it has to reach you. This free AI readiness checker scores any domain on the five
               foundations AI agents need first: robots.txt validity, AI-crawler access, content signals, sitemap, markdown
               negotiation. Scored exactly the way our full Agent Readiness scan scores them. Server-side, no sign-up.
             </p>
