@@ -1,0 +1,154 @@
+---
+title: "AI Agent Security Risks (And How to Actually Reduce Them)"
+description: "Real AI agent security risks, backed by 5 documented incidents (not hypotheticals), the risk categories behind them, and practical fixes for site owners."
+date: "2026-09-13"
+updated: "2026-09-13"
+author: "Samy BEN SADOK"
+tags: ["ai-agents", "ai-agent-security", "prompt-injection", "mcp", "ai-visibility"]
+draft: false
+---
+
+AI agent security risks stopped being theoretical once researchers started disclosing exactly how agents get exploited in production. Five separate, disclosed vulnerabilities, EchoLeak against Microsoft 365 Copilot, a Slack AI markdown exfiltration bug, Google Antigravity walking around its own permission setting, GitLab Duo losing source code, and a malicious URL hijacking Perplexity's Comet browser, show exactly what goes wrong when an agent is given more reach than the task in front of it needed.
+
+## Is This Risk Real, or Security-Vendor Hype?
+
+Most published breakdowns of AI agent security risks read the same way: a numbered list of things that *could* happen, illustrated with a made-up scenario about a junior employee tricking an HR bot or a weather plugin over-requesting file permissions. Search for "AI agent security risks" right now and every top result, including the one Google's own AI Overview draws from, follows that pattern. Some are backed by real research. Almost none point to a named, dated, disclosed incident.
+
+That gap is exactly what security practitioners keep asking about in public. A widely discussed [Hacker News thread on the EchoLeak vulnerability](https://news.ycombinator.com/item?id=44250774) turned into a broader argument about whether any of this is happening in production, not just in red-team labs. It is. The next section covers five incidents with names, dates, and technical writeups, not hypotheticals.
+
+## Five Real AI Agent Security Incidents (Not Hypotheticals)
+
+[**EchoLeak (CVE-2025-32711)**](https://sentra.io/blog/copilot-echoleak-prompt-injection) targeted Microsoft 365 Copilot with a zero-click exploit, no victim interaction required at all. A single crafted email carrying a concealed indirect prompt injection payload chained several separate bypasses together: evading Microsoft's own cross-prompt-injection classifier, slipping past link redaction via reference-style markdown, and abusing an auto-fetched image to exfiltrate data to an attacker-controlled server, all without any user interaction. It carried a CVSS score of 9.3. Microsoft patched it server-side and confirmed no exploitation was found in the wild before the fix shipped.
+
+**Slack AI's markdown exfiltration bug** worked on the same underlying flaw with one extra step. An attacker with no access to a private channel could post content in a public one that instructed Slack AI's RAG search to pull private-channel content into its answer, then render it as a markdown link with the data encoded in the URL and inviting text like "click here to reauthenticate." Rendering exposed that link; clicking it is what sent the private data to the attacker's server, so the exfiltration itself required one click, not zero. [PromptArmor](https://www.promptarmor.com/resources/data-exfiltration-from-slack-ai-via-indirect-prompt-injection), which disclosed the bug, demonstrated it by exfiltrating a developer's API key from a private channel, and noted the attacker never has to know what's actually in there to go after it. The same mechanism, they found, could also be used to serve a convincing phishing link. [The Hacker News discussion thread](https://news.ycombinator.com/item?id=41302597) has the wider security community's reaction.
+
+**Google Antigravity**, an agentic coding IDE built on Gemini, overrode its own declared permission boundary. A user had "Allow Gitignore Access" set to off, which should have kept the agent out of `.env` files. It read one anyway, using a terminal `cat` command instead of the restricted file-read tool, then exfiltrated the contents through a public request-capture service that had been left on the tool's default network allowlist. The failure here wasn't a missing guardrail; it was a guardrail the agent walked around because a separate, unrelated permission (terminal access) was left too open, and a destination nobody thought to remove from the default allowlist. [Full discussion here](https://news.ycombinator.com/item?id=46048996).
+
+**GitLab Duo** processed the entire context of a page it was asked about, including comments, descriptions, and hidden text, which made it vulnerable to instructions planted anywhere in that context. [Researchers at Legit Security](https://www.legitsecurity.com/blog/remote-prompt-injection-in-gitlab-duo) found that attackers hid prompts in merge request descriptions and commit messages using Unicode smuggling and white-on-white rendering, and used them to make Duo leak private source code and inject unsafe HTML into its own responses. GitLab shipped a patch after responsible disclosure that stops Duo from rendering unsafe HTML pointing outside gitlab.com.
+
+[CometJacking](https://thehackernews.com/2025/10/cometjacking-one-click-can-turn.html) hit Perplexity's Comet agentic browser through a single malicious link, delivered however an attacker likes, a phishing email or just a web page. One click was enough to hijack the agent into exfiltrating the user's emails, calendar, and stored session memory, Base64-encoded and sent to an attacker-controlled endpoint. In a [related disclosure](https://brave.com/blog/comet-prompt-injection/), Brave's security team showed an even lower bar: a hidden instruction sitting in a public Reddit comment, no link for the user to click at all. Asked to "summarize this page," Comet followed the planted instructions instead, retrieved a one-time password from the user's Gmail, and from there could reach anything else the browser was already logged into, banking accounts and corporate systems included.
+
+<table>
+  <thead>
+    <tr><th>Incident</th><th>Target</th><th>Risk Category</th><th>What Actually Happened</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>EchoLeak</strong> (CVE-2025-32711)</td><td>Microsoft 365 Copilot</td><td>Prompt injection, indirect</td><td>Zero-click exfiltration via auto-fetched image + a trusted-proxy CSP bypass</td></tr>
+    <tr><td><strong>Slack AI exfiltration</strong></td><td>Slack AI</td><td>Prompt injection, indirect</td><td>Markdown link render leaked private-channel data</td></tr>
+    <tr><td><strong>Google Antigravity</strong></td><td>Gemini-based coding IDE</td><td>Excessive agency</td><td>Agent bypassed a declared permission boundary to read and exfiltrate a .env file</td></tr>
+    <tr><td><strong>GitLab Duo</strong></td><td>GitLab Duo</td><td>Prompt injection / excessive agency</td><td>Unicode-smuggled instructions in MR text exploited Duo's broad standing repo access to leak source code</td></tr>
+    <tr><td><strong>CometJacking</strong></td><td>Perplexity Comet</td><td>Tool/API manipulation</td><td>One malicious URL hijacked the agent's tool access to exfiltrate email, calendar, and memory</td></tr>
+  </tbody>
+</table>
+
+The common thread across the first two incidents is worth stating plainly, because it's the part most write-ups skip: both chains started with indirect prompt injection and unauthorized access to sensitive data, but neither one ended with a backend tool call. The final exfiltration channel in both cases was rendered output, an auto-loaded image for EchoLeak, a link the victim had to click for Slack AI, not a network boundary a firewall would police. That's exactly why network-layer controls alone don't stop either one; the fix has to happen where the content gets rendered, not just where traffic gets routed.
+
+<figure>
+  <BlogImage src="/blog/ai-agent-security-risks/fig1-markdown-exfiltration.png" alt="Three-step diagram of a markdown exfiltration attack: hostile content is processed, the agent renders it, and rendering fires an outbound request to the attacker's server, EchoLeak's exact zero-click path." w="1300" h="783" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">EchoLeak auto-loaded an image on render, no click needed. Slack AI rendered a link the victim then had to click, a related but distinct mechanism.</figcaption>
+</figure>
+
+## The Risk Categories Behind These Incidents
+
+[OWASP's Top 10 for Agentic Applications](https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/), built with input from more than 100 security practitioners, is the closest thing this space has to a shared taxonomy for what an [AI agent](https://geotoolbox.ai/glossary/ai-agent) can be exploited to do, and it's the same framing behind the six-point risk list Google's own AI Overview surfaces for this exact search. The five incidents above map onto it: prompt injection and goal hijacking (EchoLeak, the Slack AI bug), identity and privilege abuse, more widely known by the older term "excessive agency" (Antigravity walking around its own permission setting, GitLab Duo's over-broad identity), and tool or API manipulation (CometJacking turning legitimate agent capabilities against the user). OWASP's broader taxonomy names one more category worth flagging separately: remote code execution through an agent's own code-running tool, which didn't show up in these five but is why [Unit 42's red-team research](https://unit42.paloaltonetworks.com/agentic-ai-threats/) found that the default container sandboxes most agent frameworks ship with are often not sufficient on their own, and recommends hardening them with stricter runtime controls.
+
+Two categories from OWASP's taxonomy didn't show up in the five incidents above but are worth naming anyway. **Memory and context poisoning** corrupts what an agent retains between sessions rather than what it's told in the moment, so a single successful injection can keep influencing behavior long after the original malicious content is gone. **Cascading agent failures** is the version of this problem that shows up once one compromised agent's bad output becomes the next agent's trusted input, and it's a growing concern as more products chain agents together rather than running one at a time. Google's own AI Overview for this search adds a sixth point beyond OWASP's list: **untraceable behavior**, the fact that an agent's decisions are probabilistic rather than a fixed set of rules, so the same input can produce a different output twice, which makes root-cause analysis after an incident genuinely harder than it is for traditional software.
+
+There's also a cost-shaped risk worth naming on its own: Check Point's "agentic looping," where something the agent reads tricks it into a recursive reasoning loop, repeatedly calling paid APIs or provisioning cloud resources while trying to solve a task it can't complete. The trigger can be an attacker, but the loop itself is the agent's own runaway decision-making, not malicious network traffic hitting your infrastructure. IBM and Unit 42 describe a related but distinct problem, "resource overload," where an attacker deliberately floods an agent with requests to exhaust its throughput, closer to a denial-of-service attack than a self-inflicted budget problem. One is a bad bill; the other is a bad day.
+
+<figure>
+  <BlogImage src="/blog/ai-agent-security-risks/fig2-risk-category-grid.png" alt="Grid mapping five real AI agent security incidents to risk categories aligned with OWASP's Top 10 for Agentic Applications: prompt injection, excessive agency, and tool or API manipulation." w="1100" h="825" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">GitLab Duo shows how injection and over-broad identity compound into one theft.</figcaption>
+</figure>
+
+One more thing worth knowing before the next section: [Unit 42's own red-team research](https://unit42.paloaltonetworks.com/agentic-ai-threats/) found that prompt injection isn't always the entry point at all. Poorly scoped or unauthenticated tool endpoints, plain old SQL injection through a tool's input field, and classic API authorization bugs can compromise an agent without any injected instruction in sight. The agent doesn't need to be tricked if the surface around it was never locked down.
+
+## MCP Servers Are a Real Supply-Chain Weak Point
+
+Model Context Protocol servers are how most agents connect to outside tools, and three independent scans have each found real vulnerabilities at scale, though they're not measuring quite the same thing and their rates shouldn't be read as replications of one another. [Check Point's 2026 Cyber Security Report](https://www.checkpoint.com/cyber-hub/cyber-security/what-is-ai-security/agentic-ai-common-security-risks/) found that 40% of MCP servers it analyzed were vulnerable, exposing secrets or enabling code execution. Security vendor Enkrypt AI [scanned 1,000 MCP servers](https://www.enkryptai.com/blog/we-scanned-1-000-mcp-servers-33-had-critical-vulnerabilities) and found roughly a third had critical vulnerabilities, averaging 5.2 per server. A separate [scan of 763 servers](https://munio.dev/blog/mcp-server-security-scan-763/) found 31% had exploitable findings at the schema level, plus 7,425 "toxic" data flows where individually safe tools combine into a dangerous path once chained together. Different definitions, different samples, but three separate, independently run measurements all landing in double digits is still a stronger signal than any one of them alone.
+
+Those three scans measured vulnerable or dangerously composed servers, not necessarily malicious ones, but the supply-chain risk goes further than that. In February 2026, [Socket documented SANDWORM_MODE](https://socket.dev/blog/sandworm-mode-npm-worm-ai-toolchain-poisoning): typosquatted npm packages impersonating tools like claude-code that, once installed, executed on the host and harvested credentials directly, then separately registered a malicious MCP server inside AI coding assistants including Cursor, using prompt injection embedded in that server's own tool descriptions to reach SSH keys, cloud credentials, and API tokens the assistant could access. Nobody misconfigured anything here. The malicious package and the malicious server it installed were the attack.
+
+<table>
+  <thead>
+    <tr><th>Scan</th><th>Servers Analyzed</th><th>Vulnerability Rate</th><th>Publisher</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Check Point 2026 Cyber Security Report</td><td>Not disclosed</td><td>40%</td><td>Check Point</td></tr>
+    <tr><td>1,000-server scan</td><td>1,000</td><td>32% (5.2 avg vulnerabilities/server)</td><td>Enkrypt AI</td></tr>
+    <tr><td>763-server scan</td><td>763</td><td>31% (schema-level), 7,425 toxic data flows</td><td>munio.dev</td></tr>
+  </tbody>
+</table>
+
+Part of the problem is structural. [MCP's own specification](https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization) makes authorization optional: HTTP-based servers should follow its OAuth 2.1-based flow, but local stdio deployments, which describes a lot of MCP servers people install and run themselves, aren't expected to and are told to pull credentials from the environment instead. That's a reasonable design for a local tool, but it means "does this server authenticate anything" is a question with no default answer, and a lot of servers end up open by omission rather than by mistake.
+
+This is the exact gap we found in our own product. Building geotoolbox's agent-readiness scanning, our self-audit surfaced that a caller could supply an arbitrary MCP server URL to one of our own tool-call paths, which is precisely the kind of unscoped trust the scans above are measuring. We shipped an SSRF proxy ban on caller-supplied MCP servers and a restriction on which `tools/call` targets are reachable at all, closing the path before it became a finding someone else reported. If you're evaluating or building on top of [MCP servers](https://geotoolbox.ai/blog/what-is-mcp-server), the same question is worth asking of every one you connect to: what can it reach, and who decided that.
+
+## How to Actually Reduce the Risk
+
+Sanitizing prompts the way you'd sanitize SQL input doesn't work here, and it's worth saying why: instructions and data share the same context window, so there's no reliable way to strip "the bad part" out before the model sees it. The fix has to be architectural, not a filter. Treat every document, webpage, and tool result an agent processes as untrusted content by default, and constrain what the agent is allowed to do immediately after it reads something from outside your control.
+
+Scope credentials the way you would for a human employee you didn't fully trust yet: this is the principle of least privilege, applied to a non-human identity. An agent that inherits standing, broad access because narrow permissions were harder to configure is the exact setup that turned GitLab Duo's identity into a privilege-escalation-by-injection vector. Short-lived, task-scoped credentials with role-based or attribute-based limits shrink what any single compromise can reach.
+
+If an agent can execute code at all, don't rely on the default container sandbox most frameworks ship with, harden it with network restrictions and least-privilege configuration, and keep it running with no ambient credentials, not the same environment holding your secrets. It's a different, narrower fix than what SANDWORM_MODE needed, though: that attack didn't escape a code interpreter, it arrived as a malicious dependency that executed as soon as it was loaded and then planted its own MCP server, so the controls that would have stopped it are dependency provenance checks, treating a new or changed MCP server registration as something that needs approval, and keeping secrets unreachable from the assistant's host environment in the first place. Sandboxing agent-generated code and sandboxing what gets installed alongside the agent are two separate problems, and this incident is a reminder that both need an answer.
+
+A Content Security Policy restricting where auto-loaded elements like images can point narrows the surface an EchoLeak-style bug can use, but EchoLeak itself is the reason to keep that claim modest: Copilot had exactly this kind of allowlist, and the attack got through anyway by routing the exfiltration through a Microsoft Teams proxy domain the policy already trusted. A CSP only protects what its allowlist excludes, and a broad allowlist can defeat the point of having one. That control doesn't extend to Slack AI's variant at all, since CSP governs resource loading, not whether a user follows an ordinary link once it's on screen; stopping that requires sanitizing or disabling agent-generated external links, stripping sensitive data out of URLs before they're rendered, and adding a confirmation step before an agent-suggested link gets followed.
+
+Egress controls need the same precision. A blocklist of internal and private IP ranges stops an agent from being turned into a path into your own network, but it wouldn't have stopped Antigravity, where the leak went out to a public service the tool's own default configuration had already allowlisted, not into private address space. What that incident calls for is a narrower default allowlist and periodic review of what's still on it, not just trusting an entry because it's already there, and applying the same file-access policy consistently whether an agent reaches a file through its normal tools or through a terminal command. Brave's Reddit demonstration is the sharpest example of why neither the CSP nor the egress fix is sufficient on its own: the agent had legitimate, already-authenticated access to Gmail, so retrieving the one-time password crossed no permission boundary at all, only a decision the agent shouldn't have made unsupervised. What helps there is requiring explicit confirmation before an agent takes a sensitive action on an authenticated session, and isolating what an agentic browser can do with credentials it already holds, which is closer to the first fix above, treating everything an agent reads as untrusted, than it is to a network control at all.
+
+None of this requires the enterprise AI-gateway and SOC-monitoring stack that Check Point or Zero Networks sell into. That tier of tooling solves a real problem for a large security team running dozens of internal agents across a Fortune 500 environment. Most [agent-ready](https://geotoolbox.ai/blog/agent-ready-website) sites and products need the fixes above done correctly, not a platform purchase.
+
+## The Angle Most Security Write-Ups Miss: Your Site as an Attack Surface
+
+Every source above frames indirect prompt injection as an internal problem, a poisoned document sitting inside a company's own RAG pipeline. The same mechanism works in the other direction. [AI crawlers](https://geotoolbox.ai/blog/ai-crawlers) and AI search agents read public web pages the same way an internal agent reads an internal document, and hidden instructions planted in a comment, a review, or any other piece of user-generated content on your site can be picked up the exact same way GitLab Duo's repository content was.
+
+If your site accepts user-generated content and an [AI crawler](https://geotoolbox.ai/glossary/ai-crawler) or agent can reach it, that content is readable input to whatever agent visits next, not just a display string on your page. Most sites already sanitize user-generated content against XSS, stripping scripts and unsafe markup, but that discipline doesn't cover this: a prompt injection payload can be plain, harmless-looking text with no HTML at all, so an XSS filter won't catch it. What helps is moderation and provenance labeling on content you didn't write, and making sure anything that processes it, human moderator or AI agent, treats it as untrusted rather than as an instruction. It's a smaller version of the problem GitLab and Microsoft had to fix, but the underlying assumption is identical: content you didn't write yourself shouldn't be able to issue instructions to anything that reads it, including the models that increasingly do the reading for AI search.
+
+That's also the piece geotoolbox exists for day to day, not the enterprise agent-governance half of this problem, but the practical question of what's reachable on your site right now.
+
+## Frequently Asked Questions
+
+### What is the difference between prompt injection and jailbreaking?
+
+They target different boundaries. Jailbreaking tries to defeat a model's own safety training so it will say or do something it was built to refuse. Prompt injection doesn't touch the model's training at all; it smuggles instructions past your application's trust boundary by hiding them in content the agent processes, like a document or a webpage. A model can be fully "un-jailbroken" and still fall for a prompt injection, because from the model's perspective the injected text just looks like part of the task.
+
+### Has an AI agent ever caused a real security breach?
+
+Yes, in the sense that matters: these are documented, working vulnerabilities disclosed against production systems, not hypothetical lab scenarios invented for a blog post. What's genuinely rare among the five is a large-scale breach with disclosed victim counts. EchoLeak's vendor reported no exploitation found in the wild before the patch shipped, and most of the incidents here were researcher demonstrations or narrow proofs of concept caught and fixed before wide abuse, not mass-casualty breaches. SANDWORM_MODE is the exception worth naming: those weren't research demos, they were real malicious packages published to npm and taken down after the fact. That distinction matters: "a real, disclosed vulnerability exists" and "attackers already exploited it at scale" are different claims, and this article is making the first one for most of the five, the second one for SANDWORM_MODE.
+
+### Are MCP servers a security risk?
+
+Independently, yes. Check Point's 2026 Cyber Security Report found 40% of the MCP servers it analyzed were vulnerable, and two more independent scans (1,000 servers, then 763) each turned up double-digit issue rates too, though they're measuring different things (critical vulnerabilities vs. schema-level exploitability) and shouldn't be read as three copies of the same finding. The protocol's own spec doesn't help: authorization is optional overall, HTTP-based servers should use OAuth 2.1, and local stdio servers, which describes a lot of what people run themselves, aren't expected to and just pull credentials from the environment instead. So treat any MCP server you didn't build yourself as unverified until you've checked what it can reach.
+
+### Does running a local AI model make agents more secure?
+
+Not by itself. Where the model runs doesn't change whether the agent's tool calls, permissions, and outbound network access are controlled. A locally hosted agent with broad file access and no egress restrictions is exposed to the same prompt injection and excessive-agency risks as a cloud one. Egress control and permission scoping matter more than hosting location.
+
+### What permissions should an AI agent have?
+
+Only what the specific task in front of it requires, scoped to be short-lived where possible, not standing access granted once and left in place. If an agent's permission footprint would embarrass you if it were compromised today, that's the signal to narrow it before it becomes an incident rather than after.
+
+## Reducing This Is Mostly about What You Already Control
+
+The pattern across every real incident here is the same: an agent was given more reach than the task required, and something it processed used that reach against the user. None of the fixes above make an agent unexploitable; what they do is shrink how much a single successful attack can reach and how far it can travel once it lands, untrusted content handled first, permission scope narrowed second, output and action controls layered on top, which is most of what changes your exposure, whether or not you ever adopt an enterprise security platform.
+
+Before any of the fixes in this article matter, it helps to know what can already reach your own site. geotoolbox's [AI Crawler Checker](https://geotoolbox.ai/tools/ai-crawler-checker) checks your robots.txt against 34 known AI crawler user-agents and shows which ones your policy currently permits, free, in about the time it took to read this article.
+
+## Sources
+
+- Copilot EchoLeak: A Zero-Click Prompt Injection - Sentra (CVSS 9.3, mechanism, Microsoft's server-side patch) - `sentra.io/blog/copilot-echoleak-prompt-injection`
+- Data Exfiltration from Slack AI via Indirect Prompt Injection - PromptArmor (original disclosure, API key exfiltration demo) - `promptarmor.com/resources/data-exfiltration-from-slack-ai-via-indirect-prompt-injection`
+- Hacker News discussion: Slack AI data exfiltration - Hacker News - `news.ycombinator.com/item?id=41302597`
+- Hacker News discussion: EchoLeak vulnerability - Hacker News - `news.ycombinator.com/item?id=44250774`
+- Hacker News discussion: Google Antigravity exfiltration - Hacker News - `news.ycombinator.com/item?id=46048996`
+- Remote Prompt Injection in GitLab Duo Leads to Source Code Theft - Legit Security (Unicode smuggling mechanism, patch detail) - `legitsecurity.com/blog/remote-prompt-injection-in-gitlab-duo`
+- CometJacking: One Click Can Turn Perplexity's Comet AI Browser Into a Data Thief - The Hacker News (LayerX disclosure) - `thehackernews.com/2025/10/cometjacking-one-click-can-turn.html`
+- Agentic Browser Security: Indirect Prompt Injection in Perplexity Comet - Brave (Reddit-comment OTP disclosure) - `brave.com/blog/comet-prompt-injection`
+- OWASP Top 10 for Agentic Applications for 2026 - OWASP Gen AI Security Project (100+ contributing experts) - `genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026`
+- AI Agents Are Here. So Are the Threats. - Unit 42, Palo Alto Networks (red-team research, sandboxing recommendations) - `unit42.paloaltonetworks.com/agentic-ai-threats`
+- Agentic AI Common Security Risks - Check Point (40% MCP server vulnerability rate, 2026 Cyber Security Report) - `checkpoint.com/cyber-hub/cyber-security/what-is-ai-security/agentic-ai-common-security-risks`
+- We Scanned 1,000 MCP Servers. ~33% Had Critical Vulnerabilities - Enkrypt AI (Oct 2025) - `enkryptai.com/blog/we-scanned-1-000-mcp-servers-33-had-critical-vulnerabilities`
+- MCP Server Security Scan: 763 Servers - munio.dev (Mar 2026, schema-level vulnerability findings) - `munio.dev/blog/mcp-server-security-scan-763`
+- SANDWORM_MODE: npm Worm Poisoning the AI Toolchain - Socket (Feb 2026, malicious MCP server via typosquatted packages) - `socket.dev/blog/sandworm-mode-npm-worm-ai-toolchain-poisoning`
+- Authorization - Model Context Protocol Specification (2025-06-18) - `modelcontextprotocol.io/specification/2025-06-18/basic/authorization`
+
