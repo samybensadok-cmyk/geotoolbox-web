@@ -24,9 +24,9 @@ export const PROMO = {
   /**
    * Seats still open, as advertised ("15 spots left"). Hand-maintained, NOT read
    * from Stripe — keep it <= (seats − coupon times_redeemed) so the copy never
-   * promises more than checkout can honour. 2026-09-14: set to 15.
+   * promises more than checkout can honour. 2026-09-14: set to 15, then 9 (operator call).
    */
-  seatsLeft: 15,
+  seatsLeft: 9,
   /** ISO date (UTC, end of day) — mirrors the Stripe promotion code expires_at. */
   deadline: "2026-09-15",
 } as const
