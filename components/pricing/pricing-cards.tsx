@@ -31,35 +31,35 @@ import { currencyParam } from "@/lib/i18n/currency"
 // from lib/plans.ts + lib/promo.ts.
 const PROMO_UI: Record<PromoLocale, { strip: string; stripReserved: string; pill: string; then: string; firstYear: string }> = {
   en: {
-    strip: `Founding rate — ${PROMO.percentOff}% off for your first ${PROMO.months} months with code ${PROMO.code}. ${PROMO.seats} seats · ends {deadline}.`,
+    strip: `Founding rate — ${PROMO.percentOff}% off for your first ${PROMO.months} months with code ${PROMO.code}. ${PROMO.seatsLeft} spots left · ends {deadline}.`,
     stripReserved: `Your founding seat is reserved — ${PROMO.percentOff}% off for your first ${PROMO.months} months. Reservation expires in {cd} (code {code}, applied at checkout).`,
     pill: `−${PROMO.percentOff}% · ${PROMO.months} months`,
     then: `for ${PROMO.months} months, then {full}`,
     firstYear: `first year, then {full}/yr`,
   },
   fr: {
-    strip: `Tarif fondateurs — −${PROMO.percentOff} % pendant vos ${PROMO.months} premiers mois avec le code ${PROMO.code}. ${PROMO.seats} places · jusqu’au {deadline}.`,
+    strip: `Tarif fondateurs — −${PROMO.percentOff} % pendant vos ${PROMO.months} premiers mois avec le code ${PROMO.code}. Plus que ${PROMO.seatsLeft} places · jusqu’au {deadline}.`,
     stripReserved: `Votre place fondateur est réservée — −${PROMO.percentOff} % pendant vos ${PROMO.months} premiers mois. La réservation expire dans {cd} (code {code}, appliqué au paiement).`,
     pill: `−${PROMO.percentOff} % · ${PROMO.months} mois`,
     then: `pendant ${PROMO.months} mois, puis {full}`,
     firstYear: `la première année, puis {full}/an`,
   },
   es: {
-    strip: `Tarifa fundadores — ${PROMO.percentOff} % de descuento durante tus primeros ${PROMO.months} meses con el código ${PROMO.code}. ${PROMO.seats} plazas · hasta el {deadline}.`,
+    strip: `Tarifa fundadores — ${PROMO.percentOff} % de descuento durante tus primeros ${PROMO.months} meses con el código ${PROMO.code}. Quedan ${PROMO.seatsLeft} plazas · hasta el {deadline}.`,
     stripReserved: `Tu plaza fundadora está reservada — ${PROMO.percentOff} % de descuento durante tus primeros ${PROMO.months} meses. La reserva caduca en {cd} (código {code}, aplicado al pagar).`,
     pill: `−${PROMO.percentOff} % · ${PROMO.months} meses`,
     then: `durante ${PROMO.months} meses, luego {full}`,
     firstYear: `el primer año, luego {full}/año`,
   },
   de: {
-    strip: `Gründerpreis — ${PROMO.percentOff} % Rabatt auf deine ersten ${PROMO.months} Monate mit dem Code ${PROMO.code}. ${PROMO.seats} Plätze · bis {deadline}.`,
+    strip: `Gründerpreis — ${PROMO.percentOff} % Rabatt auf deine ersten ${PROMO.months} Monate mit dem Code ${PROMO.code}. Nur noch ${PROMO.seatsLeft} Plätze · bis {deadline}.`,
     stripReserved: `Dein Gründerplatz ist reserviert — ${PROMO.percentOff} % Rabatt auf deine ersten ${PROMO.months} Monate. Die Reservierung läuft in {cd} ab (Code {code}, wird beim Checkout angewendet).`,
     pill: `−${PROMO.percentOff} % · ${PROMO.months} Monate`,
     then: `für ${PROMO.months} Monate, danach {full}`,
     firstYear: `im ersten Jahr, danach {full}/Jahr`,
   },
   nl: {
-    strip: `Oprichtersprijs — ${PROMO.percentOff}% korting op je eerste ${PROMO.months} maanden met de code ${PROMO.code}. ${PROMO.seats} plekken · tot {deadline}.`,
+    strip: `Oprichtersprijs — ${PROMO.percentOff}% korting op je eerste ${PROMO.months} maanden met de code ${PROMO.code}. Nog ${PROMO.seatsLeft} plekken · tot {deadline}.`,
     stripReserved: `Je oprichtersplek is gereserveerd — ${PROMO.percentOff}% korting op je eerste ${PROMO.months} maanden. De reservering verloopt over {cd} (code {code}, wordt bij het afrekenen toegepast).`,
     pill: `−${PROMO.percentOff}% · ${PROMO.months} maanden`,
     then: `gedurende ${PROMO.months} maanden, daarna {full}`,

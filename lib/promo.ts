@@ -21,6 +21,12 @@ export const PROMO = {
   percentOff: 30,
   months: 12,
   seats: 20,
+  /**
+   * Seats still open, as advertised ("15 spots left"). Hand-maintained, NOT read
+   * from Stripe — keep it <= (seats − coupon times_redeemed) so the copy never
+   * promises more than checkout can honour. 2026-09-14: set to 15.
+   */
+  seatsLeft: 15,
   /** ISO date (UTC, end of day) — mirrors the Stripe promotion code expires_at. */
   deadline: "2026-09-15",
 } as const
@@ -49,6 +55,11 @@ export function fmtPromoAmount(n: number, locale: string): string {
 export function isPromoLive(now: Date = new Date()): boolean {
   const end = Date.parse(`${PROMO.deadline}T23:59:59Z`)
   return now.getTime() <= end
+}
+
+/** Deadline as unix SECONDS (what useCountdown consumes) — 23:59:59 UTC on the deadline day. */
+export function promoDeadlineEpoch(): number {
+  return Math.floor(Date.parse(`${PROMO.deadline}T23:59:59Z`) / 1000)
 }
 
 /** Days left, floored at 0 — used for "ends in N days" copy. */

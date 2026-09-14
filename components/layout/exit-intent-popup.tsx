@@ -7,13 +7,15 @@ import { PLANS } from "@/lib/plans"
 import {
   PROMO,
   fmtPromoAmount,
+  formatCountdown,
   isPromoLive,
-  promoDaysLeft,
+  promoDeadlineEpoch,
   promoDeadlineLabel,
   promoPrice,
   rememberPromo,
   type PromoLocale,
 } from "@/lib/promo"
+import { useCountdown } from "@/components/promo/use-countdown"
 
 /**
  * SG_PROMO_EXIT_V1 (2026-08-15) — desktop exit-intent popup for the founding
@@ -56,7 +58,7 @@ type Copy = {
   cta: string
   secondary: string
   code: string
-  daysLeft: (n: number) => string
+  timeLeft: (cd: string) => string
   dismissAria: string
 }
 
@@ -65,51 +67,51 @@ function buildCopy(deadline: Record<PromoLocale, string>): Record<PromoLocale, C
     en: {
       eyebrow: "Before you go",
       headline: `Take ${PROMO.percentOff}% off, on us`,
-      body: `The Plus plan for $${fmtPromoAmount(PLUS_PROMO, "en")}/mo instead of $${PLUS_FULL} — locked in for ${PROMO.months} months. Only ${PROMO.seats} founding seats, ends ${deadline.en}.`,
+      body: `The Plus plan for $${fmtPromoAmount(PLUS_PROMO, "en")}/mo instead of $${PLUS_FULL} — locked in for ${PROMO.months} months. Only ${PROMO.seatsLeft} founding seats left, ends ${deadline.en}.`,
       cta: "Claim my founding rate",
       secondary: "No thanks, I'll pay full price later",
       code: "Code",
-      daysLeft: (n) => (n === 1 ? "1 day left" : `${n} days left`),
+      timeLeft: (cd) => `${cd} left`,
       dismissAria: "Close",
     },
     fr: {
       eyebrow: "Avant de partir",
       headline: `−${PROMO.percentOff} % offerts`,
-      body: `La formule Plus à ${fmtPromoAmount(PLUS_PROMO, "fr")} €/mois au lieu de ${PLUS_FULL} € — tarif verrouillé pendant ${PROMO.months} mois. Plus que ${PROMO.seats} places fondateurs, jusqu’au ${deadline.fr}.`,
+      body: `La formule Plus à ${fmtPromoAmount(PLUS_PROMO, "fr")} €/mois au lieu de ${PLUS_FULL} € — tarif verrouillé pendant ${PROMO.months} mois. Plus que ${PROMO.seatsLeft} places fondateurs, jusqu’au ${deadline.fr}.`,
       cta: "Profiter du tarif fondateurs",
       secondary: "Non merci, je paierai plein tarif",
       code: "Code",
-      daysLeft: (n) => (n === 1 ? "1 jour restant" : `${n} jours restants`),
+      timeLeft: (cd) => `reste ${cd}`,
       dismissAria: "Fermer",
     },
     es: {
       eyebrow: "Antes de irte",
       headline: `−${PROMO.percentOff} % de descuento`,
-      body: `El plan Plus por $${fmtPromoAmount(PLUS_PROMO, "es")}/mes en lugar de $${PLUS_FULL} — fijo durante ${PROMO.months} meses. Solo quedan ${PROMO.seats} plazas fundadoras, hasta el ${deadline.es}.`,
+      body: `El plan Plus por $${fmtPromoAmount(PLUS_PROMO, "es")}/mes en lugar de $${PLUS_FULL} — fijo durante ${PROMO.months} meses. Solo quedan ${PROMO.seatsLeft} plazas fundadoras, hasta el ${deadline.es}.`,
       cta: "Conseguir la tarifa fundadora",
       secondary: "No, gracias, pagaré el precio completo",
       code: "Código",
-      daysLeft: (n) => (n === 1 ? "queda 1 día" : `quedan ${n} días`),
+      timeLeft: (cd) => `quedan ${cd}`,
       dismissAria: "Cerrar",
     },
     de: {
       eyebrow: "Bevor du gehst",
       headline: `${PROMO.percentOff} % Rabatt — geschenkt`,
-      body: `Der Plus-Tarif für ${fmtPromoAmount(PLUS_PROMO, "de")} €/Monat statt ${PLUS_FULL} € — festgeschrieben für ${PROMO.months} Monate. Nur noch ${PROMO.seats} Gründerplätze, bis ${deadline.de}.`,
+      body: `Der Plus-Tarif für ${fmtPromoAmount(PLUS_PROMO, "de")} €/Monat statt ${PLUS_FULL} € — festgeschrieben für ${PROMO.months} Monate. Nur noch ${PROMO.seatsLeft} Gründerplätze, bis ${deadline.de}.`,
       cta: "Gründerpreis sichern",
       secondary: "Nein danke, ich zahle später den vollen Preis",
       code: "Code",
-      daysLeft: (n) => (n === 1 ? "noch 1 Tag" : `noch ${n} Tage`),
+      timeLeft: (cd) => `noch ${cd}`,
       dismissAria: "Schließen",
     },
     nl: {
       eyebrow: "Voordat je weggaat",
       headline: `${PROMO.percentOff}% korting — cadeau`,
-      body: `Het Plus-abonnement voor € ${fmtPromoAmount(PLUS_PROMO, "nl")}/maand in plaats van € ${PLUS_FULL} — vastgezet voor ${PROMO.months} maanden. Nog maar ${PROMO.seats} oprichtersplekken, tot ${deadline.nl}.`,
+      body: `Het Plus-abonnement voor € ${fmtPromoAmount(PLUS_PROMO, "nl")}/maand in plaats van € ${PLUS_FULL} — vastgezet voor ${PROMO.months} maanden. Nog maar ${PROMO.seatsLeft} oprichtersplekken, tot ${deadline.nl}.`,
       cta: "Oprichtersprijs vastzetten",
       secondary: "Nee bedankt, ik betaal later de volle prijs",
       code: "Code",
-      daysLeft: (n) => (n === 1 ? "nog 1 dag" : `nog ${n} dagen`),
+      timeLeft: (cd) => `nog ${cd}`,
       dismissAria: "Sluiten",
     },
   }
@@ -135,6 +137,9 @@ export function ExitIntentPopup({ locale = "en" }: { locale?: string }) {
     locale === "fr" || locale === "es" || locale === "de" || locale === "nl" ? locale : "en"
   const dialogRef = useRef<HTMLDivElement>(null)
   const ctaRef = useRef<HTMLAnchorElement>(null)
+  // Live hh:mm:ss to PROMO.deadline (same chip as the banner). Hook runs
+  // unconditionally — it must sit above the `if (!open) return null`.
+  const deadlineMs = useCountdown(promoDeadlineEpoch())
 
   const suppressed = isSuppressedPath(pathname)
   // This component mounts once in RootShell for the app's lifetime, so a
@@ -262,7 +267,6 @@ export function ExitIntentPopup({ locale = "en" }: { locale?: string }) {
 
   const pricingPath = loc === "en" ? "/pricing" : `/${loc}/pricing`
   const href = `${pricingPath}?promo=${PROMO.code}&bv=exit-intent`
-  const daysLeft = promoDaysLeft()
 
   return (
     <div
@@ -299,7 +303,9 @@ export function ExitIntentPopup({ locale = "en" }: { locale?: string }) {
           <span className="rounded border border-gray-200 px-1.5 py-0.5">
             {t.code} {PROMO.code}
           </span>
-          {daysLeft <= 14 && <span className="rounded border border-gray-200 px-1.5 py-0.5">{t.daysLeft(daysLeft)}</span>}
+          {deadlineMs !== null && deadlineMs > 0 && (
+            <span className="rounded border border-gray-200 px-1.5 py-0.5 tabular-nums">{t.timeLeft(formatCountdown(deadlineMs))}</span>
+          )}
         </div>
 
         <a

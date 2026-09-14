@@ -10,7 +10,7 @@ import {
   formatCountdown,
   getReservation,
   isPromoLive,
-  promoDaysLeft,
+  promoDeadlineEpoch,
   promoDeadlineLabel,
   promoPrice,
   rememberPromo,
@@ -98,27 +98,27 @@ function buildVariants(deadline: Record<PromoLocale, string>): Variant[] {
       copy: {
         en: {
           lead: "Founding rate",
-          body: `The Plus plan for $${fmtPromoAmount(PLUS_PROMO, "en")}/mo instead of $${PLUS_FULL} — ${PROMO.percentOff}% off for ${PROMO.months} months. ${PROMO.seats} seats, ends ${deadline.en}.`,
+          body: `The Plus plan for $${fmtPromoAmount(PLUS_PROMO, "en")}/mo instead of $${PLUS_FULL} — ${PROMO.percentOff}% off for ${PROMO.months} months. ${PROMO.seatsLeft} spots left, ends ${deadline.en}.`,
           cta: "Claim founding rate",
         },
         fr: {
           lead: "Tarif fondateurs",
-          body: `La formule Plus à ${fmtPromoAmount(PLUS_PROMO, "fr")} €/mois au lieu de ${PLUS_FULL} € — −${PROMO.percentOff} % pendant ${PROMO.months} mois. ${PROMO.seats} places, jusqu’au ${deadline.fr}.`,
+          body: `La formule Plus à ${fmtPromoAmount(PLUS_PROMO, "fr")} €/mois au lieu de ${PLUS_FULL} € — −${PROMO.percentOff} % pendant ${PROMO.months} mois. Plus que ${PROMO.seatsLeft} places, jusqu’au ${deadline.fr}.`,
           cta: "Profiter du tarif",
         },
         es: {
           lead: "Tarifa fundadores",
-          body: `El plan Plus por $${fmtPromoAmount(PLUS_PROMO, "es")}/mes en lugar de $${PLUS_FULL} — ${PROMO.percentOff} % de descuento durante ${PROMO.months} meses. ${PROMO.seats} plazas, hasta el ${deadline.es}.`,
+          body: `El plan Plus por $${fmtPromoAmount(PLUS_PROMO, "es")}/mes en lugar de $${PLUS_FULL} — ${PROMO.percentOff} % de descuento durante ${PROMO.months} meses. Quedan ${PROMO.seatsLeft} plazas, hasta el ${deadline.es}.`,
           cta: "Conseguir la tarifa",
         },
         de: {
           lead: "Gründerpreis",
-          body: `Der Plus-Tarif für ${fmtPromoAmount(PLUS_PROMO, "de")} €/Monat statt ${PLUS_FULL} € — ${PROMO.percentOff} % Rabatt für ${PROMO.months} Monate. Nur ${PROMO.seats} Plätze, bis ${deadline.de}.`,
+          body: `Der Plus-Tarif für ${fmtPromoAmount(PLUS_PROMO, "de")} €/Monat statt ${PLUS_FULL} € — ${PROMO.percentOff} % Rabatt für ${PROMO.months} Monate. Nur noch ${PROMO.seatsLeft} Plätze, bis ${deadline.de}.`,
           cta: "Gründerpreis sichern",
         },
         nl: {
           lead: "Oprichtersprijs",
-          body: `Het Plus-abonnement voor € ${fmtPromoAmount(PLUS_PROMO, "nl")}/maand in plaats van € ${PLUS_FULL} — ${PROMO.percentOff}% korting gedurende ${PROMO.months} maanden. Nog ${PROMO.seats} plekken, tot ${deadline.nl}.`,
+          body: `Het Plus-abonnement voor € ${fmtPromoAmount(PLUS_PROMO, "nl")}/maand in plaats van € ${PLUS_FULL} — ${PROMO.percentOff}% korting gedurende ${PROMO.months} maanden. Nog ${PROMO.seatsLeft} plekken, tot ${deadline.nl}.`,
           cta: "Oprichtersprijs vastzetten",
         },
       },
@@ -159,27 +159,27 @@ function buildVariants(deadline: Record<PromoLocale, string>): Variant[] {
       active: true,
       copy: {
         en: {
-          lead: `${PROMO.seats} founding seats`,
+          lead: `${PROMO.seatsLeft} founding seats left`,
           body: `${PROMO.percentOff}% off for a year for the first ${PROMO.seats} customers who give us blunt feedback. $0 today on trial plans. Closes ${deadline.en}.`,
           cta: "Take a founding seat",
         },
         fr: {
-          lead: `${PROMO.seats} places fondateurs`,
+          lead: `Plus que ${PROMO.seatsLeft} places fondateurs`,
           body: `−${PROMO.percentOff} % pendant un an pour les ${PROMO.seats} premiers clients qui nous font des retours sans filtre. 0 € aujourd’hui avec l’essai. Clôture le ${deadline.fr}.`,
           cta: "Réserver ma place",
         },
         es: {
-          lead: `${PROMO.seats} plazas fundadoras`,
+          lead: `Quedan ${PROMO.seatsLeft} plazas fundadoras`,
           body: `${PROMO.percentOff} % menos durante un año para los primeros ${PROMO.seats} clientes que nos den feedback sin filtros. $0 hoy en planes con prueba. Cierra el ${deadline.es}.`,
           cta: "Reservar plaza fundadora",
         },
         de: {
-          lead: `${PROMO.seats} Gründerplätze`,
+          lead: `Noch ${PROMO.seatsLeft} Gründerplätze`,
           body: `${PROMO.percentOff} % Rabatt für ein Jahr — für die ersten ${PROMO.seats} Kunden, die uns ehrliches Feedback geben. Heute 0 € dank Testphase. Endet am ${deadline.de}.`,
           cta: "Gründerplatz sichern",
         },
         nl: {
-          lead: `${PROMO.seats} oprichtersplekken`,
+          lead: `Nog ${PROMO.seatsLeft} oprichtersplekken`,
           body: `${PROMO.percentOff}% korting voor een jaar — voor de eerste ${PROMO.seats} klanten die ons eerlijke feedback geven. Vandaag € 0 dankzij de proefperiode. Loopt af op ${deadline.nl}.`,
           cta: "Oprichtersplek reserveren",
         },
@@ -225,27 +225,27 @@ function buildVariants(deadline: Record<PromoLocale, string>): Variant[] {
       copy: {
         en: {
           lead: "Founding offer",
-          body: `${PROMO.percentOff}% off for ${PROMO.months} months + a 30-min onboarding call with the founder. ${PROMO.seats} seats, ends ${deadline.en}.`,
+          body: `${PROMO.percentOff}% off for ${PROMO.months} months + a 30-min onboarding call with the founder. ${PROMO.seatsLeft} spots left, ends ${deadline.en}.`,
           cta: "Claim my seat",
         },
         fr: {
           lead: "Offre fondateurs",
-          body: `−${PROMO.percentOff} % pendant ${PROMO.months} mois + un appel d’onboarding de 30 min avec le fondateur. ${PROMO.seats} places, jusqu’au ${deadline.fr}.`,
+          body: `−${PROMO.percentOff} % pendant ${PROMO.months} mois + un appel d’onboarding de 30 min avec le fondateur. Plus que ${PROMO.seatsLeft} places, jusqu’au ${deadline.fr}.`,
           cta: "Réserver ma place",
         },
         es: {
           lead: "Oferta fundadores",
-          body: `${PROMO.percentOff} % de descuento durante ${PROMO.months} meses + una llamada de onboarding de 30 min con el fundador. ${PROMO.seats} plazas, hasta el ${deadline.es}.`,
+          body: `${PROMO.percentOff} % de descuento durante ${PROMO.months} meses + una llamada de onboarding de 30 min con el fundador. Quedan ${PROMO.seatsLeft} plazas, hasta el ${deadline.es}.`,
           cta: "Reservar mi plaza",
         },
         de: {
           lead: "Gründerangebot",
-          body: `${PROMO.percentOff} % Rabatt für ${PROMO.months} Monate + ein 30-minütiges Onboarding-Gespräch mit dem Gründer. ${PROMO.seats} Plätze, bis ${deadline.de}.`,
+          body: `${PROMO.percentOff} % Rabatt für ${PROMO.months} Monate + ein 30-minütiges Onboarding-Gespräch mit dem Gründer. Nur noch ${PROMO.seatsLeft} Plätze, bis ${deadline.de}.`,
           cta: "Platz sichern",
         },
         nl: {
           lead: "Oprichtersaanbod",
-          body: `${PROMO.percentOff}% korting gedurende ${PROMO.months} maanden + een onboardinggesprek van 30 minuten met de oprichter. ${PROMO.seats} plekken, tot ${deadline.nl}.`,
+          body: `${PROMO.percentOff}% korting gedurende ${PROMO.months} maanden + een onboardinggesprek van 30 minuten met de oprichter. Nog ${PROMO.seatsLeft} plekken, tot ${deadline.nl}.`,
           cta: "Plek reserveren",
         },
       },
@@ -255,12 +255,14 @@ function buildVariants(deadline: Record<PromoLocale, string>): Variant[] {
 
 const DISMISS_KEY = `promoBannerDismissed:${PROMO.code}:v2`
 const VARIANT_KEY = `promoBannerVariant:${PROMO.code}:v2`
+// timeLeft: live hh:mm:ss countdown to the real Stripe expires_at (PROMO.deadline),
+// replacing the former "N days left" chip (2026-09-14).
 const UI = {
-  en: { dismiss: "Dismiss", code: "Code", daysLeft: (n: number) => (n === 1 ? "1 day left" : `${n} days left`) },
-  fr: { dismiss: "Fermer", code: "Code", daysLeft: (n: number) => (n === 1 ? "1 jour restant" : `${n} jours restants`) },
-  es: { dismiss: "Cerrar", code: "Código", daysLeft: (n: number) => (n === 1 ? "queda 1 día" : `quedan ${n} días`) },
-  de: { dismiss: "Schließen", code: "Code", daysLeft: (n: number) => (n === 1 ? "noch 1 Tag" : `noch ${n} Tage`) },
-  nl: { dismiss: "Sluiten", code: "Code", daysLeft: (n: number) => (n === 1 ? "nog 1 dag" : `nog ${n} dagen`) },
+  en: { dismiss: "Dismiss", code: "Code", timeLeft: (cd: string) => `${cd} left` },
+  fr: { dismiss: "Fermer", code: "Code", timeLeft: (cd: string) => `reste ${cd}` },
+  es: { dismiss: "Cerrar", code: "Código", timeLeft: (cd: string) => `quedan ${cd}` },
+  de: { dismiss: "Schließen", code: "Code", timeLeft: (cd: string) => `noch ${cd}` },
+  nl: { dismiss: "Sluiten", code: "Code", timeLeft: (cd: string) => `nog ${cd}` },
 } as const
 
 function pickVariant(variants: Variant[]): Variant {
@@ -328,6 +330,10 @@ export function PromoBanner({ locale = "en" }: { locale?: string }) {
     }
   }, [variants])
   const msLeft = useCountdown(reservation ? reservation.expiresAt : null)
+  // Sitewide deadline countdown (hh:mm:ss to PROMO.deadline 23:59:59 UTC) — the
+  // chip next to the code. Unconditional hook call: it must run before the
+  // early returns below.
+  const deadlineMs = useCountdown(promoDeadlineEpoch())
   const reservationLive = !!reservation && msLeft !== null && msLeft > 0
 
   // One view event per page load where the banner is actually visible. For the
@@ -372,7 +378,6 @@ export function PromoBanner({ locale = "en" }: { locale?: string }) {
   // for middle-click, "open in new tab", and JS-off; the handler upgrades it.
   const mintsOnClick = variant.id === "reserve" && !isReserve
   const href = `${pricingPath}?promo=${activeCode}&bv=${variant.id}`
-  const daysLeft = promoDaysLeft()
 
   return (
     <div
@@ -389,8 +394,10 @@ export function PromoBanner({ locale = "en" }: { locale?: string }) {
           <span className="rounded border border-white/30 px-1.5 py-0.5">
             {ui.code} {activeCode}
           </span>
-          {!isReserve && daysLeft <= 14 && (
-            <span className="rounded border border-white/30 px-1.5 py-0.5">{ui.daysLeft(daysLeft)}</span>
+          {!isReserve && deadlineMs !== null && deadlineMs > 0 && (
+            <span className="rounded border border-white/30 px-1.5 py-0.5 tabular-nums" aria-live="off">
+              {ui.timeLeft(formatCountdown(deadlineMs))}
+            </span>
           )}
         </span>
         <a
