@@ -79,6 +79,26 @@ const COPY = {
       </>
     ),
   },
+  de: {
+    heading: "Affiliate-Hinweis.",
+    aria: "Affiliate-Hinweis",
+    body: (
+      <>
+        Einige Links auf dieser Seite sind Affiliate-Links: Klickst du darauf und kaufst etwas,
+        erhält GEO Toolbox unter Umständen eine Provision, ohne Mehrkosten für dich. Wir empfehlen
+        nur Tools, die wir tatsächlich getestet haben, und eine Provision ändert nie unser Urteil.
+        Mehr dazu in unserer{" "}
+        <a href="/review-methodology" className="text-accent-700 underline hover:text-accent-800">
+          Review-Methodik
+        </a>{" "}
+        und im{" "}
+        <a href="/affiliate-disclosure" className="text-accent-700 underline hover:text-accent-800">
+          Affiliate-Hinweis
+        </a>{" "}
+        (beide Seiten auf Englisch).
+      </>
+    ),
+  },
 } as const
 
 export function AffiliateDisclosure({

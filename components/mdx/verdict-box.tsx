@@ -63,6 +63,17 @@ const CHROME = {
     rated: (r: number) => `Note de ${r} sur 5`,
     summary: (n: string) => `Résumé du verdict sur ${n}`,
   },
+  de: {
+    verdict: "Unser Urteil",
+    bestFor: "Am besten für:",
+    from: "Ab:",
+    trial: "Testphase:",
+    pros: "Was für die Note spricht",
+    cons: "Was dagegen spricht",
+    note: "Affiliate-Link: Wir können eine Provision erhalten. Das ändert nie das Urteil.",
+    rated: (r: number) => `Bewertung: ${r} von 5`,
+    summary: (n: string) => `Urteil-Zusammenfassung zu ${n}`,
+  },
 } as const
 
 type VerdictBoxProps = {

@@ -54,6 +54,12 @@ const CHROME = {
     visit: "Voir", ours: "Le nôtre",
     note: "Les liens affiliés peuvent nous rémunérer sans surcoût pour vous — cela ne change jamais la sélection. Notre outil est signalé.",
   },
+  de: {
+    tool: "Tool", job: "Beste Aufgabe", price: "Einstiegspreis", vis: "KI-Sichtbarkeit",
+    ok: "Inklusive", addon: "Add-on", none: "Keine", builtin: "Eingebaut",
+    visit: "Jetzt zu", ours: "Unser Tool",
+    note: "Affiliate-Links können uns eine Provision einbringen, ohne Mehrkosten für dich: Das ändert nie unsere Auswahl. Unser eigenes Tool ist gekennzeichnet.",
+  },
 } as const
 
 type ComparisonTableProps = {

@@ -66,6 +66,15 @@ const CHROME = {
     note: "Liens affiliés : nous pouvons toucher une commission sans surcoût pour vous. Cela ne change jamais l'outil que nous recommandons.",
     label: "Sélection rapide",
   },
+  de: {
+    tool: "Tool",
+    bestFor: "Am besten für",
+    from: "Ab",
+    trial: "Testphase",
+    visit: "Jetzt zu",
+    note: "Affiliate-Links: Wir können eine Provision erhalten, ohne Mehrkosten für dich. Das ändert nie, welches Tool wir empfehlen.",
+    label: "Schnellauswahl",
+  },
 } as const
 
 type AffiliatePicksProps = {
