@@ -1654,33 +1654,64 @@ async function unlock(){
   $('gak-prompts').innerHTML = '<div class="gak-prompt"><div class="gak-prompt-q">Running your live Lost-Deal Map across ChatGPT, Perplexity &amp; Google… (usually 30–90s, sometimes longer)</div></div>';
   frameHeight();
   const myDomain = CTX.domain;   // bail if the user restarts / re-checks while this scan is in flight
-  // RETRY (2026-07-02): one cold-start/timeout on this single call used to strand a user who had already
-  // given their email (error message + breakdown stays locked). Attempt 1 warms the instance; attempt 2
-  // then typically answers in ~15-25s. Same lesson as the Lost-Deal lazy-fill retry.
-  // NOT retried on 'scan_in_progress'/'daily_cap' (2026-09-11): the engine serializes ALL scans
-  // behind one global lease, so an immediate retry just collides with the still-running first
-  // attempt and both fail — waiting won't help within this page load either.
-  let v = null, visErr = false, errCode = '';
-  for(let attempt=1; attempt<=2; attempt++){
+  /* RETRY + QUEUE.
+     2026-07-02: one cold-start/timeout used to strand a user who had ALREADY given their email —
+     the error stuck and the breakdown stayed locked. A second attempt typically answers in ~15-25s.
+     2026-09-11 QA fix: this compared e.body.MESSAGE against the literal code 'scan_in_progress',
+     never equal, so the branch never fired. e.body.error is the machine-readable code.
+     2026-09-18: 'scan_in_progress' is no longer a dead end. The engine used to serialise EVERY
+     scan behind one `lgs:global` lease, so waiting was pointless — but it now runs a pool of
+     concurrency slots (SG_LGS_SLOTS) and returns `retry_after`, so a busy moment is a QUEUE, not
+     a failure. We wait and retry until QUEUE_BUDGET_MS, telling the visitor where they stand.
+     This is the single most expensive thing to get wrong: the email is already captured, so a
+     dead-end here is a lead we collected and then failed. 'daily_cap' is still never retried —
+     that is a decision, not a transient. */
+  /* Poll budget is deliberately SMALL, and the reason is not politeness — every poll is a real
+     request that passes the handler's rate limiter BEFORE it ever reaches the lease, so a refused
+     scan still consumes a unit of both the caller's bucket (20/hr) and the global visibility
+     ceiling. Polling every 5s for two minutes would burn the visitor's own quota and then hand
+     them a 429 instead of a report. Three polls at the server's suggested spacing (~20s) covers
+     the realistic case — a scan ahead of you finishes in ~90s — without turning a queue into a
+     self-inflicted rate limit. */
+  const MAX_QUEUE_POLLS = 3;
+  const QUEUE_BUDGET_MS = 150000;              // belt-and-braces wall-clock stop
+  const queueDeadline = Date.now() + QUEUE_BUDGET_MS;
+  let v = null, visErr = false, errCode = '', queued = 0, transientTries = 0, tries = 0;
+  while(tries++ < (MAX_QUEUE_POLLS + 3)){
     try{
       v = await fetchReal(CTX.domain, {brand:CTX.brand, industry:CTX.industry, country:CTX.country, email:CTX.email, prompts:CTX.prompts, only:'visibility'});
       visErr = false; break;
     }catch(e){
-      // 2026-09-11 QA fix: this used to read e.body.message (the human-readable sentence, e.g.
-      // "Another snapshot is running...") and compare THAT against the literal code
-      // 'scan_in_progress' — never equal, so the "don't retry a lock conflict" logic below never
-      // actually fired. e.body.error is the machine-readable code; compare against that instead.
       visErr = true; errCode = (e && e.body && e.body.error) || '';
-      if(CTX.domain !== myDomain) return;   // user moved on mid-flight
-      if(attempt === 1 && errCode !== 'scan_in_progress' && errCode !== 'daily_cap'){ await new Promise(r=>setTimeout(r,1500)); }
-      else if(attempt === 1) break;   // no point retrying a lease/cap conflict immediately
+      if(CTX.domain !== myDomain) return;      // user moved on mid-flight
+      if(errCode === 'daily_cap') break;       // a decision, never retried
+      if(errCode === 'scan_in_progress'){
+        // The server tells us how long to hold off; fall back to 20s if it didn't.
+        const waitMs = Math.max(5, Math.min(60, Number((e.body && e.body.retry_after) || 20))) * 1000;
+        if(queued >= MAX_QUEUE_POLLS) break;             // poll budget spent — surface it honestly
+        if(Date.now() + waitMs > queueDeadline) break;   // out of patience
+        queued++;
+        $('gak-vis-summary').textContent = queued === 1
+          ? 'Your scan is queued — the engines are busy right now. Holding your place…'
+          : `Still queued — holding your place, this usually clears in under a minute…`;
+        frameHeight();
+        await new Promise(r=>setTimeout(r, waitMs));
+        if(CTX.domain !== myDomain) return;
+        continue;                              // queueing is not a transient failure
+      }
+      if(++transientTries >= 2) break;         // one retry for ordinary transients, as before
+      await new Promise(r=>setTimeout(r,1500));
     }
   }
   if(CTX.domain !== myDomain || !LAST) return;   // moved on -> don't write a stale scan into the new report
   if(visErr){
     pdfBtnState('failed');
     $('gak-vis-summary').textContent = errCode === 'scan_in_progress'
-      ? 'Another scan is already running — please wait about a minute and try again.'
+      // Only reachable after we queued for the full QUEUE_BUDGET_MS and it never cleared, so say
+      // that — not "try again in a minute", which we have already done on the visitor's behalf.
+      // Deliberately promises NOTHING we don't do: there is no deferred-scan runner and no report
+      // email for this widget, so "we'll send it when it runs" would be a fabrication.
+      ? 'The AI engines stayed busy for several minutes. Your readiness report above is complete — please re-run the Lost-Deal Map in a few minutes.'
       : errCode === 'daily_cap'
       ? "We've hit today's scan limit — please try again tomorrow."
       : "The Lost-Deal Map couldn't load — please try again.";
