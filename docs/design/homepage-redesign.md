@@ -29,9 +29,9 @@ These inform design principles, not copied layouts, assets, claims, or assumed c
 
 ## Two directions
 
-**A — light product presentation (recommended starting point):** off-white opening, deep green type, restrained teal emphasis, centered positioning, compact product illustration. The report and typography carry the visual interest.
+**A — light product presentation (recommended starting point):** light slate opening, neutral dark type, the existing site teal palette, centered positioning, compact product illustration. The report and typography carry the visual interest.
 
-**B — dark editorial opening:** left-aligned positioning, deep green opening, pale green action, bright report. A more dramatic continuation of the previous identity. The same content and interaction model makes the visual tradeoff easier to judge.
+**B — dark editorial opening:** left-aligned positioning, near-black opening, the existing bright teal action, bright report. A more dramatic continuation of the previous identity. The same content and interaction model makes the visual tradeoff easier to judge.
 
 The preview-only `/tools/design-review` route compares both directions at 320–1280px and in EN/FR/ES/DE/NL. The alternate styling is confined to this review tool; it is not an A/B testing or production theme system. The route returns 404 in a production build without `VERCEL_ENV=preview` and is marked noindex.
 
@@ -61,9 +61,13 @@ Before launch, capture the current funnel by source, device, and locale. Prefer 
 
 The production build with the preview route enabled and changed-file ESLint pass. Repository checks pass for agent instructions, rendered heading structure, message parity, pricing parity, JSX, and FAQ. The rendered-heading gate covers 505 content pages. Additional rendered-HTML checks pass in all five locales for one H1, tab/panel associations and initial visibility, monthly signup links and currency, metadata, and the full-size product image link. The latest main-branch Alchemy guard and its 13 mutation cases also pass.
 
-The first Vercel deployment built successfully. Desktop/mobile visual inspection and hydrated interaction checks remain pending: the preview requires Vercel authentication, and automatic approval review blocked the Google sign-in origin because provider-specific user authorization was not established. No authentication bypass was attempted. Source and rendered-HTML checks do not establish visual quality or browser behavior.
+Shared-preview access is now working. Browser checks covered the live homepage, both visual directions, all five languages, and 320/390/768/1280px review-frame widths. The readout reports the actual inner viewport after browser scrollbar and frame borders, so these are responsive browser checks, not physical-device certification. English, Spanish, German, and Dutch had no measured horizontal overflow. The French 320px check revealed a 1px overflow and a crowded legal-link row; the shared footer now wraps those links. Mobile report tabs have larger tap targets.
 
-Before production approval, inspect both directions at 320, 390, 768, and 1280px; check every locale for wrapping and overflow; exercise navigation, tabs with keyboard input, pause/resume and reduced motion, consent, and the image link; then confirm signup destinations and performance in the browser. Capture approved desktop/mobile screenshots. Keep this PR in draft until those checks and the owner's design review are complete.
+Verified report selection and arrow-key navigation, headline pause/resume, cookie refusal, mobile menu keyboard operation, FAQ expansion, the how-it-works anchor, and the actual Starter signup destination with monthly billing selected. No account was created and no payment was submitted. Fixed the desktop hover/click conflict and added Escape dismissal to the mobile menu. The dark report now has its own text color, independent of the hero.
+
+The owner's existing teal palette is retained: accent-600 (#0d9488), accent-700 (#0f766e), and accent-300 (#5eead4) on dark surfaces. The light and dark options compare composition, not different brand colors. The rotating headline remains.
+
+CSS reduced-motion behavior was reviewed in source; the preview's freeze control was exercised in the browser. This is not an OS-level reduced-motion emulation test. No real-device, Lighthouse, field Core Web Vitals, or conversion-uplift result is claimed. Final deployment checks and screenshots are recorded with the PR. Keep the branch in draft until the owner's design approval.
 
 ### Integration
 
