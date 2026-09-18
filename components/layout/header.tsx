@@ -36,7 +36,7 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
   // Close desktop dropdowns on Escape
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") { setFeaturesOpen(false); setToolsOpen(false) }
+      if (e.key === "Escape") { setFeaturesOpen(false); setToolsOpen(false); setMobileOpen(false) }
     }
     window.addEventListener("keydown", onKey)
     return () => window.removeEventListener("keydown", onKey)
@@ -109,7 +109,7 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
           >
             <button
               type="button"
-              onClick={() => setFeaturesOpen(!featuresOpen)}
+              onClick={event => event.detail === 0 ? setFeaturesOpen(!featuresOpen) : openFeatures()}
               aria-expanded={featuresOpen}
               aria-haspopup="true"
               className="flex min-h-[40px] items-center gap-1 rounded-md px-2 lg:px-3 text-[13px] font-medium text-gray-700 transition-colors hover:text-gray-900 hover:bg-gray-50"
@@ -180,7 +180,7 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
           >
             <button
               type="button"
-              onClick={() => setToolsOpen(!toolsOpen)}
+              onClick={event => event.detail === 0 ? setToolsOpen(!toolsOpen) : openTools()}
               aria-expanded={toolsOpen}
               aria-haspopup="true"
               className="flex min-h-[40px] items-center gap-1 rounded-md px-2 lg:px-3 text-[13px] font-medium text-gray-700 transition-colors hover:text-gray-900 hover:bg-gray-50"

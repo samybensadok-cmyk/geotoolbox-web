@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import s from "./homepage.module.css"
 
 /** Same-origin preview harness: real homepage, real responsive breakpoints. */
@@ -12,31 +12,64 @@ export function DesignReview() {
   const [reduceMotion, setReduceMotion] = useState(false)
   const [fullHeight, setFullHeight] = useState(false)
   const [height, setHeight] = useState(900)
+  const [layoutCheck, setLayoutCheck] = useState("Measuring preview…")
+  useEffect(() => {
+    const iframe = frame.current
+    let observer: ResizeObserver | undefined
+    let detach: (() => void) | undefined
+    const measure = () => {
+      const doc = iframe?.contentDocument
+      if (!doc?.body) return
+      const width = doc.documentElement.clientWidth
+      const overflow = Math.max(0, doc.documentElement.scrollWidth - width)
+      const offenders = overflow ? [...doc.querySelectorAll<HTMLElement>("body *")].filter(el => {
+        const box = el.getBoundingClientRect()
+        return box.width > 0 && (box.right > width + 1 || box.left < -1) && !el.classList.contains("sr-only")
+      }).slice(-4).map(el => `${el.tagName.toLowerCase()}: ${el.textContent?.trim().slice(0,45)}`).join("; ") : ""
+      const images = [...doc.querySelectorAll<HTMLImageElement>("main img")]
+      setLayoutCheck(`${doc.documentElement.lang} · viewport ${width}px · overflow ${overflow}px · images ${images.filter(img => img.complete && img.naturalWidth > 0).length}/${images.length}${offenders ? ` · ${offenders}` : ""}`)
+    }
+    const observe = () => {
+      observer?.disconnect()
+      detach?.()
+      const doc = iframe?.contentDocument
+      if (!doc?.body) return
+      observer = new ResizeObserver(measure)
+      observer.observe(doc.body)
+      doc.addEventListener("load", measure, true)
+      detach = () => doc.removeEventListener("load", measure, true)
+      measure()
+    }
+    iframe?.addEventListener("load", observe)
+    observe()
+    return () => { observer?.disconnect(); detach?.(); iframe?.removeEventListener("load", observe) }
+  }, [locale, width])
   const apply = (isDark = dark, reduced = reduceMotion, full = fullHeight) => {
     const doc = frame.current?.contentDocument
     if (!doc) return
     let style = doc.getElementById("design-review-overrides") as HTMLStyleElement | null
     if (!style) { style = doc.createElement("style"); style.id = "design-review-overrides"; doc.head.appendChild(style) }
     style.textContent = `${isDark ? `
-      .${s.hero}{background:#102d29;color:#f3f5ec;border-color:#31504a}
+      .${s.hero}{background:#030712;color:#f9fafb;border-color:#1f2937}
       .${s.heroIntro}{text-align:left;margin-left:0}
-      .${s.heroIntro} .${s.eyebrow}{color:#a5c8b2}
+      .${s.heroIntro} .${s.eyebrow}{color:#5eead4}
       .${s.headline}{margin-left:0;max-width:900px}
-      .${s.rotator}{justify-content:start;color:#b5d7b4}
-      .${s.heroDescription}{color:#bfcec3;margin-left:0}
+      .${s.rotator}{justify-content:start;color:#5eead4}
+      .${s.rotator}>span{justify-content:flex-start}
+      .${s.heroDescription}{color:#d1d5db;margin-left:0}
       .${s.heroIntro} .${s.actions}{justify-content:start}
-      .${s.heroIntro} .${s.primary}{background:#c0dbb5;border-color:#c0dbb5;color:#143e31}
-      .${s.heroIntro} .${s.secondary}{background:transparent;border-color:#648175;color:#edf5eb}
-      .${s.heroIntro} .${s.micro}{color:#a9bdb0;margin-left:0}
-      .${s.heroIntro} .${s.motionToggle}{color:#b6cbbb;border-color:#547164;background:transparent}
-      .${s.engineStrip} li,.${s.engineStrip}>p,.${s.reportFigure} figcaption{color:#b3c6b9}
+      .${s.heroIntro} .${s.primary}{background:#5eead4;border-color:#5eead4;color:#042f2e}
+      .${s.heroIntro} .${s.secondary}{background:transparent;border-color:#4b5563;color:#f9fafb}
+      .${s.heroIntro} .${s.micro}{color:#9ca3af;margin-left:0}
+      .${s.heroIntro} .${s.motionToggle}{color:#99f6e4;border-color:#374151;background:transparent}
+      .${s.engineStrip} li,.${s.engineStrip}>p,.${s.reportFigure} figcaption{color:#cbd5e1}
       @media(max-width:640px){.${s.heroIntro} .${s.motionToggle}{margin-left:0}}
     ` : ""}
       ${reduced ? `.engine-rotator>span{animation:none!important;opacity:0!important}.engine-rotator>span:first-child{opacity:1!important;transform:none!important} .${s.motionToggle}{display:none}` : ""}`
     setHeight(full ? Math.max(900,doc.documentElement.scrollHeight) : 900)
   }
-  const choice: React.CSSProperties = {padding:"9px 13px",border:"1px solid #cbd5cf",borderRadius:6,background:"white",fontSize:13}
-  return <section style={{background:"#e7ece8",padding:"28px 20px",color:"#173c35"}}>
+  const choice: React.CSSProperties = {padding:"9px 13px",border:"1px solid #cbd5e1",borderRadius:6,background:"white",fontSize:13}
+  return <section style={{background:"#f1f5f9",padding:"28px 20px",color:"#111827"}}>
     <div style={{maxWidth:1280,margin:"auto"}}>
       <p style={{fontSize:11,textTransform:"uppercase",letterSpacing:2}}>GEO Toolbox / Design review</p>
       <h1 style={{fontSize:28,fontWeight:600,letterSpacing:-1,marginTop:5}}>Two directions. One working homepage.</h1>
@@ -49,7 +82,8 @@ export function DesignReview() {
         <label style={{fontSize:12,display:"flex",gap:6}}><input type="checkbox" checked={fullHeight} onChange={event=>{setFullHeight(event.target.checked);apply(dark,reduceMotion,event.target.checked)}} /> Full page</label>
         <a href={locale==="en"?"/":`/${locale}`} style={{fontSize:12,textDecoration:"underline"}}>Open homepage</a>
       </div>
+      <p role="status" aria-label="Layout check" style={{fontSize:12,marginBottom:14}}>{layoutCheck}</p>
     </div>
-    <div style={{overflowX:"auto",paddingBottom:20}}><iframe title="Homepage preview" ref={frame} src={locale==="en"?"/":`/${locale}`} onLoad={()=>apply()} style={{display:"block",width,height,margin:"0 auto",border:"1px solid #cbd5cf",background:"white",borderRadius:8,maxWidth:"none"}} /></div>
+    <div style={{overflowX:"auto",paddingBottom:20}}><iframe title="Homepage preview" ref={frame} src={locale==="en"?"/":`/${locale}`} onLoad={()=>apply()} style={{display:"block",width,height,margin:"0 auto",border:"1px solid #cbd5e1",background:"white",borderRadius:8,maxWidth:"none"}} /></div>
   </section>
 }
