@@ -1,0 +1,83 @@
+# Alchemy AI Visibility Checker — uptime + latency-creep canary.
+#
+# WHY THIS EXISTS (incident 2026-09-18)
+# alchemyleads.com/ai-visibility-checker/ is a PAID client integration (Sean) that embeds
+# geotoolbox.ai/alchemy-preview/ as an iframe. It sat broken on that live client page showing
+# "Could not run the check right now" and we only found out because the operator happened to try
+# it. Cause: the widget's free `only=fast` tier had a 20 000 ms client abort — BELOW the endpoint's
+# real duration (12.5-25.1 s warm, plus Replit Autoscale cold boot).
+#
+# Two failure classes this canary catches, and the second is the one that actually bit:
+#   1. the endpoint breaks outright (500 / 403 / 429 / empty body) — a Redeploy regression, an
+#      expired provider key, a flag flipped off, a DB outage;
+#   2. the endpoint gets SLOWER and creeps back toward the widget's client budget. A plain
+#      up/down check would have called the 2026-09-18 incident "healthy".
+#
+# This runs on GitHub's infrastructure ON PURPOSE. The first version was a macOS LaunchAgent on the
+# operator's laptop, which only covers the hours that laptop is awake and online — the wrong place
+# to watch a live client integration.
+#
+# The STATIC half of the same contract is scripts/check-alchemy-widget-budget.mjs, wired into
+# `prebuild`: the Vercel build fails if the client budget drops below 45 s again. Static gate =
+# the client budget can't shrink; this canary = the server duration can't quietly grow into it.
+#
+# COST: scheduled jobs on a private repo bill a 1-minute minimum each, so cadence is money.
+# Hourly = 24 runs/day ≈ 720 billed minutes/month (Free tier is 2 000). Tighten to "*/30 * * * *"
+# only if an hour of blind time is genuinely too long.
+#
+# Alerts: GitHub emails the repo owner when a scheduled workflow fails. A WARN does not fail the
+# job — it posts a ::warning:: annotation on the run, so latency creep shows up without paging.
+#
+# Forensics: seo-audits/leadgen-diagnosis-2026-09-09/alchemy-build/DIAGNOSIS-2026-09-18-could-not-run.md
+name: Alchemy checker canary
+on:
+  schedule:
+    - cron: "23 * * * *" # hourly at :23 (off the hour — GitHub's :00 slot is the most contended)
+  workflow_dispatch: {}
+concurrency:
+  group: alchemy-canary
+  cancel-in-progress: false
+jobs:
+  canary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Probe only=fast and check latency headroom
+        env:
+          # MUST match the widget's fast-tier AbortController budget in
+          # public/alchemy-preview/index.html (gated by check-alchemy-widget-budget.mjs).
+          BUDGET_MS: "60000"
+          WARN_MS: "36000" # 60% of budget — headroom shrinking
+          TARGET: "geotoolbox.ai" # our own site, never the client's
+          ORIGIN: "https://alchemyleads.com"
+          CURL_MAX: "90" # above the budget on purpose: measure an overrun, don't turn it into a hang
+        run: |
+          set -u
+          url="https://sg-geo-tool.replit.app/?action=alchemy_ai_check&only=fast&url=${TARGET}&brand=Canary&industry=ai%20visibility%20tracking%20software&country=United%20States"
+          body=$(mktemp)
+          metrics=$(curl -s -m "$CURL_MAX" -o "$body" -w '%{http_code} %{time_total}\n' \
+            -H "Origin: ${ORIGIN}" -H "Accept: application/json" \
+            -A "geotoolbox-alchemy-canary/1.0 (+samy@geotoolbox.ai)" \
+            "$url") || metrics="000 0"
+          code=$(echo "$metrics" | awk '{print $1}')
+          secs=$(echo "$metrics" | awk '{print $2}')
+          ms=$(awk -v s="${secs:-0}" 'BEGIN{printf "%d", s*1000}')
+          # the widget treats a 200 without readiness.score as a failure — so must we
+          has_score=$(grep -c '"readiness"' "$body" || true)
+          err=$(sed -n 's/.*"error":"\([a-z_]*\)".*/\1/p' "$body" | head -1)
+          rm -f "$body"
+
+          echo "http=${code} ms=${ms} readiness_present=${has_score} error=${err:-none}"
+
+          if [ "$code" != "200" ] || [ "${has_score:-0}" -lt 1 ]; then
+            echo "::error::Alchemy checker FAIL — HTTP ${code}${err:+ ($err)} in ${ms}ms, readiness present=${has_score}. The client widget on alchemyleads.com is showing an error right now."
+            exit 1
+          fi
+          if [ "$ms" -gt "$BUDGET_MS" ]; then
+            echo "::error::Alchemy checker FAIL — 200 but ${ms}ms EXCEEDS the ${BUDGET_MS}ms client abort budget. Visitors are being cut off mid-scan (this is the 2026-09-18 incident recurring)."
+            exit 1
+          fi
+          if [ "$ms" -gt "$WARN_MS" ]; then
+            echo "::warning::Alchemy checker SLOW — ${ms}ms is past ${WARN_MS}ms (60% of the ${BUDGET_MS}ms client budget). Headroom is shrinking; raise the budget or speed up only=fast before it aborts."
+          fi
+          echo "Alchemy checker OK — ${ms}ms of a ${BUDGET_MS}ms budget."
