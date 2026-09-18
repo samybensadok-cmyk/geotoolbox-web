@@ -214,7 +214,14 @@ select.gak-input{appearance:none;-webkit-appearance:none;-moz-appearance:none;cu
 .gak-gate h3{position:relative;font-size:21px;line-height:1.25;color:#fff;margin:0 0 8px;font-weight:800;letter-spacing:-.02em}
 .gak-gate p{position:relative;color:#aebfd6;margin:0 auto 18px;max-width:42ch;line-height:1.55}
 .gak-gate .gak-form{position:relative}
-.gak-gate .gak-input{border-color:transparent;background:rgba(255,255,255,.97)}
+/* 2026-09-18 CONTRAST FIX — this rule flipped the input to a near-WHITE background but inherited
+   `color:var(--gak-ink)` (#e6e6e6) from .gak-input, which is sized for the DARK card. Result:
+   #e6e6e6 on #fff ≈ 1.2:1 — the email you typed was effectively invisible, and the #8a8a8a
+   placeholder ≈ 3.5:1 was under AA too. A light-on-dark token set must never be reused on a
+   light surface without re-specifying the foreground. Now ~16:1 for text, ~5.6:1 placeholder. */
+.gak-gate .gak-input{border-color:transparent;background:rgba(255,255,255,.97);color:#12161f;caret-color:#12161f}
+.gak-gate .gak-input::placeholder{color:#5b6472}
+.gak-gate .gak-input:-webkit-autofill{-webkit-text-fill-color:#12161f}
 .gak-gate .gak-terms{position:relative;display:inline-flex;align-items:center;gap:9px;margin:14px auto 2px;color:#aebfd6;font-size:13px;line-height:1.45;cursor:pointer;text-align:left}
 .gak-gate .gak-terms input{width:16px;height:16px;margin:0;flex:0 0 auto;accent-color:var(--gak-orange);cursor:pointer}
 .gak-gate .gak-terms input:focus-visible{outline:2px solid #fff;outline-offset:2px}
