@@ -5,10 +5,11 @@
 // The widget's free `only=fast` tier had a 20 000 ms AbortController budget and NO retry, while
 // the tier's real server-side cost is 12.5-25.1 s warm (it fetches the target site as six
 // different AI crawler UAs, so a slow/WAF-heavy target costs more) PLUS Replit Autoscale cold
-// boot when the instance has scaled to zero. Forensics: the failing click opened a fresh hourly
-// rate-limit window at 12:09:10Z — nothing had kept the instance warm for an hour — and the
-// operator's error screenshot is stamped 12:09:39Z, i.e. the 20 s abort fired while the server
-// was still working and returned 200 to nobody. Diagnosis:
+// boot on top when the instance has scaled to zero. The budget was therefore under the measured
+// duration on its own, before any cold-start argument: stripe.com alone measures 25.1 s WARM.
+// (A cold start is the likely aggravator — the failing click opened a fresh hourly rate-limit
+// window — but that window only proves no prior `only=fast` request, not that the instance was
+// cold, so it is an inference, not the finding.) Diagnosis:
 //   seo-audits/leadgen-diagnosis-2026-09-09/alchemy-build/DIAGNOSIS-2026-09-18-could-not-run.md
 //
 // This gate is the mechanical half of "never again". It is deliberately STATIC (no network) so a
