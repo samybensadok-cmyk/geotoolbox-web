@@ -16,7 +16,9 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
   // than 404ing under /fr) — see lib/i18n/nav.ts.
   const L = (href: string) => localizeNavHref(href, locale)
   const pathname = usePathname()
-  const isHomepage = pathname === (locale === "en" ? "/" : `/${locale}`)
+  // next-intl rewrites the default homepage internally to /en. Treat both
+  // forms identically so its prerendered and hydrated header agree.
+  const isHomepage = pathname === `/${locale}` || (locale === "en" && pathname === "/")
   const startHref = isHomepage ? `${siteConfig.appSignupUrl}&plan=starter${currencyParam(locale)}` : L("/pricing")
   const startLabel = isHomepage ? nav?.homeTrial ?? "Start trial" : nav?.startFree ?? "Get started"
   const trackStart = () => { if (isHomepage) trackEvent("app_cta_click", { placement: "home_header", cta_target: startHref, locale, design_version: "home_v3" }) }

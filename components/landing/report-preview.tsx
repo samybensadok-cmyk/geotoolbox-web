@@ -25,7 +25,6 @@ export function ReportPreview({ copy, locale }: { copy: ReportCopy; locale: stri
   const [selected, setSelected] = useState(0)
   const refs = useRef<(HTMLButtonElement | null)[]>([])
   const statuses = [copy.cited, copy.mentioned, copy.missing]
-  const state = samples[selected]
   const select = (index: number) => {
     setSelected(index)
     trackEvent("select_item", { item_list_name: "homepage_sample", item_id: String(index), locale })
@@ -61,8 +60,8 @@ export function ReportPreview({ copy, locale }: { copy: ReportCopy; locale: stri
               aria-controls={`sample-panel-${i}`} tabIndex={selected === i ? 0 : -1}
               ref={el => { refs.current[i] = el }} onClick={() => select(i)} onKeyDown={event => keyboard(event, i)}>{label}</button>)}
           </div>
-          <div role="tabpanel" id={`sample-panel-${selected}`} aria-labelledby={`sample-tab-${selected}`} tabIndex={0}>
-            <div className={s.query}><span aria-hidden="true">⌕</span><span>{copy.questions[selected]}</span></div>
+          {samples.map((state, sampleIndex) => <div key={sampleIndex} role="tabpanel" id={`sample-panel-${sampleIndex}`} aria-labelledby={`sample-tab-${sampleIndex}`} tabIndex={0} hidden={selected !== sampleIndex}>
+            <div className={s.query}><span aria-hidden="true">⌕</span><span>{copy.questions[sampleIndex]}</span></div>
             <div className={s.reportStats}>
               {statuses.map((label, i) => <div key={label}><span><i className={s[`dot${i}`]} />{label}</span><strong>{state.filter(v => v === i).length}<small>/8</small></strong></div>)}
             </div>
@@ -74,7 +73,7 @@ export function ReportPreview({ copy, locale }: { copy: ReportCopy; locale: stri
                 <td>{state[i] === 0 ? <span className={s.sourceUrl}>example.com/{copy.examplePage}</span> : <span aria-label={statuses[state[i]]}>—</span>}</td>
               </tr>)}</tbody>
             </table>
-          </div>
+          </div>)}
         </div>
       </div>
     </div>

@@ -57,6 +57,16 @@ Before launch, capture the current funnel by source, device, and locale. Prefer 
 
 ## Claude handoff
 
+### Verification status
+
+The production build with the preview route enabled and changed-file ESLint pass. Repository checks pass for agent instructions, rendered heading structure, message parity, pricing parity, JSX, and FAQ. The rendered-heading gate covers 505 content pages. Additional rendered-HTML checks pass in all five locales for one H1, tab/panel associations and initial visibility, monthly signup links and currency, metadata, and the full-size product image link. The latest main-branch Alchemy guard and its 13 mutation cases also pass.
+
+The first Vercel deployment built successfully. Desktop/mobile visual inspection and hydrated interaction checks remain pending: the preview requires Vercel authentication, and automatic approval review blocked the Google sign-in origin because provider-specific user authorization was not established. No authentication bypass was attempted. Source and rendered-HTML checks do not establish visual quality or browser behavior.
+
+Before production approval, inspect both directions at 320, 390, 768, and 1280px; check every locale for wrapping and overflow; exercise navigation, tabs with keyboard input, pause/resume and reduced motion, consent, and the image link; then confirm signup destinations and performance in the browser. Capture approved desktop/mobile screenshots. Keep this PR in draft until those checks and the owner's design review are complete.
+
+### Integration
+
 1. Review this branch and the preview against the user's chosen direction.
 2. Confirm signup handling for `plan=starter` / `plan=agency`, `interval=monthly`, and `currency=eur`. The links follow existing pricing-page conventions.
 3. Keep all production rewrites, billing logic, and application code intact.
