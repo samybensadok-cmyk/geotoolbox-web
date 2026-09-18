@@ -55,22 +55,31 @@ jobs:
           set -u
           url="https://sg-geo-tool.replit.app/?action=alchemy_ai_check&only=fast&url=${TARGET}&brand=Canary&industry=ai%20visibility%20tracking%20software&country=United%20States"
           body=$(mktemp)
+          # curl writes -w output even on a timeout (exit 28), so capture it and only fall back
+          # when the variable really is empty — the old `|| metrics="000 0"` threw away a real
+          # measurement and always reported 0ms on a timeout.
           metrics=$(curl -s -m "$CURL_MAX" -o "$body" -w '%{http_code} %{time_total}\n' \
             -H "Origin: ${ORIGIN}" -H "Accept: application/json" \
             -A "geotoolbox-alchemy-canary/1.0 (+samy@geotoolbox.ai)" \
-            "$url") || metrics="000 0"
+            "$url") || true
+          [ -z "${metrics:-}" ] && metrics="000 0"
           code=$(echo "$metrics" | awk '{print $1}')
           secs=$(echo "$metrics" | awk '{print $2}')
           ms=$(awk -v s="${secs:-0}" 'BEGIN{printf "%d", s*1000}')
-          # the widget treats a 200 without readiness.score as a failure — so must we
-          has_score=$(grep -c '"readiness"' "$body" || true)
-          err=$(sed -n 's/.*"error":"\([a-z_]*\)".*/\1/p' "$body" | head -1)
+          # The widget requires `typeof readiness.score === 'number'` and renders a generic error
+          # otherwise, so the canary must apply the SAME test. A substring grep for '"readiness"'
+          # scored `{"readiness":{"score":null}}` as healthy — which the server CAN emit at HTTP 200
+          # (alc_map_readiness: `$score = isset($rd['overall_score']) ? (float)... : null`), i.e.
+          # exactly the broken state the widget rejects. A truncated body passed it too.
+          # (2026-09-18, Fable review. jq is preinstalled on ubuntu-latest.)
+          if jq -e '.readiness.score | type == "number"' "$body" >/dev/null 2>&1; then has_score=1; else has_score=0; fi
+          err=$(jq -r '.error // empty' "$body" 2>/dev/null | head -1)
           rm -f "$body"
 
-          echo "http=${code} ms=${ms} readiness_present=${has_score} error=${err:-none}"
+          echo "http=${code} ms=${ms} readiness_score_numeric=${has_score} error=${err:-none}"
 
           if [ "$code" != "200" ] || [ "${has_score:-0}" -lt 1 ]; then
-            echo "::error::Alchemy checker FAIL — HTTP ${code}${err:+ ($err)} in ${ms}ms, readiness present=${has_score}. The client widget on alchemyleads.com is showing an error right now."
+            echo "::error::Alchemy checker FAIL — HTTP ${code}${err:+ ($err)} in ${ms}ms, readiness.score numeric=${has_score}. The client widget on alchemyleads.com is showing an error right now."
             exit 1
           fi
           if [ "$ms" -gt "$BUDGET_MS" ]; then
