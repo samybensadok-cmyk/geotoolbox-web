@@ -144,6 +144,7 @@ select.gak-input{appearance:none;-webkit-appearance:none;-moz-appearance:none;cu
 .gak-steps li::before{content:'';position:absolute;left:0;top:9px;width:10px;height:10px;border-radius:50%;border:2px solid var(--gak-line-2)}
 .gak-steps li.on::before{border-color:var(--gak-orange);animation:gak-pulse 1s ease-in-out infinite}
 .gak-steps li.done::before{border-color:var(--gak-mint);background:var(--gak-mint)}
+.gak-loadnote{color:var(--gak-muted);font-size:14px;text-align:center;margin:18px auto 0;max-width:420px;line-height:1.5}
 @keyframes gak-pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,88,0,.4)}50%{box-shadow:0 0 0 5px rgba(255,88,0,0)}}
 
 /* ---------- result cards ---------- */
@@ -698,6 +699,10 @@ body.gak-capturing::after{content:'Preparing your PDF…';position:fixed;inset:0
         <li data-step="4">Discovering citations &amp; mentions</li>
         <li data-step="5">Building your report</li>
       </ul>
+      <!-- 2026-09-18: the fast tier's client budget went 20s -> 60s to stop aborting real scans.
+           The 6-step animation only covers ~7s, so without this line a visitor could stare at a
+           finished checklist for the rest of the wait. Appears only if the scan is genuinely slow. -->
+      <p class="gak-loadnote gak-hide" id="gak-load-note" role="status"></p>
     </div>
   </section>
 
@@ -995,6 +1000,7 @@ const ro = new ResizeObserver(frameHeight); ro.observe(document.body);
 
 /* ---------- stage control ---------- */
 function stage(s){
+  if(s!=='loading') clearLoadNotes();   // 2026-09-18: never leave a slow-scan note on the form/results
   ['input','loading','results'].forEach(x=>hide('gak-stage-'+x));
   show('gak-stage-'+s); frameHeight();
   // "Powered by geotoolbox.ai" only belongs on the results stage — showing it on the
@@ -1004,15 +1010,30 @@ function stage(s){
 }
 
 /* ---------- loading animation ---------- */
-let stepTimer;
+let stepTimer, loadNoteTimers = [];
+/* 2026-09-18: honest progress copy for a slow/cold scan. The dots themselves are untouched (the
+   client likes them); this only stops the checklist from finishing in ~7s and then sitting dead
+   for the rest of a run that the client now allows to take up to 60s. */
+function loadNote(msg){
+  const el = $('gak-load-note'); if(!el) return;
+  el.textContent = msg || '';
+  el.classList.toggle('gak-hide', !msg);
+  frameHeight();
+}
+function clearLoadNotes(){ loadNoteTimers.forEach(clearTimeout); loadNoteTimers = []; loadNote(''); }
 function runSteps(){
   const lis = [...$('gak-steps').querySelectorAll('li')];
   lis.forEach(li=>li.className='');
   let i=0; lis[0].classList.add('on');
   stepTimer = setInterval(()=>{
-    if(i<lis.length){ lis[i].classList.remove('on'); lis[i].classList.add('done'); i++; if(lis[i]) lis[i].classList.add('on'); }
+    // hold the LAST step pulsing instead of marking everything done and stopping — a fully-'done'
+    // checklist while the scan is still running reads as "finished but broken" (2026-09-18).
+    if(i < lis.length-1){ lis[i].classList.remove('on'); lis[i].classList.add('done'); i++; lis[i].classList.add('on'); }
     else clearInterval(stepTimer);
   }, 1100);
+  clearLoadNotes();
+  loadNoteTimers.push(setTimeout(()=>loadNote('Fetching your site as six different AI crawlers — this can take up to a minute on the first run.'), 11000));
+  loadNoteTimers.push(setTimeout(()=>loadNote('Still going — the scanner was asleep and is waking up. Hang tight.'), 30000));
 }
 
 /* ---------- score gauge ---------- */
@@ -1685,7 +1706,18 @@ async function fetchReal(domain, opts){
   // name-filter LLM call around the sonar call; visibility adds the brief on a cache miss. Server
   // worst case moved ~+40s, so the aborts move with it — an abort that fires while the server is
   // still finishing the paid call makes the retry spend twice (same class as this morning's fix).
-  const t = setTimeout(()=>ctrl.abort(), longCall ? (opts.only==='visibility'?210000:90000) : 20000);
+  // 2026-09-18 INCIDENT FIX — the `fast` tier's abort was 20000ms and that is BELOW its real cost.
+  // Measured warm, server-side: geotoolbox.ai 12.5-13.6s, alchemyleads.com 15.0s, stripe.com 25.1s
+  // (the tier does up to 6 live per-UA crawler fetches against the target, so a slow/WAF-heavy site
+  // costs more than a fast one), and Replit Autoscale adds cold-boot on top when the instance has
+  // scaled to zero. Forensic trail: the operator's failing click opened a FRESH hourly window at
+  // 12:09:10Z (i.e. nothing had kept the instance warm for an hour) and the error screenshot is
+  // stamped 12:09:39Z — 20s abort + ~9s to screenshot. The request reached PHP, passed every gate
+  // and the server was still working when the browser gave up. Budget is now 60s: measured worst
+  // case (~25s) + cold boot + headroom. scripts/check-alchemy-widget-budget.mjs FAILS the Vercel
+  // build if this drops below 45000 or if the fast call stops going through fetchFast(); the
+  // alchemy-canary cron independently alerts if the SERVER's real duration creeps toward the budget.
+  const t = setTimeout(()=>ctrl.abort(), longCall ? (opts.only==='visibility'?210000:90000) : 60000);
   // lostdeal/visibility spend real money and require POST + an allowlisted Origin server-side
   // (2026-09-11 QA fix — a plain GET here was a zero-JS, no-CORS-needed cost-exhaustion hole: any
   // <img src="..."> or link-unfurler bot could fire the paid work from a visitor's own browser).
@@ -1696,6 +1728,43 @@ async function fetchReal(domain, opts){
     if(!r.ok){ const e = new Error((body && body.error) || ('api_'+r.status)); e.body = body; e.status = r.status; throw e; }
     return body;
   } finally { clearTimeout(t); }
+}
+/* 2026-09-18 INCIDENT FIX — retry the FREE `fast` tier once, the way lazyFillLostDeal already
+   retries lostdeal (see the "cold Autoscale instance" note at its loop). The fast tier costs $0
+   server-side, so a second attempt is free; the first attempt is what pays the cold boot, and the
+   retry lands on a now-warm instance (~13s). Deliberately does NOT retry a 429 (rate_limited) or a
+   403 (feature_disabled/origin) — those are decisions, not transients, and hammering a rate limit
+   only deepens it. Nothing else in the widget may call only=fast directly. */
+async function fetchFast(domain, opts){
+  let lastErr = null;
+  for(let attempt=0; attempt<2; attempt++){
+    try{
+      const report = await fetchReal(domain, Object.assign({}, opts, {only:'fast'}));
+      // A malformed / error-at-200 body (no readiness) is a failure, not a report — it must never
+      // render a fake 0/100 "At risk" scorecard. Treated as retryable: a half-written body is transient.
+      if(!report || !report.readiness || typeof report.readiness.score!=='number'){ const e = new Error('api_empty'); e.retryable = true; throw e; }
+      return report;
+    }catch(e){
+      lastErr = e;
+      const hardFail = (e && (e.status===429 || e.status===403));   // a decision, not a transient
+      if(hardFail || attempt===1) throw e;
+      // surface the wait honestly instead of a silent stall, then retry once. Must go to the
+      // LOADING stage's note — `gak-err` lives inside gak-stage-input, which is hidden here.
+      try{ loadNote('The scanner was asleep — retrying now, this run will be quicker.'); }catch(_){ }
+      await new Promise(res=>setTimeout(res, 1200));
+    }
+  }
+  throw lastErr;
+}
+/* Map a failure to something the operator (and a visitor) can act on. Before 2026-09-18 every
+   failure rendered the SAME generic sentence, which is why a 20s client abort was indistinguishable
+   from a rate limit or an outage and cost a full forensic session to diagnose. Keep these distinct. */
+function fastErrorMessage(err){
+  if(err && (err.name==='AbortError' || err.message==='AbortError')) return 'The scan timed out while waking up. Click “Run free AI check” again — the second run is much faster.';
+  if(err && err.status===429) return 'We’ve hit the hourly limit for free checks. Please try again in a little while.';
+  if(err && err.status===403) return 'The checker is temporarily unavailable on this page. Please let us know if it persists.';
+  if(err && err.status>=500)  return 'Our scanner had a problem on that request. Please try again in a moment.';
+  return 'Could not run the check right now. Please try again in a moment.';
 }
 function leadEndpoint(){
   if(GAK_CONFIG.LEAD_RELAY) return `${GAK_CONFIG.API_BASE}/?action=${GAK_CONFIG.API_ACTION}&only=lead`;
@@ -1970,9 +2039,11 @@ $('gak-form').addEventListener('submit', async (e)=>{
     } else {
       // LIVE: render the report FAST (only=fast — no paid call), then lazy-fill the Lost-Deal hero
       // (only=lostdeal) so a slow/failed Perplexity never blocks or discards the readiness+crawler report.
-      const report = await fetchReal(domain, {brand, industry, country, only:'fast'});
-      // guard: a malformed / error-at-200 body (no readiness) must hit the catch, never render a fake 0/100 "At risk" scorecard
-      if(!report || !report.readiness || typeof report.readiness.score!=='number') throw new Error('api_empty');
+      // fetchFast retries once on a transient (cold Autoscale boot / abort) and carries the
+      // no-readiness guard, so a malformed body still reaches the catch instead of rendering a
+      // fake 0/100 "At risk" scorecard (2026-09-18).
+      const report = await fetchFast(domain, {brand, industry, country});
+      clearLoadNotes();
       LAST=report;
       if(!report.visibility) $('gak-visibility').dataset.empty='1';
       clearInterval(stepTimer); render(report); $('gak-go').disabled=false;
@@ -1980,7 +2051,7 @@ $('gak-form').addEventListener('submit', async (e)=>{
     }
   }catch(err){
     clearInterval(stepTimer); $('gak-go').disabled=false; stage('input');
-    $('gak-err').textContent='Could not run the check right now. Please try again in a moment.';
+    $('gak-err').textContent = fastErrorMessage(err);
   }
 });
 /* lazy-fill the Lost-Deal hero + Perplexity matrix cell after the fast report (live mode only) */
