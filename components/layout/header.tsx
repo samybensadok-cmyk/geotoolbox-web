@@ -2,6 +2,9 @@
 
 import Link from "next/link"
 import { useEffect, useRef, useState } from "react"
+import { usePathname } from "next/navigation"
+import { trackEvent } from "@/lib/analytics"
+import { currencyParam } from "@/lib/i18n/currency"
 import { siteConfig } from "@/lib/config"
 import { tools } from "@/lib/tools"
 import { cn } from "@/lib/utils"
@@ -12,6 +15,11 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
   // no-op for paths with no localized route (they stay on their EN page rather
   // than 404ing under /fr) — see lib/i18n/nav.ts.
   const L = (href: string) => localizeNavHref(href, locale)
+  const pathname = usePathname()
+  const isHomepage = pathname === (locale === "en" ? "/" : `/${locale}`)
+  const startHref = isHomepage ? `${siteConfig.appSignupUrl}&plan=starter${currencyParam(locale)}` : L("/pricing")
+  const startLabel = isHomepage ? nav?.homeTrial ?? "Start trial" : nav?.startFree ?? "Get started"
+  const trackStart = () => { if (isHomepage) trackEvent("app_cta_click", { placement: "home_header", cta_target: startHref, locale, design_version: "home_v3" }) }
 
   const [mobileOpen, setMobileOpen] = useState(false)
   const [featuresOpen, setFeaturesOpen] = useState(false)
@@ -263,11 +271,12 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
               {nav?.login ?? "Log in"}
             </Link>
             <Link
-              href={L("/pricing")}
+              href={startHref}
               prefetch={false}
+              onClick={trackStart}
               className="flex min-h-[40px] items-center rounded-full bg-accent-900 px-3 lg:px-3.5 text-[13px] font-medium text-white transition-colors hover:bg-accent-800"
             >
-              {nav?.startFree ?? "Get started"}
+              {startLabel}
             </Link>
           </div>
         </nav>
@@ -421,12 +430,12 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
                 {nav?.login ?? "Log in"}
               </Link>
               <Link
-                href={L("/pricing")}
+                href={startHref}
                 prefetch={false}
-                onClick={() => setMobileOpen(false)}
+                onClick={() => { trackStart(); setMobileOpen(false) }}
                 className="rounded-full bg-accent-900 py-3 text-center text-sm font-medium text-white"
               >
-                {nav?.startFree ?? "Get started"}
+                {startLabel}
               </Link>
             </div>
           </nav>

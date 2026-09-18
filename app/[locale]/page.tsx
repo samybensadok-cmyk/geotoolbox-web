@@ -1,17 +1,7 @@
 import type { Metadata } from "next"
 import { setRequestLocale, getTranslations } from "next-intl/server"
 import { routing } from "@/i18n/routing"
-import { Hero } from "@/components/landing/hero"
-import { ProofStrip } from "@/components/landing/proof-strip"
-import { Problem } from "@/components/landing/problem"
-import { ScanSignal } from "@/components/landing/scan-signal"
-import { Playbook } from "@/components/landing/playbook"
-import { HowItWorks } from "@/components/landing/how-it-works"
-import { Features } from "@/components/landing/features"
-import { PricingTeaser } from "@/components/landing/pricing-teaser"
-import { FreeTools } from "@/components/landing/free-tools"
-import { LatestPosts } from "@/components/landing/latest-posts"
-import { CTA } from "@/components/landing/cta"
+import { HomeExperience } from "@/components/landing/home-experience"
 import { JsonLd } from "@/components/seo/json-ld"
 import { organizationSchema, websiteSchema } from "@/lib/seo-schema"
 import { marketingAlternatesFor } from "@/lib/i18n/siblings"
@@ -74,17 +64,7 @@ export default async function Home({
   return (
     <>
       <JsonLd data={[organizationSchema(), websiteSchema()]} />
-      <Hero />
-      <ProofStrip />
-      <Problem />
-      <ScanSignal />
-      <HowItWorks />
-      <Features />
-      <PricingTeaser />
-      <FreeTools />
-      <Playbook />
-      <LatestPosts />
-      <CTA />
+      <HomeExperience />
     </>
   )
 }
