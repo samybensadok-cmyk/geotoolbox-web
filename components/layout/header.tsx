@@ -9,6 +9,7 @@ import { siteConfig } from "@/lib/config"
 import { tools } from "@/lib/tools"
 import { cn } from "@/lib/utils"
 import { localizeNavHref } from "@/lib/i18n/nav"
+import headerStyles from "./header.module.css"
 
 export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; locale?: string }) {
   // Keeps chrome links inside the visitor's locale. A no-op on `en`, and a
@@ -75,7 +76,7 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-gray-100 bg-white/90 backdrop-blur-md">
+    <header data-homepage={isHomepage || undefined} className={cn("sticky top-0 z-50 w-full border-b border-gray-100 bg-white/90 backdrop-blur-md", isHomepage && headerStyles.homepage)}>
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-6">
         {/* Logo */}
         <Link href={L("/")} className="flex items-center gap-2 -mx-2 px-2 py-2 rounded-md">

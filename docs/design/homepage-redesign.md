@@ -78,3 +78,11 @@ CSS reduced-motion behavior was reviewed in source; the preview's freeze control
 5. Merge only after design approval. The repository documents automatic production deployment from `main`.
 
 Follow-on scope: pricing-page redesign, key feature templates, free-tool result-to-product transitions, then signup and first-scan UX in the separate Replit application.
+
+## Iteration 2 — September 19
+
+Owner feedback: the first pass is clearer but not sufficiently sleek. Preferred direction combines the dark version with the light version's centered hero. Keep the original teal.
+
+This iteration makes dark/centered the actual homepage default, including a matching scoped header. The comparison tool retains light/centered and dark/left alternatives. Hero contrast, typography, button shape, product-window framing, and report readability have been refined. Sample selections now produce different illustrative totals as well as different engine results. Pricing-card actions align at the bottom across varying copy lengths.
+
+Evaluate this direction on composition, hierarchy, and readability first. Use the same palette and copy to isolate the design judgment. Once approved, refine real product proof and the primary journey before extending the system to pricing and feature templates. Conversion improvement remains a hypothesis until signup, activation, and revenue data support it.

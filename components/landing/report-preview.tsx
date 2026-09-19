@@ -19,7 +19,7 @@ const engines: { id: EngineId; name: string }[] = [
   { id: "copilot", name: "Bing Copilot" }, { id: "grok", name: "Grok" },
 ]
 // Illustrative data, deliberately independent of production services.
-const samples = [[0, 0, 2, 1, 0, 1, 2, 0], [0, 2, 0, 0, 1, 0, 2, 1], [1, 0, 0, 2, 0, 2, 1, 0]]
+const samples = [[0, 0, 2, 1, 0, 1, 2, 0], [0, 2, 0, 0, 1, 0, 0, 1], [1, 0, 2, 2, 0, 2, 1, 2]]
 
 export function ReportPreview({ copy, locale }: { copy: ReportCopy; locale: string }) {
   const [selected, setSelected] = useState(0)
@@ -51,7 +51,7 @@ export function ReportPreview({ copy, locale }: { copy: ReportCopy; locale: stri
           <span className={s.smallLabel}>{copy.domain}</span>
           <strong>example.com</strong>
           <div className={s.reportNav}><span aria-hidden="true">◉</span> {copy.overview}</div>
-          <div className={s.sideMetric}><span>{copy.engines}</span><strong>8<span>/8</span></strong></div>
+          <div className={s.sideMetric}><span>{copy.engines}</span><strong>8</strong></div>
           <div className={s.sideInsight}><span className={s.smallLabel}>{copy.insight}</span><p>{copy.insightBody}</p></div>
         </div>
         <div className={s.reportMain}>
