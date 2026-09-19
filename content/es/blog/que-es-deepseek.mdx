@@ -1,19 +1,19 @@
 ---
 title: "¿Qué es DeepSeek? La IA china de pesos abiertos (2026)"
-description: "Qué es DeepSeek: el laboratorio chino de R1, V3 y V4, el mito de los 6 millones, pesos abiertos vs open source, si es seguro y cuánto cuesta. Agosto de 2026."
+description: "Qué es DeepSeek: el laboratorio chino de R1, V3 y V4, el mito de los 6 millones, pesos abiertos vs open source, si es seguro y cuánto cuesta. Septiembre de 2026."
 date: "2026-08-20"
-updated: "2026-08-23"
-recheckBy: "2026-09-15"  # peak/off-peak pricing + valuation are volatile (verified live api-docs.deepseek.com 08-20)
+updated: "2026-09-19"
+recheckBy: "2026-10-03"  # DeepSeek-V4.1-Flash replaced V4-Flash outright 2026-09-10, and DeepSeek reversed a plan to fold V4-Pro into that pricing (verified live api-docs.deepseek.com 09-19)
 author: "Samy BEN SADOK"
 tags: ["what-is-deepseek", "deepseek", "deepseek-r1", "open-weights", "chinese-ai", "llm", "guide"]
 draft: false
 locale: "es"
 donorSlug: "what-is-deepseek"
-donorCommit: "2f0d029"
+donorCommit: "fe20884"
 noindex: false
 ---
 
-DeepSeek es el laboratorio chino de inteligencia artificial cuyos modelos baratos y de pesos abiertos hicieron perder de golpe a Nvidia una cantidad récord de valor bursátil y pusieron nervioso al resto del sector. Si recuerdas el pánico de enero de 2025 y quieres la versión clara de qué es DeepSeek en realidad, quién lo desarrolla, si es seguro y en qué punto está hoy, esto es lo esencial, a agosto de 2026, ahora que [DeepSeek V4](https://geotoolbox.ai/blog/deepseek-v4) ya se ha lanzado en versión completa.
+DeepSeek es el laboratorio chino de inteligencia artificial cuyos modelos baratos y de pesos abiertos hicieron perder de golpe a Nvidia una cantidad récord de valor bursátil y pusieron nervioso al resto del sector. Si recuerdas el pánico de enero de 2025 y quieres la versión clara de qué es DeepSeek en realidad, quién lo desarrolla, si es seguro y en qué punto está hoy, esto es lo esencial, a septiembre de 2026, ahora que [DeepSeek V4](https://geotoolbox.ai/blog/deepseek-v4) ya se ha lanzado en versión completa y su nivel Flash ya cambió de arquitectura, DeepSeek-V4.1-Flash, el 10 de septiembre.
 
 Ese último detalle importa. Casi todos los artículos de «qué es DeepSeek» que vas a encontrar se escribieron durante la fiebre de R1 a principios de 2025 y se quedan ahí. Ocurre también con las explicaciones en español: las páginas mejor posicionadas para esta búsqueda (Xataka, UNIR, Raona, Tenable) están fechadas entre enero y julio de 2025 y no se han actualizado desde entonces. Aquí cubrimos lo que omiten o cuentan mal: la gama de modelos actual, la historia real detrás de los famosos «6 millones de dólares», la diferencia entre [pesos abiertos](https://geotoolbox.ai/glossary/open-weights) y [open source](https://geotoolbox.ai/glossary/open-source-ai), la verdadera dimensión de las preguntas sobre seguridad y sobre China, y qué significa un modelo chino abierto y potente para que la IA mencione o no tu marca.
 
@@ -47,20 +47,23 @@ DeepSeek tiene dos líneas de modelos. La serie V (V3, V4) es de propósito gene
 
 <table>
 <thead>
-<tr><th>Modelo (a agosto de 2026)</th><th>Lanzamiento</th><th>Qué es</th></tr>
+<tr><th>Modelo (a septiembre de 2026)</th><th>Lanzamiento</th><th>Qué es</th></tr>
 </thead>
 <tbody>
 <tr><td><strong>DeepSeek-V3</strong></td><td>Diciembre de 2024</td><td>Modelo general: 671 000 millones de parámetros totales / 37 000 millones activos (mezcla de expertos), 128K de contexto</td></tr>
 <tr><td><strong>DeepSeek-R1</strong></td><td>Enero de 2025</td><td>El modelo de razonamiento que arrancó el pánico; igualó al o1 de OpenAI en pruebas clave a un costo muy inferior</td></tr>
 <tr><td><strong>DeepSeek-V3.1</strong></td><td>Agosto de 2025</td><td>Modelo híbrido con modo de razonamiento y modo rápido sin razonamiento</td></tr>
 <tr><td><strong>DeepSeek-V3.2</strong></td><td>Diciembre de 2025</td><td>Atención de contexto largo más eficiente</td></tr>
-<tr><td><strong>DeepSeek-V4</strong> (disponible de forma general desde el 13 de agosto de 2026)</td><td>Vista previa en abril de 2026, versión general en agosto de 2026</td><td>V4-Pro (1,6 billones de parámetros totales / 49 000 millones activos) y V4-Flash (284 000 millones / 13 000 millones), ambos con 1 millón de tokens de contexto</td></tr>
+<tr><td><strong>DeepSeek-V4-Pro</strong> (versión general desde el 13 de agosto de 2026)</td><td>Vista previa en abril de 2026, versión general en agosto de 2026</td><td>Modelo insignia para razonamiento y código: 1,6 billones de parámetros totales / 49 000 millones activos, 1 millón de tokens de contexto (384K de salida máxima), sin visión</td></tr>
+<tr><td><strong>DeepSeek-V4.1-Flash</strong> (reemplazó a V4-Flash el 10 de septiembre de 2026)</td><td>Septiembre de 2026</td><td>Nivel rápido y barato con una nueva arquitectura codificador-decodificador causal: 552 000 millones + 196 000 millones (Engram) / 8000 millones activos en entrada, 16 000 millones en salida, 1 millón de tokens de contexto (384K de salida máxima), visión nativa</td></tr>
 </tbody>
 </table>
 
-Algunas cosas que conviene saber. La mayoría son modelos de mezcla de expertos (MoE): almacenan un número enorme de parámetros pero solo activan una pequeña parte para cada [token](https://geotoolbox.ai/blog/what-are-tokens-in-ai), que es el truco detrás de su bajo costo de funcionamiento. El gran salto de abril de 2026 fue la [vista previa de V4](https://api-docs.deepseek.com/news/news260424), que llevó la ventana de contexto a un millón de tokens y se dividió en un modelo Flash rápido y un modelo Pro más pesado, ambos publicados como pesos abiertos bajo licencia MIT. V4 funcionó como vista previa desde el 24 de abril y su buque insignia V4-Pro alcanzó la disponibilidad general el 13 de agosto de 2026, con el modelo Flash actualizado a la versión V4-Flash-0731 a finales de julio. (Curiosamente, la ficha del modelo V4-Pro sigue describiendo «una versión de vista previa de la serie DeepSeek-V4», aunque el producto ya se haya lanzado.) Para el detalle completo del modelo lanzado, sus pruebas de rendimiento, sus precios y sus comparativas, consulta nuestra [guía de DeepSeek V4](https://geotoolbox.ai/blog/deepseek-v4).
+Algunas cosas que conviene saber. La mayoría son modelos de mezcla de expertos (MoE): almacenan un número enorme de parámetros pero solo activan una pequeña parte para cada [token](https://geotoolbox.ai/blog/what-are-tokens-in-ai), que es el truco detrás de su bajo costo de funcionamiento. El gran salto de abril de 2026 fue la [vista previa de V4](https://api-docs.deepseek.com/news/news260424), que llevó la ventana de contexto a un millón de tokens, con ambos modelos publicados como pesos abiertos bajo licencia MIT. V4 funcionó como vista previa desde el 24 de abril y su buque insignia V4-Pro alcanzó la disponibilidad general el 13 de agosto de 2026. (Curiosamente, la ficha del modelo V4-Pro sigue describiendo «una versión de vista previa de la serie DeepSeek-V4», aunque el producto ya se haya lanzado.)
 
-Hay un modelo por el que la gente sigue preguntando y que falta: DeepSeek-R2. Se esperaba en 2025, pero a mediados de 2026 no ha llegado. Las informaciones apuntan a que Liang no estaba satisfecho con su rendimiento y a problemas de hardware por la apuesta de entrenarlo en chips domésticos de Huawei. Como la gama cambia cada pocos meses, trata esta tabla como una foto de agosto de 2026 y revisa la ficha de la versión que realmente uses.
+El nivel Flash se movió dos veces desde la vista previa de abril: una actualización oficial a finales de julio, y un cambio de arquitectura completo el 10 de septiembre, DeepSeek-V4.1-Flash, que añade visión nativa y retira por completo la versión anterior de Flash. DeepSeek anunció brevemente que también enrutaría el tráfico de V4-Pro a este nuevo precio de Flash a partir del 14 de septiembre, y luego dio marcha atrás «en respuesta a la demanda de los usuarios»: V4-Pro sigue como su propio modelo, con precio separado, y los antiguos alias deepseek-chat y deepseek-reasoner se retiraron el 24 de julio de 2026 (llama ahora a deepseek-flash y deepseek-v4-pro). Para el detalle completo de los modelos lanzados, sus pruebas de rendimiento, sus precios y sus comparativas, consulta nuestra [guía de DeepSeek V4](https://geotoolbox.ai/blog/deepseek-v4).
+
+Hay un modelo por el que la gente sigue preguntando y que falta: DeepSeek-R2. Se esperaba en 2025, pero a septiembre de 2026 no ha llegado. Las informaciones apuntan a que Liang no estaba satisfecho con su rendimiento y a problemas de hardware por la apuesta de entrenarlo en chips domésticos de Huawei. Como la gama cambia cada pocos meses, trata esta tabla como una foto de septiembre de 2026 y revisa la ficha de la versión que realmente uses.
 
 ## Por qué DeepSeek sacudió el mercado, y el mito de los 6 millones
 
@@ -117,23 +120,23 @@ En cuanto a capacidad, y siendo francos, DeepSeek compite con más fuerza en raz
 
 ## ¿DeepSeek es gratis? Precio y cómo acceder
 
-Sí, DeepSeek es gratis a través de la app web y las apps móviles, sin pago. Donde de verdad destaca es en la API, con precios muy por debajo de los laboratorios estadounidenses, incluso tras una subida de agosto de 2026. Las cifras de abajo son las [tarifas actuales de la API de V4](https://api-docs.deepseek.com/quick_start/pricing); cambian, y DeepSeek retiró sus alias antiguos `deepseek-chat` y `deepseek-reasoner` el 24 de julio de 2026; llama directamente a `deepseek-v4-flash` y `deepseek-v4-pro`.
+Sí, DeepSeek es gratis a través de la app web y las apps móviles, sin pago. Donde de verdad destaca es en la API, con precios muy por debajo de los laboratorios estadounidenses, y Flash se abarató todavía más el 10 de septiembre. Las cifras de abajo son las [tarifas actuales de la API](https://api-docs.deepseek.com/quick_start/pricing); cambian, así que llama a `deepseek-flash` y `deepseek-v4-pro` en vez de los alias antiguos ya retirados.
 
 <table>
 <thead>
-<tr><th>Cómo lo usas</th><th>Precio (a agosto de 2026)</th><th>Qué obtienes</th></tr>
+<tr><th>Cómo lo usas</th><th>Precio (a septiembre de 2026)</th><th>Qué obtienes</th></tr>
 </thead>
 <tbody>
 <tr><td><strong>Chat gratis</strong></td><td>0 $</td><td>Acceso por web y app móvil, sin configuración</td></tr>
-<tr><td><strong>API (V4-Flash)</strong></td><td>0,22 $ entrada / 0,66 $ salida en horas valle, hasta 0,44 $ / 1,32 $ en horas pico, por millón de tokens</td><td>El caballo de batalla barato y rápido; 1 millón de contexto</td></tr>
-<tr><td><strong>API (V4-Pro)</strong></td><td>0,66 $ entrada / 1,98 $ salida en horas valle, hasta 1,32 $ / 3,96 $ en horas pico, por millón de tokens</td><td>El modelo de mayor capacidad de DeepSeek, para razonamiento y agentes; 1 millón de contexto</td></tr>
+<tr><td><strong>API (V4.1-Flash)</strong></td><td>0,15 $ entrada (sin caché) / 0,60 $ salida en horas valle, hasta 0,30 $ / 1,20 $ en horas pico, por millón de tokens</td><td>El caballo de batalla barato y rápido; 1 millón de contexto (384K de salida máxima), ahora con visión nativa</td></tr>
+<tr><td><strong>API (V4-Pro)</strong></td><td>0,66 $ entrada (sin caché) / 1,98 $ salida en horas valle, hasta 1,32 $ / 3,96 $ en horas pico, por millón de tokens</td><td>El modelo de mayor capacidad de DeepSeek, para razonamiento y agentes; 1 millón de contexto (384K de salida máxima)</td></tr>
 <tr><td><strong>Autoalojamiento</strong></td><td>Licencia gratis; costo de hardware notable</td><td>Ejecutas los pesos abiertos tú mismo; los datos se quedan en tus servidores</td></tr>
 </tbody>
 </table>
 
-El cambio que DeepSeek venía anunciando desde julio llegó el 16 de agosto de 2026: la tarifa plana de todo el día se sustituyó por la división entre horas valle y horas pico de arriba, con las horas pico de 01:00 a 04:00 y de 06:00 a 10:00 UTC, al doble exacto de la tarifa valle. La [página oficial de precios](https://api-docs.deepseek.com/quick_start/pricing) de DeepSeek sigue siendo la fuente a consultar antes de construir nada, ya que estas tarifas han cambiado dos veces este año. Los precios están en dólares, la moneda de facturación de la API.
+La división entre horas valle y horas pico llegó el 16 de agosto de 2026, sustituyendo la tarifa plana de todo el día: las horas pico (de 01:00 a 04:00 y de 06:00 a 10:00 UTC, de lunes a viernes, excluyendo festivos oficiales chinos) cobran exactamente el doble de la tarifa valle; los fines de semana y festivos chinos se facturan siempre a tarifa valle. Luego, el 10 de septiembre de 2026, DeepSeek-V4.1-Flash reemplazó al modelo Flash con este nuevo precio, más bajo. DeepSeek también había anunciado que enrutaría V4-Pro a ese precio de Flash desde el 14 de septiembre, y dio marcha atrás: V4-Pro conserva su propio precio, sin cambios. La [página oficial de precios](https://api-docs.deepseek.com/quick_start/pricing) de DeepSeek sigue siendo la fuente a consultar antes de construir nada, ya que estas tarifas han cambiado tres veces este año. Los precios están en dólares, la moneda de facturación de la API.
 
-En comparación, esos precios de API son una fracción de lo que cobran los principales modelos cerrados, que es la razón por la que quienes programan recurren a DeepSeek para tareas de gran volumen en las que el costo es determinante. El acceso viene en cuatro formas: la web gratis, las apps móviles, la API compatible con OpenAI para construir y el autoalojamiento de los pesos abiertos si quieres control total. El autoalojamiento es realista sobre todo para empresas con hardware de GPU serio, ya que los modelos insignia son grandes, pero es la vía que esquiva por completo la cuestión del alojamiento en China. Para el resto, la app gratuita o un proveedor externo que aloje DeepSeek fuera de China es el punto medio práctico.
+En comparación, esos precios de API son una fracción de lo que cobran los principales modelos cerrados, que es la razón por la que quienes programan recurren a DeepSeek para tareas de gran volumen en las que el costo es determinante. El acceso viene en tres vías principales: la web y la app móvil gratis, la API compatible con OpenAI para construir, y el autoalojamiento de los pesos abiertos si quieres control total. El autoalojamiento es realista sobre todo para empresas con hardware de GPU serio, ya que los modelos insignia son grandes, pero es la vía que esquiva por completo la cuestión del alojamiento en China; para quien quiere esa misma distancia sin tener un clúster de GPU propio, un proveedor externo que aloje DeepSeek fuera de China es un punto medio práctico, además de las tres vías anteriores.
 
 ## Qué significa DeepSeek para tu visibilidad en la IA
 
@@ -153,7 +156,7 @@ Depende de cómo lo uses. Los modelos tienen barreras de seguridad como cualquie
 
 ### ¿DeepSeek es gratis?
 
-Sí. La web y las apps móviles son gratis, y la API está entre las más baratas de cualquier modelo importante, sobre unos 0,22 $ por millón de tokens de entrada en horas valle para el modelo V4-Flash a agosto de 2026 (hasta 0,44 $ en las horas pico de DeepSeek). Los pesos abiertos también son gratis de descargar y ejecutar bajo licencia MIT si tienes el hardware. Los precios cambian: consulta la página oficial de tarifas.
+Sí. La web y las apps móviles son gratis, y la API está entre las más baratas de cualquier modelo importante, sobre unos 0,15 $ por millón de tokens de entrada (sin caché) en horas valle para el modelo V4.1-Flash a septiembre de 2026 (hasta 0,30 $ en las horas pico de DeepSeek). Los pesos abiertos también son gratis de descargar y ejecutar bajo licencia MIT si tienes el hardware. Los precios cambian: consulta la página oficial de tarifas.
 
 ### ¿Está DeepSeek prohibido en España o Latinoamérica?
 
@@ -174,7 +177,9 @@ Depende de la tarea. A DeepSeek se le elogia por el razonamiento, la programaci�
 ## Fuentes
 
 - Anuncio de la vista previa de DeepSeek V4 - DeepSeek, abril de 2026 - `api-docs.deepseek.com/news/news260424`
-- Precios de la API de DeepSeek - DeepSeek (oficial) - `api-docs.deepseek.com/quick_start/pricing`
+- Precios de la API de DeepSeek - DeepSeek (oficial), verificado en vivo el 19 de septiembre de 2026 - `api-docs.deepseek.com/quick_start/pricing`
+- Registro de cambios (lanzamiento de V4.1 Flash, continuidad de V4-Pro) - DeepSeek API Docs, verificado en vivo el 19 de septiembre de 2026 - `api-docs.deepseek.com/updates`
+- Presentación de DeepSeek-V4.1-Flash - DeepSeek, 10 de septiembre de 2026 - `deepseek.com/en/news/deepseek-v4-1-flash`
 - Ficha del modelo DeepSeek-V4-Pro - DeepSeek (Hugging Face) - `huggingface.co/deepseek-ai/DeepSeek-V4-Pro`
 - DeepSeek, resumen de la empresa - Wikipedia - `es.wikipedia.org/wiki/DeepSeek`
 - Wiz descubre una base de datos de DeepSeek expuesta - Wiz, enero de 2025 - `wiz.io/blog/wiz-research-uncovers-exposed-deepseek-database-leak`
