@@ -127,7 +127,7 @@ export function Footer({
           <p className="text-xs text-gray-600">
             &copy; {new Date().getFullYear()} GEO Toolbox. {footer?.rights ?? "All rights reserved."}
           </p>
-          <div className="flex gap-4">
+          <div className="flex flex-wrap justify-center gap-x-4 gap-y-2">
             <Link href={L("/privacy")} className="text-xs text-gray-600 hover:text-gray-900 transition-colors">{footer?.privacy ?? "Privacy"}</Link>
             <Link href={L("/terms")} className="text-xs text-gray-600 hover:text-gray-900 transition-colors">{footer?.terms ?? "Terms"}</Link>
             <Link href={L("/legal")} className="text-xs text-gray-600 hover:text-gray-900 transition-colors">{footer?.legal ?? "Legal"}</Link>

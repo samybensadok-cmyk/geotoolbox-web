@@ -2,16 +2,27 @@
 
 import Link from "next/link"
 import { useEffect, useRef, useState } from "react"
+import { usePathname } from "next/navigation"
+import { trackEvent } from "@/lib/analytics"
+import { currencyParam } from "@/lib/i18n/currency"
 import { siteConfig } from "@/lib/config"
 import { tools } from "@/lib/tools"
 import { cn } from "@/lib/utils"
 import { localizeNavHref } from "@/lib/i18n/nav"
+import headerStyles from "./header.module.css"
 
 export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; locale?: string }) {
   // Keeps chrome links inside the visitor's locale. A no-op on `en`, and a
   // no-op for paths with no localized route (they stay on their EN page rather
   // than 404ing under /fr) — see lib/i18n/nav.ts.
   const L = (href: string) => localizeNavHref(href, locale)
+  const pathname = usePathname()
+  // next-intl rewrites the default homepage internally to /en. Treat both
+  // forms identically so its prerendered and hydrated header agree.
+  const isHomepage = pathname === `/${locale}` || (locale === "en" && pathname === "/")
+  const startHref = isHomepage ? `${siteConfig.appSignupUrl}&plan=starter${currencyParam(locale)}` : L("/pricing")
+  const startLabel = isHomepage ? nav?.homeTrial ?? "Start trial" : nav?.startFree ?? "Get started"
+  const trackStart = () => { if (isHomepage) trackEvent("app_cta_click", { placement: "home_header", cta_target: startHref, locale, design_version: "home_v3" }) }
 
   const [mobileOpen, setMobileOpen] = useState(false)
   const [featuresOpen, setFeaturesOpen] = useState(false)
@@ -26,7 +37,7 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
   // Close desktop dropdowns on Escape
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") { setFeaturesOpen(false); setToolsOpen(false) }
+      if (e.key === "Escape") { setFeaturesOpen(false); setToolsOpen(false); setMobileOpen(false) }
     }
     window.addEventListener("keydown", onKey)
     return () => window.removeEventListener("keydown", onKey)
@@ -65,7 +76,7 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-gray-100 bg-white/90 backdrop-blur-md">
+    <header data-homepage={isHomepage || undefined} className={cn("sticky top-0 z-50 w-full border-b border-gray-100 bg-white/90 backdrop-blur-md", isHomepage && headerStyles.homepage)}>
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-6">
         {/* Logo */}
         <Link href={L("/")} className="flex items-center gap-2 -mx-2 px-2 py-2 rounded-md">
@@ -99,7 +110,7 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
           >
             <button
               type="button"
-              onClick={() => setFeaturesOpen(!featuresOpen)}
+              onClick={event => event.detail === 0 ? setFeaturesOpen(!featuresOpen) : openFeatures()}
               aria-expanded={featuresOpen}
               aria-haspopup="true"
               className="flex min-h-[40px] items-center gap-1 rounded-md px-2 lg:px-3 text-[13px] font-medium text-gray-700 transition-colors hover:text-gray-900 hover:bg-gray-50"
@@ -170,7 +181,7 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
           >
             <button
               type="button"
-              onClick={() => setToolsOpen(!toolsOpen)}
+              onClick={event => event.detail === 0 ? setToolsOpen(!toolsOpen) : openTools()}
               aria-expanded={toolsOpen}
               aria-haspopup="true"
               className="flex min-h-[40px] items-center gap-1 rounded-md px-2 lg:px-3 text-[13px] font-medium text-gray-700 transition-colors hover:text-gray-900 hover:bg-gray-50"
@@ -263,11 +274,12 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
               {nav?.login ?? "Log in"}
             </Link>
             <Link
-              href={L("/pricing")}
+              href={startHref}
               prefetch={false}
+              onClick={trackStart}
               className="flex min-h-[40px] items-center rounded-full bg-accent-900 px-3 lg:px-3.5 text-[13px] font-medium text-white transition-colors hover:bg-accent-800"
             >
-              {nav?.startFree ?? "Get started"}
+              {startLabel}
             </Link>
           </div>
         </nav>
@@ -421,12 +433,12 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
                 {nav?.login ?? "Log in"}
               </Link>
               <Link
-                href={L("/pricing")}
+                href={startHref}
                 prefetch={false}
-                onClick={() => setMobileOpen(false)}
+                onClick={() => { trackStart(); setMobileOpen(false) }}
                 className="rounded-full bg-accent-900 py-3 text-center text-sm font-medium text-white"
               >
-                {nav?.startFree ?? "Get started"}
+                {startLabel}
               </Link>
             </div>
           </nav>
