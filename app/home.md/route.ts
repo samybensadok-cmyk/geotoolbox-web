@@ -37,7 +37,6 @@ export function GET() {
     "",
     `- [Pricing](${base}/pricing)`,
     `- [Blog](${base}/blog) — every article is also markdown: append .md, or send Accept: text/markdown`,
-    `- [Glossary](${base}/glossary)`,
     `- [llms.txt](${base}/llms.txt) · [llms-full.txt](${base}/llms-full.txt)`,
     `- [Contact](${base}/contact)`,
     "",

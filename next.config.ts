@@ -28,7 +28,6 @@ const nextConfig: NextConfig = {
               '</llms.txt>; rel="alternate"; type="text/plain"; title="llms.txt", ' +
               '</llms-full.txt>; rel="alternate"; type="text/plain"; title="llms-full.txt", ' +
               '</llms-blog.txt>; rel="alternate"; type="text/plain"; title="Complete article index", ' +
-              '</llms-glossary.txt>; rel="alternate"; type="text/plain"; title="Complete glossary index", ' +
               '</home.md>; rel="alternate"; type="text/markdown", ' +
               // rel="help", not rel="alternate": /agents.md is site-level guidance
               // (when to use us, how to call us), NOT an alternate representation
@@ -51,6 +50,10 @@ const nextConfig: NextConfig = {
       { source: "/features/content-brief", destination: "/features/content-studio", permanent: true },
       // ES: retargeted geo-seo → que-es-geo (better head term "que es geo", KD16/1,060). 2026-08-13.
       { source: "/es/blog/geo-seo", destination: "/es/blog/que-es-geo", permanent: true },
+      // The glossary index was retired 2026-09-19 (see lib/glossary-redirects.ts). This URL was
+      // advertised in the Link header / llms.txt / agents.md for weeks, so agents keep fetching it;
+      // a .txt path never reaches the markdown-404 rule, so without this it would be an HTML 404.
+      { source: "/llms-glossary.txt", destination: "/llms-blog.txt", permanent: true },
     ]
   },
   async rewrites() {

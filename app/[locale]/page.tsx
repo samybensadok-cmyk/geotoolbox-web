@@ -54,7 +54,6 @@ export async function generateMetadata({
                 { url: "/llms.txt", title: "llms.txt" },
                 { url: "/llms-full.txt", title: "llms-full.txt" },
                 { url: "/llms-blog.txt", title: "Complete article index" },
-                { url: "/llms-glossary.txt", title: "Complete glossary index" },
               ],
               "text/markdown": [{ url: "/home.md", title: "Homepage (markdown)" }],
             },

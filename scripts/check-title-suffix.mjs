@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Brand-suffix gate: article + glossary <title> tags must NOT carry " | GEO Toolbox".
+// Brand-suffix gate: article <title> tags must NOT carry " | GEO Toolbox".
 //
 // Why: the root metadata template (lib/root-metadata.ts) appends " | GEO Toolbox" (+14 chars)
 // to every route that doesn't opt out with `title: { absolute: ... }`. Forensic audit 2026-08-30
@@ -26,7 +26,6 @@ const SUFFIX = /[|\-–—:·]\s*GEO\s*Toolbox\s*$/i;
 // not checked anything.
 const MUST_BE_ABSOLUTE = [
   'app/[locale]/blog/[slug]/page.tsx',
-  'app/[locale]/glossary/[slug]/page.tsx',
 ];
 
 let violations = 0;

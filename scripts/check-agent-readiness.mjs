@@ -3,7 +3,7 @@
  *
  *   npm run check:agents
  *
- * These four files (/llms.txt, /llms-blog.txt, /llms-glossary.txt, /agents.md)
+ * These three files (/llms.txt, /llms-blog.txt, /agents.md)
  * plus the 404 recovery body and the homepage Organization JSON-LD are what an
  * agent-readiness scanner grades, and every one of them is GENERATED — so they
  * regress silently. Three failure modes have already happened or were one commit
@@ -30,7 +30,6 @@ import { join } from "node:path"
 import {
   buildLlmsIndex,
   buildBlogIndex,
-  buildGlossaryIndex,
   buildAgentsMd,
   LLMS_LOCALES,
   LLMS_TXT_MAX_CHARS,
@@ -51,7 +50,6 @@ const pass = (msg) => console.log(`  ✓ ${msg}`)
 const docs = {
   "/llms.txt": buildLlmsIndex(),
   "/llms-blog.txt": buildBlogIndex(),
-  "/llms-glossary.txt": buildGlossaryIndex(),
   "/agents.md": buildAgentsMd(),
   "404 recovery body": markdown404Body("/some/missing/path"),
 }
@@ -80,7 +78,7 @@ console.log("\nagent-readiness gate\n")
   const n = docs["/llms.txt"].length
   if (n > LLMS_TXT_MAX_CHARS) {
     fail(
-      `/llms.txt is ${n.toLocaleString()} chars, over the ${LLMS_TXT_MAX_CHARS.toLocaleString()} ceiling. Move bulk lists into /llms-blog.txt or /llms-glossary.txt and lower RECENT_LIMIT — do not raise the ceiling.`
+      `/llms.txt is ${n.toLocaleString()} chars, over the ${LLMS_TXT_MAX_CHARS.toLocaleString()} ceiling. Move bulk lists into /llms-blog.txt and lower RECENT_LIMIT — do not raise the ceiling.`
     )
   } else {
     pass(`/llms.txt is ${n.toLocaleString()} chars (ceiling ${LLMS_TXT_MAX_CHARS.toLocaleString()})`)
@@ -195,7 +193,6 @@ if (!failures) pass("all generated docs: H1, markdown links, balanced fences, no
   const wrappers = {
     "app/llms.txt/route.ts": "buildLlmsIndex",
     "app/llms-blog.txt/route.ts": "buildBlogIndex",
-    "app/llms-glossary.txt/route.ts": "buildGlossaryIndex",
     "app/agents.md/route.ts": "buildAgentsMd",
   }
   for (const [file, fn] of Object.entries(wrappers)) {
@@ -210,7 +207,7 @@ if (!failures) pass("all generated docs: H1, markdown links, balanced fences, no
       fail(`${file} no longer calls ${fn}() — this gate would be testing code the site does not serve`)
     }
   }
-  if (!failures) pass("all four routes render from the builders this gate measures")
+  if (!failures) pass("all three routes render from the builders this gate measures")
 }
 
 // ── 9. the markdown-404 route allowlist covers every real top-level route ───

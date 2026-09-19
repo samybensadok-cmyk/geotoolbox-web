@@ -41,7 +41,6 @@ export const rootMetadata: Metadata = {
         { url: "/llms.txt", title: "llms.txt" },
         { url: "/llms-full.txt", title: "llms-full.txt" },
         { url: "/llms-blog.txt", title: "Complete article index" },
-        { url: "/llms-glossary.txt", title: "Complete glossary index" },
       ],
       // /agents.md is the cold-discovery path: an agent that lands on a page
       // from web search sees these <head> alternates without ever fetching

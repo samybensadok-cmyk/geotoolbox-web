@@ -26,7 +26,9 @@ function isIndexable(mdxPath) {
   return !/^draft:\s*true/m.test(head) && !/^noindex:\s*true/m.test(head)
 }
 
-// content/blog/x.mdx -> /blog/x ; content/fr/blog/x.mdx -> /fr/blog/x ; same for glossary
+// content/blog/x.mdx -> /blog/x ; content/fr/blog/x.mdx -> /fr/blog/x. `glossary` stays in the
+// regex on purpose: the section was retired 2026-09-19, so a glossary path can only ever be a
+// DELETED file — which is exactly the case isIndexable() submits so Bing re-crawls the 301/410.
 function fileToUrl(file) {
   const m = /^content\/(?:(fr|es|nl|de)\/)?(blog|glossary)\/([^/]+)\.mdx$/.exec(file)
   if (!m) return null
@@ -37,7 +39,7 @@ function fileToUrl(file) {
 
 function allUrls() {
   const urls = [
-    `${BASE}/`, `${BASE}/blog`, `${BASE}/glossary`, `${BASE}/features`,
+    `${BASE}/`, `${BASE}/blog`, `${BASE}/features`,
     `${BASE}/pricing`, `${BASE}/about`, `${BASE}/contact`,
   ]
   for (const dir of ["app/features", "app/tools"]) {
@@ -45,7 +47,7 @@ function allUrls() {
       if (entry.isDirectory()) urls.push(`${BASE}/${dir.replace("app/", "")}/${entry.name}`)
     }
   }
-  const contentDirs = ["content/blog", "content/glossary", "content/fr/blog", "content/fr/glossary"]
+  const contentDirs = ["content/blog", "content/fr/blog", "content/es/blog", "content/de/blog", "content/nl/blog"]
   for (const dir of contentDirs) {
     if (!fs.existsSync(dir)) continue
     for (const f of fs.readdirSync(dir).filter((f) => f.endsWith(".mdx"))) {

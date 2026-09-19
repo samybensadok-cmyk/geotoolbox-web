@@ -39,8 +39,6 @@ const counts = {
   en: countPublished("content/blog"),
   fr: countPublished("content/fr/blog"),
   es: countPublished("content/es/blog"),
-  glossary: countPublished("content/glossary"),
-  glossaryFr: countPublished("content/fr/glossary"),
 }
 
 // Build date, en-GB short — matches the "21 Aug 2026" stamp style used by
@@ -55,5 +53,5 @@ const asOf = new Date().toLocaleDateString("en-GB", {
 const payload = { generatedAt: new Date().toISOString().slice(0, 10), asOf, ...counts }
 writeFileSync(OUT, JSON.stringify(payload, null, 2) + "\n")
 console.log(
-  `content counts → ${OUT}\n  EN ${counts.en} · FR ${counts.fr} · ES ${counts.es} · glossary ${counts.glossary} EN + ${counts.glossaryFr} FR · as of ${asOf}`,
+  `content counts → ${OUT}\n  EN ${counts.en} · FR ${counts.fr} · ES ${counts.es} · as of ${asOf}`,
 )

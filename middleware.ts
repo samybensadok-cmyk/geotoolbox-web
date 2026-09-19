@@ -2,6 +2,7 @@ import createMiddleware from "next-intl/middleware"
 import { NextResponse, type NextRequest } from "next/server"
 import { routing } from "./i18n/routing"
 import { isDefinitelyUnknownPath, prefersNonHtml } from "./lib/known-routes"
+import { GLOSSARY_REDIRECTS } from "./lib/glossary-redirects"
 
 const handleI18nRouting = createMiddleware(routing)
 
@@ -16,6 +17,55 @@ function markdownRewrite(request: NextRequest, locale: string, section: string, 
   const res = NextResponse.rewrite(new URL(`/md/${locale}/${section}/${slug}`, request.url))
   res.headers.set("Vary", "Accept")
   return res
+}
+
+// RETIRED GLOSSARY (2026-09-19). Every /glossary and /fr/glossary URL 301s to
+// the broader article that covers the term, or returns a real 410 where no
+// same-locale article exists (lib/glossary-redirects.ts, generated from the
+// migration CSV). This runs BEFORE the markdown-twin rewrite on purpose: a
+// `.md` glossary request would otherwise be rewritten to the internal /md/
+// route and never reach the table. The .md twin of a retired URL 301s to the
+// .md twin of its target, so an agent that asked for markdown still gets
+// markdown at the end of the hop. Trailing slashes are stripped before the
+// lookup as a safety net; in practice Next 308-normalises /glossary/x/ to
+// /glossary/x BEFORE middleware runs (same as every route on the site), so a
+// slashed retired URL is 308 → 301 → 200 — accepted, none are linked anywhere.
+// These rules stay live indefinitely — Google needs to crawl the 301/410 to
+// process it, so never disallow /glossary in robots.txt either.
+const RETIRED_GLOSSARY = /^\/(?:fr\/)?glossary(?:\/|$)/
+
+function retiredGlossaryResponse(request: NextRequest): NextResponse | undefined {
+  const { pathname } = request.nextUrl
+  if (!RETIRED_GLOSSARY.test(pathname)) return
+  const isMd = pathname.endsWith(".md")
+  const key = pathname.replace(/\.md$/, "").replace(/\/+$/, "")
+  const rule = GLOSSARY_REDIRECTS[key]
+  if (!rule) return // unknown term: fall through to the normal 404
+  if (rule.status === 301) {
+    // Only term pages have markdown twins; the hubs (/glossary → /blog) do not.
+    const to = isMd && key.includes("/glossary/") ? `${rule.to}.md` : rule.to
+    const url = new URL(to, request.url)
+    url.search = request.nextUrl.search // keep ?utm_* etc. — a campaign link to a term keeps its attribution
+    return NextResponse.redirect(url, 301)
+  }
+  const localePrefix = key.startsWith("/fr/") ? "/fr" : ""
+  const blog = new URL(`${localePrefix}/blog`, request.url).toString()
+  const wantsHtml = !isMd && (request.headers.get("accept") ?? "").includes("text/html")
+  if (wantsHtml) {
+    const html = `<!doctype html><html lang="${localePrefix ? "fr" : "en"}"><head><meta charset="utf-8"><meta name="robots" content="noindex"><title>410 Gone</title><style>body{font-family:system-ui,sans-serif;max-width:40rem;margin:4rem auto;padding:0 1rem;color:#111}a{color:#1d4ed8}</style></head><body><h1>410 — ${localePrefix ? "Cette page a été retirée" : "This page has been retired"}</h1><p>${localePrefix ? `Le glossaire a été fusionné dans le blog. <a href="${blog}">Parcourir les articles</a>.` : `The glossary was folded into the blog. <a href="${blog}">Browse the articles</a>.`}</p></body></html>`
+    return new NextResponse(html, { status: 410, headers: { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=3600", vary: "Accept" } })
+  }
+  const md = [
+    "# 410 Gone",
+    "",
+    `\`${key}\` was a glossary entry. The glossary was retired on 2026-09-19 and this term has no same-locale replacement, so the URL is permanently gone — do not retry it.`,
+    "",
+    `- Articles: ${blog}`,
+    `- Site index: ${new URL("/llms.txt", request.url)}`,
+    `- Sitemap: ${new URL("/sitemap.xml", request.url)}`,
+    "",
+  ].join("\n")
+  return new NextResponse(md, { status: 410, headers: { "content-type": "text/markdown; charset=utf-8", "cache-control": "public, max-age=3600", vary: "Accept" } })
 }
 
 export default function middleware(request: NextRequest) {
@@ -48,6 +98,9 @@ export default function middleware(request: NextRequest) {
     // which trades every visitor's TTFB for an edge case — not worth it.
     // Left as a fallthrough into next-intl routing, which is what `/` needs.
   }
+
+  const retired = retiredGlossaryResponse(request)
+  if (retired) return retired
 
   const twin = MD_TWIN.exec(pathname)
   if (twin) {

@@ -23,7 +23,7 @@ There is a fitting demonstration of why curated knowledge matters. Ask an AI mod
 
 **The Open Knowledge Format (OKF) is an open, vendor-neutral specification from Google Cloud for handing curated knowledge to AI agents as plain Markdown files.** [Google Cloud introduced it](https://cloud.google.com/blog/products/data-analytics/how-the-open-knowledge-format-can-improve-data-sharing) on June 12, 2026 as a way to package the facts an organization already knows and trusts, so an agent can read them directly instead of re-deriving them from raw documents every time.
 
-The format itself is deliberately boring, which is the point. An OKF bundle is a directory tree of Markdown files, one concept per file, each carrying a small block of YAML frontmatter. A concept can be a metric definition, a database schema, a business rule, an API, or a policy. Files link to each other with ordinary Markdown links, so a cross-linked bundle reads as a lightweight [knowledge graph](https://geotoolbox.ai/glossary/knowledge-graph) an agent can walk, not a pile of disconnected pages.
+The format itself is deliberately boring, which is the point. An OKF bundle is a directory tree of Markdown files, one concept per file, each carrying a small block of YAML frontmatter. A concept can be a metric definition, a database schema, a business rule, an API, or a policy. Files link to each other with ordinary Markdown links, so a cross-linked bundle reads as a lightweight knowledge graph an agent can walk, not a pile of disconnected pages.
 
 Per the [OKF specification](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md), the only always-required field is `type`. A concept carrying nothing but `type` is already valid. Recommended fields (`title`, `description`, `resource`, `tags`) add context, and two reserved filenames do the structural work: `index.md` lists a directory for progressive disclosure, and `log.md` records history.
 
@@ -63,7 +63,7 @@ RAG treats knowledge as a large body of text to be searched at query time. OKF t
 </tbody>
 </table>
 
-Read the provenance and freshness rows again. That is where OKF v0.2 standardizes something [retrieval](https://geotoolbox.ai/glossary/retrieval-augmented-generation) leaves to each implementation.
+Read the provenance and freshness rows again. That is where OKF v0.2 standardizes something [retrieval](https://geotoolbox.ai/blog/what-is-rag) leaves to each implementation.
 
 ## The v0.2 Trust Layer: What OKF Standardizes That RAG Doesn't
 
@@ -101,7 +101,7 @@ sources:
 ---
 ```
 
-`stale_after` is the quiet one. The bare RAG pattern has no built-in notion of a fact expiring; unless you add time-to-live logic yourself, a stale chunk sits in the index looking exactly as retrievable as a fresh one. OKF lets the knowledge itself declare an expiry date, which pushes staleness from an invisible failure into a field you can query and act on. Combined with the `sources` block, this gives a bundle a kind of [grounding](https://geotoolbox.ai/glossary/grounding) and accountability that a retrieval index does not carry by default.
+`stale_after` is the quiet one. The bare RAG pattern has no built-in notion of a fact expiring; unless you add time-to-live logic yourself, a stale chunk sits in the index looking exactly as retrievable as a fresh one. OKF lets the knowledge itself declare an expiry date, which pushes staleness from an invisible failure into a field you can query and act on. Combined with the `sources` block, this gives a bundle a kind of [grounding](https://geotoolbox.ai/blog/how-does-ai-search-work) and accountability that a retrieval index does not carry by default.
 
 ## Does OKF Replace RAG? The Hybrid Split
 
@@ -144,7 +144,7 @@ Cost cuts the same way. OKF avoids embedding spend, a vector database, and retri
 
 The most common objection to OKF is that it is nothing new. It is worth taking seriously, because it is half right. A folder of Markdown files with metadata is not a novel invention. What is new is the shared contract.
 
-Against a formal [knowledge graph](https://geotoolbox.ai/glossary/knowledge-graph), OKF trades power for maintainability. A triple store with a query language gives you richer traversal, but it also demands specialized tooling and people who know it. OKF is human-readable files anyone on the team can edit in a text editor and review in a Git pull request. You get the graph shape, through cross-links, without the graph database.
+Against a formal [knowledge graph](https://geotoolbox.ai/blog/entity-seo), OKF trades power for maintainability. A triple store with a query language gives you richer traversal, but it also demands specialized tooling and people who know it. OKF is human-readable files anyone on the team can edit in a text editor and review in a Git pull request. You get the graph shape, through cross-links, without the graph database.
 
 Against a wiki, Obsidian vault, or a `CLAUDE.md` file, the difference is standardization. Those all work, but each one is bespoke. OKF fixes the frontmatter fields and the required `type`, so any agent or vendor that speaks OKF can read your bundle without custom parsing. Portability is the entire pitch, and it is why the "just a folder" dismissal understates it.
 
