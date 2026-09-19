@@ -2,7 +2,7 @@
 title: "How Does ChatGPT Actually Work? The Transformer, in Plain English"
 description: "How does ChatGPT work? The honest mechanism: tokens, embeddings, attention, and next-token prediction, and what each step means for your AI visibility."
 date: "2026-06-12"
-updated: "2026-08-22"  # C42 ads: self-serve auction now exists (still never in-answer), synced during ES localization
+updated: "2026-09-19"  # ads freshness: Germany/Europe rollout (31 mkts, self-serve 31 Aug), OAI-AdsBot, Sponsored Agents; 2nd figure added; synced during DE localization
 author: "Samy BEN SADOK"
 tags: ["how-does-chatgpt-work", "transformer", "llm", "ai-search", "geo", "guide"]
 draft: false
@@ -121,11 +121,18 @@ The second is **live retrieval**, which only happens when the model runs a web s
 
 Two doors, then, and they open with different keys. Getting into the training corpus is slow and largely out of your hands. The retrieval door you can actually check, because it depends on whether ChatGPT's search crawlers can reach your pages at all, chiefly OAI-SearchBot, which indexes pages for ChatGPT search, and ChatGPT-User, which fetches a page live when a user's question triggers it. ([GPTBot](https://geotoolbox.ai/blog/gptbot) is the separate training crawler, not the search gate, a distinction worth getting right before you block the wrong one.) What the crawler receives matters too: in crawler-log studies, several AI bots have behaved like initial-HTML parsers rather than full browsers, so anything that only appears after JavaScript runs is at higher risk of being missed, though this varies by bot and is worth verifying. One caution worth stating plainly: ChatGPT's search is not a simple wrapper around any single search engine, so do not assume your Google ranking carries straight over to it.
 
+Since ads launched, OpenAI runs a fourth crawler: **OAI-AdsBot** validates the safety of pages submitted as ads. It has no bearing on organic retrieval, OAI-SearchBot and ChatGPT-User still gate that, but anyone running ChatGPT Ads will find it in their own server logs.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/how-does-chatgpt-work/parametric-vs-retrieval.png" alt="Parametric knowledge versus live retrieval: what each is, when it runs, how current it stays, and which crawler gates it." w="1300" h="591" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Two tracks, two crawlers: parametric knowledge is always on, live retrieval only runs on demand.</figcaption>
+</figure>
+
 ## What This Actually Means for Your AI Visibility
 
 Now the payoff, and it starts with a subtraction. Because there is no rule about your brand anywhere in the weights, any advice that promises to "optimize for the attention mechanism" or to format your content so the model "attends to it" is selling you access to a control panel that does not exist. It is unfalsifiable: there is nothing on the other side to push.
 
-The same goes for the hope that you can pay your way in. OpenAI [began showing labeled ads in ChatGPT in early 2026](https://techcrunch.com/2026/02/09/chatgpt-rolls-out-ads/), and by mid-2026 it had opened a self-serve ad auction (a relevance-weighted second-price system). But those ads sit in a labeled block apart from the answer, never inside it: as of August 2026 there is still no auction that drops your brand inside the generated text itself, and OpenAI states that ads do not influence the assistant's answer. The answer comes out of the weights and, sometimes, a live fetch, and there is no checkout for either.
+The same goes for the hope that you can pay your way in. OpenAI [began showing labeled ads in ChatGPT in the US on 9 February 2026](https://help.openai.com/en/articles/20001047-ads-in-chatgpt), opened a self-serve Ads Manager by mid-2026 (OpenAI describes the mechanism as [a relevance-weighted, second-price auction](https://help.openai.com/en/articles/20001207-ads-in-chatgpt-the-basics)), and [extended ads to 31 European markets in late August 2026](https://openai.com/index/chatgpt-ads-expands-across-europe/). But those ads sit in a labeled block apart from the answer, never inside it: OpenAI's own documentation says ads "can appear below the end of a response" and are "visually separated from ChatGPT's response," and that advertisers have "no ability to shape, rank, or alter ChatGPT's responses." As of September 2026 there is still no auction that drops your brand inside the generated text itself. The closest thing is [Sponsored Agents](https://openai.com/index/reimagining-advertising-with-ai/), in US testing since 16 September 2026, which let someone start a separate, clearly labeled conversation with a brand's agent after clicking an ad, still outside the answer, and still after a click. The answer comes out of the weights and, sometimes, a live fetch, and there is no checkout for either.
 
 What is left is less exciting and a great deal more real, and it splits cleanly into what you can check and what you can only work toward. Two levers are verifiable today: whether the retrieval crawlers can reach your pages, and what the models actually say about you when you [track it](https://geotoolbox.ai/blog/how-to-track-ai-visibility) across many runs rather than trusting one lucky screenshot, since sampling makes any single answer an anecdote. The other two are directional, grounded in how training works but impossible to measure for your brand directly: being described accurately and consistently across the sources these models read, and keeping your facts current so the likeliest continuation about you is true. Anyone who tells you those last two are measurable is selling a certainty the mechanism does not offer.
 
@@ -174,4 +181,7 @@ Only when it runs a web search, which modern versions now do automatically for m
 - Stephen Wolfram: What Is ChatGPT Doing and Why Does It Work? - `writings.stephenwolfram.com/2023/02/what-is-chatgpt-doing-and-why-does-it-work`
 - OpenAI Help: Does ChatGPT tell the truth? - `help.openai.com/en/articles/8313428-does-chatgpt-tell-the-truth`
 - Wikipedia: GPT-3 (175 billion parameters, 96 layers) - `en.wikipedia.org/wiki/GPT-3`
-- TechCrunch: ChatGPT rolls out ads (February 2026) - `techcrunch.com/2026/02/09/chatgpt-rolls-out-ads`
+- The Verge: Sam Altman on the 100 trillion parameter rumor (January 2023) - `theverge.com/2023/1/18/23560328/openai-gpt4-rumor-release-sam-altman-interview`
+- OpenAI: Ads in ChatGPT, expansion to Europe (August 2026) - `openai.com/index/chatgpt-ads-expands-across-europe`
+- OpenAI: EU Privacy Policy - `openai.com/policies/eu-privacy-policy`
+- OpenAI Developers: Bots and crawlers reference - `developers.openai.com/api/docs/bots`
