@@ -141,18 +141,28 @@ export default function middleware(request: NextRequest) {
     headers.delete("x-sg-client-ip")
     headers.delete("x-sg-edge")
     const edgeSecret = process.env.SG_EDGE_SECRET ?? ""
-    // x-vercel-forwarded-for is the edge's own value HERE, before the external rewrite; the
-    // forgeable-passthrough observed at the origin is a property of that later hop, not of
-    // what middleware reads. Leftmost entry, and only if it is a plain IP literal.
+    // ⚠️ WHICH SOURCE IS ACTUALLY TRUSTWORTHY HERE IS NOT YET ESTABLISHED. At the ORIGIN, a
+    // client-supplied x-vercel-forwarded-for was observed passing through 3 times in 6 when
+    // sent together with x-vercel-proxied-for. Whether middleware — which runs BEFORE the
+    // external rewrite — sees the edge's value or the client's is a different question, and
+    // guessing it would be the same mistake as the sg_get_client_ip() comment that claimed
+    // this header was unforgeable. So: x-sg-client-ip is emitted UNCONDITIONALLY (the inbound
+    // copy is deleted above, so it is always the edge's answer or nothing), which makes the
+    // question MEASURABLE from outside before anything depends on it —
+    //   curl -H 'X-Vercel-Forwarded-For: 9.9.9.9' -H 'X-Vercel-Proxied-For: 8.8.8.8' \
+    //        https://geotoolbox.ai/api/check-headers.php | grep X_SG_CLIENT_IP
+    // repeated ~6x, because the passthrough was intermittent. Any 9.9.9.9 means this source is
+    // client-influenced and must change (x-vercel-proxied-for was correct 7/7 at the origin;
+    // x-real-ip is the other candidate) BEFORE SG_EDGE_SECRET is set.
+    // x-sg-edge — the part that makes PHP TRUST the value — is still only sent when the secret
+    // exists, so emitting the IP early cannot grant trust to anything.
     const fwd = (request.headers.get("x-vercel-forwarded-for") ?? request.headers.get("x-real-ip") ?? "")
       .split(",")[0]
       .trim()
     const isIp =
       /^(?:\d{1,3}\.){3}\d{1,3}$/.test(fwd) || (/^[0-9A-Fa-f:]+$/.test(fwd) && fwd.includes(":"))
-    if (edgeSecret !== "" && isIp) {
-      headers.set("x-sg-client-ip", fwd)
-      headers.set("x-sg-edge", edgeSecret)
-    }
+    if (isIp) headers.set("x-sg-client-ip", fwd)
+    if (edgeSecret !== "" && isIp) headers.set("x-sg-edge", edgeSecret)
     return NextResponse.next({ request: { headers } })
   }
 
