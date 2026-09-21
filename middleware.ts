@@ -68,6 +68,25 @@ function retiredGlossaryResponse(request: NextRequest): NextResponse | undefined
   return new NextResponse(md, { status: 410, headers: { "content-type": "text/markdown; charset=utf-8", "cache-control": "public, max-age=3600", vary: "Accept" } })
 }
 
+// SG_EDGE_CLIENT_IP_V1 (2026-09-21): every path next.config.ts rewrites to the Replit
+// origin. Header normalisation MUST cover all of them, not just /app: the handlers that
+// read these headers are reachable at /index.php?action=… and under /api/ too, so covering
+// only /app would leave the forged value a query-string away. Verified the gap the hard
+// way — with only /app covered, a forged x-sg-client-ip sailed through
+// geotoolbox.ai/api/check-headers.php.
+function isProxiedToOrigin(pathname: string): boolean {
+  return (
+    pathname === "/app" ||
+    pathname.startsWith("/app/") ||
+    pathname.startsWith("/api/") ||
+    pathname === "/index.php" ||
+    pathname === "/router.php" ||
+    pathname === "/assets.php" ||
+    pathname.startsWith("/agent-readiness/r/") ||
+    pathname.startsWith("/agent-readiness/badge/")
+  )
+}
+
 export default function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
@@ -82,7 +101,7 @@ export default function middleware(request: NextRequest) {
   // catch-all matcher entry for exactly that reason; the explicit /app entries below opt it
   // into header forwarding ONLY). NextResponse.next() hands the request straight on to the
   // next.config.ts rewrite — /app is not served by this app.
-  if (pathname === "/app" || pathname.startsWith("/app/")) {
+  if (isProxiedToOrigin(pathname)) {
     const country = request.headers.get("x-vercel-ip-country") ?? ""
     const headers = new Headers(request.headers)
     // Always strip an inbound copy before setting our own. Verified against production
@@ -241,9 +260,20 @@ export const config = {
   // the children are migrated too.
   matcher: [
     "/",
-    // SG_GEO_HEADER_V1: header forwarding only — the handler returns before any routing rule.
+    // SG_GEO_HEADER_V1 / SG_EDGE_CLIENT_IP_V1: header normalisation only — the handler
+    // returns before any routing rule, so these paths never enter i18n or the markdown-404
+    // rule. They are ALSO excluded from the catch-all entry below, which is why each one has
+    // to be listed explicitly here. Keep this list and isProxiedToOrigin() in lockstep with
+    // the rewrites in next.config.ts: a proxied path missing from either is a path where a
+    // client can hand the origin its own x-sg-client-ip.
     "/app",
     "/app/:path*",
+    "/api/:path*",
+    "/index.php",
+    "/router.php",
+    "/assets.php",
+    "/agent-readiness/r/:token*",
+    "/agent-readiness/badge/:token*",
     "/features/:path*",
     "/pricing",
     "/blog/:path*",
