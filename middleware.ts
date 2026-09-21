@@ -95,6 +95,45 @@ export default function middleware(request: NextRequest) {
     // only defeats the spoofer's own gate.)
     headers.delete("x-sg-ip-country")
     if (/^[A-Z]{2}$/.test(country)) headers.set("x-sg-ip-country", country)
+
+    // SG_EDGE_CLIENT_IP_V1 (2026-09-21): give the proxied app a client IP it can TRUST.
+    //
+    // Why: inc/sentry_init.php sg_get_client_ip() reads x-vercel-forwarded-for, and that
+    // header is client-suppliable — always on the direct sg-geo-tool.replit.app origin, and
+    // measurably through geotoolbox.ai too when it is sent TOGETHER with x-vercel-proxied-for
+    // (3 of 6 probes on 2026-09-21). Because that value keys per-IP rate limits and the auth
+    // lockout, six unauthenticated requests could lock a CHOSEN third party out of login, and
+    // the same shape exists on password-reset, signup, resend-verification and accept-invite.
+    // Full evidence: geotoolbox-main/LOGIN-RATELIMIT-P1-2026-09-21.md.
+    //
+    // Same two-part contract as the country header above, and for the same reason:
+    //   1. DELETE any inbound copy, so a visitor can never supply their own value;
+    //   2. SET the edge's value, which the client cannot influence.
+    // Deleting is the load-bearing half — until this shipped, PHP reading such a header would
+    // merely have added a new forgeable input rather than removing one. That is not
+    // hypothetical: a forged x-sg-ip-country WAS honoured on production until the country half
+    // of this block went live earlier today.
+    //
+    // A request sent STRAIGHT to the Replit origin bypasses this middleware entirely and can
+    // therefore still forge both headers. That is why PHP does not trust x-sg-client-ip on its
+    // own: it must be accompanied by x-sg-edge, a shared secret only this edge knows. With
+    // SG_EDGE_SECRET unset on either side nothing is trusted and behaviour is unchanged —
+    // the app then falls back to "client unidentifiable", which it already handles.
+    headers.delete("x-sg-client-ip")
+    headers.delete("x-sg-edge")
+    const edgeSecret = process.env.SG_EDGE_SECRET ?? ""
+    // x-vercel-forwarded-for is the edge's own value HERE, before the external rewrite; the
+    // forgeable-passthrough observed at the origin is a property of that later hop, not of
+    // what middleware reads. Leftmost entry, and only if it is a plain IP literal.
+    const fwd = (request.headers.get("x-vercel-forwarded-for") ?? request.headers.get("x-real-ip") ?? "")
+      .split(",")[0]
+      .trim()
+    const isIp =
+      /^(?:\d{1,3}\.){3}\d{1,3}$/.test(fwd) || (/^[0-9A-Fa-f:]+$/.test(fwd) && fwd.includes(":"))
+    if (edgeSecret !== "" && isIp) {
+      headers.set("x-sg-client-ip", fwd)
+      headers.set("x-sg-edge", edgeSecret)
+    }
     return NextResponse.next({ request: { headers } })
   }
 
