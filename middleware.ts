@@ -141,19 +141,22 @@ export default function middleware(request: NextRequest) {
     headers.delete("x-sg-client-ip")
     headers.delete("x-sg-edge")
     const edgeSecret = process.env.SG_EDGE_SECRET ?? ""
-    // ⚠️ WHICH SOURCE IS ACTUALLY TRUSTWORTHY HERE IS NOT YET ESTABLISHED. At the ORIGIN, a
-    // client-supplied x-vercel-forwarded-for was observed passing through 3 times in 6 when
-    // sent together with x-vercel-proxied-for. Whether middleware — which runs BEFORE the
-    // external rewrite — sees the edge's value or the client's is a different question, and
-    // guessing it would be the same mistake as the sg_get_client_ip() comment that claimed
-    // this header was unforgeable. So: x-sg-client-ip is emitted UNCONDITIONALLY (the inbound
-    // copy is deleted above, so it is always the edge's answer or nothing), which makes the
-    // question MEASURABLE from outside before anything depends on it —
+    // MEASURED, not assumed (2026-09-21). At the ORIGIN a client-supplied
+    // x-vercel-forwarded-for passed through 3 times in 6 when sent together with
+    // x-vercel-proxied-for — so whether middleware, which runs BEFORE the external rewrite,
+    // sees the edge's value or the caller's was a real open question, and guessing it would
+    // have repeated the sg_get_client_ip() comment that wrongly called this header unforgeable.
+    // So x-sg-client-ip is emitted UNCONDITIONALLY (the inbound copy is deleted above, so it
+    // is the edge's answer or nothing), which made the question answerable from outside BEFORE
+    // anything depended on it:
     //   curl -H 'X-Vercel-Forwarded-For: 9.9.9.9' -H 'X-Vercel-Proxied-For: 8.8.8.8' \
+    //        -H 'X-Real-IP: 5.5.5.5' -H 'X-Forwarded-For: 4.4.4.4' \
     //        https://geotoolbox.ai/api/check-headers.php | grep X_SG_CLIENT_IP
-    // repeated ~6x, because the passthrough was intermittent. Any 9.9.9.9 means this source is
-    // client-influenced and must change (x-vercel-proxied-for was correct 7/7 at the origin;
-    // x-real-ip is the other candidate) BEFORE SG_EDGE_SECRET is set.
+    // Result: 16 runs, ZERO leaks — every one returned the caller's real address, never a
+    // forged one. So what middleware reads here IS the edge's own value; the intermittent
+    // passthrough is a property of the later rewrite hop, not of this read. Re-run that probe
+    // if the source below ever changes: the moment SG_EDGE_SECRET exists, this value becomes
+    // security-bearing automatically (it keys the rate limiters and, later, the auth lockout).
     // x-sg-edge — the part that makes PHP TRUST the value — is still only sent when the secret
     // exists, so emitting the IP early cannot grant trust to anything.
     const fwd = (request.headers.get("x-vercel-forwarded-for") ?? request.headers.get("x-real-ip") ?? "")
