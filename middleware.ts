@@ -71,6 +71,25 @@ function retiredGlossaryResponse(request: NextRequest): NextResponse | undefined
 export default function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
+  // SG_GEO_HEADER_V1 (2026-09-21): forward the visitor's country to the Replit-proxied app.
+  // Vercel strips the reserved `x-vercel-*` request headers on an EXTERNAL rewrite, so
+  // inc/consent_gate.php never sees x-vercel-ip-country and fails CLOSED for a direct-to-/app
+  // visitor: no GA4 on that first pageview, and the sign_up / begin_checkout events fired there
+  // are lost, because the banner's geo self-heal only resolves the country and reloads AFTER
+  // them. Re-emitting it under a non-reserved name lets PHP classify the visitor on their FIRST
+  // request. This runs before every other rule and returns immediately, so /app keeps its
+  // exemption from i18n routing and from the markdown-404 rule (it is excluded from the
+  // catch-all matcher entry for exactly that reason; the explicit /app entries below opt it
+  // into header forwarding ONLY). NextResponse.next() hands the request straight on to the
+  // next.config.ts rewrite — /app is not served by this app.
+  if (pathname === "/app" || pathname.startsWith("/app/")) {
+    const country = request.headers.get("x-vercel-ip-country") ?? ""
+    if (!/^[A-Z]{2}$/.test(country)) return
+    const headers = new Headers(request.headers)
+    headers.set("x-sg-ip-country", country)
+    return NextResponse.next({ request: { headers } })
+  }
+
   // Homepage content negotiation: `Accept: text/markdown` on / serves the
   // markdown twin at /home.md (same contract as articles). Any OTHER request for
   // / now falls through to next-intl routing below — the home page moved under
@@ -175,6 +194,9 @@ export const config = {
   // the children are migrated too.
   matcher: [
     "/",
+    // SG_GEO_HEADER_V1: header forwarding only — the handler returns before any routing rule.
+    "/app",
+    "/app/:path*",
     "/features/:path*",
     "/pricing",
     "/blog/:path*",
