@@ -84,9 +84,17 @@ export default function middleware(request: NextRequest) {
   // next.config.ts rewrite — /app is not served by this app.
   if (pathname === "/app" || pathname.startsWith("/app/")) {
     const country = request.headers.get("x-vercel-ip-country") ?? ""
-    if (!/^[A-Z]{2}$/.test(country)) return
     const headers = new Headers(request.headers)
-    headers.set("x-sg-ip-country", country)
+    // Always strip an inbound copy before setting our own. Verified against production
+    // 2026-09-21: a custom header supplied by the CLIENT does survive the external rewrite
+    // and PHP honours it, so returning early when Vercel's geo is absent would leave the
+    // visitor in control of their own consent classification. Deleting first means that
+    // wherever this middleware runs, the value PHP sees is the edge's or nothing.
+    // (A request sent straight to the Replit origin bypasses this entirely — the same
+    // accepted threat model consent_gate.php already documents for sg_cc: self-spoofing
+    // only defeats the spoofer's own gate.)
+    headers.delete("x-sg-ip-country")
+    if (/^[A-Z]{2}$/.test(country)) headers.set("x-sg-ip-country", country)
     return NextResponse.next({ request: { headers } })
   }
 
