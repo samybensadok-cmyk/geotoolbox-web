@@ -262,12 +262,18 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
             >
               {nav?.login ?? "Log in"}
             </Link>
+            {/* SG_CTA_FREE_V1 (2026-09-22): the primary CTA now says "Start for free" and
+                must therefore LAND somewhere free. /pricing is a $99-$999 price table, so
+                it points at signup instead: signup.php:309 routes a new account to
+                ?page=first-scan (free scan, NO card) whenever the firstrun_scan flag is on
+                for it. appSignupUrl carries interval=monthly on purpose - a bare signup
+                link is normalised to ANNUAL server-side (lib/config.ts:7-11). */}
             <Link
-              href={L("/pricing")}
+              href={siteConfig.appSignupUrl}
               prefetch={false}
               className="flex min-h-[40px] items-center rounded-full bg-accent-900 px-3 lg:px-3.5 text-[13px] font-medium text-white transition-colors hover:bg-accent-800"
             >
-              {nav?.startFree ?? "Get started"}
+              {nav?.startFree ?? "Start for free"}
             </Link>
           </div>
         </nav>
@@ -421,12 +427,12 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
                 {nav?.login ?? "Log in"}
               </Link>
               <Link
-                href={L("/pricing")}
+                href={siteConfig.appSignupUrl}
                 prefetch={false}
                 onClick={() => setMobileOpen(false)}
                 className="rounded-full bg-accent-900 py-3 text-center text-sm font-medium text-white"
               >
-                {nav?.startFree ?? "Get started"}
+                {nav?.startFree ?? "Start for free"}
               </Link>
             </div>
           </nav>
