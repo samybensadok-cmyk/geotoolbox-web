@@ -22,22 +22,23 @@ import { siteConfig } from "@/lib/config"
  * signup link (never utm_* on an internal link — it overwrites the visit's real source in GA4).
  */
 const CAMPAIGN = "scan-2026-09"
-// SG_SCAN_BANNER_OFF (2026-09-22): pulled within the hour. The link landed on the SIGNUP page, which
-// is the trial-checkout form (tier picker, "Secure checkout" step, auto-renew consent) — the
-// opposite of "free score, no card needed". Stays off until it lands on a domain-first page.
-const LIVE = false
+// SG_SCAN_BANNER_OFF → ON (2026-09-22): pulled within the hour because the link landed on the SIGNUP
+// page — the trial-checkout form (tier picker, "Secure checkout" step, auto-renew consent). It now
+// lands on ?page=free-scan (SG_FREE_SCAN_V1): website + what you sell first, then a free account.
+const LIVE = true
 const DISMISS_KEY = `scanBannerDismissed:${CAMPAIGN}`
 
 type Loc = "en" | "fr" | "es" | "de" | "nl"
 // Copy promises only what the FREE result shows (SG_FIRSTRUN_GATE_V1): a visibility score and how
-// many AI engines mention you. WHICH engines, and who they name instead, are behind the card — so
+// many AI engines mention you. No "no card" line (operator, 2026-09-22) — the result's next step is a
+// card-on-file trial, so the banner makes no claim about cards either way. WHICH engines, and who they name instead, are behind the card — so
 // no "does ChatGPT recommend you?" (that answer is gated) and no "full report".
 const COPY: Record<Loc, { lead: string; body: string; cta: string; dismiss: string }> = {
-  en: { lead: "Is AI recommending you?", body: "Get your free AI visibility score — see how many AI engines mention your site. No card needed.", cta: "Get my free score", dismiss: "Dismiss" },
-  fr: { lead: "Les IA vous recommandent-elles ?", body: "Obtenez votre score de visibilité dans les IA, gratuitement : combien de moteurs d’IA citent votre site. Sans carte bancaire.", cta: "Obtenir mon score", dismiss: "Fermer" },
-  es: { lead: "¿Te recomienda la IA?", body: "Consigue gratis tu puntuación de visibilidad en buscadores de IA: cuántos motores de IA mencionan tu sitio. Sin tarjeta.", cta: "Ver mi puntuación", dismiss: "Cerrar" },
-  de: { lead: "Empfiehlt KI Sie weiter?", body: "Holen Sie sich Ihren kostenlosen KI-Sichtbarkeits-Score: wie viele KI-Suchmaschinen Ihre Website nennen. Ohne Kreditkarte.", cta: "Score abrufen", dismiss: "Schließen" },
-  nl: { lead: "Raadt AI jou aan?", body: "Krijg gratis je AI-zichtbaarheidsscore: hoeveel AI-zoekmachines je site noemen. Zonder creditcard.", cta: "Mijn score bekijken", dismiss: "Sluiten" },
+  en: { lead: "Is AI recommending you?", body: "Get your free AI visibility score — see how many AI engines mention your site.", cta: "Get my free score", dismiss: "Dismiss" },
+  fr: { lead: "Les IA vous recommandent-elles ?", body: "Obtenez gratuitement votre score de visibilité dans les IA : combien de moteurs d’IA citent votre site.", cta: "Obtenir mon score", dismiss: "Fermer" },
+  es: { lead: "¿Te recomienda la IA?", body: "Consigue gratis tu puntuación de visibilidad en buscadores de IA: cuántos motores de IA mencionan tu sitio.", cta: "Ver mi puntuación", dismiss: "Cerrar" },
+  de: { lead: "Empfiehlt KI Sie weiter?", body: "Holen Sie sich Ihren kostenlosen KI-Sichtbarkeits-Score: wie viele KI-Suchmaschinen Ihre Website nennen.", cta: "Score abrufen", dismiss: "Schließen" },
+  nl: { lead: "Raadt AI jou aan?", body: "Krijg gratis je AI-zichtbaarheidsscore: hoeveel AI-zoekmachines je site noemen.", cta: "Mijn score bekijken", dismiss: "Sluiten" },
 }
 
 // Dismissal lives in localStorage. Read through useSyncExternalStore so the server render and the
@@ -85,7 +86,7 @@ export function ScanBanner({ locale = "en" }: { locale?: string }) {
 
   if (!visible) return null
 
-  const href = `${siteConfig.appSignupUrl}&ref=banner-scan`
+  const href = `${siteConfig.appFreeScanUrl}&ref=banner-scan`
 
   return (
     <div role="region" aria-label={t.lead} className="bg-accent-700 px-3 py-2 text-white sm:px-4" data-banner-campaign={CAMPAIGN}>
