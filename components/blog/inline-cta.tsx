@@ -37,7 +37,32 @@ type Variant = { text: string; button: string; href: string }
  * on any page carrying those.
  */
 
-const REF = "ref=blog-inline"
+/**
+ * SG_AIR_ATTRIB_C1 (2026-09-22) — the breadcrumb now names the ARTICLE.
+ *
+ * It was the bare literal `ref=blog-inline`, which tells you a reader came from *an* article but
+ * never *which one*. That distinction is the whole question item 6 turns on: the blog's top 20 posts
+ * are consumer chatbot-shopping content and the practitioner posts sit at rank 43+
+ * (ITEM6-TEASER-FORENSIC-2026-09-22.md §2), so "does a GEO post convert better than a pricing post"
+ * cannot be answered by a breadcrumb that collapses them.
+ *
+ * `api/ai_readiness.php` reads the same-origin referrer of the tool's own fetch and keeps only this
+ * `ref` value (verified in a real browser: the full path+query survives the Vercel rewrite to the PHP
+ * origin). Its allowlist is `[A-Za-z0-9._:-]{1,120}` — hence the `:` separator and the slug cap below.
+ *
+ * Still `?ref=`, never `utm_*`: /tools/* is the same site on the same GA4 property, and a utm_source
+ * on an internal link starts a new GA4 session attributed to "blog", overwriting the visitor's real
+ * acquisition source.
+ */
+const REF_BASE = "blog-inline"
+// 120 (the PHP allowlist) minus "blog-inline:" — an over-long value is dropped WHOLE by that regex,
+// so truncating here is what stops a long slug from costing us the breadcrumb entirely.
+const REF_SLUG_MAX = 120 - REF_BASE.length - 1
+function refParam(slug?: string): string {
+  const s = (slug ?? "").replace(/[^A-Za-z0-9._-]/g, "").slice(0, REF_SLUG_MAX)
+  return s ? `ref=${REF_BASE}:${s}` : `ref=${REF_BASE}`
+}
+
 const SIGNUP_BASE = "/app/?page=signup&interval=monthly"
 
 // The sitewide banner advertises 30% off on these pages. A reader who saw it but did not click
@@ -55,8 +80,8 @@ function offerSuffix(): string {
   }
   return cacheVal
 }
-function signupHref(locale: string): string {
-  return `${SIGNUP_BASE}${currencyParam(locale)}&${REF}${offerSuffix()}`
+function signupHref(locale: string, slug?: string): string {
+  return `${SIGNUP_BASE}${currencyParam(locale)}&${refParam(slug)}${offerSuffix()}`
 }
 
 const variants: Record<string, Record<InlineCtaTarget, Variant>> = {
@@ -69,27 +94,27 @@ const variants: Record<string, Record<InlineCtaTarget, Variant>> = {
     "ai-readiness": {
       text: "Curious how your own site stacks up? Run the free AI-Readiness check — five live checks on your domain, no signup.",
       button: "Check your site free",
-      href: `/tools/ai-readiness?${REF}`,
+      href: `/tools/ai-readiness`,
     },
     "ai-crawler-checker": {
       text: "Which AI crawlers does your robots.txt let in? Check it against every major AI bot — free, no signup.",
       button: "Check your crawlers",
-      href: `/tools/ai-crawler-checker?${REF}`,
+      href: `/tools/ai-crawler-checker`,
     },
     "llms-txt-checker": {
       text: "Does your own llms.txt validate? Check it against the spec in seconds — free, no signup.",
       button: "Check your llms.txt",
-      href: `/tools/llms-txt-checker?${REF}`,
+      href: `/tools/llms-txt-checker`,
     },
     "query-fanout": {
       text: "See the real sub-queries an AI engine fires for your topic — free and in your browser, using your own Gemini key.",
       button: "Run a fan-out",
-      href: `/tools/query-fanout?${REF}`,
+      href: `/tools/query-fanout`,
     },
     "keyword-to-prompts": {
       text: "Turn one keyword into ~15 conversational prompts across six intents, with the brand-surfacing ones flagged — free, no signup.",
       button: "Turn a keyword into prompts",
-      href: `/tools/keyword-to-prompts?${REF}`,
+      href: `/tools/keyword-to-prompts`,
     },
   },
   fr: {
@@ -101,27 +126,27 @@ const variants: Record<string, Record<InlineCtaTarget, Variant>> = {
     "ai-readiness": {
       text: "Envie de savoir ce que vaut votre site ? Lancez le score de préparation IA gratuit : cinq vérifications en direct sur votre domaine, sans inscription.",
       button: "Tester mon site gratuitement",
-      href: `/tools/ai-readiness?${REF}`,
+      href: `/tools/ai-readiness`,
     },
     "ai-crawler-checker": {
       text: "Quels robots d’IA votre robots.txt laisse-t-il passer ? Confrontez-le à tous les grands crawlers IA — gratuit, sans inscription.",
       button: "Vérifier mes crawlers",
-      href: `/tools/ai-crawler-checker?${REF}`,
+      href: `/tools/ai-crawler-checker`,
     },
     "llms-txt-checker": {
       text: "Votre llms.txt est-il valide ? Vérifiez-le face à la spécification en quelques secondes — gratuit, sans inscription.",
       button: "Vérifier mon llms.txt",
-      href: `/tools/llms-txt-checker?${REF}`,
+      href: `/tools/llms-txt-checker`,
     },
     "query-fanout": {
       text: "Découvrez les vraies sous-requêtes qu’un moteur d’IA lance sur votre sujet — gratuit, dans votre navigateur, avec votre propre clé Gemini.",
       button: "Lancer un fan-out",
-      href: `/tools/query-fanout?${REF}`,
+      href: `/tools/query-fanout`,
     },
     "keyword-to-prompts": {
       text: "Transformez un mot-clé en ~15 prompts conversationnels répartis sur six intentions, ceux qui font apparaître les marques étant signalés — gratuit, sans inscription.",
       button: "Convertir un mot-clé",
-      href: `/tools/keyword-to-prompts?${REF}`,
+      href: `/tools/keyword-to-prompts`,
     },
   },
   es: {
@@ -133,27 +158,27 @@ const variants: Record<string, Record<InlineCtaTarget, Variant>> = {
     "ai-readiness": {
       text: "¿Quieres saber cómo se posiciona tu propio sitio? Ejecuta el análisis de preparación IA gratis: cinco comprobaciones en vivo sobre tu dominio, sin registro.",
       button: "Analiza tu sitio gratis",
-      href: `/tools/ai-readiness?${REF}`,
+      href: `/tools/ai-readiness`,
     },
     "ai-crawler-checker": {
       text: "¿Qué rastreadores de IA deja pasar tu robots.txt? Contrástalo con todos los bots de IA importantes: gratis y sin registro.",
       button: "Revisar mis rastreadores",
-      href: `/tools/ai-crawler-checker?${REF}`,
+      href: `/tools/ai-crawler-checker`,
     },
     "llms-txt-checker": {
       text: "¿Tu llms.txt es válido? Compruébalo contra la especificación en segundos: gratis y sin registro.",
       button: "Revisar mi llms.txt",
-      href: `/tools/llms-txt-checker?${REF}`,
+      href: `/tools/llms-txt-checker`,
     },
     "query-fanout": {
       text: "Descubre las subconsultas reales que lanza un motor de IA sobre tu tema: gratis, en tu navegador y con tu propia clave de Gemini.",
       button: "Lanzar un fan-out",
-      href: `/tools/query-fanout?${REF}`,
+      href: `/tools/query-fanout`,
     },
     "keyword-to-prompts": {
       text: "Convierte una palabra clave en ~15 prompts conversacionales repartidos en seis intenciones, con los que sacan marcas señalados: gratis y sin registro.",
       button: "Convertir una palabra clave",
-      href: `/tools/keyword-to-prompts?${REF}`,
+      href: `/tools/keyword-to-prompts`,
     },
   },
 }
@@ -174,9 +199,13 @@ export function InlineCta({
 }) {
   const table = variants[locale] ?? variants.en
   const raw = table[target] ?? table["ai-readiness"]
-  // The signup href is locale- and offer-dependent, so it is built at render time rather than
-  // baked into the static variant table.
-  const v = target === "signup" ? { ...raw, href: signupHref(locale) } : raw
+  // Hrefs are built at render time, not baked into the static variant table: signup is locale- and
+  // offer-dependent, and every target now carries the ARTICLE in its ?ref= breadcrumb (SG_AIR_ATTRIB_C1),
+  // which the table cannot know.
+  const v =
+    target === "signup"
+      ? { ...raw, href: signupHref(locale, slug) }
+      : { ...raw, href: `${raw.href}?${refParam(slug)}` }
   return (
     <aside className="not-prose my-10 flex flex-col items-start gap-4 rounded-2xl border border-[var(--surface-mint-border)] bg-[var(--surface-mint)] p-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
       <p className="text-[14.5px] leading-relaxed text-gray-800">{v.text}</p>
