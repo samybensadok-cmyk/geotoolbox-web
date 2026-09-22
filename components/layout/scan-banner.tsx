@@ -22,6 +22,10 @@ import { siteConfig } from "@/lib/config"
  * signup link (never utm_* on an internal link — it overwrites the visit's real source in GA4).
  */
 const CAMPAIGN = "scan-2026-09"
+// SG_SCAN_BANNER_OFF (2026-09-22): pulled within the hour. The link landed on the SIGNUP page, which
+// is the trial-checkout form (tier picker, "Secure checkout" step, auto-renew consent) — the
+// opposite of "free score, no card needed". Stays off until it lands on a domain-first page.
+const LIVE = false
 const DISMISS_KEY = `scanBannerDismissed:${CAMPAIGN}`
 
 type Loc = "en" | "fr" | "es" | "de" | "nl"
@@ -73,7 +77,7 @@ export function ScanBanner({ locale = "en" }: { locale?: string }) {
   const suppressed = isSuppressedPath(pathname)
   const promoLive = isPromoLive()
 
-  const visible = !dismissed && !suppressed && !promoLive
+  const visible = LIVE && !dismissed && !suppressed && !promoLive
   useEffect(() => {
     if (!visible) return
     trackEvent("promo_banner_view", { promo_variant: CAMPAIGN, locale: loc, page_path: pathname })
