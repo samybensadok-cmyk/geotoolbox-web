@@ -62,6 +62,12 @@ export type AnalyticsEvent =
   | "promo_exit_view"
   | "promo_exit_click"
   | "promo_exit_dismiss"
+  // SG_REPORT_PUSH_V1 (2026-09-22): the $1,250 Report card on commercial-intent articles and the
+  // /tools pages. The sitewide scan banner and the Report exit popup reuse the promo_banner_* /
+  // promo_exit_* triplets above with promo_variant = "scan-2026-09" / "report-2026-09", so the
+  // existing GA4 explorations keep working. Params: placement ("article" | "tools"), page_path.
+  | "report_cta_view"
+  | "report_cta_click"
 
 export function trackEvent(name: AnalyticsEvent, params: GtagParams = {}): void {
   try {

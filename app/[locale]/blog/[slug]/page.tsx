@@ -23,6 +23,7 @@ import { injectInlineCta, isCommercialIntentPost } from "@/lib/inline-cta"
 import { NewsletterSignup } from "@/components/newsletter/newsletter-signup"
 import { newsletterCopyFrom } from "@/components/newsletter/copy"
 import { Avatar } from "@/components/ui/avatar"
+import { ReportCta } from "@/components/services/report-cta"
 
 // Daily ISR. The blog is otherwise fully static, which would freeze the
 // $MONTH/$YEAR title tokens (lib/seo-tokens.ts) at whatever month the site was
@@ -393,6 +394,10 @@ export default async function BlogPost({
           <RelatedPosts posts={relatedPosts} locale={locale} />
         </div>
       </section>
+
+      {/* SG_REPORT_PUSH_V1 (2026-09-22): the $1,250 Report, on the articles whose reader is
+          shopping in our category — EN only, because /services/* is not localized. */}
+      {locale === routing.defaultLocale && isCommercialIntentPost(post) && <ReportCta placement="article" />}
 
       {/* What's next — product pitch + related features */}
       <section className="border-t border-gray-200 bg-gray-50 px-6 py-20 sm:py-24">

@@ -3,6 +3,8 @@ import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { PromoBanner } from "@/components/layout/promo-banner"
 import { ExitIntentPopup } from "@/components/layout/exit-intent-popup"
+import { ScanBanner } from "@/components/layout/scan-banner"
+import { ReportExitPopup } from "@/components/layout/report-exit-popup"
 import { ConsentManager } from "@/components/consent/consent-manager"
 import { ImageLightbox } from "@/components/ui/image-lightbox"
 import "@/app/globals.css"
@@ -50,6 +52,8 @@ export function RootShell({
       <body className="min-h-full flex flex-col antialiased">
         <a href="#main-content" className="skip-link">{common?.skipToContent ?? "Skip to main content"}</a>
         <PromoBanner locale={locale} />
+        {/* SG_SCAN_BANNER_V1: stands down while a discount campaign (PromoBanner) is live. */}
+        <ScanBanner locale={locale} />
         <Header nav={nav} locale={locale} />
         <main id="main-content" className="flex-1">{children}</main>
         <Footer nav={nav} footer={footer} locale={locale} />
@@ -63,6 +67,8 @@ export function RootShell({
         {/* SG_PROMO_EXIT_V1: last-chance founding-offer popup, desktop-only
             exit-intent trigger. See components/layout/exit-intent-popup.tsx. */}
         <ExitIntentPopup locale={locale} />
+        {/* SG_REPORT_EXIT_V1: EN-only, desktop-only; stands down while a discount campaign is live. */}
+        <ReportExitPopup locale={locale} />
       </body>
     </html>
   )
