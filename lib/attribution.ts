@@ -41,7 +41,25 @@ const CAMPAIGN_KEYS = [
  * re-taken snapshot whose referrer is our own page, and would otherwise be recorded as "direct"
  * when the truth is "we did not see". (Codex QA, 2026-09-21.)
  */
-type Snapshot = { v: 1; t: number; l?: string; d?: 1; r?: string; u?: Record<string, string> }
+type Snapshot = {
+  v: 1
+  t: number
+  l?: string
+  d?: 1
+  r?: string
+  u?: Record<string, string>
+  /**
+   * `x: 1` means the size budget had to discard campaign evidence. The reader must then refuse to
+   * classify this layer at all rather than fall back to the referrer or to `d` — see the comment on
+   * the trim below. Absent `x` means what survived is the whole truth.
+   */
+  x?: 1
+}
+
+/** The campaign keys that DECIDE a channel. Values may be truncated; the keys may not be dropped. */
+const CLASSIFYING_KEYS = ["utm_source", "utm_medium", "gclid", "msclkid"] as const
+/** Descriptive only — safe to drop first when the budget is tight. */
+const DESCRIPTIVE_KEYS = ["utm_content", "utm_term", "utm_campaign"] as const
 
 // Module scope: taken once, on the first mount of the session, which is the entry page.
 let snapshot: Snapshot | null = null
@@ -112,21 +130,64 @@ export function persistAttribution(): void {
     if (!snapshot) return
     // 🔴 Budget the bytes that actually travel, not JS string length (Codex QA, 2026-09-21).
     // `value.length` counts UTF-16 code units: 841 chars of CJK campaign values measured 2,241
-    // UTF-8 bytes — past PHP's 2048-byte read cap — and 6,567 percent-encoded bytes, past the
-    // browser's ~4KB per-cookie limit. Both silently discard the attribution. So drop optional
-    // fields until BOTH the decoded UTF-8 size and the encoded cookie fit, and give up rather
-    // than write something the reader will throw away.
-    const droppable = ["u", "r", "l"] as const
-    // Work on a COPY: trimming must not mutate the module-scope first-touch snapshot.
-    const payload: Snapshot = { ...snapshot }
-    let encoded = ""
-    for (let i = 0; ; i++) {
+    // UTF-8 bytes — past the reader's 2048-byte cap — and 6,567 percent-encoded bytes, past the
+    // browser's ~4KB per-cookie limit. Both silently discarded the attribution.
+    //
+    // 🔴 AND THE ORDER OF THE TRIM IS ITSELF LOAD-BEARING (Codex re-verify, 2026-09-21). The first
+    // version of this fix dropped the whole `u` object first, which was worse than losing the
+    // cookie: a paid arrival (utm_medium=cpc + gclid) with long non-ASCII campaign values came out
+    // the other side as `channel: direct` or `organic_search` — a confident WRONG answer where the
+    // old bug at least produced an absent one. Reproduced end-to-end before fixing.
+    //
+    // So the trim now degrades in order of how much CLASSIFICATION each field carries:
+    //   1. shorten campaign VALUES (the channel is decided by which keys exist, not by their text)
+    //   2. drop the descriptive campaign keys, keeping the classifying ones
+    //   3. drop the referrer — a campaign outranks it in classification anyway
+    //   4. drop the landing path
+    //   5. drop `u` entirely AND set `x: 1`, so the reader knows evidence was destroyed and
+    //      returns `unknown` instead of inventing a channel from what is left
+    //   6. give up and write nothing
+    const payload: Snapshot = { ...snapshot } // never mutate the module-scope first-touch snapshot
+    if (payload.u) payload.u = { ...payload.u }
+
+    const fits = () => {
       const value = JSON.stringify(payload)
-      encoded = encodeURIComponent(value)
-      if (new Blob([value]).size <= 1800 && encoded.length + ATTR_COOKIE.length <= 3500) break
-      if (i >= droppable.length) return // even the bare timestamp did not fit: write nothing
-      delete payload[droppable[i]]
+      const enc = encodeURIComponent(value)
+      return new Blob([value]).size <= 1800 && enc.length + ATTR_COOKIE.length <= 3500
+        ? enc
+        : null
     }
+
+    const steps: (() => void)[] = [
+      () => {
+        if (!payload.u) return
+        for (const k of Object.keys(payload.u)) payload.u[k] = payload.u[k].slice(0, 64)
+      },
+      () => {
+        if (!payload.u) return
+        for (const k of DESCRIPTIVE_KEYS) delete payload.u[k]
+        if (Object.keys(payload.u).length === 0) delete payload.u
+      },
+      () => {
+        delete payload.r
+      },
+      () => {
+        delete payload.l
+      },
+      () => {
+        if (payload.u) {
+          delete payload.u
+          payload.x = 1 // evidence destroyed — the reader must not classify from the remainder
+        }
+      },
+    ]
+
+    let encoded = fits()
+    for (let i = 0; encoded === null && i < steps.length; i++) {
+      steps[i]()
+      encoded = fits()
+    }
+    if (encoded === null) return // even the bare timestamp did not fit: write nothing
     const secure = window.location.protocol === "https:" ? "; Secure" : ""
     document.cookie = `${ATTR_COOKIE}=${encoded}; path=/; max-age=${MAX_AGE}; SameSite=Lax${secure}`
   } catch {
