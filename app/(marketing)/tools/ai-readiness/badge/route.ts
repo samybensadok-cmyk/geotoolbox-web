@@ -1,3 +1,4 @@
+import { createHmac } from "node:crypto"
 import { siteConfig } from "@/lib/config"
 import { badgeColor, badgeSvg } from "@/lib/ai-readiness-badge"
 
@@ -34,6 +35,21 @@ function cleanHost(raw: string): string {
   return h
 }
 
+/**
+ * SG_AIR_LIMITS_V2 (2026-09-23): tell the endpoint this is a badge render, not a visitor.
+ * `x-sg-air-purpose: badge` keeps the scan out of the benchmark dataset (it used to double
+ * every widget run). The token earns the badge's own rate-limit buckets: these calls arrive
+ * from Vercel egress IPs, so per-client limits would lump every badge viewer together.
+ * Derived from SG_EDGE_SECRET, never the secret itself; without it the purpose header still
+ * suppresses recording and the call is limited like a widget run.
+ */
+function badgeHeaders(): Record<string, string> {
+  const headers: Record<string, string> = { "Content-Type": "application/json", "x-sg-air-purpose": "badge" }
+  const secret = process.env.SG_EDGE_SECRET ?? ""
+  if (secret !== "") headers["x-sg-air-badge"] = createHmac("sha256", secret).update("air-badge-v1").digest("hex")
+  return headers
+}
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const host = cleanHost(searchParams.get("host") ?? "")
@@ -42,12 +58,26 @@ export async function GET(request: Request) {
     return svgResponse(badgeSvg("AI-Readiness", "checked", "#9f9f9f"), true)
   }
 
+  // One cache entry per host (Codex review 2026-09-23): every other spelling of the same host
+  // (case, extra params, encoded variants) is a distinct CDN key, so each would be a fresh miss and
+  // a fresh scan against the host's badge budget. Redirect them all to the canonical URL instead.
+  const canonical = `?host=${encodeURIComponent(host)}`
+  if (new URL(request.url).search !== canonical) {
+    return new Response(null, {
+      status: 308,
+      headers: {
+        Location: `${siteConfig.url}/tools/ai-readiness/badge${canonical}`,
+        "Cache-Control": "public, max-age=3600, s-maxage=86400",
+      },
+    })
+  }
+
   const controller = new AbortController()
   const timer = setTimeout(() => controller.abort(), 12000)
   try {
     const res = await fetch(`${siteConfig.url}/api/ai_readiness.php`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: badgeHeaders(),
       body: JSON.stringify({ url: `https://${host}` }),
       signal: controller.signal,
     })

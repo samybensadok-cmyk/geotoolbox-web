@@ -54,7 +54,8 @@ const ERROR_COPY: Record<string, string> = {
   url_required: "Enter a URL to check.",
   url_too_long: "That URL is too long.",
   fetch_failed: "We couldn't reach that site. Check the domain and try again.",
-  rate_limited: "You've run a lot of checks — give it a minute and try again.",
+  rate_limited: "You've run a lot of checks this hour. Try again a bit later.",
+  daily_limit: "The free checker has reached today's limit. Try again tomorrow.",
   target_throttled: "That domain has been checked a lot recently — try again shortly.",
   internal_error: "Something went wrong on our end. Try again in a moment.",
 }
