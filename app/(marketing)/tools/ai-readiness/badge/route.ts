@@ -1,4 +1,5 @@
 import { siteConfig } from "@/lib/config"
+import { badgeColor, badgeSvg } from "@/lib/ai-readiness-badge"
 
 /**
  * Embeddable AI-Readiness badge (the link engine for /tools/ai-readiness).
@@ -13,36 +14,6 @@ import { siteConfig } from "@/lib/config"
 
 export const runtime = "nodejs"
 export const dynamic = "force-dynamic"
-
-function esc(s: string): string {
-  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
-}
-
-function badgeSvg(left: string, right: string, color: string): string {
-  const lw = 6.6 * left.length + 16
-  const rw = 6.6 * right.length + 16
-  const w = Math.round(lw + rw)
-  const lwR = Math.round(lw)
-  const lx = (lwR / 2) * 10
-  const rx = (lwR + rw / 2) * 10
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="20" role="img" aria-label="${esc(left)}: ${esc(right)}">
-<linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient>
-<clipPath id="r"><rect width="${w}" height="20" rx="3" fill="#fff"/></clipPath>
-<g clip-path="url(#r)">
-<rect width="${lwR}" height="20" fill="#444"/>
-<rect x="${lwR}" width="${w - lwR}" height="20" fill="${color}"/>
-<rect width="${w}" height="20" fill="url(#s)"/>
-</g>
-<g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" font-size="110" text-rendering="geometricPrecision">
-<g transform="scale(.1)">
-<text x="${lx}" y="150" fill="#010101" fill-opacity=".3">${esc(left)}</text>
-<text x="${lx}" y="140">${esc(left)}</text>
-<text x="${rx}" y="150" fill="#010101" fill-opacity=".3">${esc(right)}</text>
-<text x="${rx}" y="140">${esc(right)}</text>
-</g>
-</g>
-</svg>`
-}
 
 function svgResponse(svg: string, ok: boolean): Response {
   return new Response(svg, {
@@ -85,8 +56,7 @@ export async function GET(request: Request) {
       return svgResponse(badgeSvg("AI-Readiness", "checked", "#9f9f9f"), false)
     }
     const pct: number = data.composite.pct
-    const color = pct >= 80 ? "#2ea44f" : pct >= 40 ? "#dfb317" : "#e05d44"
-    return svgResponse(badgeSvg("AI-Readiness", `${pct}%`, color), true)
+    return svgResponse(badgeSvg("AI-Readiness", `${pct}%`, badgeColor(pct)), true)
   } catch {
     return svgResponse(badgeSvg("AI-Readiness", "checked", "#9f9f9f"), false)
   } finally {

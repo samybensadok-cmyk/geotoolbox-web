@@ -3,6 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { siteConfig } from "@/lib/config"
+import { badgeColor, badgeSvg } from "@/lib/ai-readiness-badge"
 import { ToolResultCapture } from "@/components/tools/tool-result-capture"
 
 /**
@@ -202,6 +203,9 @@ function ResultCard({ result, copied, setCopied }: { result: ReadinessResult; co
 
   const badgeUrl = `${siteConfig.url}/tools/ai-readiness/badge?host=${encodeURIComponent(host)}`
   const badgeHref = `${siteConfig.url}/tools/ai-readiness?utm_source=badge&host=${encodeURIComponent(host)}`
+  // Preview is drawn from the score in hand. Pointing it at badgeUrl re-ran the whole scan
+  // server-side on every result (2026-09-22 double-scan bug); the embed snippet keeps badgeUrl.
+  const badgePreview = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(badgeSvg("AI-Readiness", `${c.pct}%`, badgeColor(c.pct)))}`
   const badgeSnippet = `<a href="${badgeHref}"><img src="${badgeUrl}" alt="AI-Readiness score for ${host} — by GEO Toolbox" height="20"></a>`
 
   function copy() {
@@ -300,7 +304,7 @@ function ResultCard({ result, copied, setCopied }: { result: ReadinessResult; co
           </button>
         </div>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={badgeUrl} alt={`AI-Readiness score for ${host}`} height={20} className="mt-3 h-5" />
+        <img src={badgePreview} alt={`AI-Readiness score for ${host}`} height={20} className="mt-3 h-5" />
       </div>
 
       {/* Funnel CTA */}
