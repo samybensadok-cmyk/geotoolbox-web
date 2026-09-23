@@ -22,10 +22,18 @@ const engines: { id: EngineId; name: string }[] = [
   { id: "copilot", name: "Bing Copilot" }, { id: "grok", name: "Grok" },
 ]
 const planIds: PlanId[] = ["starter", "consultant", "agency"]
-const featuredTools = [
-  { slug: "agent-readiness-scanner", icon: "◎" },
-  { slug: "ai-crawler-checker", icon: "</>" },
-  { slug: "keyword-to-prompts", icon: "↗" },
+const toolIcons = {
+  // agent readiness: a gauge
+  gauge: <><path d="M4 15a8 8 0 1 1 16 0" /><path d="m12 15 4-5" /><circle cx="12" cy="15" r="1.2" fill="currentColor" stroke="none" /></>,
+  // crawler access: a document with an allow/deny check
+  robots: <><path d="M7 3h7l4 4v14H7z" /><path d="M14 3v4h4" /><path d="m9.5 14 2 2 3.5-4" /></>,
+  // keyword to prompts: a speech bubble
+  prompt: <><path d="M5 5h14v10H10l-4 4v-4H5z" /><path d="M9 9h6M9 12h4" /></>,
+}
+const featuredTools: { slug: string; icon: keyof typeof toolIcons }[] = [
+  { slug: "agent-readiness-scanner", icon: "gauge" },
+  { slug: "ai-crawler-checker", icon: "robots" },
+  { slug: "keyword-to-prompts", icon: "prompt" },
 ]
 // `card` indexes home.features.cards; keyed here so a reordered locale file can't
 // pair one feature's copy with another feature's link.
@@ -83,7 +91,7 @@ export async function HomeExperience() {
         <div className={s.workflowGrid}>
           <figure className={s.productShot}>
             <span className={s.smallLabel}>GEO Toolbox / Content Analyzer</span>
-            <a href="/screenshots/content-analyzer/citability-result.png" target="_blank" rel="noreferrer"><Image src="/screenshots/content-analyzer/citability-result.png" alt={t("redesign.screenshotAlt")} width={2048} height={1104} sizes="(max-width: 640px) 90vw, 550px" /></a>
+            <a href="/screenshots/content-analyzer/citability-result.png" target="_blank" rel="noreferrer"><Image src="/screenshots/content-analyzer/citability-actions.png" alt={t("redesign.screenshotAlt")} width={1225} height={1134} sizes="(max-width: 640px) 90vw, 550px" /></a>
             <figcaption>{t("redesign.screenshotNote")}</figcaption>
           </figure>
           <ol className={s.benefits}>
@@ -117,7 +125,7 @@ export async function HomeExperience() {
             <h3>{plan.name}</h3><p className={s.tagline}>{t(`pricingTeaser.tiles.${id}.tagline`)}</p>
             <p className={s.price}>{formatPrice(plan.priceMonthly!,locale)}<small>{t("pricingTeaser.perMonth")}</small></p>
             <p className={s.priceNote}>{t("redesign.monthly")}<br />{t("redesign.annual", { price: formatPrice(Math.round(plan.priceYearly!/12),locale) })}</p>
-            <ul>{["engines","capacity","scans"].map(key => <li key={key}>{t(`pricingTeaser.tiles.${id}.${key}`)}</li>)}</ul>
+            <ul>{["capacity","engines","scans"].map(key => <li key={key}>{t(`pricingTeaser.tiles.${id}.${key}`)}</li>)}</ul>
             {plan.trialDays ? <HomeAction href={trialHref(id)} placement={`home_pricing_${id}`} locale={locale} className={id === "starter" ? s.primary : s.secondary}>{t("redesign.trial")}<Arrow /></HomeAction> : <Link href={`${base}/pricing`} className={s.secondary}>{t("redesign.compare")}<Arrow /></Link>}
           </article>
         })}</div>
@@ -133,12 +141,13 @@ export async function HomeExperience() {
         </div>
         <div className={s.toolGrid}>{featuredTools.map(({ slug, icon }) => {
           const tool = tools.find(tool => tool.slug === slug)!
-          return <Link href={localizeNavHref(`/tools/${slug}`, locale)} key={slug} className={s.toolCard}><span aria-hidden="true" className={s.toolIcon}>{icon}</span><h3>{tool.name}</h3><p>{t(`freeTools.descs.${slug}`)}</p><span>{t("redesign.openTool")}<Arrow /></span></Link>
+          return <Link href={localizeNavHref(`/tools/${slug}`, locale)} key={slug} className={s.toolCard}><span aria-hidden="true" className={s.toolIcon}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">{toolIcons[icon]}</svg></span><h3>{tool.name}</h3><p>{t(`freeTools.descs.${slug}`)}</p><span>{t("redesign.openTool")}<Arrow /></span></Link>
         })}</div>
         <Link href={localizeNavHref("/tools", locale)} className={s.textLink} style={{marginTop:26}}>{t("freeTools.exploreAll")}<Arrow /></Link>
       </div>
     </section>
-    <div className={s.retained}><Playbook /><LatestPosts /></div>
+    <Playbook />
+    <LatestPosts />
     <section className={s.closing} aria-labelledby="home-close-title">
       <div className={s.container}><h2 id="home-close-title" className={s.sectionTitle}>{t("redesign.closeTitle")}</h2><p className={s.sectionIntro}>{t("redesign.closeBody")}</p>
         <div className={s.actions}><HomeAction href={freeScan("home-close")} placement="home_footer" locale={locale} className={s.primary}>{t("redesign.freeCta")}<Arrow /></HomeAction><Link href={`${base}/pricing`} className={s.secondary}>{t("pricingTeaser.seeAll")}</Link></div>

@@ -14,15 +14,15 @@ export async function LatestPosts() {
   const hasSecondary = secondary.length > 0
 
   return (
-    <section className="border-t border-gray-100 bg-white px-6 py-24 sm:py-32">
-      <div className="mx-auto max-w-7xl">
+    <section className="bg-white px-5 py-[50px] sm:px-7 sm:py-[70px]">
+      <div className="mx-auto max-w-[1104px]">
         {/* Editorial header */}
         <div className="flex items-end justify-between gap-8">
           <div>
             <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
               {t("eyebrow")}
             </p>
-            <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.75rem)] font-bold leading-tight tracking-tight text-gray-900">
+            <h2 className="mt-3 text-[32px] font-medium leading-[1.13] tracking-[-0.045em] text-gray-900 sm:text-[clamp(30px,3.5vw,46px)]">
               {t("heading")}
             </h2>
           </div>
@@ -39,7 +39,7 @@ export async function LatestPosts() {
 
         {hasSecondary ? (
           /* Featured + secondary — asymmetric */
-          <div className="mt-14 grid grid-cols-1 gap-10 lg:grid-cols-[7fr_5fr] lg:gap-16">
+          <div className="mt-7 grid grid-cols-1 gap-10 sm:mt-11 lg:grid-cols-[7fr_5fr] lg:gap-16">
             <Link href={`${blogBase}/blog/${featured.slug}`} className="group block">
               <div className="flex items-center gap-3">
                 {featured.tags.slice(0, 1).map((tag) => (
@@ -101,7 +101,7 @@ export async function LatestPosts() {
           </div>
         ) : (
           /* Single-post fallback — centered editorial card when secondary is empty */
-          <div className="mt-14">
+          <div className="mt-7 sm:mt-11">
             <Link
               href={`${blogBase}/blog/${featured.slug}`}
               className="group block rounded-3xl border border-gray-200 bg-gray-50/60 p-8 transition-all hover:border-accent-300 hover:bg-white hover:shadow-[0_20px_40px_-20px_rgba(15,23,42,0.1)] sm:p-12"
