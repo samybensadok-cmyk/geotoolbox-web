@@ -2,8 +2,8 @@
 title: "Grok 4.6: Specs, Benchmarks, Real Cost & the Honest Verdict (2026)"
 description: "Grok 4.6 is xAI's agent-first model, out August 12, 2026. A close read of the specs, the real benchmark table, the 200K price cliff, and AI-search impact."
 date: "2026-08-13"
-updated: "2026-09-04"  # backfilled 2026-08-18 freshness audit hygiene pass (frontmatter previously had no updated field at all)
-recheckBy: "2026-09-12"
+updated: "2026-09-19"
+recheckBy: "2026-09-26"  # Grok 4.7 still unshipped as of 09-19 (x.ai/news + 3-engine panel); recheck when it lands
 author: "Samy BEN SADOK"
 tags: ["grok-4.6", "grok", "xai", "spacexai", "ai-model", "llm", "guide"]
 draft: false
@@ -20,7 +20,7 @@ This is the plain, current version of what Grok 4.6 is: what xAI shipped on Augu
 
 ## What Is Grok 4.6?
 
-**Grok 4.6 is xAI's frontier AI model, released on August 12, 2026, and built for long-running agents, coding, and knowledge work.** It is the newest version of [Grok](https://geotoolbox.ai/blog/what-is-grok), the [large language model](https://geotoolbox.ai/glossary/large-language-model) assistant made by xAI, the company Elon Musk founded in 2023 and which now operates as SpaceXAI after the 2026 SpaceX merger. If you have been tracking the version numbers, 4.6 lands about a month after [Grok 4.5](https://geotoolbox.ai/blog/grok-4-5) and slots in as the current flagship.
+**Grok 4.6 is xAI's frontier AI model, released on August 12, 2026, and built for long-running agents, coding, and knowledge work.** It is the newest version of [Grok](https://geotoolbox.ai/blog/what-is-grok), the [large language model](https://geotoolbox.ai/blog/how-does-chatgpt-work) assistant made by xAI, the company Elon Musk founded in 2023 and which now operates as SpaceXAI after the 2026 SpaceX merger. If you have been tracking the version numbers, 4.6 lands about a month after [Grok 4.5](https://geotoolbox.ai/blog/grok-4-5) and slots in as the current flagship.
 
 Grok 4.6 is not a bigger model than 4.5. xAI describes a longer round of training on top of 4.5's foundation rather than a larger base, and secondary coverage reads the underlying model as unchanged in size. That matters because it changes how you should read the benchmark numbers below. The model is aimed at people who build software and run agents, not at people asking a chatbot for trivia, and at launch it shipped for developers and inside apps, not in xAI's own consumer chatbot.
 
@@ -53,7 +53,7 @@ Here is the spec sheet, from [xAI's developer docs and model card](https://docs.
 <tr><td><strong>Reasoning levels</strong></td><td>Low, medium, high (default), xhigh (new)</td></tr>
 <tr><td><strong>Tools</strong></td><td>Function calling, web search, X search, code execution</td></tr>
 <tr><td><strong>Price</strong></td><td>$2 / $0.50 / $6 per 1M tokens (input / cached / output) below 200K prompt tokens; doubles above</td></tr>
-<tr><td><strong>Availability</strong></td><td>xAI API, Grok Build (default), Cursor (all plans), Microsoft Office add-ins; OpenRouter, Vercel, Cloudflare, and other gateways</td></tr>
+<tr><td><strong>Availability</strong></td><td>xAI API, Grok Build (default), Cursor (all plans), Microsoft Office add-ins, OpenRouter/Vercel/Cloudflare gateways; also grok.com and the iOS/Android apps on the $30/mo SuperGrok plan</td></tr>
 <tr><td><strong>Open weights</strong></td><td>No; no self-hosting</td></tr>
 </tbody>
 </table>
@@ -120,9 +120,9 @@ Whatever the current leaderboard says, these standings turn over every few weeks
 
 ## How to Access Grok 4.6
 
-At launch, Grok 4.6 is mostly a developer product. Per xAI's model card, it is available through the xAI API (as `grok-4.6`), as the default model in Grok Build, in Cursor on every plan tier, and, notably, as the default model in the Microsoft Word, PowerPoint, and Excel add-ins, a direct move onto Copilot's turf. It is also routable through OpenRouter, Vercel, Cloudflare, and other gateways.
+Grok 4.6 launched as a developer product and, as of this writing (September 2026), has since moved onto consumer surfaces too. Per xAI's model card, it is available through the xAI API (as `grok-4.6`), as the default model in Grok Build, in Cursor on every plan tier, and, notably, as the default model in the Microsoft Word, PowerPoint, and Excel add-ins, a direct move onto Copilot's turf. It is also routable through OpenRouter, Vercel, Cloudflare, and other gateways.
 
-What it is **not**, yet, is a consumer chatbot. The model card says xAI plans to add Grok 4.6 to its consumer surfaces (the web app, mobile apps, and Grok-in-X) "at a later date," so if you are asking whether Grok 4.6 is the model answering you at grok.com or in the X app today, the answer is probably not yet.
+On the consumer side, [xAI's pricing page](https://x.ai/pricing) lists "Grok 4.6 model" as a feature of the $30-a-month SuperGrok plan, on grok.com and the iOS/Android apps, so if you are asking whether Grok 4.6 is the model answering you there today, the answer is yes. Whether the version embedded directly inside the X app has caught up is less clearly documented, so do not assume X-native access matches the standalone app. For the full SuperGrok tier lineup, including the $100-a-month SuperGrok Plus tier, see our [Grok pricing guide](https://geotoolbox.ai/blog/grok-pricing).
 
 Is it free? xAI's launch page advertises a "Try it in Grok Build for free" option, while press coverage puts Grok Build behind the $30-a-month SuperGrok plan, so check x.ai/build before assuming free access. API use is paid at the rates above. The clearest free element is the first-week 2x usage promotion in Cursor and Grok Build.
 
@@ -148,7 +148,7 @@ Two more factors belong in the decision. On governance, xAI's model card documen
 
 ### Is Grok 4.6 free?
 
-Not as a consumer chatbot yet. At launch it ran on developer surfaces (the API, Cursor, Grok Build, and the Office add-ins), and xAI's model card says consumer access on the web, mobile, and X is coming "at a later date." xAI's launch page advertises a free Grok Build trial, though coverage puts Grok Build inside the $30-a-month SuperGrok plan, so check x.ai/build before assuming free access. API use is paid.
+No, but it is not developer-only anymore either. It launched on developer surfaces (the API, Cursor, Grok Build, and the Office add-ins) and has since reached consumer chat: xAI's pricing page lists Grok 4.6 as part of the $30-a-month SuperGrok plan on grok.com and the iOS/Android apps. xAI's launch page also advertises a free Grok Build trial, though coverage puts Grok Build inside the same SuperGrok plan, so check x.ai/build before assuming free access. API use is paid.
 
 ### How much does Grok 4.6 cost?
 
@@ -184,3 +184,4 @@ Musk has said on X that Grok 4.7 is "weeks" away at a larger scale; his dates ha
 - SpaceXAI debuts Grok 4.6 - VentureBeat, Aug 12, 2026 - `venturebeat.com/technology/spacexai-debuts-grok-4-6-overtaking-kimi-k3s-performance-and-matching-gpt-5-6-sol-for-worlds-third-best-on-artificial-analysis`
 - SpaceXAI Releases Grok 4.6 - MarkTechPost, Aug 12, 2026 - `marktechpost.com/2026/08/12/spacexai-releases-grok-4-6`
 - xAI's Grok 4.6 Holds the Base Model Constant - FourWeekMBA, Aug 12, 2026 - `fourweekmba.com/ai-xai-grok-4-6-post-training-turn`
+- Pricing: Compare Grok Plans - xAI, checked Sep 19, 2026 - `x.ai/pricing`

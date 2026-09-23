@@ -95,7 +95,6 @@ export function Footer({
             <h2 className="text-xs font-semibold text-gray-900 uppercase tracking-wider">{footer?.resources ?? "Resources"}</h2>
             <ul className="mt-3 space-y-2">
               <li><Link href={L("/blog")} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">{nav?.blog ?? "Blog"}</Link></li>
-              <li><Link href={L("/glossary")} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">{nav?.glossary ?? "Glossary"}</Link></li>
               <li><Link href="/feed.xml" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">{footer?.rssFeed ?? "RSS Feed"}</Link></li>
               <li><Link href={L("/blog/what-is-geo")} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">{footer?.whatIsGeo ?? "What is GEO?"}</Link></li>
             </ul>

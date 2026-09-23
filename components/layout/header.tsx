@@ -4,7 +4,6 @@ import Link from "next/link"
 import { useEffect, useRef, useState } from "react"
 import { usePathname } from "next/navigation"
 import { trackEvent } from "@/lib/analytics"
-import { currencyParam } from "@/lib/i18n/currency"
 import { siteConfig } from "@/lib/config"
 import { tools } from "@/lib/tools"
 import { cn } from "@/lib/utils"
@@ -20,8 +19,10 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
   // next-intl rewrites the default homepage internally to /en. Treat both
   // forms identically so its prerendered and hydrated header agree.
   const isHomepage = pathname === `/${locale}` || (locale === "en" && pathname === "/")
-  const startHref = isHomepage ? `${siteConfig.appSignupUrl}&plan=starter${currencyParam(locale)}` : L("/pricing")
-  const startLabel = isHomepage ? nav?.homeTrial ?? "Start trial" : nav?.startFree ?? "Get started"
+  // SG_CTA_FREE_V1: "Start for free" always lands on the free-scan door, never the
+  // trial checkout. The homepage only adds a ref so its header clicks are attributable.
+  const startHref = isHomepage ? `${siteConfig.appFreeScanUrl}&ref=home-header` : siteConfig.appFreeScanUrl
+  const startLabel = nav?.startFree ?? "Start for free"
   const trackStart = () => { if (isHomepage) trackEvent("app_cta_click", { placement: "home_header", cta_target: startHref, locale, design_version: "home_v3" }) }
 
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -273,6 +274,11 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
             >
               {nav?.login ?? "Log in"}
             </Link>
+            {/* SG_CTA_FREE_V1 (2026-09-22): the primary CTA says "Start for free" and must
+                therefore LAND somewhere free. Not /pricing (a price table), and not
+                appSignupUrl either — that page is the trial-checkout form (tier picker,
+                "Secure checkout" step), which is what this pointed at for a few hours.
+                appFreeScanUrl is the domain-first free-scan door (SG_FREE_SCAN_V1). */}
             <Link
               href={startHref}
               prefetch={false}

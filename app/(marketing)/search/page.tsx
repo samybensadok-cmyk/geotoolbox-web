@@ -1,12 +1,12 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
-import { getAllPosts, getAllGlossaryTerms } from "@/lib/content"
+import { getAllPosts } from "@/lib/content"
 import { siteConfig } from "@/lib/config"
 
 export const metadata: Metadata = {
   title: "Search",
-  description: "Search GEO Toolbox guides, glossary terms, and tools.",
+  description: "Search GEO Toolbox guides and tools.",
   // Search-results pages should not be indexed (avoids index bloat); the route
   // exists so the WebSite SearchAction has a real, working target.
   robots: { index: false, follow: true },
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 }
 
 type Result = {
-  type: "Tool" | "Guide" | "Glossary"
+  type: "Tool" | "Guide"
   title: string
   description: string
   url: string
@@ -30,13 +30,7 @@ function buildCorpus(): Result[] {
     description: p.description,
     url: `/blog/${p.slug}`,
   }))
-  const glossary: Result[] = getAllGlossaryTerms().map((t) => ({
-    type: "Glossary",
-    title: t.term,
-    description: t.definition,
-    url: `/glossary/${t.slug}`,
-  }))
-  return [...features, ...posts, ...glossary]
+  return [...features, ...posts]
 }
 
 export default async function SearchPage({
@@ -61,7 +55,7 @@ export default async function SearchPage({
           </h1>
           <form action="/search" method="get" role="search" className="mt-6">
             <label htmlFor="q" className="sr-only">
-              Search guides, glossary, and tools
+              Search guides and tools
             </label>
             <div className="flex items-center gap-3 rounded-full border border-gray-300 bg-white px-5 py-3 transition-colors focus-within:border-accent-500">
               <svg className="h-5 w-5 shrink-0 text-gray-400" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
@@ -73,7 +67,7 @@ export default async function SearchPage({
                 name="q"
                 type="search"
                 defaultValue={query}
-                placeholder="Guides, glossary terms, tools…"
+                placeholder="Guides, tools…"
                 autoFocus
                 className="w-full bg-transparent text-[15px] text-gray-900 placeholder:text-gray-400 focus:outline-none"
               />
@@ -86,14 +80,13 @@ export default async function SearchPage({
         <div className="mx-auto max-w-3xl">
           {query === "" ? (
             <p className="text-[15px] text-gray-600">
-              Type a query above to search across guides, glossary terms, and tools.
+              Type a query above to search across guides and tools.
             </p>
           ) : results.length === 0 ? (
             <p className="text-[15px] text-gray-600">
               No results for <span className="font-semibold text-gray-900">&ldquo;{query}&rdquo;</span>. Try a
               broader term, or browse the{" "}
-              <Link href="/blog" className="font-semibold text-accent-700 underline">blog</Link> or{" "}
-              <Link href="/glossary" className="font-semibold text-accent-700 underline">glossary</Link>.
+              <Link href="/blog" className="font-semibold text-accent-700 underline">blog</Link>.
             </p>
           ) : (
             <>

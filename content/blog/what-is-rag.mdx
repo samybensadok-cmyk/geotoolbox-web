@@ -31,7 +31,7 @@ The name describes the sequence exactly: **retrieve** the relevant documents, **
 
 A RAG system runs three steps every time someone asks a question.
 
-**Retrieve.** The system turns the user's question into a search and pulls the most relevant passages from a knowledge base. That knowledge base is usually a set of documents that have been split into chunks and converted into [vector embeddings](https://geotoolbox.ai/blog/vector-embeddings), numerical representations that let software compare meaning rather than match exact words. An embedding model converts the user query into a vector too, and the retriever finds the passages whose vectors sit closest to it. This is [semantic search](https://geotoolbox.ai/glossary/semantic-search), often combined with old-fashioned keyword matching for the terms that have to be exact.
+**Retrieve.** The system turns the user's question into a search and pulls the most relevant passages from a knowledge base. That knowledge base is usually a set of documents that have been split into chunks and converted into [vector embeddings](https://geotoolbox.ai/blog/vector-embeddings), numerical representations that let software compare meaning rather than match exact words. An embedding model converts the user query into a vector too, and the retriever finds the passages whose vectors sit closest to it. This is [semantic search](https://geotoolbox.ai/blog/how-does-ai-search-work), often combined with old-fashioned keyword matching for the terms that have to be exact.
 
 **Augment.** The retrieved passages get pasted into the prompt alongside the original question. The model now sees the user's words plus a few paragraphs of supporting evidence it did not have a second ago. Nothing about the model has changed. It just has more context in front of it for this one request.
 
@@ -55,7 +55,7 @@ A standalone language model has predictable weak spots, and RAG was built to pat
 
 It has a **knowledge cutoff**. Training data is frozen at a point in time, so the model gets steadily more out of date until someone retrains it. RAG sidesteps this by fetching current information when the question is asked. It also has **no access to private or proprietary data**, the internal documents and recent pages that were never in its training set. RAG connects that external knowledge in without retraining. And because retrieval is cheap compared to fine-tuning a model on new data, it is the cost-effective way to keep answers current.
 
-The headline benefit is [grounding](https://geotoolbox.ai/glossary/grounding). By anchoring answers in retrieved sources, RAG **reduces hallucinations**, the confident, made-up answers models produce when they are working from memory alone. It also makes answers checkable, because the system can cite the passages it used.
+The headline benefit is [grounding](https://geotoolbox.ai/blog/how-does-ai-search-work). By anchoring answers in retrieved sources, RAG **reduces hallucinations**, the confident, made-up answers models produce when they are working from memory alone. It also makes answers checkable, because the system can cite the passages it used.
 
 Now the honest part, because this is the single most oversold claim in the category: **RAG reduces hallucinations, it does not eliminate them.** The model can still misread a correct source, stitch together conflicting passages, or write something unsupported when retrieval comes back thin. Retrieval quality sets a hard ceiling on the whole system: a model cannot ground an answer in a passage the retriever never found.
 

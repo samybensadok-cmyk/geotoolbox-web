@@ -1,15 +1,14 @@
-import { getAllPosts, getAllGlossaryTerms } from "@/lib/content"
+import { getAllPosts } from "@/lib/content"
 import { siteConfig } from "@/lib/config"
 import { mdxToMarkdown } from "@/lib/markdown"
 
 // llms-full.txt (llmstxt.org) — the expanded companion to /llms.txt: full text
-// of every published EN article and glossary term in one file, so agents that
+// of every published EN article in one file, so agents that
 // prefer a single fetch don't have to walk the per-article .md twins. FR
 // content is linked from /llms.txt rather than duplicated here.
 export function GET() {
   const base = siteConfig.url
   const posts = getAllPosts("en").filter((p) => !p.draft)
-  const terms = getAllGlossaryTerms("en")
 
   const postBlocks = posts.map((p) =>
     [
@@ -24,18 +23,6 @@ export function GET() {
     ].join("\n")
   )
 
-  const termBlocks = terms.map((t) =>
-    [
-      `## ${t.term}`,
-      "",
-      `> ${t.definition}`,
-      "",
-      `- Canonical: ${base}/glossary/${t.slug}`,
-      "",
-      mdxToMarkdown(t.content),
-    ].join("\n")
-  )
-
   const body = [
     `# ${siteConfig.name} — full content`,
     "",
@@ -46,10 +33,6 @@ export function GET() {
     "# Blog",
     "",
     postBlocks.join("\n\n---\n\n"),
-    "",
-    "# Glossary",
-    "",
-    termBlocks.join("\n\n---\n\n"),
     "",
   ].join("\n")
 

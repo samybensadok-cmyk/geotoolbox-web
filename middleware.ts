@@ -2,6 +2,7 @@ import createMiddleware from "next-intl/middleware"
 import { NextResponse, type NextRequest } from "next/server"
 import { routing } from "./i18n/routing"
 import { isDefinitelyUnknownPath, prefersNonHtml } from "./lib/known-routes"
+import { GLOSSARY_REDIRECTS } from "./lib/glossary-redirects"
 
 const handleI18nRouting = createMiddleware(routing)
 
@@ -18,8 +19,155 @@ function markdownRewrite(request: NextRequest, locale: string, section: string, 
   return res
 }
 
+// RETIRED GLOSSARY (2026-09-19). Every /glossary and /fr/glossary URL 301s to
+// the broader article that covers the term, or returns a real 410 where no
+// same-locale article exists (lib/glossary-redirects.ts, generated from the
+// migration CSV). This runs BEFORE the markdown-twin rewrite on purpose: a
+// `.md` glossary request would otherwise be rewritten to the internal /md/
+// route and never reach the table. The .md twin of a retired URL 301s to the
+// .md twin of its target, so an agent that asked for markdown still gets
+// markdown at the end of the hop. Trailing slashes are stripped before the
+// lookup as a safety net; in practice Next 308-normalises /glossary/x/ to
+// /glossary/x BEFORE middleware runs (same as every route on the site), so a
+// slashed retired URL is 308 → 301 → 200 — accepted, none are linked anywhere.
+// These rules stay live indefinitely — Google needs to crawl the 301/410 to
+// process it, so never disallow /glossary in robots.txt either.
+const RETIRED_GLOSSARY = /^\/(?:fr\/)?glossary(?:\/|$)/
+
+function retiredGlossaryResponse(request: NextRequest): NextResponse | undefined {
+  const { pathname } = request.nextUrl
+  if (!RETIRED_GLOSSARY.test(pathname)) return
+  const isMd = pathname.endsWith(".md")
+  const key = pathname.replace(/\.md$/, "").replace(/\/+$/, "")
+  const rule = GLOSSARY_REDIRECTS[key]
+  if (!rule) return // unknown term: fall through to the normal 404
+  if (rule.status === 301) {
+    // Only term pages have markdown twins; the hubs (/glossary → /blog) do not.
+    const to = isMd && key.includes("/glossary/") ? `${rule.to}.md` : rule.to
+    const url = new URL(to, request.url)
+    url.search = request.nextUrl.search // keep ?utm_* etc. — a campaign link to a term keeps its attribution
+    return NextResponse.redirect(url, 301)
+  }
+  const localePrefix = key.startsWith("/fr/") ? "/fr" : ""
+  const blog = new URL(`${localePrefix}/blog`, request.url).toString()
+  const wantsHtml = !isMd && (request.headers.get("accept") ?? "").includes("text/html")
+  if (wantsHtml) {
+    const html = `<!doctype html><html lang="${localePrefix ? "fr" : "en"}"><head><meta charset="utf-8"><meta name="robots" content="noindex"><title>410 Gone</title><style>body{font-family:system-ui,sans-serif;max-width:40rem;margin:4rem auto;padding:0 1rem;color:#111}a{color:#1d4ed8}</style></head><body><h1>410 — ${localePrefix ? "Cette page a été retirée" : "This page has been retired"}</h1><p>${localePrefix ? `Le glossaire a été fusionné dans le blog. <a href="${blog}">Parcourir les articles</a>.` : `The glossary was folded into the blog. <a href="${blog}">Browse the articles</a>.`}</p></body></html>`
+    return new NextResponse(html, { status: 410, headers: { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=3600", vary: "Accept" } })
+  }
+  const md = [
+    "# 410 Gone",
+    "",
+    `\`${key}\` was a glossary entry. The glossary was retired on 2026-09-19 and this term has no same-locale replacement, so the URL is permanently gone — do not retry it.`,
+    "",
+    `- Articles: ${blog}`,
+    `- Site index: ${new URL("/llms.txt", request.url)}`,
+    `- Sitemap: ${new URL("/sitemap.xml", request.url)}`,
+    "",
+  ].join("\n")
+  return new NextResponse(md, { status: 410, headers: { "content-type": "text/markdown; charset=utf-8", "cache-control": "public, max-age=3600", vary: "Accept" } })
+}
+
+// SG_EDGE_CLIENT_IP_V1 (2026-09-21): every path next.config.ts rewrites to the Replit
+// origin. Header normalisation MUST cover all of them, not just /app: the handlers that
+// read these headers are reachable at /index.php?action=… and under /api/ too, so covering
+// only /app would leave the forged value a query-string away. Verified the gap the hard
+// way — with only /app covered, a forged x-sg-client-ip sailed through
+// geotoolbox.ai/api/check-headers.php.
+function isProxiedToOrigin(pathname: string): boolean {
+  return (
+    pathname === "/app" ||
+    pathname.startsWith("/app/") ||
+    pathname.startsWith("/api/") ||
+    pathname === "/index.php" ||
+    pathname === "/router.php" ||
+    pathname === "/assets.php" ||
+    pathname.startsWith("/agent-readiness/r/") ||
+    pathname.startsWith("/agent-readiness/badge/")
+  )
+}
+
 export default function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
+
+  // SG_GEO_HEADER_V1 (2026-09-21): forward the visitor's country to the Replit-proxied app.
+  // Vercel strips the reserved `x-vercel-*` request headers on an EXTERNAL rewrite, so
+  // inc/consent_gate.php never sees x-vercel-ip-country and fails CLOSED for a direct-to-/app
+  // visitor: no GA4 on that first pageview, and the sign_up / begin_checkout events fired there
+  // are lost, because the banner's geo self-heal only resolves the country and reloads AFTER
+  // them. Re-emitting it under a non-reserved name lets PHP classify the visitor on their FIRST
+  // request. This runs before every other rule and returns immediately, so /app keeps its
+  // exemption from i18n routing and from the markdown-404 rule (it is excluded from the
+  // catch-all matcher entry for exactly that reason; the explicit /app entries below opt it
+  // into header forwarding ONLY). NextResponse.next() hands the request straight on to the
+  // next.config.ts rewrite — /app is not served by this app.
+  if (isProxiedToOrigin(pathname)) {
+    const country = request.headers.get("x-vercel-ip-country") ?? ""
+    const headers = new Headers(request.headers)
+    // Always strip an inbound copy before setting our own. Verified against production
+    // 2026-09-21: a custom header supplied by the CLIENT does survive the external rewrite
+    // and PHP honours it, so returning early when Vercel's geo is absent would leave the
+    // visitor in control of their own consent classification. Deleting first means that
+    // wherever this middleware runs, the value PHP sees is the edge's or nothing.
+    // (A request sent straight to the Replit origin bypasses this entirely — the same
+    // accepted threat model consent_gate.php already documents for sg_cc: self-spoofing
+    // only defeats the spoofer's own gate.)
+    headers.delete("x-sg-ip-country")
+    if (/^[A-Z]{2}$/.test(country)) headers.set("x-sg-ip-country", country)
+
+    // SG_EDGE_CLIENT_IP_V1 (2026-09-21): give the proxied app a client IP it can TRUST.
+    //
+    // Why: inc/sentry_init.php sg_get_client_ip() reads x-vercel-forwarded-for, and that
+    // header is client-suppliable — always on the direct sg-geo-tool.replit.app origin, and
+    // measurably through geotoolbox.ai too when it is sent TOGETHER with x-vercel-proxied-for
+    // (3 of 6 probes on 2026-09-21). Because that value keys per-IP rate limits and the auth
+    // lockout, six unauthenticated requests could lock a CHOSEN third party out of login, and
+    // the same shape exists on password-reset, signup, resend-verification and accept-invite.
+    // Full evidence: geotoolbox-main/LOGIN-RATELIMIT-P1-2026-09-21.md.
+    //
+    // Same two-part contract as the country header above, and for the same reason:
+    //   1. DELETE any inbound copy, so a visitor can never supply their own value;
+    //   2. SET the edge's value, which the client cannot influence.
+    // Deleting is the load-bearing half — until this shipped, PHP reading such a header would
+    // merely have added a new forgeable input rather than removing one. That is not
+    // hypothetical: a forged x-sg-ip-country WAS honoured on production until the country half
+    // of this block went live earlier today.
+    //
+    // A request sent STRAIGHT to the Replit origin bypasses this middleware entirely and can
+    // therefore still forge both headers. That is why PHP does not trust x-sg-client-ip on its
+    // own: it must be accompanied by x-sg-edge, a shared secret only this edge knows. With
+    // SG_EDGE_SECRET unset on either side nothing is trusted and behaviour is unchanged —
+    // the app then falls back to "client unidentifiable", which it already handles.
+    headers.delete("x-sg-client-ip")
+    headers.delete("x-sg-edge")
+    const edgeSecret = process.env.SG_EDGE_SECRET ?? ""
+    // MEASURED, not assumed (2026-09-21). At the ORIGIN a client-supplied
+    // x-vercel-forwarded-for passed through 3 times in 6 when sent together with
+    // x-vercel-proxied-for — so whether middleware, which runs BEFORE the external rewrite,
+    // sees the edge's value or the caller's was a real open question, and guessing it would
+    // have repeated the sg_get_client_ip() comment that wrongly called this header unforgeable.
+    // So x-sg-client-ip is emitted UNCONDITIONALLY (the inbound copy is deleted above, so it
+    // is the edge's answer or nothing), which made the question answerable from outside BEFORE
+    // anything depended on it:
+    //   curl -H 'X-Vercel-Forwarded-For: 9.9.9.9' -H 'X-Vercel-Proxied-For: 8.8.8.8' \
+    //        -H 'X-Real-IP: 5.5.5.5' -H 'X-Forwarded-For: 4.4.4.4' \
+    //        https://geotoolbox.ai/api/check-headers.php | grep X_SG_CLIENT_IP
+    // Result: 16 runs, ZERO leaks — every one returned the caller's real address, never a
+    // forged one. So what middleware reads here IS the edge's own value; the intermittent
+    // passthrough is a property of the later rewrite hop, not of this read. Re-run that probe
+    // if the source below ever changes: the moment SG_EDGE_SECRET exists, this value becomes
+    // security-bearing automatically (it keys the rate limiters and, later, the auth lockout).
+    // x-sg-edge — the part that makes PHP TRUST the value — is still only sent when the secret
+    // exists, so emitting the IP early cannot grant trust to anything.
+    const fwd = (request.headers.get("x-vercel-forwarded-for") ?? request.headers.get("x-real-ip") ?? "")
+      .split(",")[0]
+      .trim()
+    const isIp =
+      /^(?:\d{1,3}\.){3}\d{1,3}$/.test(fwd) || (/^[0-9A-Fa-f:]+$/.test(fwd) && fwd.includes(":"))
+    if (isIp) headers.set("x-sg-client-ip", fwd)
+    if (edgeSecret !== "" && isIp) headers.set("x-sg-edge", edgeSecret)
+    return NextResponse.next({ request: { headers } })
+  }
 
   // Homepage content negotiation: `Accept: text/markdown` on / serves the
   // markdown twin at /home.md (same contract as articles). Any OTHER request for
@@ -48,6 +196,9 @@ export default function middleware(request: NextRequest) {
     // which trades every visitor's TTFB for an edge case — not worth it.
     // Left as a fallthrough into next-intl routing, which is what `/` needs.
   }
+
+  const retired = retiredGlossaryResponse(request)
+  if (retired) return retired
 
   const twin = MD_TWIN.exec(pathname)
   if (twin) {
@@ -122,6 +273,20 @@ export const config = {
   // the children are migrated too.
   matcher: [
     "/",
+    // SG_GEO_HEADER_V1 / SG_EDGE_CLIENT_IP_V1: header normalisation only — the handler
+    // returns before any routing rule, so these paths never enter i18n or the markdown-404
+    // rule. They are ALSO excluded from the catch-all entry below, which is why each one has
+    // to be listed explicitly here. Keep this list and isProxiedToOrigin() in lockstep with
+    // the rewrites in next.config.ts: a proxied path missing from either is a path where a
+    // client can hand the origin its own x-sg-client-ip.
+    "/app",
+    "/app/:path*",
+    "/api/:path*",
+    "/index.php",
+    "/router.php",
+    "/assets.php",
+    "/agent-readiness/r/:token*",
+    "/agent-readiness/badge/:token*",
     "/features/:path*",
     "/pricing",
     "/blog/:path*",

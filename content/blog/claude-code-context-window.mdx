@@ -17,7 +17,7 @@ The context window is the session's working memory: everything Claude Code can s
 
 A [token](https://geotoolbox.ai/blog/what-are-tokens-in-ai) is roughly four characters, or about three-quarters of a word. Code is denser than prose because of punctuation, identifiers, and syntax, so source files eat the window faster than their line count suggests. Reading one large module can cost tens of thousands of tokens on its own.
 
-The mental model that trips people up is treating the window like human memory, something Claude holds in the back of its mind and glances at when needed. It does not work that way. The model has no memory between turns, so Claude Code re-sends the entire window on every single request, then appends your new message. It is not a filing cabinet Claude opens occasionally; it is the whole document it re-reads, start to finish, every time you hit enter. That is what makes everything below matter: the [context window](https://geotoolbox.ai/glossary/context-window) is not just a capacity limit, it is a recurring cost you pay on every turn.
+The mental model that trips people up is treating the window like human memory, something Claude holds in the back of its mind and glances at when needed. It does not work that way. The model has no memory between turns, so Claude Code re-sends the entire window on every single request, then appends your new message. It is not a filing cabinet Claude opens occasionally; it is the whole document it re-reads, start to finish, every time you hit enter. That is what makes everything below matter: the [context window](https://geotoolbox.ai/blog/how-does-ai-search-work) is not just a capacity limit, it is a recurring cost you pay on every turn.
 
 ## How Big Is the Context Window? 200K vs 1M
 
@@ -164,7 +164,7 @@ Point Claude at specific files with `@path` or line ranges instead of asking it 
 
 One feature deserves its own warning if you are watching spend. Agent teams, disabled by default and enabled with `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`, use **roughly 7x more tokens** than a standard session when teammates run in plan mode. Each teammate is a separate Claude instance maintaining its own context window, and each one loads `CLAUDE.md`, MCP servers, and skills automatically. Anthropic's own mitigations: run teammates on Sonnet, keep teams small, keep spawn prompts focused, and shut teammates down when they are done. It is a real capability, but it is the most expensive button in the product.
 
-One model-specific wrinkle: extended thinking is billed as output, so those [reasoning](https://geotoolbox.ai/glossary/reasoning-model) tokens count against your budget too. On [Fable 5](https://geotoolbox.ai/blog/fable-5-ban) you cannot turn extended thinking off, only lower the effort, so it takes a bigger bite of the window on simple tasks.
+One model-specific wrinkle: extended thinking is billed as output, so those [reasoning](https://geotoolbox.ai/blog/how-ai-models-think) tokens count against your budget too. On [Fable 5](https://geotoolbox.ai/blog/fable-5-ban) you cannot turn extended thinking off, only lower the effort, so it takes a bigger bite of the window on simple tasks.
 
 ## The Window Is the Lever
 

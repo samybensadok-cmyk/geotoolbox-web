@@ -2,7 +2,7 @@
 title: "What Is Temperature in AI? Why You Get Different Answers"
 description: "What is temperature in AI? The real mechanism behind why ChatGPT and other LLMs give a different answer every time, and what that variance means for your brand."
 date: "2026-06-21"
-updated: "2026-07-25"
+updated: "2026-09-19"
 author: "Samy BEN SADOK"
 tags: ["ai-temperature", "llm-temperature", "temperature", "sampling", "geo", "ai-visibility", "guide"]
 draft: false
@@ -106,7 +106,7 @@ Notice the one row where the answer is yes. You cannot touch the sampling dial o
 
 **When an AI answers a question about your brand by searching the web, sampling is only half the randomness, and usually the smaller half. The other half is retrieval,** and no temperature explainer mentions it because it happens outside the model entirely.
 
-Here is what a tool like ChatGPT search, Perplexity, or Google's AI Mode does when it answers a live question. It does not just generate from memory. It first [runs a search](https://geotoolbox.ai/blog/how-does-ai-search-work): it expands your question into several sub-queries (Google calls this query fan-out), pulls candidate pages from its index by keyword and by meaning, reranks them for relevance, pastes the winners into the model's context to [ground the answer](https://geotoolbox.ai/blog/what-is-rag), and then writes, usually [citing](https://geotoolbox.ai/glossary/ai-citation) the pages it leaned on.
+Here is what a tool like ChatGPT search, Perplexity, or Google's AI Mode does when it answers a live question. It does not just generate from memory. It first [runs a search](https://geotoolbox.ai/blog/how-does-ai-search-work): it expands your question into several sub-queries (Google calls this query fan-out), pulls candidate pages from its index by keyword and by meaning, reranks them for relevance, pastes the winners into the model's context to [ground the answer](https://geotoolbox.ai/blog/what-is-rag), and then writes, usually [citing](https://geotoolbox.ai/blog/how-to-get-cited-by-ai) the pages it leaned on.
 
 Every one of those steps is a little non-deterministic. The fan-out can expand differently from one run to the next. The web index updates continuously, so the candidate pool is never frozen. And the [relevance scores](https://geotoolbox.ai/blog/vector-embeddings) at the cutoff often sit very close together, so a near-tie can slot a different page, and a different brand, into the answer this time than last time. None of that touches the temperature dial.
 
@@ -165,23 +165,25 @@ What you can change is how you read the output. Stop treating a single AI answer
 ### Why does ChatGPT give a different answer every time I ask the same question?
 Because the model builds each answer by sampling from a probability distribution over possible next words, not by looking up a stored response. When the top candidates are close in probability, a different one can win on the next run, and that early difference cascades through the rest of the answer. In one study, ChatGPT gave consistent results to an identical prompt only about 73% of the time.
 
-### I set the temperature to 0, so why is the output still different?
-On a hosted model like ChatGPT or Claude, temperature 0 is still not perfectly deterministic. The main reason is that your request shares a batch with other people's, and the batch size changes with server load, which shifts the order of the underlying floating-point math just enough to flip near-tied tokens. Setting 0 is still the right move when you want the most repeatable output you can get, like extraction or fixed-format tasks; just do not expect bit-for-bit identical results from a hosted API. One practical caveat some developers report: because temperature 0 sticks so hard to the single most likely path, a structured-output call that fails to parse tends to fail the same way on every retry, so a low non-zero value like 0.2 is sometimes better when you want retries to actually vary. Reliable determinism is realistic mainly when you run an open-weights model yourself with fixed settings and a single batch.
-
 ### What temperature should I use?
 For anything that needs to be accurate and repeatable, like code, data extraction, or factual answers, stay low, around 0 to 0.3. For everyday writing and summaries, a middle setting of 0.4 to 0.7 balances consistency and variety. For brainstorming or creative drafts, go higher, 0.8 and up. Most APIs default to about 1.0. This only applies when you call the API directly; consumer chat apps pick the setting for you.
-
-### Can you set the temperature on GPT-5 or the o-series models?
-It depends on whether the model is reasoning. On OpenAI's o-series and on GPT-5 running in a reasoning mode, temperature and top-p are not available: send your own value and the API returns an error instead of applying it. The non-reasoning variants are the exception, so the GPT-5 chat model and GPT-5.1 or 5.2 with reasoning effort set to none still accept temperature, as do the older GPT-4-class chat models (0 to 2). The practical takeaway holds either way: on the reasoning models these products increasingly run on, you cannot assume a specific temperature is behind a given answer.
 
 ### What is the difference between temperature and top-p?
 Temperature reshapes how steep the probability curve is, making the top choice more or less dominant. Top-p, or nucleus sampling, instead keeps only the smallest set of top tokens whose probabilities add up to a threshold and samples from that set. Both control randomness, which is why providers usually recommend adjusting one or the other rather than both at once.
 
-### Does a lower temperature make the answer more accurate?
-No. A lower temperature makes the answer more predictable, not more correct. The model leans harder on its single most likely continuation, so if that continuation is wrong, a low temperature just makes it wrong more consistently. Accuracy comes from the model and its sources, not from the randomness dial.
-
 ### Why does my brand show up in an AI answer one day and disappear the next?
 Several things vary between runs. The two biggest for a live web answer are the model's own sampling and which web pages it retrieves to ground the answer, though model routing, memory, and silent updates can move it too. For answers built from a web search, the retrieval side is usually the bigger source of swing, because the index updates and near-tied pages trade places. A single appearance or absence is often just noise rather than a real change in how the AI sees you.
+
+## More Questions
+
+### I set the temperature to 0, so why is the output still different?
+On a hosted model like ChatGPT or Claude, temperature 0 is still not perfectly deterministic. The main reason is that your request shares a batch with other people's, and the batch size changes with server load, which shifts the order of the underlying floating-point math just enough to flip near-tied tokens. Setting 0 is still the right move when you want the most repeatable output you can get, like extraction or fixed-format tasks; just do not expect bit-for-bit identical results from a hosted API. One practical caveat some developers report: because temperature 0 sticks so hard to the single most likely path, a structured-output call that fails to parse tends to fail the same way on every retry, so a low non-zero value like 0.2 is sometimes better when you want retries to actually vary. Reliable determinism is realistic mainly when you run an open-weights model yourself with fixed settings and a single batch.
+
+### Can you set the temperature on GPT-5 or the o-series models?
+It depends on whether the model is reasoning. On OpenAI's o-series and on GPT-5 running in a reasoning mode, temperature and top-p are not available: send your own value and the API returns an error instead of applying it. The non-reasoning variants are the exception, so the GPT-5 chat model and GPT-5.1 or 5.2 with reasoning effort set to none still accept temperature, as do the older GPT-4-class chat models (0 to 2). The practical takeaway holds either way: on the reasoning models these products increasingly run on, you cannot assume a specific temperature is behind a given answer.
+
+### Does a lower temperature make the answer more accurate?
+No. A lower temperature makes the answer more predictable, not more correct. The model leans harder on its single most likely continuation, so if that continuation is wrong, a low temperature just makes it wrong more consistently. Accuracy comes from the model and its sources, not from the randomness dial.
 
 ### How many times should I check before trusting an AI-visibility result?
 Enough times to see a rate rather than a single outcome, ideally per engine and tracked over time. One check tells you almost nothing because the system is noisy by design. This is also why two AI-visibility tools can report different numbers for the same brand: they sample different prompts, run counts, engines, and moments, so their one-shot figures diverge. A presence rate watched for a trend is what makes any of them trustworthy. Branded or very specific prompts stabilize faster than broad, open-ended ones.

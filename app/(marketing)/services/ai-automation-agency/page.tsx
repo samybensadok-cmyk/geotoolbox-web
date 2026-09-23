@@ -440,7 +440,7 @@ export default function AiAutomationAgencyPage() {
           <p className="mt-8 text-[14px] leading-relaxed text-gray-500">
             You don&apos;t need to choose the format before we talk — bring the workflow, I&apos;ll recommend
             the build. Background reading:{" "}
-            <Link href="/glossary/ai-agent" className="font-medium text-accent-700 underline decoration-accent-200 underline-offset-2 hover:decoration-accent-500">
+            <Link href="/blog/agent-ready-website" className="font-medium text-accent-700 underline decoration-accent-200 underline-offset-2 hover:decoration-accent-500">
               what an AI agent is
             </Link>
             ,{" "}
@@ -560,8 +560,7 @@ export default function AiAutomationAgencyPage() {
                   runs keyword and SERP research, competitor analysis, a multi-model fact panel, drafting,
                   independent fact-checking and a scored QA gate — before a human ever hits publish. It has
                   produced {CONTENT_COUNTS.en} English articles, {CONTENT_COUNTS.fr} French and{" "}
-                  {CONTENT_COUNTS.es} Spanish localizations, and {CONTENT_COUNTS.totalGlossary} glossary
-                  entries ({CONTENT_COUNTS.glossary} EN + {CONTENT_COUNTS.glossaryFr} FR) as of{" "}
+                  {CONTENT_COUNTS.es} Spanish localizations as of{" "}
                   {CONTENT_COUNTS.asOf}.
                 </p>
                 <p>
@@ -593,17 +592,6 @@ export default function AiAutomationAgencyPage() {
                   <div className="flex items-baseline justify-between gap-4 border-b border-gray-100 pb-5">
                     <dt className="text-[13px] font-medium text-gray-600">Articles published (EN + FR + ES)</dt>
                     <dd className="font-mono text-2xl font-bold tabular-nums text-gray-900">{totalArticles}</dd>
-                  </div>
-                  <div className="flex items-baseline justify-between gap-4 border-b border-gray-100 pb-5">
-                    <dt className="text-[13px] font-medium text-gray-600">
-                      Glossary entries
-                      <span className="mt-0.5 block font-mono text-[10px] font-semibold uppercase tracking-widest text-gray-400">
-                        {CONTENT_COUNTS.glossary} EN · {CONTENT_COUNTS.glossaryFr} FR
-                      </span>
-                    </dt>
-                    <dd className="font-mono text-2xl font-bold tabular-nums text-gray-900">
-                      {CONTENT_COUNTS.totalGlossary}
-                    </dd>
                   </div>
                   <div className="flex items-baseline justify-between gap-4">
                     <dt className="text-[13px] font-medium text-gray-600">

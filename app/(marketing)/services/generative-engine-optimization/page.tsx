@@ -212,7 +212,7 @@ const faqs = [
   {
     question: "What exactly is generative engine optimization?",
     answer:
-      "The work of getting your pages cited inside the answers AI engines compose — ChatGPT, Perplexity, Gemini, Copilot, Google's AI Overviews. When an engine writes an answer it pulls from a handful of sources and names them; GEO makes you one of those named sources for the prompts your buyers ask. Full definition in the glossary: geotoolbox.ai/glossary/generative-engine-optimization.",
+      "The work of getting your pages cited inside the answers AI engines compose — ChatGPT, Perplexity, Gemini, Copilot, Google's AI Overviews. When an engine writes an answer it pulls from a handful of sources and names them; GEO makes you one of those named sources for the prompts your buyers ask. Full definition: geotoolbox.ai/blog/what-is-geo.",
   },
   {
     question: "How is GEO different from SEO?",
@@ -527,8 +527,8 @@ export default function GeoServicePage() {
               GEO vs AEO vs SEO
             </Link>
             , or the{" "}
-            <Link href="/glossary/generative-engine-optimization" className="font-medium text-accent-700 underline decoration-accent-200 underline-offset-2 hover:decoration-accent-500">
-              glossary definition
+            <Link href="/blog/what-is-geo" className="font-medium text-accent-700 underline decoration-accent-200 underline-offset-2 hover:decoration-accent-500">
+              full definition
             </Link>
             . This page is the done-for-you service.
           </p>

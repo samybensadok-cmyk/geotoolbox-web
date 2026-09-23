@@ -32,10 +32,20 @@
 //    ~25-40 brands at Scale-typical configs; "unlimited" was a promise the
 //    credit pool couldn't keep, and it undercut the $1,500+ Enterprise floor.
 //    Unlimited brands are now Enterprise-only.
-//  - 7-day free trial (card required) on Starter and Growth only (v3.1 pulled
-//    Pro from the trial): 25% of the
-//    monthly credit grant + max 3 generated articles during trial, full grant
-//    on first payment. T-24h renewal reminder email. No trial on Scale/Ent.
+//  - 7-day free trial (card required): 25% of the monthly credit grant + max 3
+//    generated articles during trial, full grant on first payment. T-24h
+//    renewal reminder email.
+//
+// 2026-09-18 SG_TRIAL_V2 (operator call) — the trial now covers EVERY tier on
+// the Brands & consultants ladder: Starter, Plus ('consultant') and Pro, plus
+// Growth on the agency ladder. This supersedes SG_LADDER_V3.1, which had the
+// trial on Starter + Growth only (it had pulled Pro and never gave it to Plus).
+// Scale and Enterprise stay trial-free — those are assisted sales.
+//   Trial brand caps (backend SG_TRIAL_BRAND_CAP): Starter 1, Plus 2, Pro 2,
+//   Growth 3. Credits and the 3-article cap are plan-agnostic fractions.
+//   ⚠️ trialDays here MUST match SG_TRIAL_PLANS in inc/plan_limits.php on the
+//   Replit app. A card that advertises a trial the checkout does not grant is a
+//   disclosed-trial breach (Terms §5), not a copy bug.
 //  - `inheritsFrom` and `featured` are per-segment: a card must never
 //    reference a tier the active tab doesn't show ("Everything in Growth,
 //    plus:" on the Brands tab was the bug that forced this).
@@ -112,6 +122,7 @@ export const PLANS: Plan[] = [
     name: "Plus",
     priceMonthly: 199,
     priceYearly: 1908,
+    trialDays: 7, // SG_TRIAL_V2 2026-09-18
     tagline: "A second brand, more engines, one shared prompt pool.",
     quotas: {
       domains: "Up to 3 brands",
@@ -130,7 +141,7 @@ export const PLANS: Plan[] = [
       "Actions: weekly prioritized to-do list",
       "2 team seats",
     ],
-    cta: { label: "Get started", href: SIGNUP },
+    cta: { label: "Start 7-day free trial", href: SIGNUP },
   },
   {
     id: "pro",
@@ -138,8 +149,8 @@ export const PLANS: Plan[] = [
     name: "Pro",
     priceMonthly: 399,
     priceYearly: 3828,
-    // SG_LADDER_V3.1 2026-07-28: no trial on Pro (operator call — brand-tab trial
-    // lives on Starter only) and Plus carries the "Most popular" badge.
+    trialDays: 7, // SG_TRIAL_V2 2026-09-18 — trial restored on Pro (whole brand ladder)
+    // Plus keeps the "Most popular" badge.
     // SG_PRO_TIER_V1 2026-07-28: brand-side depth tier filling the $199->$999
     // hole. All 8 engines on few brands; deliberately NO white-label or
     // unlimited seats so it cannot cannibalize Growth.
@@ -158,7 +169,7 @@ export const PLANS: Plan[] = [
       "Article writing — ~30 articles/mo",
       "3 team seats",
     ],
-    cta: { label: "Get started", href: SIGNUP },
+    cta: { label: "Start 7-day free trial", href: SIGNUP },
   },
   {
     id: "agency",
@@ -276,7 +287,8 @@ export const COMPARE_GROUPS: CompareGroup[] = [
       { label: "Scan frequency", values: ["—", "Weekly", "Weekly", "Weekly", "Weekly", "Weekly + daily add-on"] },
       { label: "History retention", values: ["—", "180 days", "1 year", "1 year", "Unlimited", "Unlimited"] },
       { label: "Team seats", values: ["—", "1", "2", "3", "Unlimited", "Unlimited"] },
-      { label: "Free trial", values: ["—", "7 days", "—", "—", "7 days", "—"] },
+      // SG_TRIAL_V2 2026-09-18: whole brand ladder + Growth. Scale stays trial-free.
+      { label: "Free trial", values: ["—", "7 days", "7 days", "7 days", "7 days", "—"] },
     ],
   },
   {

@@ -1,4 +1,4 @@
-import { getAllPosts, getAllGlossaryTerms } from "./content"
+import { getAllPosts } from "./content"
 import { siteConfig } from "./config"
 import { tools as toolRegistry } from "./tools"
 import { whenToUseLines, howToCallLines } from "./agent-guidance"
@@ -7,7 +7,6 @@ import { whenToUseLines, howToCallLines } from "./agent-guidance"
  * Builders for every machine-readable index this site publishes:
  *   /llms.txt            navigation index + agent guidance
  *   /llms-blog.txt       complete article index, all locales
- *   /llms-glossary.txt   complete glossary index, all locales
  *   /agents.md           standalone agent instruction file
  *
  * The route handlers are thin wrappers around these functions ON PURPOSE: a gate
@@ -54,8 +53,6 @@ export function buildLlmsIndex(): string {
   const posts = getAllPosts("en")
   const frPosts = getAllPosts("fr")
   const esPosts = getAllPosts("es")
-  const terms = getAllGlossaryTerms("en")
-
   const features = siteConfig.featureGroups.flatMap((g) =>
     g.features.map((f) => `- [${f.name}](${base}/features/${f.slug}): ${f.desc}`)
   )
@@ -98,21 +95,9 @@ export function buildLlmsIndex(): string {
     "",
     ...posts.slice(0, RECENT_LIMIT).map(postLine),
     "",
-    `## Glossary (${terms.length} terms)`,
-    "",
-    `- [Glossary index](${base}/glossary): every GEO and AI-search term we define`,
-    `- [Complete glossary index, all locales](${base}/llms-glossary.txt)`,
-    "",
-    `The first ${Math.min(RECENT_LIMIT, terms.length)} alphabetically:`,
-    "",
-    ...terms
-      .slice(0, RECENT_LIMIT)
-      .map((t) => `- [${t.term}](${base}/glossary/${t.slug}): ${t.definition}`),
-    "",
     `## Français (${frPosts.length} articles)`,
     "",
     `- [Blog en français](${base}/fr/blog)`,
-    `- [Glossaire en français](${base}/fr/glossary)`,
     `- [Index complet des articles](${base}/llms-blog.txt)`,
     "",
     `## Español (${esPosts.length} artículos)`,
@@ -155,33 +140,6 @@ export function buildBlogIndex(): string {
   ].join("\n")
 }
 
-/** /llms-glossary.txt — every glossary term, every locale. */
-export function buildGlossaryIndex(): string {
-  const sections = LLMS_LOCALES.flatMap((locale) => {
-    const terms = getAllGlossaryTerms(locale)
-    if (terms.length === 0) return []
-    return [
-      `## ${LOCALE_LABEL[locale] ?? locale} (${terms.length} terms)`,
-      "",
-      `- [Glossary index](${base}${localePrefix(locale)}/glossary)`,
-      ...terms.map(
-        (t) => `- [${t.term}](${base}${localePrefix(locale)}/glossary/${t.slug}): ${t.definition}`
-      ),
-      "",
-    ]
-  })
-
-  return [
-    `# ${siteConfig.name} — complete glossary index`,
-    "",
-    `> Every AI-search / GEO term defined on ${siteConfig.url}, in every locale. The navigation index is at ${base}/llms.txt.`,
-    "",
-    "Any glossary URL also serves plain markdown: append `.md` to it, or send `Accept: text/markdown`.",
-    "",
-    ...sections,
-  ].join("\n")
-}
-
 /** /agents.md — the standalone agent instruction file. */
 export function buildAgentsMd(): string {
   const tools = toolRegistry.map((t) => `- [${t.name}](${base}/tools/${t.slug}) — ${t.navDesc}`)
@@ -208,14 +166,13 @@ export function buildAgentsMd(): string {
     `| [/llms.txt](${base}/llms.txt) | Navigation index: what this site is, when to use it, links to every section |`,
     `| [/llms-full.txt](${base}/llms-full.txt) | Full text of every English article in one fetch |`,
     `| [/llms-blog.txt](${base}/llms-blog.txt) | Complete article index, all locales (en, fr, es) |`,
-    `| [/llms-glossary.txt](${base}/llms-glossary.txt) | Complete glossary index, all locales |`,
     `| [/home.md](${base}/home.md) | Markdown twin of the homepage |`,
     `| [/404.md](${base}/404.md) | The not-found recovery document (returns HTTP 404 by design) |`,
     `| [/sitemap.xml](${base}/sitemap.xml) | Every indexable URL, with lastmod |`,
     `| [/robots.txt](${base}/robots.txt) | Crawl rules — no AI crawler is disallowed |`,
     `| [/feed.xml](${base}/feed.xml) | RSS feed of new articles |`,
     "",
-    "Any article or glossary URL also serves markdown: append `.md`, or send `Accept: text/markdown`.",
+    "Any article URL also serves markdown: append `.md`, or send `Accept: text/markdown`.",
     "",
     "## Free tools an agent can point a user at",
     "",

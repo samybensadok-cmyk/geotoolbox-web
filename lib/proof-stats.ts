@@ -122,15 +122,11 @@ export type ProofStats = typeof proofStats
 // `content-counts.generated.json`. Counting rule mirrors `getAllPosts()`:
 // .mdx minus draft minus noindex — what a visitor can actually reach.
 // DO NOT hand-edit these numbers; fix the script if a count looks wrong.
-// `glossary` is the EN glossary, `glossaryFr` the FR one; `totalArticles`
-// is the blog total across all three locales.
+// `totalArticles` is the blog total across the three counted locales.
 export const contentCounts = {
   en: contentGenerated.en,
   fr: contentGenerated.fr,
   es: contentGenerated.es,
-  glossary: contentGenerated.glossary,
-  glossaryFr: contentGenerated.glossaryFr,
   totalArticles: contentGenerated.en + contentGenerated.fr + contentGenerated.es,
-  totalGlossary: contentGenerated.glossary + contentGenerated.glossaryFr,
   asOf: contentGenerated.asOf,
 } as const

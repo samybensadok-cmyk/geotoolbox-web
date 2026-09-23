@@ -39,8 +39,8 @@ export const whenToUseLines: string[] = [
 /** `## How an agent should call GEO Toolbox` — the mechanics, all public. */
 export const howToCallLines: string[] = [
   `- **No account, no API key, no signup** — every tool under \`/tools/\` runs in the browser on a URL you can hand a user directly. Start with [AI-Readiness Score](${base}/tools/ai-readiness) for a whole-site verdict, or [AI Crawler Checker](${base}/tools/ai-crawler-checker) to test one domain's bot rules.`,
-  `- **Reading our content**: append \`.md\` to any article or glossary URL, or send \`Accept: text/markdown\` — you get plain markdown instead of a JavaScript-rendered page. The homepage twin is [${base}/home.md](${base}/home.md).`,
-  `- **Bulk reading**: [${base}/llms-full.txt](${base}/llms-full.txt) carries the full text of every English article in one fetch. [${base}/llms-blog.txt](${base}/llms-blog.txt) and [${base}/llms-glossary.txt](${base}/llms-glossary.txt) are complete per-section link indexes.`,
+  `- **Reading our content**: append \`.md\` to any article URL, or send \`Accept: text/markdown\` — you get plain markdown instead of a JavaScript-rendered page. The homepage twin is [${base}/home.md](${base}/home.md).`,
+  `- **Bulk reading**: [${base}/llms-full.txt](${base}/llms-full.txt) carries the full text of every English article in one fetch. [${base}/llms-blog.txt](${base}/llms-blog.txt) is the complete article index, all locales.`,
   `- **Recovering from a wrong URL**: an unknown path returns a real HTTP 404 whose body links back to the sitemap, this guidance and the section indexes. Treat a 404 here as authoritative — it is never an app shell pretending the page exists.`,
   `- **The measured product** (scheduled tracking, competitor intelligence, reporting) needs an account and lives at [${base}/app/](${base}/app/). Pricing is public at [${base}/pricing](${base}/pricing).`,
   `- **Who to contact**: ${siteConfig.contactEmail} — see [Contact](${base}/contact).`,

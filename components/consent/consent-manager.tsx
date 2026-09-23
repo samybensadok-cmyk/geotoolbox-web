@@ -34,6 +34,17 @@ import {
   requiresConsent,
   setConsent,
 } from "@/lib/consent"
+/* SG_SIGNUP_PROVENANCE_V1 (2026-09-21): layer 1 of signup attribution rides this component
+   because this is where "are analytics allowed?" is already decided. snapshotAttribution() is a
+   pure read of document.referrer and runs FIRST, before consent resolves — otherwise an EEA
+   visitor who accepts on their third page has already lost their entry referrer and would be
+   recorded as "direct". persistAttribution() is the part that stores, and it is called only on
+   the allowed branches. See geotoolbox-main/SIGNUP-PROVENANCE-2026-09-21.md. */
+import {
+  clearAttribution,
+  persistAttribution,
+  snapshotAttribution,
+} from "@/lib/attribution"
 
 const COPY = {
   en: {
@@ -72,13 +83,16 @@ export function ConsentManager({ locale = "en" }: { locale?: string }) {
   // Initial decision. Runs client-only; until it resolves, nothing loads —
   // fail-closed by construction.
   useEffect(() => {
+    // Pure read, no storage — must happen before any early return below, on every entry.
+    snapshotAttribution()
+
     const consent = getConsent()
-    if (consent === "granted") { setTrackersOn(true); return }
+    if (consent === "granted") { setTrackersOn(true); persistAttribution(); return }
     if (consent === "denied") return
 
     const decide = (country: string) => {
       if (requiresConsent(country)) setBannerOpen(true)
-      else setTrackersOn(true)
+      else { setTrackersOn(true); persistAttribution() }
     }
 
     const cached = getCachedCountry()
@@ -107,6 +121,9 @@ export function ConsentManager({ locale = "en" }: { locale?: string }) {
     setConsent("granted")
     setBannerOpen(false)
     setTrackersOn(true)
+    // Writes the snapshot taken at mount, not the current page — so a visitor who accepts deep
+    // into the session is still attributed to the page and referrer they actually arrived on.
+    persistAttribution()
   }, [])
 
   const refuse = useCallback(() => {
@@ -126,6 +143,7 @@ export function ConsentManager({ locale = "en" }: { locale?: string }) {
         }
       })
     } catch { /* non-fatal */ }
+    clearAttribution() // SG_SIGNUP_PROVENANCE_V1: the attribution cookie is non-essential too.
     // If trackers were already mounted (settings reopened after accept), a
     // reload is the only clean way to unload them — scripts can't be un-run.
     if (trackersOn) window.location.reload()

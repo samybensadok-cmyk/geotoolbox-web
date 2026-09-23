@@ -286,11 +286,13 @@ button:not(:disabled),
 /* All items stack in the same grid cell ([grid-area:1/1] on the spans); each
    fades in, holds ~1.3s, fades out. 8 items × 2s slot = 16s loop. Every name
    stays in the DOM so crawlers and AI read the full engine list. */
+/* Each name is fully out (12.5% = its 2s slot) before the next starts at 0% of
+   its own delay, so two names never overlap mid-transition. */
 @keyframes engine-cycle {
   0%    { opacity: 0; transform: translateY(0.45em); }
   2.2%  { opacity: 1; transform: translateY(0); }
-  12.5% { opacity: 1; transform: translateY(0); }
-  14.7% { opacity: 0; transform: translateY(-0.45em); }
+  10.3% { opacity: 1; transform: translateY(0); }
+  12.5% { opacity: 0; transform: translateY(-0.45em); }
   100%  { opacity: 0; transform: translateY(-0.45em); }
 }
 .engine-rotator > span {

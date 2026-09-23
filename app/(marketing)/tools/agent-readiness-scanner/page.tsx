@@ -228,7 +228,7 @@ export default function AgentReadinessScannerPage() {
               Try the tracker free
             </Link>
             <p className="text-center text-[12px] text-gray-400">
-              Your prompts, tracked across the major AI engines · 7-day free trial on Starter and Growth
+              Your prompts, tracked across the major AI engines · 7-day free trial on Starter, Plus, Pro and Growth
             </p>
           </div>
         </div>

@@ -129,6 +129,19 @@ if (!existsSync(CANARY)) {
   }
 }
 
+// (F) light-surface inputs must re-specify their foreground. `.gak-input` sets
+// `color: var(--gak-ink)` (#e6e6e6) for the DARK card; `.gak-gate .gak-input` flips the background
+// to near-white and, until 2026-09-18, inherited that colour — #e6e6e6 on #fff is ~1.2:1, i.e. the
+// email a visitor typed was invisible, on the one field that converts. Any rule that puts a light
+// background on an input must declare its own `color` in the same block.
+for (const m of raw.matchAll(/([^{}]*\.gak-input[^{}]*)\{([^}]*)\}/g)) {
+  const [, selector, body] = m;
+  const lightBg = /background\s*:\s*(rgba?\(\s*25[0-5]|#f[0-9a-f]{2}|#fff|white)/i.test(body);
+  if (lightBg && !/(^|;)\s*color\s*:/.test(body)) {
+    fail.push(`(F) "${selector.trim()}" gives an input a light background without re-declaring \`color\`. It inherits .gak-input's light-on-dark #e6e6e6, which is ~1.2:1 on white — invisible text.`);
+  }
+}
+
 if (fail.length) {
   console.error('\nAlchemy widget budget gate FAILED:\n');
   for (const f of fail) console.error('  ✗ ' + f);

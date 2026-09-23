@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next"
-import { getAllPosts, getAllGlossaryTerms } from "@/lib/content"
+import { getAllPosts } from "@/lib/content"
 import { siteConfig } from "@/lib/config"
 import { routing, bcp47, contentLocales } from "@/i18n/routing"
 import { alternatesFor } from "@/lib/i18n/siblings"
@@ -112,12 +112,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.5,
     },
     {
-      url: `${siteConfig.url}/glossary`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.7,
-    },
-    {
       url: `${siteConfig.url}/tools`,
       lastModified: new Date(),
       changeFrequency: "weekly",
@@ -144,18 +138,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
           lastModified: new Date(post.updated ?? post.date),
           changeFrequency: "monthly" as const,
           priority: 0.8,
-          ...(alt.languages ? { alternates: { languages: alt.languages } } : {}),
-        }
-      })
-    ),
-    ...routing.locales.flatMap((locale) =>
-      getAllGlossaryTerms(locale).map((t) => {
-        const alt = alternatesFor("glossary", t.slug, locale)
-        return {
-          url: alt.canonical,
-          lastModified: t.updated ? new Date(t.updated) : new Date(),
-          changeFrequency: "monthly" as const,
-          priority: 0.6,
           ...(alt.languages ? { alternates: { languages: alt.languages } } : {}),
         }
       })

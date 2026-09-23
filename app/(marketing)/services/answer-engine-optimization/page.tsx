@@ -161,7 +161,7 @@ const faqs = [
   {
     question: "What exactly is answer engine optimization?",
     answer:
-      "The work of winning the extracted answer: the featured snippet, the People Also Ask box, the answer slot inside an AI Overview, the answer a voice assistant reads aloud. An engine picks one passage to show as the answer to a question — AEO structures your pages so that passage is yours. Full definition in the glossary: geotoolbox.ai/glossary/answer-engine-optimization.",
+      "The work of winning the extracted answer: the featured snippet, the People Also Ask box, the answer slot inside an AI Overview, the answer a voice assistant reads aloud. An engine picks one passage to show as the answer to a question — AEO structures your pages so that passage is yours. Full definition: geotoolbox.ai/blog/what-is-answer-engine-optimization.",
   },
   {
     question: "How is AEO different from SEO?",
@@ -481,8 +481,8 @@ export default function AeoServicePage() {
               GEO vs AEO vs SEO
             </Link>
             , or the{" "}
-            <Link href="/glossary/answer-engine-optimization" className="font-medium text-accent-700 underline decoration-accent-200 underline-offset-2 hover:decoration-accent-500">
-              glossary definition
+            <Link href="/blog/what-is-answer-engine-optimization" className="font-medium text-accent-700 underline decoration-accent-200 underline-offset-2 hover:decoration-accent-500">
+              full definition
             </Link>
             . This page is the done-for-you service.
           </p>

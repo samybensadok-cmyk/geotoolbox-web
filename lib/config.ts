@@ -10,6 +10,10 @@ export const siteConfig = {
   // straight into a $948 Stripe Checkout seconds after clicking "Start free trial".
   // Entry points that cannot express a billing choice must say monthly.
   appSignupUrl: "/app/?page=signup&interval=monthly",
+  // SG_FREE_SCAN_V1 (2026-09-22): the domain-first free-score door (website + what you sell, then a
+  // free account, then the scan). Every "free" CTA points here, never at appSignupUrl — that page
+  // is the trial-checkout form (tier picker, card step).
+  appFreeScanUrl: "/app/?page=free-scan",
   author: "Samy Ben Sadok",
   // Machine-readable contact + postal identity for the homepage Organization
   // JSON-LD. Agent-readiness scanners (Ora / Is Agentic `org-schema-completeness`)
