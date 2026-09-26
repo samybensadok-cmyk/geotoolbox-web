@@ -2,8 +2,8 @@
 title: "Kimi K3 vs Claude: Coding, Cost, and Reasoning Compared"
 description: "Kimi K3 vs Claude, compared honestly: which wins on frontend coding, reasoning, speed, and real cost per task across Fable 5, Opus 5, and GPT-5.6 Sol."
 date: "2026-07-26"
-updated: "2026-09-03"
-recheckBy: "2026-09-17"  # FIXED 08-18 (independent Sonnet QA review of the freshness-audit batch caught this): L96's cost table still showed the cancelled Sonnet-5 rate hike ("to $3 after Aug 31" / "to $15") four days after the 08-14 corpus-wide Sonnet-5 sweep touched this file's `updated` date without actually fixing this table — a self-contradiction against L51's own correct row in the same file. Also fixed L88 prose, which claimed K3's $15 output "sits at Sonnet 5's post-August standard rate" (false: Sonnet 5's real permanent rate is $10, so K3 runs 50% above it, not equal). No recheckBy guard existed before this.
+updated: "2026-09-26"
+recheckBy: "2026-10-09"  # 09-26: AA Intelligence Index figures moved from the stale v4.1.1 scale (K3 60 tied #1 open, Opus 5 63, Fable 5 62, Sol 61) to v4.3.2 (K3 44, #3 open behind MiMo-V2.6-Pro 46 and GLM-5.3 45; Opus 5 51, Fable 5 50, GPT-5.6 Sol 47; Opus 5.5 leads at 58), verified on the artificialanalysis.ai model pages 2026-09-26, in prose, table, Sol paragraph, FAQ and quick-verdict row. Scorecard PNG is a dated August 2026 snapshot (eyebrow says so): not regenerated, alt+figcaption now dated. Earlier: FIXED 08-18 (independent Sonnet QA review of the freshness-audit batch caught this): L96's cost table still showed the cancelled Sonnet-5 rate hike ("to $3 after Aug 31" / "to $15") four days after the 08-14 corpus-wide Sonnet-5 sweep touched this file's `updated` date without actually fixing this table — a self-contradiction against L51's own correct row in the same file. Also fixed L88 prose, which claimed K3's $15 output "sits at Sonnet 5's post-August standard rate" (false: Sonnet 5's real permanent rate is $10, so K3 runs 50% above it, not equal). No recheckBy guard existed before this.
 author: "Samy BEN SADOK"
 tags: ["kimi-k3", "claude", "kimi-k3-vs-claude", "fable-5", "claude-opus-5", "llm-comparison", "ai-coding", "open-weights", "moonshot-ai"]
 draft: false
@@ -11,7 +11,7 @@ draft: false
 
 Ask Claude Fable 5 whether Kimi K3 is better than it, with web search switched off, and it tells you Kimi K3 does not exist. Ask Google's Gemini 3.1 Pro the same question and it goes further: it calls "Claude Fable 5" a hallucinated model name and insists neither model is real. Both are real, and both are current models as of July 2026. The assistants most people rely on cannot see either one yet.
 
-So here is the comparison those models cannot give you, current as of July 2026: Kimi K3 vs Claude, head to head on coding, reasoning, speed, and what each actually costs. There is no single winner; the honest answer depends on the job. We flag which numbers are independently measured and which come from the labs themselves, because on models this new that distinction is most of the story.
+So here is the comparison those models cannot give you, current as of July 2026, with independent index scores updated in September 2026: Kimi K3 vs Claude, head to head on coding, reasoning, speed, and what each actually costs. There is no single winner; the honest answer depends on the job. We flag which numbers are independently measured and which come from the labs themselves, because on models this new that distinction is most of the story.
 
 ## Kimi K3 vs Claude: The Short Answer
 
@@ -25,9 +25,9 @@ That framing matters because most "Kimi K3 vs Claude" takes are really "should I
 </thead>
 <tbody>
 <tr><td><strong>Frontend / visual coding</strong></td><td><strong>Kimi K3</strong></td><td>First open model to top the Frontend Code Arena, ahead of Fable 5</td></tr>
-<tr><td><strong>General intelligence</strong></td><td><strong>Claude</strong></td><td>Opus 5 leads the Artificial Analysis Intelligence Index; K3 trails all three</td></tr>
+<tr><td><strong>General intelligence</strong></td><td><strong>Claude</strong></td><td>Opus 5 leads this set on the Artificial Analysis Intelligence Index; K3 trails all three</td></tr>
 <tr><td><strong>Hard reasoning</strong></td><td><strong>Claude</strong></td><td>Fable 5 and Opus 5 clear K3 by roughly ten points on Humanity's Last Exam</td></tr>
-<tr><td><strong>Cost per task</strong></td><td><strong>Kimi K3</strong></td><td>Around $0.95 per Intelligence Index task versus $2.03 for Opus 5</td></tr>
+<tr><td><strong>Cost per task</strong></td><td><strong>Kimi K3</strong></td><td>Around $0.95 per Intelligence Index task versus $2.03 for Opus 5 (summer 2026 index run)</td></tr>
 <tr><td><strong>Speed</strong></td><td><strong>Claude</strong></td><td>Fable 5 outputs roughly twice as fast; Opus 5 starts a task in about a third of the time</td></tr>
 <tr><td><strong>Open weights</strong></td><td><strong>Kimi K3</strong></td><td>Open-weight model (weights public since July 27, custom license); Claude is closed and API-only</td></tr>
 <tr><td><strong>Refusal-sensitive work</strong></td><td>Kimi K3 <em>(reported)</em></td><td>Developers report fewer blanket refusals on security- and medical-adjacent work</td></tr>
@@ -40,7 +40,7 @@ Each row below has evidence behind it. The one almost every comparison skips com
 
 "Claude" is not one model, and this is where most K3 comparisons go wrong. A benchmark that says "Claude scored 53" is useless unless you know whether it means Fable 5, Opus 5, or Sonnet 5, because those three sit at different points on both the capability and the price curve. K3 beats one of them on a given task and loses to another on the same task.
 
-Three configurations matter for this comparison. **[Fable 5.1](https://geotoolbox.ai/blog/claude-fable-5-1)** is Anthropic's top-tier model for long-running autonomous agents, and its most expensive (it replaced Fable 5 on September 1, 2026 at the same $10/$50 price). **Opus 5**, released July 24, 2026, tops the independent intelligence leaderboard and is the sensible high end for reasoning. **Sonnet 5** is the balanced production default, and the one whose sticker price lands closest to K3. There is also a legacy Opus 4.8 you will still see in older benchmark tables.
+Three configurations matter for this comparison. **[Fable 5.1](https://geotoolbox.ai/blog/claude-fable-5-1)** is Anthropic's top-tier model for long-running autonomous agents, and its most expensive (it replaced Fable 5 on September 1, 2026 at the same $10/$50 price). **Opus 5**, released July 24, 2026, is the prior high-end model for reasoning, since superseded by Opus 5.5 ($4/$20, September 22, 2026), which now leads the independent intelligence leaderboard. **Sonnet 5** is the balanced production default, and the one whose sticker price lands closest to K3. There is also a legacy Opus 4.8 you will still see in older benchmark tables.
 
 <table>
 <thead>
@@ -48,7 +48,7 @@ Three configurations matter for this comparison. **[Fable 5.1](https://geotoolbo
 </thead>
 <tbody>
 <tr><td><strong>Fable 5.1</strong></td><td>Long-running autonomous agents</td><td>$10 / $50</td><td>Top tier and priciest; overkill for jobs Opus can do</td></tr>
-<tr><td><strong>Opus 5</strong></td><td>High-end reasoning and coding</td><td>$5 / $25</td><td>Current independent intelligence leader</td></tr>
+<tr><td><strong>Opus 5</strong></td><td>High-end reasoning and coding</td><td>$5 / $25</td><td>Prior Opus; Opus 5.5 now leads the AA index (58)</td></tr>
 <tr><td><strong>Sonnet 5</strong></td><td>Balanced production default</td><td>$2 / $10 (permanent rate)</td><td>Closest Claude to K3 on price</td></tr>
 <tr><td>Opus 4.8 <em>(legacy)</em></td><td>Prior-gen reasoning</td><td>$5 / $25</td><td>Superseded by Opus 5; common in old tables</td></tr>
 </tbody>
@@ -60,11 +60,11 @@ When a headline says K3 "beats Claude," it almost always means it beat Opus 4.8 
 
 On a two-week-old model, sort every number by who measured it before you trust it. Independent evaluators run the same harness across models; the labs run their own harness, at maximum effort, on the tasks that flatter them. Both appear below, labeled, because the split is the story.
 
-The independent picture is consistent. On the [Artificial Analysis](https://artificialanalysis.ai/models/kimi-k3) Intelligence Index, K3 scores 60, the top open-weight model (tied with GLM-5.3), and sits behind only the closed frontier: Opus 5 at 63, Fable 5 at 62, and GPT-5.6 Sol at 61. But on the [Frontend Code Arena](https://arena.ai/leaderboard), a human-preference vote on generated interfaces that leans toward frontend and visual tasks, K3 ranks first, the first open-weight model to lead it, and it beats Fable 5 head to head. Read those two results together: K3 is a coding and interface specialist at the frontier of its lane, and only competitive outside it.
+The independent picture is consistent. On the [Artificial Analysis](https://artificialanalysis.ai/models/kimi-k3) Intelligence Index (v4.3.2, September 2026), K3 scores 44, third among open-weight models behind Xiaomi's MiMo-V2.6-Pro (46) and GLM-5.3 (45), and behind all three closed models compared here: Opus 5 at 51, Fable 5 at 50, and GPT-5.6 Sol at 47. Anthropic's newer Claude Opus 5.5 now leads the whole index at 58. But on the [Frontend Code Arena](https://arena.ai/leaderboard), a human-preference vote on generated interfaces that leans toward frontend and visual tasks, K3 ranks first, the first open-weight model to lead it, and it beats Fable 5 head to head. Read those two results together: K3 is a coding and interface specialist at the frontier of its lane, and only competitive outside it.
 
 <figure className="not-prose my-8">
-  <BlogImage src="/blog/kimi-k3-vs-claude/kimi-k3-vs-claude-benchmarks.png" alt="Who-wins-what scorecard comparing Kimi K3, Claude, and GPT-5.6 Sol across six dimensions: Kimi K3 leads frontend coding (Frontend Code Arena Elo 1,682), cost per task ($0.95), and open weights, while Claude leads general intelligence (Opus 5 at 63), hard reasoning (53 on Humanity's Last Exam), and output speed (Fable 5 at 71 tokens per second)." w="1100" h="744" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
-  <figcaption className="mt-3 text-center text-sm text-gray-500">Independently measured results tell a different story from the vendor tables. K3 owns frontend and cost; Claude owns reasoning and speed.</figcaption>
+  <BlogImage src="/blog/kimi-k3-vs-claude/kimi-k3-vs-claude-benchmarks.png" alt="Who-wins-what scorecard, as of August 2026, comparing Kimi K3, Claude, and GPT-5.6 Sol across six dimensions: Kimi K3 leads frontend coding (Frontend Code Arena Elo 1,682), cost per task ($0.95), and open weights, while Claude leads general intelligence (Opus 5 at 63 on the August 2026 index), hard reasoning (53 on Humanity's Last Exam), and output speed (Fable 5 at 71 tokens per second)." w="1100" h="744" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Independently measured results tell a different story from the vendor tables. K3 owns frontend and cost; Claude owns reasoning and speed. Scores as of August 2026; the September 2026 Intelligence Index re-version (v4.3.2) lowered every score but kept the order (Opus 5 51, Fable 5 50, GPT-5.6 Sol 47, K3 44).</figcaption>
 </figure>
 
 <table>
@@ -73,7 +73,7 @@ The independent picture is consistent. On the [Artificial Analysis](https://arti
 </thead>
 <tbody>
 <tr><td><strong>Frontend Code Arena</strong> (Elo)</td><td><strong>1,682 (#1)</strong></td><td>1,630 (Fable 5)</td><td>1,625</td><td><strong>Independent</strong> (Arena)</td></tr>
-<tr><td><strong>AA Intelligence Index</strong></td><td>60</td><td><strong>63 (Opus 5), 62 (Fable 5)</strong></td><td>61</td><td><strong>Independent</strong> (Artificial Analysis)</td></tr>
+<tr><td><strong>AA Intelligence Index</strong> (v4.3.2, Sept 2026)</td><td>44</td><td><strong>51 (Opus 5), 50 (Fable 5)</strong></td><td>47</td><td><strong>Independent</strong> (Artificial Analysis)</td></tr>
 <tr><td><strong>Humanity's Last Exam</strong> (reasoning, no tools)</td><td>43.5</td><td><strong>53 (Fable 5 and Opus 5)</strong></td><td>n/a</td><td>Mixed (K3 vendor; Claude independent)</td></tr>
 <tr><td><strong>Long-horizon work</strong> (GDPval Elo)</td><td>1,686</td><td><strong>1,861 (Opus 5)</strong></td><td>1,735</td><td><strong>Independent</strong> (Artificial Analysis)</td></tr>
 <tr><td><strong>Terminal-Bench 2.1</strong></td><td>88.3</td><td>84.6 (Fable 5); <strong>89 (Opus 5)</strong></td><td>88.8</td><td>Mixed (Opus 5 independent; rest vendor)</td></tr>
@@ -86,11 +86,11 @@ One nuance sits behind that accuracy row. Fable 5 is the most accurate model in 
 
 ## Price: Why the Sticker Is Misleading
 
-On paper this is the easiest win in the comparison. Kimi K3 charges $3 per million input tokens and $15 per million output, with cache hits dropping input to $0.30. That output rate runs 50% above Sonnet 5's permanent $10 rate, undercuts Opus 5, and is a third of Fable 5. And on Artificial Analysis's controlled cost-per-task measure, K3 is the cheapest model in the set at about $0.95, under Opus 5 at $2.03 and Fable 5 at $2.75. If you stop reading here, K3 looks like a straight price cut.
+On paper this is the easiest win in the comparison. Kimi K3 charges $3 per million input tokens and $15 per million output, with cache hits dropping input to $0.30. That output rate runs 50% above Sonnet 5's permanent $10 rate, undercuts Opus 5, and is a third of Fable 5. And on Artificial Analysis's controlled cost-per-task measure, in its summer 2026 index run, K3 was the cheapest model in the set at about $0.95, under Opus 5 at $2.03 and Fable 5 at $2.75 (the September v4.3.2 re-version re-measured cost and token use, and its figures are not comparable with these). If you stop reading here, K3 looks like a straight price cut.
 
 <table>
 <thead>
-<tr><th>Model</th><th>Input / 1M</th><th>Output / 1M</th><th>Cached input</th><th>Cost per task (AA, max)</th></tr>
+<tr><th>Model</th><th>Input / 1M</th><th>Output / 1M</th><th>Cached input</th><th>Cost per task (AA, max, summer 2026 run)</th></tr>
 </thead>
 <tbody>
 <tr><td><strong>Kimi K3</strong></td><td>$3.00</td><td>$15.00</td><td>$0.30</td><td><strong>$0.95</strong></td></tr>
@@ -100,7 +100,7 @@ On paper this is the easiest win in the comparison. Kimi K3 charges $3 per milli
 </tbody>
 </table>
 
-Two things complicate the clean number. The first is verbosity. K3 reasons on every request, and with its reasoning effort locked to the single "max" setting on Moonshot's API and OpenRouter alike, it meters far more output than a comparable Claude call: Artificial Analysis clocked K3 at 130M output tokens to run its index, against a 63M median. On an agent job with retries and a growing history, that extra output lands on the $15 line, which is why first-week users on Kimi's coding plans repeatedly report a single task eating a startling share of their quota.
+Two things complicate the clean number. The first is verbosity. K3 reasons on every request, and with its reasoning effort locked to the single "max" setting on Moonshot's API and OpenRouter alike, it meters far more output than a comparable Claude call: Artificial Analysis clocked K3 at 130M output tokens to run the summer 2026 version of its index, against a 63M median. On an agent job with retries and a growing history, that extra output lands on the $15 line, which is why first-week users on Kimi's coding plans repeatedly report a single task eating a startling share of their quota.
 
 The second is a comparison error worth naming, because so many of the "K3 is 10x cheaper" posts are built on it. **People compare K3's per-token API price to their flat monthly Claude subscription and conclude K3 is far cheaper. Those are different products.** A $20 Claude Pro plan is not billed per token; a fair comparison is API against API (where K3 undercuts Opus and Fable but sits near Sonnet), or subscription against subscription (where Kimi's coding plans have their own tiers and their own quota complaints). Our [Kimi API pricing](https://geotoolbox.ai/blog/kimi-api-pricing) guide covers the token rates and tiers, and the [Claude pricing guide](https://geotoolbox.ai/blog/claude-pricing) does the same on the Anthropic side. Compare like with like and the gap narrows from "10x" to "real but workload-dependent."
 
@@ -130,7 +130,7 @@ So what does open buy you against Claude, if not laptop inference? The sharpest 
 
 Most head-to-head videos are actually three-way: Kimi K3 versus Claude Fable 5 versus [GPT-5.6 Sol](https://geotoolbox.ai/blog/gpt-5-6), all building the same app on camera. It is worth knowing where OpenAI's model lands, because it changes the decision at the margins.
 
-Sol sits between the other two on most measures. It leads the set on GPQA Diamond at 94.1, edges ahead of K3 on the Intelligence Index at 61, and roughly matches K3 on Terminal-Bench, all while costing about $1.04 per task at the time of the index run, close to K3 and under both Opus 5 and Fable 5. That figure predates OpenAI's August 21, 2026 price cut, which took Sol from $5/$30 to $4/$20 per million tokens, so Sol's real cost per task is now lower than the index shows. Where it clearly loses is the specific thing K3 was built for: on the Frontend Code Arena it trails both K3 and Fable 5 for building interfaces.
+Sol sits between the other two on most measures. It leads the set on GPQA Diamond at 94.1, edges ahead of K3 on the Intelligence Index (47 to 44 on v4.3.2), and roughly matches K3 on Terminal-Bench, all while costing about $1.04 per task in the summer 2026 index run, close to K3 and under both Opus 5 and Fable 5. That figure predates OpenAI's August 21, 2026 price cut, which took Sol from $5/$30 to $4/$20 per million tokens, so Sol's real cost per task is now lower than the index shows. Where it clearly loses is the specific thing K3 was built for: on the Frontend Code Arena it trails both K3 and Fable 5 for building interfaces.
 
 The three-way verdict is cleaner than it sounds. For raw frontend and interface work, K3 is the pick. For careful reasoning and the hardest general problems, Claude Opus 5 or Fable 5. For a fast, cheap, broadly capable middle that rarely embarrasses itself, GPT-5.6 Sol is the safe default, and it is why many teams keep it as the everyday model and treat both K3 and Claude as specialists they call in. If you are weighing the wider field, our [ChatGPT alternatives](https://geotoolbox.ai/blog/chatgpt-alternatives) rundown puts all three in context.
 
@@ -144,7 +144,7 @@ Here is the direct answer the title asks for: **for building dense frontends, ag
 </thead>
 <tbody>
 <tr><td>Building or restyling a frontend / UI</td><td><strong>Kimi K3</strong></td><td>Ranks first for interface generation, beating Fable 5</td></tr>
-<tr><td>High-volume coding on a tight budget</td><td><strong>Kimi K3</strong></td><td>Lowest cost per task, if you can tolerate the latency</td></tr>
+<tr><td>High-volume coding on a tight budget</td><td><strong>Kimi K3</strong></td><td>Lowest cost per task in the summer 2026 index run, if you can tolerate the latency</td></tr>
 <tr><td>Data must stay in your jurisdiction</td><td><strong>Kimi K3</strong>, self-hosted</td><td>Only if you run the weights yourself; the hosted API sends data to China</td></tr>
 <tr><td>Hard reasoning or a wrong answer is costly</td><td><strong>Claude Opus 5 / Fable 5</strong></td><td>Leads reasoning benchmarks and is more accurate</td></tr>
 <tr><td>Interactive, latency-sensitive work</td><td><strong>Claude</strong></td><td>Roughly twice the output speed and a much shorter wait to first token</td></tr>
@@ -169,11 +169,11 @@ You cannot control what Kimi K3 or the next model learns about you. You can cont
 
 ### Is Kimi K3 better than Claude?
 
-For frontend and interface coding, yes: K3 ranks first on the human-preference Frontend Code Arena, ahead of Claude Fable 5. For general reasoning and the hardest problems, no: Claude Opus 5 and Fable 5 lead the independent Intelligence Index and score about ten points higher on Humanity's Last Exam. K3 is a specialist that wins its lane, not an across-the-board replacement.
+For frontend and interface coding, yes: K3 ranks first on the human-preference Frontend Code Arena, ahead of Claude Fable 5. For general reasoning and the hardest problems, no: Claude Opus 5 and Fable 5 score well above K3 on the independent Intelligence Index and score about ten points higher on Humanity's Last Exam. K3 is a specialist that wins its lane, not an across-the-board replacement.
 
 ### Is Kimi K3 cheaper than Claude?
 
-Against Opus 5 and Fable 5, yes: K3's per-token rates undercut both, and on Artificial Analysis's cost-per-task measure K3 is the cheapest model in the set at about $0.95, below Opus 5's $2.03. Sonnet 5 is the exception, cheaper per token today, though K3 is still cheaper per task. And K3's verbose reasoning meters more output on real jobs, so comparing its API price to a flat Claude subscription is not like-for-like.
+Against Opus 5 and Fable 5, yes: K3's per-token rates undercut both, and on Artificial Analysis's cost-per-task measure from its summer 2026 index run, K3 was the cheapest model in the set at about $0.95, below Opus 5's $2.03. Sonnet 5 is the exception, cheaper per token today, though K3 was still cheaper per task in that run. And K3's verbose reasoning meters more output on real jobs, so comparing its API price to a flat Claude subscription is not like-for-like.
 
 ### Can I use Kimi K3 in Claude Code?
 
