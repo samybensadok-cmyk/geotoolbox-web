@@ -2,7 +2,7 @@
 title: "Claude Opus 5 : prix en euros, benchmarks et ce qui change vraiment"
 description: "Le vrai prix de Claude Opus 5 en euros, les cinq niveaux d'effort qui peuvent doubler la facture, et ce qui casse quand vous migrez depuis Opus 4.8."
 date: "2026-07-25"
-updated: "2026-09-03"
+updated: "2026-09-25"
 author: "Samy BEN SADOK"
 tags: ["claude-opus-5", "claude", "anthropic", "opus-5", "llm", "guide"]
 draft: false
@@ -18,6 +18,8 @@ Le chiffre qui détermine le montant réel de votre facture est un paramètre à
 
 Tout cela est vérifiable. Et l'essentiel ne figure pas dans l'article de lancement.
 
+**Mise à jour du 22 septembre 2026 :** [Claude Opus 5.5](https://www.anthropic.com/news/claude-opus-5-5) a remplacé Opus 5 comme modèle Opus actuel d'Anthropic, à 4 $ en entrée et 20 $ en sortie par million de tokens, sous les 5 $ et 25 $ d'Opus 5. Opus 5 reste disponible comme modèle précédent, au même tarif qu'au lancement. Tout ce qui suit décrit Opus 5 tel qu'il est sorti et s'applique à ce modèle précisément ; voir notre [guide des prix Claude](https://geotoolbox.ai/fr/blog/prix-claude) pour la gamme actuelle.
+
 ## Ce qu'il faut retenir
 
 - **Claude Opus 5 est le modèle de la gamme Opus d'Anthropic, lancé le 24 juillet 2026 à 5 $ / 25 $ par million de tokens** (entrée / sortie), soit le tarif exact de l'Opus 4.8 et la moitié de celui de Fable 5.
@@ -30,7 +32,7 @@ Tout cela est vérifiable. Et l'essentiel ne figure pas dans l'article de lancem
 
 Claude Opus 5 est le modèle de la gamme Opus d'Anthropic, lancé le 24 juillet 2026. Son coût par token est identique à celui d'Opus 4.8 et ses performances sont assez proches de celles de [Claude Fable 5](https://geotoolbox.ai/blog/fable-5-ban) pour qu'Anthropic le présente comme un modèle frôlant l'intelligence de pointe, à moitié prix.
 
-Il s'agit d'un [modèle de raisonnement](https://geotoolbox.ai/blog/how-ai-models-think) ; c'est le modèle par défaut sur Claude Max et le modèle le plus puissant disponible sur Claude Pro. Il n'est pas inclus dans la formule gratuite.
+Il s'agit d'un [modèle de raisonnement](https://geotoolbox.ai/blog/how-ai-models-think) ; au lancement, c'était le modèle par défaut sur Claude Max et le modèle le plus puissant disponible sur Claude Pro. Opus 5.5 a depuis repris les deux rôles, et depuis Claude Code 2.1.280 le modèle par défaut est Opus 5.5 sur Pro, Max, Team et Enterprise (Pro et Team Standard utilisaient auparavant Sonnet 5 par défaut). Il n'est pas inclus dans la formule gratuite.
 
 <table>
   <thead>
@@ -268,9 +270,9 @@ Remplacer la chaîne de modèle ne suffit pas. Cinq changements vont toucher du 
 
 Il existe aussi une version de tout ceci au niveau des workflows. L'équipe d'Every, qui a testé Opus 5 une semaine avant le lancement, a constaté qu'il « discutait les instructions, s'arrêtait avant la fin du travail et, de manière générale, s'entendait mal avec nos skills et plugins existants ». Sa solution a été de supprimer l'échafaudage accumulé et de repartir de zéro, après quoi les résultats se sont nettement améliorés. La documentation d'Anthropic pointe dans le même sens : refaites une analyse par paliers plutôt que de reporter vos réglages.
 
-**Vous n'aurez peut-être pas le contexte d'un million de tokens dont vous avez entendu parler.** Les utilisateurs du premier jour rapportaient voir environ 200 000 tokens via Claude Code, et l'explication est dans la documentation de Claude Code plutôt que dans l'article de lancement. Sur les formules Max, Team et Enterprise, Opus est « automatiquement mis à niveau vers un contexte d'un million de tokens, sans configuration supplémentaire ». Sur Pro, non : le contexte étendu y « nécessite des crédits d'usage ». Vous pouvez le forcer avec l'alias `opus[1m]` ou `/model opus[1m]`, et un administrateur peut le désactiver entièrement avec `CLAUDE_CODE_DISABLE_1M_CONTEXT=1`, qui retire les variantes à un million du sélecteur. La fenêtre de contexte elle-même n'entraîne aucun surcoût au-delà de 200 000 tokens.
+**Vous n'aurez peut-être pas le contexte d'un million de tokens dont vous avez entendu parler.** Les utilisateurs du premier jour rapportaient voir environ 200 000 tokens via Claude Code, et au lancement l'explication se trouvait dans la documentation de Claude Code plutôt que dans l'article de lancement : sur les formules Max, Team et Enterprise, Opus était « automatiquement mis à niveau vers un contexte d'un million de tokens, sans configuration supplémentaire », tandis que sur Pro le contexte étendu « nécessite des crédits d'usage ». Ce partage par formule ne s'applique plus. La [documentation de configuration des modèles](https://code.claude.com/docs/en/model-config) d'Anthropic (consultée le 26 septembre 2026) indique qu'Opus 4.7 et les versions suivantes, Opus 5 compris, tournent avec la fenêtre d'un million sur toutes les formules, Pro inclus, sans variante `[1m]` ni crédits d'usage. Pour utiliser Opus 5 lui-même plutôt que l'alias `opus`, qui pointe désormais vers Opus 5.5, tapez `/model claude-opus-5`. Un administrateur peut toujours désactiver le million entièrement avec `CLAUDE_CODE_DISABLE_1M_CONTEXT=1`, qui ramène les modèles nativement à un million à 200 000 tokens. La fenêtre de contexte elle-même n'entraîne aucun surcoût au-delà de 200 000 tokens.
 
-Le million de tokens est donc bien réel, et sa disponibilité dépend de votre formule et de votre chaîne de modèle. Si le comportement en contexte long compte pour vous, vérifiez sur quelle variante vous êtes réellement avant de vous engager, et voyez notre guide sur les [limites de la fenêtre de contexte](https://geotoolbox.ai/blog/claude-code-context-window) pour comprendre pourquoi la [fenêtre de contexte](https://geotoolbox.ai/blog/how-does-ai-search-work) annoncée et celle réellement utilisable divergent si souvent.
+Le million de tokens est donc bien réel, et sur les versions actuelles de Claude Code il ne dépend plus de votre formule. Si le comportement en contexte long compte pour vous, vérifiez sur quel modèle vous êtes réellement avant de vous engager, et voyez notre guide sur les [limites de la fenêtre de contexte](https://geotoolbox.ai/blog/claude-code-context-window) pour comprendre pourquoi la [fenêtre de contexte](https://geotoolbox.ai/blog/how-does-ai-search-work) annoncée et celle réellement utilisable divergent si souvent.
 
 Changer la valeur d'effort entre deux requêtes invalide la mise en cache des prompts, car l'effort façonne le prompt rendu. Choisissez un niveau au début d'une session mise en cache et gardez-le.
 
@@ -370,7 +372,7 @@ Pendant que vous auditez ce que le modèle sait faire, autant vérifier ce que l
 
 ### Claude Opus 5 est-il disponible dans la formule gratuite ?
 
-Non. Claude Opus 5 exige une formule payante. C'est le modèle par défaut sur Claude Max et le modèle le plus performant disponible sur Claude Pro ; il est aussi accessible sur Team, Enterprise, Claude Code et l'API. Les utilisateurs de la formule gratuite ont Claude Sonnet 5 à la place.
+Non. Claude Opus 5 exige une formule payante. Au lancement, c'était le modèle par défaut sur Claude Max et le modèle le plus performant disponible sur Claude Pro ; Opus 5.5 occupe désormais les deux positions, et depuis Claude Code 2.1.280 c'est le modèle par défaut sur Pro, Max, Team et Enterprise. Opus 5 reste accessible sur Team, Enterprise, Claude Code et l'API comme modèle précédent. Les utilisateurs de la formule gratuite ont Claude Sonnet 5 à la place.
 
 ### Combien coûte Claude Opus 5 ?
 
@@ -386,7 +388,7 @@ Le défaut de l'API est `high`, et définir `high` explicitement produit exactem
 
 ### Claude Opus 5 fonctionne-t-il dans Claude Code ?
 
-Oui, et `high` y est aussi le défaut. La taille de la fenêtre de contexte dépend de votre formule : Max, Team et Enterprise obtiennent la fenêtre d'un million automatiquement, tandis que Pro réclame des crédits d'usage pour l'obtenir. Vous pouvez la sélectionner explicitement avec `/model opus[1m]`, et elle n'entraîne aucun surcoût au-delà de 200 000 tokens.
+Oui, et `high` y est aussi le défaut. Sur l'API Anthropic, Opus 5 tourne avec la fenêtre d'un million sur toutes les formules payantes, Pro inclus, sans variante `[1m]` ni crédits d'usage (au lancement, Pro exigeait des crédits d'usage). Sélectionnez-le avec `/model claude-opus-5`, puisque l'alias `opus` pointe désormais vers Opus 5.5 ; la fenêtre n'entraîne aucun surcoût au-delà de 200 000 tokens.
 
 ### Claude Opus 5 est-il meilleur que GPT-5.6 ?
 
@@ -394,7 +396,7 @@ Sur les comparaisons publiées par Anthropic, Opus 5 devance GPT-5.6 Sol sur la 
 
 ### Combien coûte un abonnement à Claude Opus ?
 
-Opus 5 n'est pas vendu séparément. Il est inclus dans Claude Pro à 20 $ par mois (environ 21 € TTC en France), où il est le modèle le plus performant disponible, et dans Claude Max à 100 $ ou 200 $ par mois (environ 105 € ou 210 € TTC), où il est le modèle par défaut. Les formules Team et Enterprise l'incluent aussi. Payer au token via l'API coûte de son côté 5 $ par million en entrée et 25 $ par million en sortie, sur une facture entièrement distincte de l'abonnement.
+Opus 5 n'est pas vendu séparément. Il était inclus dans Claude Pro à 20 $ par mois (environ 21 € TTC en France), où il était le modèle le plus performant disponible, et dans Claude Max à 100 $ ou 200 $ par mois (environ 105 € ou 210 € TTC), où il était le modèle par défaut ; Opus 5.5 est depuis devenu le modèle par défaut sur Pro, Max, Team et Enterprise. Les formules Team et Enterprise incluent Opus. Payer au token via l'API coûte, pour Opus 5 précisément, 5 $ par million en entrée et 25 $ par million en sortie, sur une facture entièrement distincte de l'abonnement.
 
 ### Vaut-il le coup de passer d'Opus 4.8 à Claude Opus 5 ?
 
@@ -417,3 +419,6 @@ Le prix par token ne change pas, mais le gain de capacité n'est pas automatique
 - Anthropic lance Opus 5 - Russell Brandom, TechCrunch, 24 juillet 2026 - `techcrunch.com/2026/07/24/anthropic-launches-opus-5/`
 - Claude Opus 5 : le nouveau modèle IA d'Anthropic - Believemy, 24 juillet 2026 - `believemy.com/fr/r/claude-opus-5-anthropic`
 - Présentation de Claude Opus 5 (discussion de lancement) - Hacker News, 24 juillet 2026 - `news.ycombinator.com/item?id=49038433`
+- Claude Opus 5.5 - Anthropic, 22 septembre 2026 - `anthropic.com/news/claude-opus-5-5`
+- Journal des modifications de Claude Code (2.1.280) - Anthropic - `code.claude.com/docs/en/changelog`
+- Configuration des modèles (documentation Claude Code) - Anthropic, consultée le 26 septembre 2026 - `code.claude.com/docs/en/model-config`

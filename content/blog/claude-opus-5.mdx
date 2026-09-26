@@ -2,8 +2,8 @@
 title: "Claude Opus 5: Pricing, Benchmarks & What Actually Changed"
 description: "Claude Opus 5 launched July 24, 2026 at the same price as Opus 4.8. The five effort levels, the real cost per task, and what breaks when you upgrade."
 date: "2026-07-25"
-updated: "2026-09-05"
-recheckBy: "2026-10-06"  # backfilled 2026-09-05 freshness audit (no prior guard); positions Opus 5 against the Fable tier, which moved to 5.1 on 2026-09-01. Re-verify Anthropic's "highest available capability" guidance
+updated: "2026-09-25"
+recheckBy: "2026-10-25"  # updated 2026-09-25: added Opus 5.5 supersession note (Sep 22, $4/$20) + fixed "current default" claims (Claude Code 2.1.280: default = Opus 5.5 on Pro, Max, Team, Enterprise); 2026-09-26: 1M on every plan incl. Pro per model-config. Re-verify Anthropic's "highest available capability" guidance
 author: "Samy BEN SADOK"
 tags: ["claude-opus-5", "claude", "anthropic", "opus-5", "llm", "guide"]
 draft: false
@@ -15,11 +15,13 @@ The number that decides your actual bill is a five-value parameter most teams wi
 
 All of that is checkable. Most of it is not in the launch post.
 
+**Update, September 22, 2026:** [Claude Opus 5.5](https://www.anthropic.com/news/claude-opus-5-5) has superseded Opus 5 as Anthropic's current Opus model, at $4 per million input tokens and $20 per million output tokens, below Opus 5's $5 and $25. Opus 5 remains available as the prior model at its original price. Everything below describes Opus 5 as it launched and applies to that model specifically; see our [Claude pricing guide](https://geotoolbox.ai/blog/claude-pricing) for the current lineup.
+
 ## What Is Claude Opus 5?
 
 Claude Opus 5 is Anthropic's Opus-tier model, released July 24, 2026. It costs the same per token as Opus 4.8 and lands close enough to [Claude Fable 5](https://geotoolbox.ai/blog/fable-5-ban) that Anthropic describes it as coming near frontier intelligence at half the price.
 
-It is a [reasoning model](https://geotoolbox.ai/blog/how-ai-models-think), and it is the default model on Claude Max and the strongest model available on Claude Pro. It is not on the free tier.
+It is a [reasoning model](https://geotoolbox.ai/blog/how-ai-models-think), and at launch it was the default model on Claude Max and the strongest model available on Claude Pro; Opus 5.5 has since taken over both roles, and since Claude Code 2.1.280 the default model is Opus 5.5 on Pro, Max, Team and Enterprise (Pro and Team Standard previously defaulted to Sonnet 5). It is not on the free tier.
 
 <table>
   <thead>
@@ -249,9 +251,9 @@ Swapping the model string is not sufficient. Four changes will bite production c
 
 There is a workflow-level version of this too. The team at Every, testing Opus 5 for a week before launch, found it "argued with instructions, stopped before the work was finished, and generally didn't play well with our existing skills and plugins." Their fix was to delete the accumulated scaffolding and start over, after which results improved sharply. Anthropic's own documentation points the same direction, advising a fresh effort sweep rather than carrying settings across.
 
-**You may not get the 1M context you read about.** Day-one users reported seeing roughly 200K through Claude Code, and the explanation is in the Claude Code docs rather than the launch post. On Max, Team and Enterprise plans, Opus is "automatically upgraded to 1M context with no additional configuration." On Pro it is not: extended context there "requires usage credits." You can force it with the `opus[1m]` alias or `/model opus[1m]`, and an admin can switch it off entirely with `CLAUDE_CODE_DISABLE_1M_CONTEXT=1`, which strips the 1M variants from the picker. The window itself carries no price premium beyond 200K.
+**You may not get the 1M context you read about.** Day-one users reported seeing roughly 200K through Claude Code, and at launch the explanation was in the Claude Code docs rather than the launch post: on Max, Team and Enterprise plans, Opus was "automatically upgraded to 1M context with no additional configuration," while on Pro extended context "requires usage credits." That plan split no longer applies. Anthropic's current [model configuration docs](https://code.claude.com/docs/en/model-config) (checked September 26, 2026) say Opus 4.7 and later, Opus 5 included, run with the 1M window on every plan, including Pro, with no `[1m]` variant and no usage credits. To run Opus 5 itself rather than the `opus` alias, which now resolves to Opus 5.5, use `/model claude-opus-5`. An admin can still switch 1M off entirely with `CLAUDE_CODE_DISABLE_1M_CONTEXT=1`, which holds native-1M models to 200K. The window itself carries no price premium beyond 200K.
 
-So the 1M figure is real, and whether you have it depends on your plan and your model string. If long-context behavior matters, check which variant you are actually on before committing, and see our guide to [context window limits](https://geotoolbox.ai/blog/claude-code-context-window) for why the advertised [context window](https://geotoolbox.ai/blog/how-does-ai-search-work) and the usable one so often diverge.
+So the 1M figure is real, and on current Claude Code builds it no longer depends on your plan. If long-context behavior matters, check which model you are actually on before committing, and see our guide to [context window limits](https://geotoolbox.ai/blog/claude-code-context-window) for why the advertised [context window](https://geotoolbox.ai/blog/how-does-ai-search-work) and the usable one so often diverge.
 
 Changing the effort value between requests invalidates prompt caching, because effort shapes the rendered prompt. Pick a level at the start of a cached session and hold it.
 
@@ -351,7 +353,7 @@ While you are auditing what the model can do, it is worth checking what the mode
 
 ### Is Claude Opus 5 available on the free plan?
 
-No. Claude Opus 5 requires a paid plan. It is the default model on Claude Max and the strongest model available on Claude Pro, and it is also available on Team, Enterprise, Claude Code and the API. Free users get Claude Sonnet 5 instead.
+No. Claude Opus 5 requires a paid plan. At launch it was the default model on Claude Max and the strongest model available on Claude Pro; Opus 5.5 now holds both positions, and since Claude Code 2.1.280 it is the default model on Pro, Max, Team and Enterprise. Opus 5 itself is still available on Team, Enterprise, Claude Code and the API as the prior model. Free users get Claude Sonnet 5 instead.
 
 ### How much does Claude Opus 5 cost?
 
@@ -363,7 +365,7 @@ The API default is `high`, and setting `high` explicitly produces exactly the sa
 
 ### Does Claude Opus 5 work in Claude Code?
 
-Yes, and `high` is the default there as well. The context window depends on your plan: Max, Team and Enterprise get the 1M window automatically, while Pro requires usage credits for it. You can select it explicitly with `/model opus[1m]`, and it carries no price premium beyond 200K.
+Yes, and `high` is the default there as well. On the Anthropic API, Opus 5 runs with the 1M window on every paid plan, including Pro, with no `[1m]` variant and no usage credits (at launch, Pro needed usage credits for it). Select it with `/model claude-opus-5`, since the `opus` alias now points to Opus 5.5; the window carries no price premium beyond 200K.
 
 ### Is Claude Opus 5 better than GPT-5.6?
 
@@ -371,7 +373,7 @@ On Anthropic's published comparisons, Opus 5 leads GPT-5.6 Sol on most rows: Fro
 
 ### How much does a Claude Opus subscription cost?
 
-Opus 5 is not sold separately. It comes with Claude Pro at $20 a month, where it is the strongest model available, and with Claude Max at $100 or $200 a month, where it is the default. Team and Enterprise plans include it too. Paying by the token through the API instead costs $5 per million input and $25 per million output, on a completely separate bill from the subscription.
+Opus 5 is not sold separately. It came with Claude Pro at $20 a month, where it was the strongest model available, and with Claude Max at $100 or $200 a month, where it was the default; Opus 5.5 has since taken over as the default model on Pro, Max, Team and Enterprise. Team and Enterprise plans include Opus too. Paying by the token through the API instead costs $5 per million input and $25 per million output for Opus 5 specifically, on a completely separate bill from the subscription.
 
 ## More Questions
 
@@ -399,3 +401,6 @@ The per-token price is unchanged, but the capability gain is not automatically f
 - Introducing Claude Opus 5 - Simon Willison's Weblog, July 24, 2026 - `simonwillison.net/2026/Jul/24/introducing-claude-opus-5/`
 - Anthropic launches Opus 5 - Russell Brandom, TechCrunch, July 24, 2026 - `techcrunch.com/2026/07/24/anthropic-launches-opus-5/`
 - Introducing Claude Opus 5 (launch discussion) - Hacker News, July 24, 2026 - `news.ycombinator.com/item?id=49038433`
+- Claude Opus 5.5 - Anthropic, September 22, 2026 - `anthropic.com/news/claude-opus-5-5`
+- Claude Code changelog (2.1.280) - Anthropic - `code.claude.com/docs/en/changelog`
+- Model configuration (Claude Code Docs) - Anthropic, checked September 26, 2026 - `code.claude.com/docs/en/model-config`
