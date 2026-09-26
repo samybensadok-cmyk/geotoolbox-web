@@ -2,18 +2,18 @@
 title: "Claude vs Gemini: Which Is Better? An Honest Look Under the Hood"
 description: "Claude vs Gemini, compared honestly: how each is built, how they search and cite the web, who wins which task, and which one to show up in. $MONTH_YEAR."
 date: "2026-07-05"
-updated: "2026-09-05"
-recheckBy: "2026-10-06"  # backfilled 2026-09-05 freshness audit (no prior guard); flagship-comparison table. Re-verify: Anthropic top tier (Fable 5.1 since 2026-09-01) and whether Gemini 3.5 Pro has finally shipped (still partner-testing at 2026-09-05, no API model ID)
+updated: "2026-09-25"
+recheckBy: "2026-10-25"  # updated 2026-09-25/26: Opus 5.5 ($4/$20) superseded Opus 5 ($5/$25) as of Sep 22, 2026, updated in the flagship-comparison table, context-window, pricing prose + FAQ and cutoff rows; June-2026 scorecard captioned as dated; FR twin synced. Re-verify: whether Gemini 3.5 Pro has finally shipped (still partner-testing at 2026-09-05, no API model ID)
 author: "Samy BEN SADOK"
 tags: ["claude-vs-gemini", "claude", "gemini", "ai-comparison", "geo", "llm", "guide"]
 draft: false
 ---
 
-Claude vs Gemini is usually framed as a contest with a winner. It is not one. As of July 2026 Anthropic's Claude and Google's Gemini are close enough at the frontier that the honest answer is "it depends on the task," and the two land in genuinely different places: Claude leans into writing and careful reasoning, Gemini into live search, multimodal, and the Google ecosystem it lives inside. There is also a third question almost nobody asks, and it matters most if you publish: which one cites your brand when a customer asks. This is the comparison done honestly, written for people who publish content rather than build models. New to either? Start with [what Claude AI is](https://geotoolbox.ai/blog/what-is-claude-ai) or [what Google Gemini is](https://geotoolbox.ai/blog/what-is-gemini).
+Claude vs Gemini is usually framed as a contest with a winner. It is not one. As of September 2026 Anthropic's Claude and Google's Gemini are close enough at the frontier that the honest answer is "it depends on the task," and the two land in genuinely different places: Claude leans into writing and careful reasoning, Gemini into live search, multimodal, and the Google ecosystem it lives inside. There is also a third question almost nobody asks, and it matters most if you publish: which one cites your brand when a customer asks. This is the comparison done honestly, written for people who publish content rather than build models. New to either? Start with [what Claude AI is](https://geotoolbox.ai/blog/what-is-claude-ai) or [what Google Gemini is](https://geotoolbox.ai/blog/what-is-gemini).
 
 <figure className="not-prose my-8">
-  <BlogImage src="/blog/claude-vs-gemini/claude-vs-gemini-scorecard.png" alt="Scorecard of where Claude and Gemini each lean, from writing to Workspace integration." w="1200" h="824" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
-  <figcaption className="mt-3 text-center text-sm text-gray-500">Per-row leans, not a winner: Claude for depth on text and code, Gemini for reach across the live web, media, and Workspace.</figcaption>
+  <BlogImage src="/blog/claude-vs-gemini/claude-vs-gemini-scorecard.png" alt="Scorecard dated June 2026 (Opus 4.8 and Fable 5 against Gemini 3.1 Pro and 3.5 Flash) of where Claude and Gemini each lean, from writing to Workspace integration." w="1200" h="824" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Per-row leans as of June 2026, not a winner: Claude for depth on text and code, Gemini for reach across the live web, media, and Workspace. Claude's lineup has since moved to Opus 5.5 and Fable 5.1.</figcaption>
 </figure>
 
 ## Claude vs Gemini at a Glance
@@ -26,10 +26,10 @@ Here is the honest version before the detail. Both are excellent, and the real d
 </thead>
 <tbody>
 <tr><td><strong>Maker</strong></td><td>Anthropic</td><td>Google (DeepMind)</td></tr>
-<tr><td><strong>Top models (September 2026)</strong></td><td>Opus 5, Sonnet 5, and the higher-tier Fable 5.1 (Fable 5 and Opus 4.8 now legacy)</td><td>Gemini 3.1 Pro (still in preview) and 3.8 Flash (September 2, 2026), with Gemini 3.5 Pro still in partner testing (not yet released)</td></tr>
+<tr><td><strong>Top models (September 2026)</strong></td><td>Opus 5.5, Sonnet 5, and the higher-tier Fable 5.1 (Opus 5, Fable 5 and Opus 4.8 now prior/legacy)</td><td>Gemini 3.1 Pro (still in preview) and 3.8 Flash (September 2, 2026), with Gemini 3.5 Pro still in partner testing (not yet released)</td></tr>
 <tr><td><strong>Leans best at</strong></td><td>Long-document work, writing, agentic coding</td><td>Live web research, multimodal work, and anything inside Google Workspace</td></tr>
 <tr><td><strong>Entry price</strong></td><td>Pro around $20/month</td><td>Google AI Pro around $20/month (AI Plus around $5)</td></tr>
-<tr><td><strong>Context window</strong></td><td>Up to <a href="https://support.claude.com/en/articles/8606394-how-large-is-the-context-window-on-paid-claude-plans">1M tokens on Opus 5 and Sonnet 5</a>, in the app as well as the API</td><td>1M tokens on Gemini 3.1 Pro; <a href="https://geotoolbox.ai/blog/gemini-3-5-pro">Gemini 3.5 Pro</a> is rumored at 2M (no official spec yet)</td></tr>
+<tr><td><strong>Context window</strong></td><td>Up to <a href="https://support.claude.com/en/articles/8606394-how-large-is-the-context-window-on-paid-claude-plans">1M tokens on Opus 5.5 and Sonnet 5</a>, in the app as well as the API</td><td>1M tokens on Gemini 3.1 Pro; <a href="https://geotoolbox.ai/blog/gemini-3-5-pro">Gemini 3.5 Pro</a> is rumored at 2M (no official spec yet)</td></tr>
 <tr><td><strong>Web search and citations</strong></td><td>Web search built in; fewer, more authoritative citations; strong at grounding a document you give it</td><td>Grounded in live Google Search; Deep Research across many sources; more real-time coverage</td></tr>
 <tr><td><strong>Multimodal</strong></td><td>Text, image, and document input; no native image, video, or audio generation</td><td>Generates images, video, and audio (via Google's media models); multimodal input</td></tr>
 <tr><td><strong>Standout feature</strong></td><td>Claude Code; the careful, low-fluff character</td><td>Deep Google Workspace integration; native media generation</td></tr>
@@ -63,7 +63,7 @@ The second divergence is the product, and it matters more than the model for mos
 </thead>
 <tbody>
 <tr><td><strong>What it is</strong></td><td>A trained network that turns a prompt into more text</td><td>The app around it: tools, memory, web search, media generation, integrations, safety, UI</td></tr>
-<tr><td><strong>Claude</strong></td><td>Opus 5 / Sonnet 5 / Fable 5, shaped by Constitutional AI</td><td>claude.ai and Claude Code: web search, file handling, artifacts, agentic coding</td></tr>
+<tr><td><strong>Claude</strong></td><td>Opus 5.5 / Sonnet 5 / Fable 5.1, shaped by Constitutional AI</td><td>claude.ai and Claude Code: web search, file handling, artifacts, agentic coding</td></tr>
 <tr><td><strong>Gemini</strong></td><td>Gemini 3.1 Pro / 3.6 Flash (multimodal input, text output)</td><td>The Gemini app and Workspace: live Google Search, image and video generation via Google's media models, Gmail and Docs, Deep Research</td></tr>
 </tbody>
 </table>
@@ -72,7 +72,7 @@ When people say "Gemini can make a video" or "Gemini is right there in my Gmail,
 
 ## How Each One Searches the Web and Cites Sources
 
-**This is where the two pull furthest apart.** A model only knows the world up to its training cutoff. As of July 2026 that is around May 2026 for [Claude Opus 5](https://geotoolbox.ai/blog/claude-opus-5), per Anthropic's docs, four months fresher than the legacy Opus 4.8 and Sonnet 5, which both stop around January 2026. Anything newer, including most recent facts about your company, reaches the model only at query time through live web search, the context you paste in, or files you upload.
+**This is where the two pull furthest apart.** A model only knows the world up to its training cutoff. As of July 2026 that was around May 2026 for [Claude Opus 5](https://geotoolbox.ai/blog/claude-opus-5), per Anthropic's docs, four months fresher than the legacy Opus 4.8 and Sonnet 5, which both stop around January 2026; [Opus 5.5](https://www.anthropic.com/news/claude-opus-5-5), which superseded Opus 5 on September 22, 2026, is the current Opus model. Anything newer, including most recent facts about your company, reaches the model only at query time through live web search, the context you paste in, or files you upload.
 
 Gemini's structural advantage here is obvious once you say it out loud: it is made by the company behind Google Search. Its answers can be [grounded in live Google Search](https://ai.google.dev/gemini-api/docs/google-search), and its Deep Research mode fans a question out across many sources and synthesizes them into a cited report. Tools like NotebookLM extend the same reach to your own documents. For anything that depends on current information, that reach is a real edge, and the citations come with clickable links you can check.
 
@@ -125,7 +125,7 @@ The honest call: Claude Code still feels a step ahead on agentic coherence for h
 <tr><th>Benchmark</th><th>What it measures</th><th>Reported leader (July 2026)</th><th>Read it with</th></tr>
 </thead>
 <tbody>
-<tr><td><strong><a href="https://www.swebench.com/">SWE-bench Verified</a></strong></td><td>Resolving real GitHub issues (coding)</td><td>Claude's frontier models lead: Opus 4.8 at 88.6% (the model these scores were run against, since succeeded by Opus 5) and Fable 5 at 95%, against 80.6% for Gemini 3.1 Pro, roughly an eight-point gap, wider than most comparisons imply</td><td>Scores are largely self-reported and swing with the test harness</td></tr>
+<tr><td><strong><a href="https://www.swebench.com/">SWE-bench Verified</a></strong></td><td>Resolving real GitHub issues (coding)</td><td>Claude's frontier models lead: Opus 4.8 at 88.6% (the model these scores were run against, since succeeded by Opus 5, itself since succeeded by Opus 5.5) and Fable 5 at 95%, against 80.6% for Gemini 3.1 Pro, roughly an eight-point gap, wider than most comparisons imply</td><td>Scores are largely self-reported and swing with the test harness</td></tr>
 <tr><td><strong>GPQA Diamond</strong></td><td>Graduate-level science questions (reasoning)</td><td>Contested; the two trade the lead</td><td>Scores sit near the ceiling, so tiny gaps look bigger than they are</td></tr>
 <tr><td><strong>Humanity's Last Exam</strong></td><td>Hard expert reasoning, no tools</td><td>Both rank at the frontier; the lead has traded between them</td><td>A young, brutal benchmark; low scores with wide error bars</td></tr>
 <tr><td><strong><a href="https://arena.ai/leaderboard">LMArena</a></strong></td><td>Human head-to-head preference votes</td><td>Claude and Gemini both rank among the top models in text</td><td>This measures what people prefer, not what is correct</td></tr>
@@ -141,7 +141,7 @@ The practical takeaway is dull but true: by mid-2026 the frontier models from bo
 
 **The specs people compare are rarely the things that decide it. Four practical factors matter more.**
 
-**Price and limits.** At the consumer level the two are close: Claude Pro and [Google AI Pro](https://one.google.com/about/google-ai-plans/) both sit around $20 a month, with higher tiers (Claude Max and Google AI Ultra) running $100 to $200. Gemini has the cheaper entry point, an [AI Plus tier around $5](https://geotoolbox.ai/blog/gemini-pricing) (cut from $8 in June 2026), and generally looser usage caps. That last part is the one heavy users feel most: Claude's tighter limits are the friction they hit soonest, while Gemini lets you keep going, and Gemini's free tier is the more generous of the two. On the API, Gemini's price edge is real but narrower than the shorthand suggests: its Pro tier undercuts Claude's Opus per token ($2/$12 against $5/$25). But "Flash is cheaper than almost anything" no longer holds: Gemini 3.6 Flash runs $1.50/$7.50 per million tokens, while Claude's Haiku 4.5 is $1.00/$5.00, cheaper on both. Claude's Sonnet 5 even undercuts Gemini 3.1 Pro on output at $2/$10 (a rate Anthropic made permanent in August 2026). At volume, which one is cheaper depends on the pair you compare, not the logo.
+**Price and limits.** At the consumer level the two are close: Claude Pro and [Google AI Pro](https://one.google.com/about/google-ai-plans/) both sit around $20 a month, with higher tiers (Claude Max and Google AI Ultra) running $100 to $200. Gemini has the cheaper entry point, an [AI Plus tier around $5](https://geotoolbox.ai/blog/gemini-pricing) (cut from $8 in June 2026), and generally looser usage caps. That last part is the one heavy users feel most: Claude's tighter limits are the friction they hit soonest, while Gemini lets you keep going, and Gemini's free tier is the more generous of the two. On the API, Gemini's price edge is real but narrower than the shorthand suggests: its Pro tier undercuts Claude's Opus 5.5 per token ($2/$12 against $4/$20). But "Flash is cheaper than almost anything" no longer holds: Gemini 3.6 Flash runs $1.50/$7.50 per million tokens, while Claude's Haiku 4.5 is $1.00/$5.00, cheaper on both. Claude's Sonnet 5 even undercuts Gemini 3.1 Pro on output at $2/$10 (a rate Anthropic made permanent in August 2026). At volume, which one is cheaper depends on the pair you compare, not the logo.
 
 **The Google ecosystem.** This is Gemini's quiet trump card. It is built into Gmail, Docs, Sheets, and Android, so for the millions of people already living in Workspace, Gemini is the assistant that is simply there, in the document, with the context already loaded. Claude reaches those tools through add-ons, which is not the same as being native. If your work happens inside Google's products, that integration can outweigh any model-quality difference.
 
@@ -179,7 +179,7 @@ That is the gap geotoolbox closes. We track what Claude, Gemini, and the other e
 
 ### Is Claude better than Gemini?
 
-It depends on the task, and that is the honest answer rather than a dodge. As of July 2026, Claude tends to win on long-form writing, document reasoning, and careful, concise output, while Gemini wins on live web research, multimodal generation, very long context, and deep Google Workspace integration. Coding is close. For most people there is no single winner, which is why heavy users often use both and switch by task.
+It depends on the task, and that is the honest answer rather than a dodge. As of September 2026, Claude tends to win on long-form writing, document reasoning, and careful, concise output, while Gemini wins on live web research, multimodal generation, very long context, and deep Google Workspace integration. Coding is close. For most people there is no single winner, which is why heavy users often use both and switch by task.
 
 ### Is Gemini or Claude better for coding?
 
@@ -187,7 +187,7 @@ The two are close, with a slight edge to Claude on hard, multi-step agentic work
 
 ### Is Claude or Gemini cheaper?
 
-At the consumer level they are close, both around $20 a month for the main paid plan, with Gemini offering a cheaper entry tier around $5. At the API it depends on the pair: Gemini 3.1 Pro ($2/$12 per million tokens) undercuts Claude's Opus 5 ($5/$25), but Claude's Haiku 4.5 ($1/$5) undercuts Gemini's 3.6 Flash ($1.50/$7.50) on both input and output. Claude's tighter usage limits also cut heavy sessions off sooner. Which one bills less at volume depends on which models you actually run, not on the logo.
+At the consumer level they are close, both around $20 a month for the main paid plan, with Gemini offering a cheaper entry tier around $5. At the API it depends on the pair: Gemini 3.1 Pro ($2/$12 per million tokens) undercuts Claude's Opus 5.5 ($4/$20), but Claude's Haiku 4.5 ($1/$5) undercuts Gemini's 3.6 Flash ($1.50/$7.50) on both input and output. Claude's tighter usage limits also cut heavy sessions off sooner. Which one bills less at volume depends on which models you actually run, not on the logo.
 
 ### Is Claude or Gemini better than ChatGPT?
 
@@ -201,7 +201,7 @@ Yes, because your customers use both, and the two engines draw on different sour
 
 ### Does Gemini have a bigger context window than Claude?
 
-Right now they are close, and the answer depends on the model. On paid plans Claude gives you 1M tokens when chatting with Opus 5 or Sonnet 5, and the same 1M through the API. Gemini's app gives 1M tokens to AI Pro and Ultra subscribers, 128K on AI Plus and 32K without a subscription. Gemini 3.5 Pro is rumored to target 2M, though Google has published no official spec; if true, that would pull Gemini ahead once it ships. A bigger window is not the same as better recall, though: every model gets less reliable at finding facts buried in the middle of a very long input, so window size is a ceiling, not a guarantee.
+Right now they are close, and the answer depends on the model. On paid plans Claude gives you 1M tokens when chatting with Opus 5.5, Fable 5.1 or Sonnet 5, and the same 1M through the API. Gemini's app gives 1M tokens to AI Pro and Ultra subscribers, 128K on AI Plus and 32K without a subscription. Gemini 3.5 Pro is rumored to target 2M, though Google has published no official spec; if true, that would pull Gemini ahead once it ships. A bigger window is not the same as better recall, though: every model gets less reliable at finding facts buried in the middle of a very long input, so window size is a ceiling, not a guarantee.
 
 ### Which one hallucinates less, or cites sources better?
 
@@ -210,6 +210,7 @@ Gemini's live grounding in Google Search gives it more current sourcing with cli
 ## Sources
 
 - Anthropic - Constitutional AI: Harmlessness from AI Feedback - `anthropic.com/research/constitutional-ai-harmlessness-from-ai-feedback`
+- Anthropic - Claude Opus 5.5, September 22, 2026 - `anthropic.com/news/claude-opus-5-5`
 - Anthropic - Claude models overview (current models, context windows, pricing) - `platform.claude.com/docs/en/about-claude/models/overview`
 - Google DeepMind - Gemini models - `deepmind.google/models/gemini`
 - Google - Gemini 3.5: frontier intelligence with action - `blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-5`
