@@ -15,7 +15,19 @@ export function urlFor(kind: Kind, slug: string, locale: string): string {
 // localized siblings attach via their frontmatter `donorSlug`. This is the
 // ONE place the cross-locale relationship is derived (spec §3) — hreflang,
 // canonical, and sitemap alternates all read from it, so they can't drift.
+//
+// Memoized in production only: the sitemap calls alternatesFor() once per post
+// per locale (~420x), and each call used to rebuild this whole index by
+// re-reading every post from disk (O(n^2), ~37s locally, >60s on Vercel, which
+// failed the 2026-09-30 build at /sitemap.xml). Content is immutable during a
+// production build/run, so one build per kind is exact; dev keeps live reads.
+const CACHE = process.env.NODE_ENV === "production"
+const siblingCache = new Map<Kind, Map<string, Record<string, string>>>()
+const donorCache = new Map<string, Map<string, string | undefined>>()
+
 function siblingIndex(kind: Kind): Map<string, Record<string, string>> {
+  const cached = CACHE ? siblingCache.get(kind) : undefined
+  if (cached) return cached
   const idx = new Map<string, Record<string, string>>()
   const all = kind === "blog" ? getAllPosts : getAllGlossaryTerms
   for (const item of all(routing.defaultLocale)) {
@@ -31,14 +43,21 @@ function siblingIndex(kind: Kind): Map<string, Record<string, string>> {
       idx.set(en, rec)
     }
   }
+  if (CACHE) siblingCache.set(kind, idx)
   return idx
 }
 
 // The EN (hub) slug for any locale's slug, via donorSlug.
 function enSlugOf(kind: Kind, slug: string, locale: string): string | undefined {
   if (locale === routing.defaultLocale) return slug
-  const all = kind === "blog" ? getAllPosts : getAllGlossaryTerms
-  return all(locale).find((i) => i.slug === slug)?.donorSlug
+  const key = `${kind}:${locale}`
+  let donors = CACHE ? donorCache.get(key) : undefined
+  if (!donors) {
+    const all = kind === "blog" ? getAllPosts : getAllGlossaryTerms
+    donors = new Map<string, string | undefined>(all(locale).map((i) => [i.slug, i.donorSlug]))
+    if (CACHE) donorCache.set(key, donors)
+  }
+  return donors.get(slug)
 }
 
 // Metadata.alternates payload: self-canonical + reciprocal hreflang
