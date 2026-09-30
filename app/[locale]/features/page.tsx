@@ -6,6 +6,7 @@ import { siteConfig } from "@/lib/config"
 import { JsonLd } from "@/components/seo/json-ld"
 import { breadcrumbsSchema, itemListSchema } from "@/lib/seo-schema"
 import { marketingAlternatesFor } from "@/lib/i18n/siblings"
+import { currencyParam } from "@/lib/i18n/currency"
 
 // Localized features hub: en at /features, fr at /fr/features. Relocated from
 // app/(marketing)/features/page.tsx. Individual /features/<slug> pages stay
@@ -335,7 +336,7 @@ export default async function FeaturesPage({
             </div>
             <div className="flex flex-col items-start gap-3 lg:items-end">
               <Link
-                href="/app" prefetch={false}
+                href={`${siteConfig.appSignupUrl}&ref=features-hub${currencyParam(locale)}`} prefetch={false}
                 className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px] focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950"
               >
                 {t("cta.ctaPrimary")}

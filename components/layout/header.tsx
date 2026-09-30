@@ -8,6 +8,7 @@ import { siteConfig } from "@/lib/config"
 import { tools } from "@/lib/tools"
 import { cn } from "@/lib/utils"
 import { localizeNavHref } from "@/lib/i18n/nav"
+import { currencyParam } from "@/lib/i18n/currency"
 import headerStyles from "./header.module.css"
 
 export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; locale?: string }) {
@@ -19,10 +20,14 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
   // next-intl rewrites the default homepage internally to /en. Treat both
   // forms identically so its prerendered and hydrated header agree.
   const isHomepage = pathname === `/${locale}` || (locale === "en" && pathname === "/")
-  // SG_CTA_FREE_V1: "Start for free" always lands on the free-scan door, never the
-  // trial checkout. The homepage only adds a ref so its header clicks are attributable.
-  const startHref = isHomepage ? `${siteConfig.appFreeScanUrl}&ref=home-header` : siteConfig.appFreeScanUrl
-  const startLabel = nav?.startFree ?? "Start for free"
+  // SG_SIGNUP_STREAMLINE (2026-09-30): the header CTA is the "Start free trial" door — the one-screen
+  // signup (website + account, Plus preselected) that goes straight to checkout, with the first
+  // AI-visibility scan running meanwhile. The no-card free score stays reachable from the banner and
+  // the homepage micro-link. `ref` is read into signup provenance (cta_ref), so every slot is attributable.
+  // No plan= here: the server defaults to Plus, and an explicit plan param marks a REAL choice
+  // (signup provenance `plan_explicit`). Pricing cards still pass their own plan.
+  const startHref = `${siteConfig.appSignupUrl}&ref=${isHomepage ? "home-header" : "nav-header"}${currencyParam(locale)}`
+  const startLabel = nav?.startFree ?? "Start free trial"
   const trackStart = () => { if (isHomepage) trackEvent("app_cta_click", { placement: "home_header", cta_target: startHref, locale, design_version: "home_v3" }) }
 
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -274,11 +279,8 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
             >
               {nav?.login ?? "Log in"}
             </Link>
-            {/* SG_CTA_FREE_V1 (2026-09-22): the primary CTA says "Start for free" and must
-                therefore LAND somewhere free. Not /pricing (a price table), and not
-                appSignupUrl either — that page is the trial-checkout form (tier picker,
-                "Secure checkout" step), which is what this pointed at for a few hours.
-                appFreeScanUrl is the domain-first free-scan door (SG_FREE_SCAN_V1). */}
+            {/* Primary CTA: "Start free trial" → the one-screen trial signup (card required,
+                $0 today). The no-card free score is reachable from the scan banner. */}
             <Link
               href={startHref}
               prefetch={false}

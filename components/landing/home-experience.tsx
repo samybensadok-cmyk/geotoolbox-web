@@ -53,13 +53,15 @@ export async function HomeExperience() {
   const base = locale === "en" ? "" : `/${locale}`
   const cards = t.raw("features.cards") as { tag: string; title: string; body: string }[]
   const steps = t.raw("howItWorks.steps") as { title: string; body: string }[]
-  // SG_CTA_FREE_V1: the primary action is the free-scan door (no card). The trial
-  // checkout is the secondary path, and each pricing card starts its own plan's trial.
+  // SG_SIGNUP_STREAMLINE (2026-09-30): the primary action is the "Start free trial" door (Plus,
+  // straight to checkout, scan runs meanwhile); the no-card free score is the secondary micro-link.
+  // Each pricing card still starts its own plan's trial.
   const freeScan = (ref: string) => `${siteConfig.appFreeScanUrl}&ref=${ref}`
+  const startTrial = (ref: string) => `${siteConfig.appSignupUrl}&ref=${ref}${currencyParam(locale)}`   // no plan=: server default (Plus), keeps plan_explicit meaningful
   const trialHref = (id: PlanId) => `${siteConfig.appSignupUrl}&plan=${id}${currencyParam(locale)}`
   const trialPlans = new Intl.ListFormat(locale, { style: "long", type: "conjunction" })
     .format(PLANS.filter(p => p.trialDays).map(p => p.name))
-  const freeMicro = (placement: string) => <p className={s.micro}>{t("redesign.freeTerms")} · <HomeAction href={trialHref("starter")} placement={placement} locale={locale} className={s.microLink}>{t("redesign.trialLink")}</HomeAction></p>
+  const freeMicro = (placement: string, ref: string) => <p className={s.micro}>{t("redesign.freeTerms")} · <HomeAction href={freeScan(ref)} placement={placement} locale={locale} className={s.microLink}>{t("redesign.trialLink")}</HomeAction></p>
   return <div className={s.home}>
     <section className={s.hero} aria-labelledby="home-title">
       <div className={s.container}>
@@ -68,10 +70,10 @@ export async function HomeExperience() {
           <RotatingHeadline lead={t("hero.h1Lead")} accessible={t("hero.h1Sr")} pause={t("redesign.pause")} resume={t("redesign.resume")} />
           <p className={s.heroDescription}>{t("redesign.subhead")}</p>
           <div className={s.actions}>
-            <HomeAction href={freeScan("home-hero")} placement="home_hero" locale={locale} className={s.primary}>{t("redesign.freeCta")}<Arrow /></HomeAction>
+            <HomeAction href={startTrial("home-hero")} placement="home_hero" locale={locale} className={s.primary}>{t("redesign.freeCta")}<Arrow /></HomeAction>
             <Link href="#how-it-works" className={s.secondary}>{t("hero.ctaSecondary")}</Link>
           </div>
-          {freeMicro("home_hero_trial")}
+          {freeMicro("home_hero_free", "home-hero-free")}
         </div>
         <ReportPreview copy={t.raw("redesign.report") as ReportCopy} locale={locale} />
         <div className={s.engineStrip}>
@@ -150,8 +152,8 @@ export async function HomeExperience() {
     <LatestPosts />
     <section className={s.closing} aria-labelledby="home-close-title">
       <div className={s.container}><h2 id="home-close-title" className={s.sectionTitle}>{t("redesign.closeTitle")}</h2><p className={s.sectionIntro}>{t("redesign.closeBody")}</p>
-        <div className={s.actions}><HomeAction href={freeScan("home-close")} placement="home_footer" locale={locale} className={s.primary}>{t("redesign.freeCta")}<Arrow /></HomeAction><Link href={`${base}/pricing`} className={s.secondary}>{t("pricingTeaser.seeAll")}</Link></div>
-        {freeMicro("home_footer_trial")}
+        <div className={s.actions}><HomeAction href={startTrial("home-close")} placement="home_footer" locale={locale} className={s.primary}>{t("redesign.freeCta")}<Arrow /></HomeAction><Link href={`${base}/pricing`} className={s.secondary}>{t("pricingTeaser.seeAll")}</Link></div>
+        {freeMicro("home_footer_free", "home-close-free")}
       </div>
     </section>
   </div>

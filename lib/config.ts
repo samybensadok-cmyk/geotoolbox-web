@@ -4,11 +4,10 @@ export const siteConfig = {
   url: "https://geotoolbox.ai",
   appUrl: "/app/",
   appLoginUrl: "/app/?page=login",
-  // SG_SIGNUP_INTERVAL_DEFAULT (2026-08-20): interval is EXPLICIT here on purpose.
-  // A signup with no interval is normalised server-side to ANNUAL
-  // (inc/auth_session.php sg_signup_normalize_plan), so a bare link sent buyers
-  // straight into a $948 Stripe Checkout seconds after clicking "Start free trial".
-  // Entry points that cannot express a billing choice must say monthly.
+  // SG_SIGNUP_INTERVAL_DEFAULT (2026-08-20): interval is EXPLICIT here on purpose. The server now
+  // defaults a missing interval to monthly and a missing plan to Plus (inc/auth_session.php
+  // sg_signup_normalize_plan), but this link predates that and staying explicit costs nothing.
+  // This page is the "Start free trial" door: website + account → Stripe, scan running meanwhile.
   appSignupUrl: "/app/?page=signup&interval=monthly",
   // SG_FREE_SCAN_V1 (2026-09-22): the domain-first free-score door (website + what you sell, then a
   // free account, then the scan). Every "free" CTA points here, never at appSignupUrl — that page
