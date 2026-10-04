@@ -2,7 +2,7 @@
 title: "What Is an XML Sitemap? Format, Limits, and How to Find One"
 description: "What an XML sitemap really is, which tags Google still uses in 2026, how to find and validate one, and whether it helps rankings or AI search."
 date: "2026-07-20"
-updated: "2026-07-20"  # backfilled 2026-08-18 freshness audit hygiene pass (frontmatter previously had no updated field at all)
+updated: "2026-10-04"  # field added 2026-08-18
 author: "Samy BEN SADOK"
 tags: ["sitemap", "xml-sitemap", "technical-seo", "robots-txt", "crawlers", "guide"]
 draft: false
@@ -124,7 +124,7 @@ That bare-domain-to-URL-list step is exactly what our free [sitemap extractor](/
 
 The first is **spec conformance**: does the XML match the schema? Required `<loc>`, well-formed dates, `priority` inside 0.0 to 1.0, a recognized `changefreq`, escaped ampersands, under 50,000 URLs and 50MB. This is the easy part, and a syntax validator or Search Console will catch most of it.
 
-The second is **truthfulness**, and it is where the real damage hides: are those URLs telling the truth? A sitemap can be flawless XML and still be useless if every URL in it 404s, redirects, points at a `noindex` page, or sits on a host you did not intend. Search engines treat a sitemap full of non-200 URLs as a low-quality signal about the whole file. So the questions that matter are: do the URLs still resolve, are they on the right host, and does anything else on the site contradict them?
+The second is **truthfulness**, and it is where the real damage hides: are those URLs telling the truth? A sitemap can be flawless XML and still be useless if every URL in it 404s, redirects, points at a `noindex` page, or sits on a host you did not intend. Search engines treat a sitemap full of non-200 URLs as a low-quality signal about the whole file. So the questions that matter are: do the URLs still resolve, are they on the right host, and does anything else on the site contradict them? A [canonical tag](https://geotoolbox.ai/blog/canonical-tags) pointing at a different URL is one such contradiction, and one the tool below does not check.
 
 That contradiction check is the one people skip, because it means cross-referencing the sitemap against `robots.txt` and against live HTTP status codes, not just reading the XML. The same free tool runs both passes in one go: it scores the file against the sitemaps.org spec, cross-checks `robots.txt`, and lets you fire live status checks at the URLs, so you catch the "valid but lying" cases before you submit. The most useful time to run it is right before submitting to Search Console, so errors never get logged against your property in the first place.
 
