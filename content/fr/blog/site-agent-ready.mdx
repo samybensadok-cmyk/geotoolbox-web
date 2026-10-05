@@ -2,7 +2,7 @@
 title: "Navigateurs agentiques : votre site est-il agent-ready ?"
 description: "Comet et le mode agent de ChatGPT naviguent et achètent sur votre site pour vos visiteurs. Ce qui bloque un agent, comment le vérifier, comment corriger."
 date: "2026-09-18"
-updated: "2026-10-04"
+updated: "2026-10-05"
 author: "Samy BEN SADOK"
 tags: ["agent-ready-website", "agentic-browsing", "ai-agents", "geo", "ai-visibility"]
 draft: false
@@ -177,17 +177,9 @@ Sachez quelle classe vous servez : les navigateurs agentiques basés sur Chromiu
 
 Vérifiez vos propres journaux avant de deviner : filtrez sur les user-agents identifiables (les robots de citation, pas les navigateurs agentiques en session, qui se présentent comme un Chrome ordinaire) et repérez les 403 et pages de vérification sur les parcours produit et paiement. Si vous en trouvez, ciblez la règle par chemin plutôt que de la supprimer entièrement ; une vérification sur /compte ou /admin ne vous coûte rien, une vérification sur une fiche produit publique vous coûte des achats délégués.
 
-### Faut-il bloquer les agents IA, ou est-ce que je deviendrai invisible ?
-
-La décision se prend par classe de robot, et le vrai cas nouveau, c'est le trafic agentique : contrairement aux robots d'entraînement, une session de navigateur agentique se termine souvent par une transaction, donc la bloquer a un coût direct sur le chiffre d'affaires plutôt qu'un simple coût de visibilité. Auditez quelles classes vos règles actuelles bloquent avant de décider quoi que ce soit.
-
 ### Google Analytics suit-il le trafic des agents IA ?
 
 GA4 sait étiqueter le trafic envoyé par un assistant IA via son canal Assistant IA, mais il ne peut toujours pas distinguer une session pilotée par un agent d'une session humaine, parce qu'un agent dans le navigateur hérite de l'empreinte de son utilisateur. Les solutions de contournement qui existent aujourd'hui : l'analyse des journaux serveur par chaîne user-agent, une dimension personnalisée calée sur les user-agents connus des agents, et la surveillance des sessions à la vitesse d'interaction impossible pour un humain. Aucune n'est complète, ce qui explique pourquoi les contrôles au niveau des journaux battent les tableaux de bord analytics sur ce terrain.
-
-### llms.txt vaut-il le coup si Google dit que ça n'affecte pas le classement ?
-
-Oui, mais pour la bonne raison. llms.txt n'est ni un signal de classement ni un signal de citation IA, et il ne faut pas le vendre comme tel. Il vient malgré tout d'entrer dans l'outillage de Google : les audits Agentic Browsing de Lighthouse 13.3 comprennent un contrôle llms.txt (mai 2026), et celui-ci note le fichier au lieu de se contenter de le récupérer. Les sites dépourvus de llms.txt sont marqués « non applicable », mais un fichier servi et mal formé échoue franchement : l'audit attend un fichier Markdown comportant au moins un titre H1, au moins un lien, et plus de cinquante caractères. Cela résume bien son poids actuel : facultatif, mais noté dès lors que vous le mettez en place. Notre analyse de [l'intérêt de llms.txt](https://geotoolbox.ai/blog/llms-txt) couvre le groupe restreint à qui ça sert vraiment et la règle de décision pour tous les autres.
 
 ### Le paiement agentique est-il réel aujourd'hui, ou juste un effet de mode ?
 

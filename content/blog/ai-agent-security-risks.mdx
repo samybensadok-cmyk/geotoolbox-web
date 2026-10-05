@@ -2,7 +2,7 @@
 title: "AI Agent Security Risks (And How to Actually Reduce Them)"
 description: "Real AI agent security risks, backed by 5 documented incidents (not hypotheticals), the risk categories behind them, and practical fixes for site owners."
 date: "2026-09-13"
-updated: "2026-09-13"
+updated: "2026-10-05"
 author: "Samy BEN SADOK"
 tags: ["ai-agents", "ai-agent-security", "prompt-injection", "mcp", "ai-visibility"]
 draft: false
@@ -115,10 +115,6 @@ They target different boundaries. Jailbreaking tries to defeat a model's own saf
 ### Has an AI agent ever caused a real security breach?
 
 Yes, in the sense that matters: these are documented, working vulnerabilities disclosed against production systems, not hypothetical lab scenarios invented for a blog post. What's genuinely rare among the five is a large-scale breach with disclosed victim counts. EchoLeak's vendor reported no exploitation found in the wild before the patch shipped, and most of the incidents here were researcher demonstrations or narrow proofs of concept caught and fixed before wide abuse, not mass-casualty breaches. SANDWORM_MODE is the exception worth naming: those weren't research demos, they were real malicious packages published to npm and taken down after the fact. That distinction matters: "a real, disclosed vulnerability exists" and "attackers already exploited it at scale" are different claims, and this article is making the first one for most of the five, the second one for SANDWORM_MODE.
-
-### Are MCP servers a security risk?
-
-Independently, yes. Check Point's 2026 Cyber Security Report found 40% of the MCP servers it analyzed were vulnerable, and two more independent scans (1,000 servers, then 763) each turned up double-digit issue rates too, though they're measuring different things (critical vulnerabilities vs. schema-level exploitability) and shouldn't be read as three copies of the same finding. The protocol's own spec doesn't help: authorization is optional overall, HTTP-based servers should use OAuth 2.1, and local stdio servers, which describes a lot of what people run themselves, aren't expected to and just pull credentials from the environment instead. So treat any MCP server you didn't build yourself as unverified until you've checked what it can reach.
 
 ### Does running a local AI model make agents more secure?
 
