@@ -2,7 +2,7 @@
 title: "Claude Sonnet 5 : prix, benchmarks et retour d'expérience (2026)"
 description: "Claude Sonnet 5 est sorti. Prix, benchmarks face à Sonnet 4.6 et Opus 4.8, et le vrai coût par tâche à effort élevé."
 date: "2026-06-30"
-updated: "2026-08-25"
+updated: "2026-10-06"
 author: "Samy BEN SADOK"
 tags: ["claude-sonnet-5", "claude", "anthropic", "sonnet-5", "llm", "guide"]
 draft: false
@@ -16,7 +16,7 @@ Claude Sonnet 5 a été lancé le 30 juin 2026. Pendant des mois, des fuites et 
 
 ## Ce qu'il faut retenir
 
-- Claude Sonnet 5 a été lancé le 30 juin 2026 et devient le modèle par défaut des formules Free et Pro de Claude.
+- Claude Sonnet 5 a été lancé le 30 juin 2026 et est devenu le modèle par défaut des formules Free et Pro de Claude ; depuis le 22 septembre, dans Claude Code, le modèle par défaut de Pro et Team Standard est passé de Sonnet à Opus, et Sonnet 5.5 (28 septembre) lui a succédé.
 - Le tarif est de 2 $ en entrée et 10 $ en sortie par million de tokens : d'abord annoncé comme promotionnel jusqu'au 31 août 2026, Anthropic l'a rendu permanent en août 2026 (la hausse prévue à 3 $ et 15 $ n'aura pas lieu).
 - Sonnet 5 dépasse Sonnet 4.6 sur les cinq benchmarks publiés et fait quasiment jeu égal avec Opus 4.8 sur le travail intellectuel (GDPval-AA v2 : 1 618 contre 1 615 points).
 - Opus 4.8 garde l'avantage sur le codage pur : 69,2 % contre 63,2 % sur SWE-bench Pro, et reste le choix recommandé quand la précision prime.
@@ -26,14 +26,14 @@ Claude Sonnet 5 a été lancé le 30 juin 2026. Pendant des mois, des fuites et 
 
 Claude Sonnet 5 est le modèle Claude de milieu de gamme d'Anthropic, lancé le 30 juin 2026. Il se situe entre Haiku 4.5, rapide et économique, et les modèles des paliers supérieurs Opus et Fable 5. Anthropic le présente comme « le modèle Sonnet le plus agentique à ce jour ».
 
-À noter que la gamme Opus a évolué depuis la rédaction de cet article. Anthropic a lancé [Claude Opus 5](https://geotoolbox.ai/blog/claude-opus-5) le 24 juillet 2026, en remplacement d'Opus 4.8 au même tarif de 5 $ et 25 $ par million de tokens. Les comparaisons avec Opus 4.8 ci-dessous décrivent toujours le modèle face auquel Sonnet 5 a été lancé.
+À noter que la gamme a évolué depuis la rédaction de cet article. Anthropic a lancé [Claude Opus 5](https://geotoolbox.ai/blog/claude-opus-5) le 24 juillet 2026, en remplacement d'Opus 4.8 au même tarif de 5 $ et 25 $ par million de tokens, puis Claude Opus 5.5 le 22 septembre 2026 à 4 $ et 20 $. Le 28 septembre 2026, Anthropic a enchaîné avec Claude Sonnet 5.5, qui conserve le tarif de 2 $ et 10 $ de Sonnet 5, est plus de 30 % plus rapide et coûte jusqu'à 30 % de moins par tâche, selon Anthropic. Sonnet 5.5 est désormais le Sonnet actuel ; cet article traite de Sonnet 5 tel qu'il a été lancé, et les comparaisons avec Opus 4.8 ci-dessous décrivent toujours le modèle face auquel Sonnet 5 a été lancé.
 
 Cette description est exacte, pas un simple argument marketing. Sonnet 5 sait élaborer un plan en plusieurs étapes, choisir les outils dont il a besoin (un navigateur, un terminal, un éditeur de fichiers), exécuter ce plan avec un minimum d'intervention humaine, puis vérifier son propre résultat avant de le restituer. Le compte-rendu d'Anthropic décrit des testeurs qui lui demandent d'enquêter sur un bug. Sans qu'on le lui demande, il a écrit un test qui reproduisait le bug, implémenté le correctif, puis annulé temporairement sa modification pour confirmer que le bug revenait bien sans elle, le tout en une seule passe.
 
 Sonnet 5 comble une grande partie de l'écart avec Opus 4.8 tout en restant au tarif de la gamme Sonnet. Pour beaucoup de tâches agentiques et de codage, les utilisateurs de [Claude](https://geotoolbox.ai/blog/what-is-claude-ai) disposent désormais d'une option nettement moins chère qui ne donne pas l'impression d'un choix au rabais. Mais ce n'est pas vrai à tous les niveaux d'effort, et le vrai calcul de coût fait l'objet de sa propre section plus bas.
 
 <figure className="not-prose my-8">
-  <BlogImage src="/blog/claude-sonnet-5/benchmark-comparison.png" alt="Diagramme comparant les scores SWE-bench Pro de Claude Sonnet 4.6, Sonnet 5 et Opus 4.8 : 58,1 %, 63,2 % et 69,2 %" w="1200" h="638" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <BlogImage src="/blog/claude-sonnet-5/benchmark-comparison.png" alt="Diagramme comparant les scores SWE-bench Pro de Claude Sonnet 4.6, Sonnet 5 et Opus 4.8 : 58,1 %, 63,2 % et 69,2 %" w="1200" h="604" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
   <figcaption className="mt-3 text-center text-sm text-gray-500">Sur SWE-bench Pro, Sonnet 5 devance Sonnet 4.6 de cinq points mais reste six points derrière Opus 4.8. Il comble l'essentiel de l'écart, pas la totalité.</figcaption>
 </figure>
 
@@ -138,7 +138,7 @@ Nous en avons fait l'expérience directe. Quand nous avons lancé notre propre w
 
 ## Où utiliser Claude Sonnet 5 aujourd'hui
 
-Sonnet 5 est le nouveau modèle par défaut pour les formules Free et Pro, et il est aussi disponible pour les utilisateurs Max, Team et Enterprise. Il est donc accessible dans l'application Claude (tous les forfaits), dans Claude Code dès le premier jour et via l'API Claude sous l'identifiant `claude-sonnet-5` ; côté cloud, sur la plateforme Claude, sur Amazon Bedrock et Microsoft Foundry, ainsi que sur Google Vertex AI. Seule la prise en charge complète du Cyber Verification Program sur Vertex reste en cours de déploiement.
+Au lancement, Sonnet 5 est devenu le modèle par défaut des formules Free et Pro, et il était aussi disponible pour les utilisateurs Max, Team et Enterprise. Dans Claude Code, le modèle par défaut des formules Pro et Team Standard est depuis passé de Sonnet à Opus, d'après le journal des modifications de Claude Code (2.1.280), au lancement d'Opus 5.5 le 22 septembre. Nous n'avons pas pu confirmer, d'après les pages d'Anthropic, quel modèle la formule Free utilise par défaut aujourd'hui. Il est accessible dans l'application Claude (tous les forfaits), dans Claude Code dès le premier jour et via l'API Claude sous l'identifiant `claude-sonnet-5` ; côté cloud, sur la plateforme Claude, sur Amazon Bedrock et Microsoft Foundry, ainsi que sur Google Vertex AI. Seule la prise en charge complète du Cyber Verification Program sur Vertex reste en cours de déploiement.
 
 <Callout type="note" title="Hébergement en Europe et confidentialité des données">
 Ni claude.ai ni l'API Claude directe ne sont nativement hébergés dans l'UE. Pour un hébergement régional garanti (Francfort, Irlande, Paris), souvent exigé pour la conformité RGPD, il faut passer par la plateforme Claude d'AWS ou Google Vertex AI. Indépendamment de la région, l'API propose une option de rétention nulle des données (ZDR) pour les organisations qui en font la demande, aucune conservation au-delà de la requête, aucune utilisation pour l'entraînement.
@@ -170,7 +170,7 @@ Si vous voulez savoir si ChatGPT, Gemini, Claude, Grok et les autres grands mote
 
 ### Claude Sonnet 5 est-il disponible dès maintenant ?
 
-Oui. Il a été lancé le 30 juin 2026 et est désormais le modèle par défaut pour les formules Free et Pro, disponible aussi pour Max, Team et Enterprise, ainsi que via l'API Claude et Claude Code.
+Oui. Il a été lancé le 30 juin 2026 comme modèle par défaut des formules Free et Pro, et il est disponible pour Max, Team et Enterprise, via l'API Claude (`claude-sonnet-5`) et dans Claude Code. Sonnet 5.5 lui a depuis succédé comme Sonnet actuel, et dans Claude Code le défaut de Pro et Team Standard est passé de Sonnet à Opus.
 
 ### Combien coûte Claude Sonnet 5 ?
 
@@ -180,32 +180,14 @@ Oui. Il a été lancé le 30 juin 2026 et est désormais le modèle par défaut 
 
 Pas sur tous les plans. Opus 4.8 reste en tête sur le benchmark de codage agentique le plus exigeant, SWE-bench Pro, et reste le choix recommandé par Anthropic pour les tâches qui exigent la plus grande précision. Sur le travail intellectuel (GDPval-AA v2), les deux sont à peu près à égalité. Le meilleur choix dépend de la tâche et du niveau d'effort utilisé.
 
-### Claude Sonnet 5 est-il meilleur que Sonnet 4.6 ?
-
-En grande partie, mais pas partout. Il dépasse Sonnet 4.6 sur chaque benchmark publié et se montre nettement meilleur pour le suivi agentique multi-étapes. L'exception est apparue dans les tests indépendants : en revue de code automatisée, Sonnet 5 a repéré moins de vrais bugs que 4.6 (environ 50 % contre 63 %) malgré une sortie plus propre et plus précise, et il consomme plus de tokens par tâche. Pour générer et livrer du code, c'est une nette montée en gamme ; pour la seule chasse aux bugs à budget serré, 4.6 peut encore lui tenir tête.
-
-### À quel niveau d'effort faut-il utiliser Claude Sonnet 5 ?
-
-L'effort est réglé sur high par défaut sur l'API et dans Claude Code, mais les tests indépendants désignent medium comme le meilleur compromis pour l'essentiel des tâches : il capte la majeure partie de la qualité sans la facture de tokens. À effort maximal, un benchmark de revue de code a vu le coût quasiment doubler sans que le modèle trouve notablement plus de bugs, donc réservez high et au-delà aux tâches qui exigent vraiment ce supplément de raisonnement.
-
 ### Puis-je utiliser Claude Sonnet 5 gratuitement ?
 
-Oui. C'est le modèle par défaut de la formule gratuite de Claude depuis le lancement, sans inscription séparée.
-
-### Qu'est devenu « Fennec », le Sonnet 5 qui avait fuité plus tôt dans l'année ?
-
-« Fennec » était le nom de code interne attaché à un identifiant de modèle qui a fuité via les journaux Google Vertex AI en février 2026. Ce checkpoint précis est sorti sous le nom de Claude Sonnet 4.6, pas Sonnet 5, et les rumeurs échafaudées dessus pendant des mois, scores de benchmark inventés compris, ne sont jamais venues d'Anthropic. Le vrai Claude Sonnet 5 a été lancé le 30 juin 2026, avec ses propres spécifications vérifiées.
-
-### Claude Sonnet 5 est-il disponible dans Claude Code ?
-
-Oui, dès le premier jour, en même temps que l'API Claude et la plateforme Claude. Certaines autres interfaces, comme l'application Claude Desktop, ont connu un léger décalage de déploiement dans les heures qui ont suivi le lancement.
-
-### Claude Sonnet 5 est-il la même chose que Claude Science ?
-
-Non. Claude Science, lancé le même jour, est une application distincte pour la recherche scientifique, pas une fonctionnalité de Sonnet 5.
+Oui. C'était le modèle par défaut de la formule gratuite de Claude au lancement, sans inscription séparée. Anthropic indique que Sonnet 5.5 est disponible sur toutes les plateformes, sans préciser quelles formules y ont accès dans l'application Claude, et nous n'avons pas pu confirmer quel modèle la formule gratuite utilise par défaut aujourd'hui.
 
 ## Sources
 
+- Présentation de Claude Sonnet 5.5 - Anthropic (28 septembre 2026) - le modèle successeur : tarif, vitesse et disponibilité
+- Journal des modifications de Claude Code - Anthropic (2.1.280) - le défaut de Pro et Team Standard passant de Sonnet à Opus
 - Présentation de Claude Sonnet 5 - Anthropic - l'annonce officielle : prix, benchmarks, évaluations de sécurité et témoignages clients - `anthropic.com/news/claude-sonnet-5`
 - Anthropic lance Claude Sonnet 5, une option moins chère pour faire tourner des agents - TechCrunch - contexte tarifaire concurrentiel et angle business - `techcrunch.com/2026/06/30/anthropic-launches-claude-sonnet-5-as-a-cheaper-way-to-run-agents`
 - Le nouveau Claude Sonnet 5 d'Anthropic comble l'écart avec la gamme Opus, plus chère - The Decoder - analyse complète des benchmarks et du vrai coût en tokens - `the-decoder.com/anthropics-new-claude-sonnet-5-closes-the-gap-to-the-pricier-opus-model-series`
