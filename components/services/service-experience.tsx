@@ -3,7 +3,7 @@ import Link from "next/link"
 import type { ReactNode } from "react"
 import { FeatureFaq } from "@/components/features/feature-faq"
 import { StickyServiceCta } from "./sticky-cta"
-import { ProofResults } from "./proof-results"
+import { GrowthCharts } from "./growth-charts"
 import { PRIMARY_AUTHOR } from "@/lib/authors"
 import { proofStats } from "@/lib/proof-stats"
 import styles from "./service-experience.module.css"
@@ -41,7 +41,8 @@ function OfferCard({ offer, index, callHref }: { offer: Offer; index: number; ca
 
 export function ServiceExperience(p: Props) {
   const auto = p.automation
-  const { google, asOf } = proofStats
+  const { google, asOf, aiCitations, googleAiFeatures, weeksToResult } = proofStats
+  const fmt = (n: number) => n.toLocaleString("en-US")
   return <div className={styles.page}>
     {p.children}
     <section className={styles.hero}>
@@ -67,20 +68,46 @@ export function ServiceExperience(p: Props) {
           <div className={styles.sectionHead}><div><p className={styles.eyebrow}>Built for real workflows</p><h2>Systems already in use.</h2></div><p>Examples of delivered client work. Each project starts with a specific workflow and a defined output.</p></div>
           <div className={styles.builds}>{p.builds?.map(b => <article key={b.system}><p className={styles.eyebrow}>{b.label}</p><h3>{b.system}</h3><p>{b.points[0]}</p><details><summary>Build details</summary><p>{b.points.slice(1).join(" ")}</p></details></article>)}</div>
         </> : <>
-          <div className={styles.proofGrid}>
-            <div><p className={styles.eyebrow}>Our own site · measured in Google</p><h2>Built with the process<br />we use for clients.</h2><p className={styles.note}>GeoToolbox’s own domain. Historical evidence, not a forecast for your site.</p></div>
-            <div className={styles.stat}><strong>{google.rankedKeywords.toLocaleString("en-US")}</strong><span>Unique queries ranked in Google</span></div>
-            <div className={styles.stat}><strong>{google.top10.toLocaleString("en-US")}</strong><span>Unique queries in Google’s top 10</span></div>
+          <div className={styles.sectionHead}>
+            <div><p className={styles.eyebrow}>The results · GEO Toolbox’s own site</p><h2>See how quickly<br />visibility grew.</h2></div>
+            <p>First meaningful AI citations in about {weeksToResult} weeks. The charts show monthly Google growth; the figures below track appearances in AI answers. Results from our own site, not a forecast for yours.</p>
           </div>
-          <p className={styles.source}>Source: Google Search Console API · trailing {google.windowDays} days · as of {asOf}.</p>
-          <details className={styles.evidence}><summary>Explore the evidence, AI appearances & methodology <span aria-hidden="true">+</span></summary><div className={styles.clientProof}>
+          <dl className={styles.resultMetrics}>
+            <div className={styles.aiMetric}>
+              <dt>AI-citation appearances</dt><dd className={styles.metricValue}>~{fmt(aiCitations.total)}</dd>
+              <dd>Bing Webmaster Tools · {aiCitations.source}</dd>
+              <dd>{aiCitations.windowDays}-day sample · as of {aiCitations.asOf}</dd>
+              <dd className={styles.metricNote}>Sampled appearances, not unique citations.</dd>
+            </div>
+            <div className={styles.aiMetric}>
+              <dt>Appearances in Google’s AI answers</dt><dd className={styles.metricValue}>{fmt(googleAiFeatures.impressions)}</dd>
+              <dd>{googleAiFeatures.surfaces} · Search Console</dd>
+              <dd>{googleAiFeatures.windowDays}-day window · as of {googleAiFeatures.asOf}</dd>
+              <dd className={styles.metricNote}>Link impressions, not clicks or unique citations.</dd>
+            </div>
+            <div>
+              <dt>Unique queries ranked in Google</dt><dd className={styles.metricValue}>{fmt(google.rankedKeywords)}</dd>
+              <dd>Google Search Console API</dd><dd>Trailing {google.windowDays} days · as of {asOf}</dd>
+            </div>
+            <div>
+              <dt>Unique queries in Google’s top 10</dt><dd className={styles.metricValue}>{fmt(google.top10)}</dd>
+              <dd>Google Search Console API</dd><dd>Trailing {google.windowDays} days · as of {asOf}</dd>
+            </div>
+          </dl>
+          <div className={styles.growthCharts}><GrowthCharts variant="light" /></div>
+          <p className={styles.source}>Charts: unique Google queries by calendar month · Search Console API · as of {asOf}. An asterisk marks an incomplete month. AI appearance figures above use separate reporting windows and are not added together.</p>
+          <details className={styles.evidence}><summary>Client scans & measurement details <span aria-hidden="true">+</span></summary><div className={styles.clientProof}>
             <h3>Client work before GEO Toolbox</h3>
             <p>Two guides on one unnamed client’s site, led by Samy before GEO Toolbox. Historical public scans from an earlier seven-engine tracker; these are citation results for the specific prompts shown.</p>
             <div className={styles.advanced}>
               <figure><Image src="/services/track-record/legal-ai-scan.png" width={1999} height={1602} alt="Historical scan for how to run Google Ads for lawyers: the client guide was cited by 7 of 7 engines." sizes="(max-width: 640px) 100vw, 500px" /><figcaption>Legal guide · cited by 7 of 7 engines in this scan.</figcaption></figure>
               <figure><Image src="/services/track-record/crypto-ai-scan.png" width={2208} height={1742} alt="Historical scan for how to run crypto Google Ads without getting disapproved: the client guide was cited by 6 of 7 engines." sizes="(max-width: 640px) 100vw, 500px" /><figcaption>Crypto guide · cited by 6 of 7 engines in this scan.</figcaption></figure>
             </div>
-          </div><ProofResults id="detailed-evidence" /></details>
+          </div><div className={styles.measurementNotes}>
+            <p>The AI-citation count comes from Bing Webmaster Tools’ AI Performance report for Microsoft Copilot and partners. It is not attributed to ChatGPT, Perplexity or Google.</p>
+            <p>Google’s figure comes from the Search Console “Generative AI features” report and counts appearances of a geotoolbox.ai link in AI Overviews and AI Mode. Both AI figures are manually recorded snapshots with their own dates.</p>
+            <p>Google ranking totals use a trailing {google.windowDays}-day window. The charts use calendar months, so their totals can differ from the tiles. They show Google ranking growth, not an AI citation time series.</p>
+          </div></details>
         </>}
       </div>
     </section>
