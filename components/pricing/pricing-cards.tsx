@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import { cn } from "@/lib/utils"
-import { PLANS, type Plan, type PlanSegment } from "@/lib/plans"
+import { PLANS, COMPARE_COLUMNS, COMPARE_GROUPS, type Plan, type PlanSegment } from "@/lib/plans"
 import {
   PROMO,
   RESERVATION_CODE_RE,
@@ -117,6 +117,14 @@ export type PricingCardsCopy = {
  * shape in js/auth.js (`[a-z0-9_-]`, ≤16 chars) so it survives into Stripe
  * metadata as `promo_variant`.
  */
+const TRIAL_COPY: Record<string, { label: string; body: string }> = {
+  en: { label: "What’s included in the trial?", body: "25% of monthly credits · {brands} brand(s) · up to 3 articles where included. Full allowances unlock after the first payment." },
+  fr: { label: "Que comprend l’essai ?", body: "25 % des crédits mensuels · {brands} marque(s) · jusqu’à 3 articles si inclus. Les quotas complets sont disponibles après le premier paiement." },
+  es: { label: "¿Qué incluye la prueba?", body: "25 % de los créditos mensuales · {brands} marca(s) · hasta 3 artículos si están incluidos. Los límites completos se activan tras el primer pago." },
+  de: { label: "Was enthält die Testphase?", body: "25 % der monatlichen Credits · {brands} Marke(n) · bis zu 3 Artikel, sofern enthalten. Volle Kontingente nach der ersten Zahlung." },
+  nl: { label: "Wat is inbegrepen in de proefperiode?", body: "25% van de maandelijkse credits · {brands} merk(en) · maximaal 3 artikelen indien inbegrepen. Volledige limieten na de eerste betaling." },
+}
+
 const ORGANIC_VARIANT = "organic"
 
 const fill = (tpl: string, vars: Record<string, string>) =>
@@ -162,7 +170,7 @@ function priceDisplay(plan: Plan, annual: boolean, copy: PricingCardsCopy, local
   return { big: money(plan.priceMonthly), sub: copy.billedMonthly, save: null, strike: null }
 }
 
-export function PricingCards({ copy, locale }: { copy: PricingCardsCopy; locale: string }) {
+export function PricingCards({ copy, locale, creditsLabel = "Monthly credits" }: { copy: PricingCardsCopy; locale: string; creditsLabel?: string }) {
   // Monthly first (operator call 2026-07-31): lead with the real monthly price,
   // let the annual toggle reveal the discount via the strikethrough anchor.
   const [annual, setAnnual] = useState(false)
@@ -261,7 +269,7 @@ export function PricingCards({ copy, locale }: { copy: PricingCardsCopy; locale:
       {/* Audience tabs — Brands & consultants / Agencies */}
       <div className="mb-6 flex items-center justify-center">
         <div
-          role="radiogroup"
+          role="group"
           aria-label={copy.segmentLabel ?? "Choose audience"}
           className="inline-flex items-center gap-1 rounded-full border border-gray-200 bg-gray-50 p-1"
         >
@@ -272,11 +280,10 @@ export function PricingCards({ copy, locale }: { copy: PricingCardsCopy; locale:
             <button
               key={value}
               type="button"
-              role="radio"
-              aria-checked={segment === value}
+              aria-pressed={segment === value}
               onClick={() => setSegment(value)}
               className={cn(
-                "rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors",
+                "min-h-11 rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors",
                 segment === value
                   ? "bg-white text-gray-900 shadow-sm"
                   : "text-gray-600 hover:text-gray-900"
@@ -291,7 +298,7 @@ export function PricingCards({ copy, locale }: { copy: PricingCardsCopy; locale:
       {/* Billing toggle */}
       <div className="flex items-center justify-center">
         <div
-          role="radiogroup"
+          role="group"
           aria-label={copy.billingLabel}
           className="inline-flex items-center gap-1 rounded-full border border-gray-200 bg-gray-50 p-1"
         >
@@ -302,11 +309,10 @@ export function PricingCards({ copy, locale }: { copy: PricingCardsCopy; locale:
             <button
               key={label}
               type="button"
-              role="radio"
-              aria-checked={annual === isAnnual}
+              aria-pressed={annual === isAnnual}
               onClick={() => setAnnual(isAnnual)}
               className={cn(
-                "relative rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors",
+                "relative min-h-11 rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors",
                 annual === isAnnual
                   ? "bg-white text-gray-900 shadow-sm"
                   : "text-gray-600 hover:text-gray-900"
@@ -337,6 +343,11 @@ export function PricingCards({ copy, locale }: { copy: PricingCardsCopy; locale:
       {/* Cards — both tabs render exactly three */}
       <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:mx-auto lg:max-w-5xl">
         {visibleTiers.map((plan) => {
+          const creditIndex = COMPARE_COLUMNS.findIndex(column => column.id === plan.id)
+          // The comparison data has a retired free-tier cell at index zero.
+          const credits = creditIndex < 0 ? copy.custom : COMPARE_GROUPS[0].rows[0].values[creditIndex + 1]
+          const trialBrands = ({ starter: 1, consultant: 2, pro: 2, agency: 3 } as Record<string, number>)[plan.id]
+          const trialCopy = TRIAL_COPY[locale] ?? TRIAL_COPY.en
           const p = priceDisplay(plan, annual, copy, locale, promoOn)
           const c = copy.plans[plan.id]
           const seg = segment === "agency" ? c.agency : undefined
@@ -364,9 +375,9 @@ export function PricingCards({ copy, locale }: { copy: PricingCardsCopy; locale:
             <div
               key={plan.id}
               className={cn(
-                "relative flex flex-col rounded-2xl border bg-white p-6",
+                "relative flex flex-col rounded-xl border bg-white p-7",
                 isFeatured
-                  ? "border-accent-300 shadow-[0_20px_60px_-24px_rgba(13,148,136,0.45)] xl:-mt-3 xl:mb-3"
+                  ? "border-accent-300 shadow-[0_20px_60px_-24px_rgba(13,148,136,0.45)]"
                   : "border-gray-200"
               )}
             >
@@ -383,7 +394,7 @@ export function PricingCards({ copy, locale }: { copy: PricingCardsCopy; locale:
               <h2 className="text-[15px] font-bold tracking-tight text-gray-900">{plan.name}</h2>
 
               <div className="mt-3 flex items-baseline gap-1">
-                <span className="text-3xl font-bold tracking-tight text-gray-900">{p.big}</span>
+                <span className="text-[42px] font-medium tracking-tight text-gray-900">{p.big}</span>
                 {plan.priceMonthly !== null && plan.priceMonthly > 0 && (
                   <span className="text-sm font-medium text-gray-500">{copy.perMo}</span>
                 )}
@@ -407,12 +418,13 @@ export function PricingCards({ copy, locale }: { copy: PricingCardsCopy; locale:
 
               <p className="mt-4 min-h-[40px] text-[13px] leading-snug text-gray-600">{tagline}</p>
 
+              <p className="mt-1 border-t border-gray-100 pt-4 text-[13px] text-gray-600"><strong className="text-gray-900">{credits}</strong> {creditsLabel.toLocaleLowerCase(locale)}</p>
               <Link
                 href={ctaHref}
                 prefetch={false}
                 {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                 className={cn(
-                  "mt-5 inline-flex items-center justify-center rounded-full px-5 py-2.5 text-[14px] font-semibold transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2",
+                  "mt-5 inline-flex items-center justify-center min-h-12 rounded-lg px-5 py-2.5 text-[14px] font-semibold transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2",
                   isFeatured
                     ? "bg-accent-900 text-white hover:bg-accent-800 hover:shadow-lg hover:shadow-accent-900/25"
                     : "border border-gray-300 text-gray-900 hover:border-gray-400 hover:bg-gray-50"
@@ -424,17 +436,22 @@ export function PricingCards({ copy, locale }: { copy: PricingCardsCopy; locale:
                 <p className="mt-2 text-center text-[11px] leading-snug text-gray-500">{copy.trialNote}</p>
               )}
 
+              {hasTrial && <details className="mt-3 text-[11px] leading-relaxed text-gray-600">
+                <summary className="min-h-8 cursor-pointer font-semibold text-accent-800">{trialCopy.label}</summary>
+                <p className="mt-2">{fill(trialCopy.body, { brands: String(trialBrands) })}</p>
+              </details>}
+
               {/* Quota block — same 4 rows, same order, every card */}
-              <dl className="mt-6 space-y-2 border-t border-gray-100 pt-5 text-[13px]">
+              <ul className="mt-6 space-y-2 border-t border-gray-100 pt-5 text-[13px]">
                 {Object.values(c.quotas).map((q, i) => (
-                  <div key={i} className="flex items-center gap-2 text-gray-700">
+                  <li key={i} className="flex items-center gap-2 text-gray-700">
                     <svg className="h-3.5 w-3.5 shrink-0 text-accent-600" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.2">
                       <path d="M3 8.5 6.5 12 13 4.5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                     <span className={i === 0 ? "font-semibold text-gray-900" : ""}>{q}</span>
-                  </div>
+                  </li>
                 ))}
-              </dl>
+              </ul>
 
               {/* Feature highlights */}
               <div className="mt-5 border-t border-gray-100 pt-5">

@@ -19,7 +19,7 @@ import { GrowthCharts } from "@/components/services/growth-charts"
  * impressions (AI Overviews + AI Mode) and the Bing sample — each labelled with
  * its own engine and window, never summed and never blended.
  */
-export function ProofResults() {
+export function ProofResults({ id = "results" }: { id?: string }) {
   const { google, aiCitations, googleAiFeatures, impressions, weeksToResult, asOf } = proofStats
   const fmt = (n: number) => n.toLocaleString("en-US")
   const blended = impressions.source === "google+bing"
@@ -58,7 +58,7 @@ export function ProofResults() {
   ]
 
   return (
-    <section id="results" className="scroll-mt-24 relative overflow-hidden bg-gray-950 px-6 py-20 sm:py-24">
+    <section id={id} className="scroll-mt-24 relative overflow-hidden bg-gray-950 px-6 py-20 sm:py-24">
       {/* Subtle grid bleed — anchors the dark panel without a gradient blob */}
       <div
         aria-hidden="true"

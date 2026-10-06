@@ -1,3 +1,4 @@
+import styles from "@/components/pricing/pricing-experience.module.css"
 import type { Metadata } from "next"
 import Link from "next/link"
 import { setRequestLocale, getTranslations } from "next-intl/server"
@@ -53,17 +54,6 @@ export async function generateMetadata({
   }
 }
 
-const ENGINES = [
-  "ChatGPT",
-  "Perplexity",
-  "Google AI Overviews",
-  "Google AI Mode",
-  "Gemini",
-  "Bing Copilot",
-  "Claude",
-  "Grok",
-]
-
 export default async function PricingPage({
   params,
 }: {
@@ -118,9 +108,10 @@ export default async function PricingPage({
     <>
       <JsonLd data={[breadcrumb, productSchema]} />
 
+      <div className={styles.page}>
       {/* Hero + cards */}
-      <section className="bg-white px-6 pt-16 pb-12 sm:pt-20">
-        <div className="mx-auto max-w-3xl text-center">
+      <section className={styles.hero}>
+        <div className={styles.heroCopy}>
           <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">{t("hero.eyebrow")}</p>
           <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.25rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
             {t("hero.h1a")} <span className="text-accent-700">{t("hero.h1accent")}</span>
@@ -130,11 +121,11 @@ export default async function PricingPage({
           </p>
         </div>
 
-        {/* Core features included on every plan — cards only show
-            per-tier deltas, so the shared baseline needs its own, visible-enough
-            band. Moved ABOVE the cards (was a barely-visible gray strip below them,
-            easy to miss entirely) so visitors see the shared floor before comparing
-            what each tier adds on top of it. */}
+        <div className={styles.cards}>
+          <PricingCards copy={cardsCopy} locale={locale} creditsLabel={compareCopy.groups[0].rows[0].label} />
+        </div>
+
+        {/* Shared features follow the plan decision. */}
         <div className="mx-auto mt-10 max-w-4xl">
           <div className="rounded-2xl border border-accent-200 bg-accent-50/50 px-6 py-6 sm:px-10">
             <p className="text-center font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
@@ -156,19 +147,10 @@ export default async function PricingPage({
           </div>
         </div>
 
-        <div className="mx-auto mt-10 max-w-7xl">
-          <PricingCards copy={cardsCopy} locale={locale} />
-        </div>
-
         {/* SG_PRICING_V2 2026-07-27: the Starter promo strip that used to sit here
             is REMOVED (it advertised the retired $39/$49 pricing); the
             `pricing.strip.*` keys were deleted from messages/*.json in v2.1. */}
       </section>
-
-      {/* SG_PRICING_TRYFREE_V1: the no-card way in — sits between the cards and
-          the credits explainer, so a visitor who balks at the card requirement
-          meets the free tools before the billing mechanics. */}
-      <TryFreeBand copy={tryFreeCopy} />
 
       {/* How credits work — the make-or-break explainer */}
       <section className="border-t border-gray-100 bg-accent-50/40 px-6 py-16">
@@ -192,24 +174,12 @@ export default async function PricingPage({
         </div>
       </section>
 
-      {/* Engine trust bar */}
-      <section className="border-t border-gray-100 bg-white px-6 py-12">
-        <div className="mx-auto max-w-5xl text-center">
-          <p className="font-mono text-[10px] font-semibold uppercase tracking-widest text-gray-500">
-            {t("engines.label")}
-          </p>
-          <ul className="mt-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
-            {ENGINES.map((e) => (
-              <li key={e} className="text-[14px] font-semibold text-gray-700">
-                {e}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
       {/* Full comparison */}
-      <ComparisonTable copy={compareCopy} locale={locale} />
+      <details className={styles.comparison}>
+        <summary>{t("compare.h2")}<span aria-hidden="true">+</span></summary>
+        <ComparisonTable copy={compareCopy} locale={locale} />
+      </details>
+      <TryFreeBand copy={tryFreeCopy} />
 
       {/* Enterprise band */}
       <section className="bg-gray-950 px-6 py-16">
@@ -232,7 +202,7 @@ export default async function PricingPage({
         </div>
       </section>
 
-      <FeatureFaq items={faq} heading={t("faq.heading")} />
+      <FeatureFaq items={faq} heading={t("faq.heading")} defaultOpenIndex={-1} />
 
       {/* Final CTA */}
       <section className="border-t border-gray-100 bg-white px-6 py-20 text-center">
@@ -255,6 +225,7 @@ export default async function PricingPage({
           </PromoSignupLink>
         </div>
       </section>
+      </div>
     </>
   )
 }
