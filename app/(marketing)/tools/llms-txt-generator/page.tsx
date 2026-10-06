@@ -1,3 +1,5 @@
+import { ToolIntro } from "@/components/tools/tool-intro"
+import styles from "@/components/tools/tool-experience.module.css"
 import type { Metadata } from "next"
 import Link from "next/link"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
@@ -80,7 +82,7 @@ const faqs = [
 export default function LlmsTxtGeneratorPage() {
   return (
     <>
-      <section className="relative overflow-hidden bg-[var(--surface-steel)] px-6 pt-16 pb-16 sm:pt-20 sm:pb-20">
+      <section className={styles.hero}>
         <JsonLd
           data={[
             softwareApplicationSchema({
@@ -99,34 +101,25 @@ export default function LlmsTxtGeneratorPage() {
 
         <div className="mx-auto max-w-5xl">
           <Breadcrumbs
+            tone="dark"
             trail={[
               { name: "Home", href: "/" },
               { name: "Tools", href: "/tools" },
               { name: "llms.txt Generator", href: "" },
             ]}
           />
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-              Free llms.txt tool
-            </p>
-            <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-              Free llms.txt Generator
-            </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
-              Paste your domain and get a spec-correct llms.txt built from your own sitemap — real titles, real
-              descriptions, grouped into sections, with the pages that don&apos;t belong in an AI index left out. Free, no
-              sign-up, and honest about what llms.txt does and doesn&apos;t do.
-            </p>
-          </div>
+          <ToolIntro slug="llms-txt-generator" />
 
-          <div className="mt-10">
+          <div className={styles.workbench}>
             <LlmsTxtGeneratorWidget />
           </div>
         </div>
       </section>
 
       {/* The honesty panel — the credibility wedge, and the thing competitors won't say */}
-      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
+      <details className={styles.guide}>
+        <summary>What this tool checks and how to read the results</summary>
+<section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
         <div className="mx-auto max-w-3xl">
           <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">Straight answer</p>
           <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
@@ -160,6 +153,7 @@ export default function LlmsTxtGeneratorPage() {
           </div>
         </div>
       </section>
+      </details>
 
       <HowItWorks3Step heading="From a domain to a publishable file in three steps" steps={steps} />
 

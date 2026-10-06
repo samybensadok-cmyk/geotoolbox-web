@@ -1,3 +1,5 @@
+import { ToolIntro } from "@/components/tools/tool-intro"
+import styles from "@/components/tools/tool-experience.module.css"
 import type { Metadata } from "next"
 import Link from "next/link"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
@@ -76,7 +78,7 @@ export default function LlmsTxtCheckerPage() {
   return (
     <>
       {/* Hero + the tool */}
-      <section className="relative overflow-hidden bg-[var(--surface-steel)] px-6 pt-16 pb-16 sm:pt-20 sm:pb-20">
+      <section className={styles.hero}>
         <JsonLd
           data={[
             softwareApplicationSchema({
@@ -95,35 +97,25 @@ export default function LlmsTxtCheckerPage() {
 
         <div className="mx-auto max-w-5xl">
           <Breadcrumbs
+            tone="dark"
             trail={[
               { name: "Home", href: "/" },
               { name: "Tools", href: "/tools" },
               { name: "llms.txt Checker", href: "" },
             ]}
           />
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-              Free llms.txt tool
-            </p>
-            <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-              Free llms.txt Checker
-            </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
-              Build a spec-correct llms.txt from your site name, summary and links, then check it properly: we fetch any
-              /llms.txt server-side, validate it against the spec, resolve every linked URL to confirm it loads, and score it
-              0-100 on a published rubric with a copy-paste fix for every issue. Free, no sign-up, and honest about what
-              llms.txt does and doesn&apos;t do.
-            </p>
-          </div>
+          <ToolIntro slug="llms-txt-checker" />
 
-          <div className="mt-10">
+          <div className={styles.workbench}>
             <LlmsTxtCheckerWidget />
           </div>
         </div>
       </section>
 
       {/* Honest evidence panel — the credibility wedge */}
-      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
+      <details className={styles.guide}>
+        <summary>What this tool checks and how to read the results</summary>
+<section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
         <div className="mx-auto max-w-3xl">
           <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">Straight answer</p>
           <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
@@ -148,6 +140,7 @@ export default function LlmsTxtCheckerPage() {
           </div>
         </div>
       </section>
+      </details>
 
       {/* How it works (HowTo schema source) */}
       <HowItWorks3Step heading="From a URL to a scored report in three steps" steps={steps} />

@@ -1,52 +1,20 @@
 "use client"
 
-import { NewsletterSignup } from "@/components/newsletter/newsletter-signup"
+import Link from "next/link"
+import { NewsletterSignup, NEWSLETTER_COPY_EN } from "@/components/newsletter/newsletter-signup"
+import styles from "./tool-experience.module.css"
 
-/**
- * SG_TOOL_CAPTURE_V1 (2026-09-01) — the free tools stop being a dead end.
- *
- * The ten `/tools/*` utilities are the only place a prospect experiences the
- * product working: real checks, on their own domain, with no signup, no email
- * gate and no trial clock. That is deliberate and stays. But until today a
- * visitor ran the Agent Readiness scan, got a genuine score, and left behind
- * nothing at all — no email, and no reason to come back. Meanwhile the blog,
- * which sends ~1,400 organic clicks a month, now routes its mid-article CTA
- * here (SG_BLOG_CTA_V2), so this is where that traffic lands.
- *
- * Renders only AFTER a result exists, so the ask follows the value rather than
- * gating it.
- *
- * ⚠️ Honesty: this subscribes to the newsletter — a double-opt-in list that
- * emails when we publish. It does NOT promise a scheduled re-check of this
- * score: nothing on the backend re-runs these tools on a schedule for an
- * anonymous address, and the copy must not promise what no cron delivers. If a
- * re-check job is ever built, change the copy then, not before.
- *
- * The tools live under app/(marketing)/tools, outside the next-intl `[locale]`
- * tree (verified live 2026-09-01: `/fr/tools/ai-readiness` 404s), so the copy
- * is EN-only by construction — same as every other string on these pages.
- */
-export function ToolResultCapture({
-  slug,
-  what,
-}: {
-  /** tool slug — becomes the `source` attribution tag, e.g. "tool:ai-readiness" */
-  slug: string
-  /**
-   * What the reader just got, as a lowercase noun phrase: "readiness score",
-   * "prompt set", "sitemap report". Kept neutral on purpose — an earlier draft
-   * said the result "reflects how AI engines read your site", which is wrong
-   * for the two tools that take a keyword or a query rather than a domain.
-   */
-  what: string
-}) {
-  return (
-    <div className="mt-8">
-      <NewsletterSignup
-        source={`tool:${slug}`}
-        title="AI search moves fast. This will look different in a month."
-        description={`Your ${what} is a snapshot of how AI search works today. We send one email when we publish something worth reading about what changed — no spam, unsubscribe anytime.`}
-      />
+/** Optional newsletter opt-in after results. Never gates results or exports. */
+export function ToolResultCapture({ slug, what }: { slug: string; what: string }) {
+  return <aside className={styles.capture} aria-label="Optional email updates">
+    <div>
+      <p className={styles.captureLabel}>Your {what} is ready · Optional next step</p>
+      <h3>Keep up with AI search.</h3>
+      <p>Get new GEO guides and research by email when we publish. Free to join. Unsubscribe anytime.</p>
     </div>
-  )
+    <div>
+      <NewsletterSignup source={`tool:${slug}`} compact copy={{ ...NEWSLETTER_COPY_EN, submit: "Get email updates" }} />
+      <p className={styles.privacy}>Subscribe to the GEO Toolbox newsletter. Confirm via email. <Link href="/privacy">Privacy policy</Link>.</p>
+    </div>
+  </aside>
 }
