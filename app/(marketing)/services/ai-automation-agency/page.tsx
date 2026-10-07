@@ -209,7 +209,7 @@ export default function AiAutomationAgencyPage() {
       title="Less repetitive work." accent="A system your team owns."
       description="Custom AI agents, Claude skills and internal tools for your real workflows. Scoped, tested and documented by the founder who built GEO Toolbox." callHref={CALL_HREF}
       offers={tiers} faqs={faqs} context={definitionRows} automation builds={clientBuilds}
-      steps={[{"title": "Map one workflow", "body": "Define the inputs, outputs, integrations and approval points. Get a blueprint and a fixed quote.", "output": "Workflow blueprint"}, {"title": "Build and test", "body": "Review a working system on your actual inputs, with quality checks and human approval gates.", "output": "Tested pilot"}, {"title": "Run it with confidence", "body": "Get the code, prompts and operating documentation. Add ongoing support when you need it.", "output": "Documented handoff"}]}
+      steps={[{"title": "Map one workflow", "body": "Define the inputs, outputs, integrations and approval points. Get a blueprint and a fixed quote.", "output": "Workflow blueprint"}, {"title": "Build and test", "body": "Review a working system on your actual inputs, with quality checks and human approval gates.", "output": "Tested pilot"}, {"title": "Run it with confidence", "body": "Get the code, prompts and operating documentation. Add ongoing support when you need it.", "output": "Monitoring and monthly improvements"}]}
     >
 
     </ServiceExperience>

@@ -11,7 +11,7 @@ The user wants Claude to finish the work and update data with a fresh pull. No p
 
 ## Implemented
 - Shared service experience for AI SEO, GEO, AEO and automation; shorter copy, clear packages and calls to action.
-- AI SEO/GEO/AEO proof: ~135,700 Bing AI-citation appearances and 129,000 Google AI-answer impressions from existing September snapshots, ranking totals, and both monthly growth charts visible by default. Automation uses its client builds.
+- AI SEO/GEO/AEO proof: Bing AI-citation appearances, Google AI-answer impressions, ranking totals, and both monthly growth charts visible by default (figures refreshed 7 Oct 2026, see below). Automation uses its client builds.
 - Client scan screenshots and detailed measurement notes are expandable.
 - Pricing redesign with existing offers and five-locale messages preserved.
 - Original service offers, FAQs and structured data retained.

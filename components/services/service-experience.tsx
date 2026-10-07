@@ -46,7 +46,7 @@ function OfferCard({ offer, step, index, callHref, lead }: { offer: Offer; step?
     {step && <p className={styles.deliverable}><span aria-hidden="true">→</span> You get: <strong>{step.output}</strong></p>}
     <details className={styles.scope}><summary>What’s included <span aria-hidden="true">+</span></summary><p>{offer.detail}</p></details>
     <a href={href} className={lead ? styles.primary : styles.secondary} {...ext(href)}>
-      {offer.cta?.label ?? "Book a call"}<span aria-hidden="true">{href.startsWith("#") ? "↓" : "↗"}</span>
+      {offer.cta?.label ?? "Book a call"}<span aria-hidden="true">{href.startsWith("http") ? "↗" : href.startsWith("#") ? "↓" : "→"}</span>
     </a>
   </article>
 }
@@ -70,7 +70,7 @@ export function ServiceExperience(p: Props) {
           <div className={styles.founder}>{PRIMARY_AUTHOR.avatar && <Image src={PRIMARY_AUTHOR.avatar} width={40} height={40} alt="" />}<p><strong>{PRIMARY_AUTHOR.name}</strong><span>Built GEO Toolbox. Leads your project.</span></p></div>
           {auto
             ? <a href="#results" className={styles.proofLink}>See shipped client systems <span aria-hidden="true">↓</span></a>
-            : <a href="#results" className={styles.heroProof}>
+            : <a href="#results" className={styles.heroProof} aria-label={`Our own site: ${compact(aiCitations.total)} Bing AI appearances and ${compact(googleAiFeatures.impressions)} Google AI-answer impressions in 3 months, ${compact(google.rankedKeywords)} Google queries ranked in ${google.windowDays} days. See the evidence.`}>
                 <span><strong>{compact(aiCitations.total)}</strong>Bing AI appearances · 3 mo</span>
                 <span><strong>{compact(googleAiFeatures.impressions)}</strong>Google AI-answer impressions · 3 mo</span>
                 <span><strong>{compact(google.rankedKeywords)}</strong>Google queries ranked · {google.windowDays} days</span>
@@ -97,17 +97,17 @@ export function ServiceExperience(p: Props) {
               <dd className={styles.metricNote}>Sampled appearances, not unique citations.</dd>
             </div>
             <div className={styles.aiMetric}>
-              <dt>Appearances in Google’s AI answers</dt><dd className={styles.metricValue}>{fmt(googleAiFeatures.impressions)}</dd>
+              <dt>Appearances in Google’s AI answers</dt><dd className={styles.metricValue}>~{fmt(googleAiFeatures.impressions)}</dd>
               <dd>Search Console · {googleAiFeatures.surfaces} · {googleAiFeatures.windowLabel}</dd>
               <dd className={styles.metricNote}>Link impressions, not clicks or unique citations.</dd>
             </div>
             <div>
               <dt>Queries ranked in Google</dt><dd className={styles.metricValue}>{fmt(google.rankedKeywords)}</dd>
-              <dd>Search Console API · trailing {google.windowDays} days to {asOf}</dd>
+              <dd>Search Console API · {google.windowDays} days to {google.windowEnd}</dd>
             </div>
             <div>
               <dt>Queries on Google’s first page</dt><dd className={styles.metricValue}>{fmt(google.top10)}</dd>
-              <dd>Search Console API · trailing {google.windowDays} days to {asOf}</dd>
+              <dd>Search Console API · {google.windowDays} days to {google.windowEnd}</dd>
             </div>
           </dl>
           <div className={styles.growthCharts}><GrowthCharts variant="light" /></div>

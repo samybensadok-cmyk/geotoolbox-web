@@ -40,6 +40,12 @@
 import generated from "./proof-stats.generated.json"
 import contentGenerated from "./content-counts.generated.json"
 
+// The API window ends 3 days before the run (GSC lag) — see
+// scripts/update-proof-stats.mjs. `asOf` is the RUN date, so surfaces that
+// state the window end must use this, not `asOf`.
+const windowEnd = new Date(Date.parse(generated.generatedAt) - 3 * 86400e3)
+  .toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" })
+
 export const proofStats = {
   // Automated — regenerated every 48h from the Search Console API.
   asOf: generated.asOf,
@@ -49,6 +55,7 @@ export const proofStats = {
     top3: generated.google.top3,
     dailyImpressions: generated.impressions.perDay,
     windowDays: generated.google.windowDays,
+    windowEnd,
   },
   impressions: {
     perDay: generated.impressions.perDay,
