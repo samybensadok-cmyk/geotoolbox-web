@@ -1,0 +1,272 @@
+---
+title: "Bing Webmaster Tools: Setup, IndexNow and AI Performance"
+description: "Set up Bing Webmaster Tools, push changes with IndexNow, and read the AI Performance report that shows when Copilot and Bing's AI answers cite your pages."
+date: "2026-10-07"
+updated: "2026-10-07"
+recheckBy: "2026-11-07"  # AI Performance preview features (Intents, Topics, Citation Share, Compare) and the BWT UI change often; re-open BWT before relying on screen-level details
+author: "Samy BEN SADOK"
+tags: ["bing-webmaster-tools", "indexnow", "bing", "technical-seo", "ai-search", "guide"]
+draft: false
+---
+
+Bing Webmaster Tools is Microsoft's free counterpart to Google Search Console for Bing search, and it is also where Microsoft reports how often Copilot and Bing's AI answers cite your pages.
+
+Verification is only the first step. The sitemap, IndexNow and the AI Performance report are where the value is, and the report only helps if you know what its numbers leave out.
+
+## Is Bing Webmaster Tools Worth Setting Up?
+
+Yes. Microsoft's [getting-started guide](https://www.bing.com/webmasters/help/getting-started-checklist-66a806de) describes a free account, setup fits in one sitting, and the reasons to bother go beyond Bing's own traffic.
+
+[Bing's webmaster guidelines](https://www.bing.com/webmasters/help/webmaster-guidelines-30fba23a) say Bing and Copilot search experiences "rely on the same core crawling, indexing, and ranking foundation", so a page Bing cannot crawl is unlikely to appear in a Copilot web-search citation. We cover the mechanism in [our Copilot SEO guide](https://geotoolbox.ai/blog/copilot-seo). The AI report in this tool says the same thing from the other side: [per its help page](https://www.bing.com/webmasters/help/ai-performance-9f8e7d6c), it reflects only content that is eligible for indexing.
+
+ChatGPT is less clear. [OpenAI's help page](https://help.openai.com/en/articles/9237897-chatgpt-search) says ChatGPT search sometimes partners with other search providers and lists Microsoft among the providers whose privacy statements apply. It gives no split, so treat Bing as one input to ChatGPT's AI search results. OpenAI also says a site must allow OAI-SearchBot to crawl it to be eligible, which a Bing setup does not cover.
+
+Whether Bing matters for your site is a data question. Open the Search Performance report, take 90 days of clicks, and compare them with Search Console, the check we describe in [our Bing rank tracker guide](https://geotoolbox.ai/blog/best-bing-rank-tracker). Even a site with few Bing visits can learn from the AI report, which is one piece of your [AI visibility](https://geotoolbox.ai/blog/what-is-ai-visibility).
+
+## How to Set Up Bing Webmaster Tools
+
+Importing from Search Console shortens the path.
+
+1. Sign in at [bing.com/webmasters](https://www.bing.com/webmasters) with a Microsoft, Google or Facebook account.
+2. Click **"Add a site"** and choose between importing from Google Search Console and typing the URL by hand.
+3. If you typed it, verify ownership with one of the four methods below.
+4. Submit your sitemap, covered in the next section.
+5. Wait. Microsoft says it [usually takes 48 hours](https://www.bing.com/webmasters/help/add-and-verify-site-12184f8b) after you add a site before analytics and data appear.
+
+A property can cover a whole domain such as example.com or a single branch such as example.com/clothing/, so you can verify a subfolder you control without owning the root.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/bing-webmaster-tools/bing-verify-notify-measure-flow.png" alt="Three-step flow in Bing Webmaster Tools: verify and submit a sitemap, notify on change with IndexNow, then read Search Performance and AI Performance." w="1920" h="1526" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">The three jobs in this guide, and the edge of what the AI report covers.</figcaption>
+</figure>
+
+### Import from Google Search Console
+
+If the site is already verified in Search Console, import it. Per [Bing's add-and-verify help](https://www.bing.com/webmasters/help/add-and-verify-site-12184f8b), Bing brings across the property, your user roles and your sitemaps, after you grant it access to your Search Console account.
+
+The import is not a one-time snapshot. Bing says it periodically re-validates ownership through that Search Console account and imports any new sitemap it finds there. One import handles up to 100 sites, and an account holds at most 1,000.
+
+### Verify Ownership by Hand
+
+Bing offers four methods, and which one you can use depends on what you control.
+
+<table>
+<thead>
+<tr><th>Method</th><th>What you do</th><th>Watch for</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>DNS auto verification</strong></td><td>Log in at your DNS provider when prompted and Bing adds the CNAME for you</td><td>Shown only for DNS providers that adopted the Domain Connect standard and partnered with Bing</td></tr>
+<tr><td><strong>CNAME record</strong></td><td>Add Bing's verification code as a CNAME at your domain host</td><td>Needs access to the domain account, not the website</td></tr>
+<tr><td><strong>Meta tag</strong></td><td>Paste the supplied tag at the end of the default page's <code>&lt;head&gt;</code></td><td>A template rebuild that rewrites the head can drop the tag</td></tr>
+<tr><td><strong>XML file</strong></td><td>Download <code>BingSiteAuth.xml</code> and upload it to the site root</td><td>Needs file access to the root directory</td></tr>
+</tbody>
+</table>
+
+Prefer the DNS routes when you have access, because they sit outside the site's templates (that reasoning is ours, not Microsoft's). When Bing verifies you, it shows a green checkmark; a red cross comes with an error message to fix before you try again.
+
+## Submit Your Sitemap and Individual URLs
+
+Bing's [Sitemaps tool](https://www.bing.com/webmasters/help/Sitemaps-3b5cf6ed) accepts XML sitemaps, RSS 2.0, Atom 0.3 and 1.0, and plain text files with one URL per line. You can also leave a `Sitemap:` line in robots.txt and let Bing find the file itself.
+
+The Sitemaps page lists everything Bing knows about for the site: sitemaps you submitted, ones imported from Search Console, and ones Bing discovered on its own. Each row carries a processing status and a URL count, and a detail view shows the exact error or warning. Resubmit one sitemap at a time; Bing does not allow several at once. What belongs inside the file is covered in [our XML sitemap guide](https://geotoolbox.ai/blog/xml-sitemap).
+
+For single pages, Bing's [URL Submission help](https://www.bing.com/webmasters/help/url-submission-62f2860b) allows up to 10,000 URLs per domain per day. Bing can set yours lower and support can raise it. The quota resets daily at midnight UTC, applies to the domain rather than to each subdomain, and the history view keeps only the most recent 1,000 submissions.
+
+Microsoft now steers people to IndexNow. The same page calls IndexNow "strongly recommended" and says manual URL Submission, the submission APIs and Content Submission remain supported but may be deprecated. Use manual submission for the handful of pages you just fixed, and the next section for everything else.
+
+## IndexNow: Tell Bing What Changed
+
+A sitemap tells Bing what exists. [IndexNow](https://www.indexnow.org/documentation) tells it what just changed: you send the URL of a page you added, updated or deleted, and participating engines learn about it without waiting for the next crawl.
+
+Setup takes a key, a file and a request:
+
+1. Make a key of 8 to 128 characters, using letters, digits and dashes.
+2. Host a UTF-8 text file named `{your-key}.txt` at your site root, containing only the key. The spec recommends the root; a key file hosted elsewhere on the same host covers only URLs beneath its own folder, and each submission must name it with a `keyLocation` parameter.
+3. Send a request. A single URL is a GET such as `https://www.bing.com/indexnow?url=https%3A%2F%2Fexample.com%2Fnew-page&key=your-key` (the URL must be encoded), and a POST can carry up to 10,000 URLs in one JSON body.
+
+An HTTP 200 means the submission was received. Your first request may return 202 while the engine validates your key. Per [IndexNow's response codes](https://www.indexnow.org/documentation), a 403 means the key was not found or does not match, a 422 means a URL does not belong to the host, and a 429 means you are submitting too often. Each subdomain is a separate host and needs its own key file.
+
+You submit to one participating endpoint, and according to the [IndexNow FAQ](https://www.indexnow.org/faq) your submission is "shared across all IndexNow-enabled search engines". The [engine file](https://www.indexnow.org/searchengines.json) the project publishes, read October 7, 2026, names Bing, Yandex, Seznam, Naver, Yep, Internet Archive and Amazonbot. Google is not on it, so a submission gives you nothing you can count on for Google.
+
+Keep expectations realistic. A submission is not an indexing order: the engine decides whether to crawl based on its own crawl quota, scheduling and quality signals. Every submitted URL still counts against your crawl quota, so send real changes rather than every build. IndexNow is not built for pushing your whole site at once, which is the sitemap's job, though submitting every URL after a migration or redesign is acceptable.
+
+Check your CMS or CDN before building anything. The [IndexNow FAQ](https://www.indexnow.org/faq) lists WordPress, Shopify, Wix, Drupal, Joomla and others as offering native support or support through plugins, and says Cloudflare has a native integration. If yours handles it, you do not need to make a key file yourself, because submissions happen automatically. Submission activity shows under the IndexNow tab in Bing Webmaster Tools.
+
+<table>
+<thead>
+<tr><th>Method</th><th>Use it for</th><th>Limit</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Sitemap</strong></td><td>The full list of URLs you want indexed</td><td>Resubmit one sitemap at a time</td></tr>
+<tr><td><strong>IndexNow</strong></td><td>Pages added, updated or deleted</td><td>Up to 10,000 URLs per POST (a batch size); 429 if you send too often</td></tr>
+<tr><td><strong>Manual URL Submission</strong></td><td>A few pages you want Bing to see now</td><td>Up to 10,000 URLs per domain per day (a daily quota), reset at midnight UTC; may be deprecated</td></tr>
+</tbody>
+</table>
+
+We ping IndexNow on every push that changes content on this site, through a GitHub Actions workflow that has run since July 3, 2026, but we have not measured whether it changes how quickly Copilot cites a new page. The IndexNow FAQ says it improves indexing speed with supported engines, and discovery is the step that comes before any citation.
+
+## Other Bing Webmaster Tools Reports Worth Opening
+
+Most of the left-hand menu is optional. These parts earn their place.
+
+- **Search Performance:** clicks, impressions, average click-through rate and average position. Chat responses are one of its traffic sources, keyword and page breakdowns exist only for Web traffic, and data collection starts when you add the site, so nothing is backdated. Microsoft's [help page](https://www.bing.com/webmasters/help/search-performance-c680da36) still describes the past six months of data, but [Search Engine Roundtable reported](https://www.seroundtable.com/bing-webmaster-tools-gets-24-months-39906.html) 24 months plus country and device filters on Aug 8, 2025, and the report offered ranges up to 24 months when we opened it on October 7, 2026.
+- **[URL Inspection](https://www.bing.com/webmasters/help/url-inspection-55a30305):** index status plus SEO and markup cards, and a Live URL tab that shows what Bingbot sees when it downloads the page. Asking for indexing from here draws on your URL submission quota.
+- **[Crawl Control](https://www.bing.com/webmasters/help/crawl-control-55a30303):** slows or speeds Bingbot for each of the 24 hours of the day. A `crawl-delay` line in robots.txt always wins over it.
+- **[Site Scan](https://www.bing.com/webmasters/help/site-scan-623520c9):** an on-demand crawl that flags common technical SEO problems. Bing sets your monthly quota automatically and does not accept requests to raise it. It stores up to five scans.
+- **[Verify Bingbot](https://www.bing.com/webmasters/help/verify-bingbot-2195837f):** checks whether an IP address in your server logs really belongs to Bingbot.
+- **[Backlinks](https://www.bing.com/webmasters/help/backlinks-c3a334e8):** a representative set of the links Bing has found, not a complete profile.
+
+## The AI Performance Report, View by View
+
+AI Performance reports how often Microsoft Copilot, AI-generated summaries in Bing and select partner AI integrations cite your pages.
+
+Microsoft [introduced it on February 10, 2026](https://blogs.bing.com/webmaster/2026/2/Introducing-AI-Performance-in-Bing-Webmaster-Tools-Public-Preview/) as a public preview, and its [help page](https://www.bing.com/webmasters/help/ai-performance-9f8e7d6c) lists those surfaces. When you open the report it is labelled "Microsoft Copilots and Partners". Microsoft does not name the partners, and it lists no ChatGPT, Perplexity, Gemini or Google AI surface, so do not read the report as a view of those.
+
+A **citation** here means your content was visibly referenced or shown as a source in an AI-generated answer. Each view cuts that one count a different way.
+
+<table>
+<thead>
+<tr><th>View</th><th>What it shows</th><th>What it does not show</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Total Citations</strong></td><td>How often your content was cited in the date range</td><td>Clicks, traffic, rankings or importance</td></tr>
+<tr><td><strong>Average Cited Pages</strong></td><td>Unique pages cited per day, averaged over the range</td><td>A page's role inside any one answer</td></tr>
+<tr><td><strong>Pages</strong></td><td>Citation counts by URL</td><td>Authority or placement</td></tr>
+<tr><td><strong>Grounding queries</strong></td><td>Grouped phrases the AI used to retrieve your cited content, with counts</td><td>The prompts people typed, or why a page was chosen</td></tr>
+<tr><td><strong>Query-to-page mapping</strong></td><td>Pages cited for one grounding query, or queries behind one page</td><td>Two filters at once; exports follow the filter you applied</td></tr>
+<tr><td><strong>Timeline</strong></td><td>Citation volume over time</td><td>The cause of any change</td></tr>
+</tbody>
+</table>
+
+Read it with the help page's own caveats in mind:
+
+- The data is aggregated and sampled, and totals can differ between views.
+- It refreshes daily with a short processing delay.
+- Very low or infrequent citation activity may not surface, so an empty grounding-queries tab is not a penalty.
+- Microsoft states plainly that citations are not clicks.
+
+You can export to CSV and Excel. The help page documents CSV and Excel exports but no API for this report, so plan on exporting by hand. Its range list names 7 days, 30 days, 3 months and custom, while the screen also had a **"6 M"** button when we looked.
+
+On geotoolbox.ai, the 3-month view ending October 4, 2026 showed 270.8K citations, 48 average cited pages and 1,739 grounding queries. Search Performance over a close window, all sources, showed 698 clicks and 71.5K impressions. The totals differ by a factor of about 390, but they count different things, so this is not a conversion rate and not a traffic report.
+
+The citation total also hides a step change. Daily citations ran in the hundreds until early August, then jumped to thousands a day, and the report does not say why.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/bing-webmaster-tools/citations-vs-bing-clicks-scale.png" alt="Bar chart for geotoolbox.ai comparing 270.8K Copilot and partner citations with 698 Bing clicks over three months." w="2200" h="1010" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">One site, two Bing reports on one axis, 3-month views. Citations are not visits, and not necessarily people.</figcaption>
+</figure>
+
+## AI Performance Preview Features Added in June
+
+Four preview features turn the flat list of phrases into something you can sort and read: Intents, Topics, Citation Share and Compare. Microsoft [announced them on June 16, 2026](https://blogs.bing.com/search/2026/6/New-AI-Visibility-Insights-in-Bing-Webmaster-Tools-Intents-Topics-Citation-Share-Compare/), rolling out in preview globally.
+
+**Intents** label each grounding query with a query intent. Microsoft's FAQ lists categories including Informational, Commercial, Navigational, Learn and Solve, Research, Comparison, Planning, Local and Creation, assigned by AI/ML classifiers. **Topics** group related queries into themes: Microsoft's example folds "solar panels" and "solar energy efficiency" into a cluster called Solar Energy. To see which pages sit under a topic, you export the data and filter there.
+
+**Citation Share** is the percentage of citations on one grounding query that went to your site, out of all citations across all sites. Microsoft calls it an observational metric, not a ranking or a traffic share, and it does not expose competitor domains.
+
+**Compare** overlays an earlier period on the current chart, current as a solid line and the comparison as a dashed one, aligned by day. It shows the change; finding the cause is your job.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/bing-webmaster-tools/bing-ai-performance-grounding-queries-geotoolbox.png" alt="Bing Webmaster Tools AI Performance table for geotoolbox.ai with Grounding Query, Intent, Topic, Citations and Citation Share columns." w="1920" h="1310" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Our own grounding-queries table in Bing Webmaster Tools, 3-month range ending October 4, 2026. The Intent, Topic and Citation Share columns are the June additions.</figcaption>
+</figure>
+
+The labels are imperfect, and Microsoft says so. We saw it on our own rows: "que es claude" is filed under the topic Baby Names and "claude precios" under E-commerce.
+
+Read the counts with the same care.
+
+The August jump and phrasing such as "evaluate AI visibility tracking platforms" fit the batch prompts that AI visibility tools send. geotoolbox is one of those tools, running scheduled prompts through several engines, Copilot among them, for its customers, and we cannot rule out that some of them land here. Wording alone proves little, because Microsoft says grounding queries are "not full user questions or prompts". The report does not show who asked.
+
+## How to Act on AI Performance Data
+
+Start with an export of the grounding queries, sorted by intent. They are retrieval wording, the kind of sub-query we describe in [our query fan-out guide](https://geotoolbox.ai/blog/query-fan-out), so read them as clues to how Copilot files your pages. The gaps are where to look: indexed pages with no citations reported in the selected period, or intents you expected and do not see. The data is sampled, so treat these as candidates to investigate.
+
+If an indexed page is never cited, check its directives first. [Per Bing's guidelines](https://www.bing.com/webmasters/help/webmaster-guidelines-30fba23a), NOARCHIVE prevents content from being used in Copilot responses and grounding results, NOCACHE limits Copilot to the URL, title and snippet, and NOSNIPPET or data-nosnippet may limit citation quality.
+
+For the fixes, Microsoft's [own list](https://www.bing.com/webmasters/help/ai-performance-9f8e7d6c) is short: descriptive headings, concise sections, tables, FAQ-style content, claims backed by evidence, fresh content, and text, images and media that describe the same entities. It also says none of this guarantees a citation.
+
+Because the report names no ChatGPT, Perplexity or Google surface, run the cross-checks yourself:
+
+1. Build representative questions from your top grounding queries, ask them in ChatGPT and Perplexity, and note who gets cited. Treat it as an exploratory test, not a replay. [How ChatGPT search picks sources](https://geotoolbox.ai/blog/how-chatgpt-search-works) explains what to look for.
+2. Compare citations with Search Performance clicks, where Chat responses are one source, and with referral sessions in your analytics.
+3. For engines the report does not cover, use a tracker. We list the options in our guide to [tracking brand mentions in AI search](https://geotoolbox.ai/blog/track-brand-mentions-in-ai-search). Microsoft's own [Clarity Citations dashboard](https://clarity.microsoft.com/blog/citations-now-generally-available/), generally available since May 13, 2026, adds grounding queries, cited pages and a share-of-authority view once you install the Clarity tracking code. The post does not name the engines it covers, and Microsoft says domain ownership verification, through Bing Webmaster Tools or Search Console, may also be required.
+
+
+## Bing Webmaster Tools vs Google Search Console
+
+They do the same basic job for different engines, and you want both. Search Console shows Google's view of your site, and Bing Webmaster Tools shows Bing's, including the Copilot surfaces Google never reports on.
+
+<table>
+<thead>
+<tr><th></th><th>Bing Webmaster Tools</th><th>Google Search Console</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Getting your site in</strong></td><td>Imports a verified Search Console property with its roles and sitemaps</td><td>Verified on its own</td></tr>
+<tr><td><strong>AI reporting</strong></td><td>AI Performance: citations in Copilot, Bing's AI summaries and select partners</td><td>Search Generative AI performance reports, <a href="https://developers.google.com/search/blog/2026/06/gen-ai-performance-reports">announced June 3, 2026</a> and rolled out to all websites worldwide as of August 31, 2026: impressions in AI Overviews and AI Mode</td></tr>
+<tr><td><strong>AI report breakdowns</strong></td><td>Pages, grounding queries, intents, topics and citation share</td><td>Pages, countries, devices and dates, from hourly to monthly</td></tr>
+<tr><td><strong>Telling the engine about changes</strong></td><td>IndexNow, plus sitemaps</td><td>Sitemaps and normal crawling; Google is not on the IndexNow engine list</td></tr>
+</tbody>
+</table>
+
+These AI reports measure different things. Bing counts citations, and Google counts impressions in its AI features, so a number from one cannot stand in for the other.
+
+## Troubleshooting: Page Not Indexed on Bing
+
+Work through these in order, from the cheapest check to the support ticket.
+
+1. **Check access.** A broad `Disallow` written to keep AI bots out can lock Bingbot out too, so block by user agent, using the list in [our AI crawlers guide](https://geotoolbox.ai/blog/ai-crawlers). Then check any firewall or CDN rule that challenges unknown bots. The Verify Bingbot tool tells you whether an IP in your logs is the real crawler, so you can allow it without opening the door to impostors. Also confirm your verification tag or file survived the last deploy.
+2. **Inspect the URL.** URL Inspection shows when Bing discovered, crawled and indexed the page, and the Live URL tab shows what Bingbot sees. If it reports "Discovered but not crawled", that is a known-but-not-indexed state. In a [June 15 Microsoft Q&A thread](https://learn.microsoft.com/en-us/answers/questions/5920490/bing-webmaster-tools-showing-discovered-but-not-cr) where a `site:` search returned nothing for the whole domain, an Independent Advisor said that combination "can sometimes point to a site-wide quality/trust assessment" and that only Bing can confirm the reason. Fix what you find, then request indexing within your quota.
+3. **Check the plumbing.** The Sitemaps page shows each sitemap's processing status and errors, and the IndexNow tab shows what you submitted.
+4. **Escalate to Bing support.** If URL Inspection says the page is indexed but it never appears in results, Webmaster Tools may not show the reason. In a [July 31 thread about zero impressions](https://learn.microsoft.com/en-in/answers/questions/5962187/bing-webmaster-tools-shows-my-website-as-indexed-s), a Microsoft Q&A moderator, writing as a fellow user, suggested Bing may not yet have assigned enough trust or quality signals, especially on a new domain with few backlinks or mostly manufacturer-supplied content. The moderator added that support can see serving and indexing data that Webmaster Tools does not expose, and pointed to [Webmaster Support](https://www.bing.com/webmasters/support), where you raise a support request. Attach your URL Inspection screenshots. The same answer relays a community tip: if an AI assistant loops you, ask explicitly for a human engineer. These are community answers, not Microsoft policy. While you wait, strengthening the page and the internal links pointing at it costs nothing.
+
+Google indexing a page tells you nothing about Bing. The engines run separate crawls, so a page can sit in one index and be missing from the other.
+
+## What to Do This Week
+
+Verify or import the site, submit the sitemap, switch on IndexNow, then give the reports a few weeks of data before you draw conclusions. The tool earns its place as a free check that Bing can reach your pages and as Microsoft's own count of Copilot citations. AI Performance does not measure visits; Search Performance covers Bing clicks, and your analytics covers the rest.
+
+One check comes before the report: can the crawlers reach you at all? Our free [robots.txt Tester](https://geotoolbox.ai/tools/robots-txt-tester) checks your paths against Bingbot, OAI-SearchBot, PerplexityBot and the other crawlers it lists, and shows the exact line that decided each verdict.
+
+For the engines this report does not name, [geotoolbox](https://geotoolbox.ai/features/ai-visibility-tracker) runs your prompts through ChatGPT, Perplexity, Gemini, Claude, Google's AI features and Grok on a schedule, and the engine count depends on your plan. Like any tracker, it samples the prompts you choose rather than reporting real queries.
+
+## Frequently Asked Questions
+
+### Does anyone still use Bing?
+
+Enough that it is worth checking before you decide. Search Performance shows how many clicks Bing sent you, in ranges up to 24 months, and AI Performance shows how often Copilot cited you. On our own site the first was small and the second large over the last three months.
+
+### Is Bing Webmaster Tools free?
+
+Yes. Microsoft's getting-started guide describes a free account, and sitemaps, IndexNow and AI Performance all sit inside it.
+
+### What are Google's webmaster tools called now?
+
+Google Search Console. Bing Webmaster Tools is the Bing equivalent, and it can import a verified Search Console property so you do not have to verify the site twice.
+
+## Sources
+
+- Microsoft Bing - Webmaster Guidelines (read October 7, 2026) - `bing.com/webmasters/help/webmaster-guidelines-30fba23a`
+- Microsoft Bing - Getting Started Checklist, Bing Webmaster Tools Help (read October 7, 2026) - `bing.com/webmasters/help/getting-started-checklist-66a806de`
+- Microsoft Bing - Add and Verify Site, Bing Webmaster Tools Help (read October 7, 2026) - `bing.com/webmasters/help/add-and-verify-site-12184f8b`
+- Microsoft Bing - Sitemaps, Bing Webmaster Tools Help (read October 7, 2026) - `bing.com/webmasters/help/Sitemaps-3b5cf6ed`
+- Microsoft Bing - URL Submission, Bing Webmaster Tools Help (read October 7, 2026) - `bing.com/webmasters/help/url-submission-62f2860b`
+- Microsoft Bing - Search Performance, Bing Webmaster Tools Help (read October 7, 2026) - `bing.com/webmasters/help/search-performance-c680da36`
+- Microsoft Bing - URL Inspection, Bing Webmaster Tools Help (read October 7, 2026) - `bing.com/webmasters/help/url-inspection-55a30305`
+- Microsoft Bing - Crawl Control, Bing Webmaster Tools Help (read October 7, 2026) - `bing.com/webmasters/help/crawl-control-55a30303`
+- Microsoft Bing - Site Scan, Bing Webmaster Tools Help (read October 7, 2026) - `bing.com/webmasters/help/site-scan-623520c9`
+- Microsoft Bing - Verify Bingbot, Bing Webmaster Tools Help (read October 7, 2026) - `bing.com/webmasters/help/verify-bingbot-2195837f`
+- Microsoft Bing - Backlinks, Bing Webmaster Tools Help (read October 7, 2026) - `bing.com/webmasters/help/backlinks-c3a334e8`
+- Microsoft Bing - Webmaster Support (read October 7, 2026) - `bing.com/webmasters/support`
+- Microsoft Bing - AI Performance, Bing Webmaster Tools Help (read October 7, 2026) - `bing.com/webmasters/help/ai-performance-9f8e7d6c`
+- Bing Webmaster Blog - Introducing AI Performance in Bing Webmaster Tools, Public Preview (February 10, 2026) - `blogs.bing.com/webmaster/2026/2/Introducing-AI-Performance-in-Bing-Webmaster-Tools-Public-Preview/`
+- Bing Search Blog - New AI Visibility Insights in Bing Webmaster Tools: Intents, Topics, Citation Share, Compare (June 16, 2026) - `blogs.bing.com/search/2026/6/New-AI-Visibility-Insights-in-Bing-Webmaster-Tools-Intents-Topics-Citation-Share-Compare/`
+- IndexNow - Documentation (read October 7, 2026) - `indexnow.org/documentation`
+- IndexNow - FAQ (read October 7, 2026) - `indexnow.org/faq`
+- IndexNow - Participating search engines file (read October 7, 2026) - `indexnow.org/searchengines.json`
+- OpenAI Help Center - Searching the web with ChatGPT (read October 7, 2026) - `help.openai.com/en/articles/9237897-chatgpt-search`
+- Google Search Central Blog - Introducing Search Generative AI performance reports in Search Console (June 3, 2026; note added August 31, 2026) - `developers.google.com/search/blog/2026/06/gen-ai-performance-reports`
+- Microsoft Clarity Blog - Citations in Microsoft Clarity Now Generally Available (May 13, 2026) - `clarity.microsoft.com/blog/citations-now-generally-available/`
+- Search Engine Roundtable - Bing Webmaster Tools Gets 24 Months Of Data & More (Aug 8, 2025) - `seroundtable.com/bing-webmaster-tools-gets-24-months-39906.html`
+- Microsoft Q&A - Bing Webmaster Tools showing "Discovered but not crawled" (June 15, 2026) - `learn.microsoft.com/en-us/answers/questions/5920490/bing-webmaster-tools-showing-discovered-but-not-cr`
+- Microsoft Q&A - BWT shows my website as indexed successfully, but Bing Search shows no pages or impressions (July 31, 2026) - `learn.microsoft.com/en-in/answers/questions/5962187/bing-webmaster-tools-shows-my-website-as-indexed-s`
+- geotoolbox - first-party Bing Webmaster Tools AI Performance and Search Performance observations for geotoolbox.ai (October 7, 2026) - own data
