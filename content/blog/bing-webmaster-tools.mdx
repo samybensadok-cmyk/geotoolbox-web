@@ -88,10 +88,6 @@ An HTTP 200 means the submission was received. Your first request may return 202
 
 You submit to one participating endpoint, and according to the [IndexNow FAQ](https://www.indexnow.org/faq) your submission is "shared across all IndexNow-enabled search engines". The [engine file](https://www.indexnow.org/searchengines.json) the project publishes, read October 7, 2026, names Bing, Yandex, Seznam, Naver, Yep, Internet Archive and Amazonbot. Google is not on it, so a submission gives you nothing you can count on for Google.
 
-Keep expectations realistic. A submission is not an indexing order: the engine decides whether to crawl based on its own crawl quota, scheduling and quality signals. Every submitted URL still counts against your crawl quota, so send real changes rather than every build. IndexNow is not built for pushing your whole site at once, which is the sitemap's job, though submitting every URL after a migration or redesign is acceptable.
-
-Check your CMS or CDN before building anything. The [IndexNow FAQ](https://www.indexnow.org/faq) lists WordPress, Shopify, Wix, Drupal, Joomla and others as offering native support or support through plugins, and says Cloudflare has a native integration. If yours handles it, you do not need to make a key file yourself, because submissions happen automatically. Submission activity shows under the IndexNow tab in Bing Webmaster Tools.
-
 <table>
 <thead>
 <tr><th>Method</th><th>Use it for</th><th>Limit</th></tr>
@@ -102,6 +98,10 @@ Check your CMS or CDN before building anything. The [IndexNow FAQ](https://www.i
 <tr><td><strong>Manual URL Submission</strong></td><td>A few pages you want Bing to see now</td><td>Up to 10,000 URLs per domain per day (a daily quota), reset at midnight UTC; may be deprecated</td></tr>
 </tbody>
 </table>
+
+Keep expectations realistic. A submission is not an indexing order: the engine decides whether to crawl based on its own crawl quota, scheduling and quality signals. Every submitted URL still counts against your crawl quota, so send real changes rather than every build. IndexNow is not built for pushing your whole site at once, which is the sitemap's job, though submitting every URL after a migration or redesign is acceptable.
+
+Check your CMS or CDN before building anything. The [IndexNow FAQ](https://www.indexnow.org/faq) lists WordPress, Shopify, Wix, Drupal, Joomla and others as offering native support or support through plugins, and says Cloudflare has a native integration. If yours handles it, you do not need to make a key file yourself, because submissions happen automatically. Submission activity shows under the IndexNow tab in Bing Webmaster Tools.
 
 We ping IndexNow on every push that changes content on this site, through a GitHub Actions workflow that has run since July 3, 2026, but we have not measured whether it changes how quickly Copilot cites a new page. The IndexNow FAQ says it improves indexing speed with supported engines, and discovery is the step that comes before any citation.
 
@@ -189,8 +189,9 @@ Because the report names no ChatGPT, Perplexity or Google surface, run the cross
 
 1. Build representative questions from your top grounding queries, ask them in ChatGPT and Perplexity, and note who gets cited. Treat it as an exploratory test, not a replay. [How ChatGPT search picks sources](https://geotoolbox.ai/blog/how-chatgpt-search-works) explains what to look for.
 2. Compare citations with Search Performance clicks, where Chat responses are one source, and with referral sessions in your analytics.
-3. For engines the report does not cover, use a tracker. We list the options in our guide to [tracking brand mentions in AI search](https://geotoolbox.ai/blog/track-brand-mentions-in-ai-search). Microsoft's own [Clarity Citations dashboard](https://clarity.microsoft.com/blog/citations-now-generally-available/), generally available since May 13, 2026, adds grounding queries, cited pages and a share-of-authority view once you install the Clarity tracking code. The post does not name the engines it covers, and Microsoft says domain ownership verification, through Bing Webmaster Tools or Search Console, may also be required.
+3. For engines the report does not cover, use a tracker. We list the options in our guide to [tracking brand mentions in AI search](https://geotoolbox.ai/blog/track-brand-mentions-in-ai-search).
 
+Microsoft's own [Clarity Citations dashboard](https://clarity.microsoft.com/blog/citations-now-generally-available/), generally available since May 13, 2026, adds grounding queries, cited pages and a share-of-authority view once you install the Clarity tracking code. The post does not name the engines it covers, and Microsoft says domain ownership verification, through Bing Webmaster Tools or Search Console, may also be required.
 
 ## Bing Webmaster Tools vs Google Search Console
 
@@ -217,13 +218,17 @@ Work through these in order, from the cheapest check to the support ticket.
 1. **Check access.** A broad `Disallow` written to keep AI bots out can lock Bingbot out too, so block by user agent, using the list in [our AI crawlers guide](https://geotoolbox.ai/blog/ai-crawlers). Then check any firewall or CDN rule that challenges unknown bots. The Verify Bingbot tool tells you whether an IP in your logs is the real crawler, so you can allow it without opening the door to impostors. Also confirm your verification tag or file survived the last deploy.
 2. **Inspect the URL.** URL Inspection shows when Bing discovered, crawled and indexed the page, and the Live URL tab shows what Bingbot sees. If it reports "Discovered but not crawled", that is a known-but-not-indexed state. In a [June 15 Microsoft Q&A thread](https://learn.microsoft.com/en-us/answers/questions/5920490/bing-webmaster-tools-showing-discovered-but-not-cr) where a `site:` search returned nothing for the whole domain, an Independent Advisor said that combination "can sometimes point to a site-wide quality/trust assessment" and that only Bing can confirm the reason. Fix what you find, then request indexing within your quota.
 3. **Check the plumbing.** The Sitemaps page shows each sitemap's processing status and errors, and the IndexNow tab shows what you submitted.
-4. **Escalate to Bing support.** If URL Inspection says the page is indexed but it never appears in results, Webmaster Tools may not show the reason. In a [July 31 thread about zero impressions](https://learn.microsoft.com/en-in/answers/questions/5962187/bing-webmaster-tools-shows-my-website-as-indexed-s), a Microsoft Q&A moderator, writing as a fellow user, suggested Bing may not yet have assigned enough trust or quality signals, especially on a new domain with few backlinks or mostly manufacturer-supplied content. The moderator added that support can see serving and indexing data that Webmaster Tools does not expose, and pointed to [Webmaster Support](https://www.bing.com/webmasters/support), where you raise a support request. Attach your URL Inspection screenshots. The same answer relays a community tip: if an AI assistant loops you, ask explicitly for a human engineer. These are community answers, not Microsoft policy. While you wait, strengthening the page and the internal links pointing at it costs nothing.
+4. **Escalate to Bing support.** If URL Inspection says the page is indexed but it never appears in results, Webmaster Tools may not show the reason. Sign in and raise a request through [Webmaster Support](https://www.bing.com/webmasters/support), attaching your URL Inspection screenshots.
+
+In a [July 31 thread about zero impressions](https://learn.microsoft.com/en-in/answers/questions/5962187/bing-webmaster-tools-shows-my-website-as-indexed-s), a Microsoft Q&A moderator, writing as a fellow user, suggested Bing may not yet have assigned enough trust or quality signals, especially on a new domain with few backlinks or mostly manufacturer-supplied content. The moderator added that support can see serving and indexing data that Webmaster Tools does not expose. The same answer relays a community tip: if an AI assistant loops you, ask explicitly for a human engineer. These are community answers, not Microsoft policy.
+
+While you wait, strengthening the page and the internal links pointing at it costs nothing.
 
 Google indexing a page tells you nothing about Bing. The engines run separate crawls, so a page can sit in one index and be missing from the other.
 
 ## What to Do This Week
 
-Verify or import the site, submit the sitemap, switch on IndexNow, then give the reports a few weeks of data before you draw conclusions. The tool earns its place as a free check that Bing can reach your pages and as Microsoft's own count of Copilot citations. AI Performance does not measure visits; Search Performance covers Bing clicks, and your analytics covers the rest.
+Verify or import the site, submit the sitemap, switch on IndexNow, then give the reports a few weeks of data before you draw conclusions. The tool earns its place as a free check that Bing can reach your pages and as Microsoft's own count of Copilot citations. For visits, use Search Performance and your analytics.
 
 One check comes before the report: can the crawlers reach you at all? Our free [robots.txt Tester](https://geotoolbox.ai/tools/robots-txt-tester) checks your paths against Bingbot, OAI-SearchBot, PerplexityBot and the other crawlers it lists, and shows the exact line that decided each verdict.
 
