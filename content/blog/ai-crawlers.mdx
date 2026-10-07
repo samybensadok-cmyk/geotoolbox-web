@@ -2,7 +2,7 @@
 title: "AI Crawlers: The List of AI Bots & How to Control Them"
 description: "AI crawlers fetch your pages for ChatGPT, Claude, Perplexity, and Google. The list of every major AI bot, what each does, and how to control it in robots.txt."
 date: "2026-06-07"
-updated: "2026-10-04"
+updated: "2026-10-07"
 author: "Samy BEN SADOK"
 tags: ["ai-crawlers", "robots-txt", "geo", "ai-visibility", "guide"]
 draft: false
@@ -185,11 +185,7 @@ The list is the easy part, though. The harder question is whether the bots you w
 
 ### Do I need a separate robots.txt rule for every AI bot?
 
-Yes, robots.txt has no wildcard for "all AI bots": each user-agent token needs its own block, which is why generated configs from the community trackers are worth using. A single Disallow under User-agent: * also hits Googlebot and Bingbot, the classic accidental-option-3 mistake.
-
-### Does blocking Google-Extended affect AI Overviews citations?
-
-No on both counts: it does not touch your Search ranking, and it does not remove you from AI Overviews either, because those are built from the regular Googlebot crawl. Google-Extended only governs Gemini training and grounding, so it is the one token you can block with no visibility cost in Google surfaces today.
+Yes, robots.txt has no wildcard for "all AI bots": each user-agent token needs its own block, which is why generated configs from the community trackers are worth using. A single Disallow under User-agent: * also hits Googlebot and Bingbot, the classic accidental-option-3 mistake. Our [Bing Webmaster Tools guide](https://geotoolbox.ai/blog/bing-webmaster-tools) covers how to check that Bing can still reach you.
 
 ### If I block GPTBot, am I out of ChatGPT?
 
@@ -199,17 +195,9 @@ No. GPTBot is the training crawler. ChatGPT's search answers come through OAI-Se
 
 For the major operators, yes, and you can verify it: their published IP ranges let you confirm in your server logs whether requests stopped after the change. If a blocked bot keeps appearing, check the IP before blaming the operator; it is usually a spoofer borrowing the name.
 
-### How do I stop Bytespider from draining my bandwidth?
-
-Because Bytespider often ignores robots.txt, the reliable fix is a firewall or WAF rule that blocks its user agent or IP ranges, not a Disallow line. Verify the IP rather than trusting the user-agent string, since the name is easy to fake.
-
 ### Which exact user agent does each AI engine use?
 
 The full strings carry version and contact info beyond the token, for example "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatible; GPTBot/1.2; +https://openai.com/gptbot". For robots.txt you only need the token (GPTBot, OAI-SearchBot, Claude-SearchBot, and so on per the table above); for log analysis, match on the token plus the operator's published IP ranges.
-
-### Can I block AI agents like ChatGPT Agent or Google-Agent in robots.txt?
-
-Mostly no. Google-Agent generally ignores robots.txt, and ChatGPT Agent does not send a distinct, blockable user-agent string in the first place; it verifies itself with a signed HTTP header instead. Chromium-based agentic browsers and modes like Perplexity Comet and ChatGPT's agent mode often cannot be identified at all. Robots.txt is not the lever for any of this; a network-level control, Cloudflare's Agent category or a WAF rule, is what actually reaches it.
 
 ## Where to Start
 

@@ -2,7 +2,7 @@
 title: "Rastreadores de IA: la lista de bots y cómo controlarlos"
 description: "Los rastreadores de IA leen tus páginas para ChatGPT, Claude, Perplexity y Google. La lista de cada bot, qué hace y cómo controlarlo en tu robots.txt."
 date: "2026-08-11"
-updated: "2026-10-04"
+updated: "2026-10-07"
 author: "Samy BEN SADOK"
 tags: ["ai-crawlers", "rastreadores-de-ia", "robots-txt", "geo", "ai-visibility", "guide"]
 draft: false
@@ -202,10 +202,6 @@ La lista es lo fácil, de todos modos. La pregunta más difícil es si los bots 
 
 Sí, robots.txt no tiene un comodín para «todos los bots de IA»: cada token de agente de usuario necesita su propio bloque, por eso vale la pena usar las configuraciones generadas por las listas comunitarias. Un único Disallow bajo `User-agent: *` también afecta a Googlebot y a Bingbot, el clásico error de bloquearlo todo sin querer.
 
-### ¿Bloquear Google-Extended afecta a las citas en las Vistas creadas con IA?
-
-No, por partida doble: no toca tu posicionamiento en la Búsqueda ni te quita de las Vistas creadas con IA, porque estas se construyen a partir del rastreo normal de Googlebot. Google-Extended solo gobierna el entrenamiento y la fundamentación de Gemini: es el único token que puedes bloquear hoy sin ningún costo de visibilidad en las superficies de Google.
-
 ### Si bloqueo GPTBot, ¿me quedo fuera de ChatGPT?
 
 No. GPTBot es el rastreador de entrenamiento. Las respuestas de búsqueda de ChatGPT llegan por OAI-SearchBot y ChatGPT-User: bloquear GPTBot deja intacta tu visibilidad en las respuestas de búsqueda de ChatGPT. Un matiz: tu contenido puede estar ya en conjuntos de entrenamiento a través de CCBot, algo que bloquear GPTBot hoy no deshace.
@@ -214,17 +210,9 @@ No. GPTBot es el rastreador de entrenamiento. Las respuestas de búsqueda de Cha
 
 Con los grandes operadores, sí, y puedes verificarlo: sus rangos de IP publicados te permiten confirmar en los registros de tu servidor si las peticiones pararon tras el cambio. Si un bot bloqueado sigue apareciendo, comprueba la IP antes de culpar al operador: suele ser un suplantador que se apropia del nombre.
 
-### ¿Cómo detengo a Bytespider para que no me consuma el ancho de banda?
-
-Como Bytespider suele ignorar robots.txt, el arreglo efectivo es una regla de cortafuegos o WAF que bloquee su agente de usuario o sus rangos de IP, no una línea Disallow. Verifica la IP en vez de fiarte de la cadena del agente de usuario, ya que el nombre es fácil de falsificar.
-
 ### ¿Qué agente de usuario exacto usa cada motor de IA?
 
 Las cadenas completas llevan la versión y la información de contacto más allá del token, por ejemplo «Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatible; GPTBot/1.2; +https://openai.com/gptbot». Para robots.txt solo necesitas el token (GPTBot, OAI-SearchBot, Claude-SearchBot, etc., según la tabla de arriba); para el análisis de registros, cruza el token con los rangos de IP publicados por el operador.
-
-### ¿Puedo bloquear agentes de IA como ChatGPT Agent o Google-Agent en robots.txt?
-
-Casi nunca. Google-Agent por lo general ignora robots.txt, y ChatGPT Agent ni siquiera envía una cadena de agente de usuario propia y bloqueable: se verifica con una cabecera HTTP firmada en su lugar. Navegadores y modos agénticos basados en Chromium como Perplexity Comet o el modo agente de ChatGPT a menudo ni siquiera se pueden identificar. Robots.txt no es la palanca para nada de esto; lo que de verdad llega ahí es un control a nivel de red, la categoría Agente de Cloudflare o una regla de WAF.
 
 ## Por dónde empezar
 

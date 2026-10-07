@@ -2,7 +2,7 @@
 title: "What Is an XML Sitemap? Format, Limits, and How to Find One"
 description: "What an XML sitemap really is, which tags Google still uses in 2026, how to find and validate one, and whether it helps rankings or AI search."
 date: "2026-07-20"
-updated: "2026-10-04"  # field added 2026-08-18
+updated: "2026-10-07"  # field added 2026-08-18
 author: "Samy BEN SADOK"
 tags: ["sitemap", "xml-sitemap", "technical-seo", "robots-txt", "crawlers", "guide"]
 draft: false
@@ -144,7 +144,7 @@ There are two methods that still work, and you should use both. First, declare t
 
 If you have read an old tutorial, you may have seen a third method, "pinging" a special Google URL to announce an update. That is gone. Google [deprecated the sitemaps ping endpoint](https://developers.google.com/search/blog/2023/06/sitemaps-lastmod-ping) on June 26, 2023, and switched it off roughly six months later; requests to it now return a 404. Google's stated reason was that the unauthenticated pings were rarely useful and mostly generated spam. So do not wire a ping into your publishing pipeline, and if you have one, remove it.
 
-The replacement for "tell Google I changed something" is the ordinary path: keep an accurate `<lastmod>` and let Search Console and normal recrawling do the rest. Note that IndexNow, which Bing and some other engines support, is a separate mechanism that still exists; Google's ping going away does not affect it.
+The replacement for "tell Google I changed something" is the ordinary path: keep an accurate `<lastmod>` and let Search Console and normal recrawling do the rest. Note that IndexNow, which Bing and some other engines support, is a separate mechanism that still exists; Google's ping going away does not affect it. [Our Bing Webmaster Tools guide](https://geotoolbox.ai/blog/bing-webmaster-tools) shows how to set IndexNow up.
 
 ## Do Sitemaps Help Rankings or AI Search?
 
@@ -173,17 +173,9 @@ Automatically, whenever your content changes, which is what any CMS or sitemap p
 
 A sitemap lists page URLs. A sitemap index lists other sitemap files. Once a site passes 50,000 URLs (or 50MB), it must split its pages across multiple sitemaps and publish an index that points at all of them. In practice CMSs do this long before the limit, so most sites above a few hundred pages ship an index by default, which is why an extractor has to follow the children to give you the actual pages.
 
-### Can an XML sitemap be gzipped?
-
-Yes. Serving it as `.xml.gz` is common and sensible on large files. One caveat: the 50MB size limit applies to the uncompressed file, not the compressed `.gz`, so compression saves bandwidth but does not raise the ceiling. Note that a `.xml.gz` is a gzipped file, not a gzip-encoded HTTP response, which is why some browsers and tools show you binary junk instead of reading it.
-
 ### Does an XML sitemap help my site get cited by ChatGPT or Perplexity?
 
 Only indirectly, and less than people hope. A sitemap can help your pages get discovered and indexed, which is a precondition for being used in AI answers, but it is not a citation signal and no AI engine documents it as one. What decides whether an AI crawler can use your content is whether it is allowed to fetch the page and whether the page renders cleanly, which is a robots.txt and rendering matter, not a sitemap one.
-
-### What is the difference between an XML sitemap and an HTML sitemap?
-
-An XML sitemap is for machines: a structured URL list search engines read to discover pages. An HTML sitemap is a page for humans, a browsable directory of links. They solve different problems. Good internal linking usually does the HTML sitemap's job better; the XML sitemap is the one that matters for crawl discovery.
 
 ## The Bottom Line
 
