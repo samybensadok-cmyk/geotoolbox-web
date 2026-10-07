@@ -109,42 +109,36 @@ export default async function PricingPage({
       <JsonLd data={[breadcrumb, productSchema]} />
 
       <div className={styles.page}>
-      {/* Hero + cards */}
       <section className={styles.hero}>
         <div className={styles.heroCopy}>
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">{t("hero.eyebrow")}</p>
-          <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.25rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-            {t("hero.h1a")} <span className="text-accent-700">{t("hero.h1accent")}</span>
+          <p className={styles.eyebrow}>{t("hero.eyebrow")}</p>
+          <h1>
+            {t("hero.h1a")} <span>{t("hero.h1accent")}</span>
           </h1>
-          <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-gray-600">
-            {t("hero.sub")}
-          </p>
+          <p className={styles.sub}>{t("hero.sub")}</p>
         </div>
+      </section>
 
+      {/* Plans sit on their own light section so the toggles never straddle the
+          dark hero (the old fixed-height gradient cut through them). */}
+      <section className={styles.plans}>
         <div className={styles.cards}>
           <PricingCards copy={cardsCopy} locale={locale} creditsLabel={compareCopy.groups[0].rows[0].label} />
         </div>
 
         {/* Shared features follow the plan decision. */}
-        <div className="mx-auto mt-10 max-w-4xl">
-          <div className="rounded-2xl border border-accent-200 bg-accent-50/50 px-6 py-6 sm:px-10">
-            <p className="text-center font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-              {t("included.label")}
-            </p>
-            <ul className="mt-4 flex flex-wrap items-center justify-center gap-2">
-              {included.map((f) => (
-                <li
-                  key={f}
-                  className="flex items-center gap-1.5 rounded-full border border-accent-200 bg-white px-3.5 py-1.5 text-[13px] font-semibold text-gray-800 shadow-sm"
-                >
-                  <svg className="h-3.5 w-3.5 shrink-0 text-accent-600" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.2">
-                    <path d="M3 8.5 6.5 12 13 4.5" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                  {f}
-                </li>
-              ))}
-            </ul>
-          </div>
+        <div className={styles.included}>
+          <p className={styles.eyebrow}>{t("included.label")}</p>
+          <ul>
+            {included.map((f) => (
+              <li key={f}>
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden="true">
+                  <path d="M3 8.5 6.5 12 13 4.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                {f}
+              </li>
+            ))}
+          </ul>
         </div>
 
         {/* SG_PRICING_V2 2026-07-27: the Starter promo strip that used to sit here
@@ -152,26 +146,21 @@ export default async function PricingPage({
             `pricing.strip.*` keys were deleted from messages/*.json in v2.1. */}
       </section>
 
-      {/* How credits work — the make-or-break explainer */}
-      <section className="border-t border-gray-100 bg-accent-50/40 px-6 py-16">
-        <div className="mx-auto max-w-5xl">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-[clamp(1.4rem,2.6vw,2rem)] font-bold tracking-tight text-gray-900">
-              {t("credits.h2")}
-            </h2>
-            <p className="mt-3 text-[15px] leading-relaxed text-gray-700">
-              {t("credits.sub")}
-            </p>
-          </div>
-          <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-3">
-            {creditCards.map((c) => (
-              <div key={c.t} className="rounded-2xl border border-gray-200 bg-white p-6">
-                <h3 className="text-[15px] font-bold text-gray-900">{c.t}</h3>
-                <p className="mt-2 text-[13px] leading-relaxed text-gray-600">{c.d}</p>
-              </div>
-            ))}
-          </div>
+      {/* How credits work — the make-or-break explainer, as a compact row */}
+      <section className={styles.credits}>
+        <div className={styles.creditsHead}>
+          <h2>{t("credits.h2")}</h2>
+          <p>{t("credits.sub")}</p>
         </div>
+        <ol>
+          {creditCards.map((c, i) => (
+            <li key={c.t}>
+              <span aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+              <h3>{c.t}</h3>
+              <p>{c.d}</p>
+            </li>
+          ))}
+        </ol>
       </section>
 
       {/* Full comparison */}
@@ -179,38 +168,35 @@ export default async function PricingPage({
         <summary>{t("compare.h2")}<span aria-hidden="true">+</span></summary>
         <ComparisonTable copy={compareCopy} locale={locale} />
       </details>
-      <TryFreeBand copy={tryFreeCopy} />
 
       {/* Enterprise band */}
-      <section className="bg-gray-950 px-6 py-16">
-        <div className="mx-auto flex max-w-5xl flex-col items-start justify-between gap-6 lg:flex-row lg:items-center">
-          <div className="max-w-xl">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-400">{t("enterprise.eyebrow")}</p>
-            <h2 className="mt-2 text-2xl font-bold tracking-tight text-white">{t("enterprise.h2")}</h2>
-            <p className="mt-3 text-[15px] leading-relaxed text-gray-300">
-              {t("enterprise.body")}
-            </p>
-          </div>
-          <Link
-            href="https://calendly.com/samy-bensadok/30min-call"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex shrink-0 items-center justify-center rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-colors hover:bg-gray-100"
-          >
-            {t("enterprise.cta")}
-          </Link>
+      <section className={styles.enterprise}>
+        <div>
+          <p className={styles.eyebrow}>{t("enterprise.eyebrow")}</p>
+          <h2>{t("enterprise.h2")}</h2>
+          <p>{t("enterprise.body")}</p>
         </div>
+        <Link
+          href="https://calendly.com/samy-bensadok/30min-call"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={styles.enterpriseCta}
+        >
+          {t("enterprise.cta")} <span aria-hidden="true">↗</span>
+        </Link>
       </section>
 
-      <FeatureFaq items={faq} heading={t("faq.heading")} defaultOpenIndex={-1} />
+      <TryFreeBand copy={tryFreeCopy} />
+
+      <FeatureFaq items={faq} heading={t("faq.heading")} defaultOpenIndex={-1} compact />
 
       {/* Final CTA */}
-      <section className="border-t border-gray-100 bg-white px-6 py-20 text-center">
+      <section className={styles.final}>
         <div className="mx-auto max-w-2xl">
-          <h2 className="text-[clamp(1.6rem,3vw,2.5rem)] font-bold tracking-tight text-gray-900">
+          <h2>
             {t("finalCta.h2")}
           </h2>
-          <p className="mx-auto mt-4 max-w-lg text-[15px] leading-relaxed text-gray-600">
+          <p>
             {t("finalCta.body")}
           </p>
           <PromoSignupLink
@@ -219,7 +205,7 @@ export default async function PricingPage({
             // SG_PROMO_ORGANIC_V1: and carry the founding offer, so the page's LAST CTA does
             // not quietly drop the discount its cards just advertised.
             href={`${siteConfig.appSignupUrl}${currencyParam(locale)}`}
-            className="mt-8 inline-flex items-center justify-center rounded-full bg-accent-900 px-8 py-4 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25"
+            className={styles.finalCta}
           >
             {t("finalCta.cta")}
           </PromoSignupLink>

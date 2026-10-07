@@ -4,6 +4,7 @@ export function FeatureFaq({
   items,
   heading = "Frequently asked",
   defaultOpenIndex = 0,
+  compact = false,
 }: {
   items: FAQItem[]
   heading?: string
@@ -13,6 +14,12 @@ export function FeatureFaq({
    * payoff instead of a wall of collapsed rows.
    */
   defaultOpenIndex?: number
+  /**
+   * Divider list instead of stacked cards, with a left-aligned heading beside
+   * it on wide screens. Used by the service and pricing pages, where the FAQ
+   * follows the buying decision and should read as reference, not a feature.
+   */
+  compact?: boolean
 }) {
   if (items.length === 0) return null
 
@@ -30,9 +37,9 @@ export function FeatureFaq({
   }
 
   return (
-    <section className="border-t border-gray-100 bg-white px-6 py-20 sm:py-24">
-      <div className="mx-auto max-w-3xl">
-        <div className="mb-10 text-center">
+    <section className={compact ? "border-t border-gray-100 bg-white px-5 py-16 sm:px-7 sm:py-20" : "border-t border-gray-100 bg-white px-6 py-20 sm:py-24"}>
+      <div className={compact ? "mx-auto grid max-w-[1104px] gap-8 lg:grid-cols-[1fr_2fr] lg:gap-16" : "mx-auto max-w-3xl"}>
+        <div className={compact ? "" : "mb-10 text-center"}>
           <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
             FAQ
           </p>
@@ -41,19 +48,19 @@ export function FeatureFaq({
           </h2>
         </div>
 
-        <ul className="space-y-3">
+        <ul className={compact ? "border-t border-gray-200" : "space-y-3"}>
           {items.map((item, i) => (
             <li key={i}>
               <details
                 open={i === defaultOpenIndex}
-                className="group rounded-2xl border border-gray-200 bg-white p-6 transition-colors open:border-gray-300"
+                className={compact ? "group border-b border-gray-200 py-5" : "group rounded-2xl border border-gray-200 bg-white p-6 transition-colors open:border-gray-300"}
               >
                 <summary className="flex cursor-pointer list-none items-start justify-between gap-6 [&::-webkit-details-marker]:hidden">
                   <div className="flex items-start gap-4 min-w-0 flex-1">
                     <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700 mt-1 tabular-nums shrink-0">
                       {String(i + 1).padStart(2, "0")}
                     </span>
-                    <span className="text-[17px] font-semibold leading-snug tracking-tight text-gray-900">
+                    <span className={compact ? "text-[16px] font-medium leading-snug tracking-tight text-gray-900" : "text-[17px] font-semibold leading-snug tracking-tight text-gray-900"}>
                       {item.question}
                     </span>
                   </div>
@@ -66,7 +73,7 @@ export function FeatureFaq({
                     </svg>
                   </span>
                 </summary>
-                <div className="mt-4 pl-10 text-[15px] leading-relaxed text-gray-700">
+                <div className={compact ? "mt-3 pl-10 text-[14px] leading-relaxed text-gray-600" : "mt-4 pl-10 text-[15px] leading-relaxed text-gray-700"}>
                   {item.answer}
                 </div>
               </details>

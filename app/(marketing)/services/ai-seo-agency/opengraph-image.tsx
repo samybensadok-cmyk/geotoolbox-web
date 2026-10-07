@@ -11,7 +11,7 @@ export default function OGImage() {
 
   const stats = [
     { value: fmt(google.top10), label: "On Google's first page" },
-    { value: `~${fmt(aiCitations.total)}`, label: "AI citations (Bing WMT)" },
+    { value: `~${fmt(aiCitations.total)}`, label: "Bing AI appearances · 3 months" },
     { value: fmt(google.rankedKeywords), label: "Keywords in Google" },
     { value: `${weeksToResult} wks`, label: "From zero" },
   ]

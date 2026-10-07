@@ -13,7 +13,7 @@ export default function OGImage() {
     { value: fmt(contentCounts.totalArticles), label: "Articles written by one skill" },
     { value: fmt(google.rankedKeywords), label: "Keywords in Google" },
     { value: fmt(google.top10), label: "On Google's first page" },
-    { value: `~${fmt(aiCitations.total)}`, label: "Bing AI appearances · 30-day sample" },
+    { value: `~${fmt(aiCitations.total)}`, label: "Bing AI appearances · 3 months" },
   ]
 
   return new ImageResponse(

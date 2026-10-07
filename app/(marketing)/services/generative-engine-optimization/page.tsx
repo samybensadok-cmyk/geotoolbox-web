@@ -164,7 +164,7 @@ const addons = [
     price: "$450",
     unit: "per article",
     detail:
-      `The exact pipeline behind our own blog — ~${proofStats.aiCitations.total.toLocaleString("en-US")} AI-citation appearances in a trailing ${proofStats.aiCitations.windowDays}-day Bing sample. One revenue keyword per article: AI research depth (multi-engine fact panel, SERP and competitor analysis), human editorial gates on every claim. 48-hour minimum turnaround — the QA is not skippable — then tracked for 90 days.`,
+      `The exact pipeline behind our own blog — ~${proofStats.aiCitations.total.toLocaleString("en-US")} AI-citation appearances in Bing’s AI Performance sample over ${proofStats.aiCitations.windowLabel}. One revenue keyword per article: AI research depth (multi-engine fact panel, SERP and competitor analysis), human editorial gates on every claim. 48-hour minimum turnaround — the QA is not skippable — then tracked for 90 days.`,
     cta: { label: "Buy — $450", href: CHECKOUT_ARTICLE },
   },
   {

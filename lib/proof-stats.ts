@@ -21,14 +21,14 @@
  *    is configured (`source === "google+bing"`). Surfaces MUST label the figure
  *    from `source` — never hardcode "Google + Bing (combined)".
  *  - `aiCitations.total` → Bing Webmaster Tools "AI Performance" report. Total
- *    citation APPEARANCES over a trailing 30-day window across Microsoft Copilot
+ *    citation APPEARANCES over the report's 3-month view across Microsoft Copilot
  *    and partner AI assistants — a SAMPLE, NOT unique citations. NEVER attribute
  *    this number to ChatGPT / Perplexity / Google. MANUAL: that report has no
  *    public API (confirmed 2026-07-31; on Microsoft's backlog) — bump it by hand
  *    and update `aiCitations.asOf` at the same time.
  *  - `googleAiFeatures.impressions` → Google Search Console "Generative AI
  *    features" (Beta) report: appearances of our links INSIDE AI Overviews /
- *    AI Mode over a trailing 28 days. Google-side, Google-labelled — never
+ *    AI Mode over the report's 3-month view. Google-side, Google-labelled — never
  *    blended with the Bing sample and never called "citations". MANUAL: not
  *    exposed by the Search Console API (searchAppearance returns no AI rows,
  *    verified 2026-08-28).
@@ -57,14 +57,18 @@ export const proofStats = {
   monthly: generated.monthly,
 
   // Manual — Bing WMT "AI Performance" has no public API; bump by hand and
-  // update `asOf` here in the same edit.
+  // update `asOf` here in the same edit. Since 2026-10-07 this is the report's
+  // "3 M" view (operator call: the 3-month total, not the 30 D view). The
+  // window is stated on every surface via `windowLabel`; never call it trailing
+  // 30 days. 30 D on the same read was 92.4K (7 Sep – 4 Oct), avg 73 pages.
   aiCitations: {
-    total: 135700,
-    avgCitedPages: 49,
-    windowDays: 30,
+    total: 270800,
+    avgCitedPages: 48,
+    windowDays: 90,
+    windowLabel: "3 months (7 Jul – 4 Oct 2026)",
     source: "Microsoft Copilot and partners",
     sampled: true,
-    asOf: "08 Sep 2026",
+    asOf: "7 Oct 2026",
   },
   // Manual — Google Search Console "Generative AI features" (Beta) report:
   // impressions where a geotoolbox.ai link appeared INSIDE a Google AI answer
@@ -79,22 +83,23 @@ export const proofStats = {
   //     dimension returns no AI-feature rows for this property (verified
   //     2026-08-28), so the automation script cannot pick it up. Hand-read from
   //     the GSC UI; bump `asOf` in the same edit, like the Bing field.
-  //   - `prevImpressions` is the immediately preceding 28-day window, as shown
-  //     by the report's own Compare view — the growth multiple must be derived
-  //     from these two, never asserted separately.
+  //   - Since 2026-10-07 this is the report's "3 months" view (5 Jul – 4 Oct
+  //     2026). The report gives no comparable preceding 3-month figure, so no
+  //     growth multiple is published (the old 28-day `prevImpressions` is gone).
   googleAiFeatures: {
-    impressions: 129000,
-    prevImpressions: 7120,
-    windowDays: 31,
+    impressions: 597000,
+    windowDays: 92,
+    windowLabel: "3 months (5 Jul – 4 Oct 2026)",
     surfaces: "AI Overviews + AI Mode",
     source: "Google Search Console · Generative AI features (Beta)",
-    asOf: "08 Sep 2026",
+    asOf: "7 Oct 2026",
   },
   // Top buying-intent grounding query from Bing WMT "AI Performance" — an
   // appearance count in Bing's AI Performance report, NOT unique citations.
   topGroundingQuery: {
     query: "evaluate AI visibility tracking platforms",
-    appearances: 10400,
+    appearances: 13400,
+    windowLabel: "3 months (7 Jul – 4 Oct 2026)",
     source: "Bing WMT AI Performance",
   },
   // Manual — Google Analytics 4 Home card for geotoolbox.ai, "Last 30 days"

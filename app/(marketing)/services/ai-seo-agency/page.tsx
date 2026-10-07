@@ -151,7 +151,7 @@ const addons = [
     price: "$450",
     unit: "per article",
     detail:
-      `The exact pipeline behind our own blog — ~${proofStats.aiCitations.total.toLocaleString("en-US")} AI-citation appearances in a trailing ${proofStats.aiCitations.windowDays}-day Bing sample. One revenue keyword per article: AI research depth (multi-engine fact panel, SERP and competitor analysis), human editorial gates on every claim. 48-hour minimum turnaround — the QA is not skippable — then tracked for 90 days.`,
+      `The exact pipeline behind our own blog — ~${proofStats.aiCitations.total.toLocaleString("en-US")} AI-citation appearances in Bing’s AI Performance sample over ${proofStats.aiCitations.windowLabel}. One revenue keyword per article: AI research depth (multi-engine fact panel, SERP and competitor analysis), human editorial gates on every claim. 48-hour minimum turnaround — the QA is not skippable — then tracked for 90 days.`,
     cta: { label: "Buy — $450", href: CHECKOUT.article },
   },
   {
@@ -172,7 +172,7 @@ const faqs = [
   {
     question: "How long until results?",
     answer:
-      "Our own zero-authority domain took about 7 weeks to first meaningful citations. Your site has age and authority ours didn't; your market has competition ours didn't — plan on first tracked movement in 4–8 weeks, compounding after. What you get in week one: the baseline. If someone promises AI citations in days, ask to see their tracking.",
+      `Our own zero-authority domain took about ${proofStats.weeksToResult} weeks to first meaningful citations. Your site has age and authority ours didn't; your market has competition ours didn't — plan on first tracked movement in 4–8 weeks, compounding after. What you get in week one: the baseline. If someone promises AI citations in days, ask to see their tracking.`,
   },
   {
     question: "How do you measure it?",

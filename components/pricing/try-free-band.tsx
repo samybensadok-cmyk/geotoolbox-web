@@ -43,44 +43,44 @@ const REF = "ref=pricing-tryfree"
 
 export function TryFreeBand({ copy }: { copy: TryFreeCopy }) {
   return (
-    <section className="border-t border-gray-100 bg-white px-6 py-14">
-      <div className="mx-auto max-w-5xl">
-        <div className="mx-auto max-w-2xl text-center">
+    <section className="bg-white px-5 py-14 sm:px-7">
+      <div className="mx-auto grid max-w-[1104px] gap-8 lg:grid-cols-[1fr_2fr] lg:gap-16">
+        <div>
           <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
             {copy.eyebrow}
           </p>
-          <h2 className="mt-2 text-[clamp(1.4rem,2.6vw,2rem)] font-bold tracking-tight text-gray-900">
+          <h2 className="mt-2 text-[clamp(1.4rem,2.4vw,1.9rem)] font-semibold tracking-tight text-gray-900">
             {copy.h2}
           </h2>
-          <p className="mt-3 text-[15px] leading-relaxed text-gray-700">{copy.sub}</p>
+          <p className="mt-3 text-[14px] leading-relaxed text-gray-600">{copy.sub}</p>
+          <Link
+            href={`/tools?${REF}-all`}
+            prefetch={false}
+            className="mt-4 inline-block text-[14px] font-semibold text-accent-700 underline-offset-4 hover:text-accent-800 hover:underline"
+          >
+            {copy.all} →
+          </Link>
         </div>
 
-        <ul className="mt-9 grid grid-cols-1 gap-5 sm:grid-cols-3">
+        <ul className="border-t border-gray-200">
           {copy.tools.map((tool) => (
-            <li key={tool.slug}>
+            <li key={tool.slug} className="border-b border-gray-200">
               <Link
                 href={`/tools/${tool.slug}?${REF}-${tool.slug}`}
                 prefetch={false}
-                className="group flex h-full flex-col rounded-2xl border border-gray-200 bg-white p-6 no-underline transition-all duration-200 hover:border-accent-300 hover:shadow-lg hover:shadow-accent-900/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
+                className="group flex items-center justify-between gap-6 py-4 no-underline focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
               >
-                <h3 className="text-[15px] font-bold text-gray-900 group-hover:text-accent-800">
-                  {tool.name}
-                </h3>
-                <p className="mt-2 text-[13px] leading-relaxed text-gray-600">{tool.desc}</p>
+                <span className="min-w-0">
+                  <span className="block text-[15px] font-semibold text-gray-900 group-hover:text-accent-800">
+                    {tool.name}
+                  </span>
+                  <span className="mt-1 block text-[13px] leading-relaxed text-gray-600">{tool.desc}</span>
+                </span>
+                <span aria-hidden="true" className="shrink-0 text-[18px] text-accent-700 transition-transform group-hover:translate-x-1">→</span>
               </Link>
             </li>
           ))}
         </ul>
-
-        <p className="mt-7 text-center">
-          <Link
-            href={`/tools?${REF}-all`}
-            prefetch={false}
-            className="text-[14px] font-semibold text-accent-700 underline-offset-4 hover:text-accent-800 hover:underline"
-          >
-            {copy.all}
-          </Link>
-        </p>
       </div>
     </section>
   )

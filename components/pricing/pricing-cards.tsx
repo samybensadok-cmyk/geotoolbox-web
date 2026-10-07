@@ -125,6 +125,27 @@ const TRIAL_COPY: Record<string, { label: string; body: string }> = {
   nl: { label: "Wat is inbegrepen in de proefperiode?", body: "25% van de maandelijkse credits · {brands} merk(en) · maximaal 3 artikelen indien inbegrepen. Volledige limieten na de eerste betaling." },
 }
 
+// Card feature lists show the first few lines; the rest folds away so the
+// three cards stay scannable. Label only — every feature line still renders.
+const SHOW_ALL: Record<string, string> = {
+  en: "All features",
+  fr: "Toutes les fonctionnalités",
+  es: "Todas las funciones",
+  de: "Alle Funktionen",
+  nl: "Alle functies",
+}
+const VISIBLE_HIGHLIGHTS = 3
+// Highlight lines (by index — order is identical in every locale's messages)
+// that only restate a quota row already shown as a checkmark. They move to the
+// end so the visible lines are the plan's differentiators; nothing is dropped.
+const RESTATES_QUOTA: Record<string, number[]> = {
+  starter: [1, 2],
+  consultant: [1],
+  pro: [1],
+  scale: [0],
+  enterprise: [0],
+}
+
 const ORGANIC_VARIANT = "organic"
 
 const fill = (tpl: string, vars: Record<string, string>) =>
@@ -266,8 +287,8 @@ export function PricingCards({ copy, locale, creditsLabel = "Monthly credits" }:
 
   return (
     <div>
-      {/* Audience tabs — Brands & consultants / Agencies */}
-      <div className="mb-6 flex items-center justify-center">
+      {/* Audience tabs + billing toggle share one row (wrap on narrow screens) */}
+      <div className="flex flex-wrap items-center justify-center gap-3">
         <div
           role="group"
           aria-label={copy.segmentLabel ?? "Choose audience"}
@@ -293,10 +314,8 @@ export function PricingCards({ copy, locale, creditsLabel = "Monthly credits" }:
             </button>
           ))}
         </div>
-      </div>
 
-      {/* Billing toggle */}
-      <div className="flex items-center justify-center">
+        {/* Billing toggle */}
         <div
           role="group"
           aria-label={copy.billingLabel}
@@ -341,7 +360,7 @@ export function PricingCards({ copy, locale, creditsLabel = "Monthly credits" }:
       )}
 
       {/* Cards — both tabs render exactly three */}
-      <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:mx-auto lg:max-w-5xl">
+      <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:mx-auto lg:max-w-5xl">
         {visibleTiers.map((plan) => {
           const creditIndex = COMPARE_COLUMNS.findIndex(column => column.id === plan.id)
           // The comparison data has a retired free-tier cell at index zero.
@@ -352,7 +371,12 @@ export function PricingCards({ copy, locale, creditsLabel = "Monthly credits" }:
           const c = copy.plans[plan.id]
           const seg = segment === "agency" ? c.agency : undefined
           const tagline = seg?.tagline ?? c.tagline
-          const highlights = seg?.highlights ?? c.highlights
+          const rawHighlights = seg?.highlights ?? c.highlights
+          const restated = RESTATES_QUOTA[plan.id] ?? []
+          const highlights = [
+            ...rawHighlights.filter((_, i) => !restated.includes(i)),
+            ...rawHighlights.filter((_, i) => restated.includes(i)),
+          ]
           const inheritsFrom = plan.inheritsFrom[segment]
           const isFeatured = plan.featured?.includes(segment) ?? false
           const isExternal = plan.cta.href.startsWith("http")
@@ -375,7 +399,7 @@ export function PricingCards({ copy, locale, creditsLabel = "Monthly credits" }:
             <div
               key={plan.id}
               className={cn(
-                "relative flex flex-col rounded-xl border bg-white p-7",
+                "relative flex flex-col rounded-2xl border bg-white p-6 sm:p-7",
                 isFeatured
                   ? "border-accent-300 shadow-[0_20px_60px_-24px_rgba(13,148,136,0.45)]"
                   : "border-gray-200"
@@ -436,13 +460,13 @@ export function PricingCards({ copy, locale, creditsLabel = "Monthly credits" }:
                 <p className="mt-2 text-center text-[11px] leading-snug text-gray-500">{copy.trialNote}</p>
               )}
 
-              {hasTrial && <details className="mt-3 text-[11px] leading-relaxed text-gray-600">
-                <summary className="min-h-8 cursor-pointer font-semibold text-accent-800">{trialCopy.label}</summary>
+              {hasTrial && <details className="mt-1 text-center text-[11px] leading-relaxed text-gray-600">
+                <summary className="flex min-h-8 cursor-pointer list-none items-center justify-center gap-1.5 font-semibold text-accent-800 [&::-webkit-details-marker]:hidden">{trialCopy.label} <span aria-hidden="true" className="text-[13px] font-normal">+</span></summary>
                 <p className="mt-2">{fill(trialCopy.body, { brands: String(trialBrands) })}</p>
               </details>}
 
               {/* Quota block — same 4 rows, same order, every card */}
-              <ul className="mt-6 space-y-2 border-t border-gray-100 pt-5 text-[13px]">
+              <ul className="mt-5 space-y-2 border-t border-gray-100 pt-5 text-[13px]">
                 {Object.values(c.quotas).map((q, i) => (
                   <li key={i} className="flex items-center gap-2 text-gray-700">
                     <svg className="h-3.5 w-3.5 shrink-0 text-accent-600" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.2">
@@ -454,20 +478,36 @@ export function PricingCards({ copy, locale, creditsLabel = "Monthly credits" }:
               </ul>
 
               {/* Feature highlights */}
-              <div className="mt-5 border-t border-gray-100 pt-5">
+              <div className="mt-4 border-t border-gray-100 pt-4">
                 {inheritsFrom && (
                   <p className="mb-2 text-[12px] font-medium text-gray-500">
                     {fill(copy.everythingIn, { plan: inheritsFrom })}
                   </p>
                 )}
                 <ul className="space-y-1.5 text-[13px] text-gray-700">
-                  {highlights.map((h) => (
+                  {highlights.slice(0, VISIBLE_HIGHLIGHTS).map((h) => (
                     <li key={h} className="flex items-start gap-2">
                       <span aria-hidden="true" className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-accent-500" />
                       {h}
                     </li>
                   ))}
                 </ul>
+                {highlights.length > VISIBLE_HIGHLIGHTS && (
+                  <details className="group mt-2 text-[13px] text-gray-700">
+                    <summary className="flex min-h-9 cursor-pointer list-none items-center gap-1.5 font-semibold text-accent-800 [&::-webkit-details-marker]:hidden">
+                      {SHOW_ALL[locale] ?? SHOW_ALL.en} (+{highlights.length - VISIBLE_HIGHLIGHTS})
+                      <span aria-hidden="true" className="text-[15px] font-normal transition-transform group-open:rotate-45">+</span>
+                    </summary>
+                    <ul className="mt-1 space-y-1.5">
+                      {highlights.slice(VISIBLE_HIGHLIGHTS).map((h) => (
+                        <li key={h} className="flex items-start gap-2">
+                          <span aria-hidden="true" className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-accent-500" />
+                          {h}
+                        </li>
+                      ))}
+                    </ul>
+                  </details>
+                )}
               </div>
             </div>
           )

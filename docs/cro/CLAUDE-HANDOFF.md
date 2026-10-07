@@ -47,3 +47,21 @@ The user wants Claude to finish the work and update data with a fresh pull. No p
 
 Preview:
 https://geotoolbox-web-git-codex-ser-5503d9-samybensadok-2891s-projects.vercel.app/services/ai-seo-agency#results
+
+## Claude pass — 2026-10-07
+
+### Data refresh (all read 7 Oct 2026)
+| Figure | Value | Source | Window |
+| --- | --- | --- | --- |
+| Google queries ranked / top 10 / top 3 | 41,912 / 34,363 / 12,077 | `scripts/update-proof-stats.mjs` (Search Console API) | trailing 28 days |
+| Monthly chart | Sep 2026 complete: 42,034 queries | same | calendar months, Oct excluded until day 10 |
+| Bing AI appearances | 270.8K (avg 48 cited pages) | Bing WMT AI Performance, "3 M" view | 7 Jul – 4 Oct 2026 |
+| Google AI-answer impressions | 597K | Search Console "Generative AI features" (Beta), "3 months" view | 5 Jul – 4 Oct 2026 |
+| Top grounding query | "evaluate AI visibility tracking platforms", 13.4K | Bing WMT AI Performance, 3 M | 7 Jul – 4 Oct 2026 |
+
+Both AI figures now use the 3-month view (operator call). The 30-day Bing view on the same read was 92.4K (7 Sep – 4 Oct, avg 73 cited pages) — not published. No 3-month comparison period exists in the GSC report, so the old 28-day growth multiple (`prevImpressions`) was removed with the unused `proof-results.tsx`.
+
+### Design iteration
+- Services: proof strip in the hero (3 figures, each labeled with its window); delivery steps folded into the offer cards as "You get" lines, removing the separate steps band; "Is this a fit?" merged into a dark closing CTA with three promises; one + disclosure marker everywhere; compact divider-list FAQ.
+- Pricing: hero split from the plans (toggles no longer straddle the dark/light seam) and both toggles on one row; card feature lists lead with differentiators, quota restatements and overflow fold into "All features (+N)"; credits explainer as a numbered row; enterprise as an inset card; free tools as a list; compact FAQ; dark final CTA.
+- No prices, checkout routes, Calendly links, schema or `messages/*.json` strings changed. One new UI label map (`SHOW_ALL`, 5 locales) in `pricing-cards.tsx`.
