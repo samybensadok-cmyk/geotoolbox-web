@@ -5,6 +5,7 @@ import { bcp47, type Locale } from "@/i18n/routing"
 import { archiveLanguages, archivePosts, postsForTopic } from "@/lib/blog-archive"
 import { archivePath, pageCount, paginate, parseArchivePage } from "@/lib/blog-pagination"
 import { TOPICS, primaryTopic, topicBySlug, topicCounts } from "@/lib/blog-topics"
+import { heroImage } from "@/lib/blog-hero"
 import { siteConfig } from "@/lib/config"
 import { breadcrumbsSchema } from "@/lib/seo-schema"
 import { JsonLd } from "@/components/seo/json-ld"
@@ -77,7 +78,7 @@ export async function ArchivePage({ params }: ArchiveProps) {
       <section aria-labelledby="archive-posts">
         <h2 id="archive-posts" className={styles.sectionTitle}>{!topic && page === 1 ? ui("latest") : ui("articles")}</h2>
         <ArchiveGrid locale={locale} hero={!topic && page === 1} posts={posts.map((post) => ({
-          slug: post.slug, title: post.title, description: post.description, date: post.date, image: post.image,
+          slug: post.slug, title: post.title, description: post.description, date: post.date, cover: heroImage(post),
           topicLabel: topics(primaryTopic(post).slug), readTime: ui("readTime", { minutes: post.readingTime }),
         }))} />
       </section>
