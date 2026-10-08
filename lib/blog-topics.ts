@@ -15,14 +15,12 @@ import type { Post } from "./content"
 
 export type Topic = {
   slug: string
-  label: string
   tags: string[]
 }
 
 export const TOPICS: Topic[] = [
   {
     slug: "comparisons",
-    label: "Comparisons",
     tags: [
       "ai-comparison", "comparison", "comparisons", "agency-vs-software", "chinese-ai-models",
       "claude-vs-chatgpt", "claude-vs-gemini", "gemini-vs-chatgpt", "mistral-vs-chatgpt",
@@ -36,7 +34,6 @@ export const TOPICS: Topic[] = [
   },
   {
     slug: "how-ai-works",
-    label: "How AI Works",
     tags: [
       "transformer", "tokens", "tokenization", "vector-embeddings", "rag",
       "temperature", "ai-temperature", "llm-temperature", "sampling",
@@ -48,7 +45,6 @@ export const TOPICS: Topic[] = [
   },
   {
     slug: "crawlers-agents",
-    label: "Crawlers & Agents",
     tags: [
       "ai-crawlers", "gptbot", "robots-txt", "llms-txt", "sitemap", "xml-sitemap", "technical-seo", "bing-webmaster-tools", "indexnow",
       "agentic-ai", "ai-agents", "agent-ready-website", "agentic-browsing",
@@ -59,7 +55,6 @@ export const TOPICS: Topic[] = [
   },
   {
     slug: "tools-tracking",
-    label: "Tools & Tracking",
     tags: [
       "tools", "measurement", "metrics", "rank-tracking", "audit",
       "share-of-voice", "ai-citation", "ai-overviews", "reddit", "reddit-seo", "pricing", "review",
@@ -71,7 +66,6 @@ export const TOPICS: Topic[] = [
   },
   {
     slug: "ai-engines",
-    label: "AI Engines",
     tags: [
       "claude-fable-5-1", "fable-5-1",
       "chatgpt", "chatgpt-search", "gemini", "google-gemini", "gemini-ai", "gemini-gems", "gemini-seo", "gemini-omni",
@@ -96,7 +90,6 @@ export const TOPICS: Topic[] = [
     // universal "geo"/"ai-visibility"/"llm" tags so every post that did not
     // match a more specific topic lands here.
     slug: "geo-fundamentals",
-    label: "GEO Fundamentals",
     tags: [
       "aeo", "llmo", "llm-seo", "llm", "generative-ai", "eeat",
       "schema-markup", "structured-data", "technical-seo", "content-strategy",

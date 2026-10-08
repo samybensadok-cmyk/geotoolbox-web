@@ -1,3 +1,4 @@
+import { archiveRedirect } from "./lib/blog-archive-redirects"
 import createMiddleware from "next-intl/middleware"
 import { NextResponse, type NextRequest } from "next/server"
 import { routing } from "./i18n/routing"
@@ -197,6 +198,24 @@ export default function middleware(request: NextRequest) {
     // Left as a fallthrough into next-intl routing, which is what `/` needs.
   }
 
+  // Archive normalization precedes both locale routing and markdown negotiation.
+  const archive = archiveRedirect(new URL(request.url))
+  if (archive?.status === 308) return NextResponse.redirect(new URL(archive.location, request.url), 308)
+  if (archive?.status === 404) {
+    // Hand agents the markdown 404 and browsers the site's own 404 page: an empty
+    // body is a blank screen. `page/0` is never a valid archive page, so the app
+    // renders its not-found boundary with a real 404 status.
+    if (request.headers.get("accept")?.includes("text/markdown")) {
+      const res = NextResponse.rewrite(new URL("/404.md", request.url), { status: 404 })
+      res.headers.set("Vary", "Accept")
+      return res
+    }
+    const locale = /^\/(fr|es|de|nl)(?:\/|$)/.exec(new URL(request.url).pathname)?.[1] ?? "en"
+    const res = NextResponse.rewrite(new URL(`/${locale}/blog/page/0`, request.url), { status: 404 })
+    res.headers.set("X-Robots-Tag", "noindex")
+    return res
+  }
+
   const retired = retiredGlossaryResponse(request)
   if (retired) return retired
 
@@ -209,7 +228,7 @@ export default function middleware(request: NextRequest) {
   // (browsers never send text/markdown, so human traffic is unaffected).
   if (request.headers.get("accept")?.includes("text/markdown")) {
     const article = ARTICLE_PATH.exec(pathname)
-    if (article) {
+    if (article && !(article[2] === "blog" && ["search-index", "page", "topic"].includes(article[3]))) {
       return markdownRewrite(request, article[1] ?? "en", article[2], article[3])
     }
   }

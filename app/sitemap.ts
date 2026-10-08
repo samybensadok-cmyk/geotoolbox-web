@@ -3,6 +3,9 @@ import { getAllPosts } from "@/lib/content"
 import { siteConfig } from "@/lib/config"
 import { routing, bcp47, contentLocales } from "@/i18n/routing"
 import { alternatesFor } from "@/lib/i18n/siblings"
+import { archiveLanguages } from "@/lib/blog-archive"
+import { archivePath } from "@/lib/blog-pagination"
+import { TOPICS, topicCounts } from "@/lib/blog-topics"
 import { tools } from "@/lib/tools"
 
 // Localized MARKETING routes (mounted under app/[locale]/): one entry per
@@ -29,28 +32,22 @@ function marketingEntries(
 }
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  // One listing snapshot per locale; sibling-map caching remains independent.
+  const postsByLocale = new Map(routing.locales.map((locale) => [locale, getAllPosts(locale)]))
+  const countsByLocale = new Map(contentLocales.map((locale) => [locale, topicCounts(postsByLocale.get(locale) ?? [])]))
+  const hubEntries = [undefined, ...TOPICS.map((topic) => topic.slug)].flatMap((topic) => {
+    const languages = archiveLanguages(topic, postsByLocale)
+    return contentLocales.filter((locale) => topic
+      ? (countsByLocale.get(locale)?.[topic] ?? 0) > 0
+      : (postsByLocale.get(locale)?.length ?? 0) > 0).map((locale) => ({
+      url: `${siteConfig.url}${archivePath(locale, 1, topic)}`,
+      lastModified: new Date(), changeFrequency: "daily" as const, priority: topic ? 0.7 : 0.9,
+      alternates: { languages },
+    }))
+  })
   return [
     ...marketingEntries("", { changeFrequency: "weekly", priority: 1 }),
-    // Blog index per LIVE content locale — a wired locale (es) joins here
-    // automatically once it has posts, mirroring the blogIsLive() gate in
-    // app/[locale]/blog/page.tsx. Cross-referenced via hreflang alternates.
-    ...contentLocales
-      .filter((locale) => locale === "en" || getAllPosts(locale).length > 0)
-      .map((locale, _i, live) => ({
-        url: locale === "en" ? `${siteConfig.url}/blog` : `${siteConfig.url}/${locale}/blog`,
-        lastModified: new Date(),
-        changeFrequency: "daily" as const,
-        priority: 0.9,
-        alternates: {
-          languages: Object.fromEntries([
-            ...live.map((l) => [
-              bcp47[l],
-              l === "en" ? `${siteConfig.url}/blog` : `${siteConfig.url}/${l}/blog`,
-            ]),
-            ["x-default", `${siteConfig.url}/blog`],
-          ]),
-        },
-      })),
+    ...hubEntries,
     ...marketingEntries("/features", { changeFrequency: "weekly", priority: 0.9 }),
     ...marketingEntries("/pricing", { changeFrequency: "weekly", priority: 0.9 }),
     // 14 feature detail pages — localized under app/[locale]/features (2026-07-22).
@@ -131,7 +128,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // original EN entries (no `alternates` key), so the sitemap is
     // byte-identical until FR content lands.
     ...routing.locales.flatMap((locale) =>
-      getAllPosts(locale).map((post) => {
+      (postsByLocale.get(locale) ?? []).map((post) => {
         const alt = alternatesFor("blog", post.slug, locale)
         return {
           url: alt.canonical,
