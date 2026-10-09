@@ -1,9 +1,8 @@
 /**
  * Single source of truth for the free tools. Consumed by:
- *   - the Tools dropdown in the header (components/layout/header.tsx)
- *   - the Tools column in the footer (components/layout/footer.tsx)
+ *   - the Free tools band in the footer (components/layout/footer.tsx)
  *   - the /tools hub page (app/tools/page.tsx)
- * Add a new tool here once and it appears in all three.
+ * (Removed from the header nav 2026-10-09.) Add a new tool here once and it appears in both.
  */
 
 export interface ToolEntry {
@@ -11,7 +10,7 @@ export interface ToolEntry {
   name: string
   /** Full description for the /tools hub cards. */
   desc: string
-  /** Short one-liner for the header dropdown. */
+  /** Short one-liner (was the header dropdown; kept for reuse). */
   navDesc: string
 }
 

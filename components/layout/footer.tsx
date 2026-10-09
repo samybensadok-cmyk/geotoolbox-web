@@ -39,7 +39,7 @@ export function Footer({
           </div>
           <NewsletterSignup source="footer" compact copy={nlCopy} />
         </div>
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-6">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
           {/* Brand */}
           <div>
             <Link href={L("/")} className="flex items-center gap-2">
@@ -77,19 +77,6 @@ export function Footer({
             </ul>
           </div>
 
-          {/* Tools */}
-          <div>
-            <h2 className="text-xs font-semibold text-gray-900 uppercase tracking-wider">{footer?.tools ?? "Tools"}</h2>
-            <ul className="mt-3 space-y-2">
-              {tools.map((t) => (
-                <li key={t.slug}>
-                  <Link href={`/tools/${t.slug}`} className="text-sm text-gray-600 hover:text-gray-900 transition-colors">{t.name}</Link>
-                </li>
-              ))}
-              <li><Link href={L("/tools")} className="pt-2 inline-block text-sm font-semibold text-gray-900 hover:text-accent-700 transition-colors">{footer?.allTools ?? "All tools"} →</Link></li>
-            </ul>
-          </div>
-
           {/* Resources */}
           <div>
             <h2 className="text-xs font-semibold text-gray-900 uppercase tracking-wider">{footer?.resources ?? "Resources"}</h2>
@@ -122,7 +109,31 @@ export function Footer({
           </div>
         </div>
 
-        <div className="mt-10 border-t border-gray-200 pt-6 flex flex-col sm:flex-row items-center justify-between gap-2">
+        {/* Free tools band — moved out of the header nav (2026-10-09) so the top bar stays
+            product-only. One wrapping row of chips instead of a 10-row column; hrefs stay EN
+            (the tool pages have no localized routes). */}
+        <div className="mt-10 flex flex-col gap-4 border-t border-gray-200 pt-8 lg:flex-row lg:items-start lg:gap-10">
+          <div className="shrink-0 lg:w-48">
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-900">{nav?.freeTools ?? "Free tools"}</h2>
+            <Link href={L("/tools")} className="mt-1.5 inline-block text-sm font-semibold text-gray-900 transition-colors hover:text-accent-700">
+              {footer?.allTools ?? "All tools"} →
+            </Link>
+          </div>
+          <ul className="flex flex-wrap gap-2">
+            {tools.map((t) => (
+              <li key={t.slug}>
+                <Link
+                  href={`/tools/${t.slug}`}
+                  className="inline-flex items-center rounded-full border border-gray-200 bg-white px-3 py-1.5 text-[13px] text-gray-700 transition-colors hover:border-accent-300 hover:text-accent-700"
+                >
+                  {t.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="mt-8 border-t border-gray-200 pt-6 flex flex-col sm:flex-row items-center justify-between gap-2">
           <p className="text-xs text-gray-600">
             &copy; {new Date().getFullYear()} GEO Toolbox. {footer?.rights ?? "All rights reserved."}
           </p>
