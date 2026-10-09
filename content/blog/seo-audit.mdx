@@ -1,0 +1,397 @@
+---
+title: "SEO Audit: A 9-Step Checklist for Google and AI Search"
+description: "How to do an SEO audit in 2026: nine steps from crawling and AI crawler access to indexing and AI citations, plus how to prioritize fixes, cost and cadence."
+date: "2026-10-09"
+updated: "2026-10-09"
+recheckBy: "2026-10-18"  # matches registry card ai-fetchers-javascript-rendering (OpenAI rendering report); also re-check Cloudflare AI crawler presets and the GSC/Bing AI reports
+author: "Samy BEN SADOK"
+tags: ["seo-audit", "technical-seo", "seo", "checklist", "audit", "guide"]
+draft: false
+---
+
+An SEO audit tells you why search engines are not crawling, indexing or ranking the pages you care about, and what to fix first. In 2026 it also has to answer a newer question: can AI search engines like ChatGPT, Perplexity and Google's AI Overviews reach those pages and cite them?
+
+Most audits fail at the "what to fix first" part. A crawler produces hundreds of warnings, and nobody decides which ones matter. The fix is to audit in dependency order, from access to citation, and to rank every finding by business impact.
+
+## What Is an SEO Audit?
+
+An SEO audit is a structured review of whether search engines and AI engines can reach, crawl, index, rank and cite your pages, and of what is stopping them. It spans technical SEO, on-page SEO, content, links and, now, AI visibility.
+
+A technical SEO audit is the narrower version that covers only crawling, indexing, rendering and performance. Either way, the output is a ranked fix list tied to a business goal rather than a health score.
+
+Some audits people pay for are little more than a crawler export with a logo on it. A real audit uses a tool to find candidates, then uses judgment to decide which ones are costing you traffic.
+
+Most audits cover the same layers, and some of them now concern AI engines rather than Google alone.
+
+<table>
+<thead>
+<tr><th>Layer</th><th>What you check</th><th>Free tool to start with</th><th>Red flag</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Crawl and index</strong></td><td>Status codes, robots.txt, XML sitemap, canonicals, indexing status</td><td>Google Search Console, a desktop crawler</td><td>Important templates in "not indexed" statuses</td></tr>
+<tr><td><strong>AI crawler access</strong></td><td>Which AI bots robots.txt and your CDN let through</td><td>Server or CDN logs, an AI crawler checker</td><td>Search bots for ChatGPT or Perplexity blocked by accident</td></tr>
+<tr><td><strong>Rendering</strong></td><td>Whether key text and links exist in the raw HTML</td><td>View source vs the rendered DOM</td><td>Body copy only appears after JavaScript runs</td></tr>
+<tr><td><strong>Performance</strong></td><td>Core Web Vitals from real users</td><td>PageSpeed Insights, the Core Web Vitals report</td><td>A template failing a Core Web Vital on mobile</td></tr>
+<tr><td><strong>On-page</strong></td><td>Title tags, meta descriptions, headings, structured data, snippet controls</td><td>A desktop crawler, the Rich Results Test</td><td>Duplicate titles across a whole template</td></tr>
+<tr><td><strong>Content</strong></td><td>Thin, duplicate, decaying and cannibalizing pages</td><td>Search Console performance data</td><td>Two pages with the same intent trading positions for one query</td></tr>
+<tr><td><strong>Links</strong></td><td>Internal links, orphan pages, backlinks vs competitors</td><td>A crawler, Search Console's Links report</td><td>Money pages with few internal links pointing at them</td></tr>
+<tr><td><strong>AI visibility</strong></td><td>Whether AI answers mention and cite you</td><td>A fixed prompt set, Search Console's AI report</td><td>Competitors cited for your core questions, you absent</td></tr>
+</tbody>
+</table>
+
+Of the 9 guides ranking in the top 30 for "seo audit" and related queries (US Google results, October 2026) that we read for this article, none covered AI crawler access, and only one touched AI Overviews. [AI visibility](https://geotoolbox.ai/blog/what-is-ai-visibility) is measured differently from rankings, so it needs its own step rather than a footnote in the technical section.
+
+## Before You Start: Scope the SEO Audit
+
+Start from a goal and a symptom rather than a crawl. "Find SEO issues" produces a spreadsheet nobody finishes. "Find out why product pages lost half their impressions in August" produces a short list of causes you can test.
+
+Search Console usually tells you which symptom you have:
+
+- **Impressions without clicks:** check position and query mix first, then snippet, intent or AI Overview changes
+- **Pages dropping out of the index:** an indexing or canonical problem
+- **A sudden sitewide drop in organic traffic:** an update, a technical failure or a manual action, depending on the date
+
+For that last case, Google's own guide to [debugging Search traffic drops](https://developers.google.com/search/docs/monitor-debug/debugging-search-traffic-drops) separates algorithmic updates from technical issues, manual actions and seasonality. Overlay the drop date on its list of ranking updates and open the Manual Actions report in Search Console before anything else. That order can save days of fixing the wrong thing.
+
+The free stack below covers most of an audit:
+
+1. Google Search Console for indexing, performance and the generative AI report
+2. Bing Webmaster Tools for Bing, Copilot citations and a second index to compare against (our [Bing Webmaster Tools guide](https://geotoolbox.ai/blog/bing-webmaster-tools) covers setup)
+3. PageSpeed Insights for Core Web Vitals field data
+4. A desktop crawler: the [Screaming Frog SEO Spider](https://www.screamingfrog.co.uk/seo-spider/) crawls 500 URLs for free, though JavaScript rendering is a paid-license feature
+
+Paid crawlers and backlink tools add scale and history; the questions stay the same. For more options, our list of [free SEO tools](https://geotoolbox.ai/blog/best-free-seo-tools) sorts them by job.
+
+Local businesses should add one more check: the Google Business Profile, plus name, address and phone consistency across directories, since map pack visibility is a separate system from organic rankings.
+
+## How to Do an SEO Audit in 9 Steps
+
+Use these 9 steps as your SEO audit checklist, in dependency order. A page has to be fetched before it can be rendered, rendered before Google indexes it, and indexed before it can rank or be cited as a supporting link. Google's own [JavaScript SEO basics](https://developers.google.com/search/docs/crawling-indexing/javascript/javascript-seo-basics) describe the same sequence: crawling, rendering, indexing.
+
+<figure>
+  <BlogImage src="/blog/seo-audit/seo-audit-order-flow.png" alt="The order of an SEO audit: reach, render, index, rank, then cited by AI answers." w="1200" h="683" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Audit in dependency order, so each fix unblocks the next stage.</figcaption>
+</figure>
+
+### Step 1: Crawl the Site and Sample by Template
+
+Start with a sample. On a site built from templates, one page per template finds most structural issues faster than a full crawl: one category page, one product page, one blog post, one location page. If the template is broken, every page built on it is broken.
+
+Next, crawl the whole site to measure how far each problem spreads. Use a smartphone user agent, since [Google indexes the mobile version](https://developers.google.com/search/docs/crawling-indexing/mobile/mobile-sites-mobile-first-indexing) of your content, respect robots.txt and turn on JavaScript rendering if the site depends on it. Then compare these lists of URLs:
+
+- What the crawler found by following links
+- What your [XML sitemap](https://geotoolbox.ai/blog/xml-sitemap) says should exist
+- A sample of what Search Console reports as indexed (its example lists stop at 1,000 URLs, so confirm key URLs with URL Inspection)
+
+The gaps between them are your first findings. URLs in the sitemap that the crawler never reached are candidate orphan pages, or links your crawler could not follow. URLs the crawler found that are missing from the sitemap need a decision: add the canonical pages you want indexed, and redirect only paths that genuinely moved.
+
+Record the basics per template: 4xx and 5xx responses, redirect chains longer than one hop, and click depth to your money pages. Confirm that the http, https, www and non-www versions of the homepage all redirect to the single HTTPS version you want indexed.
+
+Search Console's [Crawl Stats report](https://support.google.com/webmasters/answer/9679690) shows the responses Googlebot actually received and whether Google had host availability problems, which catches server or firewall errors your own crawler never sees.
+
+### Step 2: Check Whether AI Crawlers Can Reach the Site
+
+AI companies run separate bots for search and for model training, and a robots.txt written to block "AI" often blocks the bot that would have cited you. One line here can take you out of an engine's search answers.
+
+Check robots.txt group by group for these tokens. The full list, including user-triggered fetchers, is in our [AI crawlers guide](https://geotoolbox.ai/blog/ai-crawlers).
+
+<table>
+<thead>
+<tr><th>Token</th><th>Company</th><th>What it does</th><th>If you block it</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Googlebot</strong></td><td>Google</td><td>Crawls for Search, including AI Overviews and AI Mode</td><td>Your pages stop being crawled for Google Search, AI features included</td></tr>
+<tr><td><strong>Google-Extended</strong></td><td>Google</td><td>A <a href="https://developers.google.com/crawling/docs/crawlers-fetchers/google-common-crawlers">control token</a> for Gemini training and grounding, not a separate crawler</td><td>No effect on Google Search; opts out of Gemini training and of grounding in Gemini Apps and Vertex AI</td></tr>
+<tr><td><strong>Bingbot</strong></td><td>Microsoft</td><td>Crawls for Bing, which <a href="https://www.bing.com/webmasters/help/webmaster-guidelines-30fba23a">Copilot search shares</a></td><td>Bing stops crawling your pages, which can cut your Bing and Copilot search visibility</td></tr>
+<tr><td><strong>OAI-SearchBot</strong></td><td>OpenAI</td><td><a href="https://developers.openai.com/api/docs/bots">Surfaces sites</a> in ChatGPT search results</td><td>You drop out of ChatGPT search answers, though you can still appear as a navigational link</td></tr>
+<tr><td><strong>GPTBot</strong></td><td>OpenAI</td><td>Collects content for training OpenAI's models</td><td>Training opt-out only; search is set separately</td></tr>
+<tr><td><strong>Claude-SearchBot</strong></td><td>Anthropic</td><td><a href="https://support.claude.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler">Improves Claude's search results</a></td><td>Can reduce your visibility in Claude's search answers</td></tr>
+<tr><td><strong>PerplexityBot</strong></td><td>Perplexity</td><td><a href="https://docs.perplexity.ai/docs/resources/perplexity-crawlers">Surfaces and links sites</a> in Perplexity results, not used for model training</td><td>You can drop out of Perplexity search results</td></tr>
+</tbody>
+</table>
+
+Google's crawler documentation is explicit that Google-Extended "does not impact a site's inclusion" in Google Search, so blocking it to stay out of AI Overviews does not work (Step 6 covers the setting that does). OpenAI treats OAI-SearchBot and GPTBot as independent settings, and Anthropic separates Claude-SearchBot from ClaudeBot, its training crawler.
+
+Next, check the layer robots.txt cannot see. A CDN or firewall can block a bot your robots.txt allows. Cloudflare now sorts AI bots into [Search, Agent and Training classes](https://developers.cloudflare.com/bots/additional-configurations/block-ai-bots/), and since its [September 15, 2026 update](https://blog.cloudflare.com/accountable-mixed-use-ai-crawlers/) both "Block" and "Block on pages with ads" apply to mixed-use crawlers such as Googlebot, Bingbot and Applebot, search included.
+
+The setting that refuses training while keeping search is "Disallow AI Training", which Cloudflare now offers new ad-supported domains at onboarding, alongside blocking agents on pages with ads. Cloudflare says existing Training blocks migrate to it. Microsoft is targeting early 2027 for Bing to honor that preference through robots.txt, according to the same post.
+
+Read the status codes the bots actually received. Filter server or CDN logs by user agent, then confirm the requests came from each vendor's published IP ranges, since user agents are easy to fake.
+
+<figure>
+  <BlogImage src="/blog/seo-audit/ai-crawler-checker-result.png" alt="AI Crawler Checker report showing which AI crawlers nytimes.com blocks in robots.txt." w="960" h="1114" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">An AI Crawler Checker run on nytimes.com: the search bots for ChatGPT, Claude and Perplexity are blocked as well as the training crawlers.</figcaption>
+</figure>
+
+For a quick first pass, geotoolbox's free [AI Crawler Checker](https://geotoolbox.ai/tools/ai-crawler-checker) reads your robots.txt for 34 crawler user agents, from AI-specific bots to the search crawlers that feed AI answers, and shows the exact blocking line.
+
+It checks the homepage path only, so test each template path by hand, and it reads robots.txt permission rather than what your CDN serves. Our [GPTBot guide](https://geotoolbox.ai/blog/gptbot) covers the GPTBot allow-or-block decision. An llms.txt file is optional and is not an access control; it never replaces crawlable HTML, as our [llms.txt guide](https://geotoolbox.ai/blog/llms-txt) explains.
+
+### Step 3: Compare Raw HTML with the Rendered Page
+
+Google renders JavaScript before it indexes a page, so content built by scripts can still rank. Many AI assistants do not render. When [Search Engine World tested](https://www.searchengineworld.com/do-ai-assistants-actually-render-your-javascript-when-grounding-we-put-it-to-the-test) pasted URLs, ChatGPT, Claude and Gemini reported only the raw HTML.
+
+The evidence is moving, and our [JavaScript SEO guide](https://geotoolbox.ai/blog/javascript-seo) tracks it bot by bot. One developer's [server log](https://dev.to/hisashispace/traffic-from-chatgpt-jumped-is-it-because-its-crawlers-now-run-javascript-5961) reports OpenAI's crawlers starting to render on September 25, 2026, which OpenAI has not confirmed.
+
+Treat the raw HTML as what an AI assistant outside Google's AI Overviews and AI Mode may see. Open the page source once per template and search for:
+
+- The main body text and the H1
+- The canonical tag and meta robots tag
+- Internal links to your important pages
+- Prices, specs or other facts you want quoted
+
+If any of them appear only in the rendered DOM, that template depends on JavaScript for content an AI answer needs. URL Inspection's live test in Search Console covers the Google half, as Step 4 shows.
+
+The fix is the same whichever bots render: server-side rendering, static generation or prerendering for the content that matters. The JavaScript SEO guide has the bot-by-bot evidence and dates.
+
+### Step 4: Check Indexing in Google Search Console
+
+Open the Page indexing report and read the reasons behind the totals. Almost every site has URLs that are not indexed, and many of them should not be. The question is whether a template you need sits in a status you did not intend.
+
+<figure>
+  <BlogImage src="/blog/seo-audit/search-console-page-indexing-report.png" alt="Search Console Page indexing report listing the reasons pages on geotoolbox.ai are not indexed." w="960" h="720" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Our own geotoolbox.ai property: Crawled - currently not indexed is the largest bucket, so the next question is which templates those URLs belong to.</figcaption>
+</figure>
+
+Google's [Page indexing report documentation](https://support.google.com/webmasters/answer/7440203) defines each status. The ones that most often hide real problems:
+
+- **Crawled - currently not indexed:** Google fetched the page and chose not to index it. Google says it "may or may not be indexed in the future," with no need to resubmit, so resubmitting is not the fix. A whole template here is worth investigating: check crawl dates, rendered content and canonical selection before you assume a quality or duplication problem.
+- **Discovered - currently not indexed:** Google knows the URL but postponed the crawl, typically because crawling it then was expected to overload the site. On large sites this points at crawl budget, server speed or too many low-value URLs.
+- **Duplicate, Google chose different canonical than user:** your canonical tag says one thing, Google indexed another. This is the canonical status most worth investigating.
+- **Excluded by 'noindex' tag:** fine on utility pages, a disaster on category pages after a staging deploy.
+
+Some other statuses are expected when they are intentional. "Alternate page with proper canonical tag" means an alternate URL points to an indexed canonical, and "Page with redirect" means the old URL redirects, so check that the destinations are right and move on.
+
+Server errors, robots.txt blocks and redirect errors are never in that group. Our [canonical tags guide](https://geotoolbox.ai/blog/canonical-tags) walks through the duplicate statuses in detail.
+
+Use [URL Inspection](https://support.google.com/webmasters/answer/9012289) on one example per problem status. The indexed result shows the canonical Google selected, and the live test shows the rendered HTML, which turns a vague status into a concrete cause.
+
+On sites with several languages, check that hreflang tags point to each other in both directions, and that the mobile version carries the same content and structured data as desktop.
+
+Repeat the pass in Bing Webmaster Tools. Bing's webmaster guidelines say Bing and Copilot search experiences "rely on the same core crawling, indexing, and ranking foundation," so a page Google indexes but Bing does not is also at risk of missing from Copilot's search answers.
+
+### Step 5: Check Core Web Vitals with Field Data
+
+Audit Core Web Vitals from real-user field data. The thresholds Google publishes on [web.dev](https://web.dev/articles/vitals) are **Largest Contentful Paint (LCP) within 2.5 seconds**, **Interaction to Next Paint (INP) of 200 milliseconds or less** and **Cumulative Layout Shift (CLS) of 0.1 or less**, measured at the 75th percentile of page loads.
+
+<figure>
+  <BlogImage src="/blog/seo-audit/pagespeed-insights-core-web-vitals-field-data.png" alt="PageSpeed Insights field data on mobile, with LCP and INP good and CLS needing improvement." w="960" h="570" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">PageSpeed Insights field data on mobile for Wikipedia's search engine optimization article: LCP and INP are good, CLS of 0.17 needs improvement, so the page fails the Core Web Vitals assessment.</figcaption>
+</figure>
+
+PageSpeed Insights shows that field data at the top of the report when Chrome has enough traffic for the URL or origin. The Core Web Vitals report in Search Console groups the same data by similar URLs, which maps neatly onto templates. A single lab score tells you less than "the product template fails INP on mobile."
+
+Some items in older audit checklists no longer apply:
+
+- **First Input Delay is gone.** INP [replaced FID as a Core Web Vital](https://developers.google.com/search/blog/2023/05/introducing-inp) in March 2024. An audit that still reports FID is reading a retired metric.
+- **The Mobile-Friendly Test is gone too.** Google [retired the Mobile-Friendly Test](https://developers.google.com/search/blog/2016/05/a-new-mobile-friendly-testing-tool) and the Mobile Usability report on December 1, 2023. Check mobile rendering with Lighthouse or a real device instead.
+
+Keep page speed in proportion: fixing a slow page will not rescue one Google has not indexed.
+
+### Step 6: Audit On-Page Elements and Snippet Controls
+
+On-page checks tend to produce the longest lists and the smallest wins, so audit them by template. A missing title on one blog post is a typo. A product template that writes the same title tag on thousands of pages is a finding.
+
+Check, per template:
+
+- **Title tags:** unique, descriptive, with the term people search near the front
+- **Meta descriptions:** present and specific, even though Google often rewrites the snippet
+- **Headings:** one clear H1 that matches the page's purpose
+- **Structured data:** valid in the Rich Results Test and matching what is visible on the page
+- **Image alt text:** descriptive on images that carry meaning, and an empty alt="" on decorative ones
+
+Snippet controls now reach further than they used to. Google's [robots meta tag documentation](https://developers.google.com/search/docs/crawling-indexing/robots-meta-tag) says `nosnippet` applies to AI Overviews and AI Mode and also stops the content from being used as a direct input for them.
+
+A `nosnippet` left on a template by an old legal review can keep those pages out of AI answers, and a tight `max-snippet` limits how much of the page they can use. The same goes for `data-nosnippet` wrapped around a whole content block.
+
+Search Console also has a [Search generative AI control](https://support.google.com/webmasters/answer/16908024) under Settings. It decides whether the property is included in AI Overviews, AI Mode and generative AI features in Google Discover, so confirm someone chose its current setting on purpose.
+
+All of this is fine when it is a decision. Our guide to [turning off AI Overviews](https://geotoolbox.ai/blog/how-to-turn-off-ai-overviews) covers when publishers choose to opt out. In an audit, the finding is a snippet control nobody remembers adding.
+
+Structured data deserves the same realism. It helps search engines read the page and qualifies it for rich results, but [schema markup for AI search](https://geotoolbox.ai/blog/schema-markup-for-ai) is not a citation switch. Check that it is accurate and matches the page; extra or unsupported markup will not earn citations on its own.
+
+### Step 7: Review Content Quality and Cannibalization
+
+Export Search Console performance data by page for the last 12 months and put it next to your crawl. Save that export: it is the baseline you will judge fixes against. Every indexable URL then gets one of five decisions: keep, update, consolidate, redirect or remove.
+
+The patterns that matter:
+
+- **Decay:** pages whose clicks fell steadily while the query demand did not; Search Console's date comparison, sorted by click difference, surfaces them quickly
+- **Keyword cannibalization:** two URLs with the same intent swapping positions for one query, so neither holds a spot
+- **Thin pages and duplicate content:** near-identical location, tag or filter pages that dilute the site, or one page reachable at several URLs
+
+Map each money page to the main query it should rank for, then compare your keywords with the sites that outrank you. Queries they rank for where you have no page are content gaps.
+
+Check trust signals while you are here. Google's [helpful content](https://developers.google.com/search/docs/fundamentals/creating-helpful-content) questions ask whether a page shows clear sourcing and background on the author or site, such as an author page or an About page. Those are the visible signals of experience, expertise, authoritativeness and trust (E-E-A-T).
+
+Prune with care. Removing a page that earns links or referral traffic without a redirect turns a weak page into a broken one. Merging overlapping posts into one stronger page, with a 301 from the loser, is usually the better move.
+
+### Step 8: Check Internal Links and Backlinks
+
+Start with internal links, the part you fully control. From the crawl, list orphan pages, broken internal links and any money page buried deep in the click path, and check that anchors describe the target page.
+
+For backlinks, compare your referring domains against the handful of sites that outrank you, and list valuable links you lost. That gap is one hypothesis for a ranking ceiling, to weigh after relevance and technical eligibility. Also check whether any of your 404 URLs still have backlinks: restore the content, or redirect to a page that genuinely replaces it.
+
+Treat "toxic link" scores as a vendor's triage estimate, not a Google verdict. Google's [disavow documentation](https://support.google.com/webmasters/answer/2648487) frames the tool around a manual action for unnatural links, or the risk of one from paid links and link schemes.
+
+It calls disavow an advanced feature that can harm your site's performance if used incorrectly. No manual action and no paid-link history usually means no disavow file.
+
+### Step 9: Check Whether AI Answers Cite You
+
+The last step measures the outcome every earlier step protects. Write a fixed set of a few dozen prompts your buyers would actually ask, then run them in Google AI Overviews and AI Mode, ChatGPT, Perplexity, Gemini and Copilot.
+
+Record the engine, date and location for each run, and repeat the set on different days, since answers vary. Record separately whether you are **mentioned** and whether a page of yours is **cited** as a source.
+
+Two first-party reports now help:
+
+- Search Console's [generative AI performance report](https://support.google.com/webmasters/answer/16984139), shown as Generative AI features (still labelled Beta) under Search results, counts impressions from AI Overviews and AI Mode. Google says it rolled out to all websites as of August 31, 2026.
+- Bing Webmaster Tools' [AI Performance report](https://blogs.bing.com/webmaster/2026/2/Introducing-AI-Performance-in-Bing-Webmaster-Tools-Public-Preview/), launched as a public preview in February 2026, counts how often Microsoft Copilot, AI summaries in Bing and partner integrations cite your pages, and shows the grounding queries behind those citations.
+
+<figure>
+  <BlogImage src="/blog/seo-audit/search-console-generative-ai-report.png" alt="Search Console generative AI performance report for geotoolbox.ai showing impressions over three months." w="960" h="669" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Search Console's generative AI performance report for geotoolbox.ai, counting impressions from AI Overviews and AI Mode.</figcaption>
+</figure>
+
+<figure>
+  <BlogImage src="/blog/seo-audit/bing-webmaster-tools-ai-performance.png" alt="Bing Webmaster Tools AI Performance report with total citations and cited pages over three months." w="960" h="481" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Bing's AI Performance report for the same site: total citations and the average number of pages cited.</figcaption>
+</figure>
+
+Do not read AI referral visits in analytics as AI visibility. An answer can cite you and send nobody, or send clicks to a competitor you were listed beside. Be equally careful with vendor visibility scores: check any score against answers you ran yourself.
+
+This step deserves its own method, and our [AI visibility audit](https://geotoolbox.ai/blog/ai-visibility-audit) walks through it. For Google specifically, an [AI Overview tracker](https://geotoolbox.ai/blog/ai-overview-tracker) records whether you appear for your prompts over time, which is what turns a one-off check into a baseline.
+
+If you want this on a schedule, geotoolbox's paid tracker runs your prompt set across ChatGPT, Perplexity, Gemini, Claude, AI Overviews, AI Mode, Copilot and Grok, with the number of engines set by plan.
+
+## How to Prioritize What the Audit Finds
+
+A finding earns its place on the list from how much each affected page earns, how many pages share it, how sure you are it is the cause, and how much work it takes. Score each finding on each of those and sort.
+
+A simple version: **priority = impact per page × pages affected × confidence ÷ effort**, each scored 1 to 3. A noindex left on the category template, with every factor at 3 and effort at 1, scores 27 and gets fixed now.
+
+A tool's alt-text warning on decorative icons that already use an empty alt="" scores 1 × 3 × 1 ÷ 2, or 1.5, and gets left alone. The exact scale matters less than scoring every finding the same way, so the list stops being an argument.
+
+<figure>
+  <BlogImage src="/blog/seo-audit/seo-audit-prioritization-grid.png" alt="Scoring SEO audit findings by impact, pages affected, confidence and effort." w="1160" h="716" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">An illustrative scoring pass: one template bug becomes one row, and the score decides the tier.</figcaption>
+</figure>
+
+Group SEO audit findings by template before scoring. A missing canonical on thousands of URLs is usually one template bug and one ticket. Grouping turns a crawler export into a list a developer can finish.
+
+Most tools flag far more than matters, so separate the warnings that are usually real from the ones that are usually noise:
+
+<table>
+<thead>
+<tr><th>Usually a real problem</th><th>Usually noise</th></tr>
+</thead>
+<tbody>
+<tr><td>A money template returning 5xx or redirect loops</td><td>"Low word count" on short pages that answer the query (Google says it has no preferred word count)</td></tr>
+<tr><td><code>noindex</code> or a wrong canonical on pages that should rank</td><td><code>noindex</code> on cart, login, search and thank-you pages</td></tr>
+<tr><td>AI search bots blocked in robots.txt or at the CDN</td><td>Empty alt="" on decorative images</td></tr>
+<tr><td>Main content or links only present after JavaScript runs</td><td>HTML validation errors outside the <code>&lt;head&gt;</code> that do not break rendering</td></tr>
+<tr><td>A template failing Core Web Vitals in field data</td><td>A lab page speed score below an arbitrary target</td></tr>
+<tr><td>Two pages with the same intent competing for a high-value query</td><td>Meta descriptions a few characters over a tool's limit</td></tr>
+</tbody>
+</table>
+
+The "usually" matters: a noise item becomes real when it hits a page that earns money. One exception is worth knowing: Google says an [invalid element inside the head](https://developers.google.com/search/docs/crawling-indexing/valid-page-metadata) makes it ignore every element after it, canonical and robots tags included.
+
+Finally, cut the list into tiers: fix now, schedule and leave alone. The last tier is part of the deliverable too. Writing down what you chose to ignore, and why, stops the same warning coming back every quarter.
+
+## What an SEO Audit Report Should Include
+
+An SEO audit report exists to get fixes shipped, so write it for the people who approve and build them.
+
+<figure>
+  <BlogImage src="/blog/seo-audit/seo-audit-report-structure.png" alt="Four parts of an SEO audit report, from executive summary to appendix." w="1100" h="569" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Each part of the report is written for a different reader, from whoever approves to whoever checks.</figcaption>
+</figure>
+
+The report needs these parts:
+
+1. **Executive summary:** the goal, the handful of findings that matter most, and what fixing them should change
+2. **Ranked fix list:** each finding with its score, the template or URL pattern it affects, an owner and an effort estimate
+3. **Tickets:** for each fix, the expected behavior and how to verify it, for example "category pages return a self-referencing canonical; check with URL Inspection"
+4. **Appendix:** raw crawler and Search Console exports, the AI prompt set and its results, plus the "leave alone" list
+
+Add a validation date to every fix, the day you will re-check that it worked. If you report to clients every month, our [SEO report template](https://geotoolbox.ai/blog/seo-report-template) shows how to carry audit fixes into the monthly report so progress stays visible.
+
+## How Long Does an SEO Audit Take, and What Does It Cost?
+
+The crawl is the fast part. A small site crawls in minutes. The time goes into reading the data, checking causes and writing tickets, which takes days for a small site and weeks for a large one, a JavaScript-heavy build or a migration. Results take longer again: most fixes show up only after search engines recrawl the affected pages.
+
+SEO audit cost follows the same drivers: number of URLs and templates, rendering complexity, how many markets and languages, and whether the audit ends at findings or includes the implementation plan.
+
+The only audit-specific price data we found comes from an agency. WebFX [surveyed 250 US businesses](https://www.webfx.com/seo/pricing/how-much-does-seo-audit-cost/) and reports that **43%** paid $101 to $750 for an audit. For one-off SEO work in general, Ahrefs' [poll of 439 SEO service providers](https://ahrefs.com/blog/seo-pricing/) found that, of those pricing by project, **50.6%** charge $2,000 or less.
+
+Neither source is neutral, and the Ahrefs post, last updated on August 15, 2024, covers SEO projects in general rather than audits. Treat both as reference points.
+
+Cheaper audits can be fine. Ask for a sample report before you pay, and check that it reads your Search Console data and ranks the fixes.
+
+## How Often Should You Run an SEO Audit?
+
+Run a full SEO audit once a year, a light technical SEO check every month, and an unscheduled audit whenever the site changes underneath you. There is no official cadence, and site changes break more than the calendar does.
+
+The monthly check is short: Page indexing statuses for your key templates, Core Web Vitals, AI crawler status codes in the logs, and your AI prompt set. Anything that moved gets a closer look.
+
+Trigger a full audit after any of these:
+
+- A migration, domain change or redesign
+- A CMS, framework or hosting change
+- A sitewide traffic drop that does not line up with a Google update (Google's debugging guide says an update-related drop may not mean anything is wrong with your content)
+- New bot or firewall rules at your CDN
+
+For migrations, Google's [site move guide](https://developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes) asks you to prepare a URL mapping, redirect old URLs to new ones and monitor traffic on both. Run the audit before the move to create that map, and again after it to confirm the redirects held.
+
+## Frequently Asked Questions
+
+### Can ChatGPT do an SEO audit?
+
+Partly. ChatGPT can analyze exports you give it, explain a Search Console status or draft tickets from a findings list. It cannot crawl your site at scale or see your Search Console data unless you paste it in, so it supports an audit rather than replacing the crawler and first-party data.
+
+### What is the difference between an SEO audit and a site audit?
+
+"Site audit" or "website audit" usually means the automated crawl an SEO site audit tool runs: broken links, redirects, missing tags. An SEO audit includes that crawl but adds the judgment: indexing data from Search Console, content and link analysis, AI visibility and a prioritized plan tied to a goal.
+
+### Is SEO dead now with AI?
+
+No. Google's [guidance on AI features](https://developers.google.com/search/docs/appearance/ai-features) says a page must be indexed and eligible for a snippet to appear as a supporting link in AI Overviews or AI Mode, and other AI search engines mostly cite pages their own crawlers or a partner index can reach. The basics an audit checks are what keep a page eligible.
+
+## Where to Start
+
+If you only have an afternoon for an SEO audit, do Steps 2 and 4 first. They are quick eligibility checks: an indexing problem or a blocked crawler can quietly undo everything else, and both take minutes to spot. Choose the rest by the symptom you scoped.
+
+For a fast read on the permission layer, our free [AI Readiness check](https://geotoolbox.ai/tools/ai-readiness) fetches your robots.txt and sitemap server-side and scores five basics, including whether robots.txt lets AI crawlers in. It reads permission rather than what your CDN serves, so the log check in Step 2 still applies. Then come back to Search Console for the rest of the list.
+
+## Sources
+
+- Google Search Central - Debug drops in Google Search traffic (updated December 10, 2025) - `developers.google.com/search/docs/monitor-debug/debugging-search-traffic-drops`
+- Screaming Frog - SEO Spider (read October 9, 2026) - `www.screamingfrog.co.uk/seo-spider`
+- Google Search Central - Understand JavaScript SEO basics (updated March 4, 2026) - `developers.google.com/search/docs/crawling-indexing/javascript/javascript-seo-basics`
+- Google Search Central - Mobile site and mobile-first indexing best practices (updated December 10, 2025) - `developers.google.com/search/docs/crawling-indexing/mobile/mobile-sites-mobile-first-indexing`
+- Search Console Help - Crawl Stats report (read October 9, 2026) - `support.google.com/webmasters/answer/9679690`
+- Google Search Central - Google's common crawlers, Google-Extended (updated July 14, 2026) - `developers.google.com/crawling/docs/crawlers-fetchers/google-common-crawlers`
+- Microsoft Bing - Bing Webmaster Guidelines (read October 9, 2026) - `www.bing.com/webmasters/help/webmaster-guidelines-30fba23a`
+- OpenAI - Overview of OpenAI crawlers (read October 9, 2026) - `developers.openai.com/api/docs/bots`
+- Anthropic - Does Anthropic crawl data from the web, and how can site owners block the crawler? (read October 9, 2026) - `support.claude.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler`
+- Perplexity - Perplexity crawlers (read October 9, 2026) - `docs.perplexity.ai/docs/resources/perplexity-crawlers`
+- Cloudflare Docs - Block AI Bots, Search, Agent and Training classes (updated July 1, 2026) - `developers.cloudflare.com/bots/additional-configurations/block-ai-bots`
+- The Cloudflare Blog - Have it both ways: stay discoverable in search while disallowing AI training (September 15, 2026) - `blog.cloudflare.com/accountable-mixed-use-ai-crawlers`
+- Search Engine World - Do AI assistants actually render your JavaScript when grounding? We put it to the test (read October 9, 2026) - `www.searchengineworld.com/do-ai-assistants-actually-render-your-javascript-when-grounding-we-put-it-to-the-test`
+- DEV Community (hisashi) - Traffic from ChatGPT jumped! Is it because its crawlers now run JavaScript? (September 30, 2026) - `dev.to/hisashispace/traffic-from-chatgpt-jumped-is-it-because-its-crawlers-now-run-javascript-5961`
+- Search Console Help - Page indexing report (read October 9, 2026) - `support.google.com/webmasters/answer/7440203`
+- Search Console Help - URL Inspection tool (read October 9, 2026) - `support.google.com/webmasters/answer/9012289`
+- web.dev - Web Vitals (updated October 31, 2024) - `web.dev/articles/vitals`
+- Google Search Central Blog - Introducing INP to Core Web Vitals (May 2023; INP replaced FID in March 2024) - `developers.google.com/search/blog/2023/05/introducing-inp`
+- Google Search Central Blog - The Search Console mobile friendly testing tool (retired), update of December 1, 2023 - `developers.google.com/search/blog/2016/05/a-new-mobile-friendly-testing-tool`
+- Google Search Central - Robots meta tag, data-nosnippet, and X-Robots-Tag specifications (updated March 24, 2026) - `developers.google.com/search/docs/crawling-indexing/robots-meta-tag`
+- Search Console Help - Search generative AI control (read October 9, 2026) - `support.google.com/webmasters/answer/16908024`
+- Google Search Central - Creating helpful, reliable, people-first content (updated October 5, 2026) - `developers.google.com/search/docs/fundamentals/creating-helpful-content`
+- Search Console Help - Disavow links to your site (read October 9, 2026) - `support.google.com/webmasters/answer/2648487`
+- Search Console Help - Generative AI performance report (Search) (read October 9, 2026) - `support.google.com/webmasters/answer/16984139`
+- Bing Webmaster Blog - Introducing AI Performance in Bing Webmaster Tools, Public Preview (February 10, 2026) - `blogs.bing.com/webmaster/2026/2/Introducing-AI-Performance-in-Bing-Webmaster-Tools-Public-Preview`
+- Google Search Central - Use valid page metadata (updated December 10, 2025) - `developers.google.com/search/docs/crawling-indexing/valid-page-metadata`
+- WebFX - SEO Audit Pricing: How Much Does an SEO Audit Cost in 2026? (read October 9, 2026) - `www.webfx.com/seo/pricing/how-much-does-seo-audit-cost`
+- Ahrefs - SEO Pricing: How Much Does SEO Cost? 439 People Polled (updated August 15, 2024) - `ahrefs.com/blog/seo-pricing`
+- Google Search Central - Site moves with URL changes (updated August 20, 2026) - `developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes`
+- Google Search Central - AI features and your website (updated December 10, 2025) - `developers.google.com/search/docs/appearance/ai-features`
