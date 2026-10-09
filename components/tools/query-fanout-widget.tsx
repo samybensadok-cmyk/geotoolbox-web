@@ -14,7 +14,7 @@ import { ToolResultCapture } from "@/components/tools/tool-result-capture"
  *
  *   1. Gemini grounding call → candidates[0].groundingMetadata.webSearchQueries
  *      = the real sub-queries Gemini fanned out (kind "fired").
- *   2. Perplexity sonar (optional) → related_questions (kind "related").
+ *   2. Perplexity sonar-pro (optional) → related_questions (kind "related"; plain sonar stopped returning them, Oct 2026).
  *   3. Gemini structured-JSON call clusters the queries into intents and marks
  *      which engines share each (the cross-engine divergence map).
  *
@@ -109,7 +109,7 @@ async function perplexityFanout(key: string, seed: string): Promise<FanQuery[]> 
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
     body: JSON.stringify({
-      model: "sonar",
+      model: "sonar-pro",
       messages: [{ role: "user", content: seed }],
       return_related_questions: true,
       max_tokens: 400,
