@@ -31,7 +31,7 @@ export const PROMO = {
   deadline: "2026-09-15",
 } as const
 
-export type PromoLocale = "en" | "fr" | "es" | "de" | "nl"
+export type PromoLocale = "en" | "fr" | "es" | "de"
 
 /**
  * Discounted price, exact to the cent ($199 → 139.3, $948 → 663.6). Never round

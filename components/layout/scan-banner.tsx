@@ -28,7 +28,7 @@ const CAMPAIGN = "scan-2026-09"
 const LIVE = true
 const DISMISS_KEY = `scanBannerDismissed:${CAMPAIGN}`
 
-type Loc = "en" | "fr" | "es" | "de" | "nl"
+type Loc = "en" | "fr" | "es" | "de"
 // Copy promises only what the FREE result shows (SG_FIRSTRUN_GATE_V1): a visibility score and how
 // many AI engines mention you. No "no card" line (operator, 2026-09-22) — the result's next step is a
 // card-on-file trial, so the banner makes no claim about cards either way. WHICH engines, and who they name instead, are behind the card — so
@@ -38,7 +38,6 @@ const COPY: Record<Loc, { lead: string; body: string; cta: string; dismiss: stri
   fr: { lead: "Les IA vous recommandent-elles ?", body: "Obtenez gratuitement votre score de visibilité dans les IA : combien de moteurs d’IA citent votre site.", cta: "Obtenir mon score", dismiss: "Fermer" },
   es: { lead: "¿Te recomienda la IA?", body: "Consigue gratis tu puntuación de visibilidad en buscadores de IA: cuántos motores de IA mencionan tu sitio.", cta: "Ver mi puntuación", dismiss: "Cerrar" },
   de: { lead: "Empfiehlt KI Sie weiter?", body: "Holen Sie sich Ihren kostenlosen KI-Sichtbarkeits-Score: wie viele KI-Suchmaschinen Ihre Website nennen.", cta: "Score abrufen", dismiss: "Schließen" },
-  nl: { lead: "Raadt AI jou aan?", body: "Krijg gratis je AI-zichtbaarheidsscore: hoeveel AI-zoekmachines je site noemen.", cta: "Mijn score bekijken", dismiss: "Sluiten" },
 }
 
 // Dismissal lives in localStorage. Read through useSyncExternalStore so the server render and the
@@ -73,7 +72,7 @@ export function ScanBanner({ locale = "en" }: { locale?: string }) {
   const [closed, setClosed] = useState(false)   // this page view, even when storage is unavailable
   const dismissed = stored || closed
   const pathname = usePathname()
-  const loc: Loc = locale === "fr" || locale === "es" || locale === "de" || locale === "nl" ? locale : "en"
+  const loc: Loc = locale === "fr" || locale === "es" || locale === "de" ? locale : "en"
   const t = COPY[loc]
   const suppressed = isSuppressedPath(pathname)
   const promoLive = isPromoLive()

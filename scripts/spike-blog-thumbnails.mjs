@@ -8,10 +8,10 @@ const { renderBlogThumbnail } = await import("../lib/og/blog-thumbnail.ts")
 
 const output = process.argv[2]
 if (!output || !isAbsolute(output)) throw new Error("Supply an absolute output log path")
-const posts = ["en", "fr", "es", "de", "nl"].flatMap((locale) => getAllPosts(locale))
+const posts = ["en", "fr", "es", "de"].flatMap((locale) => getAllPosts(locale))
 const selected = []
 // Cover each available locale/cluster pair, then spread across the remaining posts.
-for (const locale of ["en", "fr", "es", "de", "nl"]) {
+for (const locale of ["en", "fr", "es", "de"]) {
   for (const cluster of ["comparison", "concept", "commercial", "default"]) {
     const post = posts.find((post) => post.locale === locale && classifyCluster(post) === cluster)
     if (post) selected.push(post)

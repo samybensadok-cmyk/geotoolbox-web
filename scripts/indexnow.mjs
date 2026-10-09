@@ -47,7 +47,7 @@ function allUrls() {
       if (entry.isDirectory()) urls.push(`${BASE}/${dir.replace("app/", "")}/${entry.name}`)
     }
   }
-  const contentDirs = ["content/blog", "content/fr/blog", "content/es/blog", "content/de/blog", "content/nl/blog"]
+  const contentDirs = ["content/blog", "content/fr/blog", "content/es/blog", "content/de/blog"]
   for (const dir of contentDirs) {
     if (!fs.existsSync(dir)) continue
     for (const f of fs.readdirSync(dir).filter((f) => f.endsWith(".mdx"))) {

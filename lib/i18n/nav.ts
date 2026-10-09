@@ -24,7 +24,7 @@ import { routing } from "@/i18n/routing"
  * French visitor to an empty page is worse than sending them to the populated
  * EN glossary. Add it here the moment content/fr/glossary/ is populated.
  */
-// Marketing routes are 1:1 same-path across ALL routing.locales (en/fr/es/de/nl).
+// Marketing routes are 1:1 same-path across ALL routing.locales (en/fr/es/de).
 const MARKETING_ROOTS = new Set([
   "/",
   "/features",
@@ -55,7 +55,7 @@ const PARTIAL_ROOTS: Record<string, ReadonlySet<string>> = {
   // ⚠️ ADD "es" to /blog the day the first ES article ships — the blog route,
   // sitemap and feed self-gate on posts existing, but this nav map is static
   // (client Header can't check content), so it's the one manual flip.
-  "/blog": new Set(["fr", "es", "de", "nl"]),
+  "/blog": new Set(["fr", "es", "de"]),
   "/privacy": new Set(["fr"]),
 }
 

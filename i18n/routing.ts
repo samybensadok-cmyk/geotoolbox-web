@@ -9,7 +9,7 @@ import { defineRouting } from "next-intl/routing"
 // (blog, glossary) live under app/[locale]/. Marketing/feature/tool
 // pages stay at root (EN-only) until they're translated (spec §10 P3).
 export const routing = defineRouting({
-  locales: ["en", "fr", "es", "de", "nl"],
+  locales: ["en", "fr", "es", "de"],
   defaultLocale: "en",
   localePrefix: "as-needed",
   // Crawler-safe + deep-link-safe: never auto-redirect on Accept-Language.
@@ -34,7 +34,7 @@ export type Locale = (typeof routing.locales)[number]
 // Ahrefs, Brevo, Crisp, Livestorm all emit bare `fr`/`es`; region codes
 // (fr-FR, fr-BE…) only pay off for multinationals maintaining SEPARATE
 // per-country pages Google must disambiguate, which we do not.
-// => EVERY future locale (de, nl, it, pt, …) gets its bare language code here.
+// => EVERY future locale (it, pt, …) gets its bare language code here.
 // (`en-US` is the one legacy exception: kept so the original EN URLs are not
 // re-canonicalized; it could become `en` too by the same logic if desired.)
 export const bcp47: Record<Locale, string> = {
@@ -42,7 +42,6 @@ export const bcp47: Record<Locale, string> = {
   fr: "fr",
   es: "es",
   de: "de",
-  nl: "nl",
 }
 
 // Locales whose BLOG content tree is wired under content/{locale}/blog.
@@ -54,8 +53,8 @@ export const bcp47: Record<Locale, string> = {
 // de is DELIBERATELY absent: the DE launch (2026-09) covers marketing/feature/
 // pricing pages only. There is no content/de/blog, so /de/blog must 404 rather
 // than render an empty index. Add "de" here the day the first DE article ships.
-// nl (2026-09-04) is the same case: marketing/feature/pricing only, no content/nl/blog.
-export const contentLocales: readonly Locale[] = ["en", "fr", "es", "de", "nl"]
+// nl was retired 2026-10-09 (EN serves that market); /nl/* 301s to EN in next.config.ts.
+export const contentLocales: readonly Locale[] = ["en", "fr", "es", "de"]
 
 // The glossary is a separate, narrower policy: en is live, fr deliberately
 // rendered a "definitions on the way" placeholder until FR entries shipped 2026-08-11,

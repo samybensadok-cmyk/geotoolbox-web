@@ -15,7 +15,7 @@ const byUrl = new Map(entries.map((entry) => [entry.url, entry]))
 const thumbnails = thumbnailParams()
 const searchLocales = searchParams().map(({ locale }) => locale)
 let archives = 0
-for (const locale of ["en", "fr", "es", "de", "nl"]) {
+for (const locale of ["en", "fr", "es", "de"]) {
   const posts = getAllPosts(locale)
   assert.equal(thumbnails.filter((params) => params.locale === locale).length, posts.length)
   assert.equal(searchLocales.includes(locale), posts.length > 0)

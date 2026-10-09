@@ -58,13 +58,6 @@ const PROMO_UI: Record<PromoLocale, { strip: string; stripReserved: string; pill
     then: `für ${PROMO.months} Monate, danach {full}`,
     firstYear: `im ersten Jahr, danach {full}/Jahr`,
   },
-  nl: {
-    strip: `Oprichtersprijs — ${PROMO.percentOff}% korting op je eerste ${PROMO.months} maanden met de code ${PROMO.code}. Nog ${PROMO.seatsLeft} plekken · tot {deadline}.`,
-    stripReserved: `Je oprichtersplek is gereserveerd — ${PROMO.percentOff}% korting op je eerste ${PROMO.months} maanden. De reservering verloopt over {cd} (code {code}, wordt bij het afrekenen toegepast).`,
-    pill: `−${PROMO.percentOff}% · ${PROMO.months} maanden`,
-    then: `gedurende ${PROMO.months} maanden, daarna {full}`,
-    firstYear: `het eerste jaar, daarna {full}/jaar`,
-  },
 }
 
 // SG_LADDER_V3 2026-07-28: segment-pure tabs. Each tab shows exactly the
@@ -122,7 +115,6 @@ const TRIAL_COPY: Record<string, { label: string; body: string }> = {
   fr: { label: "Que comprend l’essai ?", body: "25 % des crédits mensuels · {brands} marque(s) · jusqu’à 3 articles si inclus. Les quotas complets sont disponibles après le premier paiement." },
   es: { label: "¿Qué incluye la prueba?", body: "25 % de los créditos mensuales · {brands} marca(s) · hasta 3 artículos si están incluidos. Los límites completos se activan tras el primer pago." },
   de: { label: "Was enthält die Testphase?", body: "25 % der monatlichen Credits · {brands} Marke(n) · bis zu 3 Artikel, sofern enthalten. Volle Kontingente nach der ersten Zahlung." },
-  nl: { label: "Wat is inbegrepen in de proefperiode?", body: "25% van de maandelijkse credits · {brands} merk(en) · maximaal 3 artikelen indien inbegrepen. Volledige limieten na de eerste betaling." },
 }
 
 // Card feature lists show the first few lines; the rest folds away so the
@@ -132,7 +124,6 @@ const SHOW_ALL: Record<string, string> = {
   fr: "Toutes les fonctionnalités",
   es: "Todas las funciones",
   de: "Alle Funktionen",
-  nl: "Alle functies",
 }
 const VISIBLE_HIGHLIGHTS = 3
 // Highlight lines (by index — order is identical in every locale's messages)
@@ -158,7 +149,7 @@ function priceDisplay(plan: Plan, annual: boolean, copy: PricingCardsCopy, local
     // SG_PROMO_V2: the 12-month repeating coupon covers 12 monthly invoices,
     // or the FIRST annual invoice — after that the plan reverts to list price.
     // Say so on the card; the signup chip and the Stripe disclosure repeat it.
-    const ui = PROMO_UI[(locale === "fr" || locale === "es" || locale === "de" || locale === "nl" ? locale : "en") as PromoLocale]
+    const ui = PROMO_UI[(locale === "fr" || locale === "es" || locale === "de" ? locale : "en") as PromoLocale]
     if (annual && plan.priceYearly) {
       const perMo = Math.round(plan.priceYearly / 12)
       const promoYear = promoPrice(plan.priceYearly)
@@ -283,7 +274,7 @@ export function PricingCards({ copy, locale, creditsLabel = "Monthly credits" }:
     } else if (resMatches && msLeft !== null && msLeft <= 0) setPromo(fallback)
   }, [isPersonal, resMatches, msLeft])
   const promoOn = !!promo
-  const promoUi = PROMO_UI[(locale === "fr" || locale === "es" || locale === "de" || locale === "nl" ? locale : "en") as PromoLocale]
+  const promoUi = PROMO_UI[(locale === "fr" || locale === "es" || locale === "de" ? locale : "en") as PromoLocale]
 
   return (
     <div>

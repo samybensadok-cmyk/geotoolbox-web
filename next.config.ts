@@ -54,6 +54,11 @@ const nextConfig: NextConfig = {
       // advertised in the Link header / llms.txt / agents.md for weeks, so agents keep fetching it;
       // a .txt path never reaches the markdown-404 rule, so without this it would be an HTML 404.
       { source: "/llms-glossary.txt", destination: "/llms-blog.txt", permanent: true },
+      // NL locale retired 2026-10-09: the market reads EN, so every /nl URL 301s to its EN twin
+      // (marketing routes are same-path, and the one NL article shared its EN donor slug).
+      // Runs before middleware, so it holds even though "nl" is no longer a routing locale.
+      { source: "/nl", destination: "/", permanent: true },
+      { source: "/nl/:path*", destination: "/:path*", permanent: true },
     ]
   },
   async rewrites() {

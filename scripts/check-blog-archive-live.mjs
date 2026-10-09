@@ -11,7 +11,7 @@ const { bcp47 } = await import("../i18n/routing.ts")
 const { default: sitemap } = await import("../app/sitemap.ts")
 const origin = process.argv[2]
 if (!origin) throw new Error("Supply the running production server URL")
-const locales = ["en", "fr", "es", "de", "nl"]
+const locales = ["en", "fr", "es", "de"]
 const snapshot = new Map(locales.map((locale) => [locale, getAllPosts(locale)]))
 const messages = new Map(locales.map((locale) => [locale, JSON.parse(readFileSync(new URL(`../messages/${locale}.json`, import.meta.url), "utf8"))]))
 const decode = (text) => text.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&#x27;|&#39;|&apos;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">")

@@ -22,7 +22,7 @@ import matter from "gray-matter"
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..")
 const PUBLIC = join(ROOT, "public")
 const OUT = join(ROOT, "lib", "blog-heroes.generated.json")
-const LOCALES = [["en", "content/blog"], ["fr", "content/fr/blog"], ["es", "content/es/blog"], ["de", "content/de/blog"], ["nl", "content/nl/blog"]]
+const LOCALES = [["en", "content/blog"], ["fr", "content/fr/blog"], ["es", "content/es/blog"], ["de", "content/de/blog"]]
 const IMAGE_REF = /!\[[^\]]*\]\((\/[^)\s]+\.(?:png|jpe?g|webp))|src=["'](\/[^"']+\.(?:png|jpe?g|webp))["']/g
 
 function dimensions(file) {

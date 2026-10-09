@@ -210,7 +210,7 @@ export default function middleware(request: NextRequest) {
       res.headers.set("Vary", "Accept")
       return res
     }
-    const locale = /^\/(fr|es|de|nl)(?:\/|$)/.exec(new URL(request.url).pathname)?.[1] ?? "en"
+    const locale = /^\/(fr|es|de)(?:\/|$)/.exec(new URL(request.url).pathname)?.[1] ?? "en"
     const res = NextResponse.rewrite(new URL(`/${locale}/blog/page/0`, request.url), { status: 404 })
     res.headers.set("X-Robots-Tag", "noindex")
     return res

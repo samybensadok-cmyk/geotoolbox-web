@@ -104,16 +104,6 @@ function buildCopy(deadline: Record<PromoLocale, string>): Record<PromoLocale, C
       timeLeft: (cd) => `noch ${cd}`,
       dismissAria: "Schließen",
     },
-    nl: {
-      eyebrow: "Voordat je weggaat",
-      headline: `${PROMO.percentOff}% korting — cadeau`,
-      body: `Het Plus-abonnement voor € ${fmtPromoAmount(PLUS_PROMO, "nl")}/maand in plaats van € ${PLUS_FULL} — vastgezet voor ${PROMO.months} maanden. Nog maar ${PROMO.seatsLeft} oprichtersplekken, tot ${deadline.nl}.`,
-      cta: "Oprichtersprijs vastzetten",
-      secondary: "Nee bedankt, ik betaal later de volle prijs",
-      code: "Code",
-      timeLeft: (cd) => `nog ${cd}`,
-      dismissAria: "Sluiten",
-    },
   }
 }
 
@@ -125,7 +115,7 @@ function isSuppressedPath(pathname: string | null): boolean {
   return (
     pathname.startsWith("/services") ||
     pathname.startsWith("/app") ||
-    /^\/(fr|es|de|nl)?\/?pricing/.test(pathname)
+    /^\/(fr|es|de)?\/?pricing/.test(pathname)
   )
 }
 
@@ -134,7 +124,7 @@ export function ExitIntentPopup({ locale = "en" }: { locale?: string }) {
   const [armed, setArmed] = useState(false)
   const pathname = usePathname()
   const loc: PromoLocale =
-    locale === "fr" || locale === "es" || locale === "de" || locale === "nl" ? locale : "en"
+    locale === "fr" || locale === "es" || locale === "de" ? locale : "en"
   const dialogRef = useRef<HTMLDivElement>(null)
   const ctaRef = useRef<HTMLAnchorElement>(null)
   // Live hh:mm:ss to PROMO.deadline (same chip as the banner). Hook runs
@@ -204,7 +194,6 @@ export function ExitIntentPopup({ locale = "en" }: { locale?: string }) {
       fr: promoDeadlineLabel("fr"),
       es: promoDeadlineLabel("es"),
       de: promoDeadlineLabel("de"),
-      nl: promoDeadlineLabel("nl"),
     })
   }
   const t = copy.current[loc]

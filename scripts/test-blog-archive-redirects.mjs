@@ -1,7 +1,7 @@
 // node --experimental-strip-types --import ./scripts/ts-extensionless-resolve.mjs scripts/test-blog-archive-redirects.mjs
 import assert from "node:assert/strict"
 import { archiveRedirect } from "../lib/blog-archive-redirects.ts"
-for (const locale of ["en", "fr", "es", "de", "nl"]) {
+for (const locale of ["en", "fr", "es", "de"]) {
   const base = `${locale === "en" ? "" : `/${locale}`}/blog`
   const decide = (suffix) => archiveRedirect(new URL(`https://example.com${base}${suffix}`))
   for (const [input, destination] of [

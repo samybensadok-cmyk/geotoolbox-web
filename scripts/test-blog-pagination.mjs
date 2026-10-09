@@ -19,6 +19,6 @@ for (const input of ["0", "000", "-1", "2.5", "abc", "", " 2", "2e1", "900719925
 assert.equal(parseArchivePage("001"), 1)
 assert.equal(parseArchivePage("02"), 2)
 assert.equal(archivePath("en", 1), "/blog")
-assert.equal(archivePath("nl", 2, "comparisons"), "/nl/blog/topic/comparisons/page/2")
+assert.equal(archivePath("de", 2, "comparisons"), "/de/blog/topic/comparisons/page/2")
 assert.deepEqual(pagerItems(6, 12), [1, "ellipsis", 4, 5, 6, 7, 8, "ellipsis", 12])
 console.log("blog-pagination: boundary counts, coverage, parser and pager passed")
