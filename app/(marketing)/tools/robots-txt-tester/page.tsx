@@ -1,3 +1,5 @@
+import { ToolIntro } from "@/components/tools/tool-intro"
+import styles from "@/components/tools/tool-experience.module.css"
 import type { Metadata } from "next"
 import Link from "next/link"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
@@ -85,7 +87,7 @@ const faqs = [
 export default function RobotsTxtTesterPage() {
   return (
     <>
-      <section className="relative overflow-hidden bg-[var(--surface-steel)] px-6 pt-16 pb-16 sm:pt-20 sm:pb-20">
+      <section className={styles.hero}>
         <JsonLd
           data={[
             softwareApplicationSchema({
@@ -104,33 +106,24 @@ export default function RobotsTxtTesterPage() {
 
         <div className="mx-auto max-w-5xl">
           <Breadcrumbs
+            tone="dark"
             trail={[
               { name: "Home", href: "/" },
               { name: "Tools", href: "/tools" },
               { name: "robots.txt Tester & Checker", href: "" },
             ]}
           />
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-              Free robots.txt tool
-            </p>
-            <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-              Free robots.txt Tester &amp; Checker
-            </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
-              Google retired the robots.txt tester in Search Console. This does the same job: check any URL against a
-              live or draft robots.txt, per crawler, with Google&apos;s real precedence rules — and see the exact line
-              that decided each verdict. Free, no sign-up.
-            </p>
-          </div>
+          <ToolIntro slug="robots-txt-tester" />
 
-          <div className="mt-10">
+          <div className={styles.workbench}>
             <RobotsTxtTesterWidget />
           </div>
         </div>
       </section>
 
-      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
+      <details className={styles.guide}>
+        <summary>What this tool checks and how to read the results</summary>
+<section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
         <div className="mx-auto max-w-3xl">
           <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
             The rule everyone gets wrong
@@ -170,6 +163,7 @@ Disallow: /private/`}
           </div>
         </div>
       </section>
+      </details>
 
       <HowItWorks3Step heading="From a domain to a per-crawler verdict" steps={steps} />
 

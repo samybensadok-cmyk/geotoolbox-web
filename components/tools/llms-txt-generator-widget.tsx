@@ -1,5 +1,7 @@
 "use client"
 
+import { ToolResultCapture } from "./tool-result-capture"
+
 import { useState } from "react"
 import type { GenerateResult } from "@/lib/llms-txt-generate"
 import { trackEvent } from "@/lib/analytics"
@@ -238,6 +240,7 @@ export function LlmsTxtGeneratorWidget() {
           )}
         </div>
       )}
+      {result?.ok && !loading && <ToolResultCapture slug="llms-txt-generator" what="llms.txt draft" />}
     </div>
   )
 }
