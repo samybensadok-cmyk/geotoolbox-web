@@ -1,0 +1,338 @@
+---
+title: "Meta Tags for SEO: What Matters for Google and AI Search"
+description: "Which meta tags still matter for SEO in 2026, what Google rewrites, and which tags limit Google AI Overviews and Bing Copilot. With code and our SERP check."
+date: "2026-10-13"
+recheckBy: "2026-11-13"  # Search Console AI control (Aug 31, 2026), Bing Copilot directives, OpenAI publisher FAQ (Wayback 2026-10-04) and Next.js html-bots list are volatile; re-verify
+author: "Samy BEN SADOK"
+tags: ["meta-tags", "technical-seo", "ai-overviews", "ai-crawlers", "guide"]
+draft: false
+---
+
+Meta tags for SEO come down to a short list in 2026. The title, meta description, robots, viewport, canonical and Open Graph tags still do real work. The keywords tag does nothing at Google.
+
+What changed is who reads them. The robots snippet rules that shape your Google listing now also limit what Google's AI Overviews can use as direct input, and Bing applies its own robots rules to Copilot.
+
+## What Are Meta Tags?
+
+**Meta tags**, or HTML meta tags, are tags in the `<head>` of a page that describe the page to search engines, browsers and other software that reads it. [Google's own definition](https://developers.google.com/search/docs/crawling-indexing/special-tags) adds a detail that matters more than it looks: "Clients process the meta tags and ignore those they don't support."
+
+A tag only does something if a specific system reads it. Google reads some, social platforms read others, and AI assistants document fewer still.
+
+Here is a working `<head>` for an article in 2026:
+
+```html
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Meta Tags for SEO: What Matters for Google and AI Search</title>
+  <meta name="description" content="Which meta tags still matter for SEO, what Google rewrites, and which tags limit AI Overviews.">
+  <meta name="robots" content="max-image-preview:large">
+  <link rel="canonical" href="https://example.com/blog/meta-tags-for-seo">
+  <meta property="og:title" content="Meta Tags for SEO: What Matters for Google and AI Search">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://example.com/og/meta-tags.png">
+  <meta property="og:url" content="https://example.com/blog/meta-tags-for-seo">
+</head>
+```
+
+Two of those lines are not meta tags at all. The `<title>` is its own HTML element, and the canonical is a `<link>`. SEOs group them with meta tags because they live in the same head section and do the same kind of job, so this guide covers them too.
+
+When people say "SEO tags," this head set is usually what they mean.
+
+### How to Find a Page's Meta Tags
+
+Right-click and choose View Page Source (Ctrl+U on Windows, Cmd+Option+U on a Mac), then search for `<meta`. That shows the HTML the server sent.
+
+It is not always what a crawler ends up with. If a framework or tag manager injects meta tags with JavaScript, the source and the rendered page disagree, and a crawler that doesn't run JavaScript only sees the source. It is a common way a correct tag silently fails.
+
+## Which Meta Tags Still Matter (at a Glance)
+
+Here is the short list, with a column that matters more than it used to: who documents reading each tag.
+
+<table>
+<thead>
+<tr><th>Tag</th><th>What it does</th><th>Who documents reading it</th><th>What to do</th></tr>
+</thead>
+<tbody>
+<tr><td><code>&lt;title&gt;</code></td><td>Names the page; the starting point for the title Google shows</td><td>Google, Bing</td><td>Unique, descriptive title on every page</td></tr>
+<tr><td><code>meta name="description"</code></td><td>Suggests the snippet under your title</td><td>Google, Bing</td><td>Write it for pages that earn clicks; expect Google to swap in page text</td></tr>
+<tr><td><code>meta name="robots"</code> <code>noindex</code></td><td>Keeps the page out of search results, and at Bing out of Copilot</td><td>Google, Bing</td><td>Use only on pages that must not appear, and let crawlers fetch them</td></tr>
+<tr><td><code>nosnippet</code>, <code>max-snippet</code></td><td>Remove or cap the text snippet; at Google, also what AI Overviews and AI Mode can use as direct input</td><td>Google, Bing</td><td>Use only if you accept smaller or no snippets</td></tr>
+<tr><td><code>data-nosnippet</code> (attribute)</td><td>Excludes marked sections from snippets</td><td>Google, Bing</td><td>The surgical option for one block of text</td></tr>
+<tr><td><code>noarchive</code>, <code>nocache</code></td><td>Ignored by Google; at Bing, keep content out of Copilot answers or limit Copilot to the URL, title and snippet</td><td>Bing</td><td>Use only if you want to limit Copilot</td></tr>
+<tr><td><code>meta name="viewport"</code></td><td>Sets mobile rendering; tells Google the page is mobile friendly</td><td>Google, browsers</td><td>Every page</td></tr>
+<tr><td><code>meta charset</code></td><td>Declares the character encoding</td><td>Google, browsers</td><td>Every page, UTF-8</td></tr>
+<tr><td><code>link rel="canonical"</code></td><td>Names the preferred URL among duplicates (a hint)</td><td>Google, Bing</td><td>Every indexable page</td></tr>
+<tr><td>Open Graph (<code>og:</code>)</td><td>Sets the title, image and URL in link previews</td><td>Sites and apps that read the Open Graph protocol</td><td>Every page you expect people to share</td></tr>
+<tr><td><code>meta name="keywords"</code></td><td>Nothing at Google; Bing said in 2011 it treats it as a possible spam signal</td><td>Google (as unsupported); Bing in 2011</td><td>Leave it out</td></tr>
+</tbody>
+</table>
+
+<figure>
+  <BlogImage src="/blog/meta-tags-for-seo/who-reads-each-meta-tag.png" alt="Which systems read each meta tag: Google Search, Google AI Overviews, Bing and Copilot, and link previews." w="1200" h="936" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Who reads which tag, per Google Search Central, Bing Webmaster Help and ogp.me, checked October 13, 2026.</figcaption>
+</figure>
+
+The third column is the one to read twice: if no system documents reading a tag, you have no evidence it does anything.
+
+## The Title Tag: What Google Shows and Why It Rewrites It
+
+Your title tag feeds what Google calls a **title link**, the clickable headline of a result, which Google describes as "often the primary piece of information people use to decide which result to click." Google changes that headline more often than most people assume.
+
+[Google's documentation](https://developers.google.com/search/docs/appearance/title-link) lists the sources it draws on: your `<title>`, the main visual title, heading elements such as the `<h1>`, `og:title`, other large and prominent text, other text on the page, anchor text, the text of links pointing to the page, and WebSite structured data.
+
+Google doesn't publish how much the title weighs in ranking. Bing is more direct: its [Webmaster Guidelines](https://www.bing.com/webmasters/help/webmaster-guidelines-30fba23a) say missing, duplicate or overly short title tags and meta descriptions "may reduce indexing reliability, ranking, and eligibility for grounding results and citations."
+
+How often does Google replace yours? In a Q1 2025 study of the top 20 results for a curated keyword set, John McAlpin found that [Google changed title tags 76% of the time](https://searchengineland.com/google-changed-76-of-title-tags-in-q1-2025-heres-what-that-means-454847).
+
+We ran a smaller check of our own on October 13, 2026. The searches for "meta tags for seo" and "seo meta tags" returned 16 non-video results; we could fetch the HTML of 11 of them (the rest were forum pages or blocked our fetcher). For those 11, we compared each page's `<title>` with the title Google displayed.
+
+Google showed 7 titles exactly as written and changed 4. In 3 of the 4 changes Google only edited the suffix after the title: it cut the site name twice and added a section name once.
+
+<figure>
+  <BlogImage src="/blog/meta-tags-for-seo/serp-title-description-check.png" alt="Our October 2026 check: Google kept 7 of 11 titles and 3 of 11 meta descriptions." w="1200" h="841" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">What Google showed vs what the ranking pages' own tags said, October 13, 2026 (11 fetchable pages).</figcaption>
+</figure>
+
+Eleven pages on one day is a snapshot, and our share of changed titles came in well under the 76% figure. One possible reason is the query itself: pages competing for "meta tags for seo" are written by SEOs who title them carefully.
+
+### What Makes Google Rewrite a Title
+
+Google's documentation names the usual triggers: half-empty titles like `| Site Name`, titles that kept last year's date, titles that don't match the page, and boilerplate repeated across a whole site. It also warns that keyword stuffing "can make your results look spammy."
+
+What it does not give is a character limit. Google says there is no limit on how long a `<title>` can be; it truncates the title link as needed, typically "to fit the device width." The familiar 50-60 character advice is a display heuristic for avoiding the cut.
+
+Mid-length titles do tend to earn more clicks. [Backlinko's CTR study of 4 million Google results](https://backlinko.com/google-ctr-stats) found that titles between 40 and 60 characters had the best average click-through rate, and that titles that do and do not contain a question have similar CTRs. It is a correlation from one dataset, on a page last updated April 16, 2025.
+
+### How to Write One That Survives
+
+- Put the words searchers use near the start. Long titles get cut at the end, so the front is the part that survives on a phone.
+- Describe the page in plain words, and make the part that differs from your other pages easy to spot.
+- Make the title tag and the visible main heading tell the same story, since Google treats both as candidate sources.
+- Brand concisely. Google suggests including just your site name at the beginning or end of the title rather than a long tagline.
+- Update dated titles when you update the page.
+
+If Google shows a title you never wrote anywhere, it may come from anchor text on other sites, or from a second source on your own page; step 5 of the checking section covers the latter.
+
+## Meta Description: Not a Google Ranking Factor, Still a Snippet Candidate
+
+Google treats the meta description as a suggestion, and it doesn't help you rank. Google said back in [its 2009 post on the keywords tag](https://developers.google.com/search/blog/2009/09/google-does-not-use-keywords-meta-tag) that even when it uses the description for a snippet, it doesn't use the description meta tag in its ranking.
+
+[Google's snippet documentation](https://developers.google.com/search/docs/appearance/snippet) says snippets are "primarily created from the page content itself." Google uses the meta description when it "might give users a more accurate description of the page than content taken directly from the page."
+
+In our October 13 check, Google showed the page's own meta description for 3 of the 11 pages. For the other 8 it built the snippet from text on the page, usually an opening definition of meta tags rather than the marketing line in the tag.
+
+So why write one at all? Here's where it still earns its place:
+
+- **It is the fallback.** When the page text doesn't answer the query cleanly (homepages, category pages, product grids, thin landing pages), the description is often the best candidate Google has.
+- **It can carry facts the snippet would miss.** Google suggests listing details such as the author, publication date or byline for news and blog posts.
+- **It is cheap to get right at scale.** Google explicitly encourages programmatic descriptions for large database-driven sites, built from page-specific data.
+
+Google's best practices warn against sameness. Identical or near-identical descriptions across a site "aren't helpful when individual pages appear in search results," and long strings of keywords "are less likely to be displayed as a snippet." Google doesn't call either one a penalty; such descriptions are just less likely to be shown.
+
+Length works as it does for titles: no limit, cut to fit the screen. Around 150-160 characters is a rough drafting guide; put the essential part first.
+
+A good description reads like an answer: what the page covers, for whom, and one concrete detail. For an article, that might be the specific question it answers. For a product, price, availability or a spec.
+
+## The Robots Meta Tag and X-Robots-Tag
+
+The **robots meta tag** controls whether a page is indexed and how it may appear, and a mistake here can cost real traffic. [Google's robots meta tag specification](https://developers.google.com/search/docs/crawling-indexing/robots-meta-tag) lists the rules it supports. These are the ones worth knowing:
+
+<table>
+<thead>
+<tr><th>Rule</th><th>What it does at Google</th><th>Use it when</th></tr>
+</thead>
+<tbody>
+<tr><td><code>noindex</code></td><td>Keeps the page, media or resource out of search results</td><td>Thank-you pages, internal search results, staging copies</td></tr>
+<tr><td><code>nofollow</code></td><td>Google won't follow the links on the page</td><td>Rarely; link-level <code>rel</code> values are usually the better tool</td></tr>
+<tr><td><code>none</code></td><td>Same as <code>noindex, nofollow</code></td><td>Shorthand for both</td></tr>
+<tr><td><code>nosnippet</code></td><td>No text snippet or video preview, and no direct use as input for AI Overviews and AI Mode</td><td>Pages whose Google snippets and direct AI input you want to suppress</td></tr>
+<tr><td><code>max-snippet:[n]</code></td><td>Caps the snippet at n characters (0 = nosnippet, -1 = no limit)</td><td>Limiting how much text Google shows or uses</td></tr>
+<tr><td><code>max-image-preview:[setting]</code></td><td>Image preview size: none, standard or large</td><td>Allowing large previews (common for publishers)</td></tr>
+<tr><td><code>max-video-preview:[n]</code></td><td>Video preview length in seconds (-1 = no limit)</td><td>Video pages</td></tr>
+<tr><td><code>noimageindex</code></td><td>Images on the page aren't indexed</td><td>Pages with images you don't want in image search</td></tr>
+<tr><td><code>unavailable_after:[date]</code></td><td>Drops the page from results after the date</td><td>Time-limited offers and events</td></tr>
+<tr><td><code>indexifembedded</code></td><td>Allows indexing of embedded content despite <code>noindex</code></td><td>Content served inside iframes</td></tr>
+<tr><td><code>notranslate</code></td><td>No translated title link or snippet</td><td>Pages where machine translation would mislead</td></tr>
+</tbody>
+</table>
+
+A few behaviors catch people out.
+
+At Google, conflicts resolve to the stricter rule. If a page carries both `max-snippet:50` and `nosnippet`, Google applies `nosnippet`.
+
+The tag only works if the crawler can read it. Google says these settings are followed "only if crawlers are allowed to access the pages that include these settings." Block a URL in robots.txt and Google never sees its `noindex`, so the URL can still turn up in results from links alone.
+
+You can also target one crawler. `<meta name="googlebot" content="nosnippet">` applies only to Google's text results, and `googlebot-news` covers Google News. Some non-search crawlers, such as AdsBot-Google, need a rule addressed to them by name.
+
+One invalid element can switch off what follows it. Google says that if the `<head>` contains an element it doesn't allow, such as an `img` or `iframe`, it [ignores any elements that appear after it](https://developers.google.com/search/docs/crawling-indexing/valid-page-metadata).
+
+An `<img>` tracking pixel placed above your canonical or title can cause Google to skip them. Robots meta tags are the exception: Google says it will respect robots meta tags in the body section as well.
+
+Staging settings travel too. A `noindex` added to keep a staging site out of search can ship to production with a template or a CMS setting, so check the live page after every launch.
+
+For files without a `<head>`, such as PDFs, images or feeds, send the same rules as an HTTP response header. Any rule that works in the robots meta tag also works as an `X-Robots-Tag`:
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/pdf
+X-Robots-Tag: noindex, nosnippet
+```
+
+When you only need Google to stop showing or using a page's text, the snippet rules are narrower than `noindex`, and they now reach AI search too.
+
+## Meta Tags and AI Search: Google, Copilot, ChatGPT and Perplexity
+
+For Google's AI features, the controls are the same robots rules you already use, applied to a new surface.
+
+[Google's guide to AI features](https://developers.google.com/search/docs/appearance/ai-features) says that to be eligible as a supporting link in AI Overviews or AI Mode, a page must be indexed and eligible to be shown with a snippet, with no additional technical requirements. Eligibility is not a guarantee of being shown.
+
+Google's specification says `nosnippet` applies to every form of search result, including AI Overviews and AI Mode, and "will also prevent the content from being used as a direct input for AI Overviews and AI Mode." `max-snippet:[n]` caps how much of the page can be used that way, except where you have separately granted Google permission, for example through in-page structured data or a license agreement.
+
+So the snippet rules come at a price. A page with `nosnippet` loses its normal text snippet too, and because the AI features guide makes snippet eligibility a condition for appearing as a supporting link, it also gives up that link.
+
+For one block of text rather than a whole page, use the `data-nosnippet` attribute on a `span`, `div` or `section`. Google's specification describes it as keeping that text out of snippets, and Google's guide to AI features lists it among the controls for limiting what Search shows:
+
+```html
+<p>Meta tags tell search engines and browsers about a page.</p>
+<div data-nosnippet>
+  <p>Customer quote we don't want shown as the search snippet.</p>
+</div>
+```
+
+These controls only govern what Google shows and uses. They don't hide the text from visitors or from anyone else who copies it.
+
+There is also a property-level switch. Google's [Search generative AI control](https://support.google.com/webmasters/answer/16908024) in Search Console excludes a property's links and content from AI Overviews, AI Mode and generative AI features in Discover. Child properties inherit the setting but can override it, and it doesn't override separate choices such as Merchant Center or Google Ads.
+
+Google says it rolled the control out to all websites worldwide as of August 31, 2026, and that it isn't used as a ranking signal for the rest of Search. It doesn't affect AI training either. Whether to use it is a business call; our guide to [turning off AI Overviews](https://geotoolbox.ai/blog/how-to-turn-off-ai-overviews) walks through the trade-offs.
+
+<figure>
+  <BlogImage src="/blog/meta-tags-for-seo/ai-overview-content-controls.png" alt="Five Google controls for AI Overviews and AI Mode, with the scope and effect of each." w="1200" h="577" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Five Google controls, their scope and what each removes, per Google's documentation.</figcaption>
+</figure>
+
+Training is a separate control: Google-Extended. It is a robots.txt token, not a meta tag, and Google says it ["does not impact a site's inclusion in Google Search"](https://developers.google.com/crawling/docs/crawlers-fetchers/google-common-crawlers). Search Console's help page names it as the way to limit training of the models used to generate responses in Search's generative AI features. Our [AI crawlers guide](https://geotoolbox.ai/blog/ai-crawlers) covers how it differs from Googlebot.
+
+### Bing and Copilot
+
+Bing is explicit about which meta tags shape Copilot. Its [list of supported robots meta tags](https://www.bing.com/webmasters/help/which-robots-metatags-does-bing-support-5198d240) says `noarchive` means "Do not link in Chat and Copilot," and `nocache` means "Display only URL/Snippet/Title in Chat or Copilot." For training Microsoft's generative AI foundation models, `noarchive` excludes the content, while `nocache` allows only URLs, titles and snippets. If a page carries both, Bing treats it as `nocache`.
+
+Bing's Webmaster Guidelines add the rest. `noindex` keeps a URL out of "Bing search, Copilot experiences, or grounding API results," and `nosnippet` and `data-nosnippet` "may limit Copilot citation quality." Bing also supports a `data-snippet` attribute to mark the text it may display or cite.
+
+These are the same `noarchive` and `nocache` tags Google ignores, so check what Bing does with a tag before you delete it as clutter.
+
+### ChatGPT and Perplexity
+
+OpenAI's documented control is robots.txt. Its [crawler overview](https://developers.openai.com/api/docs/bots) says sites that opt out of OAI-SearchBot won't be shown in ChatGPT search answers, though they can still appear as navigational links.
+
+Its [publisher FAQ](https://help.openai.com/en/articles/12627856-publishers-and-developers-faq), in an October 4, 2026 archived copy marked "Updated: last month," mentions the `noindex` meta tag once: to stop a disallowed page appearing as just a link and page title in ChatGPT Atlas. OpenAI [said Atlas would stop working on August 9, 2026](https://help.openai.com/en/articles/20001371), and the FAQ doesn't say whether that `noindex` behavior carries over to ChatGPT search.
+
+[Perplexity's crawler documentation](https://docs.perplexity.ai/docs/resources/perplexity-crawlers) covers robots.txt for PerplexityBot and says user-requested fetches generally ignore it. It doesn't mention meta tags.
+
+### When the Tags Land in the Wrong Place
+
+Every rule above assumes the crawler receives your tags in the HTML. Google's [meta tag documentation](https://developers.google.com/search/docs/crawling-indexing/special-tags) recommends avoiding JavaScript to inject or change meta tags whenever possible. Googlebot renders pages, but in the tests collected in our [JavaScript SEO guide](https://geotoolbox.ai/blog/javascript-seo), several AI fetchers read only the raw HTML.
+
+Next.js adds a quieter version of the problem. Since version 15.2, when `generateMetadata` resolves after the first bytes are sent, [Next.js streams the metadata](https://nextjs.org/docs/app/api-reference/functions/generate-metadata) and appends the tags to the `<body>`. User agents on its HTML-limited bot list get them in the `<head>` instead.
+
+The [default list in the Next.js source](https://github.com/vercel/next.js/blob/canary/packages/next/src/shared/lib/router/utils/html-bots.ts) includes Bingbot, Twitterbot, Slackbot and facebookexternalhit, but not GPTBot, OAI-SearchBot, ClaudeBot or PerplexityBot. On routes where metadata streams, those crawlers still receive the tags, just outside the `<head>`. Next.js says it verified that bots which execute JavaScript, such as Googlebot, read streamed metadata correctly; no AI crawler documents how it treats meta tags in the body.
+
+We checked one of our own posts on geotoolbox.ai, which runs on Next.js and is prerendered. Its title, description, canonical and `og:title` sat in the `<head>` for all 7 user agents we tried, including GPTBot, OAI-SearchBot, PerplexityBot and ClaudeBot.
+
+Dynamic routes are where to look. Fetch one with an AI crawler's user agent and check where the tags land before changing anything. If they land in the `<body>` and that matters to you, note that setting `htmlLimitedBots` in `next.config` replaces the default list rather than adding to it, so a custom regex must include the default bots as well. Setting it to `/.*/` turns streaming off for everyone, which gives up the faster first response that streaming exists for.
+
+Whatever you change, measure it. If you add `nosnippet` or `max-snippet` to pages that matter, track whether Google's AI answers still cite them with an [AI Overview tracker](https://geotoolbox.ai/blog/ai-overview-tracker) before and after.
+
+## Viewport, Charset, Canonical, Hreflang and Open Graph
+
+These are the supporting tags. Each does one narrow job:
+
+- **Viewport.** `<meta name="viewport" content="width=device-width, initial-scale=1">` tells browsers how to render the page on a phone. Google's documentation adds that the presence of this tag indicates the page is mobile friendly.
+- **Charset.** `<meta charset="utf-8">` declares the character encoding. Google recommends Unicode/UTF-8 where possible.
+- **Canonical.** `<link rel="canonical">` names the preferred URL when the same content loads at several addresses. Google calls it [a hint, not a rule](https://developers.google.com/search/docs/crawling-indexing/canonicalization). Our [guide to canonical tags](https://geotoolbox.ai/blog/canonical-tags) covers how Google chooses, and which URL AI engines cited in our tests.
+- **Hreflang.** `<link rel="alternate" hreflang="...">` [tells Google which language or regional version](https://developers.google.com/search/docs/specialty/international/localized-versions) of a page to show. Google doesn't use it to detect a page's language; it uses it to understand that pages are localized versions of the same content.
+- **Verification.** `<meta name="google-site-verification">` proves to Search Console that you own the site. Google notes it is the exception to the rule that letter case doesn't matter in meta tags.
+- **Open Graph.** These tags control the title, image and description people see when a link to your page is shared. The [Open Graph protocol](https://ogp.me/) requires 4 properties on every page: `og:title`, `og:type`, `og:image` and `og:url`.
+
+What is not a meta tag: schema markup. Structured data usually ships as a JSON-LD script, not as `<meta>` elements, and it does a different job; see [schema markup for AI search](https://geotoolbox.ai/blog/schema-markup-for-ai). Alt text and heading tags aren't meta tags either, although some guides list them: both live in the page body.
+
+## Meta Tags Google Ignores
+
+The meta keywords tag is the famous one. Google [announced in September 2009](https://developers.google.com/search/blog/2009/09/google-does-not-use-keywords-meta-tag) that it doesn't use it in web ranking, and [its current documentation](https://developers.google.com/search/docs/crawling-indexing/special-tags) still lists it as unsupported, with "no effect on indexing and ranking at all." Bing went a step further: in 2011 its webmaster lead told [Search Engine Land](https://searchengineland.com/the-meta-keywords-tag-lives-at-bing-why-only-spammers-should-use-it-96874) that Bing looks at the tag as a spam signal, not a ranking signal.
+
+Google's list of ignored markup is longer than most guides mention:
+
+- **`lang` attribute.** Google detects the language from the page's text, not from code annotations (hreflang is a different mechanism and still works).
+- **`rel="next"` and `rel="prev"`.** No effect on indexing.
+- **`noarchive` and `nocache`.** Not used by Google; the cached-link feature that `noarchive` controlled is gone. Bing still reads both for Copilot.
+- **`nositelinkssearchbox`.** The sitelinks search box is gone.
+
+One tag still works but works against you: `<meta http-equiv="refresh">`. Google calls it confusing for users and recommends a server-side 301 redirect instead.
+
+## How to Check Your Meta Tags (and What Google and AI Actually See)
+
+Your CMS shows what you meant to publish. Check what crawlers actually received:
+
+1. **Read the served source.** View source, or run `curl -s https://example.com/page | grep -io '<meta[^>]*>\|<title>[^<]*</title>\|<link[^>]*canonical[^>]*>'`. This is what a non-rendering crawler gets. Add `-A "GPTBot"` to see what a user-agent-based framework serves an AI crawler.
+2. **Compare it with the rendered page.** In your browser's developer tools, inspect the `<head>` of the live DOM. Differences usually mean JavaScript is adding or changing tags, though the browser may also have repaired malformed HTML; compare with JavaScript turned off.
+3. **Ask Google what it saw.** Google's documentation points to the URL Inspection tool in Search Console for checking meta tags; its crawled-page view shows the HTML Googlebot received.
+4. **Compare with what Google shows.** Search for the page's main query and look at the title and snippet. A different title or snippet isn't an error. It can reflect the query, a trimmed brand, another source Google prefers, or simply that Google hasn't processed your latest change. A SERP preview tool estimates where a draft title will be cut.
+5. **Make sure the tag is yours.** If Google shows a title you never wrote, look for a second source: an SEO plugin and a theme both printing a `<title>`, code left behind by an uninstalled app, or injected spam on a hacked site.
+6. **Check the whole site.** A site crawler such as Screaming Frog lists missing, duplicate and over-long titles and descriptions across every URL.
+7. **Test reachability for AI crawlers.** Our free [Agent Readiness Scanner](https://geotoolbox.ai/tools/agent-readiness-scanner) requests your page from our server with six crawler user agents (GPTBot, OAI-SearchBot, ClaudeBot, PerplexityBot, Googlebot and CCBot) and renders it in a real browser. It catches WAF rules and 403s that a robots.txt reading misses; sites that verify crawlers by IP address may still treat the real bots differently.
+
+<figure>
+  <BlogImage src="/blog/meta-tags-for-seo/agent-readiness-scan-result.png" alt="Agent Readiness Scanner reachability result: six crawler user agents fetched real content." w="960" h="320" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">The reachability check from a scan of our canonical tags guide, October 13, 2026.</figcaption>
+</figure>
+
+After you fix something, give it time. Google says it has to [recrawl and reprocess the page](https://developers.google.com/search/docs/appearance/title-link) before a title change shows, which can take from a few days to a few weeks; you can request a recrawl in Search Console.
+
+Then measure. In Search Console's Performance report, filter to the page and compare the click-through rate on its main queries before and after, at a similar average position, so a ranking move doesn't masquerade as a better title. A full [SEO audit](https://geotoolbox.ai/blog/seo-audit) is the place to run these checks across a whole site.
+
+## Frequently Asked Questions
+
+### How do you create a meta tag?
+
+Add a `<meta>` element with a `name` (or `property`) and a `content` attribute inside the page's `<head>`. On WordPress, Wix and similar platforms you usually fill in fields in an SEO plugin or the page settings instead of editing HTML. In Next.js, you export a `metadata` object or a `generateMetadata` function and the framework writes the tags for you.
+
+### Do websites still use meta tags?
+
+Yes. Search engines still rely on the title, and most sites still need a meta description, robots rules for some pages, a viewport tag and a canonical. In our small check of 11 pages ranking for this topic on October 13, 2026, all 11 had a viewport tag, a canonical link, Open Graph tags and a declared character set, and none used the keywords tag. That is a small sample of SEO-written pages, not an estimate for the web as a whole.
+
+### What is the difference between a robots meta tag and robots.txt?
+
+Robots.txt controls crawling: whether a bot may fetch a URL at all. The robots meta tag controls indexing and display: whether a page that was fetched may appear in results, and with what snippet. Use robots.txt to keep bots off sections of a site, and `noindex` to keep a page out of results.
+
+## Where to Start
+
+If you only fix a few things this week: give every important page a specific title tag, make sure no page you want found carries a stray `noindex`, and confirm your tags are in the HTML your server sends rather than injected later.
+
+Then check reachability, because every tag in this guide only works if the crawler gets the page. Run your most important page through geotoolbox's free [Agent Readiness Scanner](https://geotoolbox.ai/tools/agent-readiness-scanner), no sign-up needed, and read the AI crawler reachability result first. If a crawler you care about gets an error page, no meta tag on that page matters to it yet.
+
+## Sources
+
+- Google Search Central - Meta tags and attributes that Google supports (updated December 10, 2025) - `developers.google.com/search/docs/crawling-indexing/special-tags`
+- Google Search Central - Robots meta tag, data-nosnippet, and X-Robots-Tag specifications (updated March 24, 2026) - `developers.google.com/search/docs/crawling-indexing/robots-meta-tag`
+- Google Search Central - Influencing your title links in search results (updated December 10, 2025) - `developers.google.com/search/docs/appearance/title-link`
+- Google Search Central - How to write meta descriptions (updated April 20, 2026) - `developers.google.com/search/docs/appearance/snippet`
+- Google Search Central - AI features and your website (updated December 10, 2025) - `developers.google.com/search/docs/appearance/ai-features`
+- Google Search Central - Use valid HTML to specify page metadata (updated December 10, 2025) - `developers.google.com/search/docs/crawling-indexing/valid-page-metadata`
+- Google Search Central - Canonicalization (updated August 20, 2026) - `developers.google.com/search/docs/crawling-indexing/canonicalization`
+- Google Search Central - Tell Google about localized versions of your page (updated September 21, 2026) - `developers.google.com/search/docs/specialty/international/localized-versions`
+- Google - Google's common crawlers, Google-Extended (updated July 14, 2026) - `developers.google.com/crawling/docs/crawlers-fetchers/google-common-crawlers`
+- Search Console Help - Search generative AI control (read October 13, 2026) - `support.google.com/webmasters/answer/16908024`
+- Google Search Central Blog - Google does not use the keywords meta tag in web ranking (September 21, 2009) - `developers.google.com/search/blog/2009/09/google-does-not-use-keywords-meta-tag`
+- Bing Webmaster Help - Robots meta tags and attributes that Bing supports (read October 13, 2026) - `bing.com/webmasters/help/which-robots-metatags-does-bing-support-5198d240`
+- Bing Webmaster Guidelines (read October 13, 2026) - `bing.com/webmasters/help/webmaster-guidelines-30fba23a`
+- Search Engine Land (Danny Sullivan) - The meta keywords tag lives at Bing and why only spammers should use it (October 14, 2011) - `searchengineland.com/the-meta-keywords-tag-lives-at-bing-why-only-spammers-should-use-it-96874`
+- Search Engine Land (John McAlpin) - Google changed 76% of title tags in Q1 2025 (May 1, 2025) - `searchengineland.com/google-changed-76-of-title-tags-in-q1-2025-heres-what-that-means-454847`
+- Backlinko - Organic click-through rate study of 4 million Google results (page updated April 16, 2025) - `backlinko.com/google-ctr-stats`
+- OpenAI - Overview of OpenAI crawlers (read October 13, 2026) - `developers.openai.com/api/docs/bots`
+- OpenAI Help Center - Publishers and Developers FAQ (archived copy of October 4, 2026) - `help.openai.com/en/articles/12627856-publishers-and-developers-faq`
+- OpenAI Help Center - Evolving Atlas into ChatGPT for browser-based agentic work (archived copy, 2026) - `help.openai.com/en/articles/20001371`
+- Perplexity - Perplexity crawlers (updated January 29, 2026) - `docs.perplexity.ai/docs/resources/perplexity-crawlers`
+- Next.js - generateMetadata, Streaming metadata (updated August 19, 2026) - `nextjs.org/docs/app/api-reference/functions/generate-metadata`
+- Next.js source - html-bots.ts default HTML-limited bot list (last changed August 11, 2025) - `github.com/vercel/next.js/blob/canary/packages/next/src/shared/lib/router/utils/html-bots.ts`
+- The Open Graph protocol - `ogp.me`
+- geotoolbox - SERP check of 11 pages ranking for "meta tags for seo" and "seo meta tags", plus a 7-user-agent fetch test of one of our own posts (October 13, 2026)
