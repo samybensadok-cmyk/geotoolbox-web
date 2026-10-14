@@ -2,8 +2,8 @@
 title: "GPT-6 Astra: Pricing, Benchmarks, and the Harness Catch"
 description: "OpenAI shipped GPT-6 Astra on September 3, 2026. Verified pricing, who has access today, and why its 99.9% benchmark score is a harness number."
 date: "2026-09-05"
-updated: "2026-10-05"
-recheckBy: "2026-10-06"   # volatile: per-plan availability moved twice in 48 hours (Altman confirmed Pro/Enterprise/Business Premium live 2026-09-04 with Plus "next"); Artificial Analysis re-versioned its Intelligence Index one day after launch (v4.1.1 -> v4.2) and the verdict changed with it; GPT-5.6 Sol's $4/$20 is promotional only "at least through November 21, 2026". Re-verify: developers.openai.com/api/docs/models/gpt-6-astra.md (the .md twin renders when the HTML page does not), the ChatGPT plan availability article, whether Plus gains Astra in regular Chat rather than only Work and Codex, and whether the ARC-AGI-3 headline stays at 99.9% after moving three times in three days. 09-25: added GPT-6 Sol ($2/$10) + GPT-6 Luna ($0.10/$0.50), launched 2026-09-22 in Work/Codex for Plus+ (Astra unaffected, remains OpenAI's best model per its own framing); AA Intelligence Index re-versioned again to v4.3.2 (Astra 53, level with Fable 5.1; Claude Opus 5.5 leads at 58) — every AA score in this article must stay labelled by index version, scores across versions are not comparable.
+updated: "2026-10-14"
+recheckBy: "2026-11-13"   # 10-14: GPT-6 in Chat, Bedrock, 6.1 Sol, Ultrafast. volatile: per-plan availability moved twice in 48 hours (Altman confirmed Pro/Enterprise/Business Premium live 2026-09-04 with Plus "next"); Artificial Analysis re-versioned its Intelligence Index one day after launch (v4.1.1 -> v4.2) and the verdict changed with it; GPT-5.6 Sol's $4/$20 is promotional only "at least through November 21, 2026". Re-verify: developers.openai.com/api/docs/models/gpt-6-astra.md (the .md twin renders when the HTML page does not), the ChatGPT plan availability article, whether Plus gains Astra in regular Chat rather than only Work and Codex, and whether the ARC-AGI-3 headline stays at 99.9% after moving three times in three days. 09-25: added GPT-6 Sol ($2/$10) + GPT-6 Luna ($0.10/$0.50), launched 2026-09-22 in Work/Codex for Plus+ (Astra unaffected, remains OpenAI's best model per its own framing); AA Intelligence Index re-versioned again to v4.3.2 (Astra 53, level with Fable 5.1; Claude Opus 5.5 leads at 58) — every AA score in this article must stay labelled by index version, scores across versions are not comparable.
 author: "Samy BEN SADOK"
 tags: ["gpt-6", "astra", "openai", "chatgpt", "ai-visibility", "llm", "guide"]
 draft: false
@@ -65,6 +65,8 @@ VentureBeat and Microsoft, both publishing on September 3, described Astra as re
 
 This is the top question in Google's People Also Ask block for the model, and it is where the announced list and the shipped list diverge.
 
+**Update, October 14, 2026:** In standard Chat, Astra powers the Pro thinking level, labelled GPT-6 Pro, on Pro, Business and Enterprise, while everyday chats on paid plans moved to GPT-6 Sol on October 7. Pro 500 ($500, since September 29) is the only Pro plan with Astra Ultrafast in Work and Codex, and Astra became generally available on Amazon Bedrock on September 8. The table below is the launch snapshot.
+
 <table>
   <thead>
     <tr><th>Surface</th><th>Status as of September 5, 2026</th></tr>
@@ -91,12 +93,12 @@ The Plus row is the one that catches people, and it was the most common complain
 Inside ChatGPT you are not paying the API rate either way. Astra draws down your existing plan allowance, and OpenAI says users and businesses can buy credits for more. Our [ChatGPT pricing guide](https://geotoolbox.ai/blog/chatgpt-pricing) covers what each plan costs and what the allowances mean.
 
 <Callout type="note">
-OpenAI's Help Center article on this is Cloudflare-blocked to every fetcher we tried, so we could not read it directly. The Plus line above is quoted from Google's own crawl of that page on September 5, cross-checked against Altman's posts, the launch discussion threads, and the GitHub and Azure changelogs. Plan access moved twice in 48 hours, so check your own model picker.
+OpenAI's Help Center article on this was Cloudflare-blocked to every fetcher we tried at launch, so the Plus line above is quoted from Google's own crawl of that page on September 5, cross-checked against Altman's posts, the launch discussion threads, and the GitHub and Azure changelogs. Plan access moved twice in 48 hours. Rechecked signed in on October 14, 2026: Plus still gets Astra in Work and Codex only. Check your own model picker.
 </Callout>
 
 ## GPT-6 Astra Pricing
 
-Verified live on [OpenAI's own pricing page](https://developers.openai.com/api/docs/pricing) on September 5, 2026. All figures are US dollars per million tokens, standard processing tier.
+Verified live on [OpenAI's own pricing page](https://developers.openai.com/api/docs/pricing) on September 5, 2026, and re-checked October 14, 2026. All figures are US dollars per million tokens, standard processing tier.
 
 <table>
   <thead>
@@ -108,9 +110,9 @@ Verified live on [OpenAI's own pricing page](https://developers.openai.com/api/d
   </tbody>
 </table>
 
-Batch processing runs at 50% of those rates. **Fast mode** (formerly priority processing) runs at 2x the price, and is unavailable for Astra with EU data residency. On the speed it buys, OpenAI's own pages disagree: the Astra announcement says Fast mode delivers up to 2x the speed of standard processing for Astra specifically, while the Fast mode guide claims up to 2.5x for the tier in general and names only GPT-5.6 Sol at that figure. OpenAI publishes no latency guarantee for Astra on Fast mode.
+Batch processing runs at 50% of those rates. **Fast mode** (formerly priority processing) runs at 2x the price, and is unavailable for Astra with EU data residency. **Ultrafast**, added on September 29, runs at 6x ($60 input and $300 output per million tokens at short context) on global and US-residency processing only; in ChatGPT it is limited to Pro 500 and eligible Enterprise and Edu plans. On the speed it buys, OpenAI's own pages disagree: the Astra announcement says Fast mode delivers up to 2x the speed of standard processing for Astra specifically, while the Fast mode guide claims up to 2.5x for the tier in general and names only GPT-5.6 Sol at that figure. OpenAI publishes no latency guarantee for Astra on Fast mode.
 
-OpenAI charges a 10% uplift on regional processing (data residency) endpoints for models released on or after March 5, 2026. Applied to Astra's $10.00 and $50.00, that is $11.00 and $55.00 on a data-residency endpoint. Microsoft's Foundry publishes the same split, and its numbers make the uplift concrete rather than derived: Standard Global matches OpenAI direct at $10.00 / $1.00 / $12.50 / $50.00 short context and $20.00 / $2.00 / $25.00 / $75.00 long, while Standard Data Zone (US) is exactly 10% higher across the board at $11.00 / $1.10 / $13.75 / $55.00 and $22.00 / $2.20 / $27.50 / $82.50. Foundry also prices US Data Zone Provisioned Throughput at a 10% premium to Global. Note what is not on that list: there is no EU data zone for Astra at launch.
+OpenAI charges a 10% uplift on regional processing (data residency) endpoints for models released on or after March 5, 2026. Applied to Astra's $10.00 and $50.00, that is $11.00 and $55.00 on a data-residency endpoint. Microsoft's Foundry publishes the same split, and its numbers make the uplift concrete rather than derived: Standard Global matches OpenAI direct at $10.00 / $1.00 / $12.50 / $50.00 short context and $20.00 / $2.00 / $25.00 / $75.00 long, while Standard Data Zone (US) is exactly 10% higher across the board at $11.00 / $1.10 / $13.75 / $55.00 and $22.00 / $2.20 / $27.50 / $82.50. Foundry also prices US Data Zone Provisioned Throughput at a 10% premium to Global. Note what was not on that list: there was no EU data zone for Astra at launch. Microsoft's September 22 post for the GPT-6 family does list EU Data Zone Standard for Astra, at $12 / $60 (20% above Global), so check your subscription's region table.
 
 The comparison that matters: GPT-5.6 Sol is $4.00 in and $20.00 out. Astra is **2.5x the price in every cell of the table**, input, output, cached input, cache writes, short context and long. Artificial Analysis put it the same way: "2.5x GPT-5.6 Sol's current prices across the board." Sol's rate is itself promotional, committed only "at least through November 21, 2026."
 
@@ -127,13 +129,13 @@ Artificial Analysis found Astra uses roughly 10% fewer output tokens than Sol at
 
 Their own cost-to-run figure puts Astra 75% more expensive per task on the Intelligence Index at max effort, and about level with Sol per task on the Coding Agent Index while scoring two points higher. That is their measurement, not a multiple you can derive from the list prices.
 
-The pricing page never says where short context ends and long context begins, but the model page does: **prompts over 272K input tokens are billed at 2x the input and cache rates and 1.5x the output rate, for the whole request**. That single rule reproduces the entire long-context row, and it is the number to model an API budget against. Cache writes are billed at 1.25x the uncached input rate, and Flex, like Batch, runs at 50%. The [wider token-cost picture](https://geotoolbox.ai/blog/ai-token-cost) across vendors, and what a [context window](https://geotoolbox.ai/blog/how-does-ai-search-work) actually costs you, are worth reading alongside this.
+OpenAI's pricing page now labels short context as up to 272K input tokens, and the model page spells out the rule: **prompts over 272K input tokens are billed at 2x the input and cache rates and 1.5x the output rate, for the whole request**. That single rule reproduces the entire long-context row, and it is the number to model an API budget against. Cache writes are billed at 1.25x the uncached input rate, and Flex, like Batch, runs at 50%. The [wider token-cost picture](https://geotoolbox.ai/blog/ai-token-cost) across vendors, and what a [context window](https://geotoolbox.ai/blog/how-does-ai-search-work) actually costs you, are worth reading alongside this.
 
 ## GPT-6 Sol and GPT-6 Luna Join the Family
 
-Astra shipped alone on September 3. Three weeks later, on September 22, 2026, OpenAI added two more GPT-6 models: **GPT-6 Sol** and **GPT-6 Luna**. Unlike Astra, neither is a frontier release. OpenAI's own framing is explicit: "GPT-6 Astra continues to be our best model across the board." Sol and Luna instead replace [GPT-5.6 Sol and Luna](https://geotoolbox.ai/blog/gpt-5-6) as the working and fast tiers inside ChatGPT Work and Codex, for Plus, Pro, Business, Enterprise and Edu plans. Free and Go get GPT-6 Luna only in the desktop app, not in standard Chat.
+Astra shipped alone on September 3. Three weeks later, on September 22, 2026, OpenAI added two more GPT-6 models: **GPT-6 Sol** and **GPT-6 Luna**. Unlike Astra, neither is a frontier release. OpenAI's own framing is explicit: "GPT-6 Astra continues to be our best model across the board." Sol and Luna instead replace [GPT-5.6 Sol and Luna](https://geotoolbox.ai/blog/gpt-5-6) as the working and fast tiers inside ChatGPT Work and Codex, for Plus, Pro, Business, Enterprise and Edu plans, where Free and Go get GPT-6 Luna in the desktop app only.
 
-On the API, GPT-6 Sol prices at $2.00 input and $10.00 output per million tokens, and GPT-6 Luna at $0.10 and $0.50, each roughly half the promotional rate of its GPT-5.6 counterpart ($4/$20 for Sol, $0.20/$1.20 for Luna) and a fraction of Astra's $10.00/$50.00. Standard ChatGPT conversations still run GPT-5.6, not GPT-6 Sol or Luna, as of this writing. Three weeks after launch, the GPT-6 family is one frontier model, Astra, plus two working-tier siblings, Sol and Luna, that sit below it on both price and product scope.
+On the API, GPT-6 Sol prices at $2.00 input and $10.00 output per million tokens, and GPT-6 Luna at $0.10 and $0.50, each roughly half the promotional rate of its GPT-5.6 counterpart ($4/$20 for Sol, $0.20/$1.20 for Luna) and a fraction of Astra's $10.00/$50.00. On October 7 they reached standard Chat too: GPT-6 Sol on Plus and above, and GPT-6 Luna on Free and Go from October 8, per OpenAI's release note and pricing page (its Help Center article still names GPT-5.6 Luna for Free and Go). On September 29 came GPT-6.1 Sol, near-Astra performance per OpenAI, at $2.00 input, $0.10 cached and $10.00 output per million tokens, in the API, Work and Codex. The GPT-6 family is now one frontier model, Astra, with GPT-6.1 Sol, GPT-6 Sol and GPT-6 Luna below it on price and product scope.
 
 ## Benchmarks: What OpenAI Reported and What Independents Measured
 
@@ -260,7 +262,7 @@ These two shipped the same week and list at exactly the same headline price, whi
 
 Same list price, different shape. Astra is ahead on document reasoning and on token efficiency, and Artificial Analysis notes it costs less than half of Claude Fable 5 per task on the Coding Agent Index for an equivalent score (Fable 5, not 5.1; the two are level at about 67, and OpenAI's own column reads Astra 67.0 against Fable 5's 67.2).
 
-Fable 5.1 led the general intelligence index at launch (v4.2); as of the current v4.3.2 rescale the two are level at 53, with Claude Opus 5.5 now leading the overall index at 58. Fable 5.1 still has the better cache economics, at a quarter of Astra's cached-input rate, which matters a lot for agent loops that re-read the same context.
+Fable 5.1 led the general intelligence index at launch (v4.2); on the v4.3.2 scale, as checked September 25, the two were level at 53, with Claude Opus 5.5 leading the overall index at 58. Fable 5.1 still has the better cache economics, at a quarter of Astra's cached-input rate, which matters a lot for agent loops that re-read the same context.
 
 The caveat belongs right here: OpenAI's own published figure for Fable 5.1 moved by nearly ten points across revisions of its comparison table. Read cross-vendor rows in any vendor's table with that in mind. Our fuller write-up of [Claude Fable 5.1](https://geotoolbox.ai/blog/claude-fable-5-1), including its own catch, covers that model in depth.
 
@@ -294,7 +296,7 @@ The shipped model refuses proof-of-concept exploit creation. The [system card](h
 
 Alongside the launch, OpenAI committed **$1 billion** through [Daybreak for Frontline Defenders](https://openai.com/index/daybreak-for-frontline-defenders/), subsidized access aimed at water utilities, electric grid operators, state and local government, community banks and open-source maintainers, targeted to be consumed over six months. OpenAI says thousands of defenders across 2,000 approved organizations and workspaces already use Daybreak and that more than 35 partner products now carry the Daybreak cyber models. Those are the company's own figures, published the same day, and no third party has audited them.
 
-A detail worth checking yourself, because it shows what "gated" means in practice: on OpenAI's pricing page the `gpt-daybreak-blue-latest` and `gpt-daybreak-red-latest` aliases still resolve to GPT-5.6 models, not to Astra. On its cyber jailbreak evaluations, Astra refuses 91.5% of disallowed requests against Sol's 59%.
+A detail worth checking yourself, because it shows what "gated" means in practice: OpenAI's pricing page lists its Daybreak cyber models as GPT-5.6 Sol, `gpt-5.6-cyber` and `gpt-5.5-cyber` (checked October 14, 2026), with no Astra variant. On its cyber jailbreak evaluations, Astra refuses 91.5% of disallowed requests against Sol's 59%.
 
 ## The Monitorability Problem OpenAI Admits
 
@@ -358,17 +360,17 @@ For the mechanics underneath all of this, see [how ChatGPT search works](https:/
 
 ### What is GPT-6 Astra?
 
-It is OpenAI's frontier model, above GPT-6 Sol and Luna, built for long-horizon agentic work and computer use rather than chat. In the API it is `gpt-6-astra`.
+It is OpenAI's frontier model, above GPT-6.1 Sol, GPT-6 Sol and Luna, built for long-horizon agentic work and computer use rather than chat. In the API it is `gpt-6-astra`.
 
 ### Who has access to GPT-6 Astra?
 
-As of September 5, 2026: Pro, Business and Enterprise have it including in regular Chat, and those plans also get GPT-6 Astra Pro.
+As of October 14, 2026: Pro, Business and Enterprise get it in Chat as GPT-6 Pro, the Pro thinking level, as well as in Work and Codex.
 
-Plus has it in ChatGPT Work and Codex but not in ordinary Chat. Free does not have it. It is available in the OpenAI API, generally available in Microsoft Foundry and GitHub Copilot (Pro+, Max, Business and Enterprise only), and announced for AWS Bedrock. Enterprise workspaces have it off by default until an admin enables it.
+Plus has it in ChatGPT Work and Codex but not in ordinary Chat, and Pro 500 adds Astra Ultrafast there. Free and Go do not have it. It is available in the OpenAI API and generally available in Microsoft Foundry, Amazon Bedrock (since September 8) and GitHub Copilot (Pro+, Max, Business and Enterprise only). Enterprise workspaces have it off by default until an admin enables it.
 
 ### How much does GPT-6 Astra cost?
 
-$10 per million input tokens and $50 per million output tokens on the standard tier at short context, with cached input at $1.00 and cache writes at $12.50. Long context is $20 and $75. Batch is half price, Fast mode is double, and data-residency endpoints add 10%. That is 2.5x the price of GPT-5.6 Sol. In ChatGPT itself you do not pay API rates; Astra draws on your plan allowance.
+$10 per million input tokens and $50 per million output tokens on the standard tier at short context, with cached input at $1.00 and cache writes at $12.50. Long context is $20 and $75. Batch is half price, Fast mode is double, Ultrafast is 6x, and data-residency endpoints add 10%. That is 2.5x the price of GPT-5.6 Sol. In ChatGPT itself you do not pay API rates; Astra draws on your plan allowance.
 
 ## Sources
 
@@ -376,7 +378,7 @@ $10 per million input tokens and $50 per million output tokens on the standard t
 - GPT-6 Astra System Card - OpenAI Deployment Safety Hub, September 3, 2026 - `deploymentsafety.openai.com/gpt-6-astra`
 - Path to Astra: critical capabilities and frontier safeguards - OpenAI, September 1, 2026 - `openai.com/index/path-to-astra/`
 - Daybreak for Frontline Defenders: $1B to protect essential services - OpenAI, September 3, 2026 - `openai.com/index/daybreak-for-frontline-defenders/`
-- Pricing - OpenAI API documentation, verified September 5, 2026 - `developers.openai.com/api/docs/pricing`
+- Pricing - OpenAI API documentation, verified September 5 and October 14, 2026 - `developers.openai.com/api/docs/pricing`
 - GPT-6 Astra model page (context window, output ceiling, knowledge cutoff, 272K long-context threshold), verified September 5, 2026 - `developers.openai.com/api/docs/models/gpt-6-astra.md`
 - OpenAI's GPT-6 Astra on ARC-AGI-3 - ARC Prize, September 2026 - `arcprize.org/blog/astra`
 - Benchmarking GPT-6 Astra - Artificial Analysis, September 3, 2026 - `artificialanalysis.ai/articles/benchmarking-gpt-6-astra`
@@ -388,5 +390,11 @@ $10 per million input tokens and $50 per million output tokens on the standard t
 - "Welcome to the AGI era," OpenAI says as GPT-6 Astra debuts - Axios (Ina Fried), September 3, 2026 - `axios.com/2026/09/03/openai-astra-gpt-6-agi-brockman`
 - OpenAI unveils GPT-6 Astra amid rising scrutiny and safety concerns - Al Jazeera, September 4, 2026 - `aljazeera.com/economy/2026/9/4/openai-unveils-gpt-6-astra-amid-rising-scrutiny-and-safety`
 - GPT-6 Astra: Frontier intelligence for work, now generally available in Microsoft Foundry - Microsoft Azure, September 3, 2026 - `azure.microsoft.com/en-us/blog/gpt-6-astra-frontier-intelligence-for-work-now-available-in-microsoft-foundry/`
+- GPT-6 Astra, Sol, and Luna for production AI agents in Microsoft Foundry - Microsoft Azure, September 22, 2026 - `azure.microsoft.com/en-us/blog/gpt-6-astra-sol-and-luna-for-production-agents-in-microsoft-foundry/`
+- OpenAI GPT-6 Astra is now generally available on Amazon Bedrock - AWS, September 8, 2026 - `aws.amazon.com/about-aws/whats-new/2026/09/openai-gpt-6-astra-on-amazon-bedrock/`
+- ChatGPT release notes - OpenAI Help Center, read October 14, 2026 - `help.openai.com/en/articles/6825453-chatgpt-release-notes`
+- GPT-6 and other models in ChatGPT - OpenAI Help Center, read October 14, 2026 - `help.openai.com/en/articles/20001354-gpt-6-and-other-models-in-chatgpt`
+- About ChatGPT Pro tiers - OpenAI Help Center, read October 14, 2026 - `help.openai.com/en/articles/9793128-about-chatgpt-pro-tiers`
+- API changelog - OpenAI, checked October 14, 2026 - `developers.openai.com/api/docs/changelog`
 - GPT-6 Astra is generally available in GitHub Copilot - The GitHub Blog, September 4, 2026 - `github.blog/changelog/2026-09-04-gpt-6-astra-is-generally-available-in-github-copilot/`
 - Pricing - Anthropic, verified September 5, 2026 (Claude Fable 5.1 rates) - `claude.com/pricing`
