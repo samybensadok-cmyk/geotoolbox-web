@@ -1,0 +1,186 @@
+---
+title: "Mode IA de Google : comment ça marche, comment le désactiver"
+description: "Mode IA de Google : définition, décomposition de la requête, différence avec les Aperçus IA, arrivée en France le 22 juillet 2026 et comment le désactiver."
+date: "2026-10-14"
+updated: "2026-10-14"
+recheckBy: "2026-11-04"  # modèles du Mode IA (Gemini 3.5 puis 3.7/3.8 Flash, Argon), disponibilité en France et menus Google bougent vite : rouvrir les pages d'aide Google avant de s'appuyer sur un détail
+author: "Samy BEN SADOK"
+tags: ["geo", "google-ai-mode", "ai-mode", "how-ai-works", "ai-overviews"]
+draft: false
+locale: "fr"
+donorSlug: "what-is-google-ai-mode"
+donorCommit: "f555bfe"
+noindex: false
+---
+
+Le Mode IA (AI Mode) de Google est arrivé en France le 22 juillet 2026, et beaucoup d'internautes ne savent pas encore de quoi il s'agit, ni comment l'éviter. Voici l'essentiel, expliqué simplement : ce qu'est le Mode IA, comment il fonctionne, en quoi il diffère des Aperçus IA et de l'application Gemini, où le trouver et comment revenir aux liens classiques. Le propos porte surtout sur l'outil lui-même ; la dernière partie s'adresse à ceux qui gèrent un site web.
+
+## Ce qu'il faut retenir
+
+- **Le Mode IA de Google est la recherche conversationnelle de Google, propulsée par Gemini** : un onglet de la Recherche où une réponse rédigée, avec ses sources citées, remplace la liste de liens, et où vous pouvez enchaîner les questions de suivi.
+- Il est disponible en France depuis le 22 juillet 2026, en même temps que les Aperçus IA (annonce de Google France), alors qu'il fonctionnait en français hors de France depuis octobre 2025.
+- Il est gratuit, mais même avec un abonnement payant vous ne pouvez pas choisir Gemini 3 Pro dans le Mode IA depuis la France (aucun pays de l'Union européenne sur la liste de Google, vérifié le 14 octobre 2026) ; Gemini 4 Argon, lui, est proposé aux abonnés Pro et Ultra depuis le 13 octobre 2026.
+- Aucun réglage officiel ne le désactive : le filtre « Web » ou `udm=14` ramènent des liens classiques, mais l'onglet Mode IA reste affiché (essai du 14 octobre 2026).
+- Gemini 3.5 Flash est le dernier modèle que Google a nommé comme modèle par défaut (mai 2026). Pour un site, l'enjeu devient d'être cité dans la réponse, ce que la première place ne garantit pas, et la Search Console permet de s'exclure de ces fonctions d'IA générative.
+
+## Le Mode IA de Google, c'est quoi ?
+
+Le Mode IA est une façon conversationnelle de chercher, pensée autour de l'IA et intégrée à la Recherche Google. Au lieu d'une page de liens bleus, il s'appuie sur les modèles Gemini pour parcourir le Web et rédiger une réponse accompagnée de quelques sources citées. Vous enchaînez ensuite les questions de suivi, comme dans une conversation. Google y voit [son expérience de recherche par IA la plus puissante](https://blog.google/intl/fr-fr/nouveautes-produits/explorez-obtenez-des-reponses/recherche-ia-apercus-mode/).
+
+Ce n'est pas un chatbot distinct : le Mode IA fait partie intégrante de la Recherche Google. Il repose sur l'index en temps réel, sur les systèmes de classement, sur le Knowledge Graph et sur des données en direct, comme les résultats shopping ou locaux. La différence tient surtout à l'interface : une réponse rédigée et une conversation, plutôt qu'une liste de liens à ouvrir un par un. Vous pouvez poser votre question à l'écrit ou à la voix, et y joindre une photo, une image ou un document.
+
+Le Mode IA s'ouvre dans un onglet dédié. Dès que vous y posez une question, la réponse générée occupe toute la page : les liens sont intégrés au texte ou placés en dessous, au lieu de s'empiler en liste. Il est conçu pour les questions difficiles : celles qui comptent plusieurs volets, des comparaisons ou des arbitrages, et qui demandaient jusque-là cinq recherches et une dizaine d'onglets ouverts.
+
+## Comment fonctionne le Mode IA : la décomposition de la requête
+
+Le mécanisme porte un nom : le query fan-out, que l'aide Google rend en français par « décomposition de la requête ». Quand vous posez une question, Google ne lance pas une seule recherche, mais toute une série. Il [découpe votre question en sous-thèmes](https://blog.google/intl/fr-fr/nouveautes-produits/explorez-obtenez-des-reponses/recherche-ia-apercus-mode/) et lance en parallèle une multitude de recherches, sur son index comme sur ses sources de données en direct.
+
+Concrètement, tout s'enchaîne ainsi. Vous posez votre question ; le Mode IA la décompose en sous-requêtes et les lance simultanément. Il récupère des passages issus de nombreuses pages, puis un modèle Gemini raisonne sur l'ensemble et rédige une réponse unique, avec les sources sur lesquelles il s'est appuyé. Si vous posez une question de suivi, la décomposition recommence, cette fois avec le contexte de la conversation.
+
+<figure>
+  <img src="/blog/mode-ia-google/decomposition-requete-flux.png" alt="Schéma de la décomposition de la requête dans le Mode IA de Google : une question se découpe en recherches parallèles que Gemini synthétise en une réponse unique avec ses sources" />
+  <figcaption>Décomposition de la requête (query fan-out) : une question devient plusieurs recherches parallèles, puis Gemini en tire une réponse unique avec ses sources.</figcaption>
+</figure>
+
+Deux choses en découlent. D'abord, le Mode IA va plus loin dans le Web qu'une recherche ordinaire : il peut faire remonter des pages qui ne seraient pas apparues en première page pour votre formulation exacte. Ensuite, comme il assemble des passages issus de nombreuses sources, il s'en sort bien avec les questions longues ou alambiquées. D'après Google France, une recherche en Mode IA est en moyenne trois fois plus longue qu'une recherche traditionnelle. En revanche, Google n'a pas publié le nombre de sous-requêtes générées par la décomposition, qui varie selon la question. Pour le détail du mécanisme, consultez notre explication du [query fan-out](https://geotoolbox.ai/blog/query-fan-out).
+
+## Mode IA, Aperçus IA, Gemini, recherche classique : quelles différences ?
+
+La confusion vient surtout de Google, qui emploie des noms voisins pour des choses différentes. Il existe en réalité quatre surfaces distinctes, à ne pas confondre.
+
+Les **Aperçus IA** (AI Overviews) sont le court résumé généré par l'IA qui s'affiche en haut des résultats habituels, pour certaines requêtes. Vous ne l'avez pas demandé : il s'affiche au-dessus des liens et se limite le plus souvent à une réponse unique. Le **Mode IA** est autre chose : un onglet que vous ouvrez volontairement, dont la réponse IA remplit toute la page, avec une conversation qui peut se poursuivre. **Gemini** désigne deux choses à la fois, ce qui n'aide pas : l'application de chat de Google, mais aussi la famille de modèles qui alimente les Aperçus IA comme le Mode IA. La **recherche classique**, enfin, reste la liste de liens classés que vous connaissez.
+
+<table>
+  <thead>
+    <tr><th>Surface</th><th>Comment y accéder</th><th>Ce que vous voyez</th><th>Conversation ?</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Recherche classique</strong></td><td>Page de résultats par défaut</td><td>Une liste de liens classés</td><td>Non, une requête à la fois</td></tr>
+    <tr><td><strong>Aperçus IA</strong></td><td>S'affichent d'eux-mêmes au-dessus de certains résultats</td><td>Un court résumé IA au-dessus des liens</td><td>Surtout une réponse unique</td></tr>
+    <tr><td><strong>Mode IA</strong></td><td>Vous ouvrez l'onglet ou la page Mode IA</td><td>Une réponse IA complète, avec des liens cités</td><td>Oui, avec des questions de suivi</td></tr>
+    <tr><td><strong>Application Gemini</strong></td><td>Un chatbot à part, sur gemini.google.com</td><td>Un assistant de chat, pas une page de recherche</td><td>Oui, mais ce n'est pas la Recherche</td></tr>
+  </tbody>
+</table>
+
+<figure>
+  <img src="/blog/mode-ia-google/quatre-surfaces.png" alt="Quatre surfaces Google côte à côte : la recherche classique, les Aperçus IA qui s'affichent d'eux-mêmes, le Mode IA qu'on ouvre soi-même et l'application Gemini, un chatbot à part" />
+  <figcaption>Les Aperçus IA viennent à vous, le Mode IA est un endroit où l'on se rend, et Gemini est à la fois une application et le moteur en coulisses.</figcaption>
+</figure>
+
+Si ce sont surtout les Aperçus IA qui vous intéressent, nous les détaillons dans [notre explication des Aperçus IA de Google](https://geotoolbox.ai/blog/what-are-google-ai-overviews), et le modèle lui-même dans notre guide sur [ce qu'est Gemini](https://geotoolbox.ai/blog/what-is-gemini).
+
+## De la SGE à Gemini 3.5 : comment le Mode IA a évolué
+
+Si vous vous souvenez de la « Search Generative Experience » (SGE), c'est de là que tout est parti. La SGE était le prototype optionnel de Google dans Labs, qui générait des résumés au-dessus des résultats de recherche. Google a abandonné ce nom et déployé la partie résumé à grande échelle sous le nom d'Aperçus IA. Le Mode IA est la surface conversationnelle complète venue ensuite : ce n'est ni la SGE ni l'ancien Bard, mais ce à quoi cette série d'expériences a abouti.
+
+Le modèle qui l'alimente a changé vite, ce qui explique que les guides se contredisent sur la version. Google a [lancé le Mode IA le 5 mars 2025](https://blog.google/products-and-platforms/products/search/ai-mode-search/) comme expérience optionnelle de Search Labs aux États-Unis, sur une version personnalisée de Gemini 2.0. Vers la Google I/O de mai 2025, il a [commencé à s'ouvrir à tous les utilisateurs américains](https://blog.google/products/search/google-search-ai-mode-update/) sans inscription à Labs, avec un Gemini 2.5 personnalisé, puis il est passé à la génération Gemini 3 à la fin de 2025. **Gemini 3.5 Flash** est le dernier modèle que Google a désigné comme modèle par défaut, [lors de la Google I/O du 19 mai 2026](https://blog.google/products-and-platforms/products/search/search-io-2026/) ; c'est aussi « Gemini 3.5 » que cite Google France pour le lancement en France. Les abonnés payants ont aussi obtenu d'autres modèles dans le menu : Gemini 3 Pro, puis [Gemini 3.7 Flash](https://www.searchenginejournal.com/google-brings-gemini-3-7-flash-to-ai-mode-in-search/585923/) en août 2026 (en anglais uniquement), [Gemini 3.8 Flash](https://www.searchenginejournal.com/google-gemini-3-8-flash-ai-mode/588194/) en septembre 2026 et [Gemini 4 Argon](https://blog.google/intl/fr-fr/nouveautes-produits/gemini-4-argon/) le 13 octobre 2026, ces trois derniers étant réservés aux abonnés Google AI Pro et Ultra. L'aide de Google, elle, ne distingue plus qu'un modèle « Rapide » et un modèle « Pro ».
+
+<table>
+  <thead>
+    <tr><th>Quand</th><th>Ce qui s'est passé</th><th>Modèle</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>2023-2024</strong></td><td>La Search Generative Experience (SGE) tourne comme prototype dans Labs</td><td>PaLM 2, puis Gemini</td></tr>
+    <tr><td><strong>5 mars 2025</strong></td><td>Le Mode IA ouvre aux États-Unis comme expérience optionnelle de Search Labs</td><td>Gemini 2.0 personnalisé</td></tr>
+    <tr><td><strong>Mai 2025 (I/O)</strong></td><td>Déploiement large aux États-Unis, sans inscription à Labs</td><td>Gemini 2.5 personnalisé</td></tr>
+    <tr><td><strong>Août 2025</strong></td><td>Extension à plus de 180 pays et territoires, en anglais</td><td>Gemini 2.5</td></tr>
+    <tr><td><strong>19 mai 2026 (I/O)</strong></td><td>Les Aperçus IA et le Mode IA se rapprochent ; le Mode IA dépasse 1 milliard d'utilisateurs mensuels</td><td>Gemini 3.5 Flash (dernier modèle par défaut nommé)</td></tr>
+    <tr><td><strong>22 juillet 2026</strong></td><td>Les Aperçus IA et le Mode IA arrivent en France</td><td>Gemini 3.5 (selon Google France)</td></tr>
+    <tr><td><strong>13 octobre 2026</strong></td><td>Gemini 4 Argon rejoint le menu des modèles pour les abonnés Pro et Ultra</td><td>Gemini 4 Argon (en option)</td></tr>
+  </tbody>
+</table>
+
+L'adoption a suivi. Google a annoncé que le Mode IA avait dépassé [1 milliard d'utilisateurs mensuels](https://blog.google/products-and-platforms/products/search/search-io-2026/) en 2026, avec un nombre de requêtes qui a plus que doublé chaque trimestre depuis le lancement. Les Aperçus IA, intégrés aux résultats ordinaires, touchent une audience plus large encore : [plus de 2,5 milliards d'utilisateurs actifs par mois](https://blog.google/products-and-platforms/products/search/new-controls-website-owners/), selon Google (juin 2026). En un peu plus d'un an, on est passé d'une option cachée dans Labs à un outil que plus d'un milliard de personnes utilisent chaque mois. Lors de cette même I/O de mai 2026, Google a relié les deux surfaces : on peut désormais poser une question de suivi depuis un Aperçu IA et poursuivre dans le Mode IA. Elles se rejoignent donc de plus en plus, tout en restant deux points d'entrée distincts. Le Mode IA ne remplace pas pour autant la recherche classique, du moins pas encore : la vue en liens reste accessible à tout moment.
+
+## Où trouver le Mode IA de Google, et pourquoi vous ne le voyez peut-être pas
+
+Le Mode IA est moins un réglage qu'un endroit où l'on se rend. Trois portes d'entrée sont courantes :
+
+1. L'**onglet Mode IA** de la page de résultats Google. Sur google.fr, nous l'avons constaté le 14 octobre 2026, il apparaît en tête de la barre d'onglets, avant « Tous ».
+2. L'adresse **google.com/ai**.
+3. L'entrée Mode IA de l'**application Google** (Android et iOS).
+
+Dans Chrome, un bouton Mode IA s'affiche aussi à droite de la barre d'adresse, mais Google précise que son déploiement hors des États-Unis est progressif.
+
+En France, le Mode IA est disponible depuis le **22 juillet 2026** : ce jour-là, Google a lancé en même temps les Aperçus IA et le Mode IA, sur mobile, sur ordinateur et dans l'application Google, d'après [l'annonce de Google France](https://blog.google/intl/fr-fr/nouveautes-produits/explorez-obtenez-des-reponses/recherche-ia-apercus-mode/). Le Mode IA fonctionnait pourtant déjà en français ailleurs, au Canada notamment, [depuis octobre 2025](https://blog.google/intl/fr-ca/produits/explorez-obtenez-des-reponses/le-mode-ia-est-maintenant-disponible-en-francais/), mais pas pour les internautes en France, où Google évoquait alors une « incertitude réglementaire » (propos de Nick Fox, vice-président senior de Google, traduits de l'anglais). Disponibilité en français et disponibilité en France sont donc deux choses distinctes. Le contexte du droit voisin est détaillé dans notre article sur les [Aperçus IA de Google](https://geotoolbox.ai/blog/what-are-google-ai-overviews).
+
+Si l'onglet n'apparaît pas chez vous, la cause est presque toujours la disponibilité ou le déploiement progressif, pas un réglage caché. Au 14 octobre 2026, la liste de Google compte plus de 200 pays et territoires ainsi que 98 langues, dont le français. Les comptes professionnels et scolaires (Google Workspace) peuvent aussi l'utiliser, même si les réglages de l'administrateur peuvent limiter l'expérience, et certaines options, comme Gemini 3 Pro, exigent un compte Google personnel. Quant à Search Labs, l'espace d'expérimentation de Google où arrivent souvent les nouveautés du Mode IA, il n'est pas proposé en France : l'expérience « Mode IA » de Labs est réservée aux États-Unis et à l'Inde, en anglais.
+
+## Le Mode IA est-il gratuit ?
+
+Oui. Le Mode IA est gratuit : il fait partie de la Recherche Google, et aucun abonnement n'est nécessaire pour ouvrir l'onglet et poser vos questions.
+
+Les formules payantes ne conditionnent pas l'accès : elles ajoutent des options. Les formules Google AI Plus, Pro et Ultra permettent de passer le Mode IA sur Gemini 3 Pro et offrent des limites d'usage plus élevées. Deep Search, qui produit un rapport détaillé à partir de nombreuses recherches, n'est annoncé par Google que pour les abonnés Pro et Ultra aux États-Unis ; la réservation et les appels aux commerces sont eux aussi limités aux États-Unis. Gemini 4 Argon est en revanche proposé « dans le monde entier » aux abonnés Pro et Ultra, mais pas, au 14 octobre 2026, aux abonnés Google AI Plus.
+
+Un détail que peu d'articles relèvent : même avec un abonnement payant, vous ne pouvez pas choisir Gemini 3 Pro dans le Mode IA depuis la France. Google réserve cette option à l'anglais, et aucun pays de l'Union européenne ne figure sur sa liste (vérifié le 14 octobre 2026). En Europe, elle n'existe que hors UE, en Suisse, au Royaume-Uni ou à Monaco par exemple. Le cœur du service, poser une question et obtenir une réponse synthétique avec ses sources, reste gratuit.
+
+## Peut-on désactiver le Mode IA ?
+
+C'est la frustration la plus fréquente, et, pour faire court, aucun bouton officiel ne désactive durablement le Mode IA. Google n'a prévu aucun réglage « désactiver le Mode IA » dans les paramètres de recherche.
+
+Vous en avez rarement besoin, car le Mode IA est un onglet séparé, pas une couche imposée à vos résultats habituels. Il y a deux niveaux de repli, et le second s'obtient de deux façons :
+
+- pour ignorer le Mode IA, restez sur l'onglet « Tous » ; un Aperçu IA peut toutefois s'y afficher ;
+- pour obtenir des liens classiques sans Aperçu IA, choisissez le filtre « Web », qui n'affiche que les liens texte (sur google.fr, il se trouve dans le menu « Plus », au 14 octobre 2026) ;
+- ou ajoutez `udm=14` à l'adresse d'une recherche. Selon Les Numériques, repris par 20 Minutes, vous pouvez en faire votre affichage par défaut en ajoutant dans votre navigateur un moteur de recherche personnalisé qui pointe vers l'adresse `https://www.google.com/search?udm=14&q=%s`. Google ne documente pas ce paramètre : il fonctionne en général, sans garantie.
+
+Nous avons essayé les deux dernières méthodes le 14 octobre 2026, dans un navigateur Chrome ouvert sur google.fr : le filtre Web et `udm=14` retirent l'Aperçu IA, mais l'onglet Mode IA reste affiché dans les deux cas. Le suffixe « -ia » ajouté à la requête, qu'évoque 20 Minutes d'après Le Monde, a aussi fait disparaître l'Aperçu IA sur la requête testée, au prix d'une recherche modifiée. Si Chrome vous affiche déjà le bouton « Mode IA » dans la barre d'adresse (Google le déploie progressivement hors des États-Unis), vous pouvez enfin le masquer : clic droit sur la barre d'adresse, puis décochez « Toujours afficher le Mode IA » ([Aide Chrome](https://support.google.com/chrome/answer/16704170?hl=fr)). Cela ne retire que le bouton.
+
+Aucune de ces méthodes ne fait disparaître l'onglet Mode IA. L'onglet « Tous », le filtre Web et `udm=14` vous gardent sur la recherche classique ; le filtre Web comme `udm=14` retirent en plus l'Aperçu IA. Précision utile, la plupart des tutoriels français sur le sujet parlent en réalité des Aperçus IA, ce résumé qui s'affiche en tête des résultats ordinaires, et non du Mode IA. Les écarter est une autre question, avec ses propres solutions partielles, que nous détaillons dans [notre guide pour désactiver les Aperçus IA](https://geotoolbox.ai/blog/how-to-turn-off-ai-overviews).
+
+## Le Mode IA est-il fiable ? Ce qu'il fait de travers
+
+Google le reconnaît lui-même : [son aide en français](https://support.google.com/websearch/answer/16011537?hl=fr) précise que, comme tout produit d'IA en phase de développement, le Mode IA peut faire des erreurs, par exemple en interprétant mal le contenu d'une page ou en ignorant le contexte. Prenez-le comme un point de départ rapide et bien sourcé, pas comme une autorité.
+
+Ses points faibles sont ceux de toute recherche générative. Il peut halluciner, c'est-à-dire affirmer avec aplomb une information fausse ou périmée, ce qui pèse surtout là où l'erreur coûte cher : santé, finances, droit. Ses citations restent approximatives : la décomposition puise des passages dans de nombreuses pages, et les liens joints à une réponse ne correspondent pas toujours à la phrase qu'ils sont censés étayer. Enfin, comme tout système génératif, il peut paraître plus tranché ou plus sûr de lui que les preuves ne le justifient.
+
+Contrepoids : le Mode IA s'ancre dans l'index en direct de Google plutôt que dans ses seules données d'entraînement, ce qui le rend en général mieux sourcé qu'un chatbot autonome. L'expérience n'est pas aboutie pour autant : le [bilan d'usage du Nielsen Norman Group](https://www.nngroup.com/articles/google-ai-mode/) juge la recherche puissante mais l'interface pénible à utiliser, autrement dit, le fond tient souvent mieux la route que l'ergonomie. Le bon réflexe ne change pas : lire la réponse, puis cliquer sur les liens cités pour vérifier ce qui compte.
+
+## Mode IA et visibilité : être cité plutôt que classé
+
+Si vous avez un site, le changement à retenir est que le Mode IA répond en citant des sources, et non en affichant une liste classée : tout l'enjeu est de figurer parmi les sources qu'il intègre à sa réponse. C'est un tout autre exercice que de viser la première place, qui ne garantit d'ailleurs pas la citation.
+
+Avant toute tactique, une condition de base : vos pages doivent être accessibles aux robots d'exploration de Google. Sur les sites que nous analysons avec geotoolbox pour leur visibilité dans l'IA, le problème le plus courant ne vient pas d'un contenu faible, mais d'une règle du robots.txt ou d'exploration qui bloque discrètement les robots alimentant ces systèmes. Mieux vaut le vérifier avant tout le reste.
+
+Depuis le lancement en France, la Search Console propose aussi le paramètre « IA générative dans la Recherche » ([aide de la Search Console](https://support.google.com/webmasters/answer/16908024?hl=fr)), qui permet aux propriétaires de sites de s'exclure des Aperçus IA, du Mode IA et des fonctions d'IA générative de Discover. Google précise qu'il « n'est pas utilisé comme signal de classement ou d'inclusion dans les autres parties de la Recherche ».
+
+Nous n'avons traité ici que la partie « de quoi s'agit-il ». Le guide pratique pour être cité et mesurer vos citations se trouve dans notre explication du [SEO pour le Mode IA de Google](https://geotoolbox.ai/blog/google-ai-mode-seo). Une chose à faire dès aujourd'hui : passez votre domaine dans notre [vérificateur de robots IA](https://geotoolbox.ai/tools/ai-crawler-checker) gratuit, pour confirmer que les robots à l'origine des réponses IA de Google ne sont pas bloqués.
+
+## Foire aux questions
+
+### Le Mode IA de Google, est-ce la même chose que Gemini ?
+
+Non, mais les deux sont liés. Gemini est le chatbot autonome de Google, et c'est aussi le nom de la famille de modèles qui alimente le Mode IA. Le Mode IA est une expérience de recherche à l'intérieur de la Recherche Google : il s'appuie sur un modèle Gemini, combiné à l'index en direct et au classement de Google, pour répondre avec des liens cités. L'application Gemini est un produit à part, que vous ouvrez sur gemini.google.com.
+
+### Le Mode IA de Google est-il gratuit ?
+
+Oui. Le Mode IA est gratuit, sans abonnement. Les formules Google AI Plus, Pro et Ultra ajoutent des options comme des modèles plus puissants (Gemini 3 Pro, en anglais uniquement et non proposé depuis la France, ou Gemini 4 Argon, réservé aux abonnés Pro et Ultra) et des limites d'usage plus élevées, avec Deep Search réservé aux abonnés Pro et Ultra aux États-Unis. Le service de base, poser une question et obtenir une réponse synthétique, ne coûte rien.
+
+### Peut-on désactiver le Mode IA de Google ?
+
+Aucun réglage officiel ne le désactive durablement. Comme le Mode IA est un onglet à part, la solution pratique est de rester sur l'onglet « Tous », d'utiliser le filtre « Web » (menu « Plus » sur google.fr) ou d'ajouter `udm=14` à l'adresse de recherche : l'onglet Mode IA reste affiché, mais vous gardez la recherche classique (sans Aperçu IA avec le filtre Web ou `udm=14`). Si Chrome affiche le bouton Mode IA dans la barre d'adresse, un clic droit permet aussi de le masquer. Retirer l'Aperçu IA affiché en tête des résultats est une autre question, traitée dans [notre guide pour désactiver les Aperçus IA](https://geotoolbox.ai/blog/how-to-turn-off-ai-overviews).
+
+### Le Mode IA de Google utilise-t-il mes données personnelles ?
+
+Par défaut, le Mode IA répond à partir de résultats publics du Web, pas de vos données privées. Google propose aussi de relier vos applications Google (Gmail et Google Photos, plus Google Agenda aux États-Unis et en anglais seulement) pour personnaliser les réponses, sous le nom d'« Applis connectées » dans l'Intelligence personnalisée. Cette connexion n'est pas ouverte en France : la liste des pays publiée par Google ne compte aucun État de l'Union européenne (vérifié le 14 octobre 2026). Là où elle existe, elle reste désactivée tant que vous ne l'activez pas, et votre accord vaut pour tous les services de recherche de Google (Recherche, dont le Mode IA et Discover, Maps, Shopping, Actualités, Vols, Hôtels, Traduction), pas seulement pour le Mode IA. Pour les utilisateurs de l'Espace économique européen, le responsable du traitement des données de compte est Google Ireland Limited, sous la supervision de la Data Protection Commission irlandaise. La CNIL reste votre interlocuteur pour faire valoir vos droits, et nous n'avons trouvé, au 14 octobre 2026, aucune action publique de la CNIL visant le Mode IA.
+
+## Sources
+
+- Lancement des Aperçus IA et du Mode IA dans la Recherche Google en France - Google France, 22 juillet 2026 - `blog.google/intl/fr-fr/nouveautes-produits/explorez-obtenez-des-reponses/recherche-ia-apercus-mode/`
+- Obtenir des réponses optimisées par l'IA avec le Mode IA dans la Recherche Google - Aide Recherche Google - `support.google.com/websearch/answer/16011537?hl=fr`
+- Utiliser le Mode IA dans Chrome - Aide Google Chrome - `support.google.com/chrome/answer/16704170?hl=fr`
+- Connecter vos applications de contenu Google pour bénéficier d'une expérience personnalisée dans les services de recherche - Aide Recherche Google - `support.google.com/websearch/answer/16859283?hl=fr`
+- Contrôle de l'IA générative dans la Recherche - Aide de la Search Console - `support.google.com/webmasters/answer/16908024?hl=fr`
+- Google active la recherche IA partout sauf en France (citation de Nick Fox) - iPhoneSoft, 8 octobre 2025 - `iphonesoft.fr/2025/10/08/google-active-recherche-ia-partout-sauf-france`
+- Le Mode IA est maintenant disponible en français - Google Canada, 14 octobre 2025 - `blog.google/intl/fr-ca/produits/explorez-obtenez-des-reponses/le-mode-ia-est-maintenant-disponible-en-francais/`
+- Gemini 4 Argon - Google France, 13 octobre 2026 - `blog.google/intl/fr-fr/nouveautes-produits/gemini-4-argon/`
+- Introducing AI Mode in Search - Google, 5 mars 2025 - `blog.google/products-and-platforms/products/search/ai-mode-search/`
+- AI Mode in Search update (déploiement de la I/O 2025 et Gemini 2.5) - Google, 20 mai 2025 - `blog.google/products/search/google-search-ai-mode-update/`
+- What's new in Search at I/O 2026 (utilisateurs, requêtes et Gemini 3.5 Flash par défaut) - Google, 19 mai 2026 - `blog.google/products-and-platforms/products/search/search-io-2026/`
+- New opportunities, control and insights for website owners (Aperçus IA : plus de 2,5 milliards d'utilisateurs mensuels) - Google, 3 juin 2026 - `blog.google/products-and-platforms/products/search/new-controls-website-owners/`
+- AI Mode expands to over 180 new countries and territories in English - Google, 21 août 2025 - `blog.google/products-and-platforms/products/search/ai-mode-agentic-personalized/`
+- Google brings Gemini 3.7 Flash to AI Mode in Search - Search Engine Journal, 14 août 2026 - `searchenginejournal.com/google-brings-gemini-3-7-flash-to-ai-mode-in-search/585923/`
+- Google Gemini 3.8 Flash in AI Mode - Search Engine Journal, 2 septembre 2026 - `searchenginejournal.com/google-gemini-3-8-flash-ai-mode/588194/`
+- Désactivez les réponses IA de Google en une minute sur Chrome, Firefox et Safari - Les Numériques, 23 juillet 2026 - `lesnumeriques.com/intelligence-artificielle/desactivez-les-reponses-ia-de-google-en-une-minute-sur-chrome-firefox-et-safari-n259612.html`
+- Comment ne pas afficher les réponses IA de Google dans vos requêtes - 20 Minutes, 28 juillet 2026 - `20minutes.fr/high-tech/astuces-high-tech/4236637-20260728-comment-afficher-reponses-ia-google-requetes-explique`
+- Google AI Mode: Powerful Search, Poor Usability - Nielsen Norman Group, 17 octobre 2025 - `nngroup.com/articles/google-ai-mode/`
