@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import { cn } from "@/lib/utils"
-import { PLANS, COMPARE_COLUMNS, COMPARE_GROUPS, type Plan, type PlanSegment } from "@/lib/plans"
+import { PLANS, type Plan, type PlanSegment } from "@/lib/plans"
 import {
   PROMO,
   RESERVATION_CODE_RE,
@@ -353,9 +353,6 @@ export function PricingCards({ copy, locale, creditsLabel = "Monthly credits" }:
       {/* Cards — both tabs render exactly three */}
       <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:mx-auto lg:max-w-5xl">
         {visibleTiers.map((plan) => {
-          const creditIndex = COMPARE_COLUMNS.findIndex(column => column.id === plan.id)
-          // The comparison data has a retired free-tier cell at index zero.
-          const credits = creditIndex < 0 ? copy.custom : COMPARE_GROUPS[0].rows[0].values[creditIndex + 1]
           const trialBrands = ({ starter: 1, consultant: 2, pro: 2, agency: 3 } as Record<string, number>)[plan.id]
           const trialCopy = TRIAL_COPY[locale] ?? TRIAL_COPY.en
           const p = priceDisplay(plan, annual, copy, locale, promoOn)
@@ -433,7 +430,6 @@ export function PricingCards({ copy, locale, creditsLabel = "Monthly credits" }:
 
               <p className="mt-4 min-h-[40px] text-[13px] leading-snug text-gray-600">{tagline}</p>
 
-              <p className="mt-1 border-t border-gray-100 pt-4 text-[13px] text-gray-600"><strong className="text-gray-900">{credits}</strong> {creditsLabel.toLocaleLowerCase(locale)}</p>
               <Link
                 href={ctaHref}
                 prefetch={false}
