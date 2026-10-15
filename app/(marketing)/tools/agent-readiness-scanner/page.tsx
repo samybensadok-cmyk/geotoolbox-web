@@ -1,3 +1,5 @@
+import { ToolIntro } from "@/components/tools/tool-intro"
+import styles from "@/components/tools/tool-experience.module.css"
 import type { Metadata } from "next"
 import Link from "next/link"
 
@@ -86,7 +88,7 @@ export default function AgentReadinessScannerPage() {
   return (
     <>
       {/* Hero + the tool */}
-      <section className="relative overflow-hidden bg-[var(--surface-steel)] px-6 pt-16 pb-16 sm:pt-20 sm:pb-20">
+      <section className={styles.hero}>
         <JsonLd
           data={[
             softwareApplicationSchema({
@@ -105,27 +107,16 @@ export default function AgentReadinessScannerPage() {
 
         <div className="mx-auto max-w-5xl">
           <Breadcrumbs
+            tone="dark"
             trail={[
               { name: "Home", href: "/" },
               { name: "Tools", href: "/tools" },
               { name: "Agent Readiness Scanner", href: "" },
             ]}
           />
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-              Free full scan · no sign-up
-            </p>
-            <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-              Agent Readiness Scanner
-            </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
-              The full scan, not a teaser. We fetch your site as six AI crawlers, render it in a real browser, check robots
-              against 34 known AI bots, and score every scored check in our Agent Readiness rubric. You get a 0-100 score, the
-              five pillar breakdown, and where you sit on the Level 0 to 4 agent readiness ladder.
-            </p>
-          </div>
+          <ToolIntro slug="agent-readiness-scanner" />
 
-          <div className="mt-10">
+          <div className={styles.workbench}>
             <AgentReadinessScannerWidget />
           </div>
 
@@ -139,7 +130,9 @@ export default function AgentReadinessScannerPage() {
       </section>
 
       {/* Honest evidence panel */}
-      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
+      <details className={styles.guide}>
+        <summary>What this tool checks and how to read the results</summary>
+<section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
         <div className="mx-auto max-w-3xl">
           <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">Straight answer</p>
           <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
@@ -164,6 +157,7 @@ export default function AgentReadinessScannerPage() {
           </div>
         </div>
       </section>
+      </details>
 
       {/* How it works */}
       <HowItWorks3Step heading="From a domain to an agent readiness verdict" steps={steps} />

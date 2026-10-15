@@ -1,3 +1,5 @@
+import { ToolIntro } from "@/components/tools/tool-intro"
+import styles from "@/components/tools/tool-experience.module.css"
 import type { Metadata } from "next"
 import Link from "next/link"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
@@ -110,7 +112,7 @@ const faqs = [
 export default function SitemapExtractorPage() {
   return (
     <>
-      <section className="relative overflow-hidden bg-[var(--surface-steel)] px-6 pt-16 pb-16 sm:pt-20 sm:pb-20">
+      <section className={styles.hero}>
         <JsonLd
           data={[
             softwareApplicationSchema({
@@ -129,36 +131,25 @@ export default function SitemapExtractorPage() {
 
         <div className="mx-auto max-w-5xl">
           <Breadcrumbs
+            tone="dark"
             trail={[
               { name: "Home", href: "/" },
               { name: "Tools", href: "/tools" },
               { name: "Sitemap URL Extractor & Validator", href: "" },
             ]}
           />
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-              Free sitemap tool
-            </p>
-            <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-              Free Sitemap URL Extractor &amp; Validator
-            </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
-              Paste an XML sitemap URL — or just a domain — and get every page URL out. Index files are walked to their
-              children, <code className="rounded bg-gray-200/70 px-1 text-[0.9em] text-gray-700">.xml.gz</code>{" "}is
-              decompressed, and then it does what the others don&apos;t: it doubles as a sitemap checker, validating the
-              file against the spec, flagging URLs your own robots.txt blocks, and testing whether the URLs still
-              resolve. Free, no sign-up.
-            </p>
-          </div>
+          <ToolIntro slug="sitemap-extractor" />
 
-          <div className="mt-10">
+          <div className={styles.workbench}>
             <SitemapExtractorWidget />
           </div>
         </div>
       </section>
 
       {/* The differentiator, stated plainly — this is why the tool exists */}
-      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
+      <details className={styles.guide}>
+        <summary>What this tool checks and how to read the results</summary>
+<section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
         <div className="mx-auto max-w-3xl">
           <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
             Why most extractors fail
@@ -198,6 +189,7 @@ export default function SitemapExtractorPage() {
           </div>
         </div>
       </section>
+      </details>
 
       <HowItWorks3Step heading="From a domain to a URL list in three steps" steps={steps} />
 
