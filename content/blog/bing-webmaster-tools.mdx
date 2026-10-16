@@ -86,7 +86,7 @@ Setup takes a key, a file and a request:
 2. Host a UTF-8 text file named `{your-key}.txt` at your site root, containing only the key.
 3. Send a request. A single URL is a GET such as `https://www.bing.com/indexnow?url=https%3A%2F%2Fexample.com%2Fnew-page&key=your-key` (the URL must be encoded), and a POST can carry up to 10,000 URLs in one JSON body.
 
-An HTTP 200 means the submission was received.
+An HTTP 200 means the URL was submitted successfully. On a first request you may get HTTP 202 instead: the URL was received and key validation is still pending. The documentation also lists 403 for an invalid key, 422 for URLs that do not belong to the host (or a key that does not match the protocol's schema) and 429 for too many requests.
 
 You submit to one participating endpoint, and according to the [IndexNow FAQ](https://www.indexnow.org/faq) your submission is "shared across all IndexNow-enabled search engines". The [engine file](https://www.indexnow.org/searchengines.json) the project publishes, read October 7, 2026, names Bing, Yandex, Seznam, Naver, Yep, Internet Archive and Amazonbot. Google is not on it, so a submission gives you nothing you can count on for Google.
 
@@ -110,6 +110,8 @@ We ping IndexNow on every push that changes content on this site, through a GitH
   <BlogImage src="/blog/bing-webmaster-tools/bwt-search-performance-en.png" alt="Search Performance report in Bing Webmaster Tools for geotoolbox.ai, 3-month view: total clicks, total impressions and average CTR above a line chart, with a note below it about Web traffic versus Chat." w="1505" h="693" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
   <figcaption className="mt-3 text-center text-sm text-gray-500">Search Performance for geotoolbox.ai, 3-month view on October 16, 2026. The banner under the chart says keyword, page, device and country data exists only for Web traffic, not for Chat. The totals shown cover a newer window than the October 4 figures quoted below.</figcaption>
 </figure>
+
+Microsoft's [portal overview](https://www.bing.com/webmasters/help/refreshed-webmaster-tools-7c7d2533) lists tools this guide skips. Keyword Research shows the phrases searchers use in Bing, with search volumes. Site Scan is an on-demand audit that crawls your site for common technical SEO issues. Site Explorer shows the site structure with redirects, crawl issues and URLs blocked by robots.txt. Backlinks lists referring pages, referring domains and anchor texts, with an integrated Disavow Links tool. [Crawl Control](https://www.bing.com/webmasters/help/crawl-control-55a30303) sets Bingbot to crawl faster or slower for each of the day's 24 hours; a crawl-delay directive in robots.txt always takes precedence.
 
 ## The AI Performance Report, View by View
 
@@ -248,11 +250,13 @@ Google Search Console. Bing Webmaster Tools is the Bing equivalent, and it can i
 - Microsoft Bing - URL Inspection, Bing Webmaster Tools Help (read October 7, 2026) - `bing.com/webmasters/help/url-inspection-55a30305`
 - Microsoft Bing - Webmaster Support (read October 7, 2026) - `bing.com/webmasters/support`
 - Microsoft Bing - AI Performance, Bing Webmaster Tools Help (read October 7, 2026) - `bing.com/webmasters/help/ai-performance-9f8e7d6c`
+- Microsoft Bing - Webmaster tools & features, Bing Webmaster Tools Help (read October 16, 2026) - `bing.com/webmasters/help/refreshed-webmaster-tools-7c7d2533`
+- Microsoft Bing - Crawl control, Bing Webmaster Tools Help (read October 16, 2026) - `bing.com/webmasters/help/crawl-control-55a30303`
 - Bing Webmaster Blog - Introducing AI Performance in Bing Webmaster Tools, Public Preview (February 10, 2026) - `blogs.bing.com/webmaster/2026/2/Introducing-AI-Performance-in-Bing-Webmaster-Tools-Public-Preview/`
 - Bing Search Blog - New AI Visibility Insights in Bing Webmaster Tools: Intents, Topics, Citation Share, Compare (June 16, 2026) - `blogs.bing.com/search/2026/6/New-AI-Visibility-Insights-in-Bing-Webmaster-Tools-Intents-Topics-Citation-Share-Compare/`
 - Bing Webmaster Blog - Introducing Topics Portfolio (Beta) in AI Performance (October 13, 2026) - `blogs.bing.com/webmaster/2026/10/introducing-topics-portfolio-beta-in-ai-performance/`
-- IndexNow - Documentation (read October 7, 2026) - `indexnow.org/documentation`
-- IndexNow - FAQ (read October 7, 2026) - `indexnow.org/faq`
+- IndexNow - Documentation (read October 7 and 16, 2026) - `indexnow.org/documentation`
+- IndexNow - FAQ (read October 7 and 16, 2026) - `indexnow.org/faq`
 - IndexNow - Participating search engines file (read October 7, 2026) - `indexnow.org/searchengines.json`
 - OpenAI Help Center - Searching the web with ChatGPT (read October 7, 2026) - `help.openai.com/en/articles/9237897-chatgpt-search`
 - Google Search Central Blog - Introducing Search Generative AI performance reports in Search Console (June 3, 2026; note added August 31, 2026) - `developers.google.com/search/blog/2026/06/gen-ai-performance-reports`
