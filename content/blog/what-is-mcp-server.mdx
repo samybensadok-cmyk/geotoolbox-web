@@ -2,7 +2,7 @@
 title: "What Is an MCP Server? (And Why It Matters for Your Site)"
 description: "MCP lets AI agents connect to external tools and data through one standard protocol. What it is, how it works, and why it matters for your site's AI readiness."
 date: "2026-09-08"
-updated: "2026-09-13"
+updated: "2026-10-16"
 author: "Samy BEN SADOK"
 tags: ["mcp", "ai-agents", "model-context-protocol", "agent-readiness", "ai-visibility"]
 draft: false
@@ -18,7 +18,7 @@ The protocol no longer belongs to Anthropic alone. On December 9, 2025, Anthropi
 
 MCP now sits alongside Block's goose and OpenAI's AGENTS.md as a founding project under neutral, vendor-independent governance rather than a single company's roadmap.
 
-The protocol has moved fast in the less than two years since launch. The November 2024 spec already supported a remote transport alongside local stdio connections, using HTTP with Server-Sent Events. A [March 2025 update replaced that with Streamable HTTP](https://modelcontextprotocol.io/specification/2025-03-26/basic/transports), a simpler model for remote connections.
+The protocol has moved fast since its November 2024 launch. The November 2024 spec already supported a remote transport alongside local stdio connections, using HTTP with Server-Sent Events. A [March 2025 update replaced that with Streamable HTTP](https://modelcontextprotocol.io/specification/2025-03-26/basic/transports), a simpler model for remote connections.
 
 A June 2025 update added elicitation, letting a server ask the user for more information mid-task. By the current 2026-07-28 spec, several capabilities from the original design, including the old way a server could request a model completion and its debug-logging channel, are deprecated. Any explanation of MCP older than a few months is describing an earlier version of it.
 
@@ -90,9 +90,9 @@ RAG, APIs, and MCP are not exclusive alternatives so much as composable layers, 
 
 ## Is Using an MCP Server Safe?
 
-Not automatically, and the honest answer is more useful than the reassuring one. The base MCP specification left authorization to individual implementers until an OAuth-based framework was added in March 2025, and even where that gap has since closed, real, documented incidents keep coming from a different direction: an agent acting on untrusted content with a credential that reaches further than the task needed.
+Not automatically, and the honest answer is more useful than the reassuring one. The base MCP specification left authorization to individual implementers until an OAuth-based framework was added in March 2025, and even where that gap has since closed, documented attack demonstrations by security researchers keep pointing in a different direction: an agent acting on untrusted content with a credential that reaches further than the task needed.
 
-In one case, researchers at [General Analysis showed how Supabase's MCP server could leak an entire private database](https://www.generalanalysis.com/blog/supabase-mcp-blog): an attacker planted hidden instructions inside a support ticket, and a developer's AI agent, reading that ticket through the MCP connection with a broad service-level credential, followed the embedded instructions and wrote the contents of a private tokens table back into the same ticket thread, where the attacker could simply read it.
+In one demonstration using test data, researchers at [General Analysis showed how Supabase's MCP server could leak an entire private database](https://generalanalysis.com/blog/supabase-mcp-blog): an attacker planted hidden instructions inside a support ticket, and a developer's AI agent, reading that ticket through the MCP connection with a broad service-level credential, followed the embedded instructions and wrote the contents of a private tokens table back into the same ticket thread, where the attacker could simply read it.
 
 In another, [Invariant Labs documented an attack against GitHub's MCP server](https://invariantlabs.ai/blog/mcp-github-vulnerability) where a malicious issue filed on a public repository carried hidden instructions that led an agent, which also had access to the user's private repositories, to pull data out of one of those and publish it in a pull request on the public repo.
 

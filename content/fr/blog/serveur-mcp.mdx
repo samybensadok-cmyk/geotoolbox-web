@@ -1,8 +1,8 @@
 ---
 title: "Qu'est-ce qu'un serveur MCP ? Fonctionnement et sécurité"
-description: "Le MCP connecte les agents IA à vos outils et données via un protocole standard : fonctionnement, incidents réels documentés, impact pour votre site."
+description: "Le MCP connecte les agents IA à vos outils et données via un protocole standard : fonctionnement, attaques démontrées en recherche, impact pour votre site."
 date: "2026-09-12"
-updated: "2026-10-05"
+updated: "2026-10-16"
 author: "Samy BEN SADOK"
 tags: ["mcp", "ai-agents", "model-context-protocol", "agent-readiness", "ai-visibility"]
 draft: false
@@ -22,7 +22,7 @@ Le protocole n'appartient plus à Anthropic seule. Le 9 décembre 2025, Anthropi
 
 Le MCP rejoint ainsi goose (Block) et AGENTS.md (OpenAI) parmi les projets fondateurs, sous une gouvernance neutre qui ne dépend plus d'un seul éditeur ni de sa feuille de route.
 
-Le protocole a évolué vite en moins de deux ans. La spécification de novembre 2024 prenait déjà en charge un transport distant en plus de la connexion locale stdio, via HTTP avec Server-Sent Events. Une [mise à jour de mars 2025 a remplacé ce transport par Streamable HTTP](https://modelcontextprotocol.io/specification/2025-03-26/basic/transports), un modèle plus simple pour les connexions distantes.
+Le protocole a évolué vite depuis son lancement en novembre 2024. La spécification de novembre 2024 prenait déjà en charge un transport distant en plus de la connexion locale stdio, via HTTP avec Server-Sent Events. Une [mise à jour de mars 2025 a remplacé ce transport par Streamable HTTP](https://modelcontextprotocol.io/specification/2025-03-26/basic/transports), un modèle plus simple pour les connexions distantes.
 
 Une mise à jour de juin 2025 a ajouté l'élicitation (elicitation), un mécanisme qui permet à un serveur de demander une information supplémentaire à l'utilisateur en cours de tâche. Dans la spécification actuelle (datée du 28 juillet 2026), plusieurs mécanismes de la conception d'origine sont dépréciés, dont l'ancien canal de demande de complétion (sampling) et le canal de journalisation (logging). Toute explication du MCP vieille de plus de quelques mois décrit donc une version antérieure du protocole.
 
@@ -30,7 +30,7 @@ Une mise à jour de juin 2025 a ajouté l'élicitation (elicitation), un mécani
 
 - **Un serveur MCP expose des outils, des données et des invites à un agent IA** via le Model Context Protocol, un standard ouvert créé par Anthropic le 25 novembre 2024 et confié depuis le 9 décembre 2025 à l'Agentic AI Foundation (Linux Foundation).
 - **Le mécanisme central est la découverte** : un client MCP interroge le serveur pour savoir ce qu'il propose, au lieu d'être codé en dur pour une intégration précise.
-- **Deux incidents réels et documentés** (Supabase, GitHub) montrent que le risque tient presque toujours aux droits d'accès confiés à l'agent, et non à une faille du protocole.
+- **Deux attaques documentées, démontrées par des chercheurs** (Supabase, GitHub) montrent que le risque tient presque toujours aux droits d'accès confiés à l'agent, et non à une faille du protocole.
 - **En France**, la CNIL et le CIANum ont publié en juillet 2026 une note exploratoire sur l'IA agentique, et la DINUM exploite déjà un serveur MCP public en lecture seule pour data.gouv.fr.
 - **Pour un site**, un serveur MCP (ou une API documentée) est ce qui permet à un agent d'agir sur votre service, pas seulement de le lire et de le citer.
 
@@ -102,9 +102,9 @@ Le RAG, les API et le MCP ne s'excluent pas : ce sont plutôt des couches qui se
 
 ## Un serveur MCP est-il sécurisé ?
 
-Pas automatiquement, et mieux vaut une réponse franche qu'une réponse rassurante. La spécification MCP de base laissait l'autorisation à la charge de chaque implémentation, jusqu'à l'ajout d'un cadre basé sur OAuth 2.1 en mars 2025. Même là où cette lacune a été comblée, les incidents réels et documentés continuent de venir d'ailleurs : un agent qui agit à partir de contenus non fiables avec des droits plus larges que ce que la tâche exigeait.
+Pas automatiquement, et mieux vaut une réponse franche qu'une réponse rassurante. La spécification MCP de base laissait l'autorisation à la charge de chaque implémentation, jusqu'à l'ajout d'un cadre basé sur OAuth 2.1 en mars 2025. Même là où cette lacune a été comblée, les attaques documentées par des chercheurs en sécurité pointent ailleurs : un agent qui agit à partir de contenus non fiables avec des droits plus larges que ce que la tâche exigeait.
 
-Dans un premier cas, des chercheurs de [General Analysis ont montré comment le serveur MCP de Supabase pouvait faire fuiter une base de données privée entière](https://www.generalanalysis.com/blog/supabase-mcp-blog) : un attaquant a déposé des instructions cachées dans un ticket de support, et l'agent IA d'un développeur, en lisant ce ticket via la connexion MCP avec la clé `service_role`, qui contourne les règles RLS (row-level security), a suivi ces instructions et recopié le contenu de la table privée `integration_tokens` dans un nouveau message du même fil de ticket, où l'attaquant n'avait plus qu'à le lire.
+Dans une première démonstration sur des données de test, des chercheurs de [General Analysis ont montré comment le serveur MCP de Supabase pouvait faire fuiter une base de données privée entière](https://generalanalysis.com/blog/supabase-mcp-blog) : un attaquant a déposé des instructions cachées dans un ticket de support, et l'agent IA d'un développeur, en lisant ce ticket via la connexion MCP avec la clé `service_role`, qui contourne les règles RLS (row-level security), a suivi ces instructions et recopié le contenu de la table privée `integration_tokens` dans un nouveau message du même fil de ticket, où l'attaquant n'avait plus qu'à le lire.
 
 Dans un second cas, [Invariant Labs a documenté une attaque contre le serveur MCP de GitHub](https://invariantlabs.ai/blog/mcp-github-vulnerability) : une issue malveillante déposée sur un dépôt public portait des instructions cachées qui ont conduit un agent, lequel avait aussi accès aux dépôts privés de l'utilisateur, à en extraire des données et à les publier dans une pull request sur le dépôt public. Invariant Labs le souligne lui-même : il ne s'agit pas d'une faille du code du serveur MCP de GitHub, mais d'un problème d'architecture de fond, à traiter au niveau du système agentique.
 
