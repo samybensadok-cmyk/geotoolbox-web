@@ -21,23 +21,23 @@ The mental model that trips people up is treating the window like human memory, 
 
 ## How Big Is the Context Window? 200K vs 1M
 
-**1 million tokens is now the normal case, not the exception.** Every current model is 1M-capable, and Sonnet 5.5 runs at 1M unconditionally. The 200,000-token window is still the documented default, but in practice it is the floor you land on in specific situations rather than the standard you start from.
+**1 million tokens is now the normal case, not the exception.** Every current model is 1M-capable, and Sonnet 5.5 runs at 1M by default, with no suffix to select. The 200,000-token window is still the documented default, but in practice it is the floor you land on in specific situations rather than the standard you start from.
 
 <table>
 <thead>
 <tr><th>Model</th><th>Context window in Claude Code</th><th>Notes</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>Claude Sonnet 5.5</strong> (current Sonnet)</td><td>1M tokens</td><td>Always 1M on the Anthropic API. No 200K variant, no <code>[1m]</code> suffix, no usage credits on any paid plan. Sonnet 5, the prior model, behaves the same</td></tr>
-<tr><td><strong>Claude Opus 5.5</strong> (current Opus)</td><td>1M tokens</td><td>Automatic on every paid plan, including Pro, with no <code>[1m]</code> suffix and no usage credits. Opus 5, the prior model, is still selectable and keeps the same 1M behavior</td></tr>
-<tr><td><strong>Fable 5.1</strong> (and Fable 5)</td><td>1M tokens</td><td>1M on every paid plan, including Pro. Fable usage itself can bill to usage credits on some plans and seat tiers</td></tr>
-<tr><td><strong>Claude Haiku 5.5</strong> (current Haiku)</td><td>1M tokens</td><td>1M on every plan, no <code>[1m]</code> suffix. The one 1M model priced by prompt length: prompts over 100K tokens cost $0.50 input and $2.50 output per million, against $0.10 and $0.50 below that</td></tr>
+<tr><td><strong>Claude Sonnet 5.5</strong> (current Sonnet)</td><td>1M tokens</td><td>1M by default on the Anthropic API, with no <code>[1m]</code> suffix to select and no usage credits on any paid plan. The 200K cases below are the exceptions. Sonnet 5, the prior model, behaves the same</td></tr>
+<tr><td><strong>Claude Opus 5.5</strong> (current Opus)</td><td>1M tokens</td><td>1M by default on every paid plan, including Pro, with no <code>[1m]</code> suffix and no usage credits, unless one of the 200K cases below applies. Opus 5, the prior model, is still selectable and keeps the same 1M behavior</td></tr>
+<tr><td><strong>Fable 5.1</strong> (and Fable 5)</td><td>1M tokens</td><td>1M by default on every paid plan, including Pro. Fable usage itself can bill to usage credits on some plans and seat tiers</td></tr>
+<tr><td><strong>Claude Haiku 5.5</strong> (current Haiku)</td><td>1M tokens</td><td>1M by default on every plan, no <code>[1m]</code> suffix. The one 1M model priced by prompt length: prompts over 100K tokens cost $0.50 input and $2.50 output per million, against $0.10 and $0.50 below that</td></tr>
 <tr><td><strong>Haiku 4.5</strong> (legacy)</td><td>200K tokens</td><td>Does not reach 1M</td></tr>
 <tr><td><strong>Legacy</strong> (Opus 4.8 / 4.7 / 4.6, Sonnet 4.6)</td><td>1M tokens</td><td>Opus 4.8 and 4.7 run 1M on every paid plan, like Opus 5.5. Opus 4.6 and Sonnet 4.6 reach 1M only through their <code>[1m]</code> variant: Opus 4.6 is included on Max, Team, and Enterprise and needs usage credits on Pro, while Sonnet 4.6 requires usage credits on every subscription plan, including Max</td></tr>
 </tbody>
 </table>
 
-The 1M window is available on Pro, Max, Team, and Enterprise, per Anthropic's [context window documentation](https://support.claude.com/en/articles/8606394-how-large-is-the-context-window-on-paid-claude-plans). The plan split, from Anthropic's [model configuration docs](https://code.claude.com/docs/en/model-config) (checked October 17, 2026): on the Anthropic API, Fable 5.1, Fable 5, [Sonnet 5](https://geotoolbox.ai/blog/claude-sonnet-5) and later, Haiku 5.5, and Opus 4.7 and later run with the 1M window on every plan, including Pro, with no configuration and no usage credits. The plan rules only apply to Opus 4.6 and Sonnet 4.6, covered in the legacy row above.
+The 1M window is available on Pro, Max, Team, and Enterprise, per Anthropic's [context window documentation](https://support.claude.com/en/articles/8606394-how-large-is-the-context-window-on-paid-claude-plans). The plan split, from Anthropic's [model configuration docs](https://code.claude.com/docs/en/model-config) (checked October 17, 2026): on the Anthropic API, Fable 5.1, Fable 5, [Sonnet 5](https://geotoolbox.ai/blog/claude-sonnet-5) and later, Haiku 5.5, and Opus 4.7 and later run with the 1M window by default on every plan, including Pro, with no configuration and no usage credits. The plan rules only apply to Opus 4.6 and Sonnet 4.6, covered in the legacy row above.
 
 Two details that matter for cost. First, **the 1M window uses standard model pricing with no premium for tokens beyond 200K, except on Haiku 5.5,** which costs more on prompts longer than 100K tokens. Where extended context is included with your subscription, it stays covered by your subscription; where it comes through usage credits, those tokens bill to credits. A bigger window costs more because you are sending more tokens, not because the tokens themselves are priced higher. Second, on current models there is nothing to select. The `[1m]` suffix only matters for the two older models that reach 1M through a separate variant:
 
@@ -176,10 +176,10 @@ The reason a coding agent's context is expensive is the same reason serving AI a
 ## Frequently Asked Questions
 
 ### What is the Claude Code context window size?
-On current models it is 1 million tokens. Sonnet 5.5 runs at 1M unconditionally, and Opus 5.5, Haiku 5.5 and Fable 5.1 reach 1M too. Only the legacy Haiku 4.5 stays at the 200,000-token window. The usable space is always smaller than the headline number, because the system prompt, tools, memory, and your `CLAUDE.md` occupy part of the window before you type anything.
+On current models it is 1 million tokens. Sonnet 5.5, Opus 5.5, Haiku 5.5 and Fable 5.1 run at 1M by default. Only the legacy Haiku 4.5 stays at the 200,000-token window, and a few settings, such as `CLAUDE_CODE_DISABLE_1M_CONTEXT=1` or an unrecognized gateway model ID, pull the others back to 200K. The usable space is always smaller than the headline number, because the system prompt, tools, memory, and your `CLAUDE.md` occupy part of the window before you type anything.
 
 ### Does Claude Code have a 1 million token context window?
-Yes. On the Anthropic API, Sonnet 5 and later, Haiku 5.5, Opus 5.5 (and Opus 4.7 or later), and the Fable models run with it on every paid plan, including Pro; the 1M window needs no configuration and no usage credits, although Fable usage itself can bill to credits on some plans. Only Opus 4.6 and Sonnet 4.6 need their `[1m]` variant, with plan-dependent usage credits. The 1M window carries no price premium for tokens beyond 200K, except on Haiku 5.5, which costs more past 100K.
+Yes. On the Anthropic API, Sonnet 5 and later, Haiku 5.5, Opus 5.5 (and Opus 4.7 or later), and the Fable models run with it by default on every paid plan, including Pro; the 1M window needs no configuration and no usage credits (unless `CLAUDE_CODE_DISABLE_1M_CONTEXT=1` is set), although Fable usage itself can bill to credits on some plans. Only Opus 4.6 and Sonnet 4.6 need their `[1m]` variant, with plan-dependent usage credits. The 1M window carries no price premium for tokens beyond 200K, except on Haiku 5.5, which costs more past 100K.
 
 ### What is the difference between /compact and /clear?
 `/clear` wipes the conversation history entirely while keeping your files and tools, which is what you want when switching to unrelated work. `/compact` summarizes the conversation so far and continues from that summary, which is what you want at a natural break in the same task. The short version: between tasks, clear; inside one task, compact.
