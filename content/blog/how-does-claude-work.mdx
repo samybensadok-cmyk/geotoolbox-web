@@ -2,7 +2,7 @@
 title: "How Does Claude Work? An Honest Look Under the Hood"
 description: "How does Claude work? The honest mechanism: the transformer, Constitutional AI, what interpretability found, and why even its self-explanation is a guess."
 date: "2026-06-14"
-updated: "2026-09-03"
+updated: "2026-10-17"
 author: "Samy BEN SADOK"
 tags: ["how-does-claude-work", "claude", "anthropic", "constitutional-ai", "llm", "geo", "guide"]
 draft: false
@@ -52,7 +52,7 @@ Claude is not written the way software is written. It is grown in three stages, 
 
 <figure className="not-prose my-8">
   <BlogImage src="/blog/how-does-claude-work/how-claude-is-built-stages.png" alt="Claude's three build stages: pretraining, post-training, and the tool scaffolding." w="1040" h="469" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
-  <figcaption className="mt-3 text-center text-sm text-gray-500">Two stages grow the model, and a third — the scaffolding — is ordinary software built around it.</figcaption>
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Two stages grow the model, and a third, the scaffolding, is ordinary software built around it.</figcaption>
 </figure>
 
 **Stage one: pretraining.** The network reads an enormous amount of text and does one thing, predict the next token, billions of times, nudging itself a hair after each miss. Out of that single dull pressure, grammar, facts, and reasoning patterns precipitate. What comes out is a **base model**: fluent, knowledgeable, and not yet an assistant. Ask it "can you help me write an email?" and it might just continue the document in the same style instead of answering, because it has learned to imitate the internet, not to help. There is no "Claude" in here yet. The marketing obscures this: Claude is not a module someone coded. It is a character the network learned to play, and that character gets installed in the next stage.
@@ -140,9 +140,9 @@ That split settles the worries people carry about privacy. Because the model is 
 
 The same frozen-weights design explains why Claude is sometimes confidently wrong. Reaching for a likely next token is the entire mechanism, so when training never pinned a fact down, Claude still produces a fluent, confident guess, with the fluency decoupled from the truth. That is why [AI hallucinations](https://geotoolbox.ai/blog/ai-hallucinations) are a feature of the design rather than a bug someone forgot to fix.
 
-## The Current Claude Lineup (As of July 2026)
+## The Current Claude Lineup (As of October 2026)
 
-Anthropic ships Claude as a family of models, and the lineup changes often enough that any version numbers here come with a date stamp. As of July 2026, the everyday tiers run fastest to deepest: **Haiku 4.5** for speed, **Sonnet 5** for the balance of speed and intelligence, and **[Opus 5](https://geotoolbox.ai/blog/claude-opus-5)** as the most capable of the three. Opus 5 landed on July 24, 2026 at the same $5 and $25 per million tokens as **Opus 4.8**, which Anthropic now lists as a legacy model. A frontier model, **[Fable 5.1](https://geotoolbox.ai/blog/claude-fable-5-1)** (which replaced Fable 5 on September 1, 2026), sits above them at double the price, for work where capability matters more than cost. The current [model lineup](https://platform.claude.com/docs/en/about-claude/models/overview) lives on Anthropic's own page, which is the only roster worth trusting, since published guides go stale within weeks. Two of the competitor articles we checked while writing this still listed a flagship Opus that had already been superseded.
+Anthropic ships Claude as a family of models, and the lineup changes often enough that any version numbers here come with a date stamp. As of October 2026, the everyday tiers run fastest to deepest: **Haiku 5.5** (October 7, 2026) for speed, **Sonnet 5.5** (September 28, 2026) for the balance of speed and intelligence, and **Opus 5.5** (September 22, 2026, $4 and $20 per million tokens) as the most capable of the three. Opus 5.5 succeeded [Opus 5](https://geotoolbox.ai/blog/claude-opus-5), which had replaced Opus 4.8 in July. A frontier model, **[Fable 5.1](https://geotoolbox.ai/blog/claude-fable-5-1)** (which replaced Fable 5 on September 1, 2026), sits above them at two and a half times the price of Opus 5.5, for work where capability matters more than cost. The current [model lineup](https://platform.claude.com/docs/en/models/overview) lives on Anthropic's own page, which is the only roster worth trusting, since published guides go stale within weeks. Two of the competitor articles we checked while writing this still listed a flagship Opus that had already been superseded.
 
 What Anthropic publishes about each model is interesting for what it leaves out. You get the context window, the pricing, and the knowledge cutoff. You do not get the number people most want, the model's size, or parameter count. Anthropic has never disclosed how large these models are, so "more powerful" stays a relative description rather than a measured one. When a guide confidently states that Claude has some exact number of billions of parameters, it is guessing.
 
@@ -182,17 +182,9 @@ Not by default. The underlying model is stateless and starts each conversation b
 
 Mechanically, Claude predicts the next token. It builds rich internal representations and can compose multi-step reasoning, as interpretability research shows, but that is not evidence of inner experience, and the visible "thinking" it displays is not a readout of a mind. The honest position is that next-token prediction explains the behavior without needing the word "conscious," and anyone selling you certainty in either direction is overstating what is known.
 
-### Why does Claude refuse things or sound cautious?
-
-Because that behavior was trained in. Constitutional AI shaped Claude to follow written principles about being helpful and harmless, so a refusal or a hedge is that training showing through the weights. It is a deliberate choice by Anthropic, not a live censor reading each reply and not a random mood. You can disagree with where the lines fall, but they are not arbitrary.
-
 ### Why does Claude give a different answer each time?
 
 Because it samples from a probability distribution over possible next tokens rather than always taking the single most likely one. Run the same prompt twice and the path can diverge. When web search is involved, the pages it retrieves can differ too. The practical consequence for anyone testing AI visibility is that one answer is an anecdote, not a measurement.
-
-### Is Claude better than ChatGPT?
-
-They are built on the same transformer idea but trained differently, Claude with Constitutional AI and a heavier emphasis on written principles, ChatGPT with its own mix of human-feedback methods. That shows up as differences in tone, caution, and style more than as a single winner. For how the other one works under the hood, see our companion guide on [how ChatGPT works](https://geotoolbox.ai/blog/how-does-chatgpt-work).
 
 ## Sources
 
@@ -201,4 +193,4 @@ They are built on the same transformer idea but trained differently, Claude with
 - Attention Is All You Need (the transformer paper) - Vaswani et al., 2017 - `arxiv.org/abs/1706.03762`
 - Mapping the Mind of a Large Language Model - Anthropic, 2024 - `anthropic.com/news/mapping-mind-language-model`
 - On the Biology of a Large Language Model - Anthropic, 2025 - `transformer-circuits.pub/2025/attribution-graphs/biology.html`
-- Claude models overview - Anthropic - `platform.claude.com/docs/en/about-claude/models/overview`
+- Claude models overview - Anthropic - `platform.claude.com/docs/en/models/overview`

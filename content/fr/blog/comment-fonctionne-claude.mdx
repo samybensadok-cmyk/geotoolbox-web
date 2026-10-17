@@ -2,7 +2,7 @@
 title: "Comment fonctionne Claude ? Le mécanisme réel, sans filtre"
 description: "Comment fonctionne Claude : le mécanisme réel (Transformer, IA constitutionnelle, interprétabilité) et ce que même Claude ne peut pas expliquer sur lui-même."
 date: "2026-07-04"
-updated: "2026-09-03"
+updated: "2026-10-17"
 author: "Samy BEN SADOK"
 tags: ["how-does-claude-work", "claude", "anthropic", "constitutional-ai", "llm", "geo", "guide"]
 draft: false
@@ -158,9 +158,9 @@ Cette distinction dissipe aussi les inquiétudes sur la confidentialité. Le mod
 
 C'est cette même logique de poids figés qui explique pourquoi Claude se trompe parfois avec assurance. Le mécanisme entier repose sur la recherche du prochain token le plus probable ; quand l'entraînement n'a jamais fixé un fait avec certitude, Claude produit tout de même une réponse fluide et assurée qui n'est qu'une supposition, dont l'aisance ne dit rien de la vérité. C'est pourquoi les [hallucinations de l'IA](https://geotoolbox.ai/blog/ai-hallucinations) sont un trait inhérent au système, pas un défaut que quelqu'un aurait oublié de corriger.
 
-## La gamme Claude actuelle (en juillet 2026)
+## La gamme Claude actuelle (en octobre 2026)
 
-Anthropic commercialise Claude comme une famille de modèles, et la gamme change assez souvent pour que tout numéro de version, ici, porte une date. En juillet 2026, les modèles du quotidien s'échelonnent du plus rapide au plus puissant : **Haiku 4.5** pour la vitesse, **Sonnet 5** pour l'équilibre entre vitesse et intelligence, et **[Opus 5](https://geotoolbox.ai/blog/claude-opus-5)**, le plus performant des trois. Opus 5 a été lancé le 24 juillet 2026, au même tarif de 5 $ et 25 $ par million de tokens qu'**Opus 4.8**, qu'Anthropic classe désormais comme un modèle hérité. Un modèle de pointe, **[Fable 5.1](https://geotoolbox.ai/blog/claude-fable-5-1)** (qui a remplacé Fable 5 le 1er septembre 2026), se situe au-dessus pour les tâches les plus exigeantes. La [gamme de modèles](https://platform.claude.com/docs/en/about-claude/models/overview) à jour se trouve sur le site d'Anthropic lui-même, la seule source fiable, puisque les guides publiés deviennent obsolètes en quelques semaines : deux des articles concurrents consultés pour préparer celui-ci citaient encore un modèle Opus déjà remplacé.
+Anthropic commercialise Claude comme une famille de modèles, et la gamme change assez souvent pour que tout numéro de version, ici, porte une date. En octobre 2026, les modèles du quotidien s'échelonnent du plus rapide au plus puissant : **Haiku 5.5** (7 octobre 2026) pour la vitesse, **Sonnet 5.5** (28 septembre 2026) pour l'équilibre entre vitesse et intelligence, et **Opus 5.5** (22 septembre 2026, 4 $ et 20 $ par million de tokens), le plus performant des trois. Opus 5.5 a succédé à [Opus 5](https://geotoolbox.ai/blog/claude-opus-5), qui avait lui-même remplacé Opus 4.8 en juillet. Un modèle de pointe, **[Fable 5.1](https://geotoolbox.ai/blog/claude-fable-5-1)** (qui a remplacé Fable 5 le 1er septembre 2026), se situe au-dessus pour les tâches les plus exigeantes. La [gamme de modèles](https://platform.claude.com/docs/en/models/overview) à jour se trouve sur le site d'Anthropic lui-même, la seule source fiable, puisque les guides publiés deviennent obsolètes en quelques semaines : deux des articles concurrents consultés pour préparer celui-ci citaient encore un modèle Opus déjà remplacé.
 
 Fable 5 mérite une précision, puisque c'est justement le genre de fait qui rend un guide caduc du jour au lendemain : lancé le 9 juin 2026 aux côtés de Mythos 5, il a été suspendu quelques jours plus tard par une directive de contrôle des exportations du gouvernement américain (motif invoqué : une faille de sécurité que conteste Anthropic), coupant l'accès à tout ressortissant étranger. Les autres modèles Claude, Opus 4.8 compris, ont continué de fonctionner normalement pendant les 19 jours qu'a duré la coupure. Le Département du Commerce a levé la mesure le 30 juin, et Fable 5 a retrouvé un accès mondial le 1er juillet 2026 (Mythos 5 reste réservé à un cercle d'organisations agréées, le programme Glasswing). L'épisode a eu un effet secondaire bien réel côté France : le gouvernement a débloqué 655 millions d'euros supplémentaires pour France 2030, en citant explicitement le risque de dépendre d'un fournisseur d'IA étranger. Le dossier complet est dans notre [analyse de la suspension Fable 5](https://geotoolbox.ai/blog/fable-5-ban).
 
@@ -206,21 +206,9 @@ Pas par défaut. Le modèle sous-jacent est sans état et démarre chaque conver
 
 Mécaniquement, Claude prédit le token suivant. Il construit des représentations internes riches et compose des raisonnements en plusieurs étapes, comme le montre la recherche en interprétabilité, mais rien de tout cela ne prouve une expérience intérieure, et la « réflexion » visible qu'il affiche n'est pas le reflet d'un esprit. La position honnête, c'est que la prédiction du token suivant explique le comportement sans avoir besoin du mot « conscient », et que quiconque vous vend une certitude dans un sens ou dans l'autre exagère ce que l'on sait réellement.
 
-### Pourquoi Claude refuse-t-il certaines choses, ou semble-t-il trop prudent ?
-
-Parce que ce comportement lui a été inculqué. L'IA constitutionnelle a façonné Claude pour qu'il suive des principes écrits sur l'utilité et l'innocuité ; un refus ou une réponse évasive n'est donc que cet entraînement qui transparaît à travers les poids. C'est un choix délibéré d'Anthropic : ni un censeur qui lirait chaque réponse en direct, ni un caprice passager. On peut ne pas être d'accord avec l'endroit où la limite est fixée, mais elle n'a rien d'arbitraire.
-
 ### Pourquoi Claude donne-t-il une réponse différente à chaque fois ?
 
 Parce qu'il échantillonne une distribution de probabilité sur les tokens suivants possibles, plutôt que de toujours prendre le plus probable. Exécutez deux fois le même prompt et le chemin peut diverger. Quand une recherche Web entre en jeu, les pages récupérées peuvent varier aussi. Conséquence pratique pour quiconque teste sa visibilité dans l'IA : une seule réponse est une anecdote, pas une mesure.
-
-### Claude est-il meilleur que ChatGPT ?
-
-Les deux reposent sur la même idée de Transformer, mais ils sont entraînés différemment : Claude avec l'IA constitutionnelle et une place plus large pour des principes écrits, ChatGPT avec sa propre combinaison de méthodes fondées sur les retours humains. Cela se traduit par des différences de ton, de prudence et de style, plus que par un vainqueur unique. Pour le fonctionnement interne de l'autre système, voir notre guide sur [le fonctionnement de ChatGPT](https://geotoolbox.ai/blog/how-does-chatgpt-work).
-
-### Y a-t-il eu une action de la CNIL contre Anthropic ?
-
-Non, à ce jour aucune plainte ni sanction de la CNIL contre Anthropic ou Claude n'a été recensée en France. Une action collective existe aux États-Unis autour des limites d'usage de l'abonnement Claude Max, mais il s'agit d'un litige commercial américain, sans lien avec la protection des données. Les CGU de Claude restent malgré tout à vérifier par vous-même avant tout usage professionnel sensible.
 
 ## Sources
 
@@ -229,6 +217,6 @@ Non, à ce jour aucune plainte ni sanction de la CNIL contre Anthropic ou Claude
 - Attention Is All You Need (l'article sur le Transformer) - Vaswani et al., 2017 - `arxiv.org/abs/1706.03762`
 - Mapping the Mind of a Large Language Model - Anthropic, 2024 - `anthropic.com/news/mapping-mind-language-model`
 - On the Biology of a Large Language Model - Anthropic, 2025 - `transformer-circuits.pub/2025/attribution-graphs/biology.html`
-- Présentation des modèles Claude - Anthropic - `platform.claude.com/docs/en/about-claude/models/overview`
+- Présentation des modèles Claude - Anthropic - `platform.claude.com/docs/en/models/overview`
 - Déclaration d'Anthropic sur la suspension de Fable 5 et Mythos 5 - Anthropic, juin 2026 - `anthropic.com/news/fable-mythos-access`
 - CNIL : s'opposer à la réutilisation de ses données pour l'entraînement d'un agent conversationnel - CNIL - `cnil.fr/fr/ia-comment-sopposer-la-reutilisation-de-ses-donnees-personnelles-entrainement-agent-conversationnel`
