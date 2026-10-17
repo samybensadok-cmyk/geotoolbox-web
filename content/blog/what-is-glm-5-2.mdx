@@ -2,8 +2,8 @@
 title: "What Is GLM 5.2? China's Open-Weight AI, and Your Visibility"
 description: "What is GLM 5.2? Zhipu's open-weight AI explained: the specs, honest benchmarks, the China question, pricing, and what it means for your AI visibility."
 date: "2026-06-22"
-recheckBy: "2026-10-15"  # 09-25: fixed 2 stale claims - GLM-5.3 no longer "ties Kimi K3 at the top" of AA's Index (v4.3.2: MiMo-V2.6-Pro 46 > GLM-5.3 45 > Kimi K3 44); Colibri PoC speed corrected from the overstated "~1 tok/s at best" to the sourced 0.05-0.1 tok/s per the fact registry's colibri-glm52-speed card. GLM-5.3 weights landed ~08-28 under a custom (non-MIT) license; callout updated + linked to what-is-glm-5-3 (2026-08-30). Recheck whether this 5.2 page should be retired/redirected in favor of the 5.3 pillar, and the GLM Coding Plan off-peak promo (ends end of Sept 2026)
-updated: "2026-09-25"
+recheckBy: "2026-10-30"  # 10-17: Coding Plan section re-verified against docs.z.ai (credits-based plan since 2026-07-30, 50% off-peak, Lite $18 / Pro $80 / Max $168 per z.ai/subscribe, GLM-5.2 requests routed to GLM-5.3) and the Z.ai API list price ($1.40/$4.40). NOT re-checked: benchmark tables, Spec table, AA Index figures, Colibri speed. Recheck whether this 5.2 page should be retired/redirected in favor of the 5.3 pillar
+updated: "2026-10-17"
 author: "Samy BEN SADOK"
 tags: ["what-is-glm-5-2", "glm-5-2", "glm", "zhipu-ai", "z-ai", "open-weights", "chinese-ai", "llm", "guide"]
 draft: false
@@ -12,14 +12,14 @@ draft: false
 China's Zhipu AI shipped a frontier-grade open-weight model just days after the US forced Anthropic to take its most powerful Claude models offline, and nearly all the coverage has been about coding benchmarks and price. Here is the plain version of what GLM 5.2 actually is, who builds it, whether it is safe, and where it stands, current as of mid-2026. And then the part the developer write-ups skip: why a model most marketers will never touch directly is still worth a few minutes of your attention, and what the open-weight wave it belongs to means for your visibility in AI answers.
 
 <Callout type="note" title="Zhipu has since shipped GLM-5.3">
-On August 14, 2026, Zhipu released [**GLM-5.3**](https://geotoolbox.ai/blog/what-is-glm-5-3) on the same GLM Coding Plan tiers covered below, built on the same base as 5.2 through extended post-training rather than a new pretraining run. It claims roughly a 50% jump in coding over 5.2 on its internal bench, and developed a notable emergent cyber capability; on Artificial Analysis's newest Intelligence Index (v4.3.2, September 2026) it scores 45, the #2 open-weight model behind Xiaomi's new MiMo-V2.6-Pro (46) and just ahead of Kimi K3 (44, now #3). The open weights landed about two weeks after launch, but under a new custom "GLM-5.3 license" rather than MIT (the smaller GLM-5.3-Flash kept MIT). Everything below about GLM 5.2's specs, pricing, and safety profile still applies to 5.2 itself; see our full [What Is GLM 5.3](https://geotoolbox.ai/blog/what-is-glm-5-3) writeup for the newer sibling.
+On August 14, 2026, Zhipu released [**GLM-5.3**](https://geotoolbox.ai/blog/what-is-glm-5-3) on the GLM Coding Plan, built on the same base as 5.2 through extended post-training rather than a new pretraining run. It claims roughly a 50% jump in coding over 5.2 on its internal bench, and developed a notable emergent cyber capability; on Artificial Analysis's newest Intelligence Index (v4.3.2, September 2026) it scores 45, the #2 open-weight model behind Xiaomi's new MiMo-V2.6-Pro (46) and just ahead of Kimi K3 (44, now #3). The open weights landed about two weeks after launch, but under a new custom "GLM-5.3 license" rather than MIT (the smaller GLM-5.3-Flash kept MIT). Everything below about GLM 5.2's specs, API pricing, and safety profile still applies to 5.2 itself, except the Coding Plan, which now runs GLM-5.3; see our full [What Is GLM 5.3](https://geotoolbox.ai/blog/what-is-glm-5-3) writeup for the newer sibling.
 </Callout>
 
 ## What Is GLM 5.2?
 
 **GLM 5.2 is an open-weight model from Zhipu AI, the Chinese lab that operates internationally as Z.ai; it was the flagship through mid-2026, until [GLM-5.3](https://geotoolbox.ai/blog/what-is-glm-5-3) succeeded it in August.** It launched on June 13, 2026 as a coding-first frontier model with a one-million-token context window and an MIT license, with the downloadable weights and a standalone API following within days. That license means anyone with the hardware can run it. GLM stands for General Language Model, the name Zhipu has used for its [large language models](https://geotoolbox.ai/blog/how-does-chatgpt-work) since the series began.
 
-Like other open models, GLM 5.2 is really three things, and keeping them straight clears up most of the confusion. There are the open weights, which Zhipu publishes so anyone can download, run, and adapt the model. There is the hosted Z.ai chatbot and API, which Zhipu runs on its own servers. And there is the wider ecosystem of third-party tools that have wired GLM 5.2 in. The model is open; the service around it is Zhipu's.
+Like other open models, GLM 5.2 is really three things, and keeping them straight clears up most of the confusion. There are the open weights, which Zhipu publishes so anyone can download, run, and adapt the model. There is the hosted Z.ai API, which Zhipu runs on its own servers. And there is the wider ecosystem of third-party tools that have wired GLM 5.2 in. The model is open; the service around it is Zhipu's.
 
 That split matters because the answer to most questions about GLM 5.2 is different depending on which version you mean. Where it earned its reputation is doing frontier-grade coding and agent work at a fraction of what the closed American models cost, which is why its arrival made the industry pay attention to a name most marketers had never heard.
 
@@ -96,25 +96,24 @@ The pattern is clear: a coding and agents specialist that leads the open field o
 
 **This is the question GLM 5.2 gets asked most, and the honest answer turns on one distinction: who makes the model versus who hosts your data.** A model's national origin matters for your privacy only when the maker is also the company running your prompts. Get that straight and most of the worry sorts itself out.
 
-When you use the hosted Z.ai chatbot or API, your prompts travel to Zhipu's servers, which puts them under Chinese jurisdiction and the data-access laws that come with it. For sensitive code or proprietary documents, that is a genuine consideration, and it is the reason some companies will not route that work through the hosted service at all. The same caution applies to any Chinese-hosted model, which is why we walk through it the same way for [DeepSeek](https://geotoolbox.ai/blog/what-is-deepseek).
+When you use the hosted Z.ai API, your prompts travel to Zhipu's servers, which puts them under Chinese jurisdiction and the data-access laws that come with it. For sensitive code or proprietary documents, that is a genuine consideration, and it is the reason some companies will not route that work through the hosted service at all. The same caution applies to any Chinese-hosted model, which is why we walk through it the same way for [DeepSeek](https://geotoolbox.ai/blog/what-is-deepseek).
 
 Here is the part that changes the math. Because the weights are public and MIT-licensed, you do not have to use Zhipu's servers. A team can download GLM 5.2 and run it on its own infrastructure, so prompts never leave the building at all. Or it can use a non-Chinese provider that hosts the open weights, which keeps the traffic off Zhipu's servers, though your data then sits with that provider instead. Self-hosting shifts the security burden onto you, but it is the clearest answer to the China question for sensitive work: self-host rather than send. There is also a content angle. Like other Chinese-hosted assistants, the official app follows local content rules on politically sensitive topics, and that filtering is heaviest in the hosted product and lighter in the raw weights you run yourself.
 
 ## How Much GLM 5.2 Costs and How to Access It
 
-**Cost is GLM 5.2's sharpest edge.** The fastest way in is the GLM Coding Plan, a subscription that runs about $10 a month for the Lite tier, $30 for Pro, and $80 for Max, billed quarterly. For developers building on it directly, the standalone [API is priced](https://openrouter.ai/z-ai/glm-5.2) around $1 per million input tokens and roughly $4 per million output, a small fraction of what the leading closed models charge. Depending on which comparison you draw, that lands GLM 5.2 at somewhere between a sixth and a tenth of the cost of comparable frontier access, against the roughly $200 a month a top Claude plan runs.
+**Cost is GLM 5.2's sharpest edge.** The hosted way to run GLM 5.2 itself is the standalone [API](https://docs.z.ai/guides/overview/pricing), priced at $1.40 per million input tokens and $4.40 per million output: about a seventh of the input price and an eleventh of the output price of the top closed models (Fable 5.1 and GPT-6 Astra list at $10 and $50). The GLM Coding Plan is a subscription that lists at $18 a month for the Lite tier, $80 for Pro, and $168 for Max (20% off quarterly, 30% off yearly), but it no longer serves 5.2: it runs GLM-5.3, and requests for GLM-5.2 are routed to it.
 
 The one asterisk is the token appetite from the benchmark section. Because GLM 5.2 generates roughly a quarter more tokens to finish a job, heavy agentic use eats into that headline saving, so the real cost depends on your workload, not just the rate card. It narrows the gap rather than erasing it. Here are the main ways to reach it.
 
 <table>
 <thead>
-<tr><th>How you use it</th><th>Cost (as of July 2026)</th><th>What you get</th></tr>
+<tr><th>How you use it</th><th>Cost (as of October 2026)</th><th>What you get</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>Z.ai chatbot</strong></td><td>Free</td><td>Web chat, no setup, quickest way to try it</td></tr>
-<tr><td><strong>GLM Coding Plan (Lite)</strong></td><td>~$10/month</td><td>Use it inside a coding tool, roughly 400 prompts/week</td></tr>
-<tr><td><strong>GLM Coding Plan (Max)</strong></td><td>~$80/month</td><td>Heavy agentic use, roughly 8,000 prompts/week</td></tr>
-<tr><td><strong>Standalone API</strong></td><td>~$1 in / ~$4 out per 1M tokens</td><td>Build GLM 5.2 into your own product</td></tr>
+<tr><td><strong>GLM Coding Plan (Lite, serves GLM-5.3)</strong></td><td>$18/month</td><td>Use it inside a coding tool, 10,000 credits/week</td></tr>
+<tr><td><strong>GLM Coding Plan (Max, serves GLM-5.3)</strong></td><td>$168/month</td><td>Heavy agentic use, 140,000 credits/week</td></tr>
+<tr><td><strong>Standalone API</strong></td><td>$1.40 in / $4.40 out per 1M tokens</td><td>Build GLM 5.2 into your own product</td></tr>
 <tr><td><strong>Self-host (open weights)</strong></td><td>Free license, your own GPUs</td><td>Data stays on your servers; the model is over 1.5 TB, so plan for serious hardware</td></tr>
 </tbody>
 </table>
@@ -135,7 +134,7 @@ A month of real use has surfaced friction that the launch benchmarks do not capt
 
 That last point connects to a wider complaint: GLM 5.2 is token-hungry. Users report burning through subscription quota far faster than expected, in one case at around five times the rate of a comparable Claude plan. Treat the direction as well-attested and the magnitude as anecdotal, since other users push back and attribute it to workflow rather than the model.
 
-**The Coding Plan has multipliers the price tag does not mention.** Quota burns at 3x during peak hours (14:00 to 18:00 UTC+8) and 2x off-peak, with a promotion dropping off-peak to 1x through the end of September 2026, so the cheap era has a published expiry. Quotas are weekly on a rolling cycle from your purchase date, not calendar-monthly, and the MCP tool quota is a separate and much smaller allowance that people routinely confuse with the prompt quota. Subscriptions are non-refundable once purchased. And the error you will most likely hit, `1113 Insufficient Balance`, is a catch-all thrown for calling a non-whitelisted model or the wrong endpoint, not necessarily an actual balance problem.
+**The Coding Plan meters credits, and the price tag does not say how fast they burn.** Since July 30, 2026, new subscribers get a credits-based plan with a 5-hour and a weekly allowance, and each call is charged by its input, cached and output tokens. Model calls made outside the weekday peak window (14:00 to 18:00 Singapore time, UTC+8) cost half the standard credit rate. Weekly credits reset every seven days from the day you subscribe, and the MCP tools draw on the same credits. Subscriptions are non-refundable once purchased. And the error you will most likely hit, `1113 Insufficient Balance`, is a catch-all thrown for calling a non-whitelisted model or the wrong endpoint, not necessarily an actual balance problem.
 
 ## GLM 5.2 vs Claude, GPT-5.5, DeepSeek and Kimi
 
@@ -143,7 +142,7 @@ So which should you actually use? For most teams the answer is not one model but
 
 <table>
 <thead>
-<tr><th>Model</th><th>What it is</th><th>Strongest at</th><th>Open weights?</th><th>Rough cost</th></tr>
+<tr><th>Model (as of July 2026)</th><th>What it is</th><th>Strongest at</th><th>Open weights?</th><th>Rough cost</th></tr>
 </thead>
 <tbody>
 <tr><td><strong>GLM 5.2</strong> (Zhipu / Z.ai)</td><td>Open-weight model + app</td><td>Coding, agents, huge context, low cost</td><td>Yes (MIT)</td><td>Very low; self-host free</td></tr>
@@ -178,27 +177,21 @@ No. GLM the AI model stands for General Language Model and comes from the Chines
 
 Zhipu AI, a Beijing-based lab that operates internationally as Z.ai and was founded in 2019 as a spinout from Tsinghua University. Yes, it is a Chinese company, and it operates under Chinese law. That mainly matters for the hosted API, which is run by a Chinese company and puts your prompts under Chinese jurisdiction.
 
-### Is GLM 5.2 safe to use for business?
-
-It depends on how you use it. The hosted Z.ai API routes your prompts to servers under Chinese jurisdiction, which is a real consideration for sensitive or proprietary work. Because the weights are MIT-licensed, a safer route for that work is to self-host so data never leaves your infrastructure. As with any model, it has guardrails and can still be confidently wrong, so verify anything that matters.
-
 ### Is GLM 5.2 free, and how much does it cost?
 
-The Z.ai chatbot is free to use. The GLM Coding Plan starts at about $10 a month for Lite and runs to about $80 for Max, and the standalone API lists at $1.40 per million input tokens and $4.40 per million output on Z.ai as of July 2026, though third-party providers often run cheaper. Note that Coding Plan quota burns at 2x off-peak and 3x during peak hours, with a promotional 1x off-peak rate running through the end of September 2026. The open weights are free to download and run under the MIT License if you have the hardware, since the full model is over 1.5 TB.
-
-### Is GLM 5.2 better than ChatGPT or Claude?
-
-On coding, it is competitive: it beats GPT-5.5 on SWE-bench Pro and lands within a few points of Claude Opus 4.8 on agentic tasks. On the hardest abstract reasoning it trails both. It was the strongest open-weight model you could realistically self-host through mid-2026, though not the overall best; Kimi K3 passed it on raw benchmark scores in late July, and its own successor [GLM-5.3](https://geotoolbox.ai/blog/what-is-glm-5-3) took the runnable-open crown in August. Many teams still use GLM 5.2 for high-volume work and keep a closed model for the toughest problems.
+The standalone API, the hosted way to run GLM 5.2 itself, lists at $1.40 per million input tokens and $4.40 per million output on Z.ai as of October 2026. The GLM Coding Plan lists at $18 a month for Lite and $168 for Max but now runs GLM-5.3, not 5.2, and it meters credits: model calls made outside the weekday peak window cost half the standard credit rate. The open weights are free to download and run under the MIT License if you have the hardware, since the full model is over 1.5 TB.
 
 ### Does GLM 5.2 power an AI search engine I need to show up in?
 
-Not directly. GLM 5.2 is a coding-and-agents model with a chatbot, not a consumer AI-search engine like Perplexity, so there is nothing to "optimize for." You track the products your buyers actually use, ChatGPT, Perplexity, Gemini, and Claude, and you keep your brand reachable and consistent across the web so any engine, including ones built on open models like this, can describe you correctly.
+Not directly. GLM 5.2 is a coding-and-agents model, not a consumer AI-search engine like Perplexity, so there is nothing to "optimize for." You track the products your buyers actually use, ChatGPT, Perplexity, Gemini, and Claude, and you keep your brand reachable and consistent across the web so any engine, including ones built on open models like this, can describe you correctly.
 
 ## Sources
 
 - GLM-5.2: Built for Long-Horizon Tasks - Z.ai (official announcement), June 2026 - `z.ai/blog/glm-5.2`
 - GLM-5.2 model card - Zhipu AI (Hugging Face) - `huggingface.co/zai-org/GLM-5.2`
-- Z.ai GLM 5.2 API pricing - OpenRouter - `openrouter.ai/z-ai/glm-5.2`
+- Pricing - Z.ai developer docs, checked October 17, 2026 - `docs.z.ai/guides/overview/pricing`
+- GLM Coding Plan overview and plan update notice (July 30, 2026) - Z.ai developer docs, checked October 17, 2026 - `docs.z.ai/devpack/overview`
+- GLM Coding Plan subscription page - Z.ai, checked October 17, 2026 - `z.ai/subscribe`
 - GLM-5.2 model analysis - Artificial Analysis - `artificialanalysis.ai/models/glm-5-2`
 - Zhipu AI's stock rockets after it makes GLM-5.2 open source - South China Morning Post, June 2026 - `scmp.com/tech/tech-trends/article/3357115/zhipu-ais-stock-rockets-after-chinese-firm-makes-glm-52-open-source`
 - Z.ai launches GLM-5.2 with a usable 1M-token context and no benchmarks at launch - MarkTechPost, June 2026 - `marktechpost.com/2026/06/14/z-ai-launches-glm-5-2-with-a-usable-1m-token-context-two-thinking-effort-levels-and-no-benchmarks-at-launch`
