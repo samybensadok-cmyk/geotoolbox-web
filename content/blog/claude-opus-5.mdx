@@ -2,8 +2,8 @@
 title: "Claude Opus 5: Pricing, Benchmarks & What Actually Changed"
 description: "Claude Opus 5 launched July 24, 2026 at the same price as Opus 4.8. The five effort levels, the real cost per task, and what breaks when you upgrade."
 date: "2026-07-25"
-updated: "2026-09-25"
-recheckBy: "2026-10-25"  # updated 2026-09-25: added Opus 5.5 supersession note (Sep 22, $4/$20) + fixed "current default" claims (Claude Code 2.1.280: default = Opus 5.5 on Pro, Max, Team, Enterprise); 2026-09-26: 1M on every plan incl. Pro per model-config. Re-verify Anthropic's "highest available capability" guidance
+updated: "2026-10-17"
+recheckBy: "2026-10-25"  # updated 2026-09-25: added Opus 5.5 supersession note (Sep 22, $4/$20) + fixed "current default" claims (Claude Code 2.1.280: default = Opus 5.5 on Pro, Max, Team, Enterprise); 2026-09-26: 1M on every plan incl. Pro per model-config. 2026-10-17: fast mode scoped to Opus 5 (5.5 left preview 10-15), Sonnet 5.5 note. Re-verify Anthropic's "highest available capability" guidance
 author: "Samy BEN SADOK"
 tags: ["claude-opus-5", "claude", "anthropic", "opus-5", "llm", "guide"]
 draft: false
@@ -102,7 +102,7 @@ Three details in the Opus 5 column are worth pulling out.
 
 **There is no long-context surcharge.** The full 1M-token window bills at the standard rate. A 900,000-token request costs the same per token as a 9,000-token one. That is a real differentiator against models that apply a multiplier above a threshold.
 
-**Fast mode is a separate product decision.** It runs roughly 2.5 times faster at twice the price, as a research preview limited to the first-party Claude API. The Batch API and partner clouds do not offer it.
+**Fast mode is a separate product decision.** For Opus 5 it runs roughly 2.5 times faster at twice the price, still as a research preview limited to the first-party Claude API. The Batch API and partner clouds do not offer it. Opus 5.5 is different: its fast mode left research preview on October 15, 2026, costs $8 and $40 per million tokens, and also runs on Microsoft Foundry on Azure.
 
 **The minimum cacheable prompt dropped to 512 tokens**, down from 1,024 on Opus 4.8. If you are caching short system prompts that previously fell under the threshold, they now qualify.
 
@@ -277,7 +277,7 @@ So, is Opus 5 better than Fable 5? For most work, yes, at half the token price, 
 
 The practical reading: default to Opus 5, and escalate to Fable 5 only when Opus 5 measurably fails on your workload and the cost of that failure exceeds the premium. If you have never hit a wall with Opus 5, the extra $5 and $25 buys you nothing.
 
-Against [Claude Sonnet 5](https://geotoolbox.ai/blog/claude-sonnet-5) the decision is more common and cuts the other way. Sonnet 5 is the sensible default for high-volume everyday work, and Opus 5 earns its premium when accuracy on long, multi-step tasks is what you are paying for.
+Against [Claude Sonnet 5](https://geotoolbox.ai/blog/claude-sonnet-5) the decision is more common and cuts the other way. Sonnet is the sensible default for high-volume everyday work (today that means Sonnet 5.5, which replaced Sonnet 5 on September 28, 2026 at the same $2 and $10), and Opus 5 earns its premium when accuracy on long, multi-step tasks is what you are paying for.
 
 If you are on Opus 4.8 today, the per-token rate is unchanged, but the capability gain is not automatically free: the same task can consume more thinking and response tokens, which is the unit you actually pay for. Whether that trade is worth it is the one thing no benchmark table can tell you.
 
@@ -353,27 +353,19 @@ While you are auditing what the model can do, it is worth checking what the mode
 
 ### Is Claude Opus 5 available on the free plan?
 
-No. Claude Opus 5 requires a paid plan. At launch it was the default model on Claude Max and the strongest model available on Claude Pro; Opus 5.5 now holds both positions, and since Claude Code 2.1.280 it is the default model on Pro, Max, Team and Enterprise. Opus 5 itself is still available on Team, Enterprise, Claude Code and the API as the prior model. Free users get Claude Sonnet 5 instead.
+No. Claude Opus 5 requires a paid plan. At launch it was the default model on Claude Max and the strongest model available on Claude Pro; Opus 5.5 now holds both positions, and since Claude Code 2.1.280 it is the default model on Pro, Max, Team and Enterprise. Opus 5 itself is still available on Team, Enterprise, Claude Code and the API as the prior model.
 
 ### How much does Claude Opus 5 cost?
 
 $5 per million input tokens and $25 per million output tokens, which is identical to Opus 4.8 and half of Claude Fable 5. Batch API pricing is $2.50 and $12.50, cache hits are $0.50, and fast mode doubles the base rate to $10 and $50 for roughly 2.5 times the speed. There is no surcharge for using the full 1M-token context window.
 
-### What is the default effort level for Claude Opus 5?
-
-The API default is `high`, and setting `high` explicitly produces exactly the same behavior as omitting the parameter. Opus 5 supports all five levels: `low`, `medium`, `high`, `xhigh` and `max`. You pass it as `output_config.effort`.
-
 ### Does Claude Opus 5 work in Claude Code?
 
 Yes, and `high` is the default there as well. On the Anthropic API, Opus 5 runs with the 1M window on every paid plan, including Pro, with no `[1m]` variant and no usage credits (at launch, Pro needed usage credits for it). Select it with `/model claude-opus-5`, since the `opus` alias now points to Opus 5.5; the window carries no price premium beyond 200K.
 
-### Is Claude Opus 5 better than GPT-5.6?
-
-On Anthropic's published comparisons, Opus 5 leads GPT-5.6 Sol on most rows: FrontierBench (43.3 to 34.4 in the current system-card revision), OSWorld 2.0 (70.6 to 62.6), SWE-bench Pro (79.2 to 64.6), GDPval-AA v2 (1861 to 1736) and AutomationBench (26.0 to 18.1). GPT-5.6 Sol leads on DeepSWE v1.1 (72.7 to 68.8) and HealthBench Professional (60.5 to 59.8), and effectively ties BrowseComp. These are Anthropic's numbers on Anthropic's harness, so treat them as directional and run your own evaluation on the work you actually do.
-
 ### How much does a Claude Opus subscription cost?
 
-Opus 5 is not sold separately. It came with Claude Pro at $20 a month, where it was the strongest model available, and with Claude Max at $100 or $200 a month, where it was the default; Opus 5.5 has since taken over as the default model on Pro, Max, Team and Enterprise. Team and Enterprise plans include Opus too. Paying by the token through the API instead costs $5 per million input and $25 per million output for Opus 5 specifically, on a completely separate bill from the subscription.
+Opus 5 is not sold separately. It came with Claude Pro at $20 a month, where it was the strongest model available, and with Claude Max at $100 or $200 a month, where it was the default; Opus 5.5 has since taken over as the default model on Pro, Max, Team and Enterprise. Team and Enterprise plans include Opus too. Paying by the token through the API instead costs $5 per million input and $25 per million output for Opus 5 specifically, on a separate bill from the subscription, apart from the monthly API credit that Max and Team plans have included since October 7, 2026 ($100 on Max 5x, $200 on Max 20x, up to $500 pooled on Team).
 
 ## More Questions
 

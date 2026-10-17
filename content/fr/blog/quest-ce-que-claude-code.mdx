@@ -2,7 +2,7 @@
 title: "Qu'est-ce que Claude Code ? L'outil de codage IA d'Anthropic"
 description: "Claude Code, l'outil de codage agentique d'Anthropic : il lit votre code, modifie des fichiers et exécute des commandes. Prix en euros, fonctionnement en 2026."
 date: "2026-07-16"
-updated: "2026-08-10"
+updated: "2026-10-17"
 author: "Samy BEN SADOK"
 tags: ["claude-code", "claude", "anthropic", "agentic-ai", "developer-tools", "ai-agents"]
 draft: false
@@ -50,7 +50,7 @@ Ce qui diffère, c'est l'outil autour, pas l'intelligence à l'intérieur ; c'es
 
 ## Comment fonctionne Claude Code : la boucle agentique
 
-Tout ce que fait Claude Code se ramène à une seule boucle : examiner le projet, décider d'une approche, apporter une modification, lancer quelque chose, lire le résultat, corriger. Trois éléments la font tourner, et un mode décide quand elle démarre.
+Tout ce que fait Claude Code se ramène à une seule boucle : examiner le projet, décider d'une approche, apporter une modification, lancer quelque chose, lire le résultat, corriger. Trois éléments la font tourner, et un mode décide quand elle démarre. Il ne fonctionne pas hors ligne : les modèles tournent sur les serveurs d'Anthropic, donc chaque requête a besoin d'une connexion réseau, alors que les lectures de fichiers, les commandes shell et les modifications se font sur votre machine, ce qui lui permet de travailler sur une base de code privée sans téléverser tout le dépôt.
 
 <figure className="not-prose my-8">
   <BlogImage src="/blog/what-is-claude-code/agentic-loop.png" alt="La boucle agentique de Claude Code : rassembler le contexte, décider, modifier, exécuter, lire la sortie, corriger, recommencer." w="1152" h="562" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
@@ -151,12 +151,12 @@ Il y a deux façons de payer, et les confondre est une vraie source d'erreur. Un
     <tr><td><strong>Max 5x</strong></td><td>100 $/mois (≈ 105 € TTC*)</td><td>Inclus, pour les bases de code plus volumineuses</td></tr>
     <tr><td><strong>Max 20x</strong></td><td>200 $/mois (≈ 210 € TTC*)</td><td>Inclus, accès le plus large aux modèles Claude</td></tr>
     <tr><td><strong>Console (API)</strong></td><td>Tarification standard de l'API, au token</td><td>Pas de frais Claude Code distincts</td></tr>
-    <tr><td><strong>Mode rapide</strong></td><td>10 $ / 50 $ par million de tokens (entrée / sortie)</td><td>Préversion de recherche, forfaits à la consommation</td></tr>
+    <tr><td><strong>Mode rapide</strong></td><td>8 $ / 40 $ par million de tokens (entrée / sortie) sur Opus 5.5 ; 10 $ / 50 $ sur Opus 5 et Opus 4.8</td><td>Crédits d'usage sur les abonnements, au token sur la Console</td></tr>
   </tbody>
 </table>
 
 <Callout type="note">
-Chiffres vérifiés sur la [page produit Claude Code](https://claude.com/product/claude-code) d'Anthropic le 16 juillet 2026. *Anthropic facture ces abonnements **en dollars** ; pour un client français, la **TVA à 20 %** s'ajoute au tarif affiché (ce ne sont pas des prix TTC). Les équivalents « ≈ € TTC » ci-dessus sont indicatifs (tarif en dollars hors taxes, TVA française à 20 % ajoutée, recalculé pour la France à la mi-juillet 2026) et la facturation reste en USD au taux de change du jour. Le prix de ce produit a bougé plusieurs fois cette année : vérifiez avant de bâtir un budget dessus. Notre [guide des tarifs de Claude](https://geotoolbox.ai/blog/claude-pricing) détaille le calcul en euros et l'ensemble des formules, y compris les licences Team et Enterprise.
+Chiffres vérifiés sur la [page produit Claude Code](https://claude.com/product/claude-code) d'Anthropic le 17 octobre 2026. Les pages de Claude Code continuent de qualifier le mode rapide de préversion de recherche, alors que les notes de version de l'API ont sorti Opus 5.5 de la préversion le 15 octobre. Les formules Max incluent désormais aussi un crédit API mensuel (100 $ sur Max 5x, 200 $ sur Max 20x), qui couvre l'API Claude et l'Agent SDK mais pas l'usage interactif de Claude Code. *Anthropic facture ces abonnements **en dollars** ; pour un client français, la **TVA à 20 %** s'ajoute au tarif affiché (ce ne sont pas des prix TTC). Les équivalents « ≈ € TTC » ci-dessus sont indicatifs (tarif en dollars hors taxes, TVA française à 20 % ajoutée, recalculé pour la France à la mi-juillet 2026) et la facturation reste en USD au taux de change du jour. Le prix de ce produit a bougé plusieurs fois cette année : vérifiez avant de bâtir un budget dessus. Notre [guide des tarifs de Claude](https://geotoolbox.ai/blog/claude-pricing) détaille le calcul en euros et l'ensemble des formules, y compris les licences Team et Enterprise.
 </Callout>
 
 Le prix affiché, c'est la partie facile. Ce que presque personne ne publie, c'est le coût d'une journée de travail, et Anthropic le fait : sur les déploiements en entreprise, la moyenne tourne **autour de 13 dollars par développeur et par jour actif**, et **entre 150 et 250 dollars par développeur et par mois**, les coûts restant sous les 30 dollars par jour actif pour 90 % des utilisateurs.
@@ -244,17 +244,9 @@ Non. Il faut soit un abonnement Claude payant, à partir de la formule Pro à 20
 
 Ce sont deux types d'objets différents, donc la comparaison veut souvent dire autre chose. ChatGPT est un assistant à qui vous parlez ; Claude Code est un outil agentique qui modifie et exécute votre code. La comparaison juste oppose Claude Code à d'autres outils de codage agentiques, comme Cursor, Codex d'OpenAI ou l'option européenne portée par Mistral, pas à un produit de chat.
 
-### Claude Code fonctionne-t-il hors ligne ?
-
-Non. Les modèles tournent sur les serveurs d'Anthropic, pas sur votre machine, donc chaque requête a besoin d'une connexion réseau. Ce qui tourne en local, c'est l'outil lui-même : les lectures de fichiers, les commandes shell et les modifications se font toutes sur votre machine, ce qui lui permet de travailler sur une base de code privée sans téléverser tout le dépôt.
-
 ### Anthropic entraîne-t-il ses modèles sur mon code ?
 
 Cela dépend de votre mode de paiement. Sous conditions commerciales, qui couvrent les formules Console API, Team et Enterprise, la [documentation d'Anthropic sur l'utilisation des données](https://code.claude.com/docs/en/data-usage) indique qu'Anthropic n'entraîne pas ses modèles sur le code ou les prompts que vous envoyez via Claude Code, sauf accord explicite de votre part. Sur les formules grand public (Free, Pro et Max), vos données peuvent servir à améliorer les futurs modèles quand ce réglage est activé, et vous pouvez le désactiver à tout moment dans vos paramètres de confidentialité, à l'adresse [claude.ai/settings/data-privacy-controls](https://claude.ai/settings/data-privacy-controls). Si le maintien de votre code hors de l'entraînement est une exigence ferme, une formule Console, Team ou Enterprise est le choix par défaut le plus sûr, un point à trancher avant d'y passer du code client soumis au RGPD.
-
-### Faut-il savoir programmer pour utiliser Claude Code ?
-
-Cela aide beaucoup, mais l'outil ne se limite pas à produire du code. Une part substantielle de la communauté s'en sert comme agent d'automatisation local polyvalent, pour des opérations sur fichiers, du traitement de données et de la recherche. La limite, c'est la relecture : si vous ne pouvez pas évaluer ce qu'il a fait, vous ne pouvez pas le rattraper avec certitude quand il accomplit la mauvaise tâche.
 
 ### Claude Code, est-ce la même chose que le Claude Agent SDK ?
 

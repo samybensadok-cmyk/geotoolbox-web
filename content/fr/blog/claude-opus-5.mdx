@@ -2,7 +2,7 @@
 title: "Claude Opus 5 : prix en euros, benchmarks et ce qui change vraiment"
 description: "Le vrai prix de Claude Opus 5 en euros, les cinq niveaux d'effort qui peuvent doubler la facture, et ce qui casse quand vous migrez depuis Opus 4.8."
 date: "2026-07-25"
-updated: "2026-09-25"
+updated: "2026-10-17"
 author: "Samy BEN SADOK"
 tags: ["claude-opus-5", "claude", "anthropic", "opus-5", "llm", "guide"]
 draft: false
@@ -113,7 +113,7 @@ Trois détails de la colonne Opus 5 méritent qu'on s'y arrête.
 
 **Il n'y a pas de supplément pour le contexte long.** La fenêtre complète d'un million de tokens est facturée au tarif standard. Une requête de 900 000 tokens coûte le même prix par token qu'une de 9 000. C'est un vrai facteur de différenciation face aux modèles qui appliquent un multiplicateur au-delà d'un seuil.
 
-**Le mode rapide est un choix produit distinct.** Il tourne environ 2,5 fois plus vite pour le double du prix, sous forme de préversion, limitée à l'API Claude native. L'API Batch et les clouds partenaires ne le proposent pas.
+**Le mode rapide est un choix produit distinct.** Pour Opus 5, il tourne environ 2,5 fois plus vite pour le double du prix, toujours sous forme de préversion, limitée à l'API Claude native. L'API Batch et les clouds partenaires ne le proposent pas. Opus 5.5 fait exception : son mode rapide est sorti de la préversion le 15 octobre 2026, coûte 8 $ et 40 $ par million de tokens et fonctionne aussi sur Microsoft Foundry sur Azure.
 
 **La taille minimale d'un prompt pouvant être mis en cache est descendue à 512 tokens**, contre 1 024 sur Opus 4.8. Si vous mettez en cache de courts prompts système qui passaient sous le seuil, ils deviennent éligibles.
 
@@ -296,7 +296,7 @@ Alors, Opus 5 est-il meilleur que Fable 5 ? Pour la plupart des tâches, oui, po
 
 La lecture pratique : par défaut, prenez Opus 5, et ne passez à Fable 5 que lorsque Opus 5 échoue de façon mesurable sur votre charge de travail et que le coût de cet échec dépasse le surcoût. Si vous n'avez jamais buté sur un plafond avec Opus 5, les 5 $ et 25 $ de plus ne vous apportent rien.
 
-Face à [Claude Sonnet 5](https://geotoolbox.ai/blog/claude-sonnet-5), la décision est plus courante et tranche dans l'autre sens. Sonnet 5 est le choix par défaut raisonnable pour le travail quotidien à fort volume, et Opus 5 justifie son surcoût quand c'est la précision sur des tâches longues et à plusieurs étapes que vous payez.
+Face à [Claude Sonnet 5](https://geotoolbox.ai/blog/claude-sonnet-5), la décision est plus courante et tranche dans l'autre sens. Sonnet est le choix par défaut raisonnable pour le travail quotidien à fort volume (aujourd'hui, c'est Sonnet 5.5, qui a remplacé Sonnet 5 le 28 septembre 2026 au même tarif de 2 $ et 10 $), et Opus 5 justifie son surcoût quand c'est la précision sur des tâches longues et à plusieurs étapes que vous payez.
 
 Si vous êtes sur Opus 4.8 aujourd'hui, le tarif par token ne change pas, mais le gain de capacité n'est pas automatiquement gratuit : la même tâche peut consommer plus de tokens de réflexion et de réponse, l'unité que vous payez réellement. Aucun tableau comparatif ne vous dira si l'arbitrage en vaut la peine.
 
@@ -372,31 +372,25 @@ Pendant que vous auditez ce que le modèle sait faire, autant vérifier ce que l
 
 ### Claude Opus 5 est-il disponible dans la formule gratuite ?
 
-Non. Claude Opus 5 exige une formule payante. Au lancement, c'était le modèle par défaut sur Claude Max et le modèle le plus performant disponible sur Claude Pro ; Opus 5.5 occupe désormais les deux positions, et depuis Claude Code 2.1.280 c'est le modèle par défaut sur Pro, Max, Team et Enterprise. Opus 5 reste accessible sur Team, Enterprise, Claude Code et l'API comme modèle précédent. Les utilisateurs de la formule gratuite ont Claude Sonnet 5 à la place.
+Non. Claude Opus 5 exige une formule payante. Au lancement, c'était le modèle par défaut sur Claude Max et le modèle le plus performant disponible sur Claude Pro ; Opus 5.5 occupe désormais les deux positions, et depuis Claude Code 2.1.280 c'est le modèle par défaut sur Pro, Max, Team et Enterprise. Opus 5 reste accessible sur Team, Enterprise, Claude Code et l'API comme modèle précédent.
 
 ### Combien coûte Claude Opus 5 ?
 
 5 $ par million de tokens en entrée et 25 $ par million en sortie, soit identique à Opus 4.8 et la moitié de Claude Fable 5. Le tarif de l'API Batch est de 2,50 $ et 12,50 $, les lectures de cache coûtent 0,50 $, et le mode rapide double le tarif de base à 10 $ et 50 $ pour une vitesse environ 2,5 fois supérieure. Il n'y a pas de supplément pour utiliser la fenêtre de contexte complète d'un million de tokens.
 
-### Claude Opus 5 est-il meilleur que Claude Fable 5 ?
-
-Sur la plupart des benchmarks publiés par Anthropic, oui, pour un prix par token deux fois moindre. Mais Anthropic continue d'orienter vers Fable 5 les charges de travail réclamant la plus haute capacité disponible, et précise qu'Opus 5 n'est pas globalement plus performant. L'approche pratique consiste à prendre Opus 5 par défaut et à passer à Fable 5 seulement quand Opus 5 échoue de façon mesurable sur votre charge de travail précise.
-
-### Quel est le niveau d'effort par défaut de Claude Opus 5 ?
-
-Le défaut de l'API est `high`, et définir `high` explicitement produit exactement le même comportement que d'omettre le paramètre. Opus 5 prend en charge les cinq niveaux : `low`, `medium`, `high`, `xhigh` et `max`. Vous le passez sous la forme `output_config.effort`.
-
 ### Claude Opus 5 fonctionne-t-il dans Claude Code ?
 
 Oui, et `high` y est aussi le défaut. Sur l'API Anthropic, Opus 5 tourne avec la fenêtre d'un million sur toutes les formules payantes, Pro inclus, sans variante `[1m]` ni crédits d'usage (au lancement, Pro exigeait des crédits d'usage). Sélectionnez-le avec `/model claude-opus-5`, puisque l'alias `opus` pointe désormais vers Opus 5.5 ; la fenêtre n'entraîne aucun surcoût au-delà de 200 000 tokens.
 
-### Claude Opus 5 est-il meilleur que GPT-5.6 ?
-
-Sur les comparaisons publiées par Anthropic, Opus 5 devance GPT-5.6 Sol sur la plupart des lignes : FrontierBench (43,3 contre 34,4 dans la révision actuelle de la System Card), OSWorld 2.0 (70,6 contre 62,6), SWE-bench Pro (79,2 contre 64,6), GDPval-AA v2 (1 861 contre 1 736) et AutomationBench (26,0 contre 18,1). GPT-5.6 Sol mène sur DeepSWE v1.1 (72,7 contre 68,8) et HealthBench Professional (60,5 contre 59,8), et fait presque jeu égal sur BrowseComp. Ce sont les chiffres d'Anthropic sur le harnais d'Anthropic : traitez-les comme indicatifs et menez votre propre évaluation sur le travail que vous faites vraiment.
-
 ### Combien coûte un abonnement à Claude Opus ?
 
-Opus 5 n'est pas vendu séparément. Il était inclus dans Claude Pro à 20 $ par mois (environ 21 € TTC en France), où il était le modèle le plus performant disponible, et dans Claude Max à 100 $ ou 200 $ par mois (environ 105 € ou 210 € TTC), où il était le modèle par défaut ; Opus 5.5 est depuis devenu le modèle par défaut sur Pro, Max, Team et Enterprise. Les formules Team et Enterprise incluent Opus. Payer au token via l'API coûte, pour Opus 5 précisément, 5 $ par million en entrée et 25 $ par million en sortie, sur une facture entièrement distincte de l'abonnement.
+Opus 5 n'est pas vendu séparément. Il était inclus dans Claude Pro à 20 $ par mois (environ 21 € TTC en France), où il était le modèle le plus performant disponible, et dans Claude Max à 100 $ ou 200 $ par mois (environ 105 € ou 210 € TTC), où il était le modèle par défaut ; Opus 5.5 est depuis devenu le modèle par défaut sur Pro, Max, Team et Enterprise. Les formules Team et Enterprise incluent Opus. Payer au token via l'API coûte, pour Opus 5 précisément, 5 $ par million en entrée et 25 $ par million en sortie, sur une facture distincte de l'abonnement, hormis le crédit API mensuel que les formules Max et Team incluent depuis le 7 octobre 2026 (100 $ sur Max 5x, 200 $ sur Max 20x, jusqu'à 500 $ mutualisés sur Team).
+
+## Autres questions
+
+### Claude Opus 5 est-il meilleur que Claude Fable 5 ?
+
+Sur la plupart des benchmarks publiés par Anthropic, oui, pour un prix par token deux fois moindre. Mais Anthropic continue d'orienter vers Fable 5 les charges de travail réclamant la plus haute capacité disponible, et précise qu'Opus 5 n'est pas globalement plus performant. L'approche pratique consiste à prendre Opus 5 par défaut et à passer à Fable 5 seulement quand Opus 5 échoue de façon mesurable sur votre charge de travail précise.
 
 ### Vaut-il le coup de passer d'Opus 4.8 à Claude Opus 5 ?
 
