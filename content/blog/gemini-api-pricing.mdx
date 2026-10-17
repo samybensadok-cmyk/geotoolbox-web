@@ -2,14 +2,14 @@
 title: "Gemini API Pricing in $YEAR: Every Model, Tier, and Hidden Cost"
 description: "Gemini API pricing $YEAR: every model's token cost, the four service tiers, the free tier, Vertex vs Developer API, and the hidden costs that inflate your bill."
 date: "2026-07-02"
-recheckBy: "2026-12-01"  # Claude Sonnet 5 $2.00 input made permanent 2026-08-11 (planned $3.00 rise cancelled). 09-25: added GPT-6 Sol ($2/$10) + GPT-6 Luna ($0.10/$0.50), launched 2026-09-22 in Work/Codex/API, to the OpenAI comparison row (Astra unchanged, GPT-5.6 Sol/Luna unchanged and still what standard ChatGPT runs). 09-26 review fixes: Opus 5.5 ($4/$20) replaces Opus 5 in the Anthropic row; OpenAI's 272K long-context threshold distinguished from Gemini's 200K cliff.
-updated: "2026-09-25"
+recheckBy: "2026-11-25"  # 2026-10-17: Argon $2/$10 to 11-30 then $4/$20; 3.6/3.8 Flash intro $0.75/$3.75 to 12-31; 3.5 and 3.7 Flash deprecated 10-08; comparators GPT-6.1 Sol, Claude Haiku/Sonnet 5.5.
+updated: "2026-10-17"
 author: "Samy BEN SADOK"
 tags: ["gemini-api-pricing", "gemini-api", "google-gemini", "vertex-ai", "api-pricing", "ai-pricing"]
 draft: false
 ---
 
-Gemini API pricing starts at about $0.10 per million tokens with no subscription, which makes it look like one of the cheapest ways to build on a frontier model. It often is. But the per-token rate is not the bill. The same model sells at four different service-tier prices, the free tier comes with a real catch, and a handful of meters (thinking tokens, a context cliff, and grounding) decide what you actually pay.
+Gemini API pricing starts at $0.25 per million input tokens for a new project, with no subscription, which makes it look like one of the cheapest ways to build on a frontier model. It often is. But the per-token rate is not the bill. The same model sells at four different service-tier prices, the free tier comes with a real catch, and a handful of meters (thinking tokens, a context cliff, and grounding) decide what you actually pay.
 
 This is the developer's cost reference for the Gemini API: every model's token price, the service tiers, the free-tier limits, Vertex AI versus the Developer API, and the hidden costs that inflate the number. If you want a monthly consumer plan instead of per-token billing, see the [consumer Gemini pricing](https://geotoolbox.ai/blog/gemini-pricing) breakdown instead.
 
@@ -17,61 +17,62 @@ This is the developer's cost reference for the Gemini API: every model's token p
 
 The Gemini API charges you [per token](https://geotoolbox.ai/blog/what-are-tokens-in-ai), the chunks of text a model reads and writes, billed separately for input tokens and output tokens. There is no subscription. You pay for what your software sends and receives, and the rate depends entirely on which model you call.
 
-Here are the current pay-as-you-go rates for the models worth using, at Standard-tier prices as of July 2026.
+Here are the current pay-as-you-go rates for the models worth using, at Standard-tier prices as of October 17, 2026.
 
 <table>
 <thead>
 <tr><th>Model</th><th>Input (per 1M tokens)</th><th>Output (per 1M tokens)</th><th>Best for</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>Gemini 2.5 Flash-Lite</strong></td><td>$0.10</td><td>$0.40</td><td>Cheapest option, high-volume classification</td></tr>
-<tr><td><strong>Gemini 3.1 Flash-Lite</strong></td><td>$0.25</td><td>$1.50</td><td>Prior-generation budget tier</td></tr>
-<tr><td><strong>Gemini 2.5 Flash</strong></td><td>$0.30</td><td>$2.50</td><td>Multimodal workhorse</td></tr>
-<tr><td><strong>Gemini 3.5 Flash-Lite</strong></td><td>$0.30</td><td>$2.50</td><td>New budget tier, fastest in the 3.5 line (July 2026)</td></tr>
-<tr><td><strong>Gemini 3.6 Flash</strong></td><td>$1.50</td><td>$7.50</td><td>New default workhorse, successor to 3.5 Flash (July 2026)</td></tr>
-<tr><td><strong>Gemini 3.5 Flash</strong></td><td>$1.50</td><td>$9.00</td><td>Superseded by 3.6 Flash</td></tr>
-<tr><td><strong>Gemini 2.5 Pro</strong></td><td>$1.25 / $2.50</td><td>$10.00 / $15.00</td><td>Higher rate over 200K-token prompts</td></tr>
-<tr><td><strong>Gemini 3.1 Pro (Preview)</strong></td><td>$2.00 / $4.00</td><td>$12.00 / $18.00</td><td>Top Pro model, paid only, over-200K premium</td></tr>
+<tr><td><strong>Gemini 2.5 Flash-Lite</strong></td><td>$0.10</td><td>$0.40</td><td>Legacy: open only to projects that already used the 2.5 models</td></tr>
+<tr><td><strong>Gemini 3.1 Flash-Lite</strong></td><td>$0.25</td><td>$1.50</td><td>Cheapest for new projects; earliest shutdown May 7, 2027</td></tr>
+<tr><td><strong>Gemini 2.5 Flash</strong></td><td>$0.30</td><td>$2.50</td><td>Legacy: existing 2.5 users only</td></tr>
+<tr><td><strong>Gemini 3.5 Flash-Lite</strong></td><td>$0.30</td><td>$2.50</td><td>Budget tier Google recommends for new projects</td></tr>
+<tr><td><strong>Gemini 3.8 Flash</strong></td><td>$0.75 ($1.50 from Jan 1, 2027)</td><td>$3.75 ($7.50 from Jan 1, 2027)</td><td>Newest Flash, the default workhorse</td></tr>
+<tr><td><strong>Gemini 3.6 Flash</strong></td><td>$0.75 ($1.50 from Jan 1, 2027)</td><td>$3.75 ($7.50 from Jan 1, 2027)</td><td>Previous-generation Flash, same price</td></tr>
+<tr><td><strong>Gemini 2.5 Pro</strong></td><td>$1.25 / $2.50</td><td>$10.00 / $15.00</td><td>Legacy; higher rate over 200K-token prompts</td></tr>
+<tr><td><strong>Gemini 3.1 Pro (Preview)</strong></td><td>$2.00 / $4.00</td><td>$12.00 / $18.00</td><td>Paid only, over-200K premium</td></tr>
+<tr><td><strong>Gemini 4 Argon</strong></td><td>$2.00 ($4.00 from Dec 1, 2026)</td><td>$10.00 ($20.00 from Dec 1, 2026)</td><td>Flagship, paid only, one flat rate across a 1M window</td></tr>
 </tbody>
 </table>
 
 Three patterns run through that table. Flash-Lite is the floor and Pro is the ceiling, and the gap is wide: Gemini 3.1 Pro costs eight times more per input token than 3.1 Flash-Lite. For classification, extraction, and routine summarizing, the cheap models are usually enough, and routing simple work to Flash-Lite is where most teams find their savings.
 
-Output costs more than input, four to more than eight times on the Flash models, so long responses are where bills grow fastest. The Pro models also carry a context cliff: once a single prompt crosses 200,000 tokens, the input rate roughly doubles. More on that below.
+Output costs more than input, four to more than eight times on the Flash models, so long responses are where bills grow fastest. The 3.1 Pro and 2.5 Pro models also carry a context cliff: once a single prompt crosses 200,000 tokens, the input rate roughly doubles. Argon has none. More on that below.
 
-One naming note, since older guides get it wrong. As of July 21, 2026, the current default workhorse is **Gemini 3.6 Flash** at $1.50 input and $7.50 output, the successor to 3.5 Flash (which stays live at the higher $9.00 output but is now superseded). Google also shipped **Gemini 3.5 Flash-Lite** at $0.30 / $2.50 as a newer budget tier. The rates come straight from [Google's Gemini API pricing page](https://ai.google.dev/gemini-api/docs/pricing), the source of record, which changes often enough to check before you commit a budget. For how the two new models compare head to head, see our [Gemini 3.6 Flash vs 3.5 Flash-Lite](https://geotoolbox.ai/blog/gemini-3-6-flash-vs-3-5-flash-lite) guide.
+One naming note, since older guides get it wrong. As of October 17, 2026, the current default workhorse is **Gemini 3.8 Flash** at $0.75 input and $3.75 output through December 31, 2026 ($1.50 / $7.50 after), the successor to 3.6 Flash (now Google's "previous generation" Flash, at the same price). The flagship is **Gemini 4 Argon**, paid only. The rates come straight from [Google's Gemini API pricing page](https://ai.google.dev/gemini-api/docs/pricing), the source of record, which changes often enough to check before you commit a budget. For how 3.6 Flash and 3.5 Flash-Lite compare head to head, see our [Gemini 3.6 Flash vs 3.5 Flash-Lite](https://geotoolbox.ai/blog/gemini-3-6-flash-vs-3-5-flash-lite) guide.
 
 ## Standard, Batch, Flex, and Priority: The Four Service Tiers
 
 The headline rate is only one of four prices for the same model. Since April 2026, every Gemini model is billed on a service tier, and the tier you pick swings the bill from half price to nearly double. Most pricing guides still show only Standard and Batch, which is why a number you read somewhere may not match what you are charged.
 
-Here is Gemini 3.6 Flash across all four tiers.
+Here is Gemini 3.8 Flash across all four tiers, at introductory rates that double on January 1, 2027.
 
 <table>
 <thead>
 <tr><th>Tier</th><th>Input (per 1M)</th><th>Output (per 1M)</th><th>What you trade</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>Standard</strong></td><td>$1.50</td><td>$7.50</td><td>Baseline price, normal latency</td></tr>
-<tr><td><strong>Batch</strong></td><td>$0.75</td><td>$3.75</td><td>50% off, up to 24 hours to return</td></tr>
-<tr><td><strong>Flex</strong></td><td>$0.75</td><td>$3.75</td><td>About 50% off, latency-tolerant, can be queued</td></tr>
-<tr><td><strong>Priority</strong></td><td>$2.70</td><td>$13.50</td><td>Roughly 1.8x Standard, non-sheddable traffic</td></tr>
+<tr><td><strong>Standard</strong></td><td>$0.75</td><td>$3.75</td><td>Baseline price, normal latency</td></tr>
+<tr><td><strong>Batch</strong></td><td>$0.375</td><td>$1.875</td><td>50% off, up to 24 hours to return</td></tr>
+<tr><td><strong>Flex</strong></td><td>$0.375</td><td>$1.875</td><td>50% off, minutes not seconds, can be shed when busy</td></tr>
+<tr><td><strong>Priority</strong></td><td>$1.35</td><td>$6.75</td><td>1.8x Standard, non-sheddable traffic</td></tr>
 </tbody>
 </table>
 
-Standard is the default. Batch runs any model at half price if you submit work as a job and can wait up to a day for it, which suits overnight enrichment and bulk generation. Flex is the middle ground: close to Batch pricing for on-demand calls you are willing to let the system queue during busy periods. Priority is the premium lane, about 1.8 times Standard, for production traffic that needs predictable latency: Google doesn't guarantee a specific response time, but Priority requests are non-sheddable and won't get queued behind Standard traffic during busy periods, the way Flex can.
+Standard is the default. Batch runs any model at half price if you submit work as a job and can wait up to a day for it, which suits overnight enrichment and bulk generation. Flex is the middle ground: Batch pricing for on-demand calls that can wait minutes and that the system may shed during busy periods. Priority is the premium lane, about 1.8 times Standard, for production traffic that needs predictable latency: Google doesn't guarantee a specific response time, but Priority requests are non-sheddable and won't get shed during busy periods, the way Flex can.
 
-The practical trap is reading a number without knowing its tier. If an AI Overview tells you Gemini 3.6 Flash costs $2.70 per million input tokens, it is quoting the Priority rate, not the $1.50 headline. Always confirm which tier a quoted price belongs to before you budget against it.
+The practical trap is reading a number without knowing its tier. If an AI Overview tells you Gemini 3.8 Flash costs $1.35 per million input tokens, it is quoting the Priority rate, not the $0.75 headline ($1.50 is the 2027 Standard rate). Always confirm which tier a quoted price belongs to before you budget against it.
 
 ## The Gemini API Free Tier: What's Free, and the Catch
 
-Yes, the Gemini API has a free tier, and no, it is not a trial that expires. Through Google AI Studio you can call the Flash and Flash-Lite models with no credit card. Google no longer publishes a fixed public table of the limits; the Flash-tier allowance runs into the low thousands of requests a day, but the number that matters is the live quota AI Studio shows for your project. Either way it is plenty for prototyping and light production.
+Yes, the Gemini API has a free tier, and no, it is not a trial that expires. Through Google AI Studio you can call the Flash and Flash-Lite models with no credit card. Google no longer publishes a fixed public table of the limits; the number that matters is the live quota AI Studio shows for your project. Either way it is plenty for prototyping.
 
 Two limits decide whether the free tier fits your project.
 
-The first is scope. Since April 2026 the Pro models have effectively left the free tier, and 3.1 Pro in particular is paid from the first call. If your workload runs on Flash and Flash-Lite, the free tier stretches a long way. If it needs Pro-grade reasoning, budget for paid from day one.
+The first is scope. The Pro-class models have effectively left the free tier: Argon and 3.1 Pro are paid from the first call, and 2.5 Pro is open only to existing users. If your workload runs on Flash and Flash-Lite, the free tier stretches a long way. If it needs Pro-grade reasoning, budget for paid from day one.
 
-The second is the data trade, and it is the one that surprises teams doing client work. On the free tier, [Google's API terms](https://ai.google.dev/gemini-api/terms) allow it to use your inputs and outputs to improve its models, and human reviewers may read them. That is fine for a weekend prototype and wrong for anything confidential. Paid usage, on either the Developer API or Vertex AI, is not used for training. If you are sending customer data, treat the free tier as off-limits.
+The second is the data trade, and it is the one that surprises teams doing client work. On the free tier, [Google's API terms](https://ai.google.dev/gemini-api/terms) allow it to use your inputs and outputs to improve its models, and human reviewers may read them (except in the EEA, Switzerland and the UK). That is fine for a weekend prototype and wrong for anything confidential. Paid usage on the Developer API is not used for training. If you are sending customer data, treat the free tier as off-limits.
 
 One more thing that surprises people: extra API keys do not add quota. Rate limits are enforced per project, not per key, so spinning up a second key in the same project buys you nothing. To raise limits you move up a usage tier, which is the next section.
 
@@ -101,11 +102,11 @@ The sticker rate tells you what a token costs. It does not tell you how many tok
 
 First, thinking tokens are billed as output. Gemini's reasoning models generate internal thinking before they answer, and those tokens bill at the full output rate even though the user never sees them. A model can return a two-sentence answer and charge you for thousands of tokens of hidden reasoning. It is why a low-headline-rate model can cost more in practice than a pricier one that reasons less: the effective cost depends on how verbose the thinking is on your workload. Setting a thinking budget caps how many tokens the model spends reasoning before it must answer.
 
-Second, the 200K context cliff doubles Pro input. On the Pro models, once a single prompt crosses 200,000 tokens of [context](https://geotoolbox.ai/blog/how-does-ai-search-work), the input rate roughly doubles and output climbs with it: Gemini 3.1 Pro input goes from $2.00 to $4.00 per million, output from $12.00 to $18.00. Retrieval pipelines that stuff large documents into every call cross that line on every request without anyone noticing, because dashboards show averages and the cliff hides in the few oversized prompts.
+Second, the 200K context cliff doubles Pro input. On 3.1 Pro and 2.5 Pro, once a single prompt crosses 200,000 tokens of [context](https://geotoolbox.ai/blog/how-does-ai-search-work), the input rate roughly doubles and output climbs with it: Gemini 3.1 Pro input goes from $2.00 to $4.00 per million, output from $12.00 to $18.00. Argon has no cliff. Retrieval pipelines that stuff large documents into every call cross that line on every request without anyone noticing, because dashboards show averages and the cliff hides in the few oversized prompts.
 
-Third, grounding with Google Search is a separate line. Letting a model check live Search is not free tokens; it is a per-query charge. The [Gemini 3 family](https://ai.google.dev/gemini-api/docs/pricing) gets 5,000 grounded prompts a month free, shared across the family, then $14 per thousand. The 2.5 models get 1,500 a day free, then $35 per thousand. Grounding with Google Maps runs $25 per thousand on the 2.5 models and shares the Gemini 3 family's $14 rate. A single request can also fire more than one billable search, so the line item grows faster than the request count.
+Third, grounding with Google Search is a separate line. Letting a model check live Search is not free tokens; it is a per-query charge. The [Gemini 3 family and newer](https://ai.google.dev/gemini-api/docs/pricing) gets 5,000 search requests a month free, shared across the family, then $14 per thousand. The 2.5 models get 1,500 a day free, then $35 per thousand. Grounding with Google Maps runs $25 per thousand on the 2.5 models and shares the Gemini 3 family's $14 rate. A single request can also fire more than one billable search, so the line item grows faster than the request count.
 
-Fourth, audio input costs more than text. On the same model, audio input is priced above text input, often three times higher. A voice feature is not billed like a text feature, even before you add the separate audio-output meters.
+Fourth, audio input can cost more than text. On older models, audio input is priced above text input, about three times higher on 2.5 Flash (3.5 Flash-Lite charges one rate). A voice feature is not billed like a text feature, even before you add the separate audio-output meters.
 
 ## Multimodal Pricing: Images, Video, and Audio
 
@@ -113,13 +114,13 @@ Generating media is metered on its own scales, not in text tokens, and the [medi
 
 Feeding media in is metered too, as tokens. An input image costs a fixed count by size, roughly 560 tokens for a small one and over 1,100 for a large, and a PDF is billed per page as an image plus its extracted text. So a vision or document-processing app has a bigger input line than its character count suggests, and it is worth counting image and page tokens before you ship.
 
-Images out run through Google's Flash Image models. The original, nicknamed Nano Banana, is Gemini 2.5 Flash Image at about $0.039 per image. Its successor, Nano Banana 2 (Gemini 3.1 Flash Image), bills as image-output tokens at $60 per million, which works out to roughly $0.045 for a 0.5K image up to $0.151 for 4K. If you generate at volume, resolution is a real cost lever, not a detail.
+Images out run through Google's Flash Image models. The original, nicknamed Nano Banana, is Gemini 2.5 Flash Image at about $0.039 per image. Its successor, Nano Banana 2 (Gemini 3.1 Flash Image), bills as image-output tokens at $60 per million, which works out to roughly $0.045 for a 0.5K image up to $0.151 for 4K. Both are now deprecated; the current Nano Banana 2.1 bills $30 per million, roughly $0.034 for a 1K image up to $0.113 for 4K. If you generate at volume, resolution is a real cost lever, not a detail.
 
-Video is the most expensive meter. Veo 3.1 costs $0.40 per second at 720p or 1080p and $0.60 per second at 4K on the Standard model, with cheaper Fast and Lite variants. A single ten-second 4K clip is $6 before you iterate, so video generation belongs behind a hard budget.
+Video is the most expensive meter. Veo 3.1 costs $0.40 per second at 720p or 1080p and $0.60 per second at 4K on the Standard model, with cheaper Fast and Lite variants, but all three can shut down from October 22, 2026, in favor of Gemini Omni Flash at about $0.10 per second of 720p. A single ten-second 4K clip is $6 before you iterate, so video generation belongs behind a hard budget.
 
 Audio has its own meters again. The Live API and the text-to-speech models bill separately, with audio output priced well above text. Live Translate, for example, runs about $3.50 per million tokens of input and $21 per million tokens out.
 
-Embeddings are the cheap corner of the catalog. Gemini Embedding 001 is $0.15 per million tokens, and the newer Embedding 2 is $0.20, with batch pricing halving both. For a retrieval system, embedding cost is usually a rounding error next to the generation calls it feeds.
+Embeddings are the cheap corner of the catalog. Gemini Embedding 2 is $0.20 per million text tokens, and batch pricing halves it to $0.10. For a retrieval system, embedding cost is usually a rounding error next to the generation calls it feeds.
 
 If your product touches images, video, or voice, model those meters separately. They will not show up in a token estimate, and video in particular can dwarf everything else on the bill.
 
@@ -129,37 +130,37 @@ Two levers cut a Gemini bill more than any model swap, and teams routinely miss 
 
 Batch is the easy 50%. Any job that does not need an instant answer (overnight enrichment, bulk classification, offline generation) can go through the Batch tier for half price in exchange for up to 24 hours of latency. It is one of the easiest large savings to skip, and it needs no code beyond submitting the work as a batch job instead of a live call.
 
-Caching comes in two forms, and the difference decides whether it costs you anything. Implicit caching is automatic on Gemini 2.5 and newer models: when a request reuses a prefix you have sent before, Google passes on the discount, roughly 10% of the input rate, with no storage fee and nothing to manage. Explicit caching is the version you create and hold on purpose, which guarantees the discount for a system prompt or codebase you know you will reuse but adds a storage meter, about $1.00 per million tokens an hour on Flash and $4.50 on Pro, running whether or not you use the cache.
+Caching comes in two forms, and the difference decides whether it costs you anything. Implicit caching is automatic on Gemini 2.5 and newer models: when a request reuses a prefix you have sent before, Google passes on the discount, roughly 10% of the input rate (5% on Argon), with no storage fee and nothing to manage. Explicit caching is the version you create and hold on purpose, which guarantees the discount for a system prompt or codebase you know you will reuse but adds a storage meter, $0.50 per million tokens an hour on 3.8 and 3.6 Flash through December 31, 2026 ($1.00 after) and $4.50 on 3.1 Pro, running whether or not you use the cache. Gemini 4 Argon supports implicit caching only.
 
-That storage meter gives explicit caching a break-even. A cached 200K-token context on Pro costs around $0.90 an hour to hold and saves about $0.36 on each cache hit, so it pays for itself at roughly two or three reuses an hour and loses only when a large context sits nearly idle. Lean on implicit caching by default; reach for explicit caching on the big, hot contexts where you want the discount guaranteed, and let cold ones expire.
+That storage meter gives explicit caching a break-even. A cached 200K-token context on 3.1 Pro costs around $0.90 an hour to hold and saves about $0.36 on each cache hit, so it pays for itself at roughly two or three reuses an hour and loses only when a large context sits nearly idle. Lean on implicit caching by default; reach for explicit caching on the big, hot contexts where you want the discount guaranteed, and let cold ones expire.
 
-Stacking the levers is where the big numbers come from. On Vertex AI, [cached input is priced at 10% of the standard input rate](https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing), a 90% reduction, alongside an advertised 50% batch discount, and a high-reuse batch job can combine both. Two more habits help: route classification and extraction to Flash-Lite instead of Pro, and set thinking budgets so reasoning tokens cannot balloon a simple task.
+Stacking the levers is where the big numbers come from. On Vertex AI, [cached input runs at 5% to 10% of the standard input rate](https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing) (5% on Argon, 10% on 3.1 Pro), alongside an advertised 50% batch discount, and a high-reuse batch job can combine both. Two more habits help: route classification and extraction to Flash-Lite instead of Pro, and set thinking budgets so reasoning tokens cannot balloon a simple task.
 
 ## A Worked Example: What a Real Gemini App Actually Costs
 
-Numbers in a table are abstract until you stack every meter into one bill. Take a support chatbot on Gemini 3.5 Flash handling 100,000 conversations a month. (The same workload on its successor, 3.6 Flash, runs the output-driven lines about 17% cheaper on the output-rate change alone, $7.50 instead of $9.00; the shape of the bill is identical.) Each conversation ships a 20,000-token system prompt and knowledge base, a short user turn, returns a 400-token answer, spends about 1,000 tokens thinking, and runs one grounded Search. Here is how the estimate and the real bill diverge.
+Numbers in a table are abstract until you stack every meter into one bill. Take a support chatbot on Gemini 3.8 Flash, at its introductory rate, handling 100,000 conversations a month. (From January 1, 2027 every token line below doubles; grounding does not.) Each conversation ships a 20,000-token system prompt and knowledge base, a short user turn, returns a 400-token answer, spends about 1,000 tokens thinking, and runs one grounded Search. Here is how the estimate and the real bill diverge.
 
 <table>
 <thead>
 <tr><th>Line item</th><th>How it is billed</th><th>Monthly cost</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>Input tokens</strong></td><td>~20,500 x 100K at $1.50/1M</td><td>~$3,075</td></tr>
-<tr><td><strong>Visible output</strong></td><td>400 x 100K at $9.00/1M</td><td>~$360</td></tr>
-<tr><td><strong>Thinking tokens</strong></td><td>1,000 x 100K at the $9.00 output rate</td><td>~$900</td></tr>
+<tr><td><strong>Input tokens</strong></td><td>~20,500 x 100K at $0.75/1M</td><td>~$1,538</td></tr>
+<tr><td><strong>Visible output</strong></td><td>400 x 100K at $3.75/1M</td><td>~$150</td></tr>
+<tr><td><strong>Thinking tokens</strong></td><td>1,000 x 100K at the $3.75 output rate</td><td>~$375</td></tr>
 <tr><td><strong>Grounding</strong></td><td>~95K searches at $14/1,000 (after 5K free)</td><td>~$1,330</td></tr>
-<tr><td><strong>Sticker estimate (input + visible output)</strong></td><td>what a naive calculator shows</td><td>~$3,435</td></tr>
-<tr><td><strong>Real bill (all meters)</strong></td><td>the number that actually posts</td><td>~$5,665</td></tr>
+<tr><td><strong>Sticker estimate (input + visible output)</strong></td><td>what a naive calculator shows</td><td>~$1,688</td></tr>
+<tr><td><strong>Real bill (all meters)</strong></td><td>the number that actually posts</td><td>~$3,393</td></tr>
 </tbody>
 </table>
 
-The sticker estimate misses by about 65%. Thinking tokens and grounding, neither of which appears in a per-token calculator, add more than $2,000 a month on their own. This bot grounds on every turn, which is the high end; one answering mostly from its own knowledge base would ground less and see a smaller gap. The shape holds either way: the meters a calculator ignores are the ones that move the bill.
+The sticker estimate misses by half: the real bill is about double what the calculator shows. Thinking tokens and grounding, neither of which appears in a per-token calculator, add about $1,700 a month on their own. This bot grounds on every turn, which is the high end; one answering mostly from its own knowledge base would ground less and see a smaller gap. The shape holds either way: the meters a calculator ignores are the ones that move the bill.
 
-Now apply the levers. That 20,000-token system prompt is identical on every call, so cache it. Cached input drops to roughly 10% of the rate, cutting the input line from about $3,075 to about $375, while the storage meter for a context this heavily reused costs only around $15 a month. The real bill falls from about $5,665 to about $3,000, nearly a 50% cut, from one change. If any part of the workload were offline rather than live chat, moving it to the Batch tier would halve it again.
+Now apply the levers. That 20,000-token system prompt is identical on every call, so cache it. Cached input drops to roughly 10% of the rate, cutting the input line from about $1,538 to about $190, while the storage meter for a context this heavily reused costs only around $7 a month. The real bill falls from about $3,393 to about $2,050, roughly a 40% cut, from one change. If any part of the workload were offline rather than live chat, moving it to the Batch tier would halve it again.
 
 <figure>
-<BlogImage src="/blog/gemini-api-pricing/anatomy-gemini-api-bill.png" alt="Waterfall chart of a Gemini 3.5 Flash chatbot's monthly bill: a per-token calculator shows about $3,435 from input and visible output, but the real bill is about $5,665 once thinking tokens ($900) and grounding ($1,330) are added, then drops to about $3,000 with context caching." w="1200" h="687" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
-<figcaption>The two meters a token calculator ignores, thinking tokens and grounding, add about $2,200 a month, until caching the shared context cuts the bill nearly in half.</figcaption>
+<BlogImage src="/blog/gemini-api-pricing/anatomy-gemini-api-bill-oct-2026.png" alt="Waterfall chart of a Gemini 3.8 Flash chatbot's monthly bill: a per-token calculator shows about $1,688 from input and visible output, but the real bill is about $3,393 once thinking tokens ($375) and grounding ($1,330) are added, then drops to about $2,050 with context caching." w="1200" h="805" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+<figcaption>The two meters a token calculator ignores, thinking tokens and grounding, add about $1,700 a month, until caching the shared context cuts the bill by roughly 40%.</figcaption>
 </figure>
 
 Model every meter before you ship, then attack the two or three lines that dominate, which are rarely the ones the token table points at.
@@ -180,22 +181,22 @@ The rule of thumb: build on the Developer API until you need provisioned capacit
 
 ## How Gemini API Pricing Compares to OpenAI and Anthropic
 
-On raw token price, Gemini's Flash models are among the cheapest credible options for high-volume work. Here is each provider's cheap tier against its frontier model, at Standard rates.
+On raw token price, Gemini's Flash-Lite models are no longer the cheapest credible options for high-volume work. Here is each provider's cheap tier against its frontier model, at Standard rates.
 
 <table>
 <thead>
 <tr><th>Provider</th><th>Cheap tier (in / out per 1M)</th><th>Frontier (in / out per 1M)</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>Google Gemini</strong></td><td>2.5 Flash, $0.30 / $2.50</td><td>3.1 Pro, $2.00 / $12.00</td></tr>
-<tr><td><strong>OpenAI</strong></td><td>GPT-6 Luna, $0.10 / $0.50 (Work/Codex/API; GPT-5.6 Luna, which standard ChatGPT still runs, is $0.20 / $1.20)</td><td><a href="https://geotoolbox.ai/blog/gpt-6-astra">GPT-6 Astra</a>, $10.00 / $50.00 (GPT-6 Sol below it at $2.00 / $10.00 in Work/Codex/API; GPT-5.6 Sol, which standard ChatGPT still runs on paid plans, is $4.00 / $20.00, promotional to Nov 21, 2026)</td></tr>
-<tr><td><strong>Anthropic Claude</strong></td><td>Haiku 4.5, $1.00 / $5.00</td><td>Fable 5.1, $10.00 / $50.00 (Opus 5.5 below it at $4.00 / $20.00)</td></tr>
+<tr><td><strong>Google Gemini</strong></td><td>3.5 Flash-Lite, $0.30 / $2.50</td><td>4 Argon, $2.00 / $10.00 through Nov 30, 2026, then $4.00 / $20.00 (3.1 Pro at $2.00 / $12.00)</td></tr>
+<tr><td><strong>OpenAI</strong></td><td>GPT-6 Luna, $0.10 / $0.50</td><td><a href="https://geotoolbox.ai/blog/gpt-6-astra">GPT-6 Astra</a>, $10.00 / $50.00 (GPT-6.1 Sol below it at $2.00 / $10.00)</td></tr>
+<tr><td><strong>Anthropic Claude</strong></td><td>Haiku 5.5, $0.10 / $0.50 (prompts up to 100K tokens; $0.50 / $2.50 above)</td><td>Fable 5.1, $10.00 / $50.00 (Opus 5.5 at $4.00 / $20.00, Sonnet 5.5 at $2.00 / $10.00)</td></tr>
 </tbody>
 </table>
 
-Gemini 2.5 Flash at $0.30 input and $2.50 output is a fraction of what the frontier models charge, and the fair fight is Flash against each rival's own cheap tier: GPT-6 Luna, which OpenAI added to Work, Codex and the API on September 22, 2026, at [OpenAI's published rates](https://developers.openai.com/api/docs/pricing), and Claude Haiku 4.5. That fight Gemini now loses on the headline rate, because GPT-6 Luna is $0.10 input against Flash's $0.30, an even wider gap than GPT-5.6 Luna's $0.20 (the cheap model standard ChatGPT still runs), though Flash still undercuts Haiku 4.5 at $1.00. You can read the full breakdowns in our [ChatGPT API pricing](https://geotoolbox.ai/blog/chatgpt-pricing) and [Claude API pricing](https://geotoolbox.ai/blog/claude-pricing) guides.
+Gemini 3.5 Flash-Lite at $0.30 input and $2.50 output is a fraction of what the frontier models charge, and the fair fight is Flash-Lite against each rival's own cheap tier: GPT-6 Luna, which OpenAI added to the API on September 22, 2026, at [OpenAI's published rates](https://developers.openai.com/api/docs/pricing), and Claude Haiku 5.5. That fight Gemini now loses on the headline rate, because both are $0.10 input against Flash-Lite's $0.30. You can read the full breakdowns in our [ChatGPT API pricing](https://geotoolbox.ai/blog/chatgpt-pricing) and [Claude API pricing](https://geotoolbox.ai/blog/claude-pricing) guides.
 
-There is a subtler wrinkle no table row captures: the 200K cliff erodes Gemini's long-context edge. Gemini 3.1 Pro at $2.00 input undercuts GPT-5.6 Sol by half, ties GPT-6 Sol's own $2.00 input rate, and undercuts [GPT-6 Astra](https://geotoolbox.ai/blog/gpt-6-astra) by 80%, on prompts up to 200,000 tokens. Cross that line and Gemini's input doubles to $4.00 while Anthropic holds its rates flat and OpenAI holds flat up to 272,000 tokens, so the gap narrows sharply, though even at $4.00 Gemini 3.1 Pro still sits under GPT-5.5's $5.00. Past 272,000 input tokens OpenAI applies its own surcharge, doubling input and adding half again on output for the whole request, so GPT-6 Sol moves to $4.00 and $15.00 and ties Gemini 3.1 Pro's post-cliff input rate again. Where it can actually flip is against a cheaper-tier rival: Claude Sonnet 5 undercuts Gemini's post-cliff $4.00 at its $2.00 input rate (which Anthropic made permanent in August 2026, cancelling the planned $3.00 rise). A workload that lives in very long context can erase Gemini's short-context price win, so price the cliff into your own token distribution before you commit.
+There is a subtler wrinkle no table row captures: the 200K cliff erodes 3.1 Pro's long-context edge. Gemini 3.1 Pro at $2.00 input ties GPT-6.1 Sol's own $2.00 input rate, and undercuts [GPT-6 Astra](https://geotoolbox.ai/blog/gpt-6-astra) by 80%, on prompts up to 200,000 tokens. Cross that line and Gemini's input doubles to $4.00 while Anthropic holds its rates flat (except Haiku 5.5, past 100,000 tokens) and OpenAI holds flat up to 272,000 tokens. Past 272,000 input tokens OpenAI applies its own surcharge, doubling input and adding half again on output for the whole request, so GPT-6.1 Sol moves to $4.00 and $15.00 and ties Gemini 3.1 Pro's post-cliff input rate again. Gemini 4 Argon has no cliff: its $2.00 input holds across the whole 1M window, until it rises to $4.00 on December 1, 2026. A workload that lives in very long context can erase 3.1 Pro's short-context price win, so price the cliff into your own token distribution before you commit.
 
 And remember the reasoning-token tax applies to all three. Every provider charges for internal thinking on its reasoning tiers, so a base-rate comparison can flip once you measure how verbose each model is on your actual prompts. Benchmark two or three models on your real workload before you commit. The lowest number in a table is a starting point, not the bill.
 
@@ -203,15 +204,15 @@ And remember the reasoning-token tax applies to all three. Every provider charge
 
 Gemini's lineup turns over fast, and pricing a project against a model that is about to disappear is a common, expensive mistake. Here is the current state of play from [Google's deprecation schedule](https://ai.google.dev/gemini-api/docs/deprecations).
 
-Gemini 2.0 Flash and 2.0 Flash-Lite shut down on June 1, 2026, so any guide still listing them as budget options is out of date. The bigger event is ahead: the entire 2.5 series (Pro, Flash, and Flash-Lite) retires on October 16, 2026, with 2.5 Pro pointing to 3.1 Pro, 2.5 Flash to 3.5 Flash (now itself superseded by 3.6 Flash), and 2.5 Flash-Lite to 3.1 Flash-Lite. On the media side, Imagen 4 shuts down on August 17, 2026, replaced by the Gemini image models.
+Gemini 2.0 Flash and 2.0 Flash-Lite shut down on June 1, 2026, so any guide still listing them as budget options is out of date. The 2.5 series (Pro, Flash, and Flash-Lite) has no shutdown date, but since September 18, 2026 it is open only to projects that already used it. On October 8 Google deprecated 3.5 Flash and 3.7 Flash, which now route to 3.6 Flash and 3.8 Flash. On the media side, Imagen 4 shut down on August 17, 2026, replaced by the Gemini image models.
 
-The risk is the migration path, because the wrong replacement can multiply your cost. Moving a cheap 2.5 Flash-Lite workload to 3.5 Flash instead of 3.1 Flash-Lite jumps you from $0.10 to $1.50 input, fifteen times the price, for work that never needed a frontier model. Same-class upgrades follow the tier, cheap to cheap and mid to mid, which keeps the jump small. Map every model you depend on to its named successor before its shutdown date, and confirm the replacement is the same class, not the next one up.
+The risk is the migration path, because the wrong replacement can multiply your cost. Moving a cheap 2.5 Flash-Lite workload to 3.8 Flash instead of 3.5 Flash-Lite jumps you from $0.10 to $0.75 input, seven and a half times the price, for work that never needed more than Flash-Lite. Same-class upgrades follow the tier, cheap to cheap and mid to mid, which keeps the jump small. Map every model you depend on to its named successor before its shutdown date, and confirm the replacement is the same class, not the next one up.
 
 ## Set a Hard Spend Cap Before You Get a Surprise Bill
 
 The bill-shock stories are real: a retry loop left running overnight, a leaked key mining tokens for hours, a batch job that overshoots. A Google Cloud budget alert will not save you from them, because an alert only notifies; it does not stop spend. By the time the email arrives, the money is gone.
 
-The controls that actually cap spend are more specific. The usage-tier billing caps pause service once your cumulative spend hits the tier limit, so a Tier 1 billing account cannot run past $250 in a cycle. Since March 23, 2026, Google has also rolled out prepay billing: linking a billing account requires prepaying a minimum $10 credit balance, and requests only serve while that balance stays positive, which acts as a de facto hard cap once you stop topping it up. Inside AI Studio you can also set per-project spend caps, useful when several projects share one billing account, though [Google warns](https://ai.google.dev/gemini-api/docs/billing) that batch jobs and agent sessions can overshoot a project cap slightly because billing lags real usage by about ten minutes.
+The controls that actually cap spend are more specific. The usage-tier billing caps pause service once your cumulative spend hits the tier limit, so a Tier 1 billing account cannot run past $250 in a cycle. Since March 23, 2026, Google has also rolled out prepay billing: linking a billing account requires prepaying a minimum $5 credit balance, and requests only serve while that balance stays positive, which acts as a de facto hard cap once you stop topping it up. Inside AI Studio you can also set per-project spend caps, useful when several projects share one billing account, though [Google warns](https://ai.google.dev/gemini-api/docs/billing) that batch jobs and agent sessions can overshoot a project cap slightly because billing lags real usage by about ten minutes.
 
 Beyond the platform controls, the operational habits matter more. Watch cost per call, not just total spend, because two identical-looking requests can bill very differently once thinking tokens and context length vary, and averages hide the expensive few. Put a ceiling on retries so a failing loop cannot run away. And guard your API key like a credential, because a stolen key is a direct line to your billing account.
 
@@ -226,22 +227,16 @@ One shift worth noticing: these exact prices are increasingly quoted back to dev
 ## Frequently Asked Questions
 
 ### Is the Gemini API free?
-There is a free tier through Google AI Studio with no credit card, but it is in practice limited to the Flash and Flash-Lite models at roughly a thousand-plus requests a day, and the current Pro model has not been free since April 2026. Two catches matter: free-tier data can be used to train Google's models, and enabling billing removes the free allowance rather than adding to it.
+There is a free tier through Google AI Studio with no credit card, but it is in practice limited to the Flash and Flash-Lite models; Argon and 3.1 Pro are paid only. The catch: outside the EEA, Switzerland and the UK, free-tier data can be used to train Google's models.
 
 ### Which is cheaper, the Gemini API or the ChatGPT API?
-For high-volume work OpenAI's cheap tier is now clearly cheaper: Gemini 2.5 Flash is $0.30 input against GPT-6 Luna at $0.10 (the Work/Codex/API tier OpenAI added September 22, 2026) or GPT-5.6 Luna at $0.20 (the cheap model standard ChatGPT still runs). But reasoning tokens and context length can flip a base-rate comparison, so benchmark both on your real prompts. See our [ChatGPT API pricing](https://geotoolbox.ai/blog/chatgpt-pricing) guide for the full numbers.
+For high-volume work OpenAI's cheap tier is now clearly cheaper: Gemini 3.5 Flash-Lite is $0.30 input against GPT-6 Luna at $0.10. At the frontier it flips: Gemini 4 Argon's introductory $2.00 input is a fifth of GPT-6 Astra's. But reasoning tokens and context length can flip a base-rate comparison, so benchmark both on your real prompts. See our [ChatGPT API pricing](https://geotoolbox.ai/blog/chatgpt-pricing) guide for the full numbers.
 
 ### Why is my Gemini API bill higher than the token price suggests?
-Almost always thinking tokens, which bill at the output rate even though you never see them, plus grounding charges and the 200K context cliff on Pro models. None of the three shows up in a simple per-token estimate.
-
-### What is the 200K context cliff?
-On the Pro models, once a single prompt crosses 200,000 tokens, the input rate roughly doubles and output rises with it. Gemini 3.1 Pro input goes from $2.00 to $4.00 per million. Retrieval pipelines cross it easily.
+Almost always thinking tokens, which bill at the output rate even though you never see them, plus grounding charges and, on Gemini 3.1 Pro, the 200K context cliff. None of the three shows up in a simple per-token estimate.
 
 ### Developer API or Vertex AI, which is cheaper?
-Both charge the same per-token rates. Vertex wins at high sustained volume through Provisioned Throughput discounts, but it adds Google Cloud costs like egress and idle endpoints. For most projects the Developer API is cheaper and simpler.
-
-### Does the free tier train on my data?
-Yes. On the free tier, Google may use your inputs and outputs to improve its models, and human reviewers may read them. Paid usage on the Developer API and Vertex AI is excluded from training.
+Both charge the same per-token rates on global endpoints. Vertex wins at high sustained volume through Provisioned Throughput discounts, but it adds Google Cloud costs like egress and idle endpoints. For most projects the Developer API is cheaper and simpler.
 
 ## Sources
 
@@ -251,3 +246,4 @@ Yes. On the free tier, Google may use your inputs and outputs to improve its mod
 - Gemini API model deprecations - Google (shutdown and migration dates) - `ai.google.dev/gemini-api/docs/deprecations`
 - Vertex AI generative AI pricing - Google Cloud (rate parity, caching discounts) - `cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing`
 - OpenAI API pricing - OpenAI (comparison rates) - `developers.openai.com/api/docs/pricing`
+- Claude API pricing - Anthropic (comparison rates) - `platform.claude.com/docs/en/about-claude/pricing`
