@@ -2,8 +2,8 @@
 title: "Claude Code Context Window: What It Is and Why It Controls Costs"
 description: "What the Claude Code context window is, how big it gets (200K vs 1M), what fills it, and how to read the /context meter before it degrades your output."
 date: "2026-07-04"
-updated: "2026-09-25"
-recheckBy: "2026-11-25"  # updated 2026-09-25/26: current-Opus row now Claude Opus 5.5 (superseded Opus 5 on 2026-09-22); per code.claude.com model-config (2026-09-26) Fable 5.1/5, Sonnet 5, Opus 4.7+ run 1M on every plan incl. Pro (no credits); only Opus 4.6/Sonnet 4.6 need [1m] + plan rules. Re-verify the lineup on platform.claude.com
+updated: "2026-10-17"
+recheckBy: "2026-10-30"  # updated 2026-10-17: current lineup is Opus 5.5, Sonnet 5.5, Haiku 5.5 (1M, Haiku 5.5 priced higher past 100K) and Fable 5.1; Haiku 4.5 is legacy (200K, leaves the chat selector 2026-10-29). Per code.claude.com model-config + platform.claude.com context-windows (2026-10-17): Fable, Sonnet 5+, Haiku 5.5, Opus 4.7+ run 1M natively; only Opus 4.6/Sonnet 4.6 need [1m] + plan rules. Re-verify the lineup on platform.claude.com
 author: "Samy BEN SADOK"
 tags: ["claude-code", "context-window", "agentic-ai", "claude", "anthropic"]
 draft: false
@@ -21,35 +21,36 @@ The mental model that trips people up is treating the window like human memory, 
 
 ## How Big Is the Context Window? 200K vs 1M
 
-**1 million tokens is now the normal case, not the exception.** Every current model except Haiku 4.5 is 1M-capable, and Sonnet 5 runs at 1M unconditionally. The 200,000-token window is still the documented default, but in practice it is the floor you land on in specific situations rather than the standard you start from.
+**1 million tokens is now the normal case, not the exception.** Every current model is 1M-capable, and Sonnet 5.5 runs at 1M unconditionally. The 200,000-token window is still the documented default, but in practice it is the floor you land on in specific situations rather than the standard you start from.
 
 <table>
 <thead>
 <tr><th>Model</th><th>Context window in Claude Code</th><th>Notes</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>Claude Sonnet 5</strong> (current Sonnet)</td><td>1M tokens</td><td>Always 1M on the Anthropic API. No 200K variant, no <code>[1m]</code> suffix, no usage credits on any paid plan</td></tr>
+<tr><td><strong>Claude Sonnet 5.5</strong> (current Sonnet)</td><td>1M tokens</td><td>Always 1M on the Anthropic API. No 200K variant, no <code>[1m]</code> suffix, no usage credits on any paid plan. Sonnet 5, the prior model, behaves the same</td></tr>
 <tr><td><strong>Claude Opus 5.5</strong> (current Opus)</td><td>1M tokens</td><td>Automatic on every paid plan, including Pro, with no <code>[1m]</code> suffix and no usage credits. Opus 5, the prior model, is still selectable and keeps the same 1M behavior</td></tr>
 <tr><td><strong>Fable 5.1</strong> (and Fable 5)</td><td>1M tokens</td><td>1M on every paid plan, including Pro. Fable usage itself can bill to usage credits on some plans and seat tiers</td></tr>
-<tr><td><strong>Haiku 4.5</strong></td><td>200K tokens</td><td>The one current model that does not reach 1M</td></tr>
+<tr><td><strong>Claude Haiku 5.5</strong> (current Haiku)</td><td>1M tokens</td><td>1M on every plan, no <code>[1m]</code> suffix. The one 1M model priced by prompt length: prompts over 100K tokens cost $0.50 input and $2.50 output per million, against $0.10 and $0.50 below that</td></tr>
+<tr><td><strong>Haiku 4.5</strong> (legacy)</td><td>200K tokens</td><td>Does not reach 1M</td></tr>
 <tr><td><strong>Legacy</strong> (Opus 4.8 / 4.7 / 4.6, Sonnet 4.6)</td><td>1M tokens</td><td>Opus 4.8 and 4.7 run 1M on every paid plan, like Opus 5.5. Opus 4.6 and Sonnet 4.6 reach 1M only through their <code>[1m]</code> variant: Opus 4.6 is included on Max, Team, and Enterprise and needs usage credits on Pro, while Sonnet 4.6 requires usage credits on every subscription plan, including Max</td></tr>
 </tbody>
 </table>
 
-The 1M window is available on Pro, Max, Team, and Enterprise, not the free tier, per Anthropic's [context window documentation](https://support.claude.com/en/articles/8606394-how-large-is-the-context-window-on-paid-claude-plans). The plan split, from Anthropic's [model configuration docs](https://code.claude.com/docs/en/model-config) (checked September 26, 2026): on the Anthropic API, Fable 5.1, Fable 5, [Sonnet 5](https://geotoolbox.ai/blog/claude-sonnet-5), and Opus 4.7 and later run with the 1M window on every plan, including Pro, with no configuration and no usage credits. The plan rules only apply to Opus 4.6 and Sonnet 4.6, covered in the legacy row above.
+The 1M window is available on Pro, Max, Team, and Enterprise, per Anthropic's [context window documentation](https://support.claude.com/en/articles/8606394-how-large-is-the-context-window-on-paid-claude-plans). The plan split, from Anthropic's [model configuration docs](https://code.claude.com/docs/en/model-config) (checked October 17, 2026): on the Anthropic API, Fable 5.1, Fable 5, [Sonnet 5](https://geotoolbox.ai/blog/claude-sonnet-5) and later, Haiku 5.5, and Opus 4.7 and later run with the 1M window on every plan, including Pro, with no configuration and no usage credits. The plan rules only apply to Opus 4.6 and Sonnet 4.6, covered in the legacy row above.
 
-Two details that matter for cost. First, **the 1M window uses standard model pricing with no premium for tokens beyond 200K.** Where extended context is included with your subscription, it stays covered by your subscription; where it comes through usage credits, those tokens bill to credits. A bigger window costs more because you are sending more tokens, not because the tokens themselves are priced higher. Second, on current models there is nothing to select. The `[1m]` suffix only matters for the two older models that reach 1M through a separate variant:
+Two details that matter for cost. First, **the 1M window uses standard model pricing with no premium for tokens beyond 200K, except on Haiku 5.5,** which costs more on prompts longer than 100K tokens. Where extended context is included with your subscription, it stays covered by your subscription; where it comes through usage credits, those tokens bill to credits. A bigger window costs more because you are sending more tokens, not because the tokens themselves are priced higher. Second, on current models there is nothing to select. The `[1m]` suffix only matters for the two older models that reach 1M through a separate variant:
 
 ```
 /model claude-opus-4-6[1m]
 /model claude-sonnet-4-6[1m]
 ```
 
-If your account supports those variants, they also appear in the `/model` picker; restart the session if you do not see them. `sonnet[1m]` has no effect when `sonnet` already resolves to Sonnet 5, since that model is 1M natively.
+If your account supports those variants, they also appear in the `/model` picker; restart the session if you do not see them. `sonnet[1m]` has no effect when `sonnet` already resolves to Sonnet 5.5 or Sonnet 5, since both are 1M natively.
 
-You land back on 200K in three cases: running Haiku 4.5, running behind an LLM gateway (where Claude Code cannot verify 1M support), or setting `CLAUDE_CODE_DISABLE_1M_CONTEXT=1`.
+You land back on 200K in four cases: running the legacy Haiku 4.5 (which the `haiku` alias still selects on Amazon Bedrock, Google Cloud, Microsoft Foundry and Claude Platform on AWS), running Opus 4.6 or Sonnet 4.6 without their `[1m]` variant, using a gateway model ID Claude Code does not recognize (it assumes 200K), or setting `CLAUDE_CODE_DISABLE_1M_CONTEXT=1`. Behind an LLM gateway, a model Claude Code does recognize keeps the window it has on the Anthropic API.
 
-Two things about that headline number. First, these are the Claude Code sizes; the Claude.ai chat app is different. The [same documentation](https://support.claude.com/en/articles/8606394-how-large-is-the-context-window-on-paid-claude-plans) now gives Opus 5.5, Opus 5, Fable 5.1, and Sonnet 5 a 1M window in chat on any paid plan, while Fable 5, Opus 4.6 to 4.8, and Sonnet 4.6 are held to 500K there, so do not carry a chat figure over to your terminal without checking which model it refers to. Second, the number you can actually use is always smaller than the ceiling. By the time a real session is running, a chunk of the window is already spoken for by things you never typed, which is the next section.
+Two things about that headline number. First, these are the Claude Code sizes; the Claude.ai chat app is different. The [same documentation](https://support.claude.com/en/articles/8606394-how-large-is-the-context-window-on-paid-claude-plans) now gives Opus 5.5, Opus 5, Fable 5.1, Sonnet 5.5, Sonnet 5, and Haiku 5.5 a 1M window in chat on any paid plan, while Fable 5, Opus 4.6 to 4.8, and Sonnet 4.6 are held to 500K there, so do not carry a chat figure over to your terminal without checking which model it refers to. Second, the number you can actually use is always smaller than the ceiling. By the time a real session is running, a chunk of the window is already spoken for by things you never typed, which is the next section.
 
 ## What Fills the Window Before You Type a Word
 
@@ -89,11 +90,11 @@ The second is skills. A [skill](https://geotoolbox.ai/blog/how-does-claude-work)
 You do not have to guess at any of this. Run `/context` in a session and Claude Code prints a live map of the window: a filled grid plus a per-category breakdown of exactly what is taking up space.
 
 <figure className="not-prose my-8">
-  <BlogImage src="/blog/claude-code-context-window/context-meter-breakdown.png" alt="An annotated Claude Code /context readout for Sonnet 5 against its 1M window, showing the window split into system prompt, system tools, MCP tools, memory files, messages, free space, and the reserved autocompact buffer, each with its token count and percentage." w="2200" h="1424" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <BlogImage src="/blog/claude-code-context-window/context-meter-breakdown-oct-2026.png" alt="An annotated Claude Code /context readout for Sonnet 5.5 against its 1M window, showing the window split into system prompt, system tools, MCP tools, memory files, messages, free space, and the reserved autocompact buffer, each with its token count and percentage." w="2200" h="1424" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
   <figcaption className="mt-3 text-center text-sm text-gray-500">The /context readout breaks the window into categories. The reserved autocompact buffer and free space are the two numbers to watch.</figcaption>
 </figure>
 
-The top line shows your model and usage, something like `117k/1M tokens (12%)` on a current model; the denominator reads 200k on Haiku 4.5, on Opus 4.6 or Sonnet 4.6 without their `[1m]` variant, or in the other cases listed above. Below it, each category reports its own tokens and percentage: system prompt, system tools, MCP tools, custom agents, memory files, messages, then free space and a reserved autocompact buffer at the bottom. The value is that it turns a vague "why is this session sluggish" into a specific answer. If MCP tools are showing 26k tokens, you know where to cut. If your `CLAUDE.md` is 4k before you have done anything, that is a fixed tax on every turn worth trimming.
+The top line shows your model and usage, something like `117k/1M tokens (12%)` on a current model; the denominator reads 200k on the legacy Haiku 4.5, on Opus 4.6 or Sonnet 4.6 without their `[1m]` variant, or in the other cases listed above. Below it, each category reports its own tokens and percentage: system prompt, system tools, MCP tools, custom agents, memory files, messages, then free space and a reserved autocompact buffer at the bottom. The value is that it turns a vague "why is this session sluggish" into a specific answer. If MCP tools are showing 26k tokens, you know where to cut. If your `CLAUDE.md` is 4k before you have done anything, that is a fixed tax on every turn worth trimming.
 
 ### The Interactive Simulator
 
@@ -105,7 +106,7 @@ One myth to put down: older guides claim Claude Code has no native way to see to
 
 Claude Code does not crash when you approach the limit. It compacts, and it does so in two stages: **it clears older tool outputs first, then summarizes the conversation if that is not enough.** Your requests and key code snippets are preserved; detailed instructions from early in the conversation may not be. That reserved band at the bottom of the `/context` readout, the autocompact buffer, is the room held back so there is space to run the summarization when it triggers.
 
-Anthropic does not publish a fixed buffer size, but the trigger is now configurable. `CLAUDE_CODE_AUTO_COMPACT_WINDOW` sets the capacity used for auto-compaction calculations, defaulting to the model's context window, except on Sonnet 5, which auto-compacts at about **967K tokens** by default. `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE` sets the percentage of that window at which compaction fires. On a local Opus session, auto-compaction triggers when the conversation reaches the model's context limit rather than at a percentage.
+Anthropic does not publish a fixed buffer size, but the trigger is now configurable. `CLAUDE_CODE_AUTO_COMPACT_WINDOW` sets the capacity used for auto-compaction calculations, defaulting to the model's context window, except on models with a native 1M window (the Fable models, Sonnet 5 and later, Haiku 5.5, and Opus 4.7 and later), which auto-compact at about **967K tokens** by default. `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE` sets the percentage of that window at which compaction fires.
 
 There is one failure mode worth recognizing. If a single file or tool output is so large that the context refills immediately after each summary, Claude Code **stops auto-compacting after a few attempts and shows an error instead of looping**. If you see that, the fix is a smaller input, not a bigger window.
 
@@ -175,19 +176,13 @@ The reason a coding agent's context is expensive is the same reason serving AI a
 ## Frequently Asked Questions
 
 ### What is the Claude Code context window size?
-On current models it is 1 million tokens. Sonnet 5 runs at 1M unconditionally, Opus 5.5 and Fable 5.1 reach 1M on paid plans, and Haiku 4.5 is the one current model still capped at the 200,000-token standard window. The usable space is always smaller than the headline number, because the system prompt, tools, memory, and your `CLAUDE.md` occupy part of the window before you type anything.
+On current models it is 1 million tokens. Sonnet 5.5 runs at 1M unconditionally, and Opus 5.5, Haiku 5.5 and Fable 5.1 reach 1M too. Only the legacy Haiku 4.5 stays at the 200,000-token window. The usable space is always smaller than the headline number, because the system prompt, tools, memory, and your `CLAUDE.md` occupy part of the window before you type anything.
 
 ### Does Claude Code have a 1 million token context window?
-Yes. On the Anthropic API, Sonnet 5, Opus 5.5 (and Opus 4.7 or later), and the Fable models run with it on every paid plan, including Pro; the 1M window needs no configuration and no usage credits, although Fable usage itself can bill to credits on some plans. Only Opus 4.6 and Sonnet 4.6 need their `[1m]` variant, with plan-dependent usage credits. It is not available on the free tier, and the 1M window carries no price premium for tokens beyond 200K.
+Yes. On the Anthropic API, Sonnet 5 and later, Haiku 5.5, Opus 5.5 (and Opus 4.7 or later), and the Fable models run with it on every paid plan, including Pro; the 1M window needs no configuration and no usage credits, although Fable usage itself can bill to credits on some plans. Only Opus 4.6 and Sonnet 4.6 need their `[1m]` variant, with plan-dependent usage credits. The 1M window carries no price premium for tokens beyond 200K, except on Haiku 5.5, which costs more past 100K.
 
 ### What is the difference between /compact and /clear?
 `/clear` wipes the conversation history entirely while keeping your files and tools, which is what you want when switching to unrelated work. `/compact` summarizes the conversation so far and continues from that summary, which is what you want at a natural break in the same task. The short version: between tasks, clear; inside one task, compact.
-
-### Why does Claude Code get worse in long sessions?
-As the window fills, model attention weights recent content more heavily and instructions from earlier drift toward the middle, where they get less reliable attention. You see repeated work, contradicted decisions, and ignored rules. Research on context rot shows this happens even with a larger window, so a 1M context delays the problem rather than removing it.
-
-### Is the context window the same as my usage limit?
-No. The context window is the per-session working-memory budget, and `/clear` resets it. Your usage limit is a plan-level cap on how much you can consume over a week or month. Keeping the window lean makes each turn cheaper, which helps you reach the usage limit slower, but the two are separate things.
 
 ### How do I check how much context I am using?
 Run `/context` in a session for a live breakdown by category, use `/usage` for a plan-limit view of recent usage by skills, subagents, plugins, and MCP servers, or configure the status line to display context usage continuously. Claude Code shows all of this natively.
