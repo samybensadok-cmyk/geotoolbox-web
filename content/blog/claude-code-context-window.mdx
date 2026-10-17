@@ -79,7 +79,7 @@ None of that is waste, but it is fixed overhead on every turn, and two sources b
 
 The first is MCP servers. Each connected server advertises its tools, and a single tool definition, name plus description plus parameter schema, can run several hundred tokens. Back in December 2025, before deferral existed, developer Damian Galarza [measured one MCP tool at roughly 663 tokens](https://www.damiangalarza.com/posts/2025-12-08-understanding-claude-code-context-window/) and the Playwright MCP's 22 tool definitions at about 14,300 tokens, over 7 percent of a 200K window. That is the problem Anthropic solved: **MCP tool definitions are now deferred by default** and loaded on demand through tool search, so only tool names consume context until Claude actually reaches for a specific tool. Run `/mcp` to see per-server costs.
 
-One documented exception. When `ANTHROPIC_BASE_URL` points at a non-first-party host, MCP tool search is disabled by default; set `ENABLE_TOOL_SEARCH=true` if your proxy forwards `tool_reference` blocks. Outside that case, deferral is simply on. Names still add up across many servers, though, so servers you never touch remain weight you are not using.
+Two documented exceptions. When `ANTHROPIC_BASE_URL` points at a non-first-party host, MCP tool search is disabled by default; set `ENABLE_TOOL_SEARCH=true` if your proxy forwards `tool_reference` blocks. And on Microsoft Foundry deployments hosted on Azure, which reject tool search, Claude Code loads MCP tools upfront and `ENABLE_TOOL_SEARCH` cannot override it. Names still add up across many servers, though, so servers you never touch remain weight you are not using.
 
 ### Skills Load Lighter Than MCP
 
@@ -165,7 +165,7 @@ Point Claude at specific files with `@path` or line ranges instead of asking it 
 
 One feature deserves its own warning if you are watching spend. Agent teams, disabled by default and enabled with `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`, use **roughly 7x more tokens** than a standard session when teammates run in plan mode. Each teammate is a separate Claude instance maintaining its own context window, and each one loads `CLAUDE.md`, MCP servers, and skills automatically. Anthropic's own mitigations: run teammates on Sonnet, keep teams small, keep spawn prompts focused, and shut teammates down when they are done. It is a real capability, but it is the most expensive button in the product.
 
-One model-specific wrinkle: extended thinking is billed as output, so those [reasoning](https://geotoolbox.ai/blog/how-ai-models-think) tokens count against your budget too. On [Fable 5](https://geotoolbox.ai/blog/fable-5-ban) you cannot turn extended thinking off, only lower the effort, so it takes a bigger bite of the window on simple tasks.
+One model-specific wrinkle: extended thinking is billed as output, so those [reasoning](https://geotoolbox.ai/blog/how-ai-models-think) tokens count against your budget too. On Opus 5.5, Sonnet 5.5, Haiku 5.5 and the [Fable](https://geotoolbox.ai/blog/fable-5-ban) models, Claude Code does not let you turn extended thinking off, only lower the effort, so it takes a bigger bite of the window on simple tasks.
 
 ## The Window Is the Lever
 

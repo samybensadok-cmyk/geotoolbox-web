@@ -2,7 +2,7 @@
 title: "How to Reduce Claude Code Token Costs (and Why They Add Up Fast)"
 description: "Claude Code burns tokens fast because it re-reads your whole context on every step. Here is the mechanism, plus the highest-impact ways to cut your token bill."
 date: "2026-07-04"
-updated: "2026-08-14"
+updated: "2026-10-17"
 author: "Samy BEN SADOK"
 tags: ["claude-code", "agentic-ai", "claude", "claude-sonnet-5", "anthropic"]
 draft: false
@@ -18,7 +18,7 @@ The model has no memory between steps. Every time Claude Code sends a request, i
 
 That is expensive on its own. Agentic coding makes it worse. When you ask for that "simple" fix, Claude does not answer once. It fetches a diff, reads six files to understand them, runs the tests, reads the failures, and edits. Each of those steps injects its full output, entire files, thousands of lines of logs, back into the context. And the whole growing pile is re-sent on the next step, and the next. This is why input tokens, not the code Claude writes, dominate your cost by volume. It is also the same [transformer](https://geotoolbox.ai/blog/how-does-chatgpt-work) machinery that powers every model, so the pattern is worth understanding once: see [how Claude actually works](https://geotoolbox.ai/blog/how-does-claude-work) for the longer version, and [what tokens are](https://geotoolbox.ai/blog/what-are-tokens-in-ai) if that word is still fuzzy.
 
-Claude Code softens this with [automatic prompt caching](https://code.claude.com/docs/en/prompt-caching): the unchanged part of your context is re-billed at roughly a tenth of the normal input rate, so you are not paying full price to re-read a stable prefix every turn. That shifts the real cost onto what changes each turn, plus anything that throws the cache away. Keeping that cache intact is a lever in itself, one we come back to below.
+Claude Code softens this with [automatic prompt caching](https://code.claude.com/docs/en/prompt-caching): the unchanged part of your context is re-billed at a tenth of the normal input rate or less (5 percent on Opus 5.5 and Sonnet 5.5), so you are not paying full price to re-read a stable prefix every turn. That shifts the real cost onto what changes each turn, plus anything that throws the cache away. Keeping that cache intact is a lever in itself, one we come back to below.
 
 <figure className="not-prose my-8">
   <BlogImage src="/blog/reduce-claude-code-token-costs/context-grows-every-turn.png" alt="Across four turns, the re-sent conversation history keeps accumulating while only a small new slice is added each turn, so the re-sent part dominates the token bill." w="1134" h="604" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
@@ -31,11 +31,13 @@ Computerphile has a clear walkthrough of why this is so expensive at the hardwar
 
 <YouTube id="-0HRzXk8vlk" title="Why AI Tokens are so Expensive - Computerphile" />
 
-## The Sonnet 5 Tokenizer Tax
+## The Tokenizer Tax
 
-One recent change can raise your bill without you touching anything. [Sonnet 5](https://geotoolbox.ai/blog/claude-sonnet-5) launched on June 30, 2026 and is now the default model in Claude Code, and it ships with a new tokenizer that emits roughly 30 percent more tokens for the same text on average, per Anthropic's [what's new in Sonnet 5](https://platform.claude.com/docs/en/about-claude/models/whats-new-sonnet-5) doc. The inflation is uneven: heavier on English prose, on the order of 40 percent, and lighter on code, closer to 27 percent on Python, with languages like Chinese roughly unchanged. Per-token pricing did not change, so an equivalent request or session simply costs about a third more tokens than the same work did on Sonnet 4.6. The coverage calls it a "tokenizer tax," and the name fits.
+One change can raise your token counts without you touching anything. Claude 4.7 and later models use a newer tokenizer that produces approximately 30 percent more tokens for the same text than Sonnet 4.6 and earlier, per Anthropic's [pricing documentation](https://platform.claude.com/docs/en/about-claude/pricing), and the exact increase depends on the content. On the Anthropic API, every model in Claude Code's current lineup, from Opus 5.5 and Sonnet 5.5 to Haiku 5.5 and Fable 5.1, uses the newer tokenizer, so it is the baseline now, not a surprise from one model.
 
-You cannot opt out of the ratio, but it raises the stakes on every lever below. If the same task now costs roughly 30 percent more tokens, the context you keep lean and the output you keep short are each worth proportionally more, and the 1M-token window holds meaningfully less, roughly a quarter less, of your actual text than it used to, so context discipline starts biting sooner.
+Per-token prices moved the other way. Sonnet 4.6 listed at 3 dollars per million input tokens and 15 dollars per million output; Sonnet 5.5 lists at 2 and 10. On API list prices, a session that produces 30 percent more tokens at two thirds of the per-token price still costs less, but the context window fills faster.
+
+You cannot opt out of the ratio, but it raises the stakes on every lever below. The 1M-token window holds roughly a quarter less of your actual text than it would at the old ratio, so the context you keep lean and the output you keep short are each worth proportionally more, and context discipline starts biting sooner.
 
 ## Your Bill or Your Limit? What "Cheaper" Actually Means
 
@@ -105,28 +107,28 @@ If you have gone down a wrong path, `/rewind` back to an earlier checkpoint inst
 
 ## Match the Model to the Task
 
-Most people open Claude Code, leave it on the default model, and never think about it again. Running everything on Opus is where a lot of bills quietly balloon. Opus is the architect: reserve it for planning, hard debugging, and decisions where the reasoning is the point. [Sonnet 5](https://geotoolbox.ai/blog/claude-sonnet-5) is the contractor that handles day-to-day implementation, refactors, and tests. Haiku is for cheap helper work and exploration. Use `/model` to switch, or set a default in `/config`.
+Most people open Claude Code, leave it on the default model, and never think about it again. Since Claude Code v2.1.280, that default is Opus 5.5 on Pro, Max, Team, Enterprise, and the Anthropic API, and Anthropic's [cost guidance](https://code.claude.com/docs/en/costs) lists "Opus left as the default model" among the usual causes of unexpectedly high spend on API and cloud-provider plans. Opus is the architect: reserve it for planning, hard debugging, and decisions where the reasoning is the point. Sonnet 5.5, the successor to [Sonnet 5](https://geotoolbox.ai/blog/claude-sonnet-5), is the contractor that handles day-to-day implementation, refactors, and tests. Haiku is for cheap helper work and exploration. Use `/model` to switch, or set a default in `/config`.
 
 <table>
 <thead>
-<tr><th>Model</th><th>Best for</th><th>Relative cost</th></tr>
+<tr><th>Model</th><th>Best for</th><th>List price per million tokens (input / output)</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>Opus</strong></td><td>Architecture, planning, hard reasoning</td><td>Highest</td></tr>
-<tr><td><strong>Sonnet</strong></td><td>Everyday coding, refactors, tests, reviews</td><td>Middle</td></tr>
-<tr><td><strong>Haiku</strong></td><td>Simple edits, questions, subagent helpers</td><td>Lowest</td></tr>
+<tr><td><strong>Opus 5.5</strong></td><td>Architecture, planning, hard reasoning</td><td>$4 / $20</td></tr>
+<tr><td><strong>Sonnet 5.5</strong></td><td>Everyday coding, refactors, tests, reviews</td><td>$2 / $10</td></tr>
+<tr><td><strong>Haiku 5.5</strong></td><td>Simple edits, questions, subagent helpers</td><td>$0.10 / $0.50 up to 100K-token prompts, $0.50 / $2.50 above</td></tr>
 </tbody>
 </table>
 
-The "opusplan" setting automates the split: it plans on Opus, then drops to Sonnet for execution. Useful, with one caveat worth knowing. Each model and each effort level has its own cache, so switching mid-session recomputes the entire request with no cache hits. That is why picking your model and effort at the top of a session beats flipping between them mid-task.
+The "opusplan" setting automates the split: it plans on Opus, then drops to Sonnet for execution. Useful, with one caveat worth knowing. Each model has its own cache, so switching models mid-session recomputes the entire request with no cache hits, and every plan-mode toggle under opusplan is a model switch. That is why picking your model at the top of a session beats flipping between them mid-task.
 
-The other model-shaped lever is reasoning effort. Extended thinking is on by default, and those thinking tokens are billed as output, with a default budget that can run into tens of thousands of tokens. For a job like "rename this variable," that is pure waste. Drop it with `/effort` for simple tasks, or, on models with a fixed thinking budget, cap it with `MAX_THINKING_TOKENS`. Heavier [reasoning](https://geotoolbox.ai/blog/how-ai-models-think) is a real trade-off, not a free upgrade, so dial it down when the task does not need it. One note for the current lineup: on Fable 5 you cannot turn extended thinking off entirely, so that particular switch is off the table, though you can still lower the effort.
+The other model-shaped lever is reasoning effort. Thinking tokens are billed as output, so for a job like "rename this variable," heavy thinking is pure waste. In Claude Code you cannot turn thinking off on Opus 5.5, Sonnet 5.5, Haiku 5.5, or the Fable models, and `MAX_THINKING_TOKENS=0` has no effect on them. Effort is the control. Opus 5.5, Sonnet 5.5, and Haiku 5.5 start at medium; drop to low with `/effort` for simple tasks. Per Anthropic's [model configuration docs](https://code.claude.com/docs/en/model-config), Opus 5.5 at medium matches or exceeds Opus 5 at high on coding and knowledge-work evaluations, so raising it is a deliberate spend, not a default. Heavier [reasoning](https://geotoolbox.ai/blog/how-ai-models-think) is a real trade-off, not a free upgrade, so dial it down when the task does not need it. On Opus 5.5, Sonnet 5.5, Haiku 5.5, and Fable 5.1, changing effort mid-session keeps the cache with an API key or a Claude subscription, which older models do not.
 
 ## Cut the Hidden Context Bloat
 
 Some of the worst offenders never show up in anything you typed. They load quietly in the background.
 
-MCP servers are the classic example. Older advice says every connected server dumps its full tool definitions into context on every message, and for a while that was true. It is now more nuanced: on supported models, tool definitions are deferred by default, so only tool names enter context until Claude actually uses one. That said, disabling servers you are not using still helps, especially on Haiku or through some gateways where deferral is unavailable and the full definitions load. Run `/mcp` to see what is connected and turn off what you do not need. When a plain command line tool like `gh` or `aws` will do, prefer it, since it adds no per-tool listing at all. For the servers that do earn their place, plus the cost trackers that keep this spend visible, see our roundup of [open-source Claude Code tools](https://geotoolbox.ai/blog/claude-code-open-source-tools).
+MCP servers are the classic example. Older advice says every connected server dumps its full tool definitions into context on every message, and for a while that was true. It is now more nuanced: on supported models, tool definitions are deferred by default, so only tool names enter context until Claude actually uses one. That said, disabling servers you are not using still helps, especially behind some gateways or on Microsoft Foundry, where tool search is unavailable and the full definitions load. Run `/mcp` to see what is connected and turn off what you do not need. When a plain command line tool like `gh` or `aws` will do, prefer it, since it adds no per-tool listing at all. For the servers that do earn their place, plus the cost trackers that keep this spend visible, see our roundup of [open-source Claude Code tools](https://geotoolbox.ai/blog/claude-code-open-source-tools).
 
 Verbose command output is the other silent drain. A test run, a `git diff`, or a build log gets billed at full token cost, and most of it is noise Claude does not need. Filter it before it lands. That can be as simple as `pytest -q`, or a preprocessing hook that greps a 10,000-line log down to the errors, turning tens of thousands of tokens into hundreds. The output nobody thought to trim is almost always where the surprise token counts come from, not the prompts people worry about.
 
@@ -136,7 +138,7 @@ For genuinely noisy jobs, hand them to a subagent. A subagent explores logs, run
 
 How you phrase a request changes how many tokens come back. Vague prompts like "improve this codebase" trigger broad scanning and long, hedged answers. Specific ones keep the work tight: "add input validation to the login function in auth.ts" lets Claude read one file and move. Negative prompts help too. Adding "do not redesign the architecture, do not add dependencies, do not touch code outside this function" reduces collateral changes and the tokens spent making them.
 
-Answer budgets are the cheapest lever of all, and they target the priciest tokens. Output tokens are billed five times more than input tokens, per token: [Anthropic's pricing](https://platform.claude.com/docs/en/about-claude/pricing) puts Sonnet 5 at 2 dollars per million input against 10 dollars per million output per million output, a 5-to-1 ratio. So "return only the diff," "answer in under 200 tokens," or "five bullets maximum" saves more than the word count suggests, and it usually improves the answer by forcing Claude to select instead of generating everything plausible.
+Answer budgets are the cheapest lever of all, and they target the priciest tokens. Output tokens are billed five times more than input tokens, per token: [Anthropic's pricing](https://platform.claude.com/docs/en/about-claude/pricing) puts Sonnet 5.5 at 2 dollars per million input against 10 dollars per million output, a 5-to-1 ratio that Opus 5.5 (4 and 20) shares. So "return only the diff," "answer in under 200 tokens," or "five bullets maximum" saves more than the word count suggests, and it usually improves the answer by forcing Claude to select instead of generating everything plausible.
 
 We lean on this constantly in our own work. On routine tasks we ask for terse output by default and let the model spend its budget on reasoning rather than narration. The point is to constrain the output, not the thinking: a short answer is not a dumber one if the model still reasoned fully before replying. One caveat, since extended thinking is billed as output too: an answer-length limit does not cap the hidden thinking tokens, so on simple tasks pair the terse-output request with a lower `/effort`. Some developers push this further into a grammar-stripped "caveman" style for quick lookups, which saves input tokens too, with one real failure mode. Strip too much and Claude infers more, which means it sometimes infers wrong. Keep full sentences for anything that touches production code. One developer documented a roughly 60 percent cut from this kind of context and prompt discipline alone, in [this dev.to write-up](https://dev.to/numbpill3d/how-i-cut-my-claude-code-token-usage-by-60-and-got-better-output-48b0).
 
@@ -156,14 +158,8 @@ Because the model has no memory between steps, so Claude Code re-sends the entir
 ### What is the difference between /clear and /compact?
 `/clear` wipes the conversation history completely while keeping your files and tools, which is what you want when switching to unrelated work. `/compact` summarizes the conversation so far and continues from that summary, which is what you want at a natural break in the same task. Reach for `/clear` between tasks and `/compact` within one.
 
-### How big should my CLAUDE.md file be?
-Keep it small, ideally under 200 lines. It loads at session start and stays in context the entire session, so every line adds fixed weight to every task, including the ones it has nothing to do with. Move detailed or specialized workflow instructions into skills, which load only when Claude invokes them.
-
 ### Does switching from Opus to Sonnet actually lower my bill?
-Yes, for routine work. Opus costs more per token, so running everyday edits, refactors, and tests on Sonnet (or simple helpers on Haiku) cuts cost with no real quality loss. Reserve Opus for planning and hard reasoning. Set your model at the start of a session, since switching mid-session recomputes the cache.
-
-### Do subagents cost more or less?
-It depends on the job. A subagent runs verbose work like log analysis in its own separate context and returns only a short summary, which keeps that noise out of your main thread and can save tokens overall. Spawn many long-running teammates at once, though, and each carries its own context window, so cost scales with the team.
+Yes, for routine work. Opus 5.5, the Claude Code default, lists at $4 and $20 per million input and output tokens against $2 and $10 for Sonnet 5.5, so running everyday edits, refactors, and tests on Sonnet (or simple helpers on Haiku 5.5) cuts cost, and Anthropic's cost guidance says Sonnet handles most coding tasks well. Reserve Opus for planning and hard reasoning. Set your model at the start of a session, since switching models mid-session recomputes the cache.
 
 ### Is reducing token usage about my bill or my usage limit?
 Both, depending on your plan. On a Pro or Max subscription you pay a flat fee and hit a usage limit, so saving tokens means not running out mid-week. On an API key every token is billed, so it is literal money. The same habits help either way.
@@ -175,5 +171,5 @@ Both, depending on your plan. On a Pro or Max subscription you pay a flat fee an
 - How Do AI Agents Spend Your Money? Analyzing and Predicting Token Consumption in Agentic Coding Tasks (arXiv, 2026) - `arxiv.org/abs/2604.22750`
 - Why AI Tokens are so Expensive (Computerphile) - `youtube.com/watch?v=-0HRzXk8vlk`
 - Claude API and model pricing (Anthropic) - `platform.claude.com/docs/en/about-claude/pricing`
-- What's new in Claude Sonnet 5 (Anthropic) - `platform.claude.com/docs/en/about-claude/models/whats-new-sonnet-5`
+- Model configuration - Claude Code Docs (Anthropic) - `code.claude.com/docs/en/model-config`
 - How I Cut My Claude Code Token Usage by 60% and Got Better Output (dev.to) - `dev.to/numbpill3d/how-i-cut-my-claude-code-token-usage-by-60-and-got-better-output-48b0`
