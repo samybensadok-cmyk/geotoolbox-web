@@ -54,6 +54,10 @@ const nextConfig: NextConfig = {
       // advertised in the Link header / llms.txt / agents.md for weeks, so agents keep fetching it;
       // a .txt path never reaches the markdown-404 rule, so without this it would be an HTML 404.
       { source: "/llms-glossary.txt", destination: "/llms-blog.txt", permanent: true },
+      // GLM-5.2 explainer retired 2026-10-18: GLM-5.2 requests are served by GLM-5.3 and the 5.3 pillar
+      // covers the model; the page earned ~1 click per 28 days. The .md twins follow the HTML path.
+      { source: "/blog/what-is-glm-5-2", destination: "/blog/what-is-glm-5-3", permanent: true },
+      { source: "/blog/what-is-glm-5-2.md", destination: "/blog/what-is-glm-5-3.md", permanent: true },
       // NL locale retired 2026-10-09: the market reads EN, so every /nl URL 301s to its EN twin
       // (marketing routes are same-path, and the one NL article shared its EN donor slug).
       // Runs before middleware, so it holds even though "nl" is no longer a routing locale.
