@@ -2,8 +2,8 @@
 title: "Kimi API Pricing $MONTH_YEAR: Cost, Keys, and Limits"
 description: "What the Kimi API costs in $YEAR: per-model pricing, the $1 minimum, rate-limit tiers, and the endpoint split that quietly returns a 401 on a valid key."
 date: "2026-07-18"
-updated: "2026-09-05"
-recheckBy: "2026-10-06"  # 2026-09-05: the K2.5 + moonshot-v1 retirement LANDED on 2026-08-31 (verified live on platform.kimi.ai/docs/models — calls now return 404) and is past-tensed throughout (table status cells, the legacy-row paragraph, the reseller table and the retirement chronology all re-checked line by line on 2026-09-05); summer launch top-up rebate lapsed. Next check: per-model prices vs platform.kimi.ai/docs/pricing/*, and whether the $5 cumulative-spend voucher is still standing
+updated: "2026-10-18"
+recheckBy: "2026-10-21"  # 2026-10-18: verified per-model prices, rate-limit tiers, 429 error types, caching, web-search REST, Kimi Code host against platform.kimi.ai docs. Recheck on 2026-10-21: the $web_search deprecation date (2026-10-20) has passed. NOT verified: OpenRouter route economics beyond the 2026-10-18 snapshot, the July DFS citation sample
 author: "Samy BEN SADOK"
 tags: ["kimi-ai", "kimi-k3", "moonshot-ai", "api-pricing", "llm", "pricing", "guide"]
 draft: false
@@ -13,7 +13,7 @@ The Kimi API costs $3.00 per million input tokens and $15.00 per million output 
 
 Those numbers are easy to find and easy to get wrong. We asked five AI engines what the Kimi API costs. Three produced confident tables whose highest input quote sat 73% above the lowest, because they were reading resellers instead of Moonshot's own docs.
 
-Everything below comes from the pricing pages themselves, checked July 18, 2026. Three things catch developers out: the endpoint split that returns a silent 401, the 429 that really means your balance is empty, and why prompt caching will not make K3 as cheap as you are hoping.
+Everything below comes from the pricing pages themselves, checked October 18, 2026. Three things catch developers out: the endpoint split that returns a silent 401, the 429 that really means your balance is empty, and why prompt caching will not make K3 as cheap as you are hoping.
 
 ## How Much Does the Kimi API Cost?
 
@@ -53,7 +53,7 @@ If you want the full picture on what K3 actually is before deciding whether the 
 
 This is the most common misconception about Kimi, and the search data shows it: most questions Google surfaces about the Kimi API are some version of "is it free?" The confusion is understandable, because the consumer Kimi app at kimi.com does have a free tier, and its paid plans are metered in credits rather than tokens. We cover that side separately in our [Kimi pricing](https://geotoolbox.ai/blog/kimi-pricing) guide. The API is a separate product with separate billing.
 
-A top-up buys access and a rung on the rate-limit ladder. Recharge amounts are non-refundable, so treat the first payment as a commitment rather than a trial. Spend $5 cumulatively and Moonshot issues a $5 voucher, which is the closest thing to free credit on offer. One catch before you plan around it: vouchers do not count toward tier progression. Only real money moves you up.
+A top-up buys access and a rung on the rate-limit ladder. Recharge amounts are non-refundable, so treat the first payment as a commitment rather than a trial. Top up $5 cumulatively and Moonshot issues a $5 voucher, the closest thing to free credit on offer. Since September 2026, usage is drawn half from cash and half from vouchers. One catch before you plan around it: vouchers do not count toward tier progression. Only real money moves you up.
 
 Moonshot also ran a K3 launch top-up rebate over the summer: a voucher worth 10% to 30% of a top-up at the $20, $100, $300, and $1,000 thresholds, once per organization, capped at $4,000, and excluding both the Kimi app and Kimi Code. Per the promo page as captured on July 18, 2026 (since taken down), it was set to run into mid-August, so do not count on it; the standing $5 voucher above is the credit you can actually rely on. If a similar rebate returns, the mechanics are worth knowing: it was calculated from the highest-value transaction made on the day of your first top-up, so a $20 test and a $1,000 commit on the same day earned 30% on the $1,000, a commit that landed the following day did not count, and vouchers expired after 90 days.
 
@@ -70,18 +70,18 @@ Moonshot runs more than one API surface, and a key issued on one will not authen
 <tbody>
 <tr><td>Key from <strong>platform.kimi.ai</strong></td><td><code>https://api.moonshot.ai/v1</code></td><td>Developer Platform (international)</td><td>Per token, from a prepaid balance</td></tr>
 <tr><td>Key from <strong>platform.moonshot.cn</strong></td><td><code>https://api.moonshot.cn/v1</code></td><td>Developer Platform (China)</td><td>Per token, separate balance</td></tr>
-<tr><td>Key from the Kimi Code console</td><td><code>https://api.kimi.com/coding/v1</code></td><td>Kimi Code</td><td>Subscription; ~300-1,200 requests per rolling 5-hour window by plan</td></tr>
+<tr><td>Key from the Kimi Code console</td><td><code>https://api.kimi.ai/coding/v1</code></td><td>Kimi Code (international)</td><td>Subscription; rolling 5-hour usage limit</td></tr>
 </tbody>
 </table>
 
 <figure className="not-prose my-8">
-  <BlogImage src="/blog/kimi-api-pricing/kimi-api-endpoint-routing.png" alt="Table mapping each Kimi key source to its base URL and billing model: platform.kimi.ai to api.moonshot.ai, platform.moonshot.cn to api.moonshot.cn, and Kimi Code console keys to api.kimi.com/coding/v1." w="1300" h="688" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
-  <figcaption className="mt-3 text-center text-sm text-gray-500">A Kimi key only works against the platform that issued it. Mixing them returns a bare 401 with no explanation.</figcaption>
+  <BlogImage src="/blog/kimi-api-pricing/kimi-api-endpoint-routing-oct-2026.png" alt="Table mapping each Kimi key source to its base URL and billing model: platform.kimi.ai to api.moonshot.ai, platform.moonshot.cn to api.moonshot.cn, and Kimi Code console keys to api.kimi.ai/coding/v1 for international accounts." w="2200" h="1338" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Keys are not interchangeable across these API hosts. Mixing them returns a bare 401 with no explanation.</figcaption>
 </figure>
 
 The international and China platforms hold separate balances. Money you top up on one is not spendable on the other, and the accounts do not sync. Pick the one that matches where you are billing from and keep every key, environment variable, and base URL on that side of the line.
 
-Kimi Code looks like a cheaper way to buy the same access. It is a different product: a subscription with its own keys and its own rolling request window, aimed at coding agents instead of metered calls. It is also what the Kimi CLI authenticates against, which is why a metered platform key will not drive it. A Kimi Code subscription issues its own keys, and [its documentation](https://www.kimi.com/code/docs/en) covers both OpenAI and Anthropic protocol formats. Metered platform keys speak OpenAI's format only, which is why dropping a standard Kimi key into an Anthropic-configured agent tool fails with nothing more useful than a 401.
+Kimi Code looks like a cheaper way to buy the same access. It is a different product: a subscription with its own keys and its own rolling 5-hour usage limit, aimed at coding agents instead of metered calls. It is also what the Kimi CLI logs into by default, though the CLI's `kimi` provider also accepts a metered platform key. A Kimi Code subscription issues its own keys, and [its documentation](https://www.kimi.com/code/docs/en) covers both OpenAI and Anthropic protocol formats. The metered platform API speaks OpenAI Chat Completions, the Responses API and the Anthropic-compatible Messages API, so a 401 means the wrong key for that host, not the wrong format. Kimi's China site uses `api.kimi.com`; international accounts use `api.kimi.ai`.
 
 Once you are on the right platform the rest is ordinary. The API is [OpenAI-SDK compatible](https://platform.kimi.ai/docs/introduction), so pointing an existing client at the base URL and swapping the model string is usually the whole integration:
 
@@ -99,7 +99,7 @@ resp = client.chat.completions.create(
 )
 ```
 
-The environment variable is `MOONSHOT_API_KEY`, not `KIMI_API_KEY`, and the host is `api.moonshot.ai`, not `api.kimi.ai`. The docs moved to Kimi branding; the SDK surface did not.
+Moonshot's platform docs use `MOONSHOT_API_KEY` (the Kimi Code CLI reads `KIMI_API_KEY`), and the host is `api.moonshot.ai`, not `api.kimi.ai`. The docs moved to Kimi branding; the SDK surface did not.
 
 **Note:** *A paid subscription to the consumer Kimi app does not include metered API credits. Moonshot bills the API Open Platform separately from the Kimi app and Kimi Code.*
 
@@ -113,27 +113,25 @@ The environment variable is `MOONSHOT_API_KEY`, not `KIMI_API_KEY`, and the host
 </thead>
 <tbody>
 <tr><td>Tier 0</td><td>$1</td><td>1</td><td>3</td><td>500,000</td></tr>
-<tr><td>Tier 1</td><td>$10</td><td>50</td><td>200</td><td>2,000,000</td></tr>
-<tr><td>Tier 2</td><td>$20</td><td>100</td><td>500</td><td>3,000,000</td></tr>
-<tr><td>Tier 3</td><td>$100</td><td>200</td><td>5,000</td><td>3,000,000</td></tr>
-<tr><td>Tier 4</td><td>$1,000</td><td>400</td><td>5,000</td><td>4,000,000</td></tr>
-<tr><td>Tier 5</td><td>$3,000</td><td>1,000</td><td>10,000</td><td>5,000,000</td></tr>
+<tr><td>Tier 1</td><td>$10</td><td>15</td><td>100</td><td>2,000,000</td></tr>
+<tr><td>Tier 2</td><td>$20</td><td>40</td><td>100</td><td>3,000,000</td></tr>
+<tr><td>Tier 3</td><td>$100</td><td>50</td><td>200</td><td>3,000,000</td></tr>
+<tr><td>Tier 4</td><td>$1,000</td><td>60</td><td>200</td><td>4,000,000</td></tr>
+<tr><td>Tier 5</td><td>$3,000</td><td>100</td><td>300</td><td>5,000,000</td></tr>
 </tbody>
 </table>
 
-Going from Tier 0 to Tier 1 costs $9 and buys 50 times the concurrency. If you are evaluating Kimi with a $1 balance and concluding it is too slow for real work, you are measuring the entry tier, not the API. Tier 0 also carries the only daily token cap in the system, at 1.5 million tokens per day; every tier above it is uncapped on that axis. The tokens-per-minute ceilings above are also a published maximum rather than a guarantee: Moonshot notes that temporary adjustments may occur when cluster demand is high.
+Going from Tier 0 to Tier 1 costs $9 and buys 15 times the concurrency. If you are evaluating Kimi with a $1 balance and concluding it is too slow for real work, you are measuring the entry tier, not the API. Tier 0 also carries the only daily token cap in the system, at 1.5 million tokens per day; every tier above it is uncapped on that axis. The tokens-per-minute ceilings above are also a published maximum rather than a guarantee: Moonshot notes that temporary adjustments may occur when cluster demand is high.
 
-Three details catch people out, and all three cost money. First, limits are enforced **per user, not per key**, so minting a second key to work around throttling does nothing. Second, they are **shared across models**, so a batch job on kimi-k2.6 eats into the same budget your K3 calls are drawing from.
-
-Third, Moonshot meters your rate limit against `max_completion_tokens`. Not the tokens you spend, the ceiling you declared. Setting that parameter to an optimistic ceiling reserves capacity you never consume, which throttles you earlier than your real usage warrants. Set it close to what you expect. Billing is unaffected either way: you are charged for the tokens actually generated, not the ceiling you reserved.
+One detail catches people out: Moonshot enforces limits at the organization level, so minting a second key to work around throttling does nothing.
 
 ## The 429 That Means Your Balance Is Empty
 
-A dead Kimi integration and a throttled one return the same status code. When the balance hits zero, the API has been observed answering 429 Rate Limit Reached, with nothing in the status code to distinguish it from ordinary throttling, and that has a specific consequence: a retry layer that keys off the status code alone will treat a terminal billing condition as a transient one and keep backing off until it exhausts its attempts.
+A dead Kimi integration and a throttled one can return the same status code. Moonshot's [troubleshooting guide](https://platform.kimi.ai/docs/guide/troubleshooting) now separates them by `error.type`: `rate_limit_reached_error` for an organization-level concurrency, RPM, TPM or TPD limit, and `exceeded_current_quota_error` for insufficient balance, an overdue account or an expired voucher. A retry layer that keys off the status code alone still treats a terminal billing condition as a transient one and backs off until it exhausts its attempts.
 
-The [openclaw project logged exactly this](https://github.com/openclaw/openclaw/issues/43447), filing it as "Kimi/Moonshot 'Rate Limit' error masks insufficient funds, causes UI lockout." It has since been fixed on their side, in a patch that classifies a Moonshot balance 429 as a billing failure rather than throttling. That fix lives in openclaw, though. It is client-side handling of an API behavior that still exists, so any tool that has not special-cased it will keep spinning.
+The [openclaw project logged exactly this](https://github.com/openclaw/openclaw/issues/43447), filing it as "Kimi/Moonshot 'Rate Limit' error masks insufficient funds, causes UI lockout." It has since been fixed on their side, in a patch that classifies a Moonshot balance 429 as a billing failure rather than throttling. That fix lives in openclaw, though, so any tool that has not special-cased the billing 429 will keep spinning.
 
-The fix is one call on the error path. On a 429, check your balance before you back off:
+The fix is one call on the error path. On a 429, read `error.type`, or check your balance, before you back off:
 
 ```python
 import os, time, httpx
@@ -166,7 +164,7 @@ def handle_429(response: httpx.Response) -> None:
 
 Cache that result rather than calling it on every 429, or a retry storm will add one request per failure to an account that is already refusing them.
 
-Moonshot exposes a balance endpoint precisely so you can make this distinction. One call on the error path separates "wait and try again" from "nothing you do will help until someone tops up the account," which is the difference between a slow job and a dead one nobody notices. Moonshot documents no auto-recharge, no spend alert, and no low-balance notification, and top-ups are manual, so that check is the only signal you get, and it only fires after a call has already failed.
+Moonshot exposes a balance endpoint precisely so you can make this distinction. One call on the error path separates "wait and try again" from "nothing you do will help until someone tops up the account," which is the difference between a slow job and a dead one nobody notices. That check only fires after a call has already failed, so also use what Moonshot now documents: balance alerts, automatic balance top-up, and a project daily spending limit that rejects requests once it is reached, with about ten minutes of billing latency.
 
 ## What the Bill Looks Like
 
@@ -193,19 +191,19 @@ Take a workload of 1 million input and 100,000 output tokens per day, a 10:1 inp
   <figcaption className="mt-3 text-center text-sm text-gray-500">Caching cuts both bills by about half. It barely moves the ratio between the two models, because output tokens are never cached.</figcaption>
 </figure>
 
-Caching cuts the K3 bill by 51% and the k2.7-code bill by 48%. It moves the ratio between them from 3.33x to 3.13x. One caveat on that 85%: Moonshot documents no cache API, no TTL, and no keying rules, so there is nothing published to tune against; treat your hit rate as an outcome you measure rather than a number you can engineer. If you picked K3 expecting aggressive prompt caching to bring it near the coding model's price, it does not, and no achievable hit rate will. The lever works on the shrinking half of the invoice.
+Caching cuts the K3 bill by 51% and the k2.7-code bill by 48%. It moves the ratio between them from 3.33x to 3.13x. One caveat on that 85%: Moonshot's [caching guide](https://platform.kimi.ai/docs/guide/context-caching) documents a 5-minute default TTL and bills cache writes separately, at $3.00 per million tokens, or $6.00 for a 1-hour TTL on K3; treat your hit rate as an outcome you measure. If you picked K3 expecting aggressive prompt caching to bring it near the coding model's price, it does not, and no achievable hit rate will. The lever works on the shrinking half of the invoice.
 
 Batch and web search change the math.
 
 **Batch inference is 40% off.** Moonshot prices [batch jobs](https://platform.kimi.ai/docs/pricing/batch) at 60% of standard rates, which is the largest single saving available on the platform. It comes with a restriction the pricing page makes plain: the batch table covers kimi-k2.7-code and kimi-k2.6 (it also listed kimi-k2.5 until that model was retired on August 31, 2026). K3 is not on it. Batch jobs are also exempt from the real-time concurrency limits above, which matters more than the discount if you are sitting at Tier 0 with a single concurrent request. If your workload tolerates asynchronous processing, that is a strong argument for staying on the K2 line.
 
-**Web search is billed per call.** The [`$web_search` tool](https://platform.kimi.ai/docs/pricing/tools) costs $0.005 per successful call on top of tokens, and the search results it injects are billed as input on the following call, which on K3 routinely costs more than the call fee itself. Moonshot currently carries a warning on that page saying the feature is being updated, that the documentation is outdated, and that it does not recommend using the functionality in the near term. Treat both the price and the behavior as provisional. That note was live as of July 18, 2026.
+**Web search is billed per call.** The legacy [`$web_search` tool](https://platform.kimi.ai/docs/pricing/websearch) was billed at $0.005 per call on top of tokens, and the search results it injects are billed as input on the following call, which on K3 routinely costs more than the call fee itself. Moonshot's docs say it was expected to be deprecated on October 20, 2026. Its REST endpoints are billed only on success: $0.002 per call for `/v1/tools/search`, $0.003 for `/v1/tools/search_pro` and $0.002 for `/v1/tools/fetch`.
 
 None of this is unique to Kimi. The same trap catches teams running frontier models anywhere, which is why we wrote about [how token costs add up](https://geotoolbox.ai/blog/reduce-claude-code-token-costs) in agentic workflows, and why the comparison to run is against [Gemini API pricing](https://geotoolbox.ai/blog/gemini-api-pricing) on your own traffic shape, not on a list price.
 
 ## Direct, OpenRouter, or Kimi Code?
 
-Moonshot sells the same weights through resellers, and the arbitrage runs in an unintuitive direction. Buying direct is not automatically cheapest, and on one model it is measurably the most expensive.
+Moonshot sells the same weights through resellers, and the arbitrage runs in an unintuitive direction. Buying direct is not automatically cheapest.
 
 <table>
 <thead>
@@ -213,12 +211,12 @@ Moonshot sells the same weights through resellers, and the arbitrage runs in an 
 </thead>
 <tbody>
 <tr><td><strong>Moonshot direct</strong></td><td>K3, production workloads, batch jobs</td><td>Per token, prepaid balance</td><td>WeChat Pay and Alipay only for individuals</td></tr>
-<tr><td><strong>OpenRouter</strong></td><td>Multi-provider fallback, card payment</td><td>Per token, pass-through plus margin</td><td>Exact parity with direct on K3; its old K2.5 discount died with the model</td></tr>
-<tr><td><strong>Kimi Code</strong></td><td>Coding agents, predictable monthly spend</td><td>Subscription, rolling 5-hour quota</td><td>Not metered credit; separate keys and limits</td></tr>
+<tr><td><strong>OpenRouter</strong></td><td>Multi-provider fallback, card payment</td><td>Per token, pass-through plus margin</td><td>Moonshot's own K3 endpoint matches direct; 26 K3 endpoints range from $0.25 to $4.50 input</td></tr>
+<tr><td><strong>Kimi Code</strong></td><td>Coding agents, predictable monthly spend</td><td>Subscription, rolling 5-hour limit</td><td>Shares the membership credit pool; separate keys and limits</td></tr>
 </tbody>
 </table>
 
-Before the sunset, [OpenRouter listed kimi-k2.5](https://openrouter.ai/moonshotai/kimi-k2.5) at $0.375 input and $2.025 output per million tokens against Moonshot's own $0.60 and $3.00 for the same model: 37.5% cheaper on input and 32.5% cheaper on output, through a reseller. On K3 the same comparison lands at exact parity, $3.00 and $15.00 either way, so that discount was a K2.5 artifact rather than a standing rule.
+Before the sunset, [OpenRouter listed kimi-k2.5](https://openrouter.ai/moonshotai/kimi-k2.5) at $0.375 input and $2.025 output per million tokens against Moonshot's own $0.60 and $3.00 for the same model: 37.5% cheaper on input and 32.5% cheaper on output, through a reseller. On K3 today, [OpenRouter's](https://openrouter.ai/moonshotai/kimi-k3) Moonshot endpoint sits at parity, $3.00 and $15.00, while other hosts range from $0.25 to $4.50 input, so route economics now depend on the host.
 
 That gap is now history rather than an opportunity. K2.5 was retired on August 31, 2026, and Moonshot's [model list](https://platform.kimi.ai/docs/models) confirms that calls to `kimi-k2.5` and the `moonshot-v1` series return a 404. Any reseller listing that survived the sunset is a stale catalogue entry, not a live route. The nearest replacement, `kimi-k2.7-code`, moves cache-miss input from $0.60 to $0.95. The general lesson stands even though this particular arbitrage is gone: check reseller pricing against the vendor's own rate before assuming first-party wins, and check the model is still alive before either.
 
@@ -226,7 +224,7 @@ Payment method may decide this for you regardless. Moonshot documents WeChat Pay
 
 ## Model IDs Keep Dying
 
-Fourteen model IDs have been retired since November 2025, and there is no stable alias to hide behind. For anything with a maintenance window longer than a quarter, that is a bigger operational risk than the price.
+Fifteen model IDs have been retired since November 2025, and there is no stable alias to hide behind. For anything with a maintenance window longer than a quarter, that is a bigger operational risk than the price.
 
 The [model list](https://platform.kimi.ai/docs/models) records the pattern. `kimi-thinking-preview` was discontinued in November 2025. `kimi-latest` went in January 2026. The entire kimi-k2 series was discontinued on May 25, 2026. `kimi-k2.5` and the whole `moonshot-v1` family, including three `-vision-preview` variants, came off on August 31, 2026.
 
@@ -260,40 +258,31 @@ The costs that hurt are the ones that are not on the pricing page. A key pointed
 
 ### Is the Kimi API free?
 
-No. A minimum $1 top-up is required before the API will return anything, and there is no permanent free tier. Spending $5 cumulatively earns a $5 voucher, but vouchers do not count toward rate-limit tier progression. The free tier people are thinking of belongs to the consumer Kimi app, which is a separate product from the API.
+No. A minimum $1 top-up is required before the API will return anything, and there is no permanent free tier. Topping up $5 cumulatively earns a $5 voucher, but vouchers do not count toward rate-limit tier progression. The free tier people are thinking of belongs to the consumer Kimi app, which is a separate product from the API.
 
 ### How do I get a Kimi API key?
 
-Register on Moonshot's developer platform, top up at least $1, and create a key in the console. The step that matters more than the sign-up is choosing the right platform: keys from the international platform, the China platform, and Kimi Code are not interchangeable, and using one against another's base URL fails with a bare 401.
+Register on Moonshot's developer platform at platform.kimi.ai, top up at least $1, and create a key in the console, then point your client at `api.moonshot.ai/v1`. Kimi Code keys are separate and work against a different host.
 
 ### Does a Kimi subscription include API credits?
 
-Not for the metered API. Moonshot bills the API Open Platform separately from the Kimi app and Kimi Code. Kimi Code subscribers do receive their own keys, but those run against a request quota of roughly 300 to 1,200 calls per rolling five-hour window depending on plan, not a token balance. Community threads sometimes claim subscriptions grant matching API credit; Moonshot's documentation does not support that.
+Not for the metered API. Moonshot bills the API Open Platform separately from the Kimi app and Kimi Code. Kimi Code subscribers do receive their own keys, but those run against a rolling 5-hour usage limit and the membership's shared credit pool, not a token balance. Community threads sometimes claim subscriptions grant matching API credit; Moonshot's documentation does not support that.
 
 ### Which Kimi model should I use?
 
-For coding and agent work, kimi-k2.7-code at $0.95 input and $4.00 output is the value pick. Choose kimi-k3 when you specifically need the million-token [context window](https://geotoolbox.ai/blog/how-does-ai-search-work) or its stronger reasoning, and price it accordingly, because it costs roughly three times as much per unit of work and is not on the batch pricing table. The legacy `moonshot-v1` family is no longer an option at all: it was retired on August 31, 2026 alongside `kimi-k2.5`, and calls to it now return a 404. Some variants still carry lower list prices, but they come with far smaller contexts and almost no migration runway.
-
-### Is Kimi's API cheaper than the alternatives?
-
-On the K2 line, yes, and that was Kimi's whole positioning. K3 changes the answer. At $3.00 input and $15.00 output it is priced as a frontier model, not a budget one, so compare it against the frontier models it now competes with, not the cheap tier Kimi used to occupy. Run the numbers on your own input-to-output ratio, and see our [DeepSeek pricing](https://geotoolbox.ai/blog/deepseek-pricing) breakdown for the closest open-weight comparison.
-
-### Can I pay for the Kimi API with a credit card?
-
-Moonshot documents WeChat Pay and Alipay for individual accounts and does not mention card payment. Invoices come from Beijing Moonshot AI Technology Co., Ltd. with 6% Chinese VAT. The documentation says payment options vary by account region without specifying which, so confirm you can pay before building against direct access. Buying through a reseller such as OpenRouter is the usual workaround for card-only buyers.
+For coding and agent work, kimi-k2.7-code at $0.95 input and $4.00 output is the value pick. Choose kimi-k3 when you specifically need the million-token [context window](https://geotoolbox.ai/blog/how-does-ai-search-work) or its stronger reasoning, and price it accordingly, because it costs roughly three times as much per unit of work and is not on the batch pricing table. The legacy `moonshot-v1` family is no longer an option at all: it was retired on August 31, 2026 alongside `kimi-k2.5`, and calls to it now return a 404.
 
 ## Sources
 
-- Flagship Model Kimi K3 Pricing - Moonshot AI developer docs, accessed July 18, 2026 - `platform.kimi.ai/docs/pricing/chat-k3`
-- Coding Model Kimi K2.7 Code Pricing - Moonshot AI developer docs, accessed July 18, 2026 - `platform.kimi.ai/docs/pricing/chat-k27-code`
-- Recharge and Rate Limiting - Moonshot AI developer docs, accessed July 18, 2026 - `platform.kimi.ai/docs/pricing/limits`
+- Flagship Model Kimi K3 Pricing - Moonshot AI developer docs, accessed October 18, 2026 - `platform.kimi.ai/docs/pricing/chat`
+- Recharge and Rate Limiting - Moonshot AI developer docs, accessed October 18, 2026 - `platform.kimi.ai/docs/pricing/limits`
 - Kimi K3 launch top-up rebate (dedicated page since taken down) - Moonshot AI developer docs, as captured July 18, 2026 - `platform.kimi.ai/docs/pricing/promotion`
-- BatchJob Pricing - Moonshot AI developer docs, accessed July 18, 2026 - `platform.kimi.ai/docs/pricing/batch`
-- WebSearch Pricing - Moonshot AI developer docs, accessed July 18, 2026 - `platform.kimi.ai/docs/pricing/tools`
-- Model List and Deprecation Schedule - Moonshot AI developer docs, accessed July 18, 2026 - `platform.kimi.ai/docs/models`
+- BatchJob Pricing - Moonshot AI developer docs, accessed October 18, 2026 - `platform.kimi.ai/docs/pricing/batch`
+- WebSearch Pricing - Moonshot AI developer docs, accessed October 18, 2026 - `platform.kimi.ai/docs/pricing/websearch`
+- Troubleshooting and context caching guides - Moonshot AI developer docs, accessed October 18, 2026 - `platform.kimi.ai/docs/guide/troubleshooting`
+- Model List and Deprecation Schedule - Moonshot AI developer docs, accessed October 18, 2026 - `platform.kimi.ai/docs/models`
+- Kimi K3 model page - OpenRouter, accessed October 18, 2026 - `openrouter.ai/moonshotai/kimi-k3`
 - Kimi K2.5 model page - OpenRouter, accessed July 18, 2026 - `openrouter.ai/moonshotai/kimi-k2.5`
 - Kimi/Moonshot "Rate Limit" error masks insufficient funds - openclaw issue #43447, accessed July 18, 2026 - `github.com/openclaw/openclaw/issues/43447`
-- Account and Billing - Moonshot AI developer docs, accessed July 18, 2026 - `platform.kimi.ai/docs/guide/account-and-payments`
-- Kimi Code membership guide - Moonshot AI help center, accessed July 18, 2026 - `kimi.com/help/kimi-code/membership-guide`
-- Kimi Code documentation - Moonshot AI, accessed July 18, 2026 - `kimi.com/code/docs/en`
-- API introduction and rate-limit behavior - Moonshot AI developer docs, accessed July 18, 2026 - `platform.kimi.ai/docs/introduction`
+- Account and Billing - Moonshot AI developer docs, accessed October 18, 2026 - `platform.kimi.ai/docs/guide/account-and-payments`
+- Kimi Code membership page and documentation - Moonshot AI, accessed October 18, 2026 - `kimi.com/code/docs/en/kimi-code/membership.html`
