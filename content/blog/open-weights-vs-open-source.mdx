@@ -2,18 +2,18 @@
 title: "Open Weights vs Open Source: The Real Difference ($YEAR)"
 description: "Open weights and open source are not the same thing. See what each term means, which $YEAR AI models are which, the license catches, and why it matters."
 date: "2026-07-03"
-updated: "2026-09-07"
-recheckBy: "2026-09-21"  # 09-07 sweep (from chinese-ai-models-compared/best-open-source-llms forensic update): added Meta Muse Glimmer (~30B, Apache 2.0, Aug 10) as a genuine open-weight counterexample to the "Meta pulled back" framing - Meta's flagship Muse Spark stays closed but Glimmer is a real return; updated Tencent Hunyuan Hy3->Hy4 Preview (770B, Apache 2.0, Aug 28) succession; added both as table rows. Prior: Qwen3.8-Max weights landed 2026-08-12 (text-only, bespoke license; row/section/FAQ updated 08-14); re-check exact license terms
+updated: "2026-10-18"
+recheckBy: "2026-11-08"  # 10-18 refresh (batch 7): re-read Meta Muse Spark Open card and license (HF, Oct 15), StepFun Step 5 Preview license (HF LICENSE.txt), Epoch May 29 2026 insight, DeepSeek V4.1-Flash card, Mistral Large 4 post (weights promised end of October). NOT re-checked: Llama license text, Gemma 4, gpt-oss, OLMo/OSI details, Inkling.
 author: "Samy BEN SADOK"
 tags: ["open-weights", "open-source-ai", "open-weight-vs-open-source", "llama", "deepseek", "gpt-oss", "olmo", "ai-licensing", "geo", "guide"]
 draft: false
 ---
 
-Open weights and open source get used as if they mean the same thing. They do not. Open weights means you can download the finished model and run it. Open source means you also get the recipe: the training code and enough detail about the data to rebuild and audit the model from scratch. Almost every model marketed as "open source" today - Llama, DeepSeek, Qwen, Gemma - is actually only open-weight. This guide covers what each term really means, which 2026 models fall where, the license catches that bite in production, and why the distinction matters if you care about being cited in AI answers.
+Open weights and open source get used as if they mean the same thing. They do not. Open weights means you can download the finished model and run it. Open source means you also get the recipe: the training code and enough detail about the data for a skilled team to build a substantially equivalent model. Almost every model marketed as "open source" today - Llama, DeepSeek, Qwen, Gemma - is actually only open-weight. This guide covers what each term really means, which 2026 models fall where, the license catches that bite in production, and why the distinction matters if you care about being cited in AI answers.
 
 ## Open Weights vs Open Source: The Short Answer
 
-An open-weights model hands you the trained model. An open-source model hands you the model plus everything needed to reproduce it.
+An open-weights model hands you the trained model. An open-source model hands you the model plus everything needed to build a substantially equivalent one.
 
 Both let you download and run the thing. The difference is what you can do beyond running it: study how it was built, verify what went into it, and rebuild it yourself if you need to. Open weights give you the product. Open source gives you the product and the factory.
 
@@ -26,7 +26,7 @@ Both let you download and run the thing. The difference is what you can do beyon
 <tr><td><strong>Fine-tune on your own data</strong></td><td>Yes</td><td>Yes</td></tr>
 <tr><td><strong>Training code</strong></td><td>No</td><td>Yes</td></tr>
 <tr><td><strong>Training data (or detailed data information)</strong></td><td>No</td><td>Yes</td></tr>
-<tr><td><strong>Rebuild from scratch and fully audit</strong></td><td>No</td><td>Yes</td></tr>
+<tr><td><strong>Build a substantially equivalent model and audit it</strong></td><td>No</td><td>Yes</td></tr>
 <tr><td><strong>Typical license</strong></td><td>Permissive or custom (Apache, MIT, or vendor terms)</td><td>OSI-approved (e.g. Apache 2.0)</td></tr>
 </tbody>
 </table>
@@ -51,27 +51,27 @@ The definition grants four freedoms, inherited from free software: the freedom t
 
 There is one nuance that trips people up. OSAID does not force a lab to publish the raw training dataset, which is often impossible to redistribute for copyright or privacy reasons. It requires detailed data information instead: where the data came from, how it was selected and filtered, and enough documentation that a skilled person could assemble a substantially equivalent dataset and retrain the model. Critics argue this is too soft and that true openness should require the data itself. That debate is still live.
 
-The practical test is reproducibility. If you have the weights, the training code, and the data information, an independent team can rebuild the model, inspect it for bias or backdoors, and verify what it claims to be. Very few models clear that bar. The clearest current example is OLMo from the Allen Institute for AI, now on its third generation: OLMo 3 ships its weights, full training code, checkpoints, and evaluation tooling under Apache 2.0, alongside the roughly 6-trillion-token Dolma 3 dataset it was pretrained on. It has company: EleutherAI's Pythia and LLM360's Amber and CrystalCoder are among the models the Open Source Initiative has pointed to as genuinely conforming. That is what open source actually looks like.
+The practical test is whether others can build on it. If you have the weights, the training code, and the data information, an independent team can build a substantially equivalent model, inspect it for bias or backdoors, and verify what it claims to be. Very few models clear that bar. The clearest current example is OLMo from the Allen Institute for AI, now on its third generation: OLMo 3 ships its weights, full training code, checkpoints, and evaluation tooling under Apache 2.0, alongside the roughly 6-trillion-token Dolma 3 dataset it was pretrained on. It has company: EleutherAI's Pythia and LLM360's Amber and CrystalCoder are among the models the Open Source Initiative has pointed to as genuinely conforming. That is what open source actually looks like.
 
 ## The Openness Spectrum: Closed, Open-Weight, Open-Source
 
 Treating this as open versus closed hides the part that matters. Openness is a spectrum, and most of the interesting models sit in the middle.
 
 <figure className="not-prose my-8">
-  <BlogImage src="/blog/open-weights-vs-open-source/openness-spectrum.png" alt="The AI openness spectrum from closed to open-weight to open-source, showing what you get at each tier: closed gives API access only, open-weight adds downloadable weights, open-source adds training code and data information." w="2360" h="1253" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <BlogImage src="/blog/open-weights-vs-open-source/openness-spectrum-oct-2026.png" alt="The AI openness spectrum from closed to open-weight to open-source, showing what you get at each tier: closed gives API access only, open-weight adds downloadable weights, open-source adds training code and data information." w="2000" h="1254" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
   <figcaption className="mt-3 text-center text-sm text-gray-500">Openness is a spectrum. Most models people call "open" are open-weight, not open-source.</figcaption>
 </figure>
 
-At one end are closed models like GPT-5.x, Claude, and Gemini. You reach them through an API. You never touch the weights, and you cannot run them yourself. In the middle are open-weight models: the weights are downloadable, but the recipe is not. At the far end are open-source models that meet OSAID, where the full stack is public.
+At one end are closed models like GPT-6, Claude, and Gemini. You reach them through an API. You never touch the weights, and you cannot run them yourself. In the middle are open-weight models: the weights are downloadable, but the recipe is not. At the far end are open-source models that meet OSAID, where the full stack is public.
 
 <table>
 <thead>
 <tr><th>Tier</th><th>What you get</th><th>Example models</th><th>Typical license</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>Closed</strong></td><td>API access only; no weights</td><td>GPT-5.x, Claude, Gemini</td><td>Proprietary terms of service</td></tr>
+<tr><td><strong>Closed</strong></td><td>API access only; no weights</td><td>GPT-6, Claude, Gemini</td><td>Proprietary terms of service</td></tr>
 <tr><td><strong>Open-weight</strong></td><td>Downloadable weights; run and fine-tune; no training code or data</td><td>Llama, DeepSeek, Qwen, Gemma, gpt-oss, Kimi, Inkling</td><td>Custom or permissive, varies</td></tr>
-<tr><td><strong>Open-source (OSAID)</strong></td><td>Weights, training code, and data information; fully reproducible</td><td>OLMo</td><td>OSI-approved (Apache 2.0)</td></tr>
+<tr><td><strong>Open-source (OSAID)</strong></td><td>Weights, training code, and detailed data information; a substantially equivalent model can be built</td><td>OLMo</td><td>OSI-approved (Apache 2.0)</td></tr>
 </tbody>
 </table>
 
@@ -86,16 +86,17 @@ Now the useful part: which real models are which. This is where the labels get s
 <tr><th>Model</th><th>Open-weight or open-source?</th><th>License</th><th>Commercial-use catch</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>Llama (Meta)</strong></td><td>Open-weight; frontier work has moved closed</td><td>Llama Community License + Acceptable Use Policy</td><td>Free unless you exceed 700M monthly active users; use-case and regional bans apply</td></tr>
+<tr><td><strong>Llama (Meta)</strong></td><td>Open-weight; Meta's newer open releases use other licenses</td><td>Llama Community License + Acceptable Use Policy</td><td>Free unless you exceed 700M monthly active users; use-case and regional bans apply</td></tr>
 <tr><td><strong>OLMo (Allen Institute for AI)</strong></td><td>Open-source</td><td>Apache 2.0</td><td>None; full code and Dolma data released</td></tr>
 <tr><td><strong>DeepSeek (R1, V3-0324 and later)</strong></td><td>Open-weight</td><td>MIT</td><td>None; distillation and commercial use allowed</td></tr>
 <tr><td><strong>Qwen (Alibaba)</strong></td><td>Open-weight, up to a point</td><td>Apache 2.0 (Qwen3 series, through Qwen3.6)</td><td>None on the Apache 2.0 line (the Qwen3 series through Qwen3.6, resumed with Qwen3.8-27B in August 2026); the 3.7 generation is API-only. On August 12, 2026 Alibaba published Qwen3.8-Max weights (text-only variant) under a bespoke "Qwen3.8-Max" license, its first open-weight Max-class model</td></tr>
 <tr><td><strong>Kimi (Moonshot)</strong></td><td>Open-weight</td><td>Modified MIT (K2 family); custom Kimi K3 License (K3)</td><td>Display or separate-agreement requirements above very large user, revenue, or MaaS thresholds</td></tr>
 <tr><td><strong>GLM-5.3 (Zhipu / z.ai)</strong></td><td>Open-weight</td><td>Custom</td><td>Hosts above $10B revenue in any 12 months must pass a Z.ai security review (Flash stays MIT)</td></tr>
 <tr><td><strong>Inkling (Thinking Machines)</strong></td><td>Open-weight</td><td>Apache 2.0</td><td>None; training data and code withheld</td></tr>
-<tr><td><strong>Muse Glimmer (Meta)</strong></td><td>Open-weight; Meta's flagship Muse Spark stays closed</td><td>Apache 2.0</td><td>None; distilled from the closed Muse Spark, no user-count cap unlike Llama</td></tr>
+<tr><td><strong>Muse Spark Open and Muse Glimmer (Meta)</strong></td><td>Open-weight; Spark Open weights are gated (manual approval)</td><td>Muse Model License (Spark Open); Apache 2.0 (Glimmer)</td><td>Spark Open: display "Built with Muse Spark Open"; Model-as-a-Service businesses above $20M in 12-month revenue need a separate agreement. Glimmer: none, no user-count cap unlike Llama</td></tr>
+<tr><td><strong>Step 5 Preview (StepFun)</strong></td><td>Open-weight</td><td>StepFun Model License 1.0 (Apache-style)</td><td>Display "Powered by StepFun AI" above 100M users or $20M monthly revenue; separate license for device makers and Model-as-a-Service operators above $20M in 12-month revenue</td></tr>
 <tr><td><strong>Hunyuan (Tencent)</strong></td><td>Open-weight</td><td>Apache 2.0 (Hy4 Preview)</td><td>None; training data and code withheld</td></tr>
-<tr><td><strong>Mistral</strong></td><td>Open-weight (varies by model)</td><td>Apache 2.0 or research/non-production license, by model</td><td>Research-licensed models are not for commercial use</td></tr>
+<tr><td><strong>Mistral</strong></td><td>Open-weight (varies by model)</td><td>Apache 2.0 or research/non-production license, by model</td><td>Research-licensed models are not for commercial use; Mistral Large 4 (public preview since October 6) has no weights yet, promised for the end of October</td></tr>
 <tr><td><strong>Gemma (Google)</strong></td><td>Open-weight</td><td>Apache 2.0 (Gemma 4)</td><td>None on Gemma 4; earlier Gemma used custom Google terms</td></tr>
 <tr><td><strong>gpt-oss (OpenAI)</strong></td><td>Open-weight</td><td>Apache 2.0</td><td>None</td></tr>
 </tbody>
@@ -103,7 +104,7 @@ Now the useful part: which real models are which. This is where the labels get s
 
 Read that top row carefully, because it is the one people get wrong most. Meta calls Llama open source in its own marketing, but [Wikipedia's summary](https://en.wikipedia.org/wiki/Llama_(language_model)) reflects the view of the definition-setting bodies: Llama's license discriminates against certain users and uses, which the Open Source Definition forbids, so it is not open source. The Free Software Foundation reached the same conclusion. Meta's [Community License](https://developer.meta.com/ai/llama4/license/) requires anyone above 700 million monthly active users to ask for permission, which Meta can refuse.
 
-The permissive open-weight releases are more generous. [DeepSeek](https://geotoolbox.ai/blog/what-is-deepseek) ships its recent models under the [MIT license](https://github.com/deepseek-ai/DeepSeek-R1), [Qwen](https://geotoolbox.ai/blog/what-is-qwen) ships most of its open line under [Apache 2.0](https://github.com/QwenLM/Qwen3) (through Qwen3.6, and again with Qwen3.8-27B in August 2026 after the 3.7 generation shipped no open weights), and [OpenAI's gpt-oss](https://github.com/openai/gpt-oss) models are Apache 2.0 as well. [Moonshot's Kimi](https://geotoolbox.ai/blog/what-is-kimi-ai) K2-family models use a Modified MIT license that adds an attribution requirement at scale, though its newer K3 ships under a custom license with firmer conditions, and Zhipu's GLM stayed MIT through GLM-5.2, though its newer [GLM-5.3](https://geotoolbox.ai/blog/what-is-glm-5-3) flagship moved to a custom license. Google flipped [Gemma 4 to Apache 2.0](https://blog.google/innovation-and-ai/technology/developers-tools/gemma-4/) in April 2026, dropping the custom terms its earlier models carried. In our experience helping brands track how AI systems cite them, the license is the detail teams skip and later regret, because the download page and the terms of use tell two different stories. Notice the pattern across the whole [field of Chinese open-weight models](https://geotoolbox.ai/blog/chinese-ai-models-compared) and beyond: permissive licenses are common, but open source, in the strict sense, is rare.
+The permissive open-weight releases are more generous. [DeepSeek](https://geotoolbox.ai/blog/what-is-deepseek) ships its recent models under the [MIT license](https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash), [Qwen](https://geotoolbox.ai/blog/what-is-qwen) ships most of its open line under [Apache 2.0](https://github.com/QwenLM/Qwen3) (through Qwen3.6, and again with Qwen3.8-27B in August 2026 after the 3.7 generation shipped no open weights), and [OpenAI's gpt-oss](https://github.com/openai/gpt-oss) models are Apache 2.0 as well. [Moonshot's Kimi](https://geotoolbox.ai/blog/what-is-kimi-ai) K2-family models use a Modified MIT license that adds an attribution requirement at scale, though its newer K3 ships under a custom license with firmer conditions, and Zhipu's GLM stayed MIT through GLM-5.2, though its newer [GLM-5.3](https://geotoolbox.ai/blog/what-is-glm-5-3) flagship moved to a custom license. Google flipped [Gemma 4 to Apache 2.0](https://blog.google/innovation-and-ai/technology/developers-tools/gemma-4/) in April 2026, dropping the custom terms its earlier models carried. In our experience helping brands track how AI systems cite them, the license is the detail teams skip and later regret, because the download page and the terms of use tell two different stories. Notice the pattern across the whole [field of Chinese open-weight models](https://geotoolbox.ai/blog/chinese-ai-models-compared) and beyond: permissive licenses are common, but open source, in the strict sense, is rare.
 
 ### "Announced Open-Weight" and "Downloadable" Are Not the Same Day
 
@@ -121,7 +122,7 @@ The second is trust. With an open-weight model you inherit the creator's decisio
 
 The third is control. Open weights let you fine-tune, which is cheap and practical. They do not let you retrain from scratch, which for a frontier model is wildly expensive and, without the data and code, impossible anyway. So your ability to truly change the model is bounded. Self-hosting is not the automatic saving people expect, either: renting the GPUs and keeping a large model running usually costs more than a metered API until you are serving very high volume. And an open-weight model still depends on its vendor. Terms can change, and a model can be [pulled or restricted](https://geotoolbox.ai/blog/fable-5-ban), as export controls have already shown, leaving teams scrambling for a replacement.
 
-The capability cost of choosing open is smaller than most people assume. [Epoch AI finds](https://epoch.ai/data-insights/open-weights-vs-closed-weights-models) that the best open-weight models trail the best closed models by only a few months, about three on average by its tracking. When the performance gap is that narrow, licensing and control become the real decision, not raw capability.
+The capability cost of choosing open is smaller than most people assume. [Epoch AI finds](https://epoch.ai/data-insights/open-closed-eci-gap) that the best open-weight models have trailed the best closed models by about four months on average since January 2026, per its May 2026 update. When the performance gap is that narrow, licensing and control become the real decision, not raw capability.
 
 ## Why Companies Release Weights but Call It "Open Source"
 
@@ -135,13 +136,13 @@ There is even a linguistic argument that the word has drifted. In this view "ope
 
 ### Who Is Still Releasing Weights in 2026
 
-The more interesting question this year is not what labs call their releases but which labs are still making them. Two of the archetypal open-weight vendors moved their best work behind an API, and one of them has since partly reversed course. Meta launched [Muse Spark](https://about.fb.com/news/2026/04/introducing-muse-spark-meta-superintelligence-labs/) in April 2026, its first proprietary closed-weight frontier model, available in private preview to select partners; the flagship stays closed, but on August 10, 2026 Meta shipped [Muse Glimmer](https://venturebeat.com/technology/meta-returns-to-open-source-with-muse-glimmer-an-apache-2-0-licensed-30b-parameter-ai-model-optimized-for-agents-available-now), a ~30B model distilled from Muse Spark, under a plain Apache 2.0 license with no user-count cap, more permissive than Llama ever shipped. Meta's pattern is now split: frontier closed, a smaller distilled model open. Alibaba did the same across two straight generations: Qwen3.7-Max in May and the Qwen3.7-Plus mid-tier in June were both API-only, and the downloadable Qwen line stopped at Qwen3.6 — a closed-flagship pattern that held right up until [Qwen3.8-Max](https://geotoolbox.ai/blog/qwen3-8-max) in August. OpenAI's gpt-oss weights have not been refreshed since their August 2025 release. For Meta and OpenAI's gpt-oss, the older weights stay up and nothing is formally discontinued, but the frontier moved closed.
+The more interesting question this year is not what labs call their releases but which labs are still making them. Two of the archetypal open-weight vendors moved their best work behind an API, and both have since partly reversed course. Meta launched [Muse Spark](https://about.fb.com/news/2026/04/introducing-muse-spark-meta-superintelligence-labs/) in April 2026, its first proprietary closed-weight frontier model, available in private preview to select partners. On August 10, 2026 Meta shipped [Muse Glimmer](https://venturebeat.com/technology/meta-returns-to-open-source-with-muse-glimmer-an-apache-2-0-licensed-30b-parameter-ai-model-optimized-for-agents-available-now), a ~30B model distilled from Muse Spark, under a plain Apache 2.0 license with no user-count cap, more permissive than Llama ever shipped. On October 15 it published the weights of [Muse Spark Open](https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B), an 816B-parameter model (42B active), under the Muse Model License: the weights are gated behind manual approval, products must display "Built with Muse Spark Open," and a Model-as-a-Service business above $20 million in 12-month revenue needs a separate agreement with Meta. Meta's pattern is now split between closed Muse models and open-weight Muse releases on its own terms. Alibaba did the same across two straight generations: Qwen3.7-Max in May and the Qwen3.7-Plus mid-tier in June were both API-only, and the downloadable Qwen line stopped at Qwen3.6, a closed-flagship pattern that held right up until [Qwen3.8-Max](https://geotoolbox.ai/blog/qwen3-8-max) in August. OpenAI's gpt-oss weights have not been refreshed since their August 2025 release. For OpenAI's gpt-oss, the older weights stay up and nothing is formally discontinued, but the frontier moved closed.
 
 Alibaba is the one to watch, because it has now reversed its own pattern. The Qwen3.8-Max launch post committed to publishing the weights in the week of August 10, 2026, and on August 12 they landed in Alibaba's Hugging Face organization: a text-only variant under a bespoke "Qwen3.8-Max" license rather than Apache 2.0. A lab reopening its frontier, even partially and on custom terms, is the first real counterexample to the direction this section describes.
 
-Meanwhile the open-weight releases kept coming, and mostly from Chinese labs: [DeepSeek V4](https://geotoolbox.ai/blog/deepseek-v4) under MIT, GLM-5.2 under MIT, Tencent's Hunyuan (Hy3 in July, superseded by the 770B Hy4 Preview on August 28) under Apache 2.0 both times, and Kimi K3, whose weights went public on July 27 under its own custom license.
+Meanwhile the open-weight releases kept coming, and mostly from Chinese labs: [DeepSeek V4](https://geotoolbox.ai/blog/deepseek-v4) under MIT, GLM-5.3 under a custom license, Tencent's Hunyuan (Hy3 in July, superseded by the 770B Hy4 Preview on August 28) under Apache 2.0 both times, Kimi K3, whose weights went public on July 27 under its own custom license, and StepFun's Step 5 Preview under the StepFun Model License.
 
-The tempting conclusion is that open weights are becoming a Chinese specialty, and that overstates it. Google moved the other way, flipping Gemma 4 to Apache 2.0 in April 2026. Thinking Machines Lab released [Inkling](https://geotoolbox.ai/blog/inkling-ai) in July 2026 under Apache 2.0, a 975-billion-parameter mixture-of-experts model reported as the largest US open-weight release to date, though its training data and code are withheld, which makes it open-weight rather than open-source. The accurate version is narrower and more useful: the open-weight frontier is increasingly, but not exclusively, Chinese, and the labs with the most to lose commercially are the ones pulling back.
+The tempting conclusion is that open weights are becoming a Chinese specialty, and that overstates it. Google moved the other way, flipping Gemma 4 to Apache 2.0 in April 2026. Thinking Machines Lab released [Inkling](https://geotoolbox.ai/blog/inkling-ai) in July 2026 under Apache 2.0, a 975-billion-parameter mixture-of-experts model reported as the largest US open-weight release to date, though its training data and code are withheld, which makes it open-weight rather than open-source. The accurate version is narrower and more useful: the open-weight frontier is increasingly, but not exclusively, Chinese, and the labs with the most to lose commercially release open versions on their own terms, a step behind their closed flagships.
 
 Others are trying to fix the vocabulary rather than fight it. The [Open Weight Definition](https://www.forbes.com/sites/adrianbridgwater/2025/01/22/open-weight-definition-adds-balance-to-open-source-ai-integrity/), from the Open Source Alliance, gives weights-only releases their own honest standard instead of forcing them under the open-source banner. The practical takeaway for anyone choosing a model is simple: ignore the label on the announcement and read the license on the model card. That is the only thing that actually governs what you can do.
 
@@ -153,23 +154,17 @@ The lever that decides whether you get named is the same across all of them, ope
 
 ## Frequently Asked Questions
 
-### Is Llama open source or open weight?
-Open weight. Meta calls Llama open source, but its Community License restricts certain users and fields of use, which the Open Source Definition forbids, so the Open Source Initiative and the Free Software Foundation both say it is not open source. You can download and fine-tune the weights, but the training data and code are not released, and companies above 700 million monthly active users need a separate license from Meta.
-
 ### Is DeepSeek open source or open weight?
 Open weight. DeepSeek's R1 weights and its V3 releases from V3-0324 onward are published under a permissive MIT license, so commercial use and even distillation are allowed. (The original V3 base/chat weights predate that switch and carry a separate custom Model License.) But DeepSeek does not release its training data or full training code, so you cannot reproduce or fully audit the model. Very permissive, still not open source in the strict sense.
 
-### Is ChatGPT open source? What about gpt-oss?
-ChatGPT and the GPT-5.x models behind it are closed. You only reach them through OpenAI's API or app. Separately, OpenAI released gpt-oss-120b and gpt-oss-20b as open-weight models under Apache 2.0, which you can download and run yourself. Those are open weight, not open source, because the training data and code stay private.
-
 ### Is Qwen open source?
-Partly. Qwen's open-weight models, the Qwen3 series through Qwen3.6, are released under Apache 2.0, so they are free for commercial use with no user cap. Older Qwen models used a custom community license with more conditions. But Alibaba's 3.7 generation stayed closed and API-only, from the Qwen3.7-Plus mid-tier to the Qwen3.7-Max flagship, so the open line and the frontier line had diverged. That changed on August 12, 2026, when Alibaba published the Qwen3.8-Max weights, its first open Max-class model, as a text-only variant under a bespoke "Qwen3.8-Max" license. That makes the flagship open-weight, not open source: no training code, no data disclosure, and a custom license rather than a permissive one.
+Partly. Qwen's open-weight models, the Qwen3 series through Qwen3.6 and again Qwen3.8-27B, are released under Apache 2.0, so they are free for commercial use with no user cap. Older Qwen models used a custom community license with more conditions. But Alibaba's 3.7 generation stayed closed and API-only, from the Qwen3.7-Plus mid-tier to the Qwen3.7-Max flagship, so the open line and the frontier line had diverged. That changed on August 12, 2026, when Alibaba published the Qwen3.8-Max weights, its first open Max-class model, as a text-only variant under a bespoke "Qwen3.8-Max" license. That makes the flagship open-weight, not open source: no training code, no data disclosure, and a custom license rather than a permissive one.
 
 ### Can I use open-weight models commercially?
 Usually yes, but the license decides, not the download button. Permissive licenses like MIT and Apache 2.0 allow commercial use freely. Custom licenses may add user thresholds, attribution requirements, field-of-use bans, or regional exclusions. Always read the license on the model card before you build on it.
 
 ### What is the difference between open weights and open source in one sentence?
-Open weights give you the finished model to run and fine-tune, while open source gives you the model plus the training code and data information needed to rebuild and fully audit it.
+Open weights give you the finished model to run and fine-tune, while open source gives you the model plus the training code and data information needed to build a substantially equivalent model and audit it.
 
 ## The Label Is Loose, the License Is Not
 
@@ -188,8 +183,12 @@ If your buyers are getting answers from AI, being named in those answers is its 
 - Qwen3 - Apache 2.0 open-weight models (GitHub) - `github.com/QwenLM/Qwen3`
 - Qwen3.8-Max: A New Bar for Coding and Cowork (the Max-class open-weights commitment) - Qwen / Alibaba, August 3, 2026 - `qwen.ai/blog?id=qwen3.8`
 - Qwen models - Hugging Face (checked for the Qwen3.8-Max weights, August 7, 2026) - `huggingface.co/Qwen`
-- Epoch AI - Open-weight models lag the best closed models by about three months - `epoch.ai/data-insights/open-weights-vs-closed-weights-models`
+- Epoch AI - Open models lag state-of-the-art closed models by 4 months (Data Insight, May 29, 2026) - `epoch.ai/data-insights/open-closed-eci-gap`
 - Introducing Muse Spark (Meta Superintelligence Labs) - `about.fb.com/news/2026/04/introducing-muse-spark-meta-superintelligence-labs/`
 - Moonshot AI on Hugging Face (Kimi model cards and licenses) - `huggingface.co/moonshotai`
 - OLMo 3 (Allen Institute for AI) - `allenai.org/blog/olmo3`
 - Forbes - Open Weight Definition Adds Balance To Open Source AI Integrity - `forbes.com/sites/adrianbridgwater/2025/01/22/open-weight-definition-adds-balance-to-open-source-ai-integrity`
+- Muse Spark Open model card and Muse Model License - Meta on Hugging Face, release date October 15, 2026 - `huggingface.co/meta-models/Muse-Spark-Open-816B-A42B`
+- Step 5 Preview model card and StepFun Model License 1.0 - StepFun on Hugging Face, read October 18, 2026 - `huggingface.co/stepfun-ai/Step-5-Preview`
+- DeepSeek-V4.1-Flash model card (MIT) - DeepSeek on Hugging Face, read October 18, 2026 - `huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash`
+- Mistral Large 4 public preview - Mistral AI, October 6, 2026 - `mistral.ai/news/mistral-large-4`
