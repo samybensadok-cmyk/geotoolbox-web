@@ -58,6 +58,11 @@ const nextConfig: NextConfig = {
       // covers the model; the page earned ~1 click per 28 days. The .md twins follow the HTML path.
       { source: "/blog/what-is-glm-5-2", destination: "/blog/what-is-glm-5-3", permanent: true },
       { source: "/blog/what-is-glm-5-2.md", destination: "/blog/what-is-glm-5-3.md", permanent: true },
+      // Two dead Kimi-vs-Claude URLs (404 before 2026-10-19) point at the rewritten K3 vs Claude comparison.
+      { source: "/blog/kimi-vs-claude", destination: "/blog/kimi-k3-vs-claude", permanent: true },
+      { source: "/blog/kimi-vs-claude.md", destination: "/blog/kimi-k3-vs-claude.md", permanent: true },
+      { source: "/blog/kimi-k3-fable-coding-benchmark", destination: "/blog/kimi-k3-vs-claude", permanent: true },
+      { source: "/blog/kimi-k3-fable-coding-benchmark.md", destination: "/blog/kimi-k3-vs-claude.md", permanent: true },
       // NL locale retired 2026-10-09: the market reads EN, so every /nl URL 301s to its EN twin
       // (marketing routes are same-path, and the one NL article shared its EN donor slug).
       // Runs before middleware, so it holds even though "nl" is no longer a routing locale.
