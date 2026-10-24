@@ -25,7 +25,9 @@ const CAMPAIGN = "scan-2026-09"
 // SG_SCAN_BANNER_OFF → ON (2026-09-22): pulled within the hour because the link landed on the SIGNUP
 // page — the trial-checkout form (tier picker, "Secure checkout" step, auto-renew consent). It now
 // lands on ?page=free-scan (SG_FREE_SCAN_V1): website + what you sell first, then a free account.
-const LIVE = true
+// 2026-10-24 (operator): switched OFF and unmounted from root-shell, replaced by the October sale banner
+// (components/layout/sale-banner.tsx, lib/sale.ts). Flip back to true AND re-mount in root-shell to reuse.
+const LIVE = false
 const DISMISS_KEY = `scanBannerDismissed:${CAMPAIGN}`
 
 type Loc = "en" | "fr" | "es" | "de"

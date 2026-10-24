@@ -7,6 +7,7 @@ import { PricingCards, type PricingCardsCopy } from "@/components/pricing/pricin
 import { ComparisonTable, type ComparisonCopy } from "@/components/pricing/comparison-table"
 import { TryFreeBand, type TryFreeCopy } from "@/components/pricing/try-free-band"
 import { PromoSignupLink } from "@/components/pricing/promo-signup-link"
+import { SaleStrip } from "@/components/pricing/sale-strip"
 import { FeatureFaq } from "@/components/features/feature-faq"
 import { JsonLd } from "@/components/seo/json-ld"
 import { siteConfig } from "@/lib/config"
@@ -122,6 +123,7 @@ export default async function PricingPage({
       {/* Plans sit on their own light section so the toggles never straddle the
           dark hero (the old fixed-height gradient cut through them). */}
       <section className={styles.plans}>
+        <SaleStrip locale={locale} />
         <div className={styles.cards}>
           <PricingCards copy={cardsCopy} locale={locale} creditsLabel={compareCopy.groups[0].rows[0].label} />
         </div>

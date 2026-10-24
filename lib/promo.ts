@@ -16,6 +16,8 @@
  * re-run, that's a NEW campaign with a new code and a new dismiss key.
  */
 
+import { SALE, isSaleLive } from "@/lib/sale"
+
 export const PROMO = {
   code: "FOUNDING30",
   percentOff: 30,
@@ -88,6 +90,8 @@ export function normalizePromoCode(raw: string | null | undefined): string | nul
   if (!raw) return null
   const v = raw.trim().toUpperCase()
   if (v === PROMO.code) return v
+  // SG_SALE_OCT30_V1: the October sale code, accepted only while the sale is live (lib/sale.ts).
+  if (v === SALE.code) return isSaleLive() ? v : null
   return RESERVATION_CODE_RE.test(v) ? v : null
 }
 
@@ -269,25 +273,32 @@ export function forgetPromo(): void {
  * a dead code on every signup URL on the page.
  */
 export function resolveOfferFromLocation(): { code: string; variant: string } | null {
-  if (!isPromoLive()) return null
+  // SG_SALE_OCT30_V1: the public offer is the October sale while it is live, else the (expired) founding offer.
+  const saleLive = isSaleLive()
+  if (!isPromoLive() && !saleLive) return null
   let qs: URLSearchParams | null = null
   try {
     qs = new URLSearchParams(window.location.search)
   } catch {
     qs = null
   }
-  const publicOffer = { code: PROMO.code, variant: ORGANIC_VARIANT }
+  const publicOffer = { code: saleLive ? SALE.code : PROMO.code, variant: ORGANIC_VARIANT }
   const honourPersonal = (code: string, variant: string) => {
     const res = getReservation()
     return res && res.code === code ? { code, variant } : publicOffer
   }
 
-  const fromUrl = normalizePromoCode(qs?.get("promo"))
+  // SG_SALE_OCT30_V1: a FOUNDING30 carrier left in the visitor's storage (or URL) from the closed founding offer
+  // would put a dead code on every signup link while the banner promises the October sale: ignore it.
+  const dead = (c: string | null | undefined) => c === PROMO.code && !isPromoLive()
+  const fromUrlRaw = normalizePromoCode(qs?.get("promo"))
+  const fromUrl = dead(fromUrlRaw) ? null : fromUrlRaw
   if (fromUrl) {
     const variant = (qs?.get("bv") ?? "").replace(/[^a-z0-9_-]/gi, "").slice(0, 16)
     return RESERVATION_CODE_RE.test(fromUrl) ? honourPersonal(fromUrl, variant) : { code: fromUrl, variant }
   }
-  const recalled = recallPromo()
+  const recalledRaw = recallPromo()
+  const recalled = dead(recalledRaw?.code) ? null : recalledRaw
   if (recalled) {
     return RESERVATION_CODE_RE.test(recalled.code) ? honourPersonal(recalled.code, recalled.variant) : recalled
   }

@@ -3,7 +3,7 @@ import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { PromoBanner } from "@/components/layout/promo-banner"
 import { ExitIntentPopup } from "@/components/layout/exit-intent-popup"
-import { ScanBanner } from "@/components/layout/scan-banner"
+import { SaleBanner } from "@/components/layout/sale-banner"
 import { ReportExitPopup } from "@/components/layout/report-exit-popup"
 import { ConsentManager } from "@/components/consent/consent-manager"
 import { ImageLightbox } from "@/components/ui/image-lightbox"
@@ -52,8 +52,9 @@ export function RootShell({
       <body className="min-h-full flex flex-col antialiased">
         <a href="#main-content" className="skip-link">{common?.skipToContent ?? "Skip to main content"}</a>
         <PromoBanner locale={locale} />
-        {/* SG_SCAN_BANNER_V1: stands down while a discount campaign (PromoBanner) is live. */}
-        <ScanBanner locale={locale} />
+        {/* SG_SALE_OCT30_V1 (2026-10-24): October sale banner, hides itself after 2026-10-31. Replaces the free-scan
+            banner (components/layout/scan-banner.tsx, LIVE=false, no longer mounted). */}
+        <SaleBanner locale={locale} />
         <Header nav={nav} locale={locale} />
         <main id="main-content" className="flex-1">{children}</main>
         <Footer nav={nav} footer={footer} locale={locale} />
