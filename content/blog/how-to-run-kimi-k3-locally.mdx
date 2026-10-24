@@ -2,8 +2,8 @@
 title: "How to Run Kimi K3 Locally: What It Actually Takes (2026)"
 description: "How to run Kimi K3 locally: the real hardware for a 1.56TB model, five routes ranked by cost and speed, and an honest verdict on self-hosting."
 date: "2026-07-28"
-updated: "2026-10-18"  # 10-18: llama.cpp PRs #26185/#28466 re-fetched (merged 08-15/09-08), Unsloth repo sizes re-read (new 466/509/552GB builds), Ollama cloud-only re-checked, Apple Mac Studio now M5 Max/Ultra, provider speeds/prices from Artificial Analysis + OpenRouter, rental prices from RunPod + Lambda
-recheckBy: "2026-11-01"  # NOT re-verified: practitioner estimates (ktransformers-class decode speed, electricity $/Mtok, rig cost bands, RAMageddon), Mac-cluster analogy figures
+updated: "2026-10-24"
+recheckBy: "2026-11-05"  # 2026-10-24: added the K3.1 Pro note and its API price. Re-check when K3.1 Pro weights appear on Hugging Face (promised by Nov 4): this guide covers K3 only until then. Last full re-verification 2026-10-18 (llama.cpp PRs #26185/#28466 merged 08-15/09-08, Unsloth repo sizes, Ollama cloud-only, Mac Studio M5 Max/Ultra, provider speeds/prices from Artificial Analysis + OpenRouter, rental prices from RunPod + Lambda). NOT re-verified: practitioner estimates (ktransformers-class decode speed, electricity $/Mtok, rig cost bands, RAMageddon), Mac-cluster analogy figures
 author: "Samy BEN SADOK"
 tags: ["kimi-k3", "run-llm-locally", "self-host-llm", "open-weights", "moonshot-ai", "vllm", "local-llm", "guide"]
 draft: false
@@ -12,6 +12,8 @@ draft: false
 The day after Moonshot released Kimi K3's weights, we asked three assistants how to run it. Queried on July 28, 2026 with web search off, Claude Opus 4.8 said it had no reliable information that a model called Kimi K3 exists and offered to help with K2 instead. Gemini 2.5 Flash got it backwards, insisting K3 is proprietary, cloud-only, and that "download size is irrelevant because you don't download the weights." ChatGPT with search on answered correctly.
 
 The weights are 1.56TB, sitting public on Hugging Face right now. So the real question about the largest open-weight model ever released is not whether you can have it, but how you run it. Here is what that takes, route by route, with the numbers.
+
+Update, October 24, 2026: Moonshot launched Kimi K3.1 Pro on October 23, a post-trained version of K3, and says its weights will be released by November 4. They are not published yet, so nothing in this guide (file sizes, GGUF builds, memory math, llama.cpp support) applies to K3.1 Pro today. Everything below is about K3.
 
 ## The Short Answer: Can You Run Kimi K3 Locally?
 
@@ -29,7 +31,7 @@ But local runs on a spectrum, from pointing your editor at a hosted endpoint to 
 <tr><th>Route</th><th>What you need</th><th>Realistic speed</th><th>Rough cost</th><th>Best for</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>5. Use a provider</strong></td><td>Nothing, an API key</td><td>~29-465 tok/s, provider-dependent</td><td>$3 in / $15 out per M tokens</td><td>Almost everyone</td></tr>
+<tr><td><strong>5. Use a provider</strong></td><td>Nothing, an API key</td><td>~29-465 tok/s, provider-dependent</td><td>K3 at $3 in / $15 out per M tokens (K3.1 Pro: $2 / $10)</td><td>Almost everyone</td></tr>
 <tr><td><strong>1. Rent a K3-capable node</strong></td><td>8x B300 or 16x B200, by the hour</td><td>Same as Route 2</td><td>~$70-$160 / hour</td><td>Trying it, short jobs</td></tr>
 <tr><td><strong>2. Self-host on vLLM</strong></td><td>One 8x B300 node (or 16x B200)</td><td>111 tok/s TP8, 331 with spec decoding (vLLM, measured on GB300 NVL72)</td><td>Datacenter capex or cloud</td><td>Orgs with real GPU infra</td></tr>
 <tr><td><strong>3. CPU + RAM offload</strong></td><td>Big-RAM server + 1-4 GPUs</td><td>~10 tok/s decode, slow prefill</td><td>~$5k-$65k one-time</td><td>Homelab, overnight batch</td></tr>
@@ -111,7 +113,7 @@ Can it load? Probably, above about 2TB of usable aggregate memory. Is it a pract
 
 For the overwhelming majority of use cases, the way to run Kimi K3 "locally" is to point your local tools at a hosted endpoint and keep working. K3 had been on [OpenRouter](https://openrouter.ai/moonshotai/kimi-k3) through Moonshot's own API since mid-July; within days of the weights going public, independent providers like Together AI and Modal were serving it there too. You add one API key to Cursor, VS Code, or your own scripts, and K3 answers from someone else's cluster. Speed varies a lot by host: as of October 18, 2026 Artificial Analysis lists 17 providers, from a median of roughly 29 tokens per second at the slow end to about 465 at the fast end, and Moonshot's own endpoint (about 43 tokens per second) is the second slowest.
 
-It is worth being precise about what open weights change here, because the popular version overstates it. The argument that held up best in launch-week discussion is that the payoff is not laptop inference, which almost nobody can do, but the option of many independent hosts. That has driven prices down for smaller open models. On K3 that pressure is now visible: as our [Kimi API pricing](https://geotoolbox.ai/blog/kimi-api-pricing) breakdown documents, most of the 17 providers on Artificial Analysis still match Moonshot at $3 and $15, but as of October 18, 2026 OpenRouter lists 15 of its 26 K3 endpoints with a lower input or output price, from DeepInfra at $2.85 and $14.25 down to Relace at $0.25 and $8.00, and Artificial Analysis shows Makora at about $1.53 and $12.75 and LithosAI at $2.40 and $12.00. Several of the cheapest serve fp4 or fp8 builds, so compare the quantization and routing conditions before choosing a host. What you get today is durability, since a version cannot be silently retired, and the option of data residency for teams that need it. Moonshot's API runs $3.00 per million input tokens, $0.30 on a cache hit, and $15.00 per million output.
+It is worth being precise about what open weights change here, because the popular version overstates it. The argument that held up best in launch-week discussion is that the payoff is not laptop inference, which almost nobody can do, but the option of many independent hosts. That has driven prices down for smaller open models. On K3 that pressure is now visible: as our [Kimi API pricing](https://geotoolbox.ai/blog/kimi-api-pricing) breakdown documents, most of the 17 providers on Artificial Analysis still match Moonshot at $3 and $15, but as of October 18, 2026 OpenRouter lists 15 of its 26 K3 endpoints with a lower input or output price, from DeepInfra at $2.85 and $14.25 down to Relace at $0.25 and $8.00, and Artificial Analysis shows Makora at about $1.53 and $12.75 and LithosAI at $2.40 and $12.00. Several of the cheapest serve fp4 or fp8 builds, so compare the quantization and routing conditions before choosing a host. What you get today is durability, since a version cannot be silently retired, and the option of data residency for teams that need it. For K3, Moonshot's API runs $3.00 per million input tokens, $0.30 on a cache hit, and $15.00 per million output. Its newer K3.1 Pro is listed at $2.00, $0.20 and $10.00, and since its weights are not published yet, hosted access is the only way to run it for now.
 
 ## Is Self-Hosting Kimi K3 Worth It?
 
@@ -141,7 +143,7 @@ The official repository is 1.56TB across 96 weight shards, in native MXFP4 4-bit
 
 ### What is the cheapest way to run Kimi K3?
 
-A hosted provider, by a wide margin. Moonshot's API charges $3 per million input tokens, and many competing hosts listed on OpenRouter and Artificial Analysis charge less. Self-hosting on your own electricity can run $80 to $200 per million tokens on a slow rig once you count power, before hardware. Cheap local inference of a 2.8T model is not currently a thing.
+A hosted provider, by a wide margin. Moonshot's API charges $3 per million input tokens for K3 ($2 for the newer K3.1 Pro), and many competing hosts listed on OpenRouter and Artificial Analysis charge less. Self-hosting on your own electricity can run $80 to $200 per million tokens on a slow rig once you count power, before hardware. Cheap local inference of a 2.8T model is not currently a thing.
 
 ## What K3's Launch Says About AI Search
 
@@ -154,6 +156,8 @@ The self-inflicted half of that is worth ruling out first: whether AI crawlers c
 - Kimi K3 model card - Moonshot AI / Hugging Face - `huggingface.co/moonshotai/Kimi-K3`
 - Kimi K3 day-0 support - vLLM Blog, July 2026 - `vllm.ai/blog/2026-07-27-k3`
 - Kimi K3: Open Frontier Intelligence (technical report) - arXiv - `arxiv.org/abs/2607.24653`
+- Introducing Kimi K3.1 Pro (post-trained from K3, weights promised by Nov 4) - Moonshot AI, October 2026 - `kimi.ai/blog/kimi-k3-1-pro`
+- Model inference pricing (K3 and K3.1 Pro rates) - Moonshot AI developer docs, accessed October 24, 2026 - `platform.kimi.ai/docs/pricing/chat`
 - Kimi K3 provider listing - OpenRouter - `openrouter.ai/moonshotai/kimi-k3`
 - Kimi K3 benchmarks, pricing, hardware requirements, and self-hosting - Northflank - `northflank.com/blog/what-is-kimi-k3-self-hosting`
 - Kimi K3 provider output-speed benchmarks - Artificial Analysis, October 2026 - `artificialanalysis.ai/models/kimi-k3`

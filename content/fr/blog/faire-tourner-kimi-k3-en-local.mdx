@@ -2,7 +2,8 @@
 title: "Faire tourner Kimi K3 en local : ce que ça exige vraiment"
 description: "Faire tourner Kimi K3 en local : le vrai matériel pour un modèle de 1,56 To, cinq routes par coût et vitesse, et un verdict honnête sur l'auto-hébergement."
 date: "2026-08-14"
-updated: "2026-10-18"
+updated: "2026-10-24"
+recheckBy: "2026-11-05"  # 24/10/2026 : note K3.1 Pro (poids promis d'ici le 4/11) ; à revérifier à la publication des poids.
 author: "Samy BEN SADOK"
 tags: ["kimi-k3", "run-llm-locally", "self-host-llm", "open-weights", "moonshot-ai", "vllm", "local-llm", "guide"]
 draft: false
@@ -14,12 +15,14 @@ noindex: false
 
 Les guides français sur l'IA en local vous préparent à une certaine échelle. Un modèle de 7 milliards de paramètres tourne sur une RTX 4060 ; un modèle de 24 milliards demande environ 48 Go de VRAM ; au-delà de 70 milliards, on parle de « cartes professionnelles ». C'est le plafond que décrivent presque tous les tutoriels. Kimi K3 le fait exploser : le modèle affiche 2 800 milliards de paramètres, soit une quarantaine de fois ce plafond de 70 milliards, et ses poids pèsent 1,56 To. Face à ce chiffre, la vraie question n'est plus « est-ce que je peux l'avoir » (les poids sont publics sur Hugging Face en ce moment même), mais « comment le faire tourner ». Voici ce que ça exige, route par route, chiffres à l'appui.
 
+Mise à jour du 24 octobre 2026 : Moonshot a lancé Kimi K3.1 Pro le 23 octobre, une version post-entraînée de K3, et indique que ses poids seront publiés d'ici le 4 novembre. Ils ne le sont pas encore : rien dans ce guide (tailles de fichiers, versions GGUF, calcul mémoire, prise en charge de llama.cpp) ne s'applique donc à K3.1 Pro aujourd'hui. Tout ce qui suit concerne K3.
+
 Petit avertissement en préambule, parce qu'il donne le ton. Le lendemain de la publication des poids par Moonshot, nous avons demandé à trois assistants comment faire tourner K3. Le 28 juillet 2026, recherche web coupée, Claude Opus 4.8 a répondu qu'il n'avait aucune information fiable sur l'existence d'un modèle nommé Kimi K3 et proposait de l'aide sur K2. Gemini 2.5 Flash a fait l'inverse : il insistait sur le fait que K3 était propriétaire, disponible uniquement dans le cloud, et que « la taille du téléchargement n'a pas d'importance puisque vous ne téléchargez pas les poids ». Seul ChatGPT, recherche activée, a répondu correctement. On y reviendra à la fin, car c'est le même mécanisme qui décide de ce que l'IA raconte sur votre produit.
 
 ## Ce qu'il faut retenir
 
 - **Non, on ne fait pas tourner Kimi K3 sur une machine normale** : ses 2 800 milliards de paramètres pèsent 1,56 To de poids, plus que la mémoire rapide de n'importe quel poste de travail, PC de jeu ou Mac pris seul.
-- Il existe cinq routes, du simple appel à un fournisseur (la bonne réponse pour presque tout le monde, environ 3 $ / 15 $ le million de tokens) jusqu'à l'achat d'un rack à plusieurs centaines de milliers d'euros.
+- Il existe cinq routes, du simple appel à un fournisseur (la bonne réponse pour presque tout le monde, environ 3 $ / 15 $ le million de tokens pour K3) jusqu'à l'achat d'un rack à plusieurs centaines de milliers d'euros.
 - La seule voie à pleine vitesse est de servir le modèle vous-même avec vLLM ou SGLang sur un nœud 8 GPU B300 (ou 16 B200), que le nœud soit acheté ou loué à l'heure. En France, Scaleway présente un tel nœud (2,3 To de VRAM, région Paris) ; disponibilité et tarif sont à confirmer chez eux.
 - Au tarif électrique français (0,2001 €/kWh au 1er août 2026, au-dessus du tarif américain), l'auto-hébergement revient encore plus cher qu'aux États-Unis : entre 130 et 350 € le million de tokens en électricité seule sur une machine lente.
 - La seule vraie raison de s'auto-héberger reste la résidence des données : des données sensibles que vous ne pouvez pas confier à un cloud américain, à cause du CLOUD Act. En dehors de ce cas, l'API est moins chère et plus rapide.
@@ -40,7 +43,7 @@ Mais le « local » recouvre tout un éventail de configurations, depuis le simp
 <tr><th>Route</th><th>Ce qu'il faut</th><th>Vitesse réaliste</th><th>Coût approximatif</th><th>Pour qui</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>5. Passer par un fournisseur</strong></td><td>Rien, une clé d'API</td><td>env. 29 à 465 tok/s selon l'hôte</td><td>3 $ en entrée / 15 $ en sortie le million de tokens</td><td>Presque tout le monde</td></tr>
+<tr><td><strong>5. Passer par un fournisseur</strong></td><td>Rien, une clé d'API</td><td>env. 29 à 465 tok/s selon l'hôte</td><td>K3 à 3 $ en entrée / 15 $ en sortie le million de tokens (K3.1 Pro : 2 $ / 10 $)</td><td>Presque tout le monde</td></tr>
 <tr><td><strong>1. Louer un nœud capable</strong></td><td>8× B300 ou 16× B200, à l'heure</td><td>Comme la Route 2</td><td>env. 70 à 160 $ de l'heure</td><td>Tester, jobs courts</td></tr>
 <tr><td><strong>2. S'auto-héberger sur vLLM</strong></td><td>Un nœud 8× B300 (ou 16× B200)</td><td>111 tok/s en TP8, 331 avec décodage spéculatif (vLLM, mesuré sur GB300 NVL72)</td><td>Capex datacenter ou cloud</td><td>Structures avec une vraie infra GPU</td></tr>
 <tr><td><strong>3. Déchargement CPU + RAM</strong></td><td>Serveur à grosse RAM + 1 à 4 GPU</td><td>env. 10 tok/s en décodage, prefill lent</td><td>env. 5 000 à 65 000 € en une fois</td><td>Homelab, traitement de nuit</td></tr>
@@ -132,7 +135,7 @@ Ce cluster peut-il charger le modèle ? Probablement, à condition de disposer d
 
 Pour l'immense majorité des cas d'usage, la façon de faire tourner Kimi K3 « en local » consiste à pointer vos outils locaux vers un point d'accès hébergé et à continuer de travailler. K3 était disponible sur [OpenRouter](https://openrouter.ai/moonshotai/kimi-k3) via l'API de Moonshot depuis la mi-juillet ; dans les jours qui ont suivi la publication des poids, des fournisseurs indépendants comme Together AI et Modal l'y servaient aussi. Vous ajoutez une clé d'API à Cursor, VS Code ou vos propres scripts, et K3 répond depuis le cluster de quelqu'un d'autre. La vitesse varie beaucoup selon l'hôte : au 18 octobre 2026, Artificial Analysis recense 17 fournisseurs, d'une médiane d'environ 29 tokens par seconde (le plus lent) à environ 465 (le plus rapide), et le point d'accès de Moonshot lui-même, autour de 43 tokens par seconde, est le deuxième plus lent.
 
-Il vaut la peine d'être précis sur ce que changent les poids ouverts, car la version qui circule l'exagère. L'argument le plus solide des discussions au moment du lancement, c'est que le gain n'est pas l'inférence sur ordinateur portable, que presque personne ne peut faire, mais l'option d'une multitude d'hôtes indépendants. Cela a fait baisser les prix des petits modèles ouverts. Sur K3, cet écart est désormais visible, comme le documente notre analyse du [tarif de l'API Kimi](https://geotoolbox.ai/blog/kimi-api-pricing) : la plupart des 17 fournisseurs d'Artificial Analysis restent à 3 $ en entrée et 15 $ en sortie, mais au 18 octobre 2026 OpenRouter liste 15 de ses 26 points d'accès K3 avec un prix d'entrée ou de sortie plus bas, de DeepInfra à 2,85 $ et 14,25 $ jusqu'à Relace à 0,25 $ et 8,00 $, et Artificial Analysis affiche Makora à environ 1,53 $ et 12,75 $ et LithosAI à 2,40 $ et 12,00 $. Plusieurs des moins chers servent des versions fp4 ou fp8 : comparez la quantification et les conditions de routage avant de choisir un hôte. Ce que vous obtenez aujourd'hui, c'est la durabilité, puisqu'une version ne peut pas être retirée en silence, et l'option de la résidence des données pour les équipes qui en ont besoin. L'API de Moonshot revient à 3,00 $ le million de tokens en entrée (0,30 $ le million pour les tokens servis depuis le cache), et 15,00 $ le million en sortie.
+Il vaut la peine d'être précis sur ce que changent les poids ouverts, car la version qui circule l'exagère. L'argument le plus solide des discussions au moment du lancement, c'est que le gain n'est pas l'inférence sur ordinateur portable, que presque personne ne peut faire, mais l'option d'une multitude d'hôtes indépendants. Cela a fait baisser les prix des petits modèles ouverts. Sur K3, cet écart est désormais visible, comme le documente notre analyse du [tarif de l'API Kimi](https://geotoolbox.ai/blog/kimi-api-pricing) : la plupart des 17 fournisseurs d'Artificial Analysis restent à 3 $ en entrée et 15 $ en sortie, mais au 18 octobre 2026 OpenRouter liste 15 de ses 26 points d'accès K3 avec un prix d'entrée ou de sortie plus bas, de DeepInfra à 2,85 $ et 14,25 $ jusqu'à Relace à 0,25 $ et 8,00 $, et Artificial Analysis affiche Makora à environ 1,53 $ et 12,75 $ et LithosAI à 2,40 $ et 12,00 $. Plusieurs des moins chers servent des versions fp4 ou fp8 : comparez la quantification et les conditions de routage avant de choisir un hôte. Ce que vous obtenez aujourd'hui, c'est la durabilité, puisqu'une version ne peut pas être retirée en silence, et l'option de la résidence des données pour les équipes qui en ont besoin. Pour K3, l'API de Moonshot revient à 3,00 $ le million de tokens en entrée (0,30 $ le million pour les tokens servis depuis le cache), et 15,00 $ le million en sortie. Son modèle plus récent, K3.1 Pro, est listé à 2,00 $, 0,20 $ et 10,00 $, et comme ses poids ne sont pas encore publiés, l'accès hébergé est pour l'instant le seul moyen de le faire tourner.
 
 ## Kimi K3 en auto-hébergement : est-ce que ça en vaut la peine ?
 
@@ -166,7 +169,7 @@ Le dépôt officiel pèse 1,56 To sur 96 fragments de poids, en précision nativ
 
 ### Quelle est la façon la moins chère de faire tourner Kimi K3 ?
 
-Un fournisseur hébergé, de loin. L'API de Moonshot facture 3 $ le million de tokens en entrée, et de nombreux hôtes concurrents listés sur OpenRouter et chez Artificial Analysis facturent moins. Aux tarifs américains, l'auto-hébergement peut revenir entre 80 et 200 $ le million de tokens sur une machine lente une fois l'énergie comptée, avant même le matériel, et davantage au tarif français. L'inférence locale bon marché d'un modèle de 2 800 milliards de paramètres n'existe pas à ce jour.
+Un fournisseur hébergé, de loin. L'API de Moonshot facture 3 $ le million de tokens en entrée pour K3 (2 $ pour le plus récent K3.1 Pro), et de nombreux hôtes concurrents listés sur OpenRouter et chez Artificial Analysis facturent moins. Aux tarifs américains, l'auto-hébergement peut revenir entre 80 et 200 $ le million de tokens sur une machine lente une fois l'énergie comptée, avant même le matériel, et davantage au tarif français. L'inférence locale bon marché d'un modèle de 2 800 milliards de paramètres n'existe pas à ce jour.
 
 ## Ce que le lancement de K3 dit sur la recherche par IA
 
@@ -180,6 +183,8 @@ Commencez par éliminer la partie du problème sur laquelle vous pouvez agir : s
 - Prise en charge de Kimi K3 dès le jour zéro - Blog vLLM, juillet 2026 - `vllm.ai/blog/2026-07-27-k3`
 - SGLang et Miles ajoutent la prise en charge de Kimi K3 dès le jour zéro - LMSYS, 27 juillet 2026 - `lmsys.org/blog/2026-07-27-kimi-k3-day0-support`
 - Kimi K3 : Open Frontier Intelligence (rapport technique) - arXiv - `arxiv.org/abs/2607.24653`
+- Présentation de Kimi K3.1 Pro (post-entraîné à partir de K3, poids promis d'ici le 4 novembre) - Moonshot AI, octobre 2026 - `kimi.ai/blog/kimi-k3-1-pro`
+- Tarifs d'inférence des modèles (prix K3 et K3.1 Pro) - documentation développeurs de Moonshot AI, consultée le 24 octobre 2026 - `platform.kimi.ai/docs/pricing/chat`
 - Liste des fournisseurs Kimi K3 - OpenRouter - `openrouter.ai/moonshotai/kimi-k3`
 - Benchmarks de vitesse de sortie des fournisseurs Kimi K3 - Artificial Analysis, octobre 2026 - `artificialanalysis.ai/models/kimi-k3`
 - deltafin (streaming des experts de Kimi K3 sur Apple Silicon) - GitHub - `github.com/gavamedia/deltafin`

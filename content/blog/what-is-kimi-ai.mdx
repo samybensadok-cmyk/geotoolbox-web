@@ -1,9 +1,9 @@
 ---
 title: "What Is Kimi AI? Moonshot AI's Open-Weight Model, Explained"
-description: "What is Kimi AI? Moonshot AI's Kimi K2 and K3 models explained: pricing, is it safe, the China question, open weights vs open source, and what it means."
+description: "What is Kimi AI? Moonshot AI's Kimi K2, K3 and K3.1 Pro models explained: pricing, is it safe, the China question, open weights vs open source, and what it means."
 date: "2026-06-22"
-updated: "2026-10-18"
-recheckBy: "2026-11-08"  # 2026-10-18: verified plan names and prices, K2.6 credits, lineup (API list, Kimi Code), K3 active params, funding (reported). NOT verified: OECD incident, K2.7 DeepSWE claim, Anthropic distillation follow-ups
+updated: "2026-10-24"
+recheckBy: "2026-11-05"  # 2026-10-24: K3.1 Pro launch (Oct 23), its API price, K2 new-user cutoff (Oct 31) and planned K2 retirement. Re-check when K3.1 Pro weights appear on Hugging Face (promised by Nov 4): licence, size, third-party hosts. NOT verified: OECD incident, K2.7 DeepSWE claim, Anthropic distillation follow-ups, K2.8 Preview status, plan names and prices (last checked 2026-10-18)
 author: "Samy BEN SADOK"
 tags: ["kimi-ai", "kimi-k2", "kimi-k3", "moonshot-ai", "open-weights", "chinese-ai", "llm", "guide"]
 draft: false
@@ -11,7 +11,7 @@ draft: false
 
 Kimi AI is the chat assistant and the family of open-weight models built by Moonshot AI, a Beijing company that has become one of the loudest names in open AI. If you have seen "Kimi K2" topping coding leaderboards next to ChatGPT, Claude, and DeepSeek and want the plain version of what it is, who makes it, what it costs, whether it is safe, and what "open" actually means here, this is it, current as of October 2026.
 
-First, the disambiguation, because the name is crowded: this article is about the AI model, not the anime film "Kimi no Na Wa," the manga "Hana-Kimi," or Formula 1 drivers Kimi Räikkönen and Kimi Antonelli. We mean Kimi by Moonshot AI. We will also cover the parts most explainers skip: the open weights versus open source distinction, the data and China questions brands keep asking, and what a strong Chinese open model means for whether AI tools mention your business at all. This guide covers the Kimi family as a whole; for the current flagship specifically, see our [Kimi K3 explainer](https://geotoolbox.ai/blog/what-is-kimi-k3).
+First, the disambiguation, because the name is crowded: this article is about the AI model, not the anime film "Kimi no Na Wa," the manga "Hana-Kimi," or Formula 1 drivers Kimi Räikkönen and Kimi Antonelli. We mean Kimi by Moonshot AI. We will also cover the parts most explainers skip: the open weights versus open source distinction, the data and China questions brands keep asking, and what a strong Chinese open model means for whether AI tools mention your business at all. This guide covers the Kimi family as a whole; for the K3 generation that the current flagship is built on, see our [Kimi K3 explainer](https://geotoolbox.ai/blog/what-is-kimi-k3).
 
 ## What Is Kimi AI?
 
@@ -20,9 +20,9 @@ First, the disambiguation, because the name is crowded: this article is about th
   <figcaption className="mt-3 text-center text-sm text-gray-500">Kimi's key split, shown here with the K2 line: the app and API are closed, while the model weights are open to run. K3 continued the pattern on July 27, 2026 under its own Kimi K3 License.</figcaption>
 </figure>
 
-**Kimi is two things under one name: an AI assistant you can chat with at [kimi.com](https://www.kimi.com/en), and the family of [large language models](https://geotoolbox.ai/blog/how-does-chatgpt-work) that power it, now led by Kimi K3, both made by Moonshot AI.** You use the assistant the way you use ChatGPT or Claude: ask a question, paste a document, hand it a task, and it answers in natural language. It also reads images, writes and runs code, searches the live web, and runs multi-step agent workflows.
+**Kimi is two things under one name: an AI assistant you can chat with at [kimi.com](https://www.kimi.com/en), and the family of [large language models](https://geotoolbox.ai/blog/how-does-chatgpt-work) that power it, now led by Kimi K3.1 Pro, both made by Moonshot AI.** You use the assistant the way you use ChatGPT or Claude: ask a question, paste a document, hand it a task, and it answers in natural language. It also reads images, writes and runs code, searches the live web, and runs multi-step agent workflows.
 
-The split between the assistant and the model matters more for Kimi than for most rivals, and it is the source of most confusion about it. The Kimi app and its API are a closed product Moonshot operates. The Kimi models underneath are open weights, which means the trained model files are published for anyone to download, run, and adapt. The flagship models inside ChatGPT stay closed (OpenAI has released separate, smaller open-weight models, but not the ones that power ChatGPT); Kimi opens its flagship model and keeps the product around it proprietary. That single fact shapes the pricing, the privacy trade-offs, and the strategic story we will get to.
+The split between the assistant and the model matters more for Kimi than for most rivals, and it is the source of most confusion about it. The Kimi app and its API are a closed product Moonshot operates. The Kimi models underneath are open weights, which means the trained model files are published for anyone to download, run, and adapt (two exceptions for now: the newest, K3.1 Pro, whose weights are promised but not yet published, and K2.8 Preview, which runs only inside Kimi Code). The flagship models inside ChatGPT stay closed (OpenAI has released separate, smaller open-weight models, but not the ones that power ChatGPT); Kimi has published the weights of every flagship since K2 and keeps the product around them proprietary. That single fact shapes the pricing, the privacy trade-offs, and the strategic story we will get to.
 
 Where Kimi earned its reputation is coding and agentic work, tasks where the model plans, calls tools, and works through many steps on its own, at a fraction of what the closed frontier models charge. Calling it "a Chinese ChatGPT" undersells what is interesting about it. The rest of this guide walks through each piece.
 
@@ -34,7 +34,7 @@ So yes, Kimi is a Chinese company, and that is central to the safety and data qu
 
 That backing answers a common question: who owns Kimi? Moonshot AI owns and runs it. Alibaba is the largest outside investor, but with a minority stake it does not appear to run Kimi day to day or dictate how it behaves.
 
-## The Kimi Model Lineup: K2 to K3
+## The Kimi Model Lineup: K2 to K3.1 Pro
 
 Kimi is not one model but a fast-moving series. The breakout was Kimi K2 in July 2025, a one-trillion-parameter model released as open weights under a modified MIT license, [per Moonshot's GitHub repo](https://github.com/moonshotai/kimi-k2). It matched or beat much larger closed models on coding benchmarks, and because the weights were free, it spread fast. Since then Moonshot has shipped a new version roughly every couple of months. Here is where things stand.
 
@@ -49,12 +49,17 @@ Kimi is not one model but a fast-moving series. The breakout was Kimi K2 in July
 <tr><td><strong>Kimi K2.5</strong></td><td>January 2026</td><td>Vision (images and video) and the first Agent Swarm</td></tr>
 <tr><td><strong>Kimi K2.6</strong></td><td>April 2026</td><td>Large jump on agentic benchmarks; swarm scaled to 300 sub-agents</td></tr>
 <tr><td><strong>Kimi K2.7 Code</strong></td><td>June 2026</td><td>Coding-specialized; roughly 30% fewer thinking tokens</td></tr>
-<tr><td><strong>Kimi K3</strong></td><td>July 2026</td><td>New flagship: a jump to 2.8T parameters (16 of 896 experts active) and a 1M-token context, the largest open-weight model at launch</td></tr>
+<tr><td><strong>Kimi K3</strong></td><td>July 2026</td><td>A jump to 2.8T parameters (16 of 896 experts active) and a 1M-token context, the largest open-weight model at launch; the base that K3.1 Pro was post-trained from</td></tr>
 <tr><td><strong>Kimi K2.8 Preview</strong></td><td>September 2026</td><td>Rolled out in Kimi Code as <code>kimi-for-coding</code>, "close to K3" per Moonshot; not in the API model list and no public weights; up to 1M context in Kimi Code</td></tr>
+<tr><td><strong>Kimi K3.1 Pro</strong></td><td>October 2026</td><td>Current flagship: K3 post-trained with much more compute, 1M-token context; open weights promised, not yet published</td></tr>
 </tbody>
 </table>
 
 The big change since the K2 line is Kimi K3, released July 16, 2026, with its weights going public on July 27 under a new custom Kimi K3 License, a step away from the K2 family's Modified MIT terms. It is a step up in scale, a 2.8-trillion-parameter model Moonshot bills as the largest open-weight model yet, and it moved Kimi from the cheap-and-cheerful open option into direct frontier competition on price and positioning. We cover its real specs, which benchmarks to trust, what it costs, and whether you can run it in our [Kimi K3 explainer](https://geotoolbox.ai/blog/what-is-kimi-k3).
+
+The newest model is Kimi K3.1 Pro, launched October 23, 2026. Moonshot describes it as "a post-trained version of Kimi K3, with substantially larger post-training compute", so the architecture is not new; what changed is the training. Moonshot says the full weights "will be released by Nov 4", and as of October 24 the `moonshotai` page on Hugging Face listed no K3.1 repository, so for now K3.1 Pro is something you rent, not something you download. On Moonshot's API it costs $2 per million input tokens and $10 per million output, a third below K3's $3 and $15. Artificial Analysis scores it 55 on its Intelligence Index, 11 points above K3 (44) and fourth overall, while Moonshot's own benchmark numbers are vendor claims.
+
+The older models are on a clock. Moonshot's pricing page says that from October 31, 2026 the K2 series (K2.7 Code, K2.7 Code Highspeed and K2.6 on its price list) will no longer be available to newly registered users, existing users are not affected, and Moonshot plans to retire all K2 series models by the end of December 2026.
 
 Two naming patterns are worth knowing. An "Instruct" model answers right away; a "Thinking" model works through hidden steps before replying, trading speed for accuracy on hard problems. On context length, the original K2 handled 128,000 tokens, doubled to 256,000 in the September Instruct-0905 update and carried into K2 Thinking; every model from K2.5 through K2.7 Code holds that same 256,000-token window, and the jump to a million tokens first arrives with K3.
 
@@ -66,7 +71,7 @@ The more consequential addition was Agent Swarm. Rather than one model working a
 
 The caveats arrived with the same release. In the most detailed independent review of the model, Hugging Face's Maxime Labonne called it the first open-weight model whose vision "feels genuinely competitive", but measured it burning 89 million output tokens across an evaluation suite where comparable models used a median of 14 million, and watched swarm sub-agents drift into inconsistent definitions of the same shared concept. Cheap per token and cheap per task are not the same claim.
 
-K2.5 is no longer available through Moonshot's API. Moonshot first closed it to newly registered API users, then retired it on August 31, 2026 along with the older `moonshot-v1` family; calls to either now return a 404, and the only replacement Moonshot names is `kimi-k3`. For routine coding, `kimi-k2.7-code` is the closer price match, but that is our recommendation rather than Moonshot's.
+K2.5 is no longer available through Moonshot's API. Moonshot first closed it to newly registered API users, then retired it on August 31, 2026 along with the older `moonshot-v1` family; calls to either now return a 404, and the only replacement Moonshot names is `kimi-k3`. For routine coding, `kimi-k2.7-code` was the closer price match, but that was our recommendation rather than Moonshot's, and it closes to newly registered API users on October 31.
 
 ### Kimi K2.6 and K2.7 Code: The Agentic Jump
 
@@ -76,9 +81,9 @@ K2.6 arrived April 20, 2026 with the same network underneath. Its published conf
 
 The most informative outside test came from researcher Elliot Arledge, who ran K2.7 Code against K2.6 on KernelBench-Hard, a public GPU-kernel optimization benchmark, and published his logs. His verdict was that "K2.7 is more honest but not more capable": on five of six problems the newer model wrote real Triton kernels where K2.6 had wrapped existing libraries, but two of those failed on its own bugs and one score regressed outright. It stopped papering over the hard part without yet doing the hard part better. Treat vendor benchmark wins as claims to verify against your own use, and treat this whole table as an October 2026 snapshot, because the version numbers move every few weeks.
 
-## How Kimi K3 Works: The Current Flagship
+## How Kimi K3 and K3.1 Pro Work
 
-K3 is the model to understand first now, because it is what Moonshot leads with and what a paid plan points you at. It keeps the mixture-of-experts design the K2 line established but scales it hard: **2.8 trillion parameters in total, with only 16 of 896 experts active per [token](https://geotoolbox.ai/blog/what-are-tokens-in-ai)**, so the compute cost per token stays far below what the full size suggests. Moonshot's model card puts the activated parameters at 104 billion per token.
+K3 is the architecture to understand first, because it is the base of Moonshot's current flagship, K3.1 Pro, and K3 itself is still served. It keeps the mixture-of-experts design the K2 line established but scales it hard: **2.8 trillion parameters in total, with only 16 of 896 experts active per [token](https://geotoolbox.ai/blog/what-are-tokens-in-ai)**, so the compute cost per token stays far below what the full size suggests. Moonshot's model card puts the activated parameters at 104 billion per token.
 
 The bigger change is how K3 handles long inputs. It uses a hybrid linear-attention design Moonshot calls Kimi Delta Attention, with roughly three of every four attention layers running the cheaper linear form. That is what makes a 1,048,576-token [context window](https://geotoolbox.ai/blog/how-does-ai-search-work) practical rather than theoretical, and Moonshot's own research reports decoding up to 6.3 times faster at long context. K3 reads text, images, and video and returns text, with a default output cap of 131,072 tokens that you can raise to 1,048,576.
 
@@ -88,7 +93,7 @@ One quirk matters in daily use: reasoning is always on. You can dial the effort 
 
 Under the hood, Kimi is a transformer that predicts the next chunk of text one piece at a time, the same broad design as ChatGPT and Claude. Where it differs is two deliberate engineering choices that run through the whole family and explain why it is cheap and why it leans agentic.
 
-The first is the [mixture-of-experts](https://geotoolbox.ai/blog/how-does-chatgpt-work) design. Instead of one dense network where every parameter fires on every word, the Kimi models split into hundreds of specialist sub-networks and route each token to only a few of them. K2 holds a trillion parameters in total but uses only about 32 billion for any given token, and K3 pushes the same idea much further, activating only a sliver of an even larger network at a time. You get the knowledge of a huge model at the running cost of a small one, which is the main reason Kimi's API undercuts the closed frontier so heavily.
+The first is the [mixture-of-experts](https://geotoolbox.ai/blog/how-does-chatgpt-work) design. Instead of one dense network where every parameter fires on every word, the Kimi models split into hundreds of specialist sub-networks and route each token to only a few of them. K2 holds a trillion parameters in total but uses only about 32 billion for any given token, and K3 pushes the same idea much further, activating only a sliver of an even larger network at a time. You get the knowledge of a huge model at the running cost of a small one, which is the main reason the K2-generation API undercut the closed frontier so heavily; the K3 generation is priced closer to it, with K3.1 Pro listing at $2 and $10 per million tokens.
 
 The second is the focus on agentic behavior. Moonshot trained Kimi specifically to use tools, call functions, and carry a task across many steps rather than just answer in one shot. That is why its strongest results show up in coding agents and multi-step research, where the model has to decide what to do next, run it, read the result, and adjust. The trade-off is real: a model tuned to think and act in long chains can be slower and more verbose on simple questions, a complaint developers raise often. Practitioners who run it daily report a practical way to blunt that: Kimi tends to spiral into its longest reasoning when a prompt carries contradictory or cluttered instructions, so a short, direct, internally consistent prompt noticeably cuts the wasted thinking.
 
@@ -106,13 +111,13 @@ Those benchmark numbers, stated properly, are where most write-ups go wrong. On 
 
 The economics attracted the same loose treatment. CNBC reported a training cost of roughly $4.6 million from an unnamed source and said plainly that it could not verify the figure; Moonshot's CEO has since said the number is not official, and its researchers have argued the cost is genuinely hard to pin down because so much of it is research and failed experiments. It gets repeated as fact anyway. [Artificial Analysis](https://artificialanalysis.ai/articles/kimi-k2-thinking-everything-you-need-to-know) scored K2 Thinking the highest open-weights model on its intelligence index at the time, but also found that running it on Moonshot's faster turbo endpoint made it one of the most expensive models in the whole comparison, because of how many tokens it burned getting there.
 
-One practical note if you go looking for it: Moonshot discontinued the entire `kimi-k2` series, K2 Thinking included, on its own API on May 25, 2026, and now directs users to K3. The weights remain openly published and third-party providers still serve them, which is the durability open weights buy you: when a closed model is withdrawn, outside users generally cannot keep running that version at all.
+One practical note if you go looking for it: Moonshot discontinued the entire `kimi-k2` series, K2 Thinking included, on its own API on May 25, 2026, and directed users to K3. The weights remain openly published and third-party providers still serve them, which is the durability open weights buy you: when a closed model is withdrawn, outside users generally cannot keep running that version at all.
 
 ## Is Kimi Open Source? Open Weights vs Open Source
 
 This is where Kimi is most often described incorrectly, including by AI assistants asked about it. **Kimi K2 is open weights, not open source, and the difference is real.** Open weights means Moonshot publishes the finished model files, the billions of trained numbers, so anyone can download them, run them, and fine-tune them. Open source, in the strict sense, would also mean releasing the code and enough detail about the training data and method to rebuild a substantially equivalent model. Moonshot releases the weights but not the training data or the full recipe, so you can use the model freely, but you cannot fully audit or reproduce how it was made.
 
-The license is also not plain MIT. Kimi K2 ships under a modified MIT license, and the modification is a single attribution clause: per the [license on Hugging Face](https://huggingface.co/moonshotai/Kimi-K2-Instruct), if you deploy Kimi in a product with more than 100 million monthly active users or more than $20 million in monthly revenue, you must display "Kimi K2" prominently in the interface. For almost everyone that clause never triggers, but it means "open" here comes with one string attached. The current flagship changed the terms: K3 ships not under modified MIT but under Moonshot's own [Kimi K3 License](https://huggingface.co/moonshotai/Kimi-K3), which permits commercial use but is not OSI-approved, adding a separate-agreement requirement for very large model-as-a-service operators alongside a similar "Kimi K3" display clause for very large products. The smaller Kimi-VL model uses a standard MIT license with no such clause.
+The license is also not plain MIT. Kimi K2 ships under a modified MIT license, and the modification is a single attribution clause: per the [license on Hugging Face](https://huggingface.co/moonshotai/Kimi-K2-Instruct), if you deploy Kimi in a product with more than 100 million monthly active users or more than $20 million in monthly revenue, you must display "Kimi K2" prominently in the interface. For almost everyone that clause never triggers, but it means "open" here comes with one string attached. K3 changed the terms: it ships not under modified MIT but under Moonshot's own [Kimi K3 License](https://huggingface.co/moonshotai/Kimi-K3), which permits commercial use but is not OSI-approved, adding a separate-agreement requirement for very large model-as-a-service operators alongside a similar "Kimi K3" display clause for very large products. The smaller Kimi-VL model uses a standard MIT license with no such clause. K3.1 Pro has no published license text yet, because its weights are not out.
 
 One more layer: the model is open, but the Kimi app and API are not. The product you log into at kimi.com is closed software that Moonshot runs on its own servers. So "Kimi is open source" is true only of the weights, and only loosely. This is the same pattern DeepSeek, [Zhipu's GLM](https://geotoolbox.ai/blog/what-is-glm-5-3), Llama, [Qwen](https://geotoolbox.ai/blog/what-is-qwen), and Mistral follow, a wave of open-weight models that are genuinely free to run but are not open in the way the phrase implies. To see where Kimi lands among them, our [Chinese AI models comparison](https://geotoolbox.ai/blog/chinese-ai-models-compared) lines them up side by side. The practical upside is that privacy-sensitive teams can self-host the weights instead of sending data to Moonshot, which we come back to next.
 
@@ -182,7 +187,7 @@ Yes, there is a genuine free tier called Adagio on the web and in the mobile app
 
 ### Is Kimi really open source?
 
-Not in the strict sense. Kimi K2 is open weights: the trained model is published under a modified MIT license, so you can download, run, and fine-tune it, but Moonshot does not release the training data or full recipe, and the Kimi app and API are closed. The license also asks very large deployments to credit "Kimi K2" in their interface. The current flagship, K3, ships under a separate custom Kimi K3 License, also open weights but not OSI-approved.
+Not in the strict sense. Kimi K2 is open weights: the trained model is published under a modified MIT license, so you can download, run, and fine-tune it, but Moonshot does not release the training data or full recipe, and the Kimi app and API are closed. The license also asks very large deployments to credit "Kimi K2" in their interface. K3 ships under a separate custom Kimi K3 License, also open weights but not OSI-approved. K3.1 Pro, launched October 23, 2026, has its weights promised by November 4 but not yet published, so it is hosted-only for now.
 
 ## Sources
 
@@ -194,6 +199,9 @@ Not in the strict sense. Kimi K2 is open weights: the trained model is published
 - Kimi K2.6 announcement (Agent Swarm at 300 sub-agents) - Moonshot AI, April 2026 - `kimi.com/blog/kimi-k2-6`
 - Kimi K2.7 Code model card (thinking-token reduction, benchmark suites, 256K context) - Moonshot AI (Hugging Face), June 2026 - `huggingface.co/moonshotai/Kimi-K2.7-Code`
 - Kimi K2.7-Code cuts thinking tokens 30%, but practitioners say the benchmarks don't check out (KernelBench-Hard results, DeepSWE submission) - VentureBeat, June 2026 - `venturebeat.com/technology/kimi-k2-7-code-cuts-thinking-tokens-30-practitioners-say-benchmarks-dont-check-out`
+- Introducing Kimi K3.1 Pro (post-training, availability, weights timing, vendor benchmarks) - Moonshot AI, October 2026 - `kimi.ai/blog/kimi-k3-1-pro`
+- Model inference pricing (K3.1 Pro and K3 rates, K2 new-user cutoff and planned retirement) - Moonshot AI developer docs, accessed October 24, 2026 - `platform.kimi.ai/docs/pricing/chat`
+- Kimi K3.1 Pro launches at 4th on the Intelligence Index (score 55, 2.8T / 104B active, weights not yet published) - Artificial Analysis, October 23, 2026 - `artificialanalysis.ai/articles/kimi-k3-1-pro-launch-benchmarks`
 - Model list and deprecation dates (K2 series retired May 25, 2026; K2.5 sunset August 31, 2026) - Moonshot AI developer docs, accessed October 18, 2026 - `platform.kimi.ai/docs/models`
 - Kimi K2 Thinking: everything you need to know (intelligence index, token consumption, endpoint costs) - Artificial Analysis, November 2025 - `artificialanalysis.ai/articles/kimi-k2-thinking-everything-you-need-to-know`
 - Kimi K2.6, the new leading open weights model (hallucination rate, index ranking) - Artificial Analysis, April 2026 - `artificialanalysis.ai/articles/kimi-k2-6-the-new-leading-open-weights-model`
