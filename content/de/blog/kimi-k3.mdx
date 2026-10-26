@@ -1,0 +1,243 @@
+---
+title: "Kimi K3 erklärt: Preise, Benchmarks, Lizenz und K3.1 Pro"
+description: "Kimi K3 von Moonshot AI erklärt: 2,8 Billionen Parameter, offene Gewichte, API ab 3 $, unabhängige Benchmarks und was K3.1 Pro ändert. Stand 26.10.2026."
+date: "2026-10-26"
+updated: "2026-10-26"
+recheckBy: "2026-11-05"  # prüfen: Hugging-Face-Repository der K3.1-Pro-Gewichte (Moonshot will sie bis zum 4. November veröffentlichen), Lizenz und Größe; danach Abschnitt zu K3.1 Pro und Zusammenfassung anpassen. Außerdem: K2-Abschaltung (Neukunden-Stopp 31.10., Abschaltung bis Ende Dezember), Artificial-Analysis-Werte, Arena-Rang, Kimi-Tarife in der App.
+author: "Samy BEN SADOK"
+tags: ["kimi-k3", "kimi-ai", "moonshot-ai", "open-weights", "mixture-of-experts", "chinese-ai", "llm", "guide"]
+draft: false
+locale: "de"
+donorSlug: "what-is-kimi-k3"
+donorCommit: "e044acc"
+noindex: false
+---
+
+Am Tag nach dem Start konnten die Assistenten, die die meisten Menschen nutzen, nicht sagen, was Kimi K3 ist. Gemini antwortete bei ausgeschalteter Websuche, es habe keine verlässlichen, geprüften Informationen zu einem Modell namens Kimi K3, und Claude sagte im Kern dasselbe. Das Modell war am 16. Juli 2026 erschienen. Die Assistenten hinkten hinterher, und dieser Rückstand dauert bei jedem neuen Modell Monate.
+
+Dieser Artikel ordnet nüchtern ein, Stand 26. Oktober 2026: was Kimi K3 wirklich ist, was K3.1 Pro ändert, ob der Hype vom Start den Zahlen standhält und was es kostet. Dazu kommt, ob du es selbst betreiben kannst, wie es im Vergleich zu Kimi K2 und DeepSeek dasteht und, speziell für Deutschland, wohin deine Daten gehen. Wir kennzeichnen jeweils, welche Angaben von Moonshot selbst stammen und welche unabhängig geprüft wurden, denn bei einem Modell, das erst seit wenigen Monaten auf dem Markt ist, kommt es genau auf diese Unterscheidung an.
+
+## Das Wichtigste in Kürze
+
+- **Kimi K3 ist ein Open-Weight-Modell von Moonshot AI mit 2,8 Billionen Parametern und 1 Million Token Kontext, erschienen am 16. Juli 2026; die Gewichte sind seit dem 27. Juli öffentlich, aber die Kimi-K3-Lizenz ist keine Open-Source-Lizenz im Sinne der OSI.**
+- K3 steht auf dem aktuellen Intelligence Index v4.3.2 bei 44 Punkten und auf Platz fünf unter den Open-Weight-Modellen (Stand 26. Oktober 2026); die 57 Punkte vom Start stammen aus einer früheren Index-Version und sind damit nicht direkt vergleichbar. In der Frontend Code Arena steht K3 auf Platz 17 statt wie zum Start auf Platz eins (Rangliste vom 22. Oktober 2026).
+- Die API kostet 3 $ pro Million Eingabe-Token und 15 $ pro Million Ausgabe-Token; K3.1 Pro (23. Oktober 2026) kostet 2 $ und 10 $ und damit 33 % weniger. Weil K3 immer denkt, fällt die Rechnung oft höher aus, als die Token-Preise vermuten lassen.
+- Selbst betreiben lohnt sich nur mit eigenem Rechenzentrum (rund 1,56 TB Gewichte, Supernode mit 64 oder mehr Beschleunigern). Die Gewichte von K3.1 Pro will Moonshot bis zum 4. November veröffentlichen; am 26. Oktober waren sie noch nicht da.
+- Für Nutzer in Deutschland gilt: Die API läuft auf Servern in Singapur, kimi.com und die Apps speichern in China, und keine der drei Datenschutzerklärungen nennt einen EU-Vertreter. Eine Maßnahme einer Aufsichtsbehörde gegen Kimi haben wir nicht gefunden (Stand 26. Oktober 2026).
+
+## Was ist Kimi K3?
+
+**Kimi K3 ist ein Open-Weight-Modell von Moonshot AI mit 2,8 Billionen Parametern, Mixture-of-Experts-Architektur und einem Kontextfenster von einer Million Token. Es erschien am 16. Juli 2026, und die Gewichte liegen seit dem 27. Juli unter Moonshots eigener Kimi-K3-Lizenz öffentlich vor.** Bei seiner Veröffentlichung beschrieb Reuters K3 als das größte Modell mit offenen Gewichten. Dass ein so großes Modell überhaupt lauffähig ist, liegt an einem Kniff: Pro Token wird nur ein kleiner Teil der Parameter aktiv.
+
+Wichtiger ist, was Kimi K3 nicht ist. Du kannst es in Kimis eigenen Apps und über die API nutzen, aber es ist nicht in allem besser als die Konkurrenz und auch nicht die günstige Option, mit der Moonshot bekannt wurde. K3 ist ein Spezialist: stark bei Coding, Agenten-Aufgaben und langen Kontexten, bepreist und positioniert wie ein Frontier-Modell, außerhalb dieser Disziplinen spürbar schwächer. Ein Entwickler schrieb am Starttag auf X, K3 sei in seinen ersten Tests bei einigen Aufgaben außerhalb des Codings merklich schlechter gewesen als GPT-5.6 Sol und Fable 5.
+
+Kimi K3 ist die Grundlage der aktuellen Generation einer Modellreihe, die wir in unserem [Erklärstück zu Kimi AI](https://geotoolbox.ai/blog/what-is-kimi-ai) ausführlicher beschreiben: die K2-Familie, die offenen Gewichte, die Sicherheits- und China-Fragen. Dieser Artikel behandelt K3 selbst, die Juli-Version, mit der Moonshot vom „günstigen chinesischen Open-Source-Modell“ zum direkten Frontier-Konkurrenten wurde, und was seitdem passiert ist.
+
+## Wer steckt hinter Kimi K3? Moonshot AI und der „DeepSeek-Moment“
+
+Kimi K3 stammt von Moonshot AI, einem Labor aus Peking, das 2023 von Yang Zhilin gegründet wurde und von Alibaba, Tencent und Meituan unterstützt wird. Der Aufstieg ist steil: Nach einer Series C 2025 lag die Bewertung bei rund 4,3 Milliarden US-Dollar. Im Mai 2026 berichtete LatePost von einer Runde über etwa 2 Milliarden Dollar bei mehr als 20 Milliarden Bewertung. Ende Juli meldete Bloomberg 3,5 Milliarden bei 35 Milliarden, Anfang Oktober dann den Abschluss einer weiteren Runde bei rund 50 Milliarden, vor einem geplanten Börsengang in Hongkong. Für ein Labor, das seinen Ruf fast nur darauf gegründet hat, Modelle zu verschenken, ist das eine bemerkenswerte Entwicklung.
+
+Der Start war auch ein geopolitisches Ereignis. Laut Reuters erschien K3 etwa einen Monat, nachdem Anthropics Modelle Fable und Mythos auf Anordnung der US-Regierung aus Sicherheitsgründen abrupt zurückgezogen worden waren. Die Aktien der chinesischen Wettbewerber Zhipu und MiniMax fielen in Hongkong um 27,7 % beziehungsweise 16,5 %. Bis dahin waren Meituans LongCat-2.0 und DeepSeeks V4-Pro mit rund 1,6 Billionen Parametern die größten Modelle der chinesischen KI-Branche gewesen. Alibaba antwortete binnen Tagen mit einer Vorschau auf [Qwen3.8-Max](https://geotoolbox.ai/blog/qwen3-8-max), einem Flaggschiff mit nach Unternehmensangaben 2,4 Billionen Parametern, dessen Text-Gewichte das Unternehmen am 12. August 2026 unter einer eigenen Lizenz freigab.
+
+Die Reaktionen fielen erwartbar gespalten aus. Die lautstarke Lesart am Starttag: Der Abstand zwischen chinesischen und US-Laboren sei praktisch verschwunden. Die nüchterne, die wir für vertretbarer halten: K3 verkürzt ihn bei den Aufgaben, in denen es am stärksten ist, auf unter drei Monate. Ob die Benchmark-Siege halten, klärt keine der beiden Lesarten.
+
+## Kimi K3: Aufbau und technische Daten
+
+Kimi K3 hat insgesamt 2,8 Billionen Parameter, aktiviert aber pro Token nur 16 von 896 Experten. Dadurch bleibt der Rechenaufwand pro Token weit unter dem, was die Gesamtgröße vermuten lässt. Das Routing beruht auf einem Verfahren, das Moonshot Stable LatentMoE nennt. Es ermöglicht dieses extreme Verhältnis ohne die Instabilität im Training, die damit sonst oft einhergeht. Laut Moonshots Modellkarte sind es 104 Milliarden aktive Parameter. Das Prinzip, Token durch wenige spezialisierte Teilnetze zu schicken, ist dasselbe [Mixture-of-Experts](https://geotoolbox.ai/blog/what-is-deepseek)-Muster, das wir in [So funktioniert ChatGPT](https://geotoolbox.ai/blog/how-does-chatgpt-work) erklären.
+
+Die wichtigste Neuerung ist Kimi Delta Attention, ein hybrider linearer Attention-Mechanismus. In Moonshots eigener Forschung zu Kimi Linear erzeugte sie bei einem Kontext von einer Million Token jedes Ausgabe-Token 6,3-mal schneller als MLA (ein Herstellerwert, keine unabhängige Messung an K3). Dazu kommen Attention Residuals, die Informationen über die Modelltiefe hinweg weiterreichen, und Gated MLA. Etwa drei von vier Attention-Schichten nutzen die billigere lineare Form. Das senkt den Speicherbedarf so weit, dass ein Kontextfenster von einer Million Token nicht nur auf dem Papier existiert, sondern praktisch nutzbar ist.
+
+Für die meisten zählen die praktischen Daten mehr als die Interna. Kimi K3 nimmt Text, Bilder und Video entgegen und gibt Text zurück. Das Kontextfenster umfasst 1.048.576 Token, das Standardlimit für die Ausgabe liegt bei 131.072 Token und lässt sich auf 1.048.576 anheben. Reasoning ist immer aktiv. Der Parameter `reasoning_effort` kennt in der API drei Stufen, `low`, `high` und `max`, Standard ist `max`; die Sampling-Parameter sind serverseitig fest. Zum Start gab es nur `max`, deshalb beschreiben frühe Berichte ein Modell mit einer einzigen Einstellung. Kurz gesagt: K3 denkt immer, und wenn du den Aufwand nicht senkst, denkt es bei jeder Anfrage gründlich. Das merkst du an der Geschwindigkeit und an der Rechnung.
+
+## Die Benchmarks: Welchen Zahlen du trauen kannst
+
+Den Teil überspringen die meisten Startberichte. Bei einem Modell in der Startwoche stammt fast jede auffällige Zahl vom Labor selbst, gemessen unter Bedingungen, die das Labor gewählt hat. Falsch sind die Zahlen deshalb nicht, aber du solltest sie danach sortieren, wer gemessen hat, bevor du Schlüsse ziehst.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/kimi-k3/kimi-k3-benchmarks-de.png" alt="Tabelle, die die Kimi-K3-Benchmarks danach sortiert, wer gemessen hat (Stand 26. Oktober 2026): unabhängige Ergebnisse (AA Intelligence Index 44 und Platz 5 unter den Open-Weight-Modellen, Frontend Code Arena Platz 17 mit 1.669, Halluzinationsrate 53,2 %) gegenüber den Herstellerangaben von Moonshot aus dem Juli (GPQA Diamond 93,5, Terminal-Bench 88,3, BrowseComp 91,2)." w="2200" h="1520" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Bei einem jungen Modell kommt es vor allem darauf an, welche Zahlen unabhängig geprüft sind und welche nur vom Hersteller stammen.</figcaption>
+</figure>
+
+Verlassen kannst du dich heute auf die unabhängig geprüften Werte. [Artificial Analysis](https://artificialanalysis.ai/models/kimi-k3) bewertete K3 zum Start im Intelligence Index mit 57. Der Index wurde seitdem mehrfach neu gewichtet; geändert hat sich dabei die Zusammenstellung der Tests, nicht das Modell. In der aktuellen Version v4.3.2 erreicht K3 am 26. Oktober 44 Punkte (43,6) und liegt damit auf Platz fünf unter den Open-Weight-Modellen, hinter Xiaomis MiMo-V2.6-Pro (46), DeepSeek V4.1 Flash 1017 (45,1), GLM-5.3 (44,8) und StepFuns Step 5 Preview (43,7). Geschlossene Modelle wie Claude Opus 5.5 (58), Sonnet 5.5 (56), Fable 5.1 (53) und GPT-6 Astra (53) liegen deutlich davor. Vergleiche Werte nie über Index-Versionen hinweg: Die 57 vom Start und die 44 von heute messen nicht dasselbe. Bei langen, mehrstufigen Aufgaben aus der Wissensarbeit lag K3 zum Start mit einem Elo-Wert von 1.547 nur hinter Fable 5.
+
+Die Frontend Code Arena, eine Rangliste auf Basis menschlicher Bewertungen, sah K3 zum Start auf Platz eins, vor Fable 5 und GPT-5.6 Sol. Auf der Rangliste vom 22. Oktober 2026 steht K3 auf Platz 17 mit 1.669 Punkten; angeführt wird sie von Claude Opus 5.5 (1.849). Zu den 16 Modellen davor gehören Kimi K3.1 Pro, Gemini 4 Argon, Qwen3.8-Max und das MIT-lizenzierte DeepSeek V4.1 Flash. K3 ist damit nicht mehr das bestplatzierte Open-Weight-Modell, das die Arena listet. Kritiker weisen darauf hin, dass die Rangliste stark auf Frontend- und Design-Aufgaben setzt; ein guter Platz dort steht für Stärke beim Frontend-Coding, nicht für allgemeine Leistungsfähigkeit. Zusammengenommen ergibt sich ein klares Bild: K3 war zum Start bei engen Coding- und Agenten-Aufgaben vorn und ist seitdem von der Spitze des Open-Weight-Feldes im Intelligence Index und vom ersten Arena-Platz abgerutscht.
+
+Die GPQA-, Terminal-Bench-, BrowseComp- und HLE-Werte in der Tabelle unten sind Herstellerangaben, und die Vorbehalte dagegen sind berechtigt. Moonshot hat die Benchmarks in unterschiedlichen Agent-Harnesses laufen lassen (dem eigenen Kimi Code, Claude Code oder Codex), jeweils mit maximalem Denkaufwand. Streng vergleichbar sind die Werte damit nicht. Ein Ergebnis stellt die Herstellerseite nicht in den Vordergrund: Im AA-Omniscience-Test von Artificial Analysis beantwortet K3 47,6 % der Fragen richtig, bei einer Halluzinationsrate von 53,2 %. Claude Opus 5.5 kommt dort auf 66,2 % und 58,6 %.
+
+<table>
+<thead>
+<tr><th>Benchmark</th><th>Kimi K3</th><th>Fable 5</th><th>GPT-5.6 Sol</th><th>Gemessen von</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>AA Intelligence Index</strong></td><td>44 (Platz 5 der Open-Weight-Modelle, v4.3.2, Stand 26.10.2026)</td><td>50</td><td>47</td><td><strong>Unabhängig</strong> (Artificial Analysis)</td></tr>
+<tr><td><strong>Frontend Code Arena</strong></td><td>1.669 (Platz 17, Rangliste vom 22.10.2026)</td><td>1.637</td><td>1.623</td><td><strong>Unabhängig</strong> (Arena)</td></tr>
+<tr><td><strong>GPQA Diamond</strong></td><td>93,5</td><td>92,6</td><td>94,1</td><td>Herstellerangabe (von Artificial Analysis bestätigt)</td></tr>
+<tr><td><strong>Terminal-Bench 2.1</strong></td><td>88,3</td><td>88,0</td><td>88,8</td><td>Herstellerangabe (Artificial Analysis misst 85,0)</td></tr>
+<tr><td><strong>BrowseComp</strong></td><td>91,2</td><td>88,0</td><td>90,4</td><td>Herstellerangabe</td></tr>
+<tr><td><strong>HLE (allgemeines Reasoning)</strong></td><td>43,5</td><td>53,3</td><td>44,5</td><td>Herstellerangabe</td></tr>
+<tr><td><strong>Halluzinationsrate</strong></td><td>53,2 % (47,6 % richtig)</td><td>63,6 %</td><td>92,2 %</td><td><strong>Unabhängig</strong> (Artificial Analysis)</td></tr>
+</tbody>
+</table>
+
+Fable 5 und GPT-5.6 Sol sind Moonshots Vergleichsmodelle aus dem Juli und inzwischen beide abgelöst. Selbst in Moonshots eigener Tabelle liegt K3 bei allgemeinem Reasoning hinter Fable 5, wie die HLE-Zeile zeigt: K3 ist ein Spezialist für Coding und Agenten, kein Allrounder an der Spitze. Artificial Analysis hat K3 inzwischen selbst gemessen: 85,0 bei Terminal-Bench 2.1 gegenüber Moonshots 88,3, und 93,5 bei GPQA Diamond, was die Herstellerangabe bestätigt. Orientiere dich an den unabhängigen Zahlen und behandle die übrigen Herstellerwerte (BrowseComp, HLE) als unbestätigt.
+
+## Preise für Kimi K3: „Offen“ heißt nicht „günstig“
+
+Die größte Überraschung des Starts war kein Benchmark, sondern der Preis. Die API von Kimi K3 kostet 3,00 $ pro Million Eingabe-Token, 0,30 $ pro Million bei einem Cache-Treffer und 15,00 $ pro Million Ausgabe-Token. Moonshots offizielle Preisliste in US-Dollar bestätigt diese Werte und weist für den Nachfolger K3.1 Pro vom 23. Oktober bei allen drei Sätzen 33 % niedrigere Preise aus (Details weiter unten). Die komplette Modellpalette, das Stufensystem und die Zugangswege beschreiben wir im Leitfaden zu den [Kimi-API-Preisen](https://geotoolbox.ai/blog/kimi-api-pricing); wenn du eher die Verbraucher-App meinst, findest du Tarife und Credit-System in unserem Artikel zu den [Kimi-Preisen](https://geotoolbox.ai/blog/kimi-pricing).
+
+Verglichen mit Moonshots bisherigen Preisen ist der Sprung groß. Der Ausgabepreis liegt fast beim Vierfachen dessen, was das Modell [K2.7 Code](https://geotoolbox.ai/blog/kimi-api-pricing) verlangt, der Eingabepreis bei mehr als dem Dreifachen. Auch K3.1 Pro mit 10 $ für die Ausgabe kostet noch das 2,5-Fache von K2.7 Code mit 4 $. The Decoder fasst es so zusammen: Chinesische Anbieter bieten ihre Spitzenmodelle nicht mehr zu Kampfpreisen an. Dass ein chinesisches offenes Modell automatisch die Sparoption ist, gilt nicht mehr.
+
+<table>
+<thead>
+<tr><th>Modell</th><th>Eingabe / 1 Mio.</th><th>Ausgabe / 1 Mio.</th><th>Eingabe bei Cache-Treffer</th><th>Hinweis</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Kimi K3.1 Pro</strong></td><td>2,00 $</td><td>10,00 $</td><td>0,20 $</td><td>Nachtrainiertes K3, 33 % unter K3; Gewichte für spätestens 4. November 2026 angekündigt</td></tr>
+<tr><td><strong>Kimi K3</strong></td><td>3,00 $</td><td>15,00 $</td><td>0,30 $</td><td>Vorgängermodell (Preis vom Juli-Start); Ausgabe fast 4-mal so teuer wie bei der K2-Reihe</td></tr>
+<tr><td><strong>Kimi K2.6 / K2.7 Code</strong></td><td>0,95 $</td><td>4,00 $</td><td>0,16 $ / 0,19 $</td><td>Weiterhin offen, deutlich günstiger; bei Moonshot Abschaltung bis Ende Dezember 2026 geplant</td></tr>
+<tr><td><strong>DeepSeek V4 Pro</strong></td><td>0,66 $ Nebenzeit / 1,32 $ Spitzenzeit</td><td>1,98 $ Nebenzeit / 3,96 $ Spitzenzeit</td><td>ca. 0,022 $</td><td>Frontier-nah, pro Token ein Bruchteil von K3</td></tr>
+</tbody>
+</table>
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/kimi-k3/ausgabepreis-vergleich-okt-2026-de.png" alt="Maßstabsgetreues Balkendiagramm zum Ausgabepreis pro Million Token (Listenpreise, Oktober 2026): Kimi K3 mit 15,00 $, Kimi K3.1 Pro mit 10,00 $, Kimi K2.6 und K2.7 Code mit 4,00 $, DeepSeek V4 Pro mit 3,96 $ zur Spitzenzeit und 1,98 $ in der Nebenzeit." w="2200" h="1080" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">K3.1 Pro liegt 33 % unter K3, bleibt aber mehr als doppelt so teuer wie K2.7 Code.</figcaption>
+</figure>
+
+Ob 15 $ wehtun, hängt ganz von deinem Anwendungsfall ab. Weil K3 bei jeder Anfrage denkt und dabei ausführlich werden kann, treibt vor allem langes Reasoning die Zahl der berechneten Ausgabe-Token nach oben. Wiederholte Tool-Aufrufe und ein wachsender Verlauf treiben zusätzlich die Gesamtkosten. Hohe Ausgabe-Rechnungen sind also eher die Regel als die Ausnahme. Beim Kostenmaß von Artificial Analysis, den Kosten pro Aufgabe des Intelligence Index, liegt K3 bei 2,00 $: etwa das Neunfache von Claude Haiku 5.5 (0,21 $, Index 43,4) und fast das Dreifache von GPT-6.1 Sol (0,72 $). Den ausführlicheren Vergleich liefern unsere Artikel zu den [DeepSeek-Kosten](https://geotoolbox.ai/blog/deepseek-pricing) und zu den [Claude-Preisen](https://geotoolbox.ai/blog/claude-pricing).
+
+### Und in Euro? Die Kimi-App im deutschen App Store
+
+Moonshots API-Preise gelten in US-Dollar; Steuern kommen laut Preisliste beim Bezahlen hinzu und richten sich nach den Steuerregeln deines Landes. Die Kimi-App ist im deutschen App Store mit deutscher Oberfläche gelistet (Anbieter: Beijing Moonshot Technology Co., Ltd.), und dort laufen die In-App-Käufe in Euro: Plus 22,00 €, Pro 45,00 €, Max 99,00 € und Ultra 229,00 € (abgerufen am 26. Oktober 2026). Die Webseiten kimi.com und kimi.ai zeigten beim Abruf aus Spanien nur Dollar-Preise: 19 $, 39 $, 99 $ und 199 $ im Monat für dieselben vier Stufen. Ob die Webseite aus Deutschland Euro-Preise zeigt und ob sie in Euro oder in Dollar abrechnet, haben wir nicht geprüft. Achte außerdem auf den Hinweis im Store: Der Anbieter hat sich nicht als Händler ausgewiesen, und laut Eintrag gelten die Verbraucherrechte im Europäischen Wirtschaftsraum nicht für den Vertrag mit ihm.
+
+### Das 1-Millionen-Fenster ist in doppelter Hinsicht kleiner, als es aussieht
+
+Das beworbene Kontextfenster und das, was du tatsächlich erreichst, unterscheiden sich aus zwei Gründen, die beide nicht im Datenblatt stehen.
+
+Der erste ist eine Obergrenze für die Größe einer Anfrage in Kimi Code. Moonshots Dokumentation zu Kimi Code (abgerufen am 26. Oktober 2026) nennt eine Grenze von 2 MB für die Gesamtgröße einer Anfrage, also Verlauf, Systemprompt und Tool-Ergebnisse zusammen. Die Fehlermeldung `total message size N exceeds limit 2097152` ist laut Dokumentation der häufigste 400-Fehler. Im Juli stieß ein Nutzer in Kimi Code bei etwa 770.000 Token seiner Sitzung auf diesen Fehler, weit unter den beworbenen 1.048.576, und schloss seinen Eintrag am 29. Juli als behoben. In Kimi Code kann ein textlastiges Gespräch also an die Byte-Grenze stoßen, bevor das Token-Limit erreicht ist.
+
+Der zweite ist eine Bezahlschranke. In Kimis Tarifen hängen der Zugang zu K3 und K3.1 Pro und das 1M-Fenster von der Stufe ab, und Kimi Code und der Chat unterscheiden sich dabei. In Kimi Code gibt es das 1M-Token-Fenster für K3 ab Pro, im Chat führt Kimis Preistabelle 1M-Token-Unterhaltungen mit K3 nur bei Max und Ultra auf. Wenn du wegen des Millionenfensters abonnierst, klär vorher, welches Produkt du brauchst.
+
+### Der Verbrauch im Abo hat viele überrascht
+
+Der Token-Preis zeigt nur einen Teil der Kosten. Frühe Nutzer störte vor allem, wie schnell eine einzelne Aufgabe ihr Abo-Kontingent aufbrauchte; in der ersten Woche war das die wiederkehrende Klage über Kimis Coding-Tarife. Ein Nutzer im 19-Dollar-Tarif ließ eine Aufgabe laufen, an der er jedes Modell misst, und sah zu, wie sie fast sein ganzes Fünf-Stunden-Kontingent aufbrauchte, während dieselbe Aufgabe in einem 20-Dollar-Tarif von OpenAI in Minuten erledigt war und kaum auffiel. Bei einem zweiten im gleichen Einstiegstarif hing K3 in einer Schleife mit einem wiederholten Docker-Schritt fest und verbrauchte ein komplettes Fünf-Stunden-Fenster, nach seiner Rechnung 20 % seines Wochenkontingents, allein durch diesen einen Fehler. Ein dritter, in einem Kimi-Tarif für rund 100 $, berichtete, das Kontingent sinke ähnlich schnell wie bei einem 200-Dollar-Abo von Anthropic mit Fable, und fand das Modell trotzdem gut: Er schrieb, er würde es womöglich über Opus 4.8 stellen.
+
+Der Mechanismus lässt sich messen: Für den Indexlauf von Artificial Analysis erzeugte K3 rund 160 Millionen Ausgabe-Token, mehr als der Median von 140 Millionen (Stand 26. Oktober). In Simon Willisons Test brauchte eine einzige SVG-Grafik 16.658 Ausgabe-Token, davon 13.241 fürs Reasoning, und kostete 25 Cent für ein Bild. Ein Nutzer beschrieb, wie dieses Reasoning aussieht: Absatz um Absatz „Wait, actually...“, während das Modell über ein kleines Detail ins Grübeln kam.
+
+An dieser Stelle wird `reasoning_effort` wichtig. Zum Start war `max` der einzige akzeptierte Wert und es gab keinen billigeren Modus. Moonshot hat inzwischen `low` und `high` ergänzt, aber `max` ist weiter der Standard. Für jede Anfrage, bei der du den Aufwand nicht ausdrücklich senkst, zahlst du die vollen Reasoning-Token zum Ausgabepreis von 15 $. Bei maximalem Aufwand ist K3 zudem so langsam, dass Testumgebungen an ihren Zeitlimits scheitern: Ein öffentlicher Vergleich musste das Zeitlimit pro Aufgabe von fünf auf dreißig Minuten anheben, und eine Aufgabe dauerte immer noch rund neun Minuten. Wenn Kosten oder Latenz zählen, setz den Aufwand ausdrücklich, statt dich auf den Standard zu verlassen.
+
+Noch etwas fällt auf: Die Tarife sagen nicht, was ein Nutzungsfenster in Token bedeutet. Wie ein Nutzer schrieb, sind die Grenzen deshalb schwer zu messen und zwischen Anbietern kaum zu vergleichen.
+
+## Was Kimi K3.1 Pro ändert
+
+Moonshot hat Kimi K3.1 Pro am 23. Oktober 2026 veröffentlicht und nennt es das erste Modell einer neuen K3.1-Reihe, eine nachtrainierte Version von Kimi K3 mit deutlich mehr Rechenaufwand im Post-Training. Die Architektur ist nicht neu: Artificial Analysis listet dieselben 2,8 Billionen Gesamtparameter, 104 Milliarden aktive Parameter und ein Kontextfenster von einer Million Token.
+
+Die Preise liegen bei allen drei Sätzen 33 % unter denen von K3: 2,00 $ pro Million Eingabe-Token, 10,00 $ pro Million Ausgabe-Token und 0,20 $ pro Million Token aus dem Cache.
+
+Die Gewichte gibt es noch nicht. Moonshot schreibt, die vollständigen Modellgewichte würden bis zum 4. November veröffentlicht. Als wir am 26. Oktober nachgesehen haben, zeigte Moonshots Hugging-Face-Seite kein K3.1-Repository. Behandle K3.1 Pro daher vorerst als gehostetes Modell: Über die API und je nach Tarif über Kimi kannst du es nutzen, selbst betreiben kannst du es noch nicht, weil die Gewichte fehlen.
+
+Auch hier kommt es darauf an, wer gemessen hat. Moonshot gibt für Terminal-Bench 4.0 einen Wert von 65,7 % an, gemessen im Claude-Code-Harness, gegenüber veröffentlichten 66,4 % für Claude Opus 5.5. Artificial Analysis bewertet K3.1 Pro mit eigenen Tests auf dem Intelligence Index mit 55, elf Punkte über den 44 von K3 und insgesamt auf Platz vier, hinter Opus 5.5 (58), Sonnet 5.5 (56) und Muse Wonder Full (56).
+
+## Kann man Kimi K3 selbst betreiben?
+
+„Offene Gewichte“ klingt, als könntest du K3 herunterladen und selbst laufen lassen. Die Gewichte sind tatsächlich öffentlich, seit dem 27. Juli im Hugging-Face-Repository von Moonshot. Unsloth hat sofort GGUF-Quantisierungen veröffentlicht, das Haupt-Repository von llama.cpp hat die Unterstützung für K3 am 15. August aufgenommen, Ollama dagegen bietet nur ein Cloud-Tag an. Für fast alle gilt trotzdem: Herunterladbar heißt nicht lauffähig, und der Grund ist die Größe.
+
+Bei 2,8 Billionen Parametern umfasst das Repository im nativen 4-Bit-Format MXFP4 rund 1,56 TB, und für den Betrieb mit voller Geschwindigkeit brauchst du allein für die Gewichte mindestens so viel schnellen Beschleunigerspeicher. Moonshot empfiehlt einen Supernode mit 64 oder mehr Beschleunigern; das vLLM-Team nennt als Untergrenze einen 8x-B300-Knoten oder 16 B200-GPUs. Eine einzelne RTX 4090 oder ein Mac Studio mit 512 GB reicht dafür bei Weitem nicht. Das Open-Source-Projekt deltafin hat K3 auf einem M1-Max-MacBook zum Laufen gebracht, indem es Experten von der Festplatte streamt, und meldet rund 3,4 Sekunden pro Token. Das zeigt den Abstand zwischen „ich kann es technisch laden“ und „ich kann damit arbeiten“.
+
+Praktiker beschreiben immer wieder denselben Widerspruch: Rechtlich ist K3 offen, praktisch aber für alle ohne Rechenzentrum unerreichbar, es sei denn, sie nehmen das Tempo von der Festplatte in Kauf. Der Nutzen offener Gewichte liegt hier nicht darin, das Modell auf dem Laptop laufen zu lassen. Verbreitet ist in der Community die Sicht, dass der eigentliche Gewinn im Wettbewerb unter Anbietern liegt: Weil jeder K3 hosten kann, entsteht ein Markt von API-Anbietern, der die Preise drückt. Dazu kommen Beständigkeit (eine Version lässt sich nicht stillschweigend abschalten) und Datenhoheit für Teams, die selbst hosten. Wer hostet selbst? Organisationen mit echter GPU-Infrastruktur und einem Grund, Daten im Haus zu halten, und auch sie meist nicht interaktiv. Ihre Antwort auf das Tempo-Problem: Sie lassen das Modell über Nacht an Aufgaben wie „Analysiere diese Codebasis auf Schwachstellen“ arbeiten. Eine Antwort eine Stunde später ist dafür in Ordnung.
+
+Für alle anderen bleiben Moonshots eigene Plattform, ein Router wie OpenRouter oder der kostenlose Zugang in der Kimi-App. Wenn du Self-Hosting trotzdem probieren willst, geht unsere [Anleitung zum lokalen Betrieb von Kimi K3](https://geotoolbox.ai/blog/how-to-run-kimi-k3-locally) alle Wege, die reale Hardware und die Kosten durch. API-Guthaben wird getrennt abgerechnet und steckt in keinem Kimi-App-Abo; ein App-Abo gibt dir also keinen API-Zugang. Warum der Unterschied zwischen Open Weights und Open Source zählt, erklärt unser Artikel zu [Open Weights und Open Source](https://geotoolbox.ai/blog/open-weights-vs-open-source), und unser Ranking der [besten Open-Source-LLMs](https://geotoolbox.ai/blog/best-open-source-llms) enthält einen Praxischeck zum Self-Hosting für Modelle dieser Klasse.
+
+## Kimi K3 und Datenschutz: Wohin gehen deine Daten?
+
+Ob du mit Kimi personenbezogene Daten verarbeiten darfst, hängt davon ab, welchen Zugang du nutzt, denn hinter dem Namen Kimi stehen drei verschiedene Verantwortliche.
+
+- **Die API (platform.kimi.ai):** Betrieben von Moonshots Singapurer Gesellschaft MOONSHOT AI PTE. LTD. auf Servern in Singapur. Die Datenschutzerklärung (Stand 30. April 2025) nennt Training und Verbesserung der Modelle als Zweck, gestützt auf berechtigtes Interesse oder Einwilligung. Zero Data Retention gibt es nur auf Anfrage für Unternehmenskunden, mit Ausnahmen wie der Batch-API, direkt hochgeladenen Bildern und Videos sowie Abrechnungs- und Sicherheitsprotokollen.
+- **kimi.com und die Apps:** Verantwortlich ist Beijing Moonshot Technology Co., Ltd. Laut Datenschutzerklärung (Stand 24. August 2026) werden personenbezogene Daten im Gebiet der Volksrepublik China gespeichert. Der Widerspruch gegen das Training mit deinen Inhalten läuft über eine Anfrage beim Kundenservice.
+- **kimi.ai:** Verantwortlich ist Novascent Private Limited. Die Erklärung (Stand 13. August 2026) nennt keinen Speicherort, sondern nur, dass Daten auf Servern außerhalb deines Wohnsitzlandes gespeichert werden können, und stützt das Training auf berechtigtes Interesse oder Einwilligung.
+
+Keine der drei Erklärungen nennt einen Vertreter in der EU. Auch einen Auftragsverarbeitungsvertrag oder Standardvertragsklauseln nennen weder die Datenschutzerklärung noch die Nutzungsbedingungen der API, und für Singapur gibt es keinen Angemessenheitsbeschluss der EU-Kommission. Nach unserer Lesart der veröffentlichten Unterlagen (keine Rechtsberatung) müsstest du die Übermittlung dorthin als Verantwortlicher deshalb selbst absichern; ohne diese Grundlage solltest du keine personenbezogenen Kundendaten an Moonshots Dienste schicken. Ob Moonshot Unternehmenskunden auf Anfrage einen Vertrag anbietet, lässt sich aus den öffentlichen Seiten nicht erkennen. Für Texte ohne Personenbezug, etwa Code oder öffentliche Dokumente, stellt sich die Frage seltener, die Trainingsklausel bleibt aber auch dort ein Grund, vertrauliche Inhalte nicht einzugeben.
+
+Uns ist keine Maßnahme einer Datenschutzaufsicht gegen Kimi bekannt (Stand 26. Oktober 2026): Die eigenen Suchfunktionen des Garante, der Berliner Beauftragten für Datenschutz und Informationsfreiheit (samt Jahresbericht 2025), der BfDI, des EDPB, der CNIL und der niederländischen Datenschutzbehörde liefern zu Kimi und Moonshot nichts. Die uns bekannten Verfahren gegen chinesische KI-Apps betreffen DeepSeek: Italiens Garante ordnete am 30. Januar 2025 eine Beschränkung der Verarbeitung an, und die Berliner Beauftragte meldete die App am 27. Juni 2025 nach Art. 16 des Digital Services Act an Apple und Google, die laut Jahresbericht 2025 eine Sperrung ablehnten. Ein Verfahren gegen Kimi lässt sich daraus nicht ableiten.
+
+Wer K3 nutzen will und die Daten in der EU halten muss, kann die offenen Gewichte bei einem europäischen Hoster betreiben lassen. Diese Anbieter führen K3 und nennen auf ihren eigenen Seiten einen Standort in der EU: Berget AI (Schweden; 3 € Eingabe und 15 € Ausgabe pro Million Token zuzüglich Mehrwertsteuer, nach eigener Angabe verlassen die Daten Schweden nicht), TensorX, LLMBase, Lyceum (Paris und Finnland) und Melious. Das sind Selbstauskünfte und keine geprüften Nachweise, und bei jedem Anbieter solltest du den Auftragsverarbeitungsvertrag prüfen. Nebius nennt aktuell die Region eu-west2, schreibt aber, öffentliche Endpunkte seien global und die Region könne wechseln. Amazon Bedrock bietet K3 nur über US- und Indien-Profile oder globale Cross-Region-Inferenz an, also ohne EU-Option. K3.1 Pro gibt es bisher nur bei Moonshot selbst.
+
+## Kimi K3, Kimi K2 und DeepSeek: Welches Modell passt wann?
+
+Die kurze Antwort: Greif zu Kimi K3 oder K3.1 Pro nur, wenn die Aufgabe genau das braucht, was sie am besten können, und halte für alles andere etwas Günstigeres oder Verlässlicheres bereit. K3 kostet das Drei- bis Vierfache von K2 (K3.1 Pro etwa das Zwei- bis Zweieinhalbfache). Das lohnt sich, wenn du den langen Kontext, native Bildverarbeitung oder Coding- und Agenten-Leistung auf Frontier-Niveau brauchst (beim Kontext mit Blick auf die 2-MB-Grenze pro Anfrage in Kimi Code und die Tarifstufen von oben) und das Tempo verträgst. Artificial Analysis misst aktuell rund 52 Ausgabe-Token pro Sekunde sowohl für K3.1 Pro als auch für K3 (Stand 26. Oktober), dazu kommt viel Denkzeit zwischen den Ausgaben. Die Highspeed-Variante von K3.1 Pro soll laut Moonshot das Zwei- bis Dreifache schaffen, zum doppelten Preis.
+
+Für den Alltag sind Moonshots eigene ältere Modelle die wirtschaftlichere Wahl. Kimi K2.6 und K2.7 Code sind deutlich günstiger, vollständig offen und beim Coding schon stark; solange eine Aufgabe nicht K3s Stärken trifft, erledigen die älteren Modelle sie zu einem Bruchteil der Kosten. Bei Moonshot selbst laufen sie allerdings aus: Ab dem 31. Oktober 2026 sind K2-Modelle für neu registrierte Nutzer nicht mehr verfügbar, und Moonshot plant, sie bis Ende Dezember 2026 abzuschalten. Wenn du rein nach Preis pro Token entscheidest, ist [DeepSeek](https://geotoolbox.ai/blog/what-is-deepseek) V4 noch günstiger. Und wo eine falsche Antwort teuer ist, haben Claude Opus 5.5 und Fable 5.1 weiterhin die Nase vorn: bei sorgfältigem Reasoning und bei Code, der auf Anhieb stimmen muss. Einen ausführlicheren Vergleich der offenen chinesischen Modelle findest du in unserem Artikel zu [chinesischen KI-Modellen im Vergleich](https://geotoolbox.ai/blog/chinese-ai-models-compared).
+
+<table>
+<thead>
+<tr><th>Modell</th><th>Geeignet für</th><th>Offene Gewichte?</th><th>Kosten (grob)</th><th>Darauf achten</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Kimi K3.1 Pro</strong></td><td>Dieselben Stärken wie K3, neueres Post-Training</td><td>Angekündigt für spätestens 4. November 2026, noch nicht veröffentlicht</td><td>Hoch (10 $ Ausgabe)</td><td>Gewichte noch nicht da</td></tr>
+<tr><td><strong>Kimi K3</strong></td><td>1M Kontext, Bildverarbeitung, Frontier-Coding und Agenten</td><td>Ja (öffentlich, eigene Lizenz)</td><td>Hoch (15 $ Ausgabe)</td><td>Langsam, wortreich, Self-Hosting braucht einen GPU-Cluster</td></tr>
+<tr><td><strong>Kimi K2.6 / K2.7 Code</strong></td><td>Coding im Alltag zu geringen Kosten</td><td>Ja</td><td>Niedrig</td><td>Bei den schwersten Aufgaben nicht auf Frontier-Niveau; bei Moonshot ab 31.10.2026 nicht mehr für Neukunden, Abschaltung bis Ende Dezember 2026 geplant</td></tr>
+<tr><td><strong>DeepSeek V4</strong></td><td>Reasoning und Coding zu den niedrigsten Preisen pro Token</td><td>Ja</td><td>Unter den niedrigsten</td><td>Dieselben Fragen zum Datenstandort China</td></tr>
+<tr><td><strong>Claude Opus 5.5 / Fable 5.1</strong></td><td>Aufgaben, bei denen Fehler teuer sind: anspruchsvolles Reasoning, Code, der stimmen muss</td><td>Nein</td><td>Premium</td><td>Geschlossen; du mietest, du besitzt nicht</td></tr>
+</tbody>
+</table>
+
+Bevor du dein bisheriges Modell ersetzt, lass K3 bei einer realen, messbaren Aufgabe neben ihm laufen. Zähl, wie viele Ergebnisse brauchbar waren und wie viel Nacharbeit jedes Modell brauchte, und behalte das, das insgesamt weniger Aufwand macht. Nach den Ergebnissen vom Start lohnt sich dieser Test für Coding, Agenten und lange Kontexte. Als Ersatz für ein Modell, dem du bei allen Aufgaben vertraust, taugt K3 noch nicht.
+
+## Was Kimi K3 für deine KI-Sichtbarkeit bedeutet
+
+Kehren wir zum Anfang zurück. Einen Tag nach dem Start konnten die Assistenten, die die meisten nutzen, Kimi K3 nicht beschreiben, weil ihr Training vor dem Start endete, und sie bleiben monatelang zurück. Das ist keine Eigenheit von Kimi: So geht jedes Modell mit allem Neuen um, auch mit deinem Unternehmen.
+
+Wenn ein brandneues, breit besprochenes KI-Modell für die Assistenten, die heute im Einsatz sind, unsichtbar ist, dann sind ein Produktstart, ein Rebranding oder eine korrigierte Angabe zu deinem Unternehmen genauso unsichtbar, bis Training und Websuche aufgeholt haben. Genau an dieser Lücke setzt die Arbeit an der [KI-Sichtbarkeit](https://geotoolbox.ai/blog/what-is-ai-visibility) an. Und weil die Gewichte von K3 öffentlich sind, wird das Modell feinjustiert und in viele nachgelagerte Tools eingebaut, die du nie einzeln zu sehen bekommst. Jedes davon beantwortet Fragen zu deinem Markt mit dem, was es über dich findet.
+
+Entscheidend sind deshalb zwei Hebel, und das Modell ist keiner davon. Der erste ist Erreichbarkeit: Jedes dieser Systeme und die Crawler, die es füttern, müssen deine Website abrufen können, sonst fehlst du in der Websuche der Assistenten, die sich schneller aktualisiert als ihr Training. Der zweite ist Konsistenz, der [Kern jeder Arbeit daran, von KI zitiert zu werden](https://geotoolbox.ai/blog/what-is-geo): Richtig beschrieben werden die Unternehmen, deren Fakten über die Quellen hinweg zusammenpassen, die ein Modell liest. Nach unserer Erfahrung bei geotoolbox schneiden in KI-Antworten selten die mit der hübschesten Startseite am besten ab, sondern die, deren Seiten ein Modell finden und auslesen kann und denen es vertraut, ohne über Widersprüche zu stolpern.
+
+Was Kimi K3 oder das nächste offene Modell über dich lernt, kannst du nicht steuern. Ob es dich überhaupt erreichen kann, schon. Mach den kostenlosen [KI-Readiness-Check](https://geotoolbox.ai/tools/ai-readiness), um zu sehen, ob KI-Crawler deine Website abrufen und auslesen können, und schließ die Lücken, bevor der nächste Start die Frage wieder dringend macht.
+
+## Häufige Fragen
+
+### Ist Kimi K3 chinesisch?
+
+Ja, Kimi K3 stammt von Moonshot AI, einem Labor aus Peking, das 2023 gegründet wurde und von Alibaba, Tencent und Meituan unterstützt wird. Wohin deine Daten gehen, hängt aber vom Produkt ab: Die API betreibt Moonshots Singapurer Gesellschaft MOONSHOT AI PTE. LTD. auf Servern in Singapur, während kimi.com und die mobilen Apps Daten in China speichern. Keine der Datenschutzerklärungen nennt einen EU-Vertreter. Das ist einer der Gründe, warum die offenen Gewichte zählen: Wer Daten im eigenen Rechtsraum halten muss, kann selbst hosten oder einen europäischen Anbieter nutzen, statt Eingaben an Moonshots Server zu schicken. Für die Übermittlung nach Singapur gibt es zudem keinen Angemessenheitsbeschluss der EU-Kommission.
+
+### Ist Kimi K3 Open Source?
+
+Nicht ganz. K3 hat offene Gewichte, ist aber nicht Open Source. Moonshot hat die Modelldateien am 27. Juli 2026 unter der eigenen Kimi-K3-Lizenz veröffentlicht. Sie erlaubt die kommerzielle Nutzung, ist aber keine von der OSI anerkannte Open-Source-Lizenz. Wer als Model-as-a-Service-Anbieter samt verbundenen Unternehmen in zwölf Monaten über 20 Millionen US-Dollar Umsatz erzielt, braucht eine gesonderte Vereinbarung mit Moonshot. Produkte mit mehr als 100 Millionen monatlich aktiven Nutzern oder mehr als 20 Millionen Dollar Monatsumsatz müssen „Kimi K3“ gut sichtbar anzeigen. Ausgenommen sind die interne Nutzung und die Nutzung über Moonshots offizielle Produkte oder zertifizierte Inferenzpartner. Trainingsdaten und das vollständige Rezept veröffentlicht das Unternehmen nicht, und die Kimi-App und die API bleiben geschlossen. Du kannst das Modell also betreiben und feinjustieren, aber nicht vollständig nachbauen, wie es entstanden ist.
+
+### Kann ich Kimi K3 auf meinem eigenen Rechner betreiben?
+
+Realistisch nein. Die Gewichte sind öffentlich, aber bei 2,8 Billionen Parametern sind es rund 1,56 TB zum Herunterladen, und für den Betrieb mit voller Geschwindigkeit brauchst du mindestens so viel schnellen Speicher; Moonshot empfiehlt einen Supernode mit 64 oder mehr Beschleunigern. Das liegt weit jenseits jedes Verbraucherrechners: Ein Mac Studio mit 512 GB reicht bei Weitem nicht, und der bekannteste Versuch, es mit Festplatten-Streaming auf ein MacBook zu zwingen, läuft mit rund 3,4 Sekunden pro Token. Selbst hosten lohnt sich nur für Organisationen mit ernsthafter GPU-Infrastruktur, meist als Nachtaufgabe statt als interaktiver Chat. Für alle anderen ist die gehostete API oder ein Anbieter wie OpenRouter der Weg. Unsere Anleitung zum [lokalen Betrieb von Kimi K3](https://geotoolbox.ai/blog/how-to-run-kimi-k3-locally) beschreibt Wege und Hardware im Detail.
+
+### Ist Kimi K3 besser als Claude oder GPT?
+
+Bei engen Coding- und Agenten-Benchmarks spielte K3 zum Start ganz oben mit. In der Frontend Code Arena steht es auf der Rangliste vom 22. Oktober 2026 auf Platz 17, hinter dem offenen DeepSeek V4.1 Flash. Beim allgemeinen Intelligence Index von Artificial Analysis lag es am 26. Oktober auf Platz fünf unter den Open-Weight-Modellen und deutlich hinter den geschlossenen Spitzenmodellen, und Tester berichten, es sei außerhalb von Coding schwächer. Der Nachfolger K3.1 Pro erreicht auf demselben Index 55 und liegt insgesamt auf Platz vier. K3 ist ein starker Spezialist, aber kein klarer Gesamtsieger. Unser Vergleich [Kimi K3 oder Claude](https://geotoolbox.ai/blog/kimi-k3-vs-claude) schlüsselt das nach Aufgabe, Kosten und Tempo auf.
+
+## Quellen
+
+- China's Moonshot unveils world's largest open AI model, closing in on US rivals - Reuters, Juli 2026 - `reuters.com/world/china/chinas-moonshot-unveils-worlds-largest-open-ai-model-closing-us-rivals-2026-07-17`
+- Kimi K3, and what we can still learn from the pelican benchmark - Simon Willison, Juli 2026 - `simonwillison.net/2026/Jul/16/kimi-k3`
+- Kimi K3 - Intelligence, Performance & Price Analysis - Artificial Analysis, Oktober 2026 - `artificialanalysis.ai/models/kimi-k3`
+- Introducing Kimi K3.1 Pro - Moonshot AI, Oktober 2026 - `kimi.ai/blog/kimi-k3-1-pro`
+- Kimi K3.1 Pro launches at 4th on the Intelligence Index - Artificial Analysis, 23. Oktober 2026 - `artificialanalysis.ai/articles/kimi-k3-1-pro-launch-benchmarks`
+- Kimi K3.1 Pro - Intelligence, Performance & Price Analysis - Artificial Analysis, Oktober 2026 - `artificialanalysis.ai/models/kimi-k3-1-pro`
+- Kimi's open model K3 nears GPT-5.6 Sol and Fable 5 while signaling the end of super cheap Chinese AI - The Decoder, Juli 2026 - `the-decoder.com/kimis-open-model-k3-nears-gpt-5-6-sol-and-fable-5-while-signaling-the-end-of-super-cheap-chinese-ai`
+- Kimi K3 - API Pricing & Benchmarks - OpenRouter, Juli 2026 - `openrouter.ai/moonshotai/kimi-k3`
+- Kimi Linear: An Expressive, Efficient Attention Architecture - arXiv 2510.26692 - `arxiv.org/abs/2510.26692`
+- Code Arena WebDev Frontend Leaderboard, Rangliste vom 22. Oktober 2026 - Arena - `arena.ai/leaderboard/code/webdev/frontend`
+- Moonshot AI targets USD 50 billion valuation - KrASIA - `kr-asia.com/moonshot-ai-targets-usd-50-billion-valuation-ahead-of-hong-kong-ipo`
+- Moonshot AI hits $50 billion valuation as it prepares for Hong Kong IPO - CTech by Calcalist, 6. Oktober 2026 - `calcalistech.com/ctechnews/article/r1me2gzsze`
+- Kimi Code issue 1862 (Grenze von 2 MB bei rund 770.000 Token) - MoonshotAI/kimi-code auf GitHub, Juli 2026 - `github.com/MoonshotAI/kimi-code/issues/1862`
+- Error Reference - Kimi Code Docs, Moonshot AI, abgerufen am 26. Oktober 2026 - `kimi.com/code/docs/en/kimi-code/error-reference.html`
+- Kimi K3 License - Moonshot AI, Hugging Face - `huggingface.co/moonshotai/Kimi-K3/blob/main/LICENSE`
+- Kimi OpenPlatform Privacy Policy, Stand 30. April 2025 - Moonshot AI - `platform.kimi.ai/docs/agreement/userprivacy`
+- Terms of Service for Kimi OpenPlatform, Stand 30. Juli 2026 - Moonshot AI - `platform.kimi.ai/docs/agreement/modeluse`
+- Zero Data Retention - Kimi Open Platform - `platform.kimi.ai/docs/guide/zero-data-retention`
+- Datenschutzerklärung kimi.com, Stand 24. August 2026 - Beijing Moonshot Technology - `kimi.com/user/agreement/userPrivacy?version=v2`
+- Datenschutzerklärung kimi.ai, Stand 13. August 2026 - Novascent - `kimi.ai/user/agreement/userPrivacy?version=v2`
+- Kimi im deutschen App Store - Apple, abgerufen am 26. Oktober 2026 - `apps.apple.com/de/app/kimi/id6474233312`
+- Angemessenheitsbeschlüsse - Europäische Kommission - `commission.europa.eu/law/law-topic/data-protection/international-dimension-data-protection/adequacy-decisions_en`
+- Provvedimento del 30 gennaio 2025 (DeepSeek) - Garante per la protezione dei dati personali - `garanteprivacy.it/home/docweb/-/docweb-display/docweb/10098477`
+- Jahresbericht 2025, Abschnitt IV.5 (DeepSeek) - Berliner Beauftragte für Datenschutz und Informationsfreiheit, Mai 2026 - `datenschutz-berlin.de/fileadmin/user_upload/pdf/jahresbericht/BlnBDI_Jahresbericht-2025.pdf`
+- Preise - Berget AI - `berget.ai/en/pricing`
+- Kimi K3 auf Amazon Bedrock - AWS - `docs.aws.amazon.com/bedrock/latest/userguide/model-card-moonshot-ai-kimi-k3.html`
+- Modelle - Nebius Token Factory - `tokenfactory.nebius.com/models`
+- Kimi-Linear-48B-A3B-Instruct, Modellkarte (6,3-mal schnellere Zeit pro Ausgabe-Token gegenüber MLA bei 1 Million Token) - Moonshot AI, Hugging Face - `huggingface.co/moonshotai/Kimi-Linear-48B-A3B-Instruct`
