@@ -166,8 +166,9 @@ export function WinLose({ data }: { data: LgsPublicV1 }) {
             <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-400">
               Prompt by prompt
             </p>
-            <div className="mt-4 overflow-x-auto rounded-2xl border border-gray-200">
-              <table className="w-full min-w-[720px] border-collapse text-left">
+            {/* Print: no horizontal scroll box (it clips columns on paper), rows never split across pages. */}
+            <div className="mt-4 overflow-x-auto rounded-2xl border border-gray-200 print:overflow-visible">
+              <table className="w-full min-w-[720px] border-collapse text-left print:min-w-0">
                 <thead>
                   <tr className="border-b border-gray-200 bg-gray-50">
                     <th
@@ -195,7 +196,7 @@ export function WinLose({ data }: { data: LgsPublicV1 }) {
                 </thead>
                 <tbody>
                   {prompts.map((prompt, i) => (
-                    <tr key={`${i}-${prompt}`} className="border-b border-gray-100 last:border-b-0">
+                    <tr key={`${i}-${prompt}`} className="border-b border-gray-100 last:border-b-0 break-inside-avoid">
                       <td className="max-w-[280px] px-4 py-3 align-top text-[13px] leading-relaxed text-gray-800">
                         {prompt}
                       </td>

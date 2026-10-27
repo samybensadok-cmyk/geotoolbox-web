@@ -15,6 +15,8 @@ import {
  * citations is not. Nothing here may read as a causal claim.
  */
 
+const BOOK_CALL = "https://calendly.com/samy-bensadok/30min-call"
+
 const SEVERITY_TONE: Record<string, string> = {
   error: "border-rose-200 bg-rose-50 text-rose-700",
   broken: "border-rose-200 bg-rose-50 text-rose-700",
@@ -275,12 +277,14 @@ export function ScanCta() {
               <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </Link>
-          <Link
-            href="/services/ai-seo-agency"
+          <a
+            href={BOOK_CALL}
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-full border border-gray-700 px-6 py-3 text-[15px] font-semibold text-white transition-colors hover:bg-white/5"
           >
             Book an AI visibility audit
-          </Link>
+          </a>
         </div>
         <p className="mt-4 font-mono text-[11px] text-gray-500">
           See your own AI visibility · 7-day free trial, cancel anytime
