@@ -31,7 +31,7 @@ export function RefundPolicyContent({ localeNote }: { localeNote?: React.ReactNo
             <li>Choose <strong>Cancel subscription</strong> and confirm. You receive a confirmation email with the end date.</li>
             <li>Alternatively, email <a href="mailto:samy@geotoolbox.ai" className={link}>samy@geotoolbox.ai</a> from the account owner&apos;s address, no later than the day before the renewal date (or before the trial-end date and time) shown in your account and in our emails.</li>
           </ol>
-          <p className="mt-2">Cancellation takes effect at the end of the current period (or of the trial). You keep access until then. Revoking Google access or deleting the app&apos;s cookies does <em>not</em> cancel a subscription.</p>
+          <p className="mt-2">Cancelling a paid subscription takes effect at the end of the current period, and you keep access until then. Cancelling a free trial started from October 27, 2026 (Terms version 2.1) ends it immediately: access stops at once and nothing is charged; an earlier trial keeps access until its end date. Revoking Google access or deleting the app&apos;s cookies does <em>not</em> cancel a subscription.</p>
         </section>
 
         <section>

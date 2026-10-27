@@ -14,10 +14,10 @@
 //    (L215-4) → Annex A. Model withdrawal form (L221-5 7°) → Annex B.
 //  - Entity facts (SIREN 827472424, RNE, address, franchise TVA) filled 2026-08-15 from public records; médiateur pending designation.
 
-export const TERMS_VERSION = "2.0"
-export const TERMS_UPDATED = "August 15, 2026"
-export const TERMS_EFFECTIVE_NEW = "August 15, 2026" // new customers: on publication
-export const TERMS_EFFECTIVE_EXISTING = "September 15, 2026" // existing customers: 30 days' notice
+export const TERMS_VERSION = "2.1" // 2.1: §5.4 cancelling a trial ends it at once (PHP twin SG_TERMS_VERSION)
+export const TERMS_UPDATED = "October 27, 2026"
+export const TERMS_EFFECTIVE_NEW = "October 27, 2026" // new customers: on publication
+export const TERMS_EFFECTIVE_EXISTING = "November 26, 2026" // existing customers: 30 days' notice
 
 const link = "text-accent-700 underline hover:text-accent-800"
 
@@ -78,7 +78,7 @@ export function TermsContent({ localeNote }: { localeNote?: React.ReactNode }) {
         <UL>
           <li>GEO Toolbox is a business tool. By subscribing you confirm you are acting for business purposes.</li>
           <li>Paid plans are <strong>subscriptions that renew automatically</strong> (monthly or annually) until you cancel.</li>
-          <li>A free trial requires a card and <strong>converts automatically to a paid subscription when it ends</strong> unless you cancel first. The amount and date of the first charge (for an annual plan, the full annual fee) are shown at checkout and in your confirmation email, and we also email you before the charge.</li>
+          <li>A free trial requires a card and <strong>converts automatically to a paid subscription when it ends</strong> unless you cancel first. The amount and date of the first charge (for an annual plan, the full annual fee) are shown at checkout and in your confirmation email, and we also email you before the charge. Cancelling a trial started from October 27, 2026 ends it, and your access, immediately.</li>
           <li>You can cancel at any time from <strong>Account → Manage subscription</strong>. Cancellation takes effect at the end of the current period; you keep access until then.</li>
           <li><strong>Fees are non-refundable</strong> — including when a trial converts because you did not cancel in time, and for unused time or credits — except where the law gives you a right we cannot exclude (see §8).</li>
         </UL>
@@ -159,7 +159,7 @@ export function TermsContent({ localeNote }: { localeNote?: React.ReactNode }) {
         <section>
           <H2 id="free-trial">5. Free trial</H2>
           <P>
-            <strong>5.1 What it is.</strong> Where offered (currently on selected plans, as shown on the pricing page), a free trial gives you access to the plan you selected for the trial period stated at checkout (currently <strong>7 days</strong>). A valid payment method is required to start a trial. Trial accounts may run with reduced limits (for example a fraction of the plan&apos;s credits, a lower brand cap, no white-label reports); the full plan unlocks when the trial converts.
+            <strong>5.1 What it is.</strong> Where offered (currently on selected plans, as shown on the pricing page), a free trial gives you access to the plan you selected for the trial period stated at checkout (currently <strong>7 days</strong>), or, for trials started under version 2.1 or later, until you cancel it (§5.4). A valid payment method is required to start a trial. Trial accounts may run with reduced limits (for example a fraction of the plan&apos;s credits, a lower brand cap, no white-label reports); the full plan unlocks when the trial converts.
           </P>
           <P>
             <strong>5.2 Automatic conversion — read this carefully.</strong> <strong>Unless you cancel before the trial ends, your trial converts automatically into a paid subscription for the plan and billing interval (monthly or annual) you selected, and the payment method on file is charged the amount shown at checkout on the trial end date.</strong> The exact amount, currency and first-charge date are displayed at checkout before you confirm, and are repeated in the confirmation email we send when the trial starts. The subscription then renews automatically under §6.
@@ -169,7 +169,7 @@ export function TermsContent({ localeNote }: { localeNote?: React.ReactNode }) {
           </P>
           <P>
             <strong>5.4 How to cancel a trial.</strong> Cancel at any time before the trial ends from <strong>Account → Manage subscription</strong> (Stripe customer portal), or by emailing{" "}
-            <a href="mailto:samy@geotoolbox.ai" className={link}>samy@geotoolbox.ai</a>{" "}from the account owner&apos;s address before the trial end date and time shown in your account and in the confirmation email. A trial cancelled before it ends is never charged. Cancellation is confirmed by email.
+            <a href="mailto:samy@geotoolbox.ai" className={link}>samy@geotoolbox.ai</a>{" "}from the account owner&apos;s address before the trial end date and time shown in your account and in the confirmation email. A trial cancelled before it ends is never charged. <strong>For trials started under version 2.1 or later of these Terms (from October 27, 2026), cancelling a trial ends it immediately:</strong> access to the trial plan stops at once and your account moves to the free plan. A trial started earlier keeps its access until its end date. Because trials are one per customer (§5.6), subscribing again later is billed from the start. Cancellation is confirmed by email.
           </P>
           <P>
             <strong>5.5 No refund for a missed cancellation.</strong> Because the conversion terms are disclosed at checkout and confirmed by email at enrollment, <strong>a charge that results from your not cancelling before the trial end is a valid charge and is non-refundable</strong> (subject only to §8.6); the additional reminders in §5.3 do not change this. This applies equally to monthly and annual subscriptions.
