@@ -4,8 +4,8 @@ import { useState, useSyncExternalStore } from "react"
 import { useEffect } from "react"
 import { usePathname } from "next/navigation"
 import { trackEvent } from "@/lib/analytics"
-import { formatCountdown, rememberPromo } from "@/lib/promo"
-import { SALE, SALE_COPY, isSaleLive, saleDeadlineEpoch, saleDeadlineLabel, type SaleLocale } from "@/lib/sale"
+import { rememberPromo } from "@/lib/promo"
+import { SALE, SALE_COPY, formatSaleCountdown, isSaleLive, saleDeadlineEpoch, saleDeadlineLabel, type SaleLocale } from "@/lib/sale"
 import { useCountdown } from "@/components/promo/use-countdown"
 
 /**
@@ -78,7 +78,7 @@ export function SaleBanner({ locale = "en" }: { locale?: string }) {
           </span>
           {deadlineMs !== null && deadlineMs > 0 && (
             <span className="rounded border border-white/30 px-1.5 py-0.5 tabular-nums" aria-live="off">
-              {t.timeLeft(formatCountdown(deadlineMs))}
+              {t.timeLeft(formatSaleCountdown(deadlineMs, loc))}
             </span>
           )}
         </span>

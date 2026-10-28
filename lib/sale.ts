@@ -42,6 +42,21 @@ export function saleDeadlineEpoch(): number {
   return Math.floor(Date.parse(`${SALE.deadline}T23:59:59Z`) / 1000)
 }
 
+/**
+ * "2d 05h 12m" while a day or more is left, then "05h 12m 30s". The sale runs for days, so a raw
+ * lib/promo.ts formatCountdown ("80:12:30") reads as a big number, not a deadline. Day unit per locale.
+ */
+export function formatSaleCountdown(msLeft: number, locale: SaleLocale): string {
+  const s = Math.max(0, Math.floor(msLeft / 1000))
+  const d = Math.floor(s / 86400)
+  const h = Math.floor((s % 86400) / 3600)
+  const m = Math.floor((s % 3600) / 60)
+  const sec = s % 60
+  const pad = (n: number) => String(n).padStart(2, "0")
+  const dayUnit = locale === "fr" ? "j" : locale === "de" ? "T" : "d"
+  return d > 0 ? `${d}${dayUnit} ${pad(h)}h ${pad(m)}m` : `${pad(h)}h ${pad(m)}m ${pad(sec)}s`
+}
+
 /** "Oct 31" / "31 oct" / "31 oct" / "31. Okt" — short, locale-aware, no trailing dot. */
 export function saleDeadlineLabel(locale: string): string {
   const loc = locale === "fr" ? "fr-FR" : locale === "es" ? "es-ES" : locale === "de" ? "de-DE" : "en-US"
