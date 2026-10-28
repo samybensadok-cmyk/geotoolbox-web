@@ -2,7 +2,7 @@
 title: "LLM SEO: cómo lograr que ChatGPT y otras IA te citen (2026)"
 description: "El LLM SEO, o SEO para LLM, consiste en que ChatGPT, Claude o Perplexity te citen al responder. Qué cambia frente al SEO clásico y qué puedes ignorar, sin humo."
 date: "2026-08-18"
-updated: "2026-09-18"
+updated: "2026-10-28"
 author: "Samy BEN SADOK"
 tags: ["llm-seo", "llmo", "geo", "ai-visibility", "ai-search", "guide"]
 draft: false
@@ -143,7 +143,7 @@ Distintos bots hacen distintos trabajos, y bloquear el equivocado tiene consecue
 
 Un matiz que despista: los bots que actúan a petición de una persona (ChatGPT-User, Perplexity-User, Claude-User) van a buscar una página concreta cuando alguien la pide, y no todos respetan el robots.txt. OpenAI dice que sus reglas pueden no aplicarse a ChatGPT-User, y el [bot de usuario de Perplexity por lo general ignora el robots.txt](https://docs.perplexity.ai/docs/resources/perplexity-crawlers), mientras que [Anthropic dice que Claude-User sí lo respeta](https://support.claude.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler). Por eso, un bloqueo en robots.txt solo es del todo de fiar para los bots automáticos de la tabla. El error frecuente y caro es bloquear los bots de recuperación (OAI-SearchBot, PerplexityBot, Claude-SearchBot) creyendo que solo te sales del entrenamiento. Tu robots.txt «se ve bien» y has dejado de recibir citas sin enterarte.
 
-La puerta que no cerraste tú es peor. En julio de 2025, [Cloudflare empezó a bloquear los bots de IA por defecto en los dominios nuevos](https://www.cloudflare.com/press/press-releases/2025/cloudflare-just-changed-how-ai-crawlers-scrape-the-internet-at-large/), y se presentó como el primer proveedor de infraestructura de Internet en hacerlo. Sus reglas han seguido cambiando desde entonces: con los [controles por categoría de 2026](https://blog.cloudflare.com/content-independence-day-ai-options/), a partir del 15 de septiembre de 2026 los dominios nuevos bloquearán por defecto los bots de entrenamiento y de agente en las páginas con publicidad, mientras dejan pasar los de búsqueda. La conclusión no es cuál sea el valor por defecto este mes; es que si tu sitio va detrás de una CDN o un WAF, una política de borde que nunca elegiste puede decidir qué bots de IA llegan a ti. Los propios [datos de junio de 2024 de Cloudflare](https://blog.cloudflare.com/declaring-your-aindependence-block-ai-bots-scrapers-and-crawlers-with-a-single-click/) encontraron que los bots de IA llegaban a cerca del 39 % del millón de sitios web principales de su red, mientras que solo un 2,98 % de ese millón tenía algún control de bots de IA activado.
+La puerta que no cerraste tú es peor. En julio de 2025, [Cloudflare empezó a bloquear los bots de IA por defecto en los dominios nuevos](https://www.cloudflare.com/press/press-releases/2025/cloudflare-just-changed-how-ai-crawlers-scrape-the-internet-at-large/), y se presentó como el primer proveedor de infraestructura de Internet en hacerlo. Sus reglas han seguido cambiando desde entonces: con los [controles por categoría de 2026](https://blog.cloudflare.com/content-independence-day-ai-options/), Cloudflare indicó que, a partir del 15 de septiembre de 2026, los dominios nuevos bloquearían por defecto los bots de entrenamiento y de agente en las páginas con publicidad, mientras dejarían pasar los de búsqueda. La conclusión no es cuál sea el valor por defecto este mes; es que si tu sitio va detrás de una CDN o un WAF, una política de borde que nunca elegiste puede decidir qué bots de IA llegan a ti. Los propios [datos de junio de 2024 de Cloudflare](https://blog.cloudflare.com/declaring-your-aindependence-block-ai-bots-scrapers-and-crawlers-with-a-single-click/) encontraron que los bots de IA llegaban a cerca del 39 % del millón de sitios web principales de su red, mientras que solo un 2,98 % de ese millón tenía algún control de bots de IA activado.
 
 Verifica, entonces, y no des nada por hecho. Lee tu robots.txt línea a línea contra los user-agents de arriba, y nuestro [comprobador gratuito de rastreadores de IA](https://geotoolbox.ai/tools/ai-crawler-checker) hace justo eso: te muestra cuáles de 34 rastreadores de IA deja pasar o bloquea tu robots.txt, con la línea exacta que hay que corregir. Eso cubre solo la capa del robots.txt. Para detectar las puertas del WAF y la CDN, busca en los registros de tu servidor los bots que rastrean tus páginas (GPTBot, OAI-SearchBot, PerplexityBot, Claude-SearchBot) para confirmar que reciben un 200, y compara tu HTML en crudo con la versión renderizada con JavaScript, porque un bot que no ejecuta tu JavaScript solo ve la respuesta en bruto. En los sitios que auditamos para visibilidad en IA, una regla de robots.txt anticuada o un valor por defecto del borde es una razón frecuente y fácil de pasar por alto de que una página con buena pinta nunca se cite, y es lo más barato de descartar primero.
 
@@ -202,21 +202,9 @@ No. Las respuestas de IA se apoyan mucho en los mismos índices de búsqueda y e
 
 Sí, y pasa a menudo. Los motores de respuesta usan sus propios índices y pueden llevar a una respuesta una página bien estructurada y accesible aunque esté en la segunda página de Google. Posicionar bien en Google mejora tus opciones, pero ni es obligatorio ni es garantía.
 
-### ¿ChatGPT cita las mismas páginas que salen primeras en Google?
-
-A veces, pero no cuentes con ello. El solapamiento es parcial y varía según la consulta: las preguntas informativas tienden a recurrir más a las autoridades conocidas, mientras que los prompts comerciales y de comparación sacan a menudo listas, foros y páginas de reseñas que nunca ocuparon los primeros puestos. Posicionar bien es una señal positiva, pero planifica la superficie de IA como un objetivo propio en vez de suponer que tus páginas ganadoras en Google se trasladan.
-
-### ¿Necesito un archivo llms.txt para el LLM SEO?
-
-No. Ningún gran motor de IA ha confirmado usar el llms.txt como señal de cita, un amplio estudio de Ahrefs encontró que el 97 % de los archivos publicados recibió cero peticiones, y Google dice directamente que no necesitas archivos de texto para IA para aparecer en sus funciones de IA. Tiene un uso real en herramientas para desarrolladores, pero para que te citen tu tiempo rinde más confirmando que los bots de IA pueden llegar a tus páginas.
-
 ### ¿Cuánto tarda en dar resultados el LLM SEO?
 
 Depende de la vía. En la vía de recuperación, una página accesible y bien estructurada puede citarse en respuestas en vivo en cuestión de días. En la vía de entrenamiento, pasar a formar parte del conocimiento base de un modelo lleva generaciones de modelos, a menudo muchos meses, y depende de menciones amplias de terceros que no puedes acelerar.
-
-### ¿Puedo evitar que la IA recomiende a mi competidor en vez de a mí?
-
-No de forma directa. No puedes editar un modelo ni sacar a un competidor de sus respuestas. Lo que sí puedes hacer es reforzar las señales que el modelo lee sobre ti, es decir, ganar más menciones de terceros, reseñas y contenido citable para que el conjunto de pruebas se incline a tu favor con el tiempo.
 
 ### ¿Qué hago si una IA describe mal mi negocio?
 
