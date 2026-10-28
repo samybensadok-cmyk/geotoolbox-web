@@ -3,7 +3,7 @@ title: "What Is Kimi K3? Moonshot AI's 2.8T Open Model, Explained"
 description: "What is Kimi K3? Moonshot AI's open-weight model explained: real specs, which benchmarks to trust, pricing, whether you can run it, and K2 vs DeepSeek."
 date: "2026-07-17"
 recheckBy: "2026-11-05"  # 10-26: donor re-verified for the DE localization (K3.1 Pro weights still unpublished on HF, GitHub and ModelScope; AA speed, rank, funding, licence and data-jurisdiction facts patched). 10-24: K3.1 Pro (Oct 23) added; Moonshot promised its weights by Nov 4, re-check whether they are published (HF repo, licence, size) and move the K3.1 Pro section. 10-18: re-verified AA, Arena, Moonshot pricing, llama.cpp, Ollama. NOT verified: Kimi Linear 6.3x, Reuters stock moves.
-updated: "2026-10-26"
+updated: "2026-10-28"
 author: "Samy BEN SADOK"
 tags: ["kimi-k3", "kimi-ai", "moonshot-ai", "open-weights", "mixture-of-experts", "chinese-ai", "llm", "guide"]
 draft: false
@@ -90,7 +90,7 @@ Against Moonshot's own history, the jump is stark. That output rate is nearly fo
   <figcaption className="mt-3 text-center text-sm text-gray-500">Output price per million tokens, list prices as of October 26, 2026. K3 costs nearly four times the K2 line; K3.1 Pro narrows the gap.</figcaption>
 </figure>
 
-Whether $15 hurts depends entirely on your workload. Because K3 reasons on every request and can be verbose, a single task often drags a long thinking trace, retried tool calls, and a growing history through the output meter, so heavy output bills are routine rather than rare. On Artificial Analysis's cost-per-task measure K3 runs $2.00 per Intelligence Index task: about nine times Claude Haiku 5.5 ($0.21, with an index of 43.4) and almost three times GPT-6.1 Sol ($0.72). Our [DeepSeek pricing breakdown](https://geotoolbox.ai/blog/deepseek-pricing) and [Claude pricing guide](https://geotoolbox.ai/blog/claude-pricing) give the fuller comparison.
+Whether $15 hurts depends entirely on your workload. Because K3 reasons on every request and can be verbose, a single task often drags a long thinking trace, retried tool calls, and a growing history through the output meter, so heavy output bills are routine rather than rare. On Artificial Analysis's cost-per-task measure (v4.3.2, before Artificial Analysis moved to v5 on October 27) K3 ran $2.00 per Intelligence Index task: about nine times Claude Haiku 5.5 ($0.21, with an index of 43.4) and almost three times GPT-6.1 Sol ($0.72, against $1.27 on v5). Our [DeepSeek pricing breakdown](https://geotoolbox.ai/blog/deepseek-pricing) and [Claude pricing guide](https://geotoolbox.ai/blog/claude-pricing) give the fuller comparison.
 
 ### The 1M Context Comes With Conditions
 
@@ -118,7 +118,7 @@ The prices are 33% lower than K3 on all three rates: $2.00 input, $10.00 output 
 
 The weights are not out yet. Moonshot says "the full model weights will be released by Nov 4," and when we checked on October 24 and again on October 26, Hugging Face, GitHub and ModelScope showed no K3.1 repository, so treat K3.1 Pro as an API model for now.
 
-The benchmark split matters again. Moonshot reports 65.7% on Terminal-Bench 4.0, run on the Claude Code harness, against a published 66.4% for Claude Opus 5.5. Artificial Analysis, running its own tests, scores K3.1 Pro 55 on its Intelligence Index, 11 points above K3's 44 and fourth overall behind Opus 5.5 (58), Sonnet 5.5 (56) and Muse Wonder Full (56).
+The benchmark split matters again. Moonshot reports 65.7% on Terminal-Bench 4.0, run on the Claude Code harness, against a published 66.4% for Claude Opus 5.5. Artificial Analysis, running its own tests, scored K3.1 Pro 55 on its v4.3.2 Intelligence Index, 11 points above K3's 44 and fourth overall behind Opus 5.5 (58), Sonnet 5.5 (56) and Muse Wonder Full (56). On v5, launched October 27, it scores 46, the top open-weights model but 12 points behind Opus 5.5 (58).
 
 ## Can You Actually Run Kimi K3?
 
@@ -132,7 +132,7 @@ This is the tension practitioners keep circling: K3 may be legally open while st
 
 The short answer: reach for Kimi K3 or K3.1 Pro only when the job specifically needs what they do best, and keep something cheaper or more reliable for everything else. K3 earns its 3-to-4x premium over K2 (K3.1 Pro narrows that to roughly 2-to-2.5x) when you need the long context (bearing in mind Kimi Code's 2 MB request cap and the plan tiering above), native vision, or frontier-grade coding and agent performance, and when you can tolerate its speed, which Artificial Analysis currently puts at about 52 output tokens per second for both K3.1 Pro and K3 (checked October 26), with a lot of thinking in between; Moonshot's K3.1 Pro Highspeed variant claims 2-3x that speed at double the price.
 
-For most day-to-day work the math favors its own siblings. Kimi K2.6 and K2.7 Code are far cheaper, fully open, and already strong on coding, so unless a task hits K3's specific strengths, the older models do it for a fraction of the cost. Starting October 31, 2026, K2 series models will no longer be available to newly registered users, and Moonshot plans to retire them by the end of December 2026. If you are optimizing purely for price per token, [DeepSeek](https://geotoolbox.ai/blog/what-is-deepseek) V4 is cheaper still. And where the cost of a wrong answer is high, Claude Opus 5.5 and Fable 5.1 keep the edge on careful reasoning and verified coding. A fuller side-by-side of the open Chinese models lives in our [Chinese AI models comparison](https://geotoolbox.ai/blog/chinese-ai-models-compared).
+For most day-to-day work the math favors its own siblings. Kimi K2.6 and K2.7 Code are far cheaper, fully open, and already strong on coding, so unless a task hits K3's specific strengths, the older models do it for a fraction of the cost. Moonshot's pricing page says that, starting October 31, 2026, K2 series models will no longer be available to newly registered users, and Moonshot plans to retire them by the end of December 2026. If you are optimizing purely for price per token, [DeepSeek](https://geotoolbox.ai/blog/what-is-deepseek) V4 is cheaper still. And where the cost of a wrong answer is high, Claude Opus 5.5 and Fable 5.1 keep the edge on careful reasoning and verified coding. A fuller side-by-side of the open Chinese models lives in our [Chinese AI models comparison](https://geotoolbox.ai/blog/chinese-ai-models-compared).
 
 <table>
 <thead>
@@ -175,7 +175,7 @@ Realistically, no. The weights are public now, but at 2.8 trillion parameters K3
 
 ### Is Kimi K3 better than Claude or GPT?
 
-On narrow coding and agent benchmarks, K3 competed at the top at launch, but on the Frontend Code Arena board dated October 16, 2026 it was 14th, and on the October 22 board it was 17th, behind the open-weight DeepSeek V4.1 Flash. On general intelligence, Artificial Analysis's v4.3.2 index put it fourth among open-weight models on October 18 and fifth on October 26, and well behind the closed leaders, and reviewers report it is weaker on non-coding work. Its successor K3.1 Pro scores 55 on the same Artificial Analysis index, fourth overall. It is a strong specialist, not a clear overall winner. Our [Kimi K3 vs Claude](https://geotoolbox.ai/blog/kimi-k3-vs-claude) comparison breaks the head-to-head down by task, cost, and speed.
+On narrow coding and agent benchmarks, K3 competed at the top at launch, but on the Frontend Code Arena board dated October 16, 2026 it was 14th, and on the October 22 board it was 17th, behind the open-weight DeepSeek V4.1 Flash. On general intelligence, Artificial Analysis's v4.3.2 index put it fourth among open-weight models on October 18 and fifth on October 26 (the day before AA moved to v5 and rescaled every score), and well behind the closed leaders, and reviewers report it is weaker on non-coding work. Its successor K3.1 Pro scored 55 on v4.3.2, fourth overall, and scores 46 on v5. It is a strong specialist, not a clear overall winner. Our [Kimi K3 vs Claude](https://geotoolbox.ai/blog/kimi-k3-vs-claude) comparison breaks the head-to-head down by task, cost, and speed.
 
 ## Sources
 
