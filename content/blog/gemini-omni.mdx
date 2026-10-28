@@ -2,7 +2,7 @@
 title: "Gemini Omni: What It Is, Pricing, and How to Get Access (2026)"
 description: "Gemini Omni is Google's any-input-to-video AI model. What Omni Flash does, which Google AI plans include it, API pricing at $0.10/sec, and what breaks."
 date: "2026-07-02"
-updated: "2026-09-17"
+updated: "2026-10-28"
 author: "Samy BEN SADOK"
 tags: ["gemini-omni", "gemini", "google-gemini", "ai-video", "ai-models"]
 draft: false
@@ -29,15 +29,15 @@ Omni sits inside the wider Gemini stack alongside the chat models, Veo, Imagen, 
 
 ## Gemini Omni vs Veo: What Happened to Veo?
 
-The short version: **Omni replaces Veo inside the Gemini app**, and Veo carries on as the high-fidelity specialist everywhere else.
+The short version: **Omni replaces Veo inside the Gemini app**, and Veo carries on as the high-fidelity specialist on Google Cloud's Gemini Enterprise Agent Platform.
 
 Google's own product FAQ states it plainly: Gemini Omni is the newest video generation and editing model, and it takes over from Veo 3.1 as the default when you ask the Gemini app for video. As the rollout completes, video prompts in the app route to Omni Flash instead.
 
-Veo is not dead, though. The DeepMind lineup still lists Veo as a separate specialized model, and the Gemini API sells both. The practical split looks like this: Veo 3.1 is the realism engine, generating up to 4K broadcast-quality clips natively. Omni Flash generates natively at 720p and can upscale to 1080p or 4K since its August GA release, but its real edge is that it accepts any input mix and lets you edit the result by talking to it.
+Veo is not dead, though. The DeepMind lineup still lists Veo as a separate specialized model, and Veo 3.1 remains listed on Google Cloud's Gemini Enterprise Agent Platform, but Google's Gemini API deprecations page shows the three Veo 3.1 API preview models as shut down on October 22, 2026, with Omni Flash as the recommended replacement. The practical split looks like this: Veo 3.1 is the realism engine, generating up to 4K broadcast-quality clips natively. Omni Flash generates natively at 720p and can upscale to 1080p or 4K since its August GA release, but its real edge is that it accepts any input mix and lets you edit the result by talking to it.
 
 Here's the way to think about it. Veo is the cinematographer you hand a finished shot list. Omni is the editor sitting next to you who keeps the whole scene in its head while you change your mind, turn after turn.
 
-The cost gap runs the same direction: at 720p, standard Veo 3.1 output costs four times as much per second as Omni Flash.
+The cost gap ran the same direction: on Google's Gemini API pricing page as archived on October 15, 2026, standard Veo 3.1 output cost $0.40 per second at 720p, four times Omni Flash's $0.10.
 
 ## What Gemini Omni Flash Can Do
 
@@ -71,7 +71,7 @@ That sits awkwardly beside the product direction. Google's July 16 update leans 
 
 ### Watermarks: Two of Them, and Only One Comes Off
 
-Google documents an invisible SynthID watermark on every generated clip. Users additionally report a **visible Gemini logo on the frame**, which is the one that actually blocks commercial work: as one put it, it "prevents it from being used in anything, from an Instagram post to a feature film." Google has not documented the visible mark, so treat it as a widely reported user observation rather than a published spec, but a small market of removal tools targeting Omni specifically has already appeared, which tells you how real it is.
+Google documents an invisible SynthID watermark on every generated clip. Users additionally report a **visible Gemini logo on the frame**, which is the one that actually blocks commercial work: as one put it, it "prevents it from being used in anything, from an Instagram post to a feature film." Google has not documented the visible mark, so treat it as a widely reported user observation rather than a published spec, but a small market of removal tools targeting Omni specifically has already appeared, which tells you how real it is. On licensing, the Gemini API additional terms say that Google "won't claim ownership" over content its services generate, and that you will "comply with applicable law in using generated content".
 
 Worth knowing if you are tempted: those tools strip the visible overlay via reverse alpha blending. **SynthID survives, because it lives in the pixel values rather than as an overlay.** Removing the logo does not make a clip untraceable.
 
@@ -136,21 +136,21 @@ Developer access arrived on June 30, 2026, when Google [brought Omni Flash to th
 
 Under the hood that dollar is token math: video output is billed at [5,792 tokens per second of 720p footage](https://ai.google.dev/gemini-api/docs/pricing) against a $17.50 per million video-output-token rate, with input at $1.50 per million tokens across text, image, video, and audio.
 
-Here's how that sits against the rest of Google's video lineup at 720p:
+Here's how that sat against the rest of Google's video lineup at 720p, with the Veo prices taken from the Gemini API pricing page as archived on October 15, 2026 (the three Veo 3.1 API preview models have since been shut down):
 
 <table>
 <thead>
 <tr><th>Model</th><th>720p, per second</th><th>Positioning</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>Veo 3.1 Lite</strong></td><td>$0.05</td><td>Cheapest, 1080p max</td></tr>
+<tr><td><strong>Veo 3.1 Lite</strong> (API preview, shut down)</td><td>$0.05</td><td>Cheapest, 1080p max</td></tr>
 <tr><td><strong>Gemini Omni Flash</strong></td><td>$0.10</td><td>Any-input generation + conversational editing, now with resolution control</td></tr>
-<tr><td><strong>Veo 3.1 Fast</strong></td><td>$0.10</td><td>Speed-tier realism, up to 4K at $0.30</td></tr>
-<tr><td><strong>Veo 3.1</strong></td><td>$0.40</td><td>Full realism tier, up to 4K at $0.60</td></tr>
+<tr><td><strong>Veo 3.1 Fast</strong> (API preview, shut down)</td><td>$0.10</td><td>Speed-tier realism, up to 4K at $0.30</td></tr>
+<tr><td><strong>Veo 3.1</strong> (API preview, shut down)</td><td>$0.40</td><td>Full realism tier, up to 4K at $0.60</td></tr>
 </tbody>
 </table>
 
-Since the August 27 GA release, Omni Flash bills each resolution at its own rate rather than a single 720p price: about **$0.034/sec at 360p**, **$0.10/sec at 720p** (unchanged), **$0.152/sec at 1080p**, and **$0.304/sec at 4K**, all derived from the [per-resolution token counts Google publishes on its enterprise pricing page](https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing) at the same $17.50-per-million-output-token rate. That 4K rate lands almost exactly on Veo 3.1 Fast's 4K price ($0.30/sec) and well under standard Veo 3.1's ($0.60/sec), though Omni's 4K is an upscale of a 720p-native generation, not Veo's native 4K output.
+Since the August 27 GA release, Omni Flash bills each resolution at its own rate rather than a single 720p price: about **$0.034/sec at 360p**, **$0.10/sec at 720p** (unchanged), **$0.152/sec at 1080p**, and **$0.304/sec at 4K**, all derived from the [per-resolution token counts Google publishes on its enterprise pricing page](https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing) at the same $17.50-per-million-output-token rate. That 4K rate lands almost exactly on the archived Gemini API 4K price of Veo 3.1 Fast ($0.30/sec) and well under that of standard Veo 3.1 ($0.60/sec), though Omni's 4K is an upscale of a 720p-native generation, not Veo's native 4K output.
 
 The multi-turn editing runs on Google's **Interactions API**, a stateful interface that carries the previous video and its references into each new turn, which is what lets you stack sequential edits. It is the same multimodal session layer Nano Banana uses, which is what makes the two models chainable.
 
@@ -200,37 +200,10 @@ Partly. Omni Flash video generation is rolling out at no cost inside YouTube Sho
 
 ### How much does the Gemini Omni API cost?
 
-$0.10 per second of generated 720p video, billed as 5,792 video tokens per second at $17.50 per million output tokens, the same per-second rate as Veo 3.1 Fast. Since the August 27, 2026 GA release, other resolutions bill at their own token rate: about $0.034/sec at 360p, $0.152/sec at 1080p, and $0.304/sec at 4K.
-
-### What is the difference between Gemini Omni and Veo?
-
-Omni replaces Veo as the video model inside the Gemini app and focuses on any-input generation and conversational editing. Since its August 2026 GA release Omni also outputs up to 4K, at $0.304 per second, upscaled from a 720p-native generation. Veo 3.1 continues separately as Google's realism specialist, generating natively up to 4K clips at up to $0.60 per second via the API.
-
-### Can you use Gemini Omni with a Google Workspace account?
-
-Yes, with the right license. Google's video generation help page says work and school accounts need a qualifying Workspace license, while personal accounts need a Google AI plan (Plus, Pro, or Ultra). Many Workspace users reported being locked out in the launch window before licensing caught up, and developers on any account type can use the paid Gemini API.
-
-### Why does Gemini Omni say my prompt violates the prominent people policy?
-This is a known filter misfire that has been affecting paying Google Flow users since late June 2026, and it blocks original fictional characters and even users' own avatars, not just real public figures. Renaming the character or rewriting the prompt generally does not clear it. The workaround users report is a surface split: the same prompt often succeeds in the Gemini app while failing in Flow, so try the app before you rewrite anything.
-
-### Do I get my credits back if Omni blocks my video?
-No. A generation stopped by the safety filter is billed the same as a successful one, because a policy block does not trigger the refund path. Users have been reporting this on Google's own developer forum since May 2026 without resolution. Budget for it: if you are running prompts that sit anywhere near the filter's boundaries, some share of your credits will buy you nothing.
-
-### How do I remove the Gemini Omni watermark?
-There are two watermarks, and only one is removable. Users report a visible Gemini logo on the frame, and third-party tools do strip it. The invisible SynthID watermark that Google embeds in every clip lives in the pixel values rather than as an overlay, so it survives removal. Taking the logo off does not make a clip untraceable or unattributable.
-
-### How many edits can Gemini Omni handle before it breaks?
-Plan for about three sequential edits, which matches Google's own guidance. Users and independent testers report drift starting around the fourth or fifth turn: characters get redesigned, objects appear mid-scene, and faces stop matching. Conversational editing is genuinely Omni's best feature, but it has a shorter runway than the demos suggest.
+$0.10 per second of generated 720p video, billed as 5,792 video tokens per second at $17.50 per million output tokens, the same per-second rate Veo 3.1 Fast charged on the Gemini API before its preview models shut down. Since the August 27, 2026 GA release, other resolutions bill at their own token rate: about $0.034/sec at 360p, $0.152/sec at 1080p, and $0.304/sec at 4K.
 
 ### Can you make Gemini Omni videos longer than 10 seconds?
 Yes, since the August 27, 2026 GA release. A single generation still runs 3 to 10 seconds at 24fps, but you can now chain extensions in 10-second increments up to 40 seconds cumulative. Before GA, extension was announced but unavailable.
-
-### Is Gemini Omni available on Vertex AI?
-Yes, though the name is the problem. Google renamed Vertex AI to the Gemini Enterprise Agent Platform in April 2026, so searching for "Vertex AI Omni" turns up nothing useful. The model is documented there as `gemini-omni-1.1-flash`, now at general availability.
-
-### Can you use Gemini Omni videos commercially?
-
-Generally yes. Google's terms do not claim ownership of generated output, and commercial use is allowed within its content policies. Every clip carries the invisible SynthID watermark no matter where it was made (users report a visible badge on consumer-app clips too), and purely AI-generated footage may not qualify for copyright protection on its own.
 
 ## Sources
 
