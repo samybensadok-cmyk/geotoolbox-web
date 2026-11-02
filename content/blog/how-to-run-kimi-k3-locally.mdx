@@ -2,7 +2,7 @@
 title: "How to Run Kimi K3 Locally: What It Actually Takes (2026)"
 description: "How to run Kimi K3 locally: the real hardware for a 1.56TB model, five routes ranked by cost and speed, and an honest verdict on self-hosting."
 date: "2026-07-28"
-updated: "2026-10-24"
+updated: "2026-11-01"
 recheckBy: "2026-11-05"  # 2026-10-24: added the K3.1 Pro note and its API price. Re-check when K3.1 Pro weights appear on Hugging Face (promised by Nov 4): this guide covers K3 only until then. Last full re-verification 2026-10-18 (llama.cpp PRs #26185/#28466 merged 08-15/09-08, Unsloth repo sizes, Ollama cloud-only, Mac Studio M5 Max/Ultra, provider speeds/prices from Artificial Analysis + OpenRouter, rental prices from RunPod + Lambda). NOT re-verified: practitioner estimates (ktransformers-class decode speed, electricity $/Mtok, rig cost bands, RAMageddon), Mac-cluster analogy figures
 author: "Samy BEN SADOK"
 tags: ["kimi-k3", "run-llm-locally", "self-host-llm", "open-weights", "moonshot-ai", "vllm", "local-llm", "guide"]
@@ -22,7 +22,7 @@ Not on a normal machine. Kimi K3 is a [2.8-trillion-parameter](https://geotoolbo
 But local runs on a spectrum, from pointing your editor at a hosted endpoint to buying a rack. The question is which of these routes matches your actual constraint: privacy, cost, speed, or curiosity.
 
 <figure className="not-prose my-8">
-  <BlogImage src="/blog/how-to-run-kimi-k3-locally/kimi-k3-memory-gap-oct-2026.png" alt="Bar chart to scale showing fast memory each option holds against the 1.56TB Kimi K3 needs for full-speed inference (disk-backed runs are possible but slow), as of October 2026: an RTX 4090 (24GB) is a thin sliver, a 512GB Mac Studio (an M5 Ultra option Apple lists as coming late October) and a 1TB-RAM server both fall short of the dashed 1.56TB line, and only an 8x B300 datacenter node (about 2.3TB) clears it." w="1100" h="764" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <BlogImage src="/blog/how-to-run-kimi-k3-locally/kimi-k3-memory-gap-oct-2026-v2.png" alt="Bar chart to scale showing fast memory each option holds against the 1.56TB Kimi K3 needs for full-speed inference (disk-backed runs are possible but slow), as of November 2026: an RTX 4090 (24GB) is a thin sliver, a 512GB Mac Studio (an M5 Ultra option now listed on Apple's US store) and a 1TB-RAM server both fall short of the dashed 1.56TB line, and only an 8x B300 datacenter node (about 2.3TB) clears it." w="1100" h="764" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
   <figcaption className="mt-3 text-center text-sm text-gray-500">The weights must sit in fast memory to run at full speed. A RAM-based rig can still run K3 slowly by offloading experts to system memory (Route 3), but a datacenter node is the only thing that clears the line outright.</figcaption>
 </figure>
 
@@ -35,7 +35,7 @@ But local runs on a spectrum, from pointing your editor at a hosted endpoint to 
 <tr><td><strong>1. Rent a K3-capable node</strong></td><td>8x B300 or 16x B200, by the hour</td><td>Same as Route 2</td><td>~$70-$160 / hour</td><td>Trying it, short jobs</td></tr>
 <tr><td><strong>2. Self-host on vLLM</strong></td><td>One 8x B300 node (or 16x B200)</td><td>111 tok/s TP8, 331 with spec decoding (vLLM, measured on GB300 NVL72)</td><td>Datacenter capex or cloud</td><td>Orgs with real GPU infra</td></tr>
 <tr><td><strong>3. CPU + RAM offload</strong></td><td>Big-RAM server + 1-4 GPUs</td><td>~10 tok/s decode, slow prefill</td><td>~$5k-$65k one-time</td><td>Homelab, overnight batch</td></tr>
-<tr><td><strong>4. Mac Studio cluster</strong></td><td>4-5x 512GB M5 Ultra (option not yet shipping)</td><td>~15 tok/s by analogy, unmeasured</td><td>Not yet priced</td><td>Unified-memory experiments</td></tr>
+<tr><td><strong>4. Mac Studio cluster</strong></td><td>4-5x 512GB M5 Ultra Mac Studio</td><td>~15 tok/s by analogy, unmeasured</td><td>~$89k-$111k (4-5 x $22,299, Apple US list price on Nov 1, 2026)</td><td>Unified-memory experiments</td></tr>
 </tbody>
 </table>
 
@@ -103,7 +103,7 @@ A couple more numbers set expectations. Unsloth's 2-bit build runs about 861GB, 
 
 ## Route 4: Can a Mac Studio Cluster Do It?
 
-Apple Silicon is the obvious candidate for a memory-hungry model, because a Mac Studio with 512GB of unified memory holds far more than any single GPU. Apple's store now sells the M5 Max and M5 Ultra Mac Studio with up to 256GB and lists a 512GB M5 Ultra option as "coming late October", so this cluster cannot be bought today. One machine is not enough anyway. To reach the roughly 2TB of aggregate memory K3 needs, you are looking at four or five 512GB Mac Studios wired together.
+Apple Silicon is the obvious candidate for a memory-hungry model, because a Mac Studio with 512GB of unified memory holds far more than any single GPU. Apple sells the Mac Studio with an M5 Max or M5 Ultra, and on November 1, 2026 its US store lets you configure a 512GB M5 Ultra: the 512GB option switches the chip to the 36-core CPU and 80-core GPU M5 Ultra and prices that configuration at $22,299 (Apple US list price). One machine is not enough anyway. To reach the roughly 2TB of aggregate memory K3 needs, you are looking at four or five 512GB Mac Studios wired together, about $89,000 to $111,000 at that list price, before tax, cables and networking.
 
 That is where the plan meets physics, and the physics is latency, not weight bandwidth. Cluster tooling like EXO or mlx.distributed shards the model layer-wise, so each machine holds its own layers and their experts resident; what crosses the link is a small activation vector at each pipeline boundary, on every token. Thunderbolt is far slower than each machine's local memory bandwidth, and the round trips serialize across four or five hops. The cost is the stalls between machines, not moving the weights themselves.
 
@@ -165,7 +165,7 @@ The self-inflicted half of that is worth ruling out first: whether AI crawlers c
 - Practitioner reports - r/LocalLLaMA, r/LocalLLM, r/kimi launch-week threads, July 2026
 - Kimi K3 GGUF quantizations and benchmarks - Unsloth Documentation - `unsloth.ai/docs/models/kimi-k3`
 - Kimi-K3-GGUF repository file listing - Unsloth / Hugging Face - `huggingface.co/unsloth/Kimi-K3-GGUF`
-- Mac Studio configurations - Apple - `apple.com/shop/buy-mac/mac-studio`
+- Mac Studio configurations and pricing - Apple US store, accessed November 1, 2026 - `apple.com/shop/buy-mac/mac-studio`
 - GPU cloud pricing - RunPod and Lambda - `runpod.io/pricing`, `lambda.ai/pricing`
 - model: add Kimi-K3 text model (PR #26185, merged August 15, 2026) - llama.cpp / GitHub - `github.com/ggml-org/llama.cpp/pull/26185`
 - model: support Kimi-K3 recurrent-state rollback (PR #28466, merged September 8, 2026) - llama.cpp / GitHub - `github.com/ggml-org/llama.cpp/pull/28466`

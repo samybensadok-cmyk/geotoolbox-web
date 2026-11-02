@@ -2,7 +2,7 @@
 title: "Faire tourner Kimi K3 en local : ce que ça exige vraiment"
 description: "Faire tourner Kimi K3 en local : le vrai matériel pour un modèle de 1,56 To, cinq routes par coût et vitesse, et un verdict honnête sur l'auto-hébergement."
 date: "2026-08-14"
-updated: "2026-10-24"
+updated: "2026-11-01"
 recheckBy: "2026-11-05"  # 24/10/2026 : note K3.1 Pro (poids promis d'ici le 4/11) ; à revérifier à la publication des poids.
 author: "Samy BEN SADOK"
 tags: ["kimi-k3", "run-llm-locally", "self-host-llm", "open-weights", "moonshot-ai", "vllm", "local-llm", "guide"]
@@ -34,7 +34,7 @@ Pas sur une machine normale. Kimi K3, le plus grand modèle à poids ouverts jam
 Mais le « local » recouvre tout un éventail de configurations, depuis le simple fait de pointer votre éditeur vers un point d'accès hébergé jusqu'à l'achat d'un rack entier. La bonne question est de savoir laquelle de ces routes correspond à votre vraie contrainte : la confidentialité, le coût, la vitesse ou la curiosité.
 
 <figure className="not-prose my-8">
-  <BlogImage src="/blog/faire-tourner-kimi-k3-en-local/kimi-k3-memory-gap-oct-2026.png" alt="Diagramme à barres à l'échelle comparant la mémoire rapide de chaque option aux 1,56 To exigés par Kimi K3 pour une inférence à pleine vitesse (une exécution depuis le disque reste possible, mais lente), en octobre 2026 : une RTX 4090 (24 Go) forme un trait fin, un Mac Studio de 512 Go (option M5 Ultra qu'Apple annonce pour fin octobre) et un serveur de 1 To de RAM restent tous deux sous la ligne pointillée des 1,56 To, et seul un nœud de datacenter à 8 GPU B300 (environ 2,3 To) la franchit." w="1100" h="891" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <BlogImage src="/blog/faire-tourner-kimi-k3-en-local/kimi-k3-memory-gap-oct-2026-v2.png" alt="Diagramme à barres à l'échelle comparant la mémoire rapide de chaque option aux 1,56 To exigés par Kimi K3 pour une inférence à pleine vitesse (une exécution depuis le disque reste possible, mais lente), en novembre 2026 : une RTX 4090 (24 Go) forme un trait fin, un Mac Studio de 512 Go (option M5 Ultra désormais proposée par l'Apple Store américain) et un serveur de 1 To de RAM restent tous deux sous la ligne pointillée des 1,56 To, et seul un nœud de datacenter à 8 GPU B300 (environ 2,3 To) la franchit." w="1100" h="864" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
   <figcaption className="mt-3 text-center text-sm text-gray-500">Les poids doivent tenir en mémoire rapide pour tourner à pleine vitesse. Un serveur doté d'une grande quantité de RAM peut néanmoins faire tourner K3 lentement en déchargeant les experts vers la mémoire système (Route 3), mais seul un nœud de datacenter franchit la ligne d'emblée.</figcaption>
 </figure>
 
@@ -47,7 +47,7 @@ Mais le « local » recouvre tout un éventail de configurations, depuis le simp
 <tr><td><strong>1. Louer un nœud capable</strong></td><td>8× B300 ou 16× B200, à l'heure</td><td>Comme la Route 2</td><td>env. 70 à 160 $ de l'heure</td><td>Tester, jobs courts</td></tr>
 <tr><td><strong>2. S'auto-héberger sur vLLM</strong></td><td>Un nœud 8× B300 (ou 16× B200)</td><td>111 tok/s en TP8, 331 avec décodage spéculatif (vLLM, mesuré sur GB300 NVL72)</td><td>Capex datacenter ou cloud</td><td>Structures avec une vraie infra GPU</td></tr>
 <tr><td><strong>3. Déchargement CPU + RAM</strong></td><td>Serveur à grosse RAM + 1 à 4 GPU</td><td>env. 10 tok/s en décodage, prefill lent</td><td>env. 5 000 à 65 000 € en une fois</td><td>Homelab, traitement de nuit</td></tr>
-<tr><td><strong>4. Cluster de Mac Studio</strong></td><td>4 à 5× M5 Ultra 512 Go (option pas encore livrée)</td><td>env. 15 tok/s par analogie, non mesuré</td><td>Pas encore chiffré</td><td>Expériences en mémoire unifiée</td></tr>
+<tr><td><strong>4. Cluster de Mac Studio</strong></td><td>4 à 5× Mac Studio M5 Ultra 512 Go</td><td>env. 15 tok/s par analogie, non mesuré</td><td>env. 89 000 à 111 000 $ (4 à 5 × 22 299 $, prix catalogue Apple US au 1er novembre 2026)</td><td>Expériences en mémoire unifiée</td></tr>
 </tbody>
 </table>
 
@@ -125,7 +125,7 @@ Si votre besoin réel est une IA en local souveraine, et non ce modèle géant p
 
 ## Route 4 : un cluster de Mac Studio, est-ce possible ?
 
-Apple Silicon est le candidat évident pour un modèle gourmand en mémoire, car un Mac Studio à 512 Go de mémoire unifiée tient bien plus que le moindre GPU seul. Le Mac Studio vendu aujourd'hui par Apple est en M5 Max ou M5 Ultra, avec jusqu'à 256 Go, et une option 512 Go pour le M5 Ultra est annoncée « à partir de fin octobre » : ce cluster ne s'achète donc pas encore. Une seule machine ne suffit de toute façon pas. Pour atteindre les quelque 2 To de mémoire agrégée que réclame K3, il faut compter quatre à cinq Mac Studio de 512 Go câblés ensemble.
+Apple Silicon est le candidat évident pour un modèle gourmand en mémoire, car un Mac Studio à 512 Go de mémoire unifiée tient bien plus que le moindre GPU seul. Apple vend le Mac Studio en M5 Max ou M5 Ultra, et au 1er novembre 2026 son Apple Store américain permet de configurer un M5 Ultra à 512 Go : cette option fait passer la puce au M5 Ultra à 36 cœurs CPU et 80 cœurs GPU et chiffre cette configuration à 22 299 $ (prix catalogue Apple US). Une seule machine ne suffit de toute façon pas. Pour atteindre les quelque 2 To de mémoire agrégée que réclame K3, il faut compter quatre à cinq Mac Studio de 512 Go câblés ensemble, soit environ 89 000 à 111 000 $ à ce prix catalogue, avant taxes, câbles et réseau.
 
 C'est là que le plan rencontre la physique, et la physique, c'est la latence, pas la bande passante des poids. Les outils de cluster comme EXO ou mlx.distributed découpent le modèle couche par couche, si bien que chaque machine garde ses propres couches et leurs experts résidents ; ce qui traverse le lien, c'est un petit vecteur d'activation à chaque frontière de pipeline, à chaque token. Thunderbolt est bien plus lent que la bande passante mémoire locale de chaque machine, et les allers-retours se sérialisent sur quatre ou cinq sauts. Ce qui coûte vraiment, ce sont les temps d'attente entre les machines, accumulés à chaque aller-retour.
 
@@ -194,7 +194,7 @@ Commencez par éliminer la partie du problème sur laquelle vous pouvez agir : s
 - Retours de praticiens - fils r/LocalLLaMA, r/LocalLLM, r/kimi, juillet 2026
 - Quantifications GGUF et benchmarks de Kimi K3 - Documentation Unsloth - `unsloth.ai/docs/models/kimi-k3`
 - Liste des fichiers du dépôt Kimi-K3-GGUF - Unsloth / Hugging Face - `huggingface.co/unsloth/Kimi-K3-GGUF`
-- Configurations du Mac Studio - Apple - `apple.com/shop/buy-mac/mac-studio`
+- Configurations et prix du Mac Studio - Apple Store américain, consulté le 1er novembre 2026 - `apple.com/shop/buy-mac/mac-studio`
 - Tarifs du cloud GPU - RunPod et Lambda - `runpod.io/pricing`, `lambda.ai/pricing`
 - model: add Kimi-K3 text model (PR #26185, fusionnée le 15 août 2026) - llama.cpp / GitHub - `github.com/ggml-org/llama.cpp/pull/26185`
 - model: support Kimi-K3 recurrent-state rollback (PR #28466, fusionnée le 8 septembre 2026) - llama.cpp / GitHub - `github.com/ggml-org/llama.cpp/pull/28466`
