@@ -1,7 +1,7 @@
 import { archiveRedirect } from "./lib/blog-archive-redirects"
 import createMiddleware from "next-intl/middleware"
 import { NextResponse, type NextRequest } from "next/server"
-import { routing } from "./i18n/routing"
+import { routing, contentLocales } from "./i18n/routing"
 import { isDefinitelyUnknownPath, prefersNonHtml } from "./lib/known-routes"
 import { GLOSSARY_REDIRECTS } from "./lib/glossary-redirects"
 
@@ -11,8 +11,12 @@ const handleI18nRouting = createMiddleware(routing)
 // token): /blog/<slug>.md and /glossary/<slug>.md serve the article as plain
 // markdown, as does requesting the canonical URL with `Accept: text/markdown`.
 // Both rewrite to the internal /md/<locale>/<section>/<slug> route handler.
-const MD_TWIN = /^\/(?:(fr|es)\/)?(blog|glossary)\/([^/]+)\.md$/
-const ARTICLE_PATH = /^\/(?:(fr|es)\/)?(blog|glossary)\/([^/]+)$/
+// The locale alternation is derived from contentLocales so a new content locale
+// gets its .md twin automatically (DE shipped without one: every DE article
+// advertised a text/markdown alternate that answered 404 until 2026-11-03).
+const MD_LOCALES = contentLocales.filter((l) => l !== "en").join("|")
+const MD_TWIN = new RegExp(`^/(?:(${MD_LOCALES})/)?(blog|glossary)/([^/]+)\\.md$`)
+const ARTICLE_PATH = new RegExp(`^/(?:(${MD_LOCALES})/)?(blog|glossary)/([^/]+)$`)
 
 function markdownRewrite(request: NextRequest, locale: string, section: string, slug: string) {
   const res = NextResponse.rewrite(new URL(`/md/${locale}/${section}/${slug}`, request.url))
