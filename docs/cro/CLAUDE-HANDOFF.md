@@ -50,6 +50,16 @@ https://geotoolbox-web-git-codex-ser-5503d9-samybensadok-2891s-projects.vercel.a
 
 ## Claude pass — 2026-10-07
 
+### Data refresh (all read 3 Nov 2026)
+| Figure | Value | Source | Window |
+| --- | --- | --- | --- |
+| Google queries ranked / top 10 / top 3 | 40,175 / 35,220 / 16,600 | `scripts/update-proof-stats.mjs` (Search Console API) | trailing 28 days to 31 Oct 2026 |
+| Monthly chart | Oct 2026 complete: 43,014 queries | same | calendar months, Nov excluded until day 10 |
+| Bing AI appearances | 325.1K (avg 67 cited pages) | Bing WMT AI Performance, "3 M" view | 3 Aug – 1 Nov 2026 |
+| Google AI-answer impressions | 1.29M (tile, rounded) | Search Console "Generative AI features" (Beta), "3 months" view | 2 Aug – 1 Nov 2026 |
+
+The 7 Oct table below is superseded. `compact()` now prints millions as "1.29M".
+
 ### Data refresh (all read 7 Oct 2026)
 | Figure | Value | Source | Window |
 | --- | --- | --- | --- |

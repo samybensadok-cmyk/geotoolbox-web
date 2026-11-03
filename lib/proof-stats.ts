@@ -67,15 +67,15 @@ export const proofStats = {
   // update `asOf` here in the same edit. Since 2026-10-07 this is the report's
   // "3 M" view (operator call: the 3-month total, not the 30 D view). The
   // window is stated on every surface via `windowLabel`; never call it trailing
-  // 30 days. 30 D on the same read was 92.4K (7 Sep – 4 Oct), avg 73 pages.
+  // 30 days. Read 3 Nov 2026: 3 M view = 3 Aug – 1 Nov 2026 (91 days).
   aiCitations: {
-    total: 270800,
-    avgCitedPages: 48,
-    windowDays: 90,
-    windowLabel: "3 months (7 Jul – 4 Oct 2026)",
+    total: 325100,
+    avgCitedPages: 67,
+    windowDays: 91,
+    windowLabel: "3 months (3 Aug – 1 Nov 2026)",
     source: "Microsoft Copilot and partners",
     sampled: true,
-    asOf: "7 Oct 2026",
+    asOf: "3 Nov 2026",
   },
   // Manual — Google Search Console "Generative AI features" (Beta) report:
   // impressions where a geotoolbox.ai link appeared INSIDE a Google AI answer
@@ -90,23 +90,23 @@ export const proofStats = {
   //     dimension returns no AI-feature rows for this property (verified
   //     2026-08-28), so the automation script cannot pick it up. Hand-read from
   //     the GSC UI; bump `asOf` in the same edit, like the Bing field.
-  //   - Since 2026-10-07 this is the report's "3 months" view (5 Jul – 4 Oct
-  //     2026). The report gives no comparable preceding 3-month figure, so no
+  //   - Since 2026-10-07 this is the report's "3 months" view (read 3 Nov
+  //     2026: 2 Aug – 1 Nov 2026, tile shows "1.29m", stored rounded). The report gives no comparable preceding 3-month figure, so no
   //     growth multiple is published (the old 28-day `prevImpressions` is gone).
   googleAiFeatures: {
-    impressions: 597000,
+    impressions: 1290000,
     windowDays: 92,
-    windowLabel: "3 months (5 Jul – 4 Oct 2026)",
+    windowLabel: "3 months (2 Aug – 1 Nov 2026)",
     surfaces: "AI Overviews + AI Mode",
     source: "Google Search Console · Generative AI features (Beta)",
-    asOf: "7 Oct 2026",
+    asOf: "3 Nov 2026",
   },
   // Top buying-intent grounding query from Bing WMT "AI Performance" — an
   // appearance count in Bing's AI Performance report, NOT unique citations.
   topGroundingQuery: {
     query: "evaluate AI visibility tracking platforms",
     appearances: 13400,
-    windowLabel: "3 months (7 Jul – 4 Oct 2026)",
+    windowLabel: "3 months (3 Aug – 1 Nov 2026)",
     source: "Bing WMT AI Performance",
   },
   // Manual — Google Analytics 4 Home card for geotoolbox.ai, "Last 30 days"

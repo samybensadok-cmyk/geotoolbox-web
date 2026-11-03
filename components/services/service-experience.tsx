@@ -24,8 +24,10 @@ type Props = {
 }
 
 const fmt = (n: number) => n.toLocaleString("en-US")
-// 270800 → "270.8K", 597000 → "597K", 41912 → "41.9K"
-const compact = (n: number) => n >= 1000 ? `${(Math.round(n / 100) / 10).toLocaleString("en-US")}K` : fmt(n)
+// 325100 → "325.1K", 1290000 → "1.29M", 41912 → "41.9K"
+const compact = (n: number) =>
+  n >= 1e6 ? `${(Math.round(n / 1e4) / 100).toLocaleString("en-US")}M`
+  : n >= 1000 ? `${(Math.round(n / 100) / 10).toLocaleString("en-US")}K` : fmt(n)
 
 const ext = (href: string) => href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {}
 
