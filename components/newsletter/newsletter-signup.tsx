@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useState } from "react"
+import { useId, useRef, useState } from "react"
 import { trackEvent } from "@/lib/analytics"
 
 /**
@@ -65,6 +65,7 @@ export function NewsletterSignup({
   copy?: NewsletterCopy
 }) {
   const t = { ...NEWSLETTER_COPY_EN, ...copy, errors: { ...NEWSLETTER_COPY_EN.errors, ...copy.errors } }
+  const fieldId = useId()
   const heading = title ?? t.title
   const blurb = description ?? t.description
   const [email, setEmail] = useState("")
@@ -119,7 +120,7 @@ export function NewsletterSignup({
 
   if (done) {
     return (
-      <div className={compact ? "text-[13px] text-gray-700" : "rounded-2xl border border-accent-200 bg-accent-50 p-6"}>
+      <div role="status" className={compact ? "text-[13px] text-gray-700" : "rounded-2xl border border-accent-200 bg-accent-50 p-6"}>
         {t.done}
       </div>
     )
@@ -156,6 +157,9 @@ export function NewsletterSignup({
 
       <div className={compact ? "flex flex-col gap-2 sm:flex-row" : "mt-4 flex flex-col gap-2 sm:flex-row"}>
         <input
+          id={fieldId}
+          aria-invalid={Boolean(errorMsg)}
+          aria-describedby={errorMsg ? `${fieldId}-error` : undefined}
           type="email"
           inputMode="email"
           autoComplete="email"
@@ -178,7 +182,7 @@ export function NewsletterSignup({
       </div>
 
       {errorMsg && (
-        <p className="mt-2.5 text-[13px] text-red-600" role="alert">
+        <p id={`${fieldId}-error`} className="mt-2.5 text-[13px] text-red-600" role="alert">
           {errorMsg}
         </p>
       )}
