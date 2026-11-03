@@ -2,7 +2,7 @@
 title: "AI Crawlers: The List of AI Bots & How to Control Them"
 description: "AI crawlers fetch your pages for ChatGPT, Claude, Perplexity, and Google. The list of every major AI bot, what each does, and how to control it in robots.txt."
 date: "2026-06-07"
-updated: "2026-10-07"
+updated: "2026-11-03"
 author: "Samy BEN SADOK"
 tags: ["ai-crawlers", "robots-txt", "geo", "ai-visibility", "guide"]
 draft: false
@@ -13,7 +13,7 @@ AI crawlers are the bots that fetch your pages for AI companies, and there are n
 ## What Is an AI Crawler, and the Three Jobs They Do
 
 <figure className="not-prose my-8">
-  <BlogImage src="/blog/ai-crawlers/three-jobs-ai-crawlers.png" alt="AI crawlers grouped by their three jobs: training, search, and user fetch." w="1100" h="608" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <BlogImage src="/blog/ai-crawlers/three-jobs-ai-crawlers-v2.png" alt="AI crawlers grouped by their three jobs: training, search, and user fetch." w="1100" h="608" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
   <figcaption className="mt-3 text-center text-sm text-gray-500">Training, search, and user-fetch bots do different jobs, and blocking each costs you something different.</figcaption>
 </figure>
 
@@ -47,10 +47,10 @@ Here is the current roster of AI crawlers worth knowing, with the job each one d
     <tr><td>PerplexityBot</td><td>Perplexity</td><td>Search</td><td>PerplexityBot</td><td>Allow (Perplexity citations)</td></tr>
     <tr><td>Perplexity-User</td><td>Perplexity</td><td>User fetch</td><td>Perplexity-User</td><td>Allow (ignores robots.txt anyway)</td></tr>
     <tr><td>Googlebot</td><td>Google</td><td>Search</td><td>Googlebot</td><td>Never block (Search + AI Overviews)</td></tr>
-    <tr><td>Google-Extended</td><td>Google</td><td>Training</td><td>Google-Extended</td><td>Block to opt out of Gemini training</td></tr>
+    <tr><td>Google-Extended (a robots.txt token, not a crawler)</td><td>Google</td><td>Training</td><td>Google-Extended</td><td>Block to opt out of Gemini training and Gemini app grounding</td></tr>
     <tr><td>Bingbot</td><td>Microsoft</td><td>Search</td><td>Bingbot</td><td>Never block (Bing + Copilot)</td></tr>
     <tr><td>Applebot</td><td>Apple</td><td>Search</td><td>Applebot</td><td>Allow (Siri, Spotlight)</td></tr>
-    <tr><td>Applebot-Extended</td><td>Apple</td><td>Training</td><td>Applebot-Extended</td><td>Block to opt out of Apple AI training</td></tr>
+    <tr><td>Applebot-Extended (a robots.txt token, not a crawler)</td><td>Apple</td><td>Training</td><td>Applebot-Extended</td><td>Block to opt out of Apple AI training</td></tr>
     <tr><td>DuckAssistBot</td><td>DuckDuckGo</td><td>Search</td><td>DuckAssistBot</td><td>Allow (DuckDuckGo AI answers; not used for training)</td></tr>
     <tr><td>Amazonbot</td><td>Amazon</td><td>Training</td><td>Amazonbot</td><td>Block to opt out of Amazon AI training</td></tr>
     <tr><td>Amzn-SearchBot</td><td>Amazon</td><td>Search</td><td>Amzn-SearchBot</td><td>Allow (Alexa and Amazon search)</td></tr>
@@ -101,7 +101,7 @@ The economics help clarify the call. Training crawlers take more than they retur
 That leaves three workable strategies:
 
 1. **Allow everything.** The simplest choice, and the right one if your goal is maximum AI visibility and bandwidth is not a concern. The trade is that your content can be used for training.
-2. **Block training, allow search.** The selective default for most sites: disallow GPTBot, ClaudeBot, Google-Extended, CCBot, and the other training tokens, but keep OAI-SearchBot, Claude-SearchBot, PerplexityBot, Googlebot, and Bingbot reachable. You opt out of training while staying citable.
+2. **Block training, allow search.** The selective default for most sites: disallow GPTBot, ClaudeBot, Google-Extended, CCBot, and the other training tokens, but keep OAI-SearchBot, Claude-SearchBot, PerplexityBot, Googlebot, and Bingbot reachable. You opt out of training while staying citable in search-based answers (blocking Google-Extended also removes Gemini app grounding).
 3. **Block everything.** Right only when protecting content or controlling server load matters more than any AI visibility, which is common for paywalled archives and large media libraries.
 
 These three strategies are all about training versus search. Agent traffic, live at the network level on Cloudflare, is a separate lever again: for most sites the reasonable default is to allow it, since an agent bot is fulfilling a live request someone made, but a site that wants to shut down automated actions specifically now has a dedicated control for that too.
@@ -165,7 +165,7 @@ If your site runs through Cloudflare, that AI Crawl Control row above is not a h
 
 The catch is what Cloudflare calls a mixed-use crawler. Googlebot, Bingbot, and Applebot each crawl for both search and training under one bot, so a Training block can catch all three at once. Cloudflare's fix is an "Accountable" designation it grants to crawler operators, not a per-site setting: an operator that meets Cloudflare's criteria (an opt-out mechanism, transparency, a guarantee that opting out of training does not cost search visibility) gets its crawler read as two behaviors instead of one. Google, Apple, and Microsoft all already qualify as Accountable. For Google and Apple that already means something concrete: selecting Disallow AI Training makes Cloudflare publish that no-training preference straight into your robots.txt through what it calls Bot Preference Sync, the network-layer equivalent of hand-adding a Google-Extended or Applebot-Extended line yourself. Microsoft is still building the mechanism to do the same for Bing, targeted for early 2027, so until then Disallow AI Training will not reach Bing through robots.txt; that still means NOARCHIVE or Bing's own removal tools instead. It is the same Googlebot-versus-Google-Extended problem from earlier in this piece, now handled for you at the network layer instead of by hand. If you are on Cloudflare, check the AI Crawl Control dashboard directly rather than assuming robots.txt tells the whole story, and check what it wrote into your robots.txt while you are there.
 
-Cloudflare's Agent category exists for a problem robots.txt never solved in the first place: agentic bots. Google-Agent, [Google's own token](https://developers.google.com/crawling/docs/crawlers-fetchers/google-user-triggered-fetchers) for agents that navigate a site and take action on a person's behalf, generally ignores robots.txt, the same way Perplexity-User does. ChatGPT Agent, OpenAI's cloud browser, goes further: it has no fixed, blockable token at all. Independent inspection of its outbound requests found it presenting as an ordinary Chrome browser, and instead of a token it signs every request with an HTTP Message Signature carrying a `Signature-Agent: "https://chatgpt.com"` header, verifiable against a published key rather than a user-agent string or an IP range, which is enough for a CDN or WAF to build an allow or block policy on even though robots.txt cannot. Perplexity's own agentic browser, Comet, and ChatGPT's agent mode (a Chrome extension and a ChatGPT app feature since OpenAI discontinued the standalone Atlas browser in August 2026) raise the stakes further: both run on or alongside Chromium and, in most configurations, produce traffic indistinguishable from an ordinary human session, with no reliable signal to filter on at all (our [Perplexity Comet](https://geotoolbox.ai/blog/perplexity-comet) piece covers what that means for site owners). Anthropic and Microsoft have their own agentic products (Claude's computer use, Copilot Actions) but neither has published a distinct crawler signature for them yet. For all of it, network-level detection, not a robots.txt line, is the only lever that actually reaches this traffic.
+Cloudflare's Agent category exists for a problem robots.txt never solved in the first place: agentic bots. Google-Agent, [Google's own token](https://developers.google.com/crawling/docs/crawlers-fetchers/google-user-triggered-fetchers) for agents that navigate a site and take action on a person's behalf, generally ignores robots.txt, the same way Perplexity-User does. ChatGPT Agent, OpenAI's earlier cloud browser (OpenAI has since retired it in favor of ChatGPT Work's cloud browser), went further: it had no fixed, blockable token at all. Independent inspection of its outbound requests found it presenting as an ordinary Chrome browser, and instead of a token it signed every request with an HTTP Message Signature carrying a `Signature-Agent: "https://chatgpt.com"` header, verifiable against a published key rather than a user-agent string or an IP range, which is enough for a CDN or WAF to build an allow or block policy on even though robots.txt cannot. Perplexity's own agentic browser, Comet, raises the stakes further: it runs on Chromium and, in most configurations, produces traffic indistinguishable from an ordinary human session, with no reliable signal to filter on at all (our [Perplexity Comet](https://geotoolbox.ai/blog/perplexity-comet) piece covers what that means for site owners). Anthropic and Microsoft have their own agentic products (Claude's computer use, Copilot Actions) but neither has published a distinct crawler signature for them yet. For all of it, network-level detection, not a robots.txt line, is the only lever that actually reaches this traffic.
 
 ## How to Tell a Real AI Crawler from a Fake One
 
