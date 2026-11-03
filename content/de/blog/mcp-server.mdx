@@ -2,7 +2,7 @@
 title: "Was ist ein MCP-Server? Erklärung, Beispiele und Einrichtung"
 description: "Was ein MCP-Server ist, wie MCP seit der Spezifikation vom Juli 2026 funktioniert, welche Server es gibt und wie du einen verbindest. Getestet im Oktober 2026."
 date: "2026-10-16"
-updated: "2026-10-16"
+updated: "2026-11-03"
 author: "Samy BEN SADOK"
 tags: ["mcp", "ai-agents", "model-context-protocol", "agent-readiness", "ai-visibility"]
 draft: false
@@ -63,11 +63,11 @@ Was ein Server anbietet und was er im Gegenzug vom Client verlangen kann, beschr
 <tr><td>Elicitation</td><td>Client</td><td>Der Server fragt den Nutzer mitten in der Aufgabe nach weiteren Angaben</td><td>Aktiv</td></tr>
 <tr><td>Roots</td><td>Client</td><td>Der Client teilt dem Server mit, auf welche Verzeichnisse sich der Server konzentrieren soll</td><td>Veraltet seit der Spezifikation vom 28. Juli 2026</td></tr>
 <tr><td>Sampling</td><td>Client</td><td>Der Server fordert eine Antwort vom Modell des Clients an</td><td>Veraltet seit der Spezifikation vom 28. Juli 2026</td></tr>
-<tr><td>Logging</td><td>Client</td><td>Debug-Meldungen vom Server an den Client</td><td>Veraltet seit der Spezifikation vom 28. Juli 2026</td></tr>
+<tr><td>Logging</td><td>Server</td><td>Debug-Meldungen vom Server an den Client</td><td>Veraltet seit der Spezifikation vom 28. Juli 2026</td></tr>
 </tbody>
 </table>
 
-Viele Erklärtexte führen Sampling und Logging noch als zentrale, aktuelle Funktionen. Das waren sie, doch die Spezifikation hat sich weiterentwickelt: Neue Implementierungen sollten die API des Modellanbieters direkt aufrufen, statt Sampling zu nutzen, und auf stderr oder über OpenTelemetry loggen, nicht mehr über das alte Logging-Primitiv.
+Viele Erklärtexte führen Sampling und Logging noch als zentrale, aktuelle Funktionen. Das waren sie, doch die Spezifikation hat sich weiterentwickelt: Neue Implementierungen sollten die API des Modellanbieters direkt aufrufen, statt Sampling zu nutzen, und auf stderr oder über OpenTelemetry loggen, nicht mehr über das alte Logging-Primitiv. Die Architekturseite ordnet Logging den clientseitigen Funktionen zu, die Logging-Spezifikation lässt Server es dagegen als Server-Capability deklarieren, weshalb die Tabelle es unter Server führt.
 
 Was MCP von einer individuell programmierten Integration unterscheidet, ist die Erkennung der Fähigkeiten zur Laufzeit. Ein Client muss nicht vorab wissen, was ein Server kann. Er kann nachfragen, welche Versionen und Fähigkeiten der Server unterstützt, und dann getrennt die aktuelle Liste der Tools, Ressourcen oder Prompts abrufen, die er zwischenspeichern kann. Ein Entwickler hat dafür ein treffendes Bild gefunden: Eine klassische API ist eine gedruckte Speisekarte, und ändert die Küche ein Gericht, muss jemand neu drucken. MCP gleicht eher einem Kellner, der dir sagt, was es heute gibt. Das zahlt sich vor allem aus, wenn ein Anbieter seine Tools oft ändert oder ein Client viele Server gleichzeitig nutzt.
 

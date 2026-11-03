@@ -2,7 +2,7 @@
 title: "Embeddings : comment l'IA choisit ce qu'elle cite"
 description: "Les embeddings expliqués pour le SEO : comment les moteurs IA transforment le contenu en vecteurs, choisissent quoi citer et ce qu'on peut vraiment optimiser."
 date: "2026-07-02"
-updated: "2026-08-10"
+updated: "2026-11-03"
 author: "Samy BEN SADOK"
 tags: ["vector-embeddings", "geo", "ai-search", "guide"]
 draft: false
@@ -42,7 +42,7 @@ Comment un modèle apprend-il le sens ? Par le contexte. Entraînez-le sur assez
 
 Un mot sur les dimensions. Chaque vecteur a une longueur fixe, et cette longueur est le **nombre de dimensions** du modèle. [BERT](https://arxiv.org/abs/1810.04805) utilise 768 dimensions dans sa version de base et 1 024 dans sa version large (768 est un choix d'architecture, la taille des têtes d'attention multipliée par leur nombre, pas un nombre magique). [Les modèles d'embedding d'OpenAI](https://developers.openai.com/api/docs/guides/embeddings) produisent 1 536 dimensions pour text-embedding-3-small et 3 072 pour text-embedding-3-large. Un nombre plus élevé de dimensions peut capturer des distinctions plus fines, au prix du stockage et de la vitesse, ce qui explique qu'OpenAI laisse les développeurs raccourcir les vecteurs via un paramètre `dimensions` plutôt que de tourner en permanence à pleine taille. (Et non, la taille d'embedding qu'utilise GPT-4 en interne n'est pas publiée, quoi qu'un vendeur d'outil ait pu vous dire.)
 
-Les autres fournisseurs se situent dans des ordres de grandeur comparables. Le modèle **Gemini Embedding** de Google (`gemini-embedding-001`, en version stable) génère par défaut 3 072 dimensions, réductibles à 1 536, 768 ou 256 via la technique Matryoshka ; sa déclinaison multimodale **Gemini Embedding 2** (préversion publique, mars 2026) conserve ces mêmes tailles. Côté européen, **Mistral** propose `mistral-embed` (1 024 dimensions) et `codestral-embed`, spécialisé dans le code (jusqu'à 3 072 dimensions, taille ajustable via `output_dimension`), avec l'avantage d'un hébergement des données dans l'UE par défaut, sans transfert vers un pays tiers.
+Les autres fournisseurs se situent dans des ordres de grandeur comparables. Le modèle **Gemini Embedding** de Google (`gemini-embedding-001`, en version stable) génère par défaut 3 072 dimensions, réductibles à 1 536, 768 ou 256 via la technique Matryoshka ; sa déclinaison multimodale **Gemini Embedding 2** (version stable depuis le 22 avril 2026, désormais le modèle d'embedding le plus récent de l'API Gemini) conserve la même dimension par défaut et la même réduction Matryoshka. Côté européen, **Mistral** propose `mistral-embed` (1 024 dimensions) et `codestral-embed`, spécialisé dans le code (jusqu'à 3 072 dimensions, taille ajustable via `output_dimension`), avec l'avantage d'un hébergement des données dans l'UE par défaut, sans transfert vers un pays tiers.
 
 Les premiers modèles, comme word2vec et GloVe, étaient statiques : un mot, un vecteur, pour toujours. Cela coince sur les mots ambigus, parce qu'« avocat » a plusieurs sens et qu'un vecteur unique doit tous les moyenner. Les modèles à base de Transformer, comme BERT, ont réglé ce point. Ils lisent d'abord l'entrée entière, si bien que le vecteur de chaque mot varie selon les mots qui l'entourent. « Avocat » près de « tribunal » et « avocat » près de « salade » produisent des embeddings différents.
 
@@ -212,10 +212,6 @@ Les embeddings denses sont ceux dont parle tout cet article : des vecteurs compa
 
 En partie, mais moins qu'on ne le croit. Le mécanisme est réel : le français produit plus de tokens que l'anglais (accents, apostrophes, mots composés), et l'anglais reste sur-représenté dans les corpus d'entraînement, même « multilingues ». Les vieux modèles anglocentrés capturent donc mal certaines constructions françaises (la négation « ne… pas », la concordance des temps). Mais les moteurs en production (ChatGPT, Perplexity, Google) tournent sur des modèles multilingues récents bien plus robustes : le `gemini-embedding-001` de Google, par exemple, a dominé le classement MTEB multilingue. En pratique, pas de quoi paniquer : la cohérence terminologique et un français explicite, sans ambiguïté, importent tout de même un peu plus qu'en anglais.
 
-### Perplexity fonctionne-t-il comme la recherche de ChatGPT ?
-
-Dans les grandes lignes oui : les deux récupèrent des passages candidats avant de répondre, et c'est là que les embeddings comptent. Ils diffèrent sur la source de récupération. Des études publiées sur les recoupements ont trouvé que les citations de Perplexity collent bien plus aux résultats de Google que celles de ChatGPT (notre comparaison [ChatGPT vs Perplexity](https://geotoolbox.ai/blog/chatgpt-vs-perplexity) le détaille), si bien qu'une même page peut être citée par un moteur et invisible pour l'autre.
-
 ### Les embeddings sont-ils la même chose que les mots-clés ?
 
 Non. Les mots-clés sont des chaînes littérales comparées à un index ; les embeddings encodent le sens, de sorte que « corriger les erreurs de paiement » et « résoudre les échecs de paiement » se retrouvent proches sans partager un mot. La recherche de mots-clés compte encore dans les systèmes hybrides BM25 + vecteurs : les termes exacts sont ce qui permet aux moteurs d'attraper noms de produits, codes et jargon, et ils restent votre meilleure preuve de ce que les gens demandent réellement.
@@ -223,10 +219,6 @@ Non. Les mots-clés sont des chaînes littérales comparées à un index ; les e
 ### Le balisage Schema change-t-il vos embeddings ?
 
 Pas directement. Les embeddings de texte se calculent à partir de votre contenu visible, et les données structurées sont un signal distinct qui sert une autre couche du système. Le [balisage Schema pour l'IA](https://geotoolbox.ai/blog/schema-markup-for-ai) garde son intérêt pour la désambiguïsation d'entités et les résultats enrichis, simplement pas en déplaçant vos vecteurs.
-
-### Les embeddings deviennent-ils obsolètes ?
-
-Les embeddings eux-mêmes ne se dégradent pas, mais ce sont des instantanés : quand vous réécrivez une page, rien ne change tant que le moteur ne l'a pas réexplorée et réencodée. Dans la recherche IA, la fraîcheur vient de la couche de récupération qui capte le contenu à jour, une raison de plus pour laquelle l'accès au crawl compte davantage que n'importe quelle astuce d'optimisation.
 
 ## Par où aller maintenant
 

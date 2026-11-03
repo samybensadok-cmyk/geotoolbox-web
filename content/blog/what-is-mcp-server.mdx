@@ -2,7 +2,7 @@
 title: "What Is an MCP Server? (And Why It Matters for Your Site)"
 description: "MCP lets AI agents connect to external tools and data through one standard protocol. What it is, how it works, and why it matters for your site's AI readiness."
 date: "2026-09-08"
-updated: "2026-10-16"
+updated: "2026-11-03"
 author: "Samy BEN SADOK"
 tags: ["mcp", "ai-agents", "model-context-protocol", "agent-readiness", "ai-visibility"]
 draft: false
@@ -47,11 +47,11 @@ What a server can offer, and what a server can ask of the client in return, come
 <tr><td>Elicitation</td><td>Client</td><td>Lets a server ask the user for more information mid-task</td><td>Active</td></tr>
 <tr><td>Roots</td><td>Client</td><td>Lets a client tell a server which directories to focus on</td><td>Deprecated as of the 2026-07-28 spec</td></tr>
 <tr><td>Sampling</td><td>Client</td><td>Let a server request a completion from the client's own model</td><td>Deprecated as of the 2026-07-28 spec</td></tr>
-<tr><td>Logging</td><td>Client</td><td>Server-to-client debug messages</td><td>Deprecated as of the 2026-07-28 spec</td></tr>
+<tr><td>Logging</td><td>Server</td><td>Server-to-client debug messages</td><td>Deprecated as of the 2026-07-28 spec</td></tr>
 </tbody>
 </table>
 
-A lot of MCP explainers still describe sampling and logging as core, current capabilities. They were, but the current spec has moved on: new implementations are expected to call the model provider's API directly rather than route through sampling, and to log to stderr or OpenTelemetry instead of the old logging primitive.
+A lot of MCP explainers still describe sampling and logging as core, current capabilities. They were, but the current spec has moved on: new implementations are expected to call the model provider's API directly rather than route through sampling, and to log to stderr or OpenTelemetry instead of the old logging primitive. The architecture page groups logging with the client-side features, but the logging specification has servers declare it as a server capability, which is why the table lists it under Server.
 
 The other piece that separates MCP from a hand-built integration is discovery. A client does not need to be hardcoded with what a server can do ahead of time. It can check the server's supported capabilities, then ask separately for the current list of tools, resources, or prompts, caching the results rather than asking every time. One developer's explanation of the idea puts it well: a traditional API is a printed menu, and if the kitchen changes a dish, someone has to reprint it. MCP is closer to a waiter who can tell you what's available today without a fresh menu print run, which matters most for a fast-moving tool provider or a client juggling many servers at once.
 

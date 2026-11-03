@@ -2,7 +2,7 @@
 title: "Qu'est-ce qu'un token en IA ? Pourquoi ChatGPT compte mal"
 description: "Qu'est-ce qu'un token en IA ? Les fragments de texte que les modèles lisent à la place des mots : tokenisation, coût par token, surcoût du français et visibilité IA."
 date: "2026-07-02"
-updated: "2026-08-14"
+updated: "2026-11-03"
 author: "Samy BEN SADOK"
 tags: ["tokens", "tokenization", "ai-search", "geo", "guide"]
 draft: false
@@ -112,7 +112,7 @@ Mi-2026, [plus d'une douzaine de modèles de pointe proposent des fenêtres d'un
 
 Quand vous dépassez la fenêtre, le système ne vous prévient pas en douceur. Une API peut renvoyer une erreur de limite de contexte, tandis qu'un outil de chat peut tronquer, résumer, compacter ou gérer autrement l'ancien contexte, et c'est pourquoi une longue session peut sembler oublier son début ou perdre le haut d'un document collé. Aucun comportement n'est garanti. La seule certitude, c'est que le texte d'origine complet ne tient plus.
 
-C'est aussi là que les tokens rencontrent la recherche IA. Quand ChatGPT ou un AI Overview de Google (attendu en France pour l'été 2026) répond à une question, la [génération augmentée par récupération](https://geotoolbox.ai/blog/what-is-rag) va chercher des passages sur le web et les glisse dans ce même budget de tokens avant que le modèle n'écrive un mot. La [fenêtre de contexte](https://geotoolbox.ai/blog/how-does-ai-search-work) étant finie, le système ne garde que les passages qu'il classe le plus haut. Votre contenu est en concurrence pour une place qui se mesure en tokens.
+C'est aussi là que les tokens rencontrent la recherche IA. Quand ChatGPT ou un AI Overview de Google (disponible en France depuis le 22 juillet 2026) répond à une question, la [génération augmentée par récupération](https://geotoolbox.ai/blog/what-is-rag) va chercher des passages sur le web et les glisse dans ce même budget de tokens avant que le modèle n'écrive un mot. La [fenêtre de contexte](https://geotoolbox.ai/blog/how-does-ai-search-work) étant finie, le système ne garde que les passages qu'il classe le plus haut. Votre contenu est en concurrence pour une place qui se mesure en tokens.
 
 ## Comment fonctionne la tarification au token, et pourquoi chaque réponse coûte plus cher
 
@@ -158,10 +158,6 @@ D'expérience, chez geotoolbox, les personnes les plus perdues sur ce point ont 
 
 Environ 750 mots d'anglais. La règle est d'un token pour à peu près trois quarts de mot, donc une réponse de 1 000 tokens fait environ deux pages d'un livre de poche. La ponctuation, les mots rares et les autres langues font varier le compte, et le français tourne autour de 30 % de tokens en plus, mais 750 reste une bonne base pour planifier.
 
-### Pourquoi ChatGPT n'arrive-t-il pas à compter les lettres de « strawberry » ?
-
-Parce que le mot lui parvient sous forme de quelques tokens de sous-mots, sans que la structure au niveau des lettres lui soit directement accessible. Compter les « r » revient donc à se les rappeler et à les additionner de mémoire, plutôt qu'à les lire sur la page. Les modèles qui répondent juste écrivent en général le mot lettre par lettre au préalable, ce qui est un contournement, pas un remède.
-
 ### Comment vérifier le nombre de tokens de mon texte ?
 
 Avec un outil de tokenisation. Le [Tokenizer](https://platform.openai.com/tokenizer) gratuit d'OpenAI montre le découpage exact pour les modèles GPT, et sa bibliothèque [tiktoken](https://github.com/openai/tiktoken) fait de même en code. Pour les autres familles, le Tokenizer Playground de Hugging Face couvre la plupart des tokeniseurs ouverts. Les comptes diffèrent d'une famille à l'autre, donc un chiffre obtenu avec un tokeniseur n'est qu'une estimation pour un autre.
@@ -169,14 +165,6 @@ Avec un outil de tokenisation. Le [Tokenizer](https://platform.openai.com/tokeni
 ### Est-ce que je paie des tokens dans ChatGPT ?
 
 Pas dans l'application grand public. Un abonnement ChatGPT est un forfait mensuel avec des limites d'usage. Le paiement au token, c'est le monde des API, où une entreprise paie séparément les tokens qu'elle envoie et ceux que le modèle lui renvoie.
-
-### Le français consomme-t-il vraiment plus de tokens que l'anglais ?
-
-Oui, mais modérément. Sur les tokeniseurs récents d'OpenAI, un texte français réclame entre 1,2 et 1,5 fois le nombre de tokens du même texte en anglais, soit autour de 30 % de plus, en raison des accents, des apostrophes et d'une morphologie plus riche. C'est le bas de la fourchette européenne, loin des langues à alphabet non latin. En pratique, cela pèse surtout sur les gros volumes d'API et sur la place que votre contenu français occupe dans la fenêtre de contexte.
-
-### Que se passe-t-il quand j'atteins la limite de tokens ?
-
-Dans une API, vous obtenez une erreur « longueur de contexte dépassée » ; dans un chat, les tours les plus anciens sont généralement tronqués ou retirés du contexte. Si cela arrive, ouvrez une nouvelle discussion, recollez seulement ce qui compte, ou demandez un résumé de la conversation. Un modèle à plus grande fenêtre de contexte vous donne de la marge, pas une immunité.
 
 ### Un « token IA » est-il une cryptomonnaie ?
 

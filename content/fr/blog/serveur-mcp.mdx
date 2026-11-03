@@ -2,7 +2,7 @@
 title: "Qu'est-ce qu'un serveur MCP ? Fonctionnement et sécurité"
 description: "Le MCP connecte les agents IA à vos outils et données via un protocole standard : fonctionnement, attaques démontrées en recherche, impact pour votre site."
 date: "2026-09-12"
-updated: "2026-10-16"
+updated: "2026-11-03"
 author: "Samy BEN SADOK"
 tags: ["mcp", "ai-agents", "model-context-protocol", "agent-readiness", "ai-visibility"]
 draft: false
@@ -63,7 +63,7 @@ Ce qu'un serveur peut proposer, et ce qu'il peut demander au client en retour, s
 </tbody>
 </table>
 
-Beaucoup d'explications du MCP présentent encore le sampling et le logging comme des capacités centrales et actuelles. Ces deux capacités l'ont été, mais la spécification a évolué depuis : les nouvelles implémentations sont censées appeler directement l'API du fournisseur de modèle plutôt que de passer par le sampling, et journaliser vers stderr ou OpenTelemetry plutôt que d'utiliser l'ancien canal de logging. Précision utile : déprécié ne veut pas dire supprimé. La [spécification garantit qu'une fonctionnalité dépréciée reste utilisable au moins douze mois](https://modelcontextprotocol.io/specification/2026-07-28/deprecated) ; pour le sampling, le logging et les roots, la suppression ne pourra donc pas intervenir avant la première révision publiée à compter du 28 juillet 2027, et aucune n'a encore été retirée.
+Beaucoup d'explications du MCP présentent encore le sampling et le logging comme des capacités centrales et actuelles. Ces deux capacités l'ont été, mais la spécification a évolué depuis : les nouvelles implémentations sont censées appeler directement l'API du fournisseur de modèle plutôt que de passer par le sampling, et journaliser vers stderr ou OpenTelemetry plutôt que d'utiliser l'ancien canal de logging. Précision utile : déprécié ne veut pas dire supprimé. La [spécification garantit qu'une fonctionnalité dépréciée reste utilisable au moins douze mois](https://modelcontextprotocol.io/specification/2026-07-28/deprecated) ; pour le sampling, le logging et les roots, la suppression ne pourra donc pas intervenir avant la première révision publiée à compter du 28 juillet 2027, et aucune n'a encore été retirée. La page d'architecture range le logging parmi les fonctionnalités côté client, mais la spécification du logging fait déclarer cette capacité par les serveurs, ce qui explique que le tableau la classe côté serveur.
 
 L'autre différence entre un serveur MCP et une intégration sur mesure, c'est la découverte. Un client n'a pas besoin de savoir à l'avance, en dur dans son code, ce qu'un serveur sait faire. Il peut vérifier les capacités prises en charge par le serveur, puis demander séparément la liste actuelle des outils, ressources ou invites, en mettant les résultats en cache plutôt qu'en les redemandant à chaque fois. Un développeur résume bien l'idée : une API classique ressemble à un menu imprimé, et si la cuisine change un plat, quelqu'un doit réimprimer le menu. Le MCP ressemble davantage à un maître d'hôtel capable de vous dire ce qui est disponible aujourd'hui, sans avoir à réimprimer quoi que ce soit, ce qui compte surtout pour un fournisseur d'outils qui évolue vite ou un client qui jongle avec de nombreux serveurs à la fois.
 
