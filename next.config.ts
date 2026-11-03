@@ -63,6 +63,12 @@ const nextConfig: NextConfig = {
       { source: "/blog/kimi-vs-claude.md", destination: "/blog/kimi-k3-vs-claude.md", permanent: true },
       { source: "/blog/kimi-k3-fable-coding-benchmark", destination: "/blog/kimi-k3-vs-claude", permanent: true },
       { source: "/blog/kimi-k3-fable-coding-benchmark.md", destination: "/blog/kimi-k3-vs-claude.md", permanent: true },
+      // DE comparisons renamed oder -> vs 2026-11-03: German searchers and every top-10 German title use
+      // "vs." (DFS: claude vs chatgpt 5,400/mo vs oder 1,600). The old URLs earned 0 clicks in 90 days.
+      { source: "/de/blog/claude-oder-chatgpt", destination: "/de/blog/claude-vs-chatgpt", permanent: true },
+      { source: "/de/blog/claude-oder-chatgpt.md", destination: "/de/blog/claude-vs-chatgpt.md", permanent: true },
+      { source: "/de/blog/gemini-oder-chatgpt", destination: "/de/blog/gemini-vs-chatgpt", permanent: true },
+      { source: "/de/blog/gemini-oder-chatgpt.md", destination: "/de/blog/gemini-vs-chatgpt.md", permanent: true },
       // NL locale retired 2026-10-09: the market reads EN, so every /nl URL 301s to its EN twin
       // (marketing routes are same-path, and the one NL article shared its EN donor slug).
       // Runs before middleware, so it holds even though "nl" is no longer a routing locale.
