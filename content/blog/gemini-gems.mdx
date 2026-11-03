@@ -1,8 +1,8 @@
 ---
 title: "Gemini Gems: What They Are and How to Build One (2026)"
-description: "Gemini Gems are reusable custom versions of Google Gemini. What they are, how to build one, what knowledge files really do, and how they compare to custom GPTs."
+description: "Gemini Gems are reusable custom versions of Google Gemini. How to build one, what knowledge files do, and how Gems turn read-only on November 17, 2026."
 date: "2026-06-25"
-updated: "2026-08-09"
+updated: "2026-11-03"
 author: "Samy BEN SADOK"
 tags: ["gemini-gems", "google-gemini", "gemini-ai", "gemini", "llm", "guide"]
 draft: false
@@ -15,13 +15,33 @@ Gemini Gems are reusable custom versions of Google Gemini that you set up once a
   <figcaption className="mt-3 text-center text-sm text-gray-500">Every Gem is three pieces on top of the same Gemini model: instructions, optional knowledge files, and a name.</figcaption>
 </figure>
 
+## Gems Are Becoming Skills: Key Dates
+
+Google is replacing Gems with skills: reusable instructions you call from any Gemini chat by typing / (soon @) followed by the skill's name, instead of opening a separate Gem. For personal Google Accounts aged 18 and over, [Google's transition page](https://support.google.com/gemini/answer/18560919) (checked November 3, 2026) gives this schedule (personal accounts aged 18 and over first, then Workspace):
+
+<table>
+<thead>
+<tr><th>Date</th><th>What happens to Gems</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>November 17, 2026</strong></td><td>Gems transition to skills and become read-only: you can still open them, but cannot use or edit them, or create new ones</td></tr>
+<tr><td><strong>December 17, 2026</strong></td><td>Gems are removed from Gemini Apps; download any knowledge files before this date</td></tr>
+<tr><td><strong>March 2027</strong></td><td>Workspace business, enterprise, and non-profit accounts</td></tr>
+<tr><td><strong>June 2027</strong></td><td>Workspace education accounts</td></tr>
+</tbody>
+</table>
+
+Personal accounts under 18 move at a later date Google has not given yet. Google says it will recreate your Gems as skills automatically, and you can do it by hand sooner. The conversion is not lossless: skills hold up to 100 MB of files in total (the largest files are dropped first), and GitHub, audio, video, legacy Office (.doc, .xls, .ppt), and archive files do not carry over. Most Gem default tools, including Canvas, Deep Research, Create video, Create music, and Guided Learning, do not work with skills for now. Google also says Opal and Gems from Labs go away in November.
+
+The rest of this guide describes Gems as they work until the cutover. If you read it after November 17 on a personal account, treat the build steps as background on what your skills inherit, not as a way to create a new Gem.
+
 ## What Are Gemini Gems?
 
 A Gem is a customized configuration of Gemini: a name, a set of standing instructions, and optional reference files, saved so you can reuse it. Google calls them [custom AI experts](https://gemini.google/overview/gems/), and they are its version of ChatGPT's custom GPTs. You build it once, and from then on that Gem opens with its instructions already loaded, so you skip the setup paragraph you would otherwise paste into every new chat.
 
 The honest framing matters here, because the marketing oversells it. A Gem is not a smarter model or a fine-tuned AI trained on your data. It is a saved prompt with a few extras bolted on. That is genuinely useful for anything you do repeatedly, but it will not make Gemini fundamentally better at a task it already struggles with. It removes the re-setup tax, not the model's limits.
 
-Under the hood, a Gem runs on whatever [Gemini](https://geotoolbox.ai/blog/what-is-gemini) model your plan gives you, which in 2026 means the Gemini 3 family (a fast Flash model on the free tier, a more capable Pro model on paid plans). There is no separate "Gem model." When Google updates the model on your plan, your Gems use it automatically, because the Gem is a configuration layer sitting on top of the [large language model](https://geotoolbox.ai/blog/how-does-chatgpt-work), not a model itself. Paid plans simply give you access to more capable models for it to run on.
+Under the hood, a Gem runs on whatever [Gemini](https://geotoolbox.ai/blog/what-is-gemini) model your plan gives you. As of November 2026, per Google's [model-access help page](https://support.google.com/gemini/answer/17004136), that means Auto on the free tier (most prompts go to Flash-Lite, harder ones may go to Flash or Pro), Flash-Lite and Flash on Google AI Plus, and the Pro model on Google AI Pro and Ultra. There is no separate "Gem model." When Google updates the model on your plan, your Gems use it automatically, because the Gem is a configuration layer sitting on top of the [large language model](https://geotoolbox.ai/blog/how-does-chatgpt-work), not a model itself. Paid plans simply give you access to more capable models for it to run on.
 
 Three pieces make up every Gem:
 
@@ -31,18 +51,18 @@ Three pieces make up every Gem:
 
 ## Are Gemini Gems Free?
 
-Yes. Gems are available on the free tier of Gemini, not just paid plans. This is the single most out-of-date claim in older guides. When Gems launched in August 2024 they were limited to Gemini Advanced and Workspace, so a lot of articles still say you need a subscription. That changed: Gems rolled out to free accounts, and [9to5Google reported the free mobile rollout on March 25, 2025](https://9to5google.com/2025/03/25/gemini-gems-free-mobile/). Most eligible free users can now build and use Gems, though availability still varies by age, region, and account type.
+Yes. Gems are available on the free tier of Gemini, not just paid plans. This is the single most out-of-date claim in older guides. When Gems launched in August 2024 they were limited to Gemini Advanced and Workspace, so a lot of articles still say you need a subscription. That changed: Gems rolled out to free accounts, and [9to5Google reported the free mobile rollout on March 25, 2025](https://9to5google.com/2025/03/25/gemini-gems-free-mobile/). Until the November 17, 2026 cutover described above, most eligible free users can build and use Gems, though availability varies by age, region, and account type.
 
 What your plan changes is not access to Gems, but the model behind them and the usage limits. A free Gem runs on Google's fast everyday model; a paid plan runs the same Gem on more capable models. So if a free Gem feels weaker than you expected, it is usually the model tier, not the Gem itself. If you are weighing an upgrade, our [Gemini pricing guide](https://geotoolbox.ai/blog/gemini-pricing) lays out what each paid plan costs and unlocks.
 
 <table>
 <thead>
-<tr><th>Plan</th><th>Gems access</th><th>Model behind your Gems</th><th>Best for</th></tr>
+<tr><th>Plan</th><th>Gems access (personal accounts: until November 17, 2026)</th><th>Model behind your Gems</th><th>Best for</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>Free</strong></td><td>Yes, create and use</td><td>The fast default Gemini model</td><td>Personal use and trying Gems out</td></tr>
+<tr><td><strong>Free</strong></td><td>Yes, create and use (until November 17, 2026)</td><td>The fast default Gemini model</td><td>Personal use and trying Gems out</td></tr>
 <tr><td><strong>Google AI Pro</strong></td><td>Yes</td><td>Access to the more capable Pro and thinking models</td><td>Daily heavy use, harder reasoning tasks</td></tr>
-<tr><td><strong>Business / Enterprise</strong></td><td>Yes, with admin controls</td><td>Workspace models plus org-level sharing governance</td><td>Teams that need to share and govern Gems</td></tr>
+<tr><td><strong>Business / Enterprise</strong></td><td>Yes, with admin controls (transition planned for March 2027)</td><td>Workspace models plus org-level sharing governance</td><td>Teams that need to share and govern Gems</td></tr>
 </tbody>
 </table>
 
@@ -50,7 +70,7 @@ One practical note on where you can build them. You can use Gems anywhere the Ge
 
 ## How to Create a Gemini Gem, Step by Step
 
-Building your first Gem takes about two minutes.
+Until November 17, 2026 on a personal account, building your first Gem takes about two minutes. After that date the steps below no longer apply there, and skills take over.
 
 1. Open gemini.google.com and click **"Explore Gems"** in the left sidebar to open the Gem manager (Google's [step-by-step Help page](https://support.google.com/gemini/answer/15235603) mirrors this flow).
 2. Click **"New Gem"** to start a blank one.
@@ -119,7 +139,7 @@ Google ships five built-in Gems, and the fastest way to learn the feature is to 
 
 Make a copy of whichever is closest to your use case, then narrow it. The Writing editor, for example, becomes far more useful once you paste your actual brand voice rules into its instructions instead of leaving it generic.
 
-Google is also experimenting with Gems built from its Opal tool, surfaced as "Gems from Labs," which some coverage calls "Super Gems." These are mini-app style Gems aimed at multi-step workflows rather than a single saved prompt. As of mid-2026 they are experimental and limited in availability, so treat them as a preview, not a stable feature to build a workflow around yet.
+Google has also tested Gems built from its Opal tool, surfaced as "Gems from Labs," which some coverage calls "Super Gems." These are mini-app style Gems aimed at multi-step workflows rather than a single saved prompt. Google's transition page says Opal and Gems from Labs go away in November 2026, at the same time as Gems on personal accounts, so do not build a workflow on them.
 
 ## Gemini Gems vs ChatGPT Custom GPTs
 
@@ -136,7 +156,7 @@ If you already use ChatGPT's custom GPTs, Gems will feel familiar, with some rea
 <tr><td><strong>Public marketplace</strong></td><td>No</td><td>Yes, the GPT Store</td></tr>
 <tr><td><strong>Image generation</strong></td><td>Via a default-tool setting (open every chat in Create image mode)</td><td>Yes, built in</td></tr>
 <tr><td><strong>Sharing</strong></td><td>Yes, Drive-style link and roles</td><td>Yes, link or store listing</td></tr>
-<tr><td><strong>Free tier</strong></td><td>Yes</td><td>Yes, with limits</td></tr>
+<tr><td><strong>Free tier</strong></td><td>Yes (until November 17, 2026 on personal accounts)</td><td>Yes, with limits</td></tr>
 </tbody>
 </table>
 
@@ -164,7 +184,7 @@ Gems are reusable custom versions of Google Gemini. You give one a name, a set o
 
 ### Are Gemini Gems free?
 
-Yes. Gems are available on the free tier of Gemini, not only on paid plans. They launched as a paid feature in 2024 but rolled out to free accounts in 2025. Your plan changes the underlying model and usage limits, not whether you can create Gems.
+Yes, until Gems turn read-only on personal accounts on November 17, 2026. Gems are available on the free tier of Gemini, not only on paid plans. They launched as a paid feature in 2024 but rolled out to free accounts in 2025. Your plan changes the underlying model and usage limits, not whether you can create Gems.
 
 ### How many knowledge files can a Gemini Gem use?
 
@@ -173,14 +193,6 @@ You can attach up to 10 knowledge files per Gem, each up to 100 MB, per Google's
 ### Can you share a Gemini Gem?
 
 Yes, since September 2025. Sharing works like a Google Drive file: add people by email or share a link with viewer or editor access. Sharing can be blocked if the Gem uses non-shareable knowledge files or if a Workspace admin has disabled it for your organization.
-
-### Can a Gemini Gem use tools like Deep Research or Canvas?
-
-Yes. Each Gem has a default tool setting, so you can make every chat with that Gem open directly in Deep Research, Canvas, image creation, music, or Guided Learning instead of a plain conversation. A drafting Gem set to Canvas, for example, opens the editing surface every time instead of a standard chat.
-
-### Do Gemini Gems use a different AI model?
-
-No. A Gem is just saved configuration, not a separate model, so it runs on whatever Gemini model your plan includes and upgrades automatically when Google ships a newer one. Paid plans let you run a Gem on a more capable model for harder tasks.
 
 ## Take It Further
 
@@ -199,3 +211,5 @@ The bigger point for marketers is that a Gem is only as accurate as the facts yo
 - Upload and analyze files in Gemini Apps (Gemini Apps Help) - `support.google.com/gemini/answer/14903178`
 - How to use Gemini Gems: build custom AI assistants (2026) - `ai-toolbox.co/gemini-management-and-productivity/how-to-use-gemini-gems-create-custom-2026`
 - Gemini app launches scheduled actions to help you stay productive (Google) - `blog.google/products-and-platforms/products/gemini/scheduled-actions-gemini-app`
+- About the transition from Gems to skills (Gemini Apps Help) - `support.google.com/gemini/answer/18560919`
+- Changes to Gemini model access and limits (Gemini Apps Help) - `support.google.com/gemini/answer/17004136`
