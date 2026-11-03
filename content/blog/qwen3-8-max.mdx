@@ -2,7 +2,7 @@
 title: "What Is Qwen3.8-Max? Alibaba's 2.4T Flagship"
 description: "What is Qwen3.8-Max? Alibaba's 2.4T-parameter flagship: the published benchmarks, the independent ones, API pricing, and the open-weights promise."
 date: "2026-07-22"
-updated: "2026-10-28"
+updated: "2026-11-03"
 recheckBy: "2026-11-01"  # 2026-10-18: re-verified vs primaries (HF Max license + card, QwenCloud, Model Studio pricing, SCMP, Qoder campaign page, AA v4.3.2 + Terminal-Bench 2.1 Legacy board). Deleted unverifiable: reasoning_effort levels, Token Plan tiers, 3.7-Max promo. No Qwen4 release as of 10-18.
 author: "Samy BEN SADOK"
 tags: ["qwen3-8-max", "qwen", "qwen3", "alibaba", "tongyi-qianwen", "chinese-ai", "open-weights", "llm", "guide"]
@@ -104,11 +104,11 @@ Here is the pattern it broke. Alibaba runs a genuine two-track strategy: the sma
 
 The competitive read is hard to ignore: Moonshot announced Kimi K3 with a firm weights date of July 27, days before Alibaba's preview, and then met it. The promise kept Alibaba's open-flagship credibility alive through a news cycle it would otherwise have lost, and weight-release promises across the industry have a habit of slipping once headlines move on.
 
-The verification bar is simple, and worth being strict about: an actual repository under [Alibaba's own Hugging Face organization](https://huggingface.co/Qwen) containing weights and a license file. Not a blog post, not a tweet, and not a third-party repository that merely carries the name. Repos titled Qwen3.8 have already appeared from unaffiliated accounts, and they are worth understanding because they are the trap. Some are empty placeholders holding a README. Others do contain real weights that are simply not this model: one of the most-downloaded, at roughly 23,000 downloads, ships files named `qwen3-4b-thinking-2507`, an older and far smaller Qwen wearing the new number. Both kinds carry an Apache 2.0 label that is not Alibaba's terms. Until the real URL exists under Alibaba's own account, treat the release as a roadmap item that can slip. And keep in mind that even a delivered release can be less open than the headline suggests: [open weights are not open source](https://geotoolbox.ai/blog/open-weights-vs-open-source), and the license attached will matter as much as the download link.
+The verification bar is simple, and worth being strict about: an actual repository under [Alibaba's own Hugging Face organization](https://huggingface.co/Qwen) containing weights and a license file. Not a blog post, not a tweet, and not a third-party repository that merely carries the name. Repos titled Qwen3.8 have already appeared from unaffiliated accounts, and they are worth understanding because they are the trap. Some are empty placeholders holding a README. Others do contain real weights that are simply not this model: one of the most-downloaded, at roughly 23,000 downloads, ships files named `qwen3-4b-thinking-2507`, an older and far smaller Qwen wearing the new number. Both kinds carry an Apache 2.0 label that is not Alibaba's terms. The real URL now exists under Alibaba's own account (linked above), so treat any other repository carrying the name as unofficial. And keep in mind that even a delivered release can be less open than the headline suggests: [open weights are not open source](https://geotoolbox.ai/blog/open-weights-vs-open-source), and the license attached will matter as much as the download link.
 
 ## Can You Actually Run It?
 
-Not this one, and probably not for a long time, even if the weights land tomorrow.
+Not this one, and probably not for a long time, even though the weights are now public.
 
 At 2.4 trillion parameters, the arithmetic is brutal. The packed weights alone would occupy roughly 1.2 terabytes at 4-bit quantization, before runtime overhead and caches, and even an extreme 1.5 bits per weight leaves hundreds of gigabytes of raw weights, a point Hacker News commenters worked out within hours of the announcement. Serving it properly means a multi-accelerator cluster; a single Nvidia H200 carries 141 GB, so even an eight-GPU node cannot hold the weights. That math works for inference providers and almost nobody else.
 
