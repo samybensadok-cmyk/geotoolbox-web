@@ -2,7 +2,7 @@
 title: "GPTBot: What It Crawls and How to Allow or Block It"
 description: "GPTBot is OpenAI's training crawler. What it crawls, how to allow or block it in robots.txt, and why blocking GPTBot does not remove you from ChatGPT search."
 date: "2026-06-08"
-updated: "2026-07-22"
+updated: "2026-11-04"
 author: "Samy BEN SADOK"
 tags: ["ai-crawlers", "gptbot", "openai", "robots-txt", "guide"]
 draft: false
@@ -33,8 +33,8 @@ The practical read: if a page is public and not disallowed, assume GPTBot can us
 This is the part that trips up almost every "should you block GPTBot" guide. OpenAI runs four crawlers, and they do different jobs; our [AI crawler list](https://geotoolbox.ai/blog/ai-crawlers) covers how the other operators split theirs the same way.
 
 <figure className="not-prose my-8">
-  <BlogImage src="/blog/gptbot/openai-crawlers-compared.png" alt="OpenAI's four crawlers side by side, each with its job and what blocking it costs." w="1100" h="676" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
-  <figcaption className="mt-3 text-center text-sm text-gray-500">Four OpenAI bots, four different jobs — and each reads only its own robots.txt block.</figcaption>
+  <BlogImage src="/blog/gptbot/openai-crawlers-compared-v2.png" alt="OpenAI's four crawlers side by side, each with its job and what blocking it costs." w="1100" h="676" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Four OpenAI bots, four different jobs, each with its own robots.txt token (ChatGPT-User may not follow it).</figcaption>
 </figure>
 
 <table>
@@ -44,12 +44,12 @@ This is the part that trips up almost every "should you block GPTBot" guide. Ope
   <tbody>
     <tr><td><strong>GPTBot</strong></td><td>Collects content to train OpenAI's models</td><td>opt out of model training</td></tr>
     <tr><td><strong>OAI-SearchBot</strong></td><td>Builds the index behind ChatGPT search</td><td>disappear from ChatGPT search answers (navigational links can still show)</td></tr>
-    <tr><td><strong>ChatGPT-User</strong></td><td>Fetches a page live when a user asks ChatGPT to read it</td><td>block the on-demand reads users asked for</td></tr>
+    <tr><td><strong>ChatGPT-User</strong></td><td>Fetches a page live when a user asks ChatGPT to read it</td><td>ask OpenAI to skip the on-demand reads users asked for (OpenAI says robots.txt may not apply to them)</td></tr>
     <tr><td><strong>OAI-AdsBot</strong></td><td>Validates ad landing pages</td><td>affect ad checks only</td></tr>
   </tbody>
 </table>
 
-The line that matters: **blocking GPTBot opts you out of training, not out of ChatGPT search.** Visibility in ChatGPT's answers runs through OAI-SearchBot and ChatGPT-User, which are separate tokens. [OpenAI is explicit](https://developers.openai.com/api/docs/bots) that sites opted out of OAI-SearchBot will not be shown in ChatGPT search answers (though they can still appear as navigational links), and that this is independent from GPTBot. One nuance from the same doc: if you allow both bots, OpenAI may use the results of a single crawl for both jobs "to avoid duplicative crawling," so the separation lives in the opt-outs, not necessarily in the fetches you see in your logs.
+The line that matters: **blocking GPTBot opts you out of training, not out of ChatGPT search.** Visibility in ChatGPT search runs through OAI-SearchBot; ChatGPT-User only fetches pages a user asks about, and OpenAI says it is not used to decide what appears in search. [OpenAI is explicit](https://developers.openai.com/api/docs/bots) that sites opted out of OAI-SearchBot will not be shown in ChatGPT search answers (though they can still appear as navigational links), and that this is independent from GPTBot. One nuance from the same doc: if you allow both bots, OpenAI may use the results of a single crawl for both jobs "to avoid duplicative crawling," so the separation lives in the opt-outs, not necessarily in the fetches you see in your logs.
 
 ## Should You Allow or Block GPTBot?
 
@@ -132,14 +132,6 @@ GPTBot identifies itself with a user agent ending in `+https://openai.com/gptbot
 ### Does GPTBot execute JavaScript?
 
 No; like most AI training crawlers it reads raw HTML. Content that only appears after scripts run is invisible to it, which matters more for the citation bots, but it means a JavaScript-heavy site contributes less to training than its rendered pages suggest.
-
-### Will blocking GPTBot hurt my Google SEO?
-
-No. GPTBot is OpenAI's crawler and has nothing to do with Googlebot or Google rankings. Blocking GPTBot only affects whether OpenAI can use your content for training; your Google Search visibility is governed by Google's own crawlers.
-
-### How often does GPTBot crawl a site?
-
-There is no published schedule; frequency tracks how often your content changes and how OpenAI prioritizes domains. If crawl load is the concern, rate-limiting verified GPTBot IPs at the server is safer than a robots block, since it caps the cost without opting you out of training entirely.
 
 ## Where to Start
 

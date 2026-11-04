@@ -2,7 +2,7 @@
 title: "AI Crawlers: The List of AI Bots & How to Control Them"
 description: "AI crawlers fetch your pages for ChatGPT, Claude, Perplexity, and Google. The list of every major AI bot, what each does, and how to control it in robots.txt."
 date: "2026-06-07"
-updated: "2026-11-03"
+updated: "2026-11-04"
 author: "Samy BEN SADOK"
 tags: ["ai-crawlers", "robots-txt", "geo", "ai-visibility", "guide"]
 draft: false
@@ -64,15 +64,15 @@ Here is the current roster of AI crawlers worth knowing, with the job each one d
   </tbody>
 </table>
 
-That is the set that matters for most sites, but it is not the whole field. Mistral now runs the same three-bot split as OpenAI and Anthropic ([MistralAI-Training, MistralAI-Index, MistralAI-User](https://docs.mistral.ai/robots)), and Moonshot AI's Kimi does too ([KimiBot, Kimi-SearchBot, Kimi-User](https://www.kimi.ai/policies/kimi-crawlers)). DeepSeekBot crawls for training, but unlike GPTBot or ClaudeBot, DeepSeek has not published clear robots.txt compliance documentation, and site owners report mixed results blocking it. [xAI's Grok](https://geotoolbox.ai/blog/what-is-grok) and Cohere are active too. The names change often: bots launch, rename, and split into separate training and search agents. The community-maintained [ai.robots.txt list on GitHub](https://github.com/ai-robots-txt/ai.robots.txt) tracked 150 AI user agents in early June 2026 and tracks 175 today, and it generates ready-to-use robots.txt and server configs; [Known Agents](https://knownagents.com/agents) (formerly Dark Visitors) keeps a similar live directory. Treat any static list, including this one, as a snapshot.
+That is the set that matters for most sites, but it is not the whole field. Mistral now runs the same training / index / user split as OpenAI and Anthropic ([MistralAI-Training, MistralAI-Index, MistralAI-User](https://docs.mistral.ai/robots)), and Moonshot AI's Kimi does too ([KimiBot, Kimi-SearchBot, Kimi-User](https://www.kimi.ai/policies/kimi-crawlers)). DeepSeekBot crawls for training, but unlike GPTBot or ClaudeBot, DeepSeek has not published clear robots.txt compliance documentation, and site owners report mixed results blocking it. [xAI's Grok](https://geotoolbox.ai/blog/what-is-grok) and Cohere are active too. The names change often: bots launch, rename, and split into separate training and search agents. The community-maintained [ai.robots.txt list on GitHub](https://github.com/ai-robots-txt/ai.robots.txt) tracked 150 AI user agents in early June 2026 and tracks 175 today, and it generates ready-to-use robots.txt and server configs; [Known Agents](https://knownagents.com/agents) (formerly Dark Visitors) keeps a similar live directory. Treat any static list, including this one, as a snapshot.
 
 A few numbers put the traffic in perspective, though the share shifts fast enough that any snapshot dates quickly, so check a live tracker before quoting it. In [Cloudflare's May 2026 crawler data](https://www.digitalapplied.com/blog/ai-crawler-bot-traffic-statistics-2026-data-reference), Googlebot was the single largest AI-adjacent bot at 27.26 percent of requests, followed by GPTBot at 11.48 percent and ClaudeBot at 9.73 percent, a reversal from April 2026, when ClaudeBot led at 11.69 percent against GPTBot's 9.84 percent. These bots are now a real share of who visits your site. The single-site picture is telling: SEO consultant Suganthan Mohanadasan counted [8,060 AI-crawler requests in one week](https://suganthan.com/blog/how-to-make-website-agent-ready) from at least eight organizations in his own server logs, against 1,421 across the previous 44 days. Bots in total now outnumber people: in early June 2026, [Cloudflare reported](https://www.tomshardware.com/tech-industry/artificial-intelligence/bots-have-now-passed-human-traffic-online-cloudflare-boss-laments-says-agentic-traffic-wasnt-expected-to-eclipse-real-people-until-next-year) that automated traffic of all kinds passed human traffic for the first time in its data, at 57.5 percent of web requests.
 
 ## OpenAI: GPTBot, OAI-SearchBot, and ChatGPT-User
 
-OpenAI runs three crawlers, and the [OpenAI bots documentation](https://developers.openai.com/api/docs/bots) names each one. [GPTBot](https://geotoolbox.ai/blog/gptbot) is the training crawler: disallow it and your content should not be used to train future models. OAI-SearchBot is the one that matters for visibility. It builds the index behind ChatGPT search, and OpenAI is explicit that sites opted out of OAI-SearchBot will not appear in ChatGPT search answers (though they can still show up as navigational links). ChatGPT-User is the real-time fetcher that runs when a person asks ChatGPT to read a page.
+OpenAI documents four user agents in its [bots documentation](https://developers.openai.com/api/docs/bots); three of them matter here (the fourth, OAI-AdsBot, only checks pages submitted as ads and does not train models). [GPTBot](https://geotoolbox.ai/blog/gptbot) is the training crawler: disallow it and your content should not be used to train future models. OAI-SearchBot is the one that matters for visibility. It builds the index behind ChatGPT search, and OpenAI is explicit that sites opted out of OAI-SearchBot will not appear in ChatGPT search answers (though they can still show up as navigational links). ChatGPT-User is the real-time fetcher that runs when a person asks ChatGPT to read a page.
 
-The practical takeaway is the one most "block ChatGPT" guides get wrong: blocking GPTBot does nothing to your presence in ChatGPT search. Training and citation run through different bots. If you want to keep your content out of training but stay citable, block GPTBot and leave OAI-SearchBot and ChatGPT-User alone. Our guide to [getting cited in ChatGPT](https://geotoolbox.ai/blog/seo-for-chatgpt) covers the citation side. OpenAI also runs OAI-AdsBot, which only validates ad landing pages and does not train models.
+The practical takeaway is the one most "block ChatGPT" guides get wrong: blocking GPTBot does nothing to your presence in ChatGPT search. Training and citation run through different bots. If you want to keep your content out of training but stay citable, block GPTBot and leave OAI-SearchBot and ChatGPT-User alone. Our guide to [getting cited in ChatGPT](https://geotoolbox.ai/blog/seo-for-chatgpt) covers the citation side.
 
 ## Anthropic: ClaudeBot, Claude-SearchBot, and Claude-User
 
@@ -189,7 +189,7 @@ Yes, robots.txt has no wildcard for "all AI bots": each user-agent token needs i
 
 ### If I block GPTBot, am I out of ChatGPT?
 
-No. GPTBot is the training crawler. ChatGPT's search answers come through OAI-SearchBot and ChatGPT-User, so blocking GPTBot leaves your ChatGPT visibility intact. One caveat: your content may already sit in training sets through CCBot, which blocking GPTBot today does not undo.
+No. GPTBot is the training crawler. ChatGPT search visibility runs through OAI-SearchBot (ChatGPT-User only fetches pages a user asks about, and OpenAI says it does not decide what appears in search), so blocking GPTBot leaves your ChatGPT visibility intact. One caveat: your content may already sit in training sets through CCBot, which blocking GPTBot today does not undo.
 
 ### Does blocking AI crawlers in robots.txt actually work?
 

@@ -2,7 +2,7 @@
 title: "Gemini SEO: How to Get Cited in Google Gemini"
 description: "Gemini SEO means getting cited in Google Gemini's answers. How grounding, the Google index, Google-Extended, and the four Gemini surfaces actually work."
 date: "2026-06-27"
-updated: "2026-10-04"
+updated: "2026-11-04"
 author: "Samy BEN SADOK"
 tags: ["gemini", "gemini-seo", "geo", "ai-visibility", "guide"]
 draft: false
@@ -65,8 +65,8 @@ Because all four surfaces ground on the same Google index, the foundation is sha
   </thead>
   <tbody>
     <tr><td><strong>Gemini app</strong></td><td>The Gemini model, grounded on Google Search when a question needs fresh facts</td><td>Be indexed and be the clean, current answer; off-site mentions help corroborate the brand too</td><td>Ask Gemini your questions in a signed-out session and read the cited links</td></tr>
-    <tr><td><strong>AI Overviews</strong></td><td>The standard Search index, summarized at the top of results</td><td>Be indexed and extractable; position is a weak signal, so see the dedicated playbook</td><td>Search Console, bundled under "Web"; manual SERP checks</td></tr>
-    <tr><td><strong>AI Mode</strong></td><td>The same index, with heavier query fan-out and deeper synthesis</td><td>Cover the question neighborhood on one page so you win multiple sub-queries</td><td>Manual checks; Search Console does not break it out separately yet</td></tr>
+    <tr><td><strong>AI Overviews</strong></td><td>The standard Search index, summarized at the top of results</td><td>Be indexed and extractable; position is a weak signal, so see the dedicated playbook</td><td>Search Console's Generative AI performance report (impressions only, AI Overviews and AI Mode combined); manual SERP checks</td></tr>
+    <tr><td><strong>AI Mode</strong></td><td>The same index, with heavier query fan-out and deeper synthesis</td><td>Cover the question neighborhood on one page so you win multiple sub-queries</td><td>Manual checks; Search Console's Generative AI report counts it together with AI Overviews (impressions only), never on its own</td></tr>
     <tr><td><strong>Gemini API grounding</strong></td><td>Developer apps calling Gemini with Grounding with Google Search enabled</td><td>Be indexed and keep Google-Extended unblocked; this surface is gated by Google-Extended, like the app</td><td>Inspect the inline <code>url_citation</code> annotations the API returns</td></tr>
   </tbody>
 </table>
@@ -110,7 +110,7 @@ A few tactics get sold as Gemini requirements that Google's own documentation co
 
 ## How to Measure Gemini Visibility
 
-Be honest with yourself about the measurement gap before you build a dashboard, because Google's tools do not make this easy yet. Search Console folds AI Overviews into the regular "Web" search type and does not break out AI Mode separately, so you cannot cleanly isolate how much of your impression count comes from an AI answer. Referral data is worse: clicks from Gemini answers often arrive stripped of a clear referrer, so a meaningful share of Gemini-driven sessions land in your analytics as direct traffic rather than anything labeled "gemini." To recover the clicks that do carry a referrer, set up a GA4 custom channel that matches the gemini.google.com referrer, and treat it as a floor, since it misses the zero-click majority.
+Be honest with yourself about the measurement gap before you build a dashboard, because Google's tools do not make this easy yet. Search Console's Generative AI performance report, rolled out to all sites as of August 31, 2026, isolates impressions from AI Overviews and AI Mode, but it counts the two together and reports impressions only, so you still cannot tell which AI surface earned an impression, let alone a click. Referral data is worse: clicks from Gemini answers often arrive stripped of a clear referrer, so a meaningful share of Gemini-driven sessions land in your analytics as direct traffic rather than anything labeled "gemini." To recover the clicks that do carry a referrer, set up a GA4 custom channel that matches the gemini.google.com referrer, and treat it as a floor, since it misses the zero-click majority.
 
 So measurement is mostly manual, and it works like this:
 
@@ -135,10 +135,6 @@ The better argument is the marginal cost. The four surfaces share the same Googl
 
 Yes, when it grounds a question on a live search. Gemini answers built from retrieval carry inline citations to the pages they used, and the Gemini API returns the same as inline citation annotations with the source URLs. When it answers from memory alone on an evergreen question, there are no per-claim sources, which is why getting cited means earning a place in the grounded answers.
 
-### Is there a Gemini crawler I need to allow?
-
-No dedicated one. Discovery runs on Googlebot, the same crawler that indexes you for normal Search, so if Googlebot can reach you, Gemini's surfaces can cite you. Google-Extended is a training and grounding control, not a search crawler, and there is no "GeminiBot" user-agent to add to robots.txt.
-
 ### Does blocking Google-Extended hurt my Google rankings or AI Overviews?
 
 No. Google has confirmed Google-Extended is not a ranking signal and does not affect your inclusion in Search. Blocking it opts you out of model training and of grounding in the Gemini app and the API, while leaving you fully eligible for AI Overviews and AI Mode, which run on Googlebot.
@@ -150,10 +146,6 @@ It shares the same foundation, since Gemini grounds on the Google index, but the
 ### How do I check if Gemini mentions my brand?
 
 Ask Gemini your category questions in a signed-out session, repeat across AI Mode and the AI Overview on the same query, and record whether you are cited and who is cited instead. Because answers vary between runs, sample each prompt a few times and track your citation rate rather than a single result.
-
-### Can I see Gemini referral traffic in analytics?
-
-Partly. Clicks from the Gemini app can arrive with a gemini.google.com referrer, but most AI answers are read without a click, and many sessions lose the referrer and show up as direct traffic. Treat referral data as a floor, not a full count, and lean on manual citation checks for the real picture.
 
 ## Start with Reachability
 
