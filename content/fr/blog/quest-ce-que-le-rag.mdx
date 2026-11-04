@@ -2,7 +2,7 @@
 title: "Qu'est-ce que le RAG (retrieval-augmented generation) ?"
 description: "Le RAG (retrieval-augmented generation) est le moteur de la recherche IA : ce qu'il est, comment il marche, et comment devenir la page qu'il récupère et cite."
 date: "2026-07-03"
-updated: "2026-08-10"
+updated: "2026-11-04"
 author: "Samy BEN SADOK"
 tags: ["rag", "geo", "ai-search", "ai-visibility", "guide"]
 draft: false
@@ -21,7 +21,7 @@ La plupart des explications sur le RAG s'adressent à ceux qui le construisent. 
 - **Le RAG (génération augmentée par récupération) permet à un grand modèle de langage (LLM) de récupérer des documents pertinents avant de répondre**, au lieu de puiser uniquement dans sa mémoire d'entraînement.
 - Il tient en trois verbes : récupérer les passages utiles, enrichir la requête avec eux, puis générer une réponse ancrée dans ces sources.
 - C'est le moteur de la recherche IA : ChatGPT, Perplexity et les AI Overviews (aperçus IA) de Google récupèrent des pages avant de répondre, donc se faire récupérer est le tour de qualification pour se faire citer.
-- Le RAG réduit les hallucinations sans les supprimer : une étude de Stanford a mesuré 17 à 34 % de réponses inventées sur des outils juridiques qui reposent pourtant sur le RAG.
+- Le RAG réduit les hallucinations sans les supprimer : une étude de Stanford a mesuré 17 à 33 % de réponses inventées sur des outils juridiques qui reposent pourtant sur le RAG.
 - En France, connecter vos documents internes à un RAG fait de vous le responsable de traitement au sens du RGPD (position de la CNIL) : un point à cadrer avant d'y brancher des données personnelles.
 
 ## Qu'est-ce que la génération augmentée par récupération (RAG) ?
@@ -75,7 +75,7 @@ L'atout principal, c'est l'[ancrage](https://geotoolbox.ai/blog/how-does-ai-sear
 
 Passons à la partie qui fâche, car c'est l'affirmation la plus survendue de toute la catégorie : **le RAG réduit les hallucinations, il ne les élimine pas.** Le modèle peut toujours mal lire une source correcte, assembler des passages contradictoires ou écrire quelque chose d'infondé quand la récupération ne remonte pas grand-chose. La qualité de la récupération impose un plafond infranchissable à tout le système : un modèle ne peut pas ancrer une réponse dans un passage que le récupérateur n'a jamais trouvé.
 
-Les chiffres, eux, sont sans appel. Une étude de Stanford, [« Hallucination-Free? Assessing the Reliability of Leading AI Legal Research Tools »](https://reglab.stanford.edu/publications/hallucination-free-assessing-the-reliability-of-leading-ai-legal-research-tools/), a testé des outils commerciaux de recherche juridique qui sont eux-mêmes des systèmes RAG bâtis sur des bibliothèques juridiques soigneusement constituées et faisant autorité. Elle a relevé que Lexis+ AI hallucinait sur plus de 17 % des requêtes, et l'outil de Westlaw sur plus d'un tiers, alors que leur marketing laissait entendre le contraire. Si un RAG conçu exprès pour un corpus juridique « propre » se trompe encore aussi souvent, traitez avec méfiance toute promesse de « zéro hallucination ». Le RAG est un garde-fou solide, et c'est exactement là qu'est sa valeur. Sur les raisons profondes du phénomène, voyez notre analyse des [hallucinations de l'IA](https://geotoolbox.ai/blog/ai-hallucinations).
+Les chiffres, eux, sont sans appel. Une étude de Stanford, [« Hallucination-Free? Assessing the Reliability of Leading AI Legal Research Tools »](https://reglab.stanford.edu/publications/hallucination-free-assessing-the-reliability-of-leading-ai-legal-research-tools/), a testé des outils commerciaux de recherche juridique qui sont eux-mêmes des systèmes RAG bâtis sur des bibliothèques juridiques soigneusement constituées et faisant autorité. Elle a relevé que Lexis+ AI hallucinait sur plus de 17 % des requêtes, et l'outil de Westlaw sur environ un tiers, alors que leur marketing laissait entendre le contraire. Si un RAG conçu exprès pour un corpus juridique « propre » se trompe encore aussi souvent, traitez avec méfiance toute promesse de « zéro hallucination ». Le RAG est un garde-fou solide, et c'est exactement là qu'est sa valeur. Sur les raisons profondes du phénomène, voyez notre analyse des [hallucinations de l'IA](https://geotoolbox.ai/blog/ai-hallucinations).
 
 En France, l'enjeu est déjà passé devant les tribunaux. Des juridictions administratives ont commencé à sanctionner des écritures truffées de références jurisprudentielles inventées par une IA générative : le tribunal administratif d'Orléans a relevé une quinzaine de références entièrement fausses dans les conclusions d'un avocat et lui a adressé un avertissement (29 décembre 2025, n° 2506461) ; le tribunal administratif de Grenoble avait pointé des références « fantaisistes » quelques semaines plus tôt (3 décembre 2025). Un système RAG qui affiche les passages qu'il a récupérés est justement la parade technique à ce genre de dérapage : il rend la réponse traçable et vérifiable, source à l'appui.
 
@@ -213,27 +213,11 @@ Le modèle sous-jacent, non ; mais le mode recherche et navigation de ChatGPT, o
 
 ### Le RAG met-il fin aux hallucinations ?
 
-Il les réduit, il ne les supprime pas. Ancrer les réponses dans des sources récupérées fait baisser le taux de contenu inventé, mais le modèle peut encore mal lire une source ou combler les trous quand la récupération ramène peu de résultats. Une étude de Stanford a montré que des outils juridiques RAG commerciaux hallucinaient encore sur 17 à 34 % des requêtes : traitez donc avec prudence toute promesse de « zéro hallucination ».
+Il les réduit, il ne les supprime pas. Ancrer les réponses dans des sources récupérées fait baisser le taux de contenu inventé, mais le modèle peut encore mal lire une source ou combler les trous quand la récupération ramène peu de résultats. Une étude de Stanford a montré que des outils juridiques RAG commerciaux hallucinaient encore sur 17 à 33 % des requêtes : traitez donc avec prudence toute promesse de « zéro hallucination ».
 
 ### Quelle différence entre le RAG et une base de données vectorielle ?
 
 Le RAG est la technique d'ensemble, celle qui consiste à ancrer la réponse d'un modèle dans des documents récupérés. Une base de données vectorielle est l'un des composants que certains systèmes RAG utilisent pour stocker des embeddings et faire une recherche de similarité rapide. On peut construire un RAG sans elle, avec une recherche par mots-clés ou un graphe de connaissances : la base vectorielle est une brique fréquente, pas une obligation.
-
-### Quels sont les types ou « niveaux » de RAG ?
-
-On décrit d'habitude une progression : le RAG naïf (récupérer une fois, générer une fois), le RAG avancé (meilleur découpage, réordonnancement et recherche hybride pour améliorer ce qui est récupéré) et le RAG agentique (un agent décide quand et quoi récupérer, et peut itérer). Ce sont des points sur un spectre, pas des catégories rigides.
-
-### Quelle différence entre le RAG et le CAG ?
-
-Le CAG (*cache-augmented generation*, génération augmentée par cache) est une alternative au RAG. Au lieu de récupérer des documents à la volée à chaque question, il précharge toute la base de connaissances dans la fenêtre de contexte du modèle et met en cache le résultat, une fois pour toutes. Il n'y a plus d'étape de récupération : le modèle « a déjà tout sous les yeux ». Le CAG est adapté à un corpus petit et stable, où il gagne en vitesse et en simplicité ; le RAG reste préférable pour de gros volumes ou des données qui changent souvent, car il ne va chercher que les passages utiles. C'est le prolongement direct du débat contexte long contre récupération.
-
-### Peut-on faire du RAG avec des outils français ou souverains ?
-
-Oui. Côté européen, **Mistral** propose avec « Vibe » (ex-Le Chat) une fonction RAG native, les « Libraries » : vous y déposez des documents, l'assistant les interroge en temps réel et cite les passages récupérés, avec un hébergement des données dans l'UE. **OVHcloud** donne accès, via ses AI Endpoints, à des modèles d'embedding et à PostgreSQL avec l'extension pgvector, avec un engagement de non-rétention des données. **Dust**, jeune pousse française, permet de brancher des agents IA sur vos outils internes (Notion, Slack, Drive) par récupération. De quoi garder une base de connaissances sensible dans un périmètre européen plutôt que de l'envoyer chez un fournisseur non européen.
-
-### Un système RAG est-il concerné par l'AI Act ?
-
-Cela dépend de l'usage. Un chatbot RAG public à visée informative relève surtout du risque limité : une obligation de transparence (dire que l'utilisateur parle à une IA). Un RAG qui aide à décider dans un domaine sensible, santé ou justice par exemple, peut basculer en « haut risque », avec des obligations bien plus strictes (explicabilité, journalisation des sources, supervision humaine). Ces obligations montent en charge à partir d'août 2026 : mieux vaut classer votre cas d'usage tôt.
 
 ### Dois-je construire un système RAG pour profiter de la recherche IA ?
 
@@ -251,7 +235,6 @@ La première chose à vérifier, c'est si les moteurs IA peuvent ne serait-ce qu
 - Les questions-réponses de la CNIL sur l'utilisation d'un système d'IA générative - CNIL - `cnil.fr/fr/les-questions-reponses-de-la-cnil-sur-lutilisation-dun-systeme-dia-generative`
 - Les hallucinations d'intelligence artificielle devant les juridictions françaises - Village de la Justice, 2026 - `village-justice.com/articles/les-hallucinations-intelligence-artificielle-devant-les-juridictions-francaises,56337.html`
 - Génération à enrichissement contextuel - Wikipédia - `fr.wikipedia.org/wiki/G%C3%A9n%C3%A9ration_%C3%A0_enrichissement_contextuel`
-- Mistral Vibe (anciennement Le Chat) et les Libraries - Mistral AI - `mistral.ai/products/vibe`
 - Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks - Lewis et al., 2020 (NeurIPS 2020) - `arxiv.org/abs/2005.11401`
 - What Is Retrieval-Augmented Generation, aka RAG? - NVIDIA, 2023 (mis à jour en 2025) - `blogs.nvidia.com/blog/what-is-retrieval-augmented-generation`
 - Hallucination-Free? Assessing the Reliability of Leading AI Legal Research Tools - Magesh et al., Stanford RegLab & HAI, 2024 - `reglab.stanford.edu/publications/hallucination-free-assessing-the-reliability-of-leading-ai-legal-research-tools`
