@@ -2,7 +2,7 @@
 title: "How to Reduce Claude Code Token Costs (and Why They Add Up Fast)"
 description: "Claude Code burns tokens fast because it re-reads your whole context on every step. Here is the mechanism, plus the highest-impact ways to cut your token bill."
 date: "2026-07-04"
-updated: "2026-10-17"
+updated: "2026-11-05"
 author: "Samy BEN SADOK"
 tags: ["claude-code", "agentic-ai", "claude", "claude-sonnet-5", "anthropic"]
 draft: false
@@ -43,9 +43,9 @@ You cannot opt out of the ratio, but it raises the stakes on every lever below. 
 
 Before the tactics, get clear on what you are optimizing, because it changes what "saving tokens" means for you.
 
-If you use Claude Code through a Pro or Max subscription, you do not pay per token. You pay a flat monthly fee and hit a usage limit. Saving tokens means not running out mid-week, not a smaller invoice. If you use an API key, every token is real money, and the numbers add up: Anthropic's [cost documentation](https://code.claude.com/docs/en/costs) reports an average of around 13 US dollars per developer per active day and 150 to 250 dollars per developer per month across enterprise deployments, with 90 percent of users staying under 30 dollars a day. Either way, the same habits help. One protects your limit, the other protects your wallet. If you are still deciding which tool to buy in the first place, our [Claude vs Copilot](https://geotoolbox.ai/blog/claude-vs-copilot) comparison walks through how the two meter heavy use.
+If you use Claude Code through a Pro, Max, or Ultra subscription, you do not pay per token by default. You pay a flat monthly fee and hit a usage limit, unless you turn on usage credits, which keep you working past it at API rates (on Pro, Fable runs on credits from the first request). Saving tokens means not running out mid-week or, with credits on, spending less. If you use an API key, every token is real money, and the numbers add up: Anthropic's [cost documentation](https://code.claude.com/docs/en/costs) reports an average of around 13 US dollars per developer per active day and 150 to 250 dollars per developer per month across enterprise deployments, with 90 percent of users staying under 30 dollars a day. Either way, the same habits help. One protects your limit and credit spend, the other your wallet. If you are still deciding which tool to buy in the first place, our [Claude vs Copilot](https://geotoolbox.ai/blog/claude-vs-copilot) comparison walks through how the two meter heavy use.
 
-You can see where your tokens go with the `/usage` command. It shows your session token totals, and on a paid plan (Pro, Max, Team, or Enterprise) it also breaks recent usage down by skills, subagents, plugins, and individual MCP servers:
+You can see where your tokens go with the `/usage` command. It shows your session token totals, and on a paid plan (Pro, Max, Ultra, Team, or Enterprise) it also breaks recent usage down by skills, subagents, plugins, and individual MCP servers:
 
 ```
 Total cost:            $0.55
@@ -107,7 +107,7 @@ If you have gone down a wrong path, `/rewind` back to an earlier checkpoint inst
 
 ## Match the Model to the Task
 
-Most people open Claude Code, leave it on the default model, and never think about it again. Since Claude Code v2.1.280, that default is Opus 5.5 on Pro, Max, Team, Enterprise, and the Anthropic API, and Anthropic's [cost guidance](https://code.claude.com/docs/en/costs) lists "Opus left as the default model" among the usual causes of unexpectedly high spend on API and cloud-provider plans. Opus is the architect: reserve it for planning, hard debugging, and decisions where the reasoning is the point. Sonnet 5.5, the successor to [Sonnet 5](https://geotoolbox.ai/blog/claude-sonnet-5), is the contractor that handles day-to-day implementation, refactors, and tests. Haiku is for cheap helper work and exploration. Use `/model` to switch, or set a default in `/config`.
+Most people open Claude Code, leave it on the default model, and never think about it again. Since Claude Code v2.1.280, that default is Opus 5.5 on Pro, Max, Ultra, Team, Enterprise, and the Anthropic API, and Anthropic's [cost guidance](https://code.claude.com/docs/en/costs) lists "Opus left as the default model" among the usual causes of unexpectedly high spend on API and cloud-provider plans. Opus is the architect: reserve it for planning, hard debugging, and decisions where the reasoning is the point. Sonnet 5.5, the successor to [Sonnet 5](https://geotoolbox.ai/blog/claude-sonnet-5), is the contractor that handles day-to-day implementation, refactors, and tests. Haiku is for cheap helper work and exploration. Use `/model` to switch, or set a default in `/config`.
 
 <table>
 <thead>
@@ -159,10 +159,10 @@ Because the model has no memory between steps, so Claude Code re-sends the entir
 `/clear` wipes the conversation history completely while keeping your files and tools, which is what you want when switching to unrelated work. `/compact` summarizes the conversation so far and continues from that summary, which is what you want at a natural break in the same task. Reach for `/clear` between tasks and `/compact` within one.
 
 ### Does switching from Opus to Sonnet actually lower my bill?
-Yes, for routine work. Opus 5.5, the Claude Code default, lists at $4 and $20 per million input and output tokens against $2 and $10 for Sonnet 5.5, so running everyday edits, refactors, and tests on Sonnet (or simple helpers on Haiku 5.5) cuts cost, and Anthropic's cost guidance says Sonnet handles most coding tasks well. Reserve Opus for planning and hard reasoning. Set your model at the start of a session, since switching models mid-session recomputes the cache.
+Yes, for routine work on an API key or on credits. Opus 5.5, the Claude Code default, lists at $4 and $20 per million input and output tokens against $2 and $10 for Sonnet 5.5, so running everyday edits, refactors, and tests on Sonnet (or simple helpers on Haiku 5.5) cuts cost, and Anthropic's cost guidance says Sonnet handles most coding tasks well. Reserve Opus for planning and hard reasoning. Set your model at the start of a session, since switching models mid-session recomputes the cache.
 
 ### Is reducing token usage about my bill or my usage limit?
-Both, depending on your plan. On a Pro or Max subscription you pay a flat fee and hit a usage limit, so saving tokens means not running out mid-week. On an API key every token is billed, so it is literal money. The same habits help either way.
+Both, depending on your plan. On a Pro, Max, or Ultra subscription you pay a flat fee and hit a usage limit, unless you turn on usage credits, so saving tokens means not running out mid-week or spending fewer credits. On an API key every token is billed, so it is literal money. The same habits help either way.
 
 ## Sources
 
@@ -172,4 +172,5 @@ Both, depending on your plan. On a Pro or Max subscription you pay a flat fee an
 - Why AI Tokens are so Expensive (Computerphile) - `youtube.com/watch?v=-0HRzXk8vlk`
 - Claude API and model pricing (Anthropic) - `platform.claude.com/docs/en/about-claude/pricing`
 - Model configuration - Claude Code Docs (Anthropic) - `code.claude.com/docs/en/model-config`
+- Manage usage credits - Claude Help Center (Anthropic) - `support.claude.com/en/articles/12429409`
 - How I Cut My Claude Code Token Usage by 60% and Got Better Output (dev.to) - `dev.to/numbpill3d/how-i-cut-my-claude-code-token-usage-by-60-and-got-better-output-48b0`
