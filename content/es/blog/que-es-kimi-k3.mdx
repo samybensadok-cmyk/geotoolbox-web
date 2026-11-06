@@ -2,7 +2,7 @@
 title: "¿Qué es Kimi K3? El modelo abierto 2,8T de Moonshot AI"
 description: "¿Qué es Kimi K3? El modelo de pesos abiertos de Moonshot AI: especificaciones reales, qué benchmarks creer, precios y si puedes ejecutarlo, frente a DeepSeek."
 date: "2026-08-21"
-updated: "2026-10-28"
+updated: "2026-11-06"
 author: "Samy BEN SADOK"
 tags: ["kimi-k3", "kimi-ai", "moonshot-ai", "open-weights", "mixture-of-experts", "chinese-ai", "llm", "guide"]
 draft: false
@@ -14,7 +14,7 @@ noindex: false
 
 En el lanzamiento, preguntar a un asistente de IA qué era Kimi K3 mostraba el problema en tiempo real. Con la búsqueda web desactivada, Gemini respondió «no dispongo de información confiable y verificada sobre un modelo llamado Kimi K3», y Claude dijo más o menos lo mismo. El modelo se lanzó el 16 de julio de 2026. Los asistentes en los que confía la mayoría de la gente aún no se habían puesto al día, y ese desfase dura meses con cualquier modelo nuevo.
 
-Aquí tienes la versión clara, a fecha del 26 de octubre de 2026: qué es Kimi K3 en realidad, qué cambia K3.1 Pro, si el entusiasmo del lanzamiento sobrevive al contacto con los números, cuánto cuesta, si puedes ejecutarlo y cómo se compara con Kimi K2 y DeepSeek. Vamos indicando qué afirmaciones son de la propia Moonshot y cuáles ha comprobado alguien independiente, porque en un modelo recién salido esa distinción es casi toda la historia.
+Aquí tienes la versión clara, a fecha del 26 de octubre de 2026 (estado de los pesos de K3.1 Pro a 6 de noviembre): qué es Kimi K3 en realidad, qué cambia K3.1 Pro, si el entusiasmo del lanzamiento sobrevive al contacto con los números, cuánto cuesta, si puedes ejecutarlo y cómo se compara con Kimi K2 y DeepSeek. Vamos indicando qué afirmaciones son de la propia Moonshot y cuáles ha comprobado alguien independiente, porque en un modelo recién salido esa distinción es casi toda la historia.
 
 ## Lo que debes saber
 
@@ -89,7 +89,7 @@ Frente al historial de Moonshot, el salto es drástico. Esa tarifa de salida es 
 <tr><th>Modelo</th><th>Entrada / 1M</th><th>Salida / 1M</th><th>Entrada con caché</th><th>Nota</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>Kimi K3.1 Pro</strong></td><td>2,00 $</td><td>10,00 $</td><td>0,20 $</td><td>K3 posentrenado, un 33 % por debajo de K3; pesos prometidos a más tardar para el 4 de nov. de 2026</td></tr>
+<tr><td><strong>Kimi K3.1 Pro</strong></td><td>2,00 $</td><td>10,00 $</td><td>0,20 $</td><td>K3 posentrenado, un 33 % por debajo de K3; pesos en Hugging Face con licencia propia</td></tr>
 <tr><td><strong>Kimi K3</strong></td><td>3,00 $</td><td>15,00 $</td><td>0,30 $</td><td>Generación anterior (precio del lanzamiento de julio); salida casi 4× la de la gama K2</td></tr>
 <tr><td><strong>Kimi K2.6 / K2.7 Code</strong></td><td>0,95 $</td><td>4,00 $</td><td>0,16 $ / 0,19 $</td><td>Sigue abierto, mucho más barato</td></tr>
 <tr><td><strong>DeepSeek V4 Pro</strong></td><td>0,66 $ valle / 1,32 $ pico</td><td>1,98 $ valle / 3,96 $ pico</td><td>~0,022 $</td><td>Clase de frontera, una fracción del precio de K3 por token</td></tr>
@@ -123,11 +123,11 @@ Vale la pena mencionar una cosa más: casi nadie puede medir su propio consumo. 
 
 ## Qué cambia con Kimi K3.1 Pro
 
-Moonshot lanzó Kimi K3.1 Pro el 23 de octubre de 2026 y lo presenta como el primer modelo de una nueva serie K3.1 y como «una versión posentrenada de Kimi K3, con una capacidad de cómputo de posentrenamiento sustancialmente mayor». La arquitectura no es nueva: Artificial Analysis indica los mismos 2,8 billones de parámetros totales y 104 000 millones activos, y una ventana de 1 millón de tokens.
+Moonshot lanzó Kimi K3.1 Pro el 23 de octubre de 2026 y lo presenta como el primer modelo de una nueva serie K3.1 y como «una versión posentrenada de Kimi K3, con una capacidad de cómputo de posentrenamiento sustancialmente mayor». El tamaño no cambia: Artificial Analysis indica los mismos 2,8 billones de parámetros totales y 104 000 millones activos, y una ventana de 1 millón de tokens, aunque la ficha del modelo señala que K3.1 Pro sustituye las capas de atención completa Gated MLA de K3 por capas Gated DSA (DeepSeek Sparse Attention).
 
 Los precios son un 33 % más bajos que los de K3 en las tres tarifas: 2,00 $ de entrada, 10,00 $ de salida y 0,20 $ por millón de tokens con acierto de caché.
 
-Los pesos aún no están publicados. Moonshot afirma que «los pesos completos del modelo se publicarán a más tardar el 4 de noviembre», y cuando lo comprobamos el 24 y de nuevo el 26 de octubre, ni Hugging Face ni GitHub ni ModelScope mostraban ningún repositorio K3.1, así que por ahora conviene tratar K3.1 Pro como un modelo de API.
+Los pesos ya son públicos. Moonshot afirmaba que «los pesos completos del modelo se publicarán a más tardar el 4 de noviembre», y a 6 de noviembre de 2026 están en Hugging Face como [moonshotai/Kimi-K3.1-Pro](https://huggingface.co/moonshotai/Kimi-K3.1-Pro), un repositorio público y sin acceso restringido creado el 2 de noviembre. (Cuando lo comprobamos el 24 y el 26 de octubre, ni Hugging Face ni GitHub ni ModelScope mostraban ningún repositorio K3.1.) La ficha del modelo indica 2,8T de parámetros totales y 104B activados, un contexto de 1 048 576 tokens, pesos en MXFP4 y entrada de texto e imagen, y remite a vLLM y SGLang para servirlo. La licencia es la Kimi K3.1 Pro License propia de Moonshot, no aprobada por la OSI: permite el uso comercial, pero un operador de modelo como servicio con más de 20 millones de dólares de ingresos (contando sus afiliadas) en cualquier periodo de 12 meses consecutivos necesita un acuerdo aparte con Moonshot, y un producto con más de 100 millones de usuarios activos mensuales o más de 20 millones de dólares de ingresos mensuales debe mostrar «Kimi K3.1-Pro». El uso interno y el uso a través de los productos oficiales de Moonshot o de sus socios de inferencia certificados quedan exentos de ambas. Todo lo que la sección siguiente dice sobre tamaño y hardware se refiere a K3, no a K3.1 Pro.
 
 Vuelve a importar la separación entre cifras. Moonshot comunica un 65,7 % en Terminal-Bench 4.0, medido con el arnés de Claude Code, frente al 66,4 % publicado para Claude Opus 5.5. Artificial Analysis, con sus propias pruebas, puntuaba a K3.1 Pro con 55 en su índice de inteligencia v4.3.2: 11 puntos más que los 44 de K3 y cuarto en total, por detrás de Opus 5.5 (58), Sonnet 5.5 (56) y Muse Wonder Full (56). En la v5, lanzada el 27 de octubre, obtiene 46, el primer modelo de pesos abiertos pero a 12 puntos de Opus 5.5 (58).
 
@@ -154,7 +154,7 @@ Para el trabajo del día a día, la balanza se inclina hacia sus propios hermano
 <tr><th>Modelo</th><th>Ideal para</th><th>¿Pesos abiertos?</th><th>Costo aproximado</th><th>Ojo con</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>Kimi K3.1 Pro</strong></td><td>Mismo terreno que K3, con posentrenamiento más reciente</td><td>Prometidos a más tardar para el 4 de nov. de 2026, aún sin publicar</td><td>Alto (10 $ de salida)</td><td>Pesos aún sin publicar (prometidos a más tardar para el 4 de nov.)</td></tr>
+<tr><td><strong>Kimi K3.1 Pro</strong></td><td>Mismo terreno que K3, con posentrenamiento más reciente</td><td>Sí (públicos en Hugging Face, licencia propia)</td><td>Alto (10 $ de salida)</td><td>Licencia propia con condiciones para grandes proveedores y productos</td></tr>
 <tr><td><strong>Kimi K3</strong></td><td>Contexto 1M, visión, programación y agentes de frontera</td><td>Sí (públicos, licencia propia)</td><td>Alto (15 $ de salida)</td><td>Lento, verboso, necesita un clúster de GPU para autoalojar</td></tr>
 <tr><td><strong>Kimi K2.6 / K2.7 Code</strong></td><td>Programación diaria a bajo costo</td><td>Sí</td><td>Bajo</td><td>No llega al nivel de frontera en lo más difícil</td></tr>
 <tr><td><strong>DeepSeek V4</strong></td><td>Entre los más baratos en razonamiento y programación por token</td><td>Sí</td><td>Entre los más bajos</td><td>Mismas dudas sobre los datos en China</td></tr>
@@ -200,6 +200,7 @@ En los benchmarks estrechos de programación y agentes, K3 competía en la cima 
 - Kimi K3, and what we can still learn from the pelican benchmark - Simon Willison, julio de 2026 - `simonwillison.net/2026/Jul/16/kimi-k3`
 - Kimi K3 - Intelligence, Performance & Price Analysis - Artificial Analysis, octubre de 2026 - `artificialanalysis.ai/models/kimi-k3`
 - Introducing Kimi K3.1 Pro - Moonshot AI, octubre de 2026 - `kimi.ai/blog/kimi-k3-1-pro`
+- Ficha y licencia de Kimi-K3.1-Pro - Moonshot AI en Hugging Face, consultadas el 6 de noviembre de 2026 - `huggingface.co/moonshotai/Kimi-K3.1-Pro`
 - Kimi K3.1 Pro launches at 4th on the Intelligence Index - Artificial Analysis, 23 de octubre de 2026 - `artificialanalysis.ai/articles/kimi-k3-1-pro-launch-benchmarks`
 - Kimi K3.1 Pro - Intelligence, Performance & Price Analysis - Artificial Analysis, 24 de octubre de 2026 - `artificialanalysis.ai/models/kimi-k3-1-pro`
 - Kimi's open model K3 nears GPT-5.6 Sol and Fable 5 while signaling the end of super cheap Chinese AI - The Decoder, julio de 2026 - `the-decoder.com/kimis-open-model-k3-nears-gpt-5-6-sol-and-fable-5-while-signaling-the-end-of-super-cheap-chinese-ai`
