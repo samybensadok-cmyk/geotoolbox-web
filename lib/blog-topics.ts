@@ -28,6 +28,7 @@ export const TOPICS: Topic[] = [
       "microsoft-copilot-vs-chatgpt", "copilot-vs-chatgpt", "copilot-vs-gemini",
       "claude-vs-copilot", "github-copilot", "copilot",
       "gemini-flash-vs-flash-lite", "kimi-k3-vs-claude", "llm-comparison", "best-ai-model", "llm-rankings",
+      "claude-models-compared", "sonnet-vs-opus",
       "semrush-vs-ahrefs", "seo-tools", "okf-vs-rag",
       "ai seo agency", "geo agency", "generative engine optimization",
     ],
