@@ -193,7 +193,7 @@ export default function AiCrawlerCheckerPage() {
               robots.txt is permission. Agent Readiness checks what crawlers actually receive.
             </h2>
             <p className="mt-2 max-w-xl text-base text-gray-300">
-              Live-fetch your site as each of 34 AI crawlers, render it like a headless agent, and see what&apos;s really
+              Live-fetch your site as the 8 major AI crawlers, render it like a headless agent, and see what&apos;s really
               blocking you: WAF rules, 403s, JavaScript walls. Free.
             </p>
           </div>

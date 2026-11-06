@@ -47,7 +47,7 @@ const faqs = [
   {
     question: "Why only 5 checks?",
     answer:
-      "Because these five are what we can verify honestly from a single public request, and they're the foundations that gate the rest. Everything else, rendering as a headless agent, live-fetching as 34 crawlers, structured data, MCP, commerce feeds, visual layout, runs in the full Agent Readiness scan, which is also free.",
+      "Because these five are what we can verify honestly from a single public request, and they're the foundations that gate the rest. Everything else, rendering as a headless agent, live-fetching as the 8 major AI crawlers, structured data, MCP, commerce feeds, visual layout, runs in the full Agent Readiness scan, which is also free.",
   },
   {
     question: "My score is high. Why am I still not showing up in AI answers?",
@@ -182,7 +182,7 @@ export default function AiReadinessPage() {
               5 checks is the foundation. The full scan runs every check in the rubric.
             </h2>
             <p className="mt-2 max-w-xl text-base text-gray-300">
-              Agent Readiness live-fetches your site as 34 AI crawlers, renders it like a headless agent, and adds structured
+              Agent Readiness live-fetches your site as the 8 major AI crawlers, renders it like a headless agent, and adds structured
               data, MCP, commerce and visual checks. Free.
             </p>
           </div>

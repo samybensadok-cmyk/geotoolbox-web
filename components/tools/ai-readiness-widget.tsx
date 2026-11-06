@@ -314,7 +314,7 @@ function ResultCard({ result, copied, setCopied }: { result: ReadinessResult; co
           You&apos;ve scored {cov.free_checks} of {cov.total_checks} checks. See the other {cov.total_checks - cov.free_checks}.
         </h3>
         <p className="mt-2 text-[14px] leading-relaxed text-gray-300">
-          The full Agent Readiness scan live-fetches your site as 34 AI crawlers and adds rendering, structured-data, MCP,
+          The full Agent Readiness scan live-fetches your site as the 8 major AI crawlers, checks robots.txt for 34, and adds rendering, structured-data, MCP,
           commerce and visual checks — the parts a robots.txt can&apos;t tell you.
         </p>
         <div className="mt-5">

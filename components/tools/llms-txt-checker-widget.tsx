@@ -423,7 +423,7 @@ function ResultCard({
         </h3>
         <p className="mt-2 text-[14px] leading-relaxed text-gray-300">
           It doesn&apos;t tell you whether AI crawlers can actually reach and render your <strong className="text-white">whole site</strong> —
-          or whether any AI engine cites you. Agent Readiness runs 28 checks across 34 AI crawlers and shows what an agent really sees.
+          or whether any AI engine cites you. Agent Readiness runs 28 checks, live-fetches your site as the 8 major AI crawlers and shows what an agent really sees.
         </p>
         <div className="mt-5">
           <AgentReadinessLink />
