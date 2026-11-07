@@ -2,7 +2,7 @@
 title: "How ChatGPT Search Works"
 description: "The model doesn't browse the web. A retrieval tool fetches live pages, and it answers with citations. How ChatGPT Search works and which index it uses."
 date: "2026-07-23"
-updated: "2026-11-03"  # backfilled 2026-08-18 freshness audit hygiene pass (frontmatter previously had no updated field at all)
+updated: "2026-11-07"  # backfilled 2026-08-18 freshness audit hygiene pass (frontmatter previously had no updated field at all)
 author: "Samy BEN SADOK"
 tags: ["chatgpt-search", "chatgpt", "rag", "ai-search", "guide"]
 draft: false
@@ -64,6 +64,11 @@ The infrastructure data backs the "building its own index" part. A Botify and Ne
 
 Not every question triggers a search, and this is the source of most complaints about accuracy. The classifier from step one makes the call: current or fast-moving topics get retrieval, timeless ones get answered from training data.
 
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/how-chatgpt-search-works/chatgpt-search-or-memory.png" alt="Decision diagram: when a prompt would benefit from current information, ChatGPT may run its search tool, usually rewriting the prompt into targeted queries, and the answer may show citations or source links and a Sources button when available; otherwise it answers from training data. To force a search, pick Search from the tools menu or type / and choose Search." w="2200" h="1398" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">ChatGPT decides on its own whether to search, so start the search yourself when freshness matters.</figcaption>
+</figure>
+
 That matters because training data has a cutoff. Ask about something that happened after the model's cutoff and, if the classifier decides not to search, you get a confident guess instead of a fact. The catch is that ChatGPT does not clearly flag which mode produced an answer. A wrong "fact" that a user blames on ChatGPT Search was often never a search at all, just the model answering from stale memory.
 
 The fix is to remove the guesswork. If freshness matters, force the search rather than hoping the classifier does. Turn on the search tool, or watch for the "Searching the web" status and the source links that only appear when retrieval actually ran. For heavier questions, Deep Research runs the same retrieval loop many times over, reading dozens of pages before it answers, which is slower but far more thorough than a single search.
@@ -95,11 +100,21 @@ Paid plans do not change what the feature is; they raise the ceiling, with highe
 
 ## Can You Trust It? Where ChatGPT Search Gets Things Wrong
 
-The citations look authoritative. They are not always accurate. A Columbia Journalism Review study that [tested eight AI search engines](https://www.cjr.org/tow_center/we-compared-eight-ai-search-engines-theyre-all-bad-at-citing-news.php) across 1,600 queries found they identified the source of a quote incorrectly more than 60% of the time. ChatGPT Search was wrong in 134 of its 200 tests (67%), giving a partly or fully incorrect source and rarely flagging any uncertainty.
+The citations look authoritative. They are not always accurate. A Columbia Journalism Review study that [tested eight AI search engines](https://www.cjr.org/tow_center/we-compared-eight-ai-search-engines-theyre-all-bad-at-citing-news.php) across 1,600 queries found they identified the source of a quote incorrectly more than 60% of the time. ChatGPT Search misidentified the source article (its headline, publisher, date or URL) in 134 of its 200 tests (67%) and rarely flagged any uncertainty.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/how-chatgpt-search-works/chatgpt-citation-verification.png" alt="Citation check card: in the Columbia Journalism Review Tow Center test, ChatGPT Search misidentified the source article in 134 of 200 tests (67%). Three steps follow: open the link, find the claim, and confirm the passage supports the answer. A note warns that ChatGPT may still cite a syndicated or copied version when a publisher blocks its crawler." w="2200" h="1300" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">The 67% figure comes from one March 2025 study of news quotes; the three checks apply to any cited answer.</figcaption>
+</figure>
 
 The mechanism explains why. The tool screens results on metadata alone, then reads winners in disconnected chunks, then the model writes fluent prose around whatever it pulled. A citation is generated to look right, not guaranteed to be right. There is also a reachability trap: when OAI-SearchBot cannot reach the original page, ChatGPT may cite a scraper or aggregator that copied the content instead of the source itself. We go deeper on this in [how ChatGPT cites sources](https://geotoolbox.ai/blog/chatgpt-citations).
 
 The practical rule: a plausible-looking link is not verification. For anything that matters, click through and confirm the source actually says what the answer claims.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/how-chatgpt-search-works/chatgpt-nasa-sources.png" alt="Logged-out ChatGPT answer about NASA's week, showing a November 5 item on the spacewalk to install the last International Space Station roll-out solar array with a linked NASA source titled 'Spacewalk Begins to Install Last Roll-Out Solar Array', a summary table of three developments, and a link to NASA's 2026 News Releases." w="1920" h="1370" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">In this answer the dated item carries its own source link, and that link is what you open to check it. ChatGPT free, logged out. Captured November 7, 2026.</figcaption>
+</figure>
 
 ## What This Means If You Want ChatGPT to Find You
 

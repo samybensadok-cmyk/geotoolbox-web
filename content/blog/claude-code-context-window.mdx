@@ -2,7 +2,7 @@
 title: "Claude Code Context Window: What It Is and Why It Controls Costs"
 description: "What the Claude Code context window is, how big it gets (200K vs 1M), what fills it, and how to read the /context meter before it degrades your output."
 date: "2026-07-04"
-updated: "2026-11-06"
+updated: "2026-11-07"
 recheckBy: "2026-10-30"  # updated 2026-10-17: current lineup is Opus 5.5, Sonnet 5.5, Haiku 5.5 (1M, Haiku 5.5 priced higher past 100K) and Fable 5.1; Haiku 4.5 is legacy (200K, leaves the chat selector 2026-10-29). Per code.claude.com model-config + platform.claude.com context-windows (2026-10-17): Fable, Sonnet 5+, Haiku 5.5, Opus 4.7+ run 1M natively; only Opus 4.6/Sonnet 4.6 need [1m] + plan rules. Re-verify the lineup on platform.claude.com
 author: "Samy BEN SADOK"
 tags: ["claude-code", "context-window", "agentic-ai", "claude", "anthropic"]
@@ -104,7 +104,7 @@ One myth to put down: older guides claim Claude Code has no native way to see to
 
 ## Auto-Compaction: What Happens When the Window Fills
 
-Claude Code does not crash when you approach the limit. It compacts, and it does so in two stages: **it clears older tool outputs first, then summarizes the conversation if that is not enough.** Your requests and key code snippets are preserved; detailed instructions from early in the conversation may not be. That reserved band at the bottom of the `/context` readout, the autocompact buffer, is the room held back so there is space to run the summarization when it triggers.
+Claude Code does not crash when you approach the limit. It compacts: **it replaces the conversation with a structured summary.** Your requests and key code snippets are preserved; detailed instructions from early in the conversation may not be. That reserved band at the bottom of the `/context` readout, the autocompact buffer, is the room held back so there is space to run the summarization when it triggers.
 
 Anthropic does not publish a fixed buffer size, but the trigger is now configurable. `CLAUDE_CODE_AUTO_COMPACT_WINDOW` sets the capacity used for auto-compaction calculations, defaulting to the model's context window, except on models with a native 1M window (the Fable models, Sonnet 5 and later, Haiku 5.5, and Opus 4.7 and later), which auto-compact at about **967K tokens** by default. `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE` sets the percentage of that window at which compaction fires.
 
@@ -112,9 +112,14 @@ There is one failure mode worth recognizing. If a single file or tool output is 
 
 ### What Survives a Compaction
 
-Compaction is not lossless, and it is worth knowing what survives it. Anthropic's [documentation on what survives compaction](https://code.claude.com/docs/en/context-window) notes that the system prompt stays unchanged and isn't part of the compacted message history in the first place, while your project-root `CLAUDE.md`, memory, and MCP tools all reload automatically.
+Compaction is not lossless, and it is worth knowing what survives it. Anthropic's [documentation on what survives compaction](https://code.claude.com/docs/en/context-window) notes that the system prompt and output style still apply, your project-root `CLAUDE.md`, unscoped rules and auto memory are re-injected, and most other startup content reloads automatically.
 
-**The skill listing is the one exception.** Everything else reloads; the index of available skill descriptions does not. Only skills you actually invoked are preserved, and those are capped at about 5,000 tokens each and 25,000 total, oldest dropped first. Truncation keeps the start of the file, which is why the most important instructions belong near the top of a `SKILL.md`. Path-scoped rules and nested `CLAUDE.md` files are dropped until their directory is touched again. In other words, the standing context you set up mostly holds, but anything that depended on being deep in the conversation can quietly vanish.
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/claude-code-context-window/claude-compaction-survival-map.png" alt="Table of what Claude Code keeps after a compaction: the system prompt and output style still apply; project-root CLAUDE.md, unscoped rules and auto memory are re-injected from disk; your requests and key code snippets stay in the summary; up to five recently modified files are re-read; skill descriptions are rebuilt and re-injected (Claude Code v2.1.304 or later); invoked skill bodies return capped at 5,000 tokens each and 25,000 in total; path-scoped rules and nested CLAUDE.md files are summarized away until a matching file is read or edited again." w="2200" h="1680" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Standing context comes back from disk after a compaction; anything that lived only in the conversation depends on the summary.</figcaption>
+</figure>
+
+Skills come back in two parts. The index of skill descriptions is rebuilt and re-injected (Claude Code v2.1.304 or later), and the skills you actually invoked are restored too, capped at about 5,000 tokens each and 25,000 total, oldest dropped first. Truncation keeps the start of the file, which is why the most important instructions belong near the top of a `SKILL.md`. Path-scoped rules and nested `CLAUDE.md` files are summarized away until Claude reads, writes or edits a file that triggers them again. In other words, the standing context you set up mostly holds, but anything that depended on being deep in the conversation can quietly vanish.
 
 ### /clear, /compact, and /rewind
 
