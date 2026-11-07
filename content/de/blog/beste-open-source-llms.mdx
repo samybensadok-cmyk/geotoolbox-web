@@ -1,0 +1,349 @@
+---
+title: "Die 11 besten Open-Source-LLMs im $MONTH_YEAR"
+description: "Die besten Open-Source-LLMs im November 2026 im Vergleich: GLM-5.3, DeepSeek V4.1, Kimi K3 und mehr, mit Lizenzen, Hardware-Bedarf, DSGVO und EU-Hosting."
+date: "2026-11-07"
+updated: "2026-11-07"
+recheckBy: "2026-11-20"  # prüfen: Index-Werte v5.0.1, Kimi K3.1 Pro (nicht gerankt), Hy4-Gewichte (angekündigt), Preise der Anbieter, Katalogstand STACKIT/IONOS. Nicht erneut gerankt: Mistral Large 4, Aleph Alpha Kolibri-1.
+author: "Samy BEN SADOK"
+tags: ["best-open-source-llm", "open-source-llm", "open-weights", "ai-comparison", "glm-5-2", "glm-5-3", "deepseek", "kimi-k3", "qwen", "llama", "gemma", "guide"]
+draft: false
+locale: "de"
+donorSlug: "best-open-source-llms"
+donorCommit: "ab2aed7"
+noindex: false
+---
+
+Wer 2026 das beste Open-Source-LLM sucht, hat ein besonderes Problem: Die Antwort ändert sich monatlich, und die meisten Ranglisten, die du findest, waren beim Schreiben richtig und sind beim Lesen falsch. Diese hier datiert jede Aussage auf den Stand vom 7. November 2026 und sagt offen, welche Zahlen aus Herstellerfolien stammen und welche aus geprüften Modellkarten. Elf Modelle haben es in die Rangliste geschafft. Ihre Lizenzen unterscheiden sich stärker als ihre Benchmark-Werte, und nur eine Handvoll läuft auf Hardware, die du dir tatsächlich anschaffen kannst. Für Unternehmen in Deutschland kommen zwei Fragen dazu, die englischsprachige Ranglisten auslassen: ob du ein Modell hier überhaupt einsetzen darfst und wo seine Gewichte laufen.
+
+## Das Wichtigste in Kürze
+
+- **Stand 7. November 2026 empfehlen wir GLM-5.3 von Z.ai als bestes Open-Source-LLM, vor allem wegen seiner Stärke beim agentischen Coding. DeepSeek V4.1 Flash und Xiaomis MiMo-V2.6-Pro sind die Preis-Leistungs-Tipps.** Im Intelligence Index v5.0.1 von Artificial Analysis führt DeepSeek V4.1 Flash 1017 mit 33 Punkten unter den offenen Modellen unserer Auswahl, GLM-5.3 folgt mit 32.
+- Fast alle Modelle sind Open Weights, nicht Open Source, und die Lizenz entscheidet über den Einsatz: MIT und Apache 2.0 enthalten keine Umsatz-, Nutzer- oder Gebietsgrenzen (die Hinweispflichten bleiben), Lizenzen wie die von GLM-5.3, Kimi K3, Llama 4 und MiniMax M3 knüpfen die Nutzung dagegen an Umsatz-, Nutzer-, Nutzungs- oder Gebietsgrenzen.
+- Die Spitzenmodelle laufen nur auf Servern mit mehreren GPUs, denn bei MoE-Modellen müssen alle Parameter im Speicher liegen, nicht nur die aktiven. Gemma 4 und die mittleren Qwen3.6-Modelle laufen dagegen quantisiert auf einer einzelnen 24-GB-Consumer-GPU.
+- Für Unternehmen in Deutschland entscheidet, wo das Modell läuft: Schickst du personenbezogene Daten an die gehostete API eines chinesischen Labors, ist das nach der DSGVO eine Übermittlung in ein Drittland; offene Gewichte auf eigener oder EU-Infrastruktur sind es nicht, solange niemand aus einem Drittland darauf zugreift. Die multimodalen Llama-4-Modelle sind für Unternehmen mit Hauptsitz in der EU nicht lizenziert.
+- Jede Rangliste ist nach wenigen Wochen veraltet: Kimi K3.1 Pro (Gewichte spätestens seit dem 5. November 2026 öffentlich, 46 Punkte im Index v5.0.1) würde die Liste anführen, ist aber noch nicht aufgenommen.
+
+## Die besten Open-Source-LLMs im November 2026 auf einen Blick
+
+Kurz gesagt: [**GLM-5.3**](https://geotoolbox.ai/blog/what-is-glm-5-3) ist unsere Wahl als bestes Open-Source-LLM, und zwar für agentisches Coding über lange Aufgabenketten. **DeepSeek V4.1 Flash** und **MiMo-V2.6-Pro** von Xiaomi sind die Preis-Leistungs-Tipps. **Kimi K3** führt das Benchmark-Rennen der offenen Modelle nicht mehr an. Im Intelligence Index v4.3.2 von Artificial Analysis lag zuletzt MiMo-V2.6-Pro mit 46,3 Punkten vorn, vor DeepSeek V4.1 Flash (45,1), GLM-5.3 (44,8), Step 5 Preview von StepFun (43,7) und Kimi K3 (43,6). Das ist der Stand vor dem 27. Oktober 2026, als mit v5 Methodik und Punkteskala wechselten, sodass sich Werte aus v4.3.2 und v5.0.1 nicht direkt vergleichen lassen. In v5.0.1 führt DeepSeek V4.1 Flash 1017 mit 33 Punkten unter den hier vorgestellten offenen Modellen, vor GLM-5.3 mit 32; für Kimi K3 (dort als „Kimi K3 (Max)“ geführt) zeigt die Modellseite von Artificial Analysis keinen v5-Wert.
+
+Moonshots K3.1 Pro (v4.3.2: 55 Punkte, v5.0.1: 46) würde diese Liste anführen. Seine Gewichte sind spätestens seit dem 5. November 2026 unter der eigenen Kimi-K3.1-Pro-Lizenz auf Hugging Face öffentlich; weil wir die Liste seitdem nicht neu bewertet haben, fehlt es noch darin. Mit 2,8 Billionen Parametern sind K3 und K3.1 Pro ohnehin für fast jedes Team zu groß für das Self-Hosting. Die Spitzenreiter, die ein Server mit mehreren GPUs noch fasst, sind GLM-5.3 (753 Milliarden Parameter), DeepSeek V4.1 Flash (552 Milliarden) und MiMo-V2.6-Pro (1,02 Billionen). Ein Haken bei GLM-5.3: Anders als GLM-5.2 steht es nicht unter MIT, sondern unter einer eigenen Lizenz (nur das kleinere GLM-5.3-Flash blieb bei MIT). Welches Modell du nehmen solltest, hängt von der Aufgabe ab, von den Lizenzbedingungen, mit denen du leben kannst, und von der Hardware, die du hast.
+
+Modellangaben und Lizenzbezeichnungen der Tabelle haben wir am 7. November 2026 mit den offiziellen Modellkarten und Lizenztexten abgeglichen; die Spalte „Geeignet für“ ist unsere Einschätzung.
+
+<table>
+<thead>
+<tr><th>Modell</th><th>Hersteller</th><th>Parameter (gesamt / aktiv)</th><th>Kontext</th><th>Lizenz</th><th>Geeignet für</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>GLM-5.3</strong></td><td>Z.ai</td><td>753 Milliarden / 40 Milliarden</td><td>1M</td><td>Eigene Lizenz</td><td>Agentisches Coding bei 753 Milliarden Parametern</td></tr>
+<tr><td><strong>DeepSeek V4 Pro / V4.1 Flash</strong></td><td>DeepSeek</td><td>1,6 Billionen / 49 Milliarden und 552 Milliarden / 16 Milliarden</td><td>1M</td><td>MIT</td><td>Preis-Leistung, Weltwissen</td></tr>
+<tr><td><strong>Step 5 Preview</strong></td><td>StepFun</td><td>600 Milliarden / 27 Milliarden</td><td>1M</td><td>StepFun Model License 1.0</td><td>Agentische Aufgaben</td></tr>
+<tr><td><strong>Kimi K2.7-Code / K3</strong></td><td>Moonshot AI</td><td>1 Billion / 32 Milliarden und 2,8 Billionen / 104 Milliarden (K3)</td><td>256K / 1M</td><td>Modified MIT (K2.7-Code); eigene Kimi-K3-Lizenz</td><td>Agenten-Schwärme; K3 als größtes offenes Modell</td></tr>
+<tr><td><strong>Hunyuan Hy4 Preview</strong></td><td>Tencent</td><td>770 Milliarden / 49 Milliarden</td><td>1M</td><td>Apache 2.0</td><td>Freizügige Lizenz auf Spitzenniveau</td></tr>
+<tr><td><strong>MiniMax M3</strong></td><td>MiniMax</td><td>428 Milliarden / 23 Milliarden</td><td>1M</td><td>MiniMax Community</td><td>Multimodale Agenten</td></tr>
+<tr><td><strong>Qwen3.5 / 3.6 / 3.8-27B</strong></td><td>Alibaba</td><td>0,8 Milliarden bis 397 Milliarden / 17 Milliarden</td><td>262K+</td><td>Apache 2.0</td><td>Lizenzfreiheit, Mehrsprachigkeit</td></tr>
+<tr><td><strong>MiMo-V2.6-Pro</strong></td><td>Xiaomi</td><td>1,02 Billionen / 42 Milliarden</td><td>1M</td><td>MIT</td><td>Token-Effizienz</td></tr>
+<tr><td><strong>Llama 4 / Muse Spark Open / Muse Glimmer</strong></td><td>Meta</td><td>109 Milliarden / 17 Milliarden und 400 Milliarden / 17 Milliarden (Llama 4); 816 Milliarden / 42 Milliarden (Spark Open); rund 30 Milliarden dicht (Glimmer)</td><td>bis 10M angegeben (Llama 4); 1M (Spark Open); 131K (Glimmer)</td><td>Llama 4 Community; Muse Model License (Spark Open); Apache 2.0 (Glimmer)</td><td>Westlicher Standard, langer Kontext; Glimmer für lokale Agenten</td></tr>
+<tr><td><strong>Gemma 4</strong></td><td>Google</td><td>E2B bis 31B (5 Größen)</td><td>128K (E2B/E4B), 256K (12B, 26B A4B, 31B)</td><td>Apache 2.0</td><td>Lokale Hardware und Edge-Geräte</td></tr>
+<tr><td><strong>gpt-oss-120b</strong></td><td>OpenAI</td><td>117 Milliarden / 5,1 Milliarden</td><td>128K</td><td>Apache 2.0</td><td>Reasoning aus den USA unter Apache 2.0</td></tr>
+</tbody>
+</table>
+
+Zwei Dinge fallen an dieser Tabelle auf. Erstens stammen die meisten Einträge von chinesischen Laboren, und sie belegen die meisten Spitzenplätze in den Benchmarks. Zweitens umfasst „offen“ mehrere Lizenzfamilien, die sich im Betrieb deutlich unterscheiden: MIT, Apache 2.0, eigene Lizenzen mit Umsatz- oder Nutzerschwellen und Lizenzen mit Anzeigepflichten oder Gebietsregeln.
+
+Ein Vorbehalt vorweg: Selbst die KI-Engines sind sich beim ersten Platz nicht einig. Als wir diese Frage im Juli 2026 fünf KI-Engines stellten (ChatGPT, Gemini, Perplexity, Claude und dem Suchmodus von ChatGPT), nannten vier GLM-5.2 das beste offene Modell insgesamt, eine setzte DeepSeek V4 Pro auf Platz eins. Eine Wiederholung am 7. November 2026, bei der wir die Engines baten, die Modelle einzuordnen, bestätigt das Bild: Perplexity sah keinen völlig eindeutigen Sieger, und ChatGPT nannte je nach Rangliste verschiedene Spitzenreiter (BenchLM: Kimi K3.1 Pro, ArtificialWatch: DeepSeek V4.1 Flash). Der Abstand ist klein genug, dass deine Aufgabe den Ausschlag geben sollte und nicht die Rangliste.
+
+## Open Source oder Open Weights: der Unterschied in einer Minute
+
+Fast jedes Modell dieser Liste hat **offene Gewichte** (Open Weights), ist aber nicht Open Source. Der Unterschied ist wichtiger, als das Marketing nahelegt.
+
+Open Weights heißt: Du kannst die Modellparameter herunterladen, auf eigener Hardware betreiben und in der Regel kommerziell nutzen. Die Trainingsdaten siehst du dadurch nicht, und nachbauen kannst du das Modell auch nicht. Die [Open Source AI Definition der Open Source Initiative](https://opensource.org/ai/open-source-ai-definition) verlangt dagegen drei Dinge: detaillierte Angaben zu den Daten, den vollständigen Trainingscode und die Parameter, alles unter offenen Bedingungen. Gewichte allein reichen dafür nicht.
+
+Nach der strengen OSI-Lesart sind GLM-5.3, DeepSeek V4 und Llama 4 Open Weights, ebenso der jüngste freizügige Neuzugang dieser Liste, Xiaomis MIT-lizenziertes MiMo-V2.6-Pro. Wirklich Open Source sind Modelle wie OLMo von AI2 und Pythia von EleutherAI: Ihre Entwickler veröffentlichen Trainingsdaten und Rezepte, an der Spitze der Leistungs-Ranglisten stehen diese Modelle aber nicht. NVIDIAs Nemotron 3 kommt beidem am nächsten: Es erscheint mit Gewichten sowie Trainingsdatensätzen und Rezepten. Näher an die OSI-Definition kommt kein Labor im Umfeld der Spitzenmodelle. Wegen seiner mittelmäßigen Benchmark-Werte fehlt es trotzdem unter den elf ausgewählten Modellen (siehe „Knapp nicht dabei“ weiter unten).
+
+Was jede Bezeichnung rechtlich bedeutet, erklärt unser Leitfaden zu [offenen Gewichten und Open Source](https://geotoolbox.ai/blog/open-weights-vs-open-source). Für diesen Artikel ist die praktische Folge wichtig: Jedes der elf Modelle hat heute herunterladbare offene Gewichte (die von K3 seit dem 27. Juli, die von Llama 4 und Muse Spark Open hinter einer manuellen Freigabe auf Hugging Face), und bei jedem nennen wir den Haken an der Lizenz. Die Lizenz entscheidet oft eher als der Benchmark-Wert darüber, ob ein Team ein Modell in einem Produkt einsetzen darf. Deshalb zeigt die Grafik, was jede Lizenz von einem Unternehmen verlangt.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/beste-open-source-llms/open-weight-license-gates-nov-2026-de.png" alt="Tabelle: Was jede offene Lizenz von einem Unternehmen verlangt. MIT und Apache 2.0 stellen keine Umsatz-, Nutzer- oder Gebietsbedingungen; GLM-5.3, Kimi K2.7-Code, Kimi K3, Llama 4, Muse Spark Open, MiniMax M3 und Step 5 Preview knüpfen die Nutzung an Schwellen, Anzeigepflichten, gesonderte Lizenzen oder Gebietsgrenzen." w="1040" h="867" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Was jede Lizenz von einem Unternehmen verlangt, laut Lizenztext, gelesen am 7. November 2026. Die Schwellen geben den Wortlaut der Lizenzen wieder; prüfe den aktuellen Text, bevor du ein Modell in ein Produkt einbaust.</figcaption>
+</figure>
+
+## So ist das Ranking entstanden und so liest du LLM-Benchmarks richtig
+
+Jede Platzierung unten stützt sich auf offizielle Modellkarten und Lizenztexte und ist mit unabhängigen Ranglisten gegengeprüft, die ihr Testverfahren offenlegen. Stand dieser Rangliste ist der 7. November 2026: An diesem Tag haben wir Spezifikationen, Lizenzen und Benchmark-Werte mit den Modellkarten und Lizenztexten auf Hugging Face und mit der Live-Rangliste von Artificial Analysis abgeglichen. Ausgenommen sind die ausdrücklich als v4.3.2 gekennzeichneten Werte, die wir nicht mehr abrufen konnten und als dokumentierten Stand vor dem Versionswechsel führen. Die VentureBeat-Seiten blockieren automatisierte Abrufe; ihre Angaben haben wir am selben Tag im Browser geprüft. Dieses Datum ist wichtiger, als es klingt.
+
+Benchmark-Zahlen sind leicht zu frisieren und noch leichter misszuverstehen. Drei Fallen erklären die meisten schiefen Vergleiche in Open-Source-LLM-Listen.
+
+**Falle 1: Verified und Pro verwechseln.** SWE-bench Verified und SWE-bench Pro sind verschiedene Tests. GLM-5.2 erreicht laut [offizieller Modellkarte](https://huggingface.co/zai-org/GLM-5.2) 62,1 % auf SWE-bench Pro, während mehrere Konkurrenten Werte um 80 % auf dem leichteren Verified-Set bewerben. Stellst du beides in eine Spalte, sieht GLM-5.2 wie der Verlierer aus. Das ist es nicht, gemessen wurde nur ein schwererer Test. Hinzu kommt: OpenAI wertet SWE-bench Verified seit Februar 2026 wegen Kontamination nicht mehr aus und schätzte im Juli 2026 rund 30 % der Aufgaben von SWE-bench Pro als fehlerhaft ein. Scale hat im September 2026 eine bereinigte Version 2 von SWE-bench Pro mit 642 Aufgaben veröffentlicht. Werte verschiedener Versionen sind nicht vergleichbar.
+
+**Falle 2: einen Versuch mit mehreren vergleichen.** Kimi K2 meldete bei SWE-bench Verified 65,8 % im ersten Versuch und 71,6 %, wenn Wiederholungen erlaubt waren. Beide Zahlen stimmen. Vergleichbar mit dem Einzelversuch eines anderen Labors ist nur eine davon.
+
+**Falle 3: mit und ohne Tools mischen.** Bei Humanity's Last Exam schwanken die Werte um zehn oder mehr Punkte, je nachdem, ob das Modell suchen und Code ausführen darf. Die Modellkarte von GLM-5.2 nennt für HLE 40,5; Ranglisten, die Tools zulassen, führen dasselbe Modell im mittleren 50er-Bereich. Keine der Zahlen ist falsch, aber in einer gemeinsamen Spalte haben sie nichts verloren.
+
+Dazu kommt ein grundsätzlicheres Problem, das die Community auf r/LocalLLaMA „Benchmaxxing“ nennt: Labore trimmen ihre Modelle auf die öffentlichen Tests. Du erkennst es, wenn ein Modell SWE-bench anführt und an deinem eigenen Repository scheitert. Nimm jeden Wert deshalb als Vorfilter und teste vor einer Entscheidung mit eigenen Aufgaben. Ein Modell kann ein Benchmark-Format meistern und an einer leicht umformulierten Fassung derselben Aufgabe trotzdem scheitern. Für Deutsch gilt das erst recht: Die Sprachqualität der Modelle auf deutschen Texten haben wir nicht getestet. Prüfe deine Kandidaten also mit deinen eigenen deutschen Dokumenten, bevor du dich festlegst.
+
+Mit diesen Vorbehalten im Kopf nun zu den elf Modellen.
+
+## Das Ranking: die 11 besten offenen Modelle im November 2026
+
+### 1. GLM-5.3 (Z.ai): die erste Wahl für agentisches Coding
+
+**753 Milliarden Parameter gesamt, 40 Milliarden aktiv (MoE), 1 Million Token Kontext, eigene GLM-5.3-Lizenz, veröffentlicht am 14. August 2026, die offenen Gewichte folgten rund zwei Wochen später.** GLM-5.3 behält die Basis von GLM-5.2 (753 Milliarden / 40 Milliarden); alle Verbesserungen stammen aus dem Post-Training. Im Index v4.3.2 (Oktober 2026, vor dem Wechsel auf v5 am 27. Oktober) kam es auf 44,8 Punkte. Das war Platz drei unter den offenen Modellen, hinter MiMo-V2.6-Pro (46,3) und DeepSeek V4.1 Flash (45,1) und knapp vor Step 5 Preview (43,7) und Kimi K3 (43,6). Im Index v5.0.1 erreicht es 32 Punkte, einen weniger als DeepSeek V4.1 Flash 1017 (33), das dort unter allen Modellen dieser Liste den höchsten Wert hat.
+
+Wir setzen GLM-5.3 auf Platz eins für agentisches Coding über lange Aufgabenketten, und das bei 753 Milliarden Parametern. Im unabhängig gemessenen Terminal-Bench 4.0 von Artificial Analysis liegt es mit 42 % vor allen anderen Modellen dieser Liste; nur das noch nicht aufgenommene Kimi K3.1 Pro kommt mit 67 % höher, und in älteren Benchmark-Versionen liegen teils andere Modelle vorn. MiMo-V2.6-Pro (1,02 Billionen) und DeepSeek V4.1 Flash, unser Preis-Leistungs-Tipp, lagen in v4.3.2 etwas höher; in v5.0.1 liegt MiMo-V2.6-Pro (30) hinter GLM-5.3 (32). Auffällig sind seine Fähigkeiten in der IT-Sicherheit: Z.ai selbst nennt 84,5 Punkte im CyberGym-Benchmark, beim Ausnutzen von Schwachstellen bleibt das Modell aber hinter den besten geschlossenen Modellen zurück. Der Haken an der Lizenz: Wer ein Model-as-a-Service-Geschäft betreibt und mit allen verbundenen Unternehmen in zwölf aufeinanderfolgenden Monaten mehr als 10 Milliarden US-Dollar umsetzt, muss vor jeder kommerziellen Nutzung von GLM-5.3 eine Sicherheitsprüfung von Z.ai bestehen. Nur das kleinere GLM-5.3-Flash bleibt unter MIT.
+
+Praktisch am wichtigsten ist das Kontextfenster von 1 Million Token. Coding-Agenten können ein mittelgroßes Repository im Kontext halten, ohne ständig zu komprimieren, und Z.ai gibt an, dass seine Optimierung IndexShare die Rechenlast im vollen 1-Million-Token-Fenster um rund den Faktor 2,9 senkt.
+
+**Zu beachten:** Das Modell verarbeitet keine Bilder, und Self-Hosting ist ein aufwendiges Projekt. Selbst stark quantisierte Community-Builds sind noch Hunderte Gigabyte groß. Die meisten Teams nutzen es über einen API-Anbieter statt auf eigener Hardware. Die vollständigen Spezifikationen findest du in unserem [Beitrag zu GLM-5.3](https://geotoolbox.ai/blog/what-is-glm-5-3).
+
+### 2. DeepSeek V4 Pro und V4.1 Flash: der Preis-Leistungs-Tipp
+
+**1,6 Billionen Parameter / 49 Milliarden aktiv (Pro) und 552 Milliarden / 16 Milliarden aktiv (V4.1 Flash), 1 Million Token Kontext, MIT-Lizenz.** Die [V4-Familie](https://geotoolbox.ai/blog/deepseek-v4) von DeepSeek deckt beide Enden des Budgets ab. V4 Pro wurde auf mehr als 32 Billionen Token vortrainiert, V4.1 Flash (10. September, aktualisiert am 17. Oktober) auf 45 Billionen. In v4.3.2 lag V4.1 Flash (Build vom 17. Oktober) mit 45,1 Punkten vor dem Pro-Modell. In v5.0.1 liegt V4.1 Flash 1017 mit 33 Punkten deutlich vor V4 Pro (23), bei einem Bruchteil der Betriebskosten. Beide nutzen ein komprimiertes Attention-Design, das den Speicherbedarf des KV-Caches bei langem Kontext drastisch senkt.
+
+Ein Vorteil von V4 Pro, den Ranglisten selten zeigen, ist sein Faktenwissen: Laut Modellkarte liegt es bei SimpleQA Verified vor den dort verglichenen offenen Modellen. Starke Reasoning-Modelle mit gutem Faktenwissen sind seltener, als die Ranglisten vermuten lassen. Das Labor, das den ursprünglichen „DeepSeek-Moment“ ausgelöst hat, bleibt beim Preis der Maßstab, an dem sich jeder Wettbewerber messen lassen muss (siehe unsere Aufschlüsselung der [DeepSeek-Preise](https://geotoolbox.ai/de/blog/deepseek-kosten)). Hintergrund zum Labor und zur R1-Geschichte liefert unser [Überblick zu DeepSeek](https://geotoolbox.ai/blog/what-is-deepseek).
+
+**Zu beachten:** Die Gewichte von V4.1 Flash sind rund 510 GB groß, trotz des Namens „Flash“ also ein Download für Server.
+
+### 3. Step 5 Preview (StepFun): der Neueinsteiger für agentische Aufgaben
+
+**600 Milliarden Parameter gesamt, 27 Milliarden aktiv (MoE), bis zu 1 Million Token Kontext, StepFun Model License 1.0.** StepFuns agentisches Flaggschiff erreichte im [Intelligence Index v4.3.2 von Artificial Analysis](https://artificialanalysis.ai/models/step-5) 43,7 Punkte, 0,1 mehr als Kimi K3, und damit Platz vier unter den offenen Modellen (in v5.0.1: 29). Das [Hugging-Face-Repository](https://huggingface.co/stepfun-ai/Step-5-Preview) stammt vom 20. September 2026. Wie GLM-5.3 und Kimi K3 hat es offene Gewichte, aber keine freizügige Lizenz: Ab 100 Millionen aktiven Nutzern oder 20 Millionen US-Dollar Umsatz in einem Monat muss ein Produkt „Powered by StepFun AI“ anzeigen. Gerätehersteller (Fahrzeuge eingeschlossen) und Betreiber eines Model-as-a-Service-Geschäfts mit mehr als 20 Millionen US-Dollar Umsatz in zwölf Monaten brauchen eine gesonderte kommerzielle Lizenz; rein interne Nutzung ist ausgenommen.
+
+### 4. Kimi K3 und K2.7-Code (Moonshot AI): stark bei Agenten, K3 als größtes offenes Modell
+
+**K3: 2,8 Billionen Parameter, 1 Million Token Kontext, vorgestellt am 16. Juli 2026. K2.7-Code: rund 1 Billion / 32 Milliarden aktiv, 256K Kontext, Mitte Juni 2026 erschienen.** K2.7-Code ist das auf Coding spezialisierte Modell der K2-Linie; als Allzweckmodell der Serie führt Moonshot weiterhin K2.6. Es ist der Coding-Ableger von K2.6, dessen Modellkarte Agenten-Schwärme mit bis zu 300 Sub-Agenten über 4.000 koordinierte Schritte beschreibt. Laut seiner Modellkarte verbraucht K2.7-Code rund 30 % weniger Reasoning-Token als K2.6; der auf Coding zugeschnittene Preis liegt bei 0,95 $ je Million Eingabe-Token und 4,00 $ je Million Ausgabe-Token. K2.6 läuft auf der API noch zum selben Preis. Wichtig für Neukunden: Über Moonshots eigene API ist K2.7-Code wie die gesamte K2-Serie seit dem 31. Oktober 2026 nicht mehr neu buchbar, und Moonshot will die K2-Serie bis Ende Dezember 2026 abschalten. Die Gewichte bleiben unter der Modified-MIT-Lizenz herunterladbar.
+
+Für Schlagzeilen sorgt K3: [das größte offene Modell, das je veröffentlicht wurde](https://venturebeat.com/technology/chinas-moonshot-ai-releases-kimi-k3-the-largest-open-source-model-ever-rivaling-top-u-s-systems), ein MoE mit 2,8 Billionen Parametern gesamt und 104 Milliarden aktiv, rund 75 % größer als DeepSeek V4 Pro. Im [Intelligence Index v4.3.2 von Artificial Analysis](https://artificialanalysis.ai/models/kimi-k3) (Oktober 2026, vor dem Wechsel auf v5) landete es mit 43,6 Punkten auf Platz fünf der offenen Modelle, 0,1 Punkte hinter Step 5 Preview. Zum Start hielt K3 bei einigen Tests mit den besten proprietären Systemen mit, darunter ein laut Hersteller führender Wert von 91,2 bei BrowseComp. Moonshots K3.1 Pro, ein nachtrainiertes K3 vom 23. Oktober 2026, erreichte in v4.3.2 55 Punkte (in v5.0.1: 46); Artificial Analysis erwartete, dass es die offenen Modelle anführen würde, sobald die Gewichte erscheinen. Spätestens seit dem 5. November 2026 sind sie unter einer eigenen Kimi-K3.1-Pro-Lizenz auf Hugging Face öffentlich, in unsere Auswahl haben wir das Modell aber noch nicht aufgenommen.
+
+Ein Datum ist wichtig: Die Gewichte von K3 sind seit dem **27. Juli 2026** öffentlich. Davor gab es das Modell nur per API und App, zu [3 $ je Million Eingabe-Token und 15 $ je Million Ausgabe-Token](https://venturebeat.com/technology/chinas-moonshot-ai-releases-kimi-k3-the-largest-open-source-model-ever-rivaling-top-u-s-systems), dem 3,75-Fachen des Ausgabepreises von K2.7-Code. Unser Beitrag zu [Kimi K3](https://geotoolbox.ai/de/blog/kimi-k3) trennt, was belegt und was vom Hersteller behauptet ist. Die Anleitung, [Kimi K3 lokal zu betreiben](https://geotoolbox.ai/blog/how-to-run-kimi-k3-locally), klärt, ob sich ein 2,8-Billionen-Modell überhaupt auf eigener Hardware nutzen lässt (meist nicht).
+
+**Zu beachten:** die Lizenz. K2.7-Code erscheint mit denselben Bedingungen wie sein Vorgänger K2.6, Moonshots [Modified MIT](https://huggingface.co/moonshotai/Kimi-K2.7-Code/blob/main/LICENSE): Produkte mit mehr als 100 Millionen monatlich aktiven Nutzern oder mehr als 20 Millionen US-Dollar Monatsumsatz müssen den Modellnamen gut sichtbar in der Oberfläche anzeigen. Für die meisten Teams ist das trivial, für Verbraucher-Apps mit großer Reichweite eine echte Abwägung. K3 erschien nicht unter der Modified MIT, die manche erwartet hatten, sondern unter einer eigenen [Kimi-K3-Lizenz](https://huggingface.co/moonshotai/Kimi-K3): Kommerzielle Nutzung ist erlaubt. Produkte jenseits von 100 Millionen monatlich aktiven Nutzern oder 20 Millionen US-Dollar Monatsumsatz müssen „Kimi K3“ in der Oberfläche anzeigen. Wer ein Model-as-a-Service-Geschäft betreibt, braucht vor jeder kommerziellen Nutzung von K3 eine gesonderte Vereinbarung mit Moonshot, sobald sein Gesamtumsatz einschließlich verbundener Unternehmen in zwölf Monaten 20 Millionen US-Dollar übersteigt; rein interne Nutzung ist davon ausgenommen. Die Modellkarte nennt vLLM (mit eigenem Rezept) und SGLang als empfohlene Inferenz-Engines.
+
+### 5. Hunyuan Hy4 Preview (Tencent): der freizügige Herausforderer auf Spitzenniveau
+
+**770 Milliarden Parameter gesamt, 49 Milliarden aktiv (MoE), 1 Million Token Kontext, Apache 2.0, offene Gewichte seit dem 28. August 2026.** Unter den freizügig lizenzierten Modellen ist Tencents Hunyuan-Linie unser Favorit. Tencents eigener Blindtest stellt Hy4 Preview knapp vor GLM-5.3 und Kimi K3 (2,99 gegenüber 2,92 und 2,94). Anders als GLM-5.3 und Kimi K3, die beide eigene Lizenzen mit Umsatz- oder Nutzerschwellen haben, steht Hy4 Preview schlicht unter Apache 2.0, ohne Zusatzklauseln, und das in einer Größe (770 Milliarden Parameter), die die meisten komplett freizügigen Veröffentlichungen nicht erreichen.
+
+**Zu beachten:** der Preis. Laut Tencents Preisliste kostet Hy4 bei den Eingabe-Token rund sechsmal so viel wie Hy3 (0,834 $ statt 0,132 $ je Million Token), deshalb fahren preisbewusste Teams mit dem vollen Hy3 (295 Milliarden / 21 Milliarden, 256K Kontext, ebenfalls Apache 2.0) oft günstiger. Verwechsle es außerdem nicht mit dem Hy3-Preview vom April: Es stand unter der restriktiveren Tencent Hy Community License, die unter anderem die EU ausschloss; diese Gebietsausschlüsse hat Tencent mit der Juli-Veröffentlichung gestrichen. Und „Preview“ im Namen ist wörtlich zu nehmen: Das finale Hy4 (mit Bildverstehen und Computer-Steuerung, zum selben Listenpreis von 0,834 $ je Million Eingabe-Token) hat Tencent am 4. November 2026 vorgestellt, seine Gewichte sollen laut Tencent aber erst noch folgen. Stand 7. November 2026 ist Hy4 Preview deshalb weiterhin die neueste Hy4-Version mit herunterladbaren Gewichten.
+
+### 6. MiniMax M3: das beste multimodale Agentenmodell
+
+**428 Milliarden Parameter gesamt, 23 Milliarden aktiv (MoE), 1 Million Token Kontext über MiniMax Sparse Attention, MiniMax Community License.** M3 wurde von Anfang an mit gemischten Modalitäten trainiert und verarbeitet deshalb Bild und Video nativ.
+
+**Zu beachten:** die Lizenz und die Quellen der Werte. Die MiniMax Community License erlaubt nicht-kommerzielle Nutzung und knüpft kommerzielle Nutzung an Bedingungen: Wer M3 kommerziell einsetzt, muss „Built with MiniMax M3“ anzeigen und MiniMax einmalig informieren. Über 20 Millionen US-Dollar Jahresumsatz braucht es eine vorherige schriftliche Freigabe, und militärische Zwecke schließt die Lizenz aus. Die Reasoning-Werte des Modells stützen sich zudem teils auf Aggregator-Ranglisten, die Tests anders gewichten als die einzelnen Benchmarks. Lies bei beidem also das Kleingedruckte.
+
+### 7. Qwen3.5, Qwen3.6 und Qwen3.8-27B (Alibaba): Lizenzfreiheit und Sprachabdeckung
+
+**0,8 Milliarden bis 397 Milliarden Parameter (17 Milliarden aktiv beim größten Modell), 262K Token Kontext, erweiterbar Richtung 1M, Apache 2.0.** Qwen setzt auf Breite. Die Familie reicht vom handytauglichen 0,8-Milliarden-Modell bis zum Qwen3.5-Flaggschiff mit 397 Milliarden Parametern, alles unter Apache 2.0, einer der freizügigsten gängigen Lizenzen: keine Anzeigepflicht ab einer bestimmten Größe, keine Nutzergrenzen, nichts, was du neu verhandeln müsstest, wenn dein Produkt wächst.
+
+Das Flaggschiff verarbeitet laut Modellkarte Text, Bilder, Video und Dokumente in einem einzigen Modell und deckt 201 Sprachen und Dialekte ab. Die Generationen wechseln außerdem schnell: Die Qwen3.6-Welle vom April 2026 brachte ein dichtes 27-Milliarden-Modell und ein MoE mit 35 Milliarden gesamt und 3 Milliarden aktiv, die weit mehr leisten, als ihre Größe vermuten lässt. Für Consumer-Hardware sind sie, nicht das Qwen3.5-Flaggschiff, die aktuellen Empfehlungen der Familie. Die komplette Aufstellung steht in unserem [Qwen-Leitfaden](https://geotoolbox.ai/blog/what-is-qwen).
+
+**Zu beachten:** Mit vollem Kontext braucht das Flaggschiff viel Speicher auf mehreren GPUs. Gerade die Breite der Familie ist ihr Vorteil: Nimm die Größe, die deine Hardware schafft. Dazu ein Hinweis zur Benennung: Alibabas 2,4-Billionen-Modell [Qwen3.8-Max](https://geotoolbox.ai/blog/qwen3-8-max) erschien am 3. August 2026 als geschlossene Max-API (2 $ / 6 $ je Million Token), nicht als offene Veröffentlichung. Seine offenen Gewichte folgten am 12. August 2026, aber als reine Textvariante unter einer eigenen Qwen3.8-Max-Lizenz statt einer freizügigen. Dieser Eintrag deckt deshalb Qwens Apache-2.0-Linie ab, in der Qwen3.5-397B weiter das größte Flaggschiff und Qwen3.8-27B (August 2026) das neueste Modell ist.
+
+### 8. MiMo-V2.6-Pro (Xiaomi): der Außenseiter mit der besten Token-Effizienz
+
+**1,02 Billionen Parameter gesamt, 42 Milliarden aktiv (MoE), 1 Million Token Kontext, MIT-Lizenz, Gewichte seit dem 21. September 2026.** Xiaomi ist das am wenigsten besprochene Labor dieser Liste und wohl das effizienteste. MiMo-V2.6-Pro, das MiMo-V2.5-Pro als Xiaomis Flaggschiff abgelöst hat, war im Index v4.3.2 das beste offene Modell (46,3, Stand Oktober 2026). In v5.0.1 (v5 startete am 27. Oktober) erreicht es 30 Punkte, hinter DeepSeek V4.1 Flash 1017 (33) und GLM-5.3 (32). Sein Reinforcement-Learning-Rezept belohnt ausdrücklich kürzere Lösungswege und weniger Token je Aufgabe, was bei langen agentischen Abläufen spürbar Kosten spart. Dazu verarbeitet es Text, Bild, Video und Audio in einem Modell.
+
+**Zu beachten:** die Reife des Ökosystems. Werkzeuge, quantisierte Community-Builds und Anbieterunterstützung hinken den größeren Namen hinterher, rechne also mit mehr Integrationsaufwand.
+
+### 9. Llama 4, Muse Spark Open und Muse Glimmer (Meta): der westliche Standard
+
+**Llama 4: 109 Milliarden / 17 Milliarden und 400 Milliarden / 17 Milliarden (MoE), multimodal, Kontextfenster mit bis zu 10 Millionen Token beworben. Muse Spark Open: 816 Milliarden / 42 Milliarden (MoE), nativ multimodal, 1 Million Token Kontext, Muse Model License, veröffentlicht am 15. Oktober 2026. Muse Glimmer: rund 29,6 Milliarden (dicht), 131K Kontext, Apache 2.0, erschienen am 10. August 2026.** Llama bleibt das Fundament des offenen Ökosystems: die breiteste Werkzeugunterstützung, die meisten Fine-Tunes, die meisten Deployment-Anleitungen. Scout (109 Milliarden Parameter) ist die sparsame Wahl für lokale Entwicklung und Edge-Anwendungen, Maverick (400 Milliarden) der Allrounder für den Produktivbetrieb mit starken mehrsprachigen Werten, beides allerdings nur, wenn dich die EU-Klausel der Llama-4-Lizenz nicht trifft (siehe „Zu beachten“). Llama trieb außerdem [Meta AI](https://geotoolbox.ai/blog/what-is-meta-ai) an, Metas Verbraucher-Assistenten, bis Meta im April 2026 auf das proprietäre Modell Muse Spark umstieg.
+
+Muse Glimmer ist Metas Antwort auf die Kritik an den Llama-Lizenzen: ein von Muse Spark destilliertes Modell der 30-Milliarden-Klasse, zugeschnitten auf Agenten, die lokal auf dem Gerät laufen. In 4-Bit-Quantisierung passt es auf eine einzelne 24-GB-Consumer-GPU, und laut Meta liegt es bei Agenten-Benchmarks wie MCP Atlas und DeepSearch QA vor Gemma 4 und Qwen3.6-27B.
+
+**Zu beachten:** vier Dinge. Die Llama 4 Community License ist nicht von der OSI anerkannt und verlangt eine gesonderte Lizenz von Meta, wenn ein Unternehmen am Veröffentlichungstag von Llama 4 mehr als 700 Millionen monatlich aktive Nutzer hatte. Muse Glimmer unter schlichtem Apache 2.0 kennt diese Einschränkung nicht. Für Unternehmen in der EU kommt bei den multimodalen Llama-4-Modellen eine weitere Einschränkung dazu, die wir weiter unten im Abschnitt zu DSGVO, AI Act und Lizenzen erklären. Die [Lizenz von Muse Spark Open](https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B) ist keine Apache-Lizenz: Sie verlangt den Hinweis „Built with Muse Spark Open“ und eine gesonderte Vereinbarung für Model-as-a-Service-Geschäfte über 20 Millionen US-Dollar Umsatz. Und die 10 Millionen Token Kontext von Llama 4 sind eine Marketing-Obergrenze, kein Wert für den Praxisbetrieb: Die Qualität bei langem Kontext lässt branchenweit lange vor den beworbenen Grenzen nach. Plane deine Anwendungen also mit einem deutlich kleineren nutzbaren Fenster.
+
+### 10. Gemma 4 (Google): die Wahl für lokale Hardware und Edge-Geräte
+
+**Fünf Größen von Effective-2B bis 31B dicht (E2B, E4B, 12B, 26B A4B, 31B), 128K Kontext bei den beiden kleinsten und 256K bei den übrigen, Apache 2.0.** Gemma 4 ist die Antwort auf die Frage, was du tatsächlich betreiben kannst. Die Familie lässt sich sauber staffeln: handytaugliche Varianten E2B und E4B, ein 12B (seit Juni 2026), ein MoE 26B A4B und ein dichtes 31B-Flaggschiff. E2B, E4B und 12B verarbeiten auch Audio. Das MoE 26B A4B aktiviert pro Token nur 3,8 Milliarden von 25,2 Milliarden Parametern. Die unquantisierten bf16-Gewichte des dichten 31B (30,7 Milliarden Parameter, also rund 61 GB) passen auf eine einzelne H100 mit 80 GB, quantisierte Builds laufen auf Consumer-GPUs.
+
+Google hat zudem die Lizenzkritik ausgeräumt: Gemma 3 erschien noch unter eigenen Bedingungen, Gemma 4 steht unter Apache 2.0.
+
+**Zu beachten:** Ein dichtes 31B-Modell tritt bei harten Reasoning-Aufgaben nicht gegen die MoE-Klasse im Billionen-Bereich an, und dem 31B fehlt die Audio-Unterstützung der kleineren Varianten. Das ist die Liga für lokale Hardware, nicht die Spitzenliga.
+
+### 11. gpt-oss-120b (OpenAI): das freizügige westliche Reasoning-Modell
+
+**117 Milliarden Parameter gesamt, 5,1 Milliarden aktiv, 128K Kontext, Apache 2.0.** OpenAIs offene Veröffentlichung geht neben den chinesischen Schwergewichten leicht unter, und das sollte sie nicht. Mit nur 5,1 Milliarden aktiven Parametern gehört gpt-oss-120b zu den im Betrieb günstigsten starken Reasoning-Modellen; gebaut wurde es für Reasoning und Tool-Nutzung. Apache 2.0 und ein US-Labor sind zudem ein Argument für Einkaufsabteilungen, die kein chinesisches Modell einsetzen dürfen, ob zu Recht oder nicht. (Der Sicherheitsfrage widmen wir [einen eigenen Beitrag](https://geotoolbox.ai/de/blog/chinesische-ki).)
+
+**Zu beachten:** Bei breiten Wissenstests liegt es deutlich hinter den führenden offenen Modellen. Und mit 128K Kontext (131.072 Token) gehört gpt-oss-120b, zusammen mit Muse Glimmer und den kleinen Gemma-4-Varianten, zu den Modellen mit dem kleinsten Kontextfenster in dieser Liste.
+
+**Knapp nicht dabei.** Vier Modelle fehlen in der Liste, und das verdient eine Erklärung. NVIDIAs Nemotron 3 (550 Milliarden / 55 Milliarden, hybrides Transformer-Mamba, Lizenz OpenMDW-1.1) verdient Respekt für seine Transparenz: Es erscheint mit Gewichten sowie Trainingsdatensätzen und Rezepten, und steht damit näher an der Open-Source-Definition der OSI als jedes andere Modell aus dem Spitzenfeld. Wegen seiner Benchmark-Werte ging der Platz trotzdem an Hunyuan Hy4 Preview, das Leistung und offene Lizenz besser verbindet. Im Intelligence Index v5.0.1 kommt Nemotron 3 Ultra nur auf 12 Punkte, gegenüber 33 für DeepSeek V4.1 Flash 1017, den v5.0.1-Spitzenreiter unter den elf Modellen.
+
+Mistrals offene Linie besteht heute aus den Devstral-2-Coding-Spezialisten, [Mistral Large 3](https://huggingface.co/mistralai/Mistral-Large-3-675B-Instruct-2512), einem Generalisten mit 675 Milliarden Parametern unter Apache 2.0, der vor der diesjährigen Welle neuer Spitzenmodelle entstand, und seit dem 29. Oktober 2026 aus [Mistral Large 4](https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B). Large 4 ist ein MoE mit rund 1 Billion Parametern (etwa 52 Milliarden aktiv, 1 Million Token Kontext) unter der Mistral Ecosystem Open-Weight License. Diese modifizierte MIT-Lizenz erlaubt kommerzielle und nicht-kommerzielle Nutzung, verlangt für ein Model-as-a-Service-Geschäft aber eine gesonderte kommerzielle Lizenz von Mistral. Für diese Liste haben wir es nicht bewertet, deshalb taucht es in keiner Tabelle auf.
+
+Microsofts Phi-4-Familie spielt am kleinen Ende, auf Geräten ohne GPU, nicht im Wettlauf der Flaggschiffe. Und OLMo, weiter oben erwähnt, überzeugt durch Offenheit statt durch Leistung. Kennen solltest du alle vier. Nemotron 3, Phi-4 und OLMo schlagen keinen der Einträge oben in dessen Disziplin; Mistral Large 4 haben wir nicht mit den elf Modellen oben verglichen.
+
+## Welches offene Modell für welche Aufgabe
+
+<table>
+<thead>
+<tr><th>Du brauchst</th><th>Nimm</th><th>Warum</th></tr>
+</thead>
+<tbody>
+<tr><td>Agentisches Coding (unser Tipp Nr. 1)</td><td><strong>GLM-5.3</strong></td><td>Unter den hier vorgestellten Modellen führende Werte bei langen Coding-Aufgaben, 1 Million Token Kontext, 753 Milliarden Parameter</td></tr>
+<tr><td>Bestes Preis-Leistungs-Verhältnis</td><td><strong>MiMo-V2.6-Pro</strong> oder <strong>DeepSeek V4.1 Flash</strong></td><td>MiMo: bester v4.3.2-Wert (46,3) unserer Auswahl, in v5.0.1 30 Punkte für rund 0,26 $ je Index-Aufgabe; V4.1 Flash: in v5.0.1 33 Punkte, 0,15 $ / 0,60 $ je Million Token zu Nebenzeiten (Off-Peak), MIT-Lizenz</td></tr>
+<tr><td>Agenten-Schwärme und lange autonome Läufe</td><td><strong>Kimi K2.7-Code</strong></td><td>Agenten-Schwarm-Architektur der K2-Linie (K2.6-Karte: bis zu 300 Sub-Agenten, 4.000 Schritte), 30 % weniger Reasoning-Token als K2.6; über Moonshots API seit dem 31. Oktober nicht mehr neu buchbar, die K2-Serie soll bis Ende Dezember 2026 abgeschaltet werden, die Gewichte bleiben herunterladbar</td></tr>
+<tr><td>Multimodale Agenten (Bild, Video)</td><td><strong>MiniMax M3</strong></td><td>Training von Anfang an mit gemischten Modalitäten</td></tr>
+<tr><td>Sauberste Lizenz in jeder Größe</td><td><strong>Qwen3.5</strong> oder <strong>Gemma 4</strong></td><td>Apache 2.0, keine Schwellen</td></tr>
+<tr><td>Eine einzelne 24-GB-Consumer-GPU</td><td><strong>Gemma 4 26B-A4B</strong> oder ein mittelgroßes Qwen3.6</td><td>Für genau diese Hardwareklasse gebaut</td></tr>
+<tr><td>Größtes offenes Modell (2,8 Billionen Parameter)</td><td><strong>Kimi K3</strong> (seit 27. Juli)</td><td>Platz 5 der offenen Modelle im Index v4.3.2, der am 27. Oktober abgelöst wurde (43,6, hinter MiMo-V2.6-Pro mit 46,3, DeepSeek V4.1 Flash mit 45,1, GLM-5.3 mit 44,8 und Step 5 Preview mit 43,7)</td></tr>
+<tr><td>Schwerste Reasoning-Aufgaben</td><td><strong>MiMo-V2.6-Pro</strong></td><td>Höchster Wert unserer Auswahl in der alten HLE-Version von Artificial Analysis (49,4 %; in v5 durch HLE-Diamond ersetzt); das noch nicht aufgenommene Kimi K3.1 Pro liegt dort mit 52,5 % darüber</td></tr>
+<tr><td>Freizügige Lizenz auf Spitzenniveau</td><td><strong>MiMo-V2.6-Pro</strong> (MIT) oder <strong>Hunyuan Hy4 Preview</strong> (Apache 2.0)</td><td>1,02 Billionen und 770 Milliarden Parameter, keine eigene Umsatz- oder Nutzerklausel wie bei GLM-5.3 oder K3</td></tr>
+<tr><td>Prüfbare Trainingsdaten</td><td><strong>Nemotron 3</strong> (knapp nicht dabei, siehe oben)</td><td>Daten und Rezepte veröffentlicht, nicht nur Gewichte</td></tr>
+</tbody>
+</table>
+
+Bleibt eine der häufigsten Fragen: Sind diese Modelle gratis? Herunterladen kannst du jedes Modell oben kostenlos, bei Llama 4 und Muse Spark Open nach einer manuellen Freigabe. Geld kostet die Rechenleistung. Heißt „kostenlos“ für dich „kostenlos chatten“, bieten die gehosteten Apps von Kimi, DeepSeek und Qwen jeweils ein Gratis-Kontingent.
+
+## Kannst du diese Modelle wirklich selbst betreiben? Der Realitätscheck
+
+Hier kommt der Teil, den die meisten Ranglisten überspringen: Beim Spitzenfeld dieser Liste sind „herunterladbar“ und „betreibbar“ zwei verschiedene Aussagen.
+
+**Die VRAM-Rechnung.** Als Faustregel braucht ein Modell bei FP16 rund 2 GB Speicher pro Milliarde Parameter und bei 4-Bit-Quantisierung etwa 0,5 bis 0,6 GB. Dazu kommt der KV-Cache, der mit Kontextlänge und gleichzeitigen Anfragen wächst (bei lokalem Chat bescheiden, bei langem Kontext riesig). Eine 8-GB-GPU stößt bei einem Modell mit 7 bis 8 Milliarden Parametern in 4-Bit an ihre Grenze. Eine 24-GB-Karte schafft dichte Modelle mit 27 bis 32 Milliarden Parametern. An die Billionen-Klasse kommt keine Consumer-Hardware heran.
+
+**Die MoE-Falle.** Das ist die am häufigsten missverstandene Tatsache beim Self-Hosting. Ein Mixture-of-Experts-Modell wie Kimi K2.7-Code aktiviert pro Token nur 32 Milliarden Parameter, aber **alle rund 1 Billion Parameter müssen im Speicher liegen**, weil jedes Token an jeden Experten geleitet werden kann. Die aktiven Parameter bestimmen Tempo und Kosten pro Token, die Gesamtparameter dagegen deine Speicherrechnung. Community-Builds von Modellen der K2.7-Code-Klasse brauchen selbst bei extremer Quantisierung Hunderte Gigabyte aus RAM und VRAM zusammen.
+
+**Quantisierung ist der Hebel, aber mit Grenzen.** Q4_K_M, das gängige 4-Bit-GGUF-Format, braucht laut der Tabelle von llama.cpp 4,89 Bit pro Gewicht statt 16 und spart damit rund 70 % Speicher, bei meist nur mäßigem Qualitätsverlust für dichte Modelle. MoE-Modelle vertragen aggressive Quantisierung schlechter, und die Reasoning-Qualität leidet in der Regel früher als die Chat-Qualität. Wenn die Stärke eines Modells im sorgfältigen mehrstufigen Schlussfolgern liegt, teste die quantisierte Fassung, bevor du ihr vertraust.
+
+**Der Stack.** Zum Prototyping ist [Ollama](https://ollama.com/) der schnellste Weg: Ein Befehl lädt einen vorquantisierten Build und stellt ihn hinter einem OpenAI-kompatiblen Endpunkt bereit. Für den Produktivbetrieb mit vielen gleichzeitigen Anfragen ist [vLLM](https://docs.vllm.ai/en/latest/) der Standard: PagedAttention und Continuous Batching halten die GPUs ausgelastet. Wichtigste Alternative ist SGLang. Miss dein Setup nicht am Spitzendurchsatz, sondern an den zwei Zahlen, die Nutzer spüren: der Zeit bis zum ersten Token und der Latenz zwischen den Token. Eine Schritt-für-Schritt-Anleitung von der Installation bis zum ersten Chat findest du in unserem Beitrag, [wie du ein LLM lokal betreibst](https://geotoolbox.ai/blog/run-llm-locally).
+
+<table>
+<thead>
+<tr><th>Hardware</th><th>Was darauf läuft</th><th>Beispiele</th></tr>
+</thead>
+<tbody>
+<tr><td>Laptop / 8-GB-GPU</td><td>2B bis 8B in 4-Bit</td><td>Gemma 4 E2B und E4B, kleine Qwen3.5/3.6</td></tr>
+<tr><td>24-GB-Consumer-GPU</td><td>12B bis 32B</td><td>Gemma 4 26B-A4B (quantisiert), mittleres Qwen3.6</td></tr>
+<tr><td>128-GB-Mac-Studio / Workstation</td><td>rund 100 bis 300 Milliarden als MoE bei Quantisierung der 3-Bit-Klasse</td><td>gpt-oss-120b</td></tr>
+<tr><td>Server mit mehreren GPUs (deutlich über 300 GB)</td><td>Die Spitzenklasse, quantisiert</td><td>GLM-5.3, DeepSeek V4.1 Flash (rund 510 GB), Kimi K2.7-Code, DeepSeek V4 Pro</td></tr>
+<tr><td>Nur per API</td><td>Alles, ohne Investition in Hardware</td><td>Viele der Modelle über Drittanbieter oder offizielle APIs; Angebot und Zugang unterscheiden sich je nach Anbieter und ändern sich laufend</td></tr>
+</tbody>
+</table>
+
+**Was kostet der Betrieb wirklich?** Bei den Modellen der Spitzenklasse meist mehr als die API. Eine einzelne gebrauchte GPU der H100-Klasse kostet einen fünfstelligen Betrag, bevor Strom dazukommt, und die Spitzenklasse braucht mehrere. Die Token-Preise der API sind für offene Modelle dagegen aggressiv: DeepSeek V4.1 Flash kostet Cent-Beträge pro Million Token, und selbst Kimi K3 startete mit 3 $ je Million Eingabe-Token. Zur Einordnung: Eine Anwendung, die mit K3, dem teuersten Modell hier, täglich eine Million Ausgabe-Token erzeugt, kommt bei 15 $ je Million Ausgabe-Token auf rund 450 $ im Monat. Self-Hosting gewinnt beim Datenschutz, beim Offline-Betrieb, bei der Freiheit zum Fine-Tuning und bei dauerhaft sehr hohem Volumen. Ein selbst betriebenes Modell schickt keine Prompts an die API eines Dritten. Das entschärft bei chinesischen Modellen die Sorge um abfließende Daten, auch wenn die Lizenzbedingungen weiter gelten, bei GLM-5.3 für sehr große Model-as-a-Service-Anbieter auch die Sicherheitsprüfung durch Z.ai. Allein bei den Kosten gewinnt es selten; unsere Aufschlüsselung der [Kimi-API-Preise](https://geotoolbox.ai/blog/kimi-api-pricing) zeigt, wie schnell gehostete Preise bei typischer Nutzung eigene Hardware unterbieten. Rechne mit deinem tatsächlichen Token-Volumen nach, bevor du irgendetwas kaufst. Was beim Datenschutz in Deutschland rechtlich gilt, klärt der nächste Abschnitt.
+
+## Darf dein Unternehmen offene LLMs einsetzen? DSGVO, AI Act und Lizenzen
+
+In Deutschland entscheiden drei Fragen darüber, ob ein offenes Modell im Betrieb erlaubt ist, und kaum eine Rangliste beantwortet sie: wo die Gewichte laufen, was der AI Act von dir als Betreiber verlangt und ob die Lizenz dich überhaupt zulässt.
+
+### Wo die Gewichte laufen: die DSGVO-Frage
+
+Wer die gehostete API eines chinesischen Anbieters mit personenbezogenen Daten nutzt, übermittelt diese Daten in ein Drittland. DeepSeek speichert sie laut Datenschutzerklärung (Stand 10. Februar 2026) in der Volksrepublik China, und für China gibt es keinen Angemessenheitsbeschluss der EU-Kommission. Damit braucht es geeignete Garantien wie Standarddatenschutzklauseln nach Art. 46 DSGVO samt Prüfung der Rechtslage im Empfängerland. Laufen dieselben offenen Gewichte auf eigener oder in der EU gehosteter Infrastruktur, fließen keine Prompts an den Modellhersteller. Ganz ohne Drittlandbezug bleibt das aber nur, wenn auch niemand aus einem Drittland zugreift: Eine eingeräumte Zugriffsmöglichkeit, etwa für Administration oder Support, kann nach der [Handreichung des Landesbeauftragten für Datenschutz Baden-Württemberg](https://www.baden-wuerttemberg.datenschutz.de/drittstaatentransfer-handreichung-kap-v-dsgvo/) schon ein Transfer nach Kapitel V DSGVO sein, jedenfalls sobald tatsächlich zugegriffen wird. Verarbeitet ein Hoster dabei personenbezogene Daten in deinem Auftrag, braucht es zudem einen Vertrag zur Auftragsverarbeitung nach Art. 28 DSGVO. Was die Berliner Beauftragte für Datenschutz und Informationsfreiheit im Fall DeepSeek unternommen hat, steht in unserem Beitrag [Chinesische KI im Vergleich](https://geotoolbox.ai/de/blog/chinesische-ki).
+
+### Der AI Act: Anbieterpflichten, Open-Source-Ausnahme und wann du beim Fine-Tuning selbst Anbieter wirst
+
+Für die meisten deutschen Unternehmen, die ein offenes Modell nur einsetzen oder feinabstimmen, greifen die Pflichten für Anbieter von KI-Modellen mit allgemeinem Verwendungszweck (GPAI) im EU AI Act (KI-Verordnung) nicht. Nach den (nicht bindenden) Leitlinien der EU-Kommission wird man als Richtwert erst dann selbst zum Anbieter, wenn die Änderung mehr als ein Drittel der ursprünglichen Trainingsrechenleistung verbraucht. Diese Pflichten gelten für neue Modelle seit dem 2. August 2025. Modelle, die schon vorher auf dem Markt waren, haben bis zum 2. August 2027 Zeit, und seit dem 2. August 2026 kann die Kommission die Pflichten mit Bußgeldern durchsetzen. Erleichterungen für quelloffene Modelle (Art. 53 Abs. 2 und Art. 54 Abs. 6) gelten nur bei einer wirklich freien Lizenz ohne Monetarisierung; Lizenzen, die ab einer Umsatz- oder Nutzungsschwelle Geld oder eine Sondervereinbarung verlangen, wertet die Kommission nicht als frei. Die Pflicht zu einer Urheberrechtsstrategie und zur Zusammenfassung der Trainingsdaten bleibt auch dann, und Modelle mit systemischem Risiko (vermutet ab 10²⁵ Gleitkommaoperationen Trainingsaufwand) erhalten diese Erleichterungen gar nicht. Welche Modelle dieser Liste unter diese Vermutung fallen, haben wir nicht geprüft. Der Digital-Omnibus (Verordnung (EU) 2026/1744 vom 8. Juli 2026, in Kraft seit dem 27. Juli 2026) verschiebt vor allem die Hochrisiko-Pflichten auf den 2. Dezember 2027 (Anhang III) und den 2. August 2028 (Anhang I); an den Pflichten der Modellanbieter (Art. 53 bis 55) ändert er nichts.
+
+### Lizenzen mit Gebietsklausel
+
+Die wichtigste EU-Klausel steckt ausgerechnet im westlichen Standardmodell: Laut der Acceptable Use Policy von Llama 4 erhalten Personen mit Wohnsitz und Unternehmen mit Hauptsitz in der EU für die multimodalen Llama-4-Modelle keine Lizenzrechte nach Abschnitt 1(a). Scout und Maverick sind beide multimodal. Ausgenommen sind nur Endnutzer fertiger Produkte. Tencents älteres Hy3-Preview schließt die EU, Großbritannien und Südkorea ganz aus; Hy3 und Hy4 Preview stehen dagegen unter Apache 2.0. Alle anderen Lizenzen der Rangliste enthalten nach unserer Lektüre am 7. November 2026 keine Gebietsbeschränkung. Muse Spark Open und Llama 4 verlangen allerdings eine manuelle Zugangsfreigabe auf Hugging Face.
+
+### Europäische Optionen und Hosting in Deutschland
+
+Mistral Large 4 (rund 1 Billion Parameter, 52 Milliarden aktiv, 1 Million Token Kontext, seit dem 29. Oktober 2026 offen) wurde laut Mistral von Grund auf in Europa trainiert, ist aber nicht uneingeschränkt freigegeben: Für jedes Model-as-a-Service-Geschäft braucht es eine kommerzielle Lizenz von Mistral, intern darfst du es ohne gesonderte Lizenz nutzen. Aleph Alpha hat am 3. Oktober 2026 Kolibri-1 veröffentlicht, ein deutsch-englisches MoE-Modell mit 78 Milliarden Parametern (3,5 Milliarden aktiv) und 1 Million Token Kontext unter Apache 2.0. Artificial Analysis hat es nicht gemessen, deshalb nehmen wir es weder in unser Ranking auf noch vergleichen wir es. Wer offene Modelle nicht selbst betreiben will, findet einen Teil davon bei deutschen Cloud-Anbietern: STACKIT bietet unter anderem gpt-oss-120b, Gemma 4 (31 Milliarden Parameter) und Qwen3.8-27B an, der IONOS AI Model Hub (Datenverarbeitung in Deutschland) unter anderem gpt-oss-120b und Qwen3.5-397B. GLM-5.3, DeepSeek V4, Kimi und Mistral Large 4 führen beide Kataloge Stand 7. November 2026 nicht.
+
+## Warum jede Liste der „besten offenen LLMs“ anders aussieht
+
+Suchst du zu diesem Thema, findest du aktuelle, gut platzierte Artikel, die drei verschiedene Generationen derselben Modellreihe selbstbewusst als „das Neueste“ empfehlen. In einem davon ist der jüngste Eintrag ein Modell von vor zwei Generationen. Schuld ist das Tempo: Allein Z.ai hat 2026 vier GLM-Generationen veröffentlicht (Februar, April, Juni, August), und zwischen Mitte August und Ende Oktober erschienen sieben weitere offene Spitzenmodelle anderer Labore. Statische Ranglisten veralten dabei schnell.
+
+Die Tabelle unten ist das Gegenmittel. Sie nennt pro Labor das aktuelle Flaggschiff, Stand November 2026, neben den überholten Versionen, die dir anderswo noch als Empfehlung begegnen.
+
+<table>
+<thead>
+<tr><th>Labor</th><th>Aktuelles Flaggschiff (Stand November 2026)</th><th>Überholt, wird aber noch oft empfohlen</th></tr>
+</thead>
+<tbody>
+<tr><td>Z.ai (Zhipu)</td><td><strong>GLM-5.3</strong> (August 2026)</td><td>GLM-5.2, GLM-5.1</td></tr>
+<tr><td>Moonshot AI</td><td><strong>Kimi K3.1 Pro</strong> (23. Oktober; Gewichte spätestens seit 5. November 2026 öffentlich); <strong>Kimi K3</strong> (16. Juli; Gewichte 27. Juli) + K2.7-Code (Juni 2026, Coding-Ableger; API-Abschaltung der K2-Serie bis Ende 2026 geplant)</td><td>K2.6, K2.5, K2 Thinking, K2</td></tr>
+<tr><td>DeepSeek</td><td><strong>V4 Pro</strong> (allgemein verfügbar seit 13. August) + <strong>V4.1 Flash</strong> (10. September; aktualisiert 17. Oktober)</td><td>V4 Flash (284 Milliarden), V3.2, V3-0324, R1</td></tr>
+<tr><td>Alibaba (Qwen)</td><td><strong>Qwen3.8-27B</strong> (August 2026, neuestes Apache-2.0-Modell); Qwen3.5-397B bleibt nach Größe das Flaggschiff*</td><td>Qwen3-Coder-480B, Qwen3 VL 235B, Qwen3</td></tr>
+<tr><td>MiniMax</td><td><strong>M3</strong> (Juni 2026) + M3.1 Flash (Oktober 2026, laut Modellkarte ebenfalls rund 428 Milliarden Parameter gesamt, 23 Milliarden aktiv, gleiche Lizenz)</td><td>M2.5, M2</td></tr>
+<tr><td>Meta</td><td><strong>Muse Spark Open</strong> (15. Oktober 2026) + Muse Glimmer (August 2026, kleineres Agentenmodell); Llama 4 (April 2025)</td><td>Llama 3.3, 3.1</td></tr>
+<tr><td>Google</td><td><strong>Gemma 4</strong> (April 2026; 12B seit Juni 2026)</td><td>Gemma 3</td></tr>
+<tr><td>Xiaomi</td><td><strong>MiMo-V2.6-Pro</strong> (21. September 2026)</td><td>MiMo-V2.5-Pro, MiMo-V2-Pro</td></tr>
+<tr><td>Tencent</td><td><strong>Hunyuan Hy4 Preview</strong> (28. August 2026; das finale Hy4 erschien am 4. November, seine Gewichte stehen noch aus)</td><td>Hy3 (6. Juli 2026), Hy3-Preview (April 2026)</td></tr>
+<tr><td>StepFun</td><td><strong>Step 5 Preview</strong> (September 2026)</td><td>entfällt (erster Auftritt in dieser Liste)</td></tr>
+</tbody>
+</table>
+
+*Qwens Benennung läuft auf zwei Gleisen (offene Gewichte und die geschlossene Max-API), was in Ranglisten ständig für Verwirrung sorgt. Das beste Beispiel ist Qwen3.8-Max (siehe Eintrag 7): erst eine geschlossene API, dann offene Gewichte nur als Textvariante unter eigener Lizenz, also eine Teilöffnung und keine Apache-2.0-Veröffentlichung.
+
+Mehrere Messungen zeigen das Tempo. [Epoch AI hat gemessen](https://epoch.ai/data-insights/open-weights-vs-closed-weights-models), dass offene Spitzenmodelle den besten geschlossenen Modellen Ende 2025 im Schnitt um etwa drei Monate hinterherhinkten; [das Update vom Mai 2026](https://epoch.ai/data-insights/open-closed-eci-gap) beziffert den Rückstand auf rund vier Monate. Der [AI Index 2025 der Stanford University](https://hai.stanford.edu/ai-index/2025-ai-index-report) zeigte außerdem, dass der Abstand zwischen offenen und geschlossenen Modellen auf einigen Benchmarks binnen eines Jahres von 8 % auf 1,7 % schrumpfte. Zudem sank laut dem Bericht der Abstand zwischen Platz 1 und Platz 10 der weltweiten Spitzenmodelle von 11,9 % auf 5,4 %. Der [AI Index 2026](https://hai.stanford.edu/ai-index/2026-ai-index-report/technical-performance) berichtet inzwischen den gegenläufigen Trend: Im März 2026 lag in der Arena-Rangliste das beste geschlossene Modell 3,3 % vor dem besten offenen, nach 0,5 % im August 2024. In einem Feld, in dem sich die Reihenfolge binnen Monaten dreht, ist jede Rangliste nach einem Monat teilweise falsch, irgendwann auch diese hier. Deshalb trägt hier jede Aussage ein Datum, so wie geotoolbox auch jeden eigenen Engine-Scan datiert.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/beste-open-source-llms/open-weight-release-race-nov-2026-de.png" alt="Zeitstrahl der Flaggschiff-Veröffentlichungen offener LLMs von Januar 2025 bis November 2026 bei DeepSeek, Moonshot AI, Z.ai, MiniMax, Alibaba Qwen, Xiaomi, Tencent, StepFun, Mistral, Meta und Google; Kimi K3 im Juli 2026 hervorgehoben, die Gewichte von Kimi K3.1 Pro (spätestens am 5. November 2026 öffentlich) als neueste gezeigte Veröffentlichung." w="1040" h="741" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Die Marker zeigen das Start- oder das Open-Weights-Datum eines Modells (bei Kimi K3.1 Pro das Datum der Gewichte, spätestens 5. November 2026; das Modell erschien am 23. Oktober). Daten aus den offiziellen Modellkarten und Launch-Meldungen, geprüft am 7. November 2026.</figcaption>
+</figure>
+
+Wie diese offenen Modelle im Vergleich mit den geschlossenen Spitzenreitern abschneiden, zeigt unsere Rangliste der [besten KI-Modelle nach Aufgabe](https://geotoolbox.ai/blog/best-ai-model).
+
+## Was die Open-Weight-Welle für deine KI-Sichtbarkeit bedeutet
+
+Arbeitest du in Marketing oder SEO, betrifft dich dieses Modellrennen direkt. Jedes Modell dieser Liste ist zugleich eine Antwortmaschine, die Marken beschreibt, Produkte empfiehlt und Quellen zitiert. Offene Gewichte verstärken das auf besondere Weise: Sie landen unbemerkt in fremden Produkten. Arbeitet in einem Coding-Tool, einem CRM oder einer Suchfunktion unter der Haube GLM-5.3 oder ein Qwen-Fine-Tune, übernimmt das Produkt das Bild, das dieses Modell von deiner Marke hat, und kein Referrer verrät dir das.
+
+Die praktische Antwort ist dieselbe Disziplin, die dieser Artikel auf Modelle anwendet: prüfen statt annehmen. Kontrolliere, was die KI-Engines über deine Marke sagen, miss, welche deiner Seiten sie zitieren, und wiederhole das, wenn eine neue Modellgeneration erscheint. Ein Versionssprung ändert die Trainingsdaten und damit oft die Antworten; welche Quellen eine Anwendung abruft und zitiert, hängt zusätzlich von ihr selbst ab. Was Kimi K2.5 über deine Marke geantwortet hat, muss für K3 nicht mehr gelten.
+
+Genau dafür ist geotoolbox gebaut. Willst du wissen, ob deine Website für die Crawler, die diese Modelle füttern, überhaupt lesbar ist? Dann starte mit dem kostenlosen [KI-Readiness-Check](https://geotoolbox.ai/tools/ai-readiness). Er dauert eine Minute und zeigt technische Hürden, die das Crawlen deiner Website erschweren können, ganz gleich, welches Modell gerade vorn liegt.
+
+## Häufige Fragen
+
+### Was ist das stärkste Open-Source-LLM im Moment?
+
+Das hängt davon ab, was du gewichtest. Im aktuellen Intelligence Index v5.0.1 von Artificial Analysis führt DeepSeek V4.1 Flash 1017 mit 33 Punkten unter den Modellen unserer Auswahl, vor GLM-5.3 mit 32. Im bis zum 27. Oktober gültigen Index v4.3.2 lag noch Xiaomis MiMo-V2.6-Pro mit 46,3 vorn, vor DeepSeek V4.1 Flash mit 45,1, GLM-5.3 mit 44,8, Step 5 Preview mit 43,7 und Kimi K3 mit 43,6. Moonshots K3.1 Pro (55 in v4.3.2, 46 in v5.0.1) würde in beiden Index-Versionen vorn liegen; seine Gewichte sind spätestens seit dem 5. November 2026 auf Hugging Face öffentlich, in unser Ranking haben wir es aber noch nicht aufgenommen. Für agentisches Coding wählen wir GLM-5.3, das anders als GLM-5.2 nicht unter MIT, sondern unter einer eigenen Lizenz steht.
+
+### Gibt es ein wirklich quelloffenes LLM?
+
+Ja, aber nicht an der Spitze. Die OSI-Definition verlangt drei veröffentlichte Dinge: Angaben zu den Daten, den Trainingscode und die Parameter. OLMo von AI2 und Pythia von EleutherAI erfüllen sie, NVIDIAs Nemotron 3 kommt ihr unter den großen Modellen am nächsten. Die Benchmark-Spitzenreiter auf dieser Seite, DeepSeek eingeschlossen, sind Open-Weight-Modelle, nicht Open Source im Sinne der OSI.
+
+### Was kostet der Betrieb eines Open-Source-LLM?
+
+Die Gewichte sind kostenlos, die Rechenleistung nicht. Ein Modell mit 7 bis 12 Milliarden Parametern läuft in 4-Bit-Quantisierung auf einer Consumer-GPU, die du vielleicht schon besitzt. Die 24-GB-Klasse deckt Modelle bis etwa 32 Milliarden ab. Spitzenmodelle wie GLM-5.3 oder Kimi K2.7-Code brauchen Hunderte Gigabyte Speicher, also einen Server mit mehreren GPUs, oder du nutzt sie über eine gehostete API. Für die meisten Anwendungen ist der API-Preis pro Token (bei DeepSeek V4.1 Flash ab Cent-Beträgen pro Million Token) günstiger als eigene Hardware.
+
+### Welches Open-Source-LLM ist am besten zum Programmieren?
+
+GLM-5.3, wenn es um agentisches Coding über lange Aufgabenketten geht. Im Terminal-Bench 4.0, den Artificial Analysis unabhängig misst, liegt es mit 42 % vor allen anderen hier vorgestellten Modellen; nur das noch nicht aufgenommene Kimi K3.1 Pro schneidet mit 67 % besser ab. In älteren Benchmark-Versionen und in Herstellertabellen liegen teils andere Modelle vorn. DeepSeek V4 gehört zu den stärksten Preis-Leistungs-Tipps, und Qwens Coder-Varianten sind unter Apache 2.0 eine Option für Teams, die Rechenaufwand und Coding-Leistung abwägen. Moonshots Coding-Ableger K2.7-Code und Agenten-Frameworks, die Wiederholungen erlauben, verkleinern den Abstand zur Spitze deutlich.
+
+## Quellen
+
+- China's Moonshot AI releases Kimi K3, the largest open-source model ever - VentureBeat, 16. Juli 2026 - `venturebeat.com/technology/chinas-moonshot-ai-releases-kimi-k3-the-largest-open-source-model-ever-rivaling-top-u-s-systems`
+- Kimi K3 achieves #3 in the Artificial Analysis Intelligence Index, comparable to Opus 4.8 and GPT-5.5 - Artificial Analysis, 17. Juli 2026 - `artificialanalysis.ai/articles/kimi-k3-achieves-3-in-the-artificial-analysis-intelligence-index-comparable-to-opus-4-8-and-gpt-5-5`
+- Kimi K3 model card and license - Moonshot AI auf Hugging Face - `huggingface.co/moonshotai/Kimi-K3`
+- Kimi K3.1 Pro launch benchmarks - Artificial Analysis, 23. Oktober 2026 - `artificialanalysis.ai/articles/kimi-k3-1-pro-launch-benchmarks`
+- Introducing Kimi K3.1 Pro - Moonshot AI, 23. Oktober 2026 - `kimi.ai/blog/kimi-k3-1-pro`
+- The Open Source AI Definition v1.0 - Open Source Initiative - `opensource.org/ai/open-source-ai-definition`
+- How far behind are open models? - Epoch AI, 30. Oktober 2025 - `epoch.ai/data-insights/open-weights-vs-closed-weights-models`
+- Open models lag update (ECI gap) - Epoch AI, Mai 2026 - `epoch.ai/data-insights/open-closed-eci-gap`
+- The 2025 AI Index Report - Stanford HAI - `hai.stanford.edu/ai-index/2025-ai-index-report`
+- The 2026 AI Index Report, Technical Performance - Stanford HAI - `hai.stanford.edu/ai-index/2026-ai-index-report/technical-performance`
+- GLM-5.2 official model card - Z.ai auf Hugging Face - `huggingface.co/zai-org/GLM-5.2`
+- GLM-5.3 official model card and license - Z.ai auf Hugging Face - `huggingface.co/zai-org/GLM-5.3`
+- Kimi K2.7-Code Modified MIT license text - Moonshot AI auf Hugging Face - `huggingface.co/moonshotai/Kimi-K2.7-Code/blob/main/LICENSE`
+- Kimi K2.7-Code model card - Moonshot AI auf Hugging Face - `huggingface.co/moonshotai/Kimi-K2.7-Code`
+- Tencent open-sources Hy4 preview with 770B parameters and a 1M-token context - TechNode, 28. August 2026 - `technode.com/2026/08/28/tencent-open-sources-hy4-preview-with-770b-parameters-and-a-1m-token-context`
+- Tencent launches Hy4 with vision and computer use capabilities - TechNode, 4. November 2026 - `technode.com/2026/11/04/tencent-launches-hy4-with-vision-and-computer-use-capabilities`
+- Hy3-preview license - Tencent auf Hugging Face - `huggingface.co/tencent/Hy3-preview/blob/main/LICENSE`
+- Meta returns to open source with Muse Glimmer, an Apache 2.0 licensed 30B parameter AI model - VentureBeat, 10. August 2026 - `venturebeat.com/technology/meta-returns-to-open-source-with-muse-glimmer-an-apache-2-0-licensed-30b-parameter-ai-model-optimized-for-agents-available-now`
+- Llama 4 Acceptable Use Policy - Meta - `llama.com/llama4/use-policy`
+- Muse Spark Open model card - Meta auf Hugging Face - `huggingface.co/meta-models/Muse-Spark-Open-816B-A42B`
+- Step 5 Preview model card - StepFun auf Hugging Face - `huggingface.co/stepfun-ai/Step-5-Preview`
+- DeepSeek-V4.1-Flash model card - DeepSeek auf Hugging Face - `huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash`
+- Open-weight models, index v5.0.1 - Artificial Analysis - `artificialanalysis.ai/models/open-source`
+- Step 5 model page - Artificial Analysis - `artificialanalysis.ai/models/step-5`
+- Kimi K3 model page - Artificial Analysis - `artificialanalysis.ai/models/kimi-k3`
+- Mistral Large 3 675B Instruct model card - Mistral AI auf Hugging Face - `huggingface.co/mistralai/Mistral-Large-3-675B-Instruct-2512`
+- Mistral Large 4 open weights - Mistral AI, 29. Oktober 2026 - `mistral.ai/news/mistral-large-4-oss`
+- Mistral Large 4 model card - Mistral AI auf Hugging Face, 29. Oktober 2026 - `huggingface.co/mistralai/Mistral-Large-4-1T-A52B`
+- Kolibri has landed: a sovereign open-weight model - Aleph Alpha, 3. Oktober 2026 - `aleph-alpha.com/en/blog/kolibri-has-landed-a-sovereign-open-weight-model`
+- Kolibri-1 model card - Aleph Alpha auf Hugging Face - `huggingface.co/Aleph-Alpha/Kolibri-1`
+- Verordnung (EU) 2016/679 (DSGVO), deutsche Fassung - EUR-Lex - `eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32016R0679`
+- Verordnung (EU) 2024/1689 (KI-Verordnung), deutsche Fassung - EUR-Lex - `eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32024R1689`
+- Handreichung Drittstaatentransfer nach Kapitel V DSGVO - Landesbeauftragter für Datenschutz und Informationsfreiheit Baden-Württemberg - `www.baden-wuerttemberg.datenschutz.de/drittstaatentransfer-handreichung-kap-v-dsgvo`
+- Verordnung (EU) 2026/1744 (Digital Omnibus on AI) - Amtsblatt der EU, Verordnung vom 8. Juli 2026, veröffentlicht am 24. Juli 2026 - `eur-lex.europa.eu/legal-content/EN/TXT/?uri=OJ:L_202601744`
+- Guidelines for providers of general-purpose AI models - Europäische Kommission, aktualisiert 28. April 2026 - `digital-strategy.ec.europa.eu/en/policies/guidelines-gpai-providers`
+- Questions and answers on the GPAI guidelines - Europäische Kommission, aktualisiert 11. November 2025 - `digital-strategy.ec.europa.eu/en/faqs/guidelines-obligations-general-purpose-ai-providers`
+- DeepSeek Privacy Policy, Stand 10. Februar 2026 - DeepSeek - `cdn.deepseek.com/policies/en-US/deepseek-privacy-policy.html`
+- Available shared models - STACKIT Docs - `docs.stackit.cloud/products/data-and-ai/ai-model-serving/basics/available-shared-models`
+- LLMs im AI Model Hub - IONOS Docs - `docs.ionos.com/cloud/ai/ai-model-hub/models/llms`
+- llama.cpp quantize README - ggml-org auf GitHub - `github.com/ggml-org/llama.cpp/blob/master/tools/quantize/README.md`
+- vLLM documentation - `docs.vllm.ai/en/latest/`
+- Ollama - `ollama.com`
