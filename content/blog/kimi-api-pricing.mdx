@@ -2,8 +2,8 @@
 title: "Kimi API Pricing $MONTH_YEAR: Cost, Keys, and Limits"
 description: "What the Kimi API costs in $YEAR: per-model pricing, the $1 minimum, rate-limit tiers, and the endpoint split that quietly returns a 401 on a valid key."
 date: "2026-07-18"
-updated: "2026-11-06"
-recheckBy: "2026-11-20"  # 2026-10-24: verified K3.1 Pro, K3 and K2 prices, batch coverage (K2.7 Code and K2.6 only), the K2 new-user cutoff (Oct 31) and the planned end-of-December K2 retirement against platform.kimi.ai docs; rate-limit tiers, 429 error types, caching, web-search REST and Kimi Code host as of 2026-10-18. K3.1 Pro weights were on Hugging Face on 2026-11-06 (not there on 2026-10-24); the K2 cutoff has passed. NOT verified: OpenRouter route economics beyond the 2026-10-18 K3 snapshot (no K3.1 Pro listing checked), the July DFS citation sample
+updated: "2026-11-07"
+recheckBy: "2026-11-20"  # 2026-10-24: verified K3.1 Pro, K3 and K2 prices, batch coverage (all four current models since the October 2026 changelog entry, re-read 2026-11-07), the K2 new-user cutoff (end of October) and the planned end-of-December K2 retirement against platform.kimi.ai docs; rate-limit tiers, 429 error types, caching, web-search REST and Kimi Code host as of 2026-10-18. K3.1 Pro weights were on Hugging Face on 2026-11-06 (not there on 2026-10-24); the K2 cutoff has passed. NOT verified: OpenRouter route economics beyond the 2026-10-18 K3 snapshot (no K3.1 Pro listing checked), the July DFS citation sample
 author: "Samy BEN SADOK"
 tags: ["kimi-ai", "kimi-k3", "moonshot-ai", "api-pricing", "llm", "pricing", "guide"]
 draft: false
@@ -32,20 +32,20 @@ The column most pricing roundups omit is the middle one. Moonshot charges a tent
 <tr><td><strong>kimi-k2.7-code-highspeed</strong></td><td>$1.90</td><td>$0.38</td><td>$8.00</td><td>262,144</td><td>Faster variant</td></tr>
 <tr><td><strong>kimi-k2.7-code</strong></td><td>$0.95</td><td>$0.19</td><td>$4.00</td><td>262,144</td><td>Coding workhorse</td></tr>
 <tr><td><strong>kimi-k2.6</strong></td><td>$0.95</td><td>$0.16</td><td>$4.00</td><td>262,144</td><td>General purpose</td></tr>
-<tr><td><strong>kimi-k2.5</strong></td><td>$0.60</td><td>$0.10</td><td>$3.00</td><td>262,144</td><td>Retired Aug 31, 2026 (404)</td></tr>
-<tr><td><strong>moonshot-v1-128k</strong></td><td>$2.00</td><td>None</td><td>$5.00</td><td>131,072</td><td>Retired Aug 31, 2026 (404)</td></tr>
-<tr><td><strong>moonshot-v1-32k</strong></td><td>$1.00</td><td>None</td><td>$3.00</td><td>32,768</td><td>Retired Aug 31, 2026 (404)</td></tr>
-<tr><td><strong>moonshot-v1-8k</strong></td><td>$0.20</td><td>None</td><td>$2.00</td><td>8,192</td><td>Retired Aug 31, 2026 (404)</td></tr>
+<tr><td><strong>kimi-k2.5</strong></td><td>$0.60</td><td>$0.10</td><td>$3.00</td><td>262,144</td><td>Retired Aug 2026 (404)</td></tr>
+<tr><td><strong>moonshot-v1-128k</strong></td><td>$2.00</td><td>None</td><td>$5.00</td><td>131,072</td><td>Retired Aug 2026 (404)</td></tr>
+<tr><td><strong>moonshot-v1-32k</strong></td><td>$1.00</td><td>None</td><td>$3.00</td><td>32,768</td><td>Retired Aug 2026 (404)</td></tr>
+<tr><td><strong>moonshot-v1-8k</strong></td><td>$0.20</td><td>None</td><td>$2.00</td><td>8,192</td><td>Retired Aug 2026 (404)</td></tr>
 </tbody>
 </table>
 
-Prices are per million tokens and exclude tax, which Moonshot calculates at checkout based on your jurisdiction. The last four rows are kept for reference only: `kimi-k2.5` and the `moonshot-v1` family were retired on August 31, 2026 and calls to them now return a 404. You cannot buy those rates today.
+Prices are per million tokens and exclude tax, which Moonshot calculates at checkout based on your jurisdiction. The last four rows are kept for reference only: `kimi-k2.5` and the `moonshot-v1` family were retired in August 2026 and calls to them now return a 404. You cannot buy those rates today.
 
 The K3-series rows and the legacy rows deserve a closer look.
 
 The first is the K3 series. Kimi built its reputation as [the cheap open-weight option](https://geotoolbox.ai/blog/what-is-kimi-ai), and K3 broke that. K3.1 Pro's $10.00 per million output tokens is 2.5 times what kimi-k2.7-code charges, and the older K3's $15.00 is 3.75 times, which puts both in the same conversation as the frontier models they were built to compete with rather than the budget tier developers came to Kimi for.
 
-The second is the legacy row, and it is now a cautionary tale rather than a live trap. Until August 31, 2026 the `moonshot-v1` family was still on sale at rates that made no sense: `moonshot-v1-128k` cost more per input token than `kimi-k2.6` while giving you half the context and no cache discount at all. Anyone running a 2025 integration that nobody had revisited was paying more for less, right up until the model string stopped resolving. Both families were retired on the same date, so an unmaintained integration did not quietly overpay, it broke.
+The second is the legacy row, and it is now a cautionary tale rather than a live trap. Until August 2026 the `moonshot-v1` family was still on sale at rates that made no sense: `moonshot-v1-128k` cost more per input token than `kimi-k2.6` while giving you half the context and no cache discount at all. Anyone running a 2025 integration that nobody had revisited was paying more for less, right up until the model string stopped resolving. Both families were retired together, so an unmaintained integration did not quietly overpay, it broke.
 
 K3.1 Pro is a post-trained version of Kimi K3, according to Moonshot's launch post, and Moonshot promised the full model weights by Nov 4, 2026. They were not on Hugging Face when we checked on October 24; as of November 6, 2026 they are there as [moonshotai/Kimi-K3.1-Pro](https://huggingface.co/moonshotai/Kimi-K3.1-Pro) under a custom Kimi K3.1 Pro License. If you want the full picture on what K3 actually is before deciding whether the flagship rate is justified, our [Kimi K3 explainer](https://geotoolbox.ai/blog/what-is-kimi-k3) covers the specs, the benchmarks worth trusting, and whether you can realistically self-host it.
 
@@ -57,7 +57,7 @@ This is the most common misconception about Kimi, and the search data shows it: 
 
 A top-up buys access and a rung on the rate-limit ladder. Recharge amounts are non-refundable, so treat the first payment as a commitment rather than a trial. Top up $5 cumulatively and Moonshot issues a $5 voucher, the closest thing to free credit on offer. Since September 2026, usage is drawn half from cash and half from vouchers. One catch before you plan around it: vouchers do not count toward tier progression. Only real money moves you up.
 
-Moonshot also ran a K3 launch top-up rebate over the summer: a voucher worth 10% to 30% of a top-up at the $20, $100, $300, and $1,000 thresholds, once per organization, capped at $4,000, and excluding both the Kimi app and Kimi Code. Per the promo page as captured on July 18, 2026 (since taken down), it was set to run into mid-August, so do not count on it; the standing $5 voucher above is the credit you can actually rely on. If a similar rebate returns, the mechanics are worth knowing: it was calculated from the highest-value transaction made on the day of your first top-up, so a $20 test and a $1,000 commit on the same day earned 30% on the $1,000, a commit that landed the following day did not count, and vouchers expired after 90 days.
+Moonshot ran a time-limited top-up rebate around the K3 launch in summer 2026. Its dedicated promo page has since been taken down (we captured it on July 18, 2026), so we can no longer re-verify the terms: do not plan around a repeat, and rely on the standing $5 voucher above.
 
 ## How to Get a Kimi API Key
 
@@ -199,7 +199,7 @@ Caching cuts the K3.1 Pro and K3 bills by 51% each and the k2.7-code bill by 48%
 
 Batch and web search change the math.
 
-**Batch inference is 40% off, on K2 models only.** Moonshot prices [batch jobs](https://platform.kimi.ai/docs/pricing/batch) at 60% of standard rates, which is the largest single saving available on the platform. It comes with a restriction the pricing page makes plain: the batch table covers kimi-k2.7-code and kimi-k2.6 (it also listed kimi-k2.5 until that model was retired on August 31, 2026). The K3 series, K3.1 Pro included, is not on it. Batch jobs are also exempt from the real-time concurrency limits above, which matters more than the discount if you are sitting at Tier 0 with a single concurrent request. That discount exists only on models Moonshot plans to retire by the end of December 2026, so do not build a long-lived pipeline around it.
+**Batch inference is 40% off.** Moonshot prices [batch jobs](https://platform.kimi.ai/docs/pricing/batch) at 60% of standard rates, a flat 40% off every batched token. Per its changelog, the Batch API has covered kimi-k3.1-pro and kimi-k3 since October 2026, in addition to kimi-k2.7-code and kimi-k2.6 (it also listed kimi-k2.5 until that model was retired in August 2026). Batch jobs on the K3 models are also charged cache-write fees, and cache hits on any batch job are best-effort rather than guaranteed. Batch jobs are also exempt from the real-time concurrency limits above, which matters more than the discount if you are sitting at Tier 0 with a single concurrent request. The K2 models in that table are the ones Moonshot plans to retire by the end of December 2026, so do not build a long-lived pipeline on them.
 
 **Web search is billed per call.** The legacy [`$web_search` tool](https://platform.kimi.ai/docs/pricing/websearch) was billed at $0.005 per call on top of tokens, and the search results it injects are billed as input on the following call, which on the K3 series routinely costs more than the call fee itself. Moonshot's current WebSearch pricing page no longer lists it; server-side search now bills at $0.005 per call through the Responses API `web_search` tool or the Formula API web-search tool. The REST endpoints are billed only on success: $0.002 per call for `/v1/tools/search`, $0.003 for `/v1/tools/search_pro` and $0.002 for `/v1/tools/fetch`.
 
@@ -214,7 +214,7 @@ Moonshot sells the same weights through resellers, and the arbitrage runs in an 
 <tr><th>Route</th><th>Best for</th><th>How it prices</th><th>Watch for</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>Moonshot direct</strong></td><td>K3.1 Pro, production workloads, K2 batch jobs</td><td>Per token, prepaid balance</td><td>WeChat Pay and Alipay only for individuals</td></tr>
+<tr><td><strong>Moonshot direct</strong></td><td>K3.1 Pro, production workloads, batch jobs</td><td>Per token, prepaid balance</td><td>WeChat Pay and Alipay only for individuals</td></tr>
 <tr><td><strong>OpenRouter</strong></td><td>Multi-provider fallback, card payment</td><td>Per token, pass-through plus margin</td><td>Moonshot's own K3 endpoint matches direct; 26 K3 endpoints range from $0.25 to $4.50 input</td></tr>
 <tr><td><strong>Kimi Code</strong></td><td>Coding agents, predictable monthly spend</td><td>Subscription, rolling 5-hour limit</td><td>Shares the membership credit pool; separate keys and limits</td></tr>
 </tbody>
@@ -222,7 +222,7 @@ Moonshot sells the same weights through resellers, and the arbitrage runs in an 
 
 Before the sunset, [OpenRouter listed kimi-k2.5](https://openrouter.ai/moonshotai/kimi-k2.5) at $0.375 input and $2.025 output per million tokens against Moonshot's own $0.60 and $3.00 for the same model: 37.5% cheaper on input and 32.5% cheaper on output, through a reseller. On K3 as of October 18, [OpenRouter's](https://openrouter.ai/moonshotai/kimi-k3) Moonshot endpoint sat at parity, $3.00 and $15.00, while other hosts ranged from $0.25 to $4.50 input, so route economics depend on the host.
 
-That gap is now history rather than an opportunity. K2.5 was retired on August 31, 2026, and Moonshot's [model list](https://platform.kimi.ai/docs/models) confirms that calls to `kimi-k2.5` and the `moonshot-v1` series return a 404. Any reseller listing that survived the sunset is a stale catalogue entry, not a live route. The nearest replacement, `kimi-k2.7-code`, moves cache-miss input from $0.60 to $0.95. The general lesson stands even though this particular arbitrage is gone: check reseller pricing against the vendor's own rate before assuming first-party wins, and check the model is still alive before either.
+That gap is now history rather than an opportunity. K2.5 was retired in August 2026, and Moonshot's [model list](https://platform.kimi.ai/docs/models) confirms that calls to `kimi-k2.5` and the `moonshot-v1` series return a 404. Any reseller listing that survived the sunset is a stale catalogue entry, not a live route. The nearest replacement, `kimi-k2.7-code`, moves cache-miss input from $0.60 to $0.95. The general lesson stands even though this particular arbitrage is gone: check reseller pricing against the vendor's own rate before assuming first-party wins, and check the model is still alive before either.
 
 Payment method may decide this for you regardless. Moonshot documents WeChat Pay and Alipay for individual accounts and never mentions cards. Invoices are issued by Beijing Moonshot AI Technology Co., Ltd. with 6% Chinese VAT, which sits awkwardly beside the pricing pages' statement that tax is calculated at checkout by your own jurisdiction. The docs do not reconcile the two, so budget for either. Payment options reportedly vary by region, though no blocked country is named. Verify you can pay before designing around direct access.
 
@@ -230,7 +230,7 @@ Payment method may decide this for you regardless. Moonshot documents WeChat Pay
 
 Fifteen model IDs have been retired since November 2025, and there is no stable alias to hide behind. For anything with a maintenance window longer than a quarter, that is a bigger operational risk than the price.
 
-The [model list](https://platform.kimi.ai/docs/models) records the pattern. `kimi-thinking-preview` was discontinued in November 2025. `kimi-latest` went in January 2026. The entire kimi-k2 series was discontinued on May 25, 2026. `kimi-k2.5` and the whole `moonshot-v1` family, including three `-vision-preview` variants, came off on August 31, 2026. Next on the list is the current K2 series (K2.7 Code, K2.7 Code Highspeed and K2.6): per Moonshot's pricing page, newly registered users lose access to it starting October 31, 2026, existing users are not affected, and Moonshot says it plans to retire all K2 series models by the end of December 2026. That is a plan, not a date to schedule around, but it puts the coding workhorse and the only batch-priced models on a short clock.
+The [model list](https://platform.kimi.ai/docs/models) records the pattern. `kimi-thinking-preview` was discontinued in November 2025. `kimi-latest` went in January 2026. The entire kimi-k2 series was discontinued on May 25, 2026. `kimi-k2.5` and the whole `moonshot-v1` family, including three `-vision-preview` variants, came off in August 2026. Next on the list is the current K2 series (K2.7 Code, K2.7 Code Highspeed and K2.6): per Moonshot's pricing page and model list, it has been closed to newly registered users since the end of October 2026 (users registered before November 1 keep access), and Moonshot says it plans to retire all K2 series models by the end of December 2026. That is a plan, not a date to schedule around, but it puts the coding workhorse on a short clock.
 
 Note what `kimi-latest` was. It was the floating alias, the one string you would pin precisely so you never had to think about this. Moonshot killed it, which means the documented advice is now to pin an explicit version like `kimi-k3.1-pro` and accept that the explicit version will itself be retired on a timeline you do not control.
 
@@ -256,7 +256,7 @@ You cannot fix a citation gap you have not found. This is the failure mode geoto
 
 The sticker price is the smallest part of this. A working integration costs $1 to start, and $10 in cumulative top-ups lifts the account from Tier 0's evaluation limits to Tier 1's. From there the bill is set by which model you pinned and how much output you generate, because output is the part no cache discount touches.
 
-The costs that hurt are the ones that are not on the pricing page. A key pointed at the wrong platform. A retry loop backing off against a terminal billing error. A model string that dies on August 31 and takes your integration with it. Budget for a migration every couple of quarters and pin explicit versions, and Kimi is a genuinely cheap way to run coding and agent work. Treat it as set-and-forget and it will surprise you twice, once on the invoice and once at three in the morning.
+The costs that hurt are the ones that are not on the pricing page. A key pointed at the wrong platform. A retry loop backing off against a terminal billing error. A model string that dies on a retirement date and takes your integration with it. Budget for a migration every couple of quarters and pin explicit versions, and Kimi is a genuinely cheap way to run coding and agent work. Treat it as set-and-forget and it will surprise you twice, once on the invoice and once at three in the morning.
 
 ## Frequently Asked Questions
 
@@ -274,7 +274,7 @@ Not for the metered API. Moonshot bills the API Open Platform separately from th
 
 ### Which Kimi model should I use?
 
-For coding and agent work, kimi-k2.7-code at $0.95 input and $4.00 output is still the cheapest pick, but it is a K2 model: Moonshot's pricing page says new accounts lose access starting October 31, 2026, and Moonshot plans to retire the series by the end of December. Choose kimi-k3.1-pro at $2.00 and $10.00 when you specifically need the million-token [context window](https://geotoolbox.ai/blog/how-does-ai-search-work) or its stronger reasoning, and price it accordingly, because it costs roughly 2.2 times as much on the workload above and is not on the batch pricing table. The older kimi-k3 costs 50% more than K3.1 Pro on input, output and cache hits. The legacy `moonshot-v1` family is no longer an option at all: it was retired on August 31, 2026 alongside `kimi-k2.5`, and calls to it now return a 404.
+For coding and agent work, kimi-k2.7-code at $0.95 input and $4.00 output is still the cheapest pick, but it is a K2 model: Moonshot has closed it to newly registered accounts since the end of October 2026 and plans to retire the series by the end of December. Choose kimi-k3.1-pro at $2.00 and $10.00 when you specifically need the million-token [context window](https://geotoolbox.ai/blog/how-does-ai-search-work) or its stronger reasoning, and price it accordingly, because it costs roughly 2.2 times as much on the workload above. The older kimi-k3 costs 50% more than K3.1 Pro on input, output and cache hits. The legacy `moonshot-v1` family is no longer an option at all: it was retired in August 2026 alongside `kimi-k2.5`, and calls to it now return a 404.
 
 ## Sources
 
@@ -283,8 +283,8 @@ For coding and agent work, kimi-k2.7-code at $0.95 input and $4.00 output is sti
 - Kimi K3.1 Pro quickstart - Moonshot AI developer docs, accessed October 24, 2026 - `platform.kimi.ai/docs/guide/kimi-k3-1-pro-quickstart`
 - Moonshot AI organization page - Hugging Face, accessed October 24, 2026 - `huggingface.co/moonshotai`
 - Recharge and Rate Limiting - Moonshot AI developer docs, accessed October 18, 2026 - `platform.kimi.ai/docs/pricing/limits`
+- BatchJob Pricing - Moonshot AI developer docs, accessed November 7, 2026 - `platform.kimi.ai/docs/pricing/batch`
 - Kimi K3 launch top-up rebate (dedicated page since taken down) - Moonshot AI developer docs, as captured July 18, 2026 - `platform.kimi.ai/docs/pricing/promotion`
-- BatchJob Pricing - Moonshot AI developer docs, accessed October 24, 2026 - `platform.kimi.ai/docs/pricing/batch`
 - WebSearch Pricing - Moonshot AI developer docs, accessed October 18, 2026 - `platform.kimi.ai/docs/pricing/websearch`
 - Troubleshooting and context caching guides - Moonshot AI developer docs, accessed October 18, 2026 - `platform.kimi.ai/docs/guide/troubleshooting`
 - Model List and Deprecation Schedule - Moonshot AI developer docs, accessed October 18, 2026 - `platform.kimi.ai/docs/models`
