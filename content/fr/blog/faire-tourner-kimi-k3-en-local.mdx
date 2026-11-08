@@ -2,7 +2,7 @@
 title: "Faire tourner Kimi K3 en local : ce que ça exige vraiment"
 description: "Faire tourner Kimi K3 en local : le vrai matériel pour un modèle de 1,56 To, cinq routes par coût et vitesse, et un verdict honnête sur l'auto-hébergement."
 date: "2026-08-14"
-updated: "2026-11-06"
+updated: "2026-11-08"
 recheckBy: "2026-11-20"  # 24/10/2026 : note K3.1 Pro ; poids publiés sur Hugging Face (vérifié le 06/11/2026), le guide ne couvre toujours que K3.
 author: "Samy BEN SADOK"
 tags: ["kimi-k3", "run-llm-locally", "self-host-llm", "open-weights", "moonshot-ai", "vllm", "local-llm", "guide"]
@@ -57,6 +57,11 @@ Les vitesses des lignes auto-hébergées sont le plafond atteignable sur le bon 
 
 Le nombre qui décide de tout, c'est 1,56 To, la taille du [dépôt Kimi K3](https://huggingface.co/moonshotai/Kimi-K3) sur Hugging Face, réparti sur 96 fragments de poids. Un chiffre plus petit, autour de 594 Go, circule dans une partie des articles publiés au lancement. Ce n'est pas le modèle complet, c'est la taille de la quantification GGUF 1-bit d'Unsloth, et son dépôt en liste désormais de plus petites encore (UD-Q1_0 à 466 Go, UD-TQ1_0 à 509 Go, UD-TQ2_0 à 552 Go ; sa documentation recommande la version de 594 Go et ne publie aucun chiffre de précision pour les plus petites). L'arithmétique sur les poids complets écarte la pleine fidélité à ces tailles : 594 Go impliqueraient environ 1 200 milliards de paramètres en 4 bits, or K3 en compte 2 800 milliards, donc la route des poids officiels exige toujours de budgéter 1,56 To.
 
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/how-to-run-kimi-k3-locally/kimi-k3-hugging-face-files.png" alt="Onglet « Files and versions » du dépôt moonshotai/Kimi-K3 sur Hugging Face (interface en anglais) : branche principale de 1,56 To et fichiers de poids model-00001-of-000096.safetensors et suivants, les fragments 2 et 3 pesant 17 Go chacun." w="2320" h="1948" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Le dépôt Kimi K3 sur Hugging Face : 1,56 To répartis en 96 fragments safetensors. Capture en anglais du 7 novembre 2026.</figcaption>
+</figure>
+
 Le calcul naïf donne 2 800 milliards de paramètres × 4 bits, soit 1,4 To. Le dépôt réel pèse 1,56 To parce que le format MXFP4 stocke un facteur d'échelle partagé par bloc et que les couches hors experts dépassent les 4 bits. Comptez donc 1,56 To résidents rien que pour les poids, et 1,8 à 2 To une fois ajoutés le cache KV et les tampons de calcul. C'est le mur, et il ne rétrécit pas. Comme K3 est entraîné avec quantification intégrée en 4 bits (avec des activations MXFP8 en 8 bits), il n'y a pas de division gratuite par deux à espérer du passage habituel de 16 à 4 bits : une version 8 bits n'est pas plus petite que ce qui a été publié (la version Q8 sans perte d'Unsloth pèse les mêmes 1,56 To).
 
 La conception en [mélange d'experts](https://geotoolbox.ai/blog/what-is-deepseek) est le second piège. K3 n'active que 16 de ses 896 experts routés (plus 2 experts partagés) par token, si bien qu'il calcule comme un modèle bien plus petit. Cela économise du calcul, pas de la mémoire. L'ensemble des poids doit rester résident, car n'importe quel token peut être routé vers n'importe quel expert. Un modèle creux allège la passe avant, mais l'empreinte mémoire, elle, ne bouge pas. Peu de guides francophones le disent clairement, et c'est pourtant ce mécanisme qui rend l'échelle de K3 compréhensible.
@@ -80,6 +85,11 @@ Chargez votre vrai cas d'usage, pas un exemple de démonstration. Testez sur le 
 ## Route 2 : l'auto-héberger avec vLLM
 
 C'est la route pour laquelle Moonshot a conçu K3, et la seule qui atteint la pleine vitesse. [vLLM](https://vllm.ai/blog/2026-07-27-k3) a livré une prise en charge dès le jour zéro et propose la documentation la plus complète, mais ce n'est pas la seule voie : SGLang a livré sa propre prise en charge le même jour, le 27 juillet 2026, et Moonshot cite officiellement vLLM, SGLang et TokenSpeed. La pile de service est le moindre de vos soucis. Le matériel, non.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/how-to-run-kimi-k3-locally/vllm-day-0-kimi-k3.png" alt="Article du blog vLLM intitulé « Kimi K3 Is Here: Efficient Day-0 Support on vLLM », daté du 27 juillet 2026." w="1800" h="1366" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">L'annonce du support de Kimi K3 dès sa sortie par vLLM, datée du 27 juillet 2026. Capture en anglais du 7 novembre 2026.</figcaption>
+</figure>
 
 Le supernode de 64 accélérateurs de Moonshot est une recommandation de production ; la configuration minimale qui fait juste tenir les poids est différente. D'après l'équipe vLLM, la configuration minimale est un nœud 8× B300 (ou un GB300 NVL72), ou un minimum de 16× B200 ou GB200 sur la génération précédente, et le MI355X d'AMD embarque la prise en charge ROCm dès son lancement si vous n'êtes pas sur NVIDIA. Leur propre note est sans détour : le modèle « tient à peine dans un seul NVIDIA DGX B300 ». Aucun H100, H200 ni B200 seul ne le contient, donc tout déploiement réel est un cluster distribué, et l'interconnexion compte autant que les cartes. Le parallélisme tensoriel sur une interconnexion lente est une régression, pas une amélioration : sans RDMA à haute bande passante entre les nœuds, les échanges all-to-all se bloquent et le traitement des prompts s'effondre. Sur un GB300 NVL72, vLLM a mesuré 111 tokens par seconde et par utilisateur en parallélisme tensoriel de taille 8 (331 avec le décodage spéculatif DSpark), et 118 en TP16, montant à 370 avec DSpark.
 

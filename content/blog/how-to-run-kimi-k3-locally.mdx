@@ -2,7 +2,7 @@
 title: "How to Run Kimi K3 Locally: What It Actually Takes (2026)"
 description: "How to run Kimi K3 locally: the real hardware for a 1.56TB model, five routes ranked by cost and speed, and an honest verdict on self-hosting."
 date: "2026-07-28"
-updated: "2026-11-06"
+updated: "2026-11-08"
 recheckBy: "2026-11-20"  # 2026-10-24: added the K3.1 Pro note and its API price. K3.1 Pro weights are on Hugging Face (checked 2026-11-06); this guide still covers K3 only. Last full re-verification 2026-10-18 (llama.cpp PRs #26185/#28466 merged 08-15/09-08, Unsloth repo sizes, Ollama cloud-only, Mac Studio M5 Max/Ultra, provider speeds/prices from Artificial Analysis + OpenRouter, rental prices from RunPod + Lambda). NOT re-verified: practitioner estimates (ktransformers-class decode speed, electricity $/Mtok, rig cost bands, RAMageddon), Mac-cluster analogy figures
 author: "Samy BEN SADOK"
 tags: ["kimi-k3", "run-llm-locally", "self-host-llm", "open-weights", "moonshot-ai", "vllm", "local-llm", "guide"]
@@ -45,6 +45,11 @@ Speeds for the self-hosted rows are the ceiling on the right hardware, not what 
 
 The number that decides everything is 1.56TB, the size of the [Kimi K3 repository](https://huggingface.co/moonshotai/Kimi-K3) on Hugging Face, spread across 96 weight shards. A smaller figure, around 594GB, gets repeated in some launch coverage. That's not the full model; it's the size of Unsloth's aggressively quantized 1-bit GGUF build, and its repo now lists smaller ones still (UD-Q1_0 at 466GB, UD-TQ1_0 at 509GB, UD-TQ2_0 at 552GB; its docs page recommends the 594GB build and publishes no accuracy figure for the smaller ones). The arithmetic on the full weights rules out full fidelity at any of these sizes: 594GB would imply about 1.2 trillion parameters at 4-bit, and K3 has 2.8 trillion, so the official-weights route still means budgeting 1.56TB.
 
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/how-to-run-kimi-k3-locally/kimi-k3-hugging-face-files.png" alt="Hugging Face 'Files and versions' tab of moonshotai/Kimi-K3 showing the main branch at 1.56 TB and weight files named model-00001-of-000096.safetensors onward, with shards 2 and 3 at 17 GB each." w="2320" h="1948" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">The Kimi K3 repository on Hugging Face: 1.56 TB across 96 safetensors shards. Captured November 7, 2026.</figcaption>
+</figure>
+
 The naive calculation is 2.8 trillion parameters times 4 bits, which comes to 1.4TB. The actual repo is 1.56TB because MXFP4 stores a shared scale factor per block and the non-expert layers sit above 4-bit. So budget 1.56TB resident just for weights, and 1.8TB to 2TB once you add the KV cache and compute buffers. That is the wall, and it does not shrink. Because K3 is quantization-aware-trained at 4-bit (with 8-bit MXFP8 activations), there is no free halving from the usual 16-bit-to-4-bit step waiting for you; an 8-bit build is no smaller than what shipped (Unsloth's lossless Q8 rebuild lands at the same 1.56TB).
 
 The [mixture-of-experts](https://geotoolbox.ai/blog/what-is-deepseek) design is the second trap. K3 activates only 16 of its 896 routed experts (plus two shared experts) per token, so it computes like a much smaller model. That saves compute, not memory. The full weight set still has to be resident, because any token might route to any expert. A sparse model gives you a cheaper forward pass, never a smaller footprint.
@@ -64,6 +69,11 @@ Load your real workload, not a toy prompt. Push your actual context length and c
 ## Route 2: Serve It Yourself With vLLM
 
 This is the route Moonshot designed K3 for, and the only one that reaches full speed. [vLLM](https://vllm.ai/blog/2026-07-27-k3) shipped day-0 support and has the fullest documentation, though SGLang is a supported alternative. The serving stack is the least of your problems. The hardware is.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/how-to-run-kimi-k3-locally/vllm-day-0-kimi-k3.png" alt="vLLM blog post titled 'Kimi K3 Is Here: Efficient Day-0 Support on vLLM', dated July 27, 2026." w="1800" h="1366" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">vLLM's day-0 Kimi K3 announcement, dated July 27, 2026. Captured November 7, 2026.</figcaption>
+</figure>
 
 Moonshot's 64-accelerator supernode is a production-serving recommendation; the minimum config that merely fits the weights is different. Per the vLLM team, the floor is one 8x B300 node (or a GB300 NVL72), or a minimum of 16x B200 or GB200 on the previous generation, and AMD's MI355X carries ROCm support from launch if you are not on NVIDIA. Their own note is blunt: the model "can barely fit in a single NVIDIA DGX B300." No single H100, H200, or B200 holds it, so any real deployment is a distributed cluster, and the interconnect matters as much as the cards. Tensor parallelism over a slow fabric is a downgrade, not an upgrade: without high-bandwidth RDMA between nodes, the all-to-all traffic stalls and prompt processing collapses. On GB300 NVL72, vLLM measured 111 tokens per second per user at tensor-parallel size 8 (331 with DSpark speculative decoding), and 118 at TP16, rising to 370 with DSpark.
 
