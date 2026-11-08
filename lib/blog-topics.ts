@@ -69,7 +69,7 @@ export const TOPICS: Topic[] = [
     slug: "ai-engines",
     tags: [
       "claude-fable-5-1", "fable-5-1",
-      "chatgpt", "chatgpt-search", "gemini", "google-gemini", "gemini-ai", "gemini-gems", "gemini-seo", "gemini-omni",
+      "chatgpt", "chatgpt-search", "gemini", "google-gemini", "gemini-ai", "gemini-gems", "gemini-seo", "gemini-omni", "gemini-4-argon",
       "claude", "claude-seo", "claude-fable-5", "claude-mythos", "claude-sonnet-5", "sonnet-5", "claude-opus-5", "opus-5",
       "grok", "grok-ai", "grok-5", "grok-5-release-date", "grok-4.5", "grok-4.6", "grok-imagine", "xai", "spacexai",
       "perplexity", "deepseek", "deepseek-r1", "deepseek-v4", "kimi-ai", "kimi-k2", "kimi-k3",
