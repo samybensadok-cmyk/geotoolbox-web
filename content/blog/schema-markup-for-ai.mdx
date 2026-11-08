@@ -2,7 +2,7 @@
 title: "Schema Markup for AI Search: What It Does and Doesn't Do"
 description: "Schema markup for AI search, minus the hype: which engines actually use JSON-LD, what the studies show, the types worth adding, and how to verify it arrived."
 date: "2026-06-10"
-updated: "2026-09-30"
+updated: "2026-11-08"
 author: "Samy BEN SADOK"
 tags: ["schema-markup", "structured-data", "geo", "ai-search", "technical-seo"]
 draft: false
@@ -30,15 +30,15 @@ Two platforms have said yes on the record for their AI surfaces broadly, and one
   </thead>
   <tbody>
     <tr><td><strong>Google AI Overviews / AI Mode</strong></td><td>Reads it, doesn't require it</td><td>Google's <a href="https://developers.google.com/search/docs/fundamentals/ai-optimization-guide">generative AI optimization guide</a> (updated July 2026): structured data "isn't required for generative AI search," but keep using it for rich-result eligibility and the features that depend on it.</td></tr>
-    <tr><td><strong>Microsoft Bing Copilot</strong></td><td>Confirmed</td><td>Fabrice Canel, principal product manager at Bing, <a href="https://searchengineland.com/microsoft-bing-copilot-use-schema-for-its-llms-453455">said on stage at SMX Munich</a> (March 2025) that schema markup helps Microsoft's LLMs understand content.</td></tr>
+    <tr><td><strong>Microsoft Bing Copilot</strong></td><td>Confirmed</td><td>Fabrice Canel, principal product manager at Bing, <a href="https://searchengineland.com/microsoft-bing-copilot-use-schema-for-its-llms-453455">said on stage at SMX Munich</a> (March 2025) that schema markup helps Microsoft's LLMs understand content. Bing's current <a href="https://www.bing.com/webmasters/help/webmaster-guidelines-30fba23a">Webmaster Guidelines</a> now say so in writing, with a limit: structured data "may support clearer grounding but does not guarantee visibility or grounding traffic," and the markup must reflect visible content.</td></tr>
     <tr><td><strong>ChatGPT</strong></td><td>Citations: no confirmation. Shopping: yes</td><td>OpenAI has never said its search citations use schema, but its shopping surface documents structured product metadata and a <a href="https://developers.openai.com/commerce/specs">merchant product feed spec</a>. ChatGPT search uses third-party providers and partner content; OpenAI does not publicly name Bing here. High overlap with Bing's index is a dated inference, not a platform confirmation.</td></tr>
     <tr><td><strong>Gemini</strong></td><td>No statement</td><td>Google's structured-data statements cover Search's AI features, not the Gemini app. Nothing published either way.</td></tr>
-    <tr><td><strong>Perplexity</strong></td><td>No confirmation</td><td>No public statement on schema anywhere in its answer pipeline.</td></tr>
+    <tr><td><strong>Perplexity</strong></td><td>No confirmation</td><td>Its <a href="https://docs.perplexity.ai/docs/resources/perplexity-crawlers">crawler documentation</a> covers robots.txt rules and published IP ranges and says nothing about structured data. No public statement on schema anywhere in its answer pipeline.</td></tr>
     <tr><td><strong>Claude</strong></td><td>No confirmation</td><td>Anthropic has published nothing on structured data in its search or citation pipeline.</td></tr>
   </tbody>
 </table>
 
-One more official line worth keeping verbatim, because it kills a whole category of snake oil. Per the same Google guide: "there's no special schema.org markup you need to add" for AI features, and Google's [AI features documentation](https://developers.google.com/search/docs/appearance/ai-features) adds that no AI-specific files or markup exist at all. Eligibility for an AI Overview citation is the same as for a snippet: be indexed, be crawlable. If a vendor pitches you an "AI schema type," the markup does not exist. The same guide's ignore list also covers ["chunking" content](https://geotoolbox.ai/blog/content-chunking), a sibling myth we examine separately.
+One more official line worth keeping verbatim, because it kills a whole category of snake oil. Per the same Google guide: "there's no special schema.org markup you need to add" for AI features, and Google's [AI features documentation](https://developers.google.com/search/docs/appearance/ai-features) adds that you do not need new machine-readable files, AI text files, or markup to appear in those features. Eligibility for an AI Overview citation is the same as for a snippet: be indexed, be crawlable. If a vendor pitches you an "AI schema type," Google says you do not need it. The same guide's ignore list also covers ["chunking" content](https://geotoolbox.ai/blog/content-chunking), a sibling myth we examine separately.
 
 So the platform answer to "does AI use schema markup" is: Google and Bing, yes, as an understanding signal. Everyone else, unknown, and unknowable until they say so or someone tests it properly. Which someone now has.
 
@@ -56,7 +56,7 @@ Claims about schema and AI visibility come in wildly different strengths, and mo
     <tr><th>Claim</th><th>Verdict</th><th>Basis</th></tr>
   </thead>
   <tbody>
-    <tr><td>Google and Bing use structured data to understand content</td><td><strong>Confirmed</strong></td><td>Official documentation and an on-stage statement from Bing's Fabrice Canel</td></tr>
+    <tr><td>Google and Bing use structured data to understand content</td><td><strong>Confirmed</strong></td><td>Official documentation, an on-stage statement from Bing's Fabrice Canel, and Bing's written Webmaster Guidelines</td></tr>
     <tr><td>LLMs can extract text into user-defined structured schemas</td><td><strong>Demonstrated in the lab</strong></td><td>A <a href="https://www.nature.com/articles/s41467-024-45563-x">Nature Communications study</a> (February 2024) showed fine-tuned LLMs reliably extracting scientific text into user-defined schemas. Scope: trained models in a lab, not web markup, not visibility.</td></tr>
     <tr><td>Pages cited by AI tend to have schema</td><td><strong>Correlative only</strong></td><td>Across 6 million URLs, Ahrefs found AI-cited pages were almost 3x more likely to carry JSON-LD, which is where the "3x" stat in vendor decks comes from. Sites that add schema also invest in everything else; the correlation is real, the causation is what the test below checks.</td></tr>
     <tr><td>Adding schema increases AI citations</td><td><strong>No lift in the only intervention test</strong></td><td>Ahrefs <a href="https://ahrefs.com/blog/schema-ai-citations/">tracked 1,885 pages that added JSON-LD</a> against roughly 4,000 matched controls: Google AI Overviews -4.6%, AI Mode +2.4%, ChatGPT +2.2%, everything within noise except the small AIO decline. The study's own scope caveats: pages already cited 100+ times, 30-day windows, all schema types pooled.</td></tr>
@@ -76,6 +76,11 @@ Here is the mechanical reality. Many [AI crawlers](https://geotoolbox.ai/blog/ai
 
 1. **JSON-LD hard-coded in your HTML travels fine.** A script tag in the source is just text in the document those bots download. Whether their pipelines parse it is the open question from the table above, but at least it arrived.
 2. **JSON-LD injected by JavaScript may not arrive for crawlers that do not render the page.** If your markup is added by Google Tag Manager, a consent management platform (CMP), or any client-side script, the bots that skip rendering download a page with no schema in it at all. Google can process JavaScript when it is not blocked, and Bing can process some JavaScript, but server-side JSON-LD is still safer, and that is exactly why this failure hides: the Rich Results Test shows green while the entire unconfirmed column above receives nothing. Per the Williams-Cook test, text reaching the model is the one pathway proven to work at answer time, and it is the pathway tag-manager injection forfeits.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/schema-markup-for-ai/schema-delivery-path.png" alt="Two delivery paths for JSON-LD. Hard-coded in the server HTML, it arrives for any crawler. Injected by script, it reaches rendering bots but non-rendering bots download a page with no schema. A 60-second check: view-source or curl the URL and search for application/ld+json." w="1100" h="672" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Schema that validates in Google's tools can still be missing from the HTML a non-rendering bot downloads.</figcaption>
+</figure>
 
 In our experience analyzing pages for AI visibility, this is one of the most common surprises we find: markup that validates perfectly in Google's tools but is absent from the HTML an AI crawler actually receives, because it ships through a tag manager.
 
@@ -114,13 +119,13 @@ Use Article (or BlogPosting), with headline, author, dates published and modifie
 
 ### FAQPage, with Honest Expectations
 
-Google [restricted FAQ rich results](https://developers.google.com/search/blog/2023/08/howto-faq-changes) to government and health sites in August 2023, then [retired the feature entirely in May 2026](https://developers.google.com/search/docs/appearance/structured-data/faqpage), so anyone promising FAQ dropdowns in the SERP is years out of date. Google's only comfort on leftover markup is neutral: unused structured data causes no problems, it just has no visible effect. The real case for keeping FAQPage is the extraction logic above: a clean question-answer block is the easiest format for AI systems to lift, and the Williams-Cook test shows the text inside your markup does reach the models. Add it for genuine FAQ content, never for the SERP feature. HowTo markup sits in the same bucket: its rich result died in 2023, and the structured steps stay cheap to keep where content is genuinely procedural.
+Google [restricted FAQ rich results](https://developers.google.com/search/blog/2023/08/howto-faq-changes) to government and health sites in August 2023, then [retired the feature entirely in May 2026](https://developers.google.com/search/updates#deprecating-the-faq-rich-result-feature) and removed its documentation in June, so anyone promising FAQ dropdowns in the SERP is years out of date. Google's only comfort on leftover markup is neutral: unused structured data causes no problems, it just has no visible effect. The real case for keeping FAQPage is the extraction logic above: a clean question-answer block is the easiest format for AI systems to lift, and the Williams-Cook test shows the text inside your markup does reach the models. Add it for genuine FAQ content, never for the SERP feature. HowTo markup sits in the same bucket: its rich result died in 2023, and the structured steps stay cheap to keep where content is genuinely procedural.
 
 ### Product and Review, Only Where Real
 
 If you sell, structured price, availability, and rating data gives an AI shopping answer your numbers to quote instead of a reseller's; OpenAI's merchant feed spec and Google's Shopping surfaces both consume structured product data, which makes commerce the one corner of AI search where markup is closest to table stakes. If you do not, skip these entirely; marking up reviews that do not exist visibly on the page is the classic path to a manual action.
 
-Past that stack, niche types earn their keep only where the content genuinely exists: VideoObject with a transcript if video matters to you, SoftwareApplication if you sell software, LocalBusiness if customers walk through a door. Notice what is absent from all of this: nothing AI-specific, because per Google, no such type exists.
+Past that stack, niche types earn their keep only where the content genuinely exists: VideoObject with a transcript if video matters to you, SoftwareApplication if you sell software, LocalBusiness if customers walk through a door. Notice what is absent from all of this: nothing AI-specific, because per Google, no special schema.org markup is needed for its AI features.
 
 ## How to Implement It: JSON-LD, @id, and the Entity Graph
 
@@ -159,8 +164,9 @@ Measure schema like infrastructure, not like a campaign. The Ahrefs numbers abov
 What is worth watching:
 
 1. **Search Console's enhancement reports.** Errors and valid-item counts tell you whether Google parses your markup at all. This is table stakes, not victory.
-2. **Your citation picture over time.** Whether AI engines actually cite you for the prompts your buyers ask is the metric schema is supposed to serve. Run your prompt set on a schedule and watch the trend, not a single snapshot; the manual version of that workflow is in our guide to [tracking AI visibility](https://geotoolbox.ai/blog/how-to-track-ai-visibility), and geotoolbox automates it.
-3. **One caveat on before/after reads.** If citations move after you ship schema, remember you probably shipped other improvements too. The cleanest reading of all current data is that content and authority move citations; schema rides along.
+2. **First-party AI reports.** Google's [Generative AI performance report](https://support.google.com/webmasters/answer/16984139) in Search Console, rolled out to all sites on August 31, 2026, shows your impressions in AI Overviews and AI Mode, and Bing Webmaster Tools' [AI Performance dashboard](https://blogs.bing.com/webmaster/2026/2/Introducing-AI-Performance-in-Bing-Webmaster-Tools-Public-Preview/) (public preview since February 2026) shows citations across Copilot and Bing's AI summaries.
+3. **Your citation picture over time.** Whether AI engines actually cite you for the prompts your buyers ask is the metric schema is supposed to serve. Run your prompt set on a schedule and watch the trend, not a single snapshot; the manual version of that workflow is in our guide to [tracking AI visibility](https://geotoolbox.ai/blog/how-to-track-ai-visibility), and geotoolbox automates it.
+4. **One caveat on before/after reads.** If citations move after you ship schema, remember you probably shipped other improvements too. The cleanest reading of all current data is that content and authority move citations; schema rides along.
 
 ## Schema Is Infrastructure, Not a Citation Hack
 
@@ -180,15 +186,11 @@ For the basics, usually: both emit a connected Article, Organization, and Breadc
 
 ### What is the difference between the Rich Results Test and the Schema.org validator?
 
-The Rich Results Test checks only whether markup qualifies for Google's rich-result features, so it ignores valid schema Google has no feature for. FAQ rich results stopped appearing in Google Search on May 7, 2026; Google is removing the FAQ search-appearance filter, the rich-results report, and Rich Results Test support in June 2026, and Search Console API support in August 2026. FAQPage markup stays valid (it won't cause problems) but no longer produces visible Google results. The Schema.org validator checks syntax and vocabulary for every type. Use the validator for correctness, and the Rich Results Test only when chasing a specific Google feature.
+The Rich Results Test checks only whether markup qualifies for Google's rich-result features, so it ignores valid schema Google has no feature for. FAQ rich results stopped appearing in Google Search on May 7, 2026, and Google removed its FAQ rich result documentation on June 15, 2026. The last version of that page announced that the FAQ search-appearance filter, the rich-results report, and Rich Results Test support would go in June 2026, and Search Console API support in August 2026. FAQPage markup stays valid (it won't cause problems) but no longer produces visible Google results. The Schema.org validator checks syntax and vocabulary for every type. Use the validator for correctness, and the Rich Results Test only when chasing a specific Google feature.
 
 ### Is schema markup the same job as llms.txt?
 
 Different layers entirely. Schema annotates entities and facts inside a page; llms.txt is a site-level index file proposed as a curated map for AI agents. Neither has confirmed citation impact, but schema at least has confirmed readers. If you want both layers checked, start with the page-level markup.
-
-### Should I add schema to every page or only key pages?
-
-Ship the template-level types sitewide, since they cost nothing per page: Organization once, Article and BreadcrumbList on every post automatically. Reserve hand-built markup, such as Product details and genuine FAQ blocks, for the pages that earn money or answer real questions. Marking up thin or duplicate pages adds bytes, not signals.
 
 ## Sources
 
@@ -198,8 +200,12 @@ Ship the template-level types sitewide, since they cost nothing per page: Organi
 - Ahrefs - We Tracked 1,885 Pages Adding Schema. AI Citations Barely Moved. (May 2026) - `ahrefs.com/blog/schema-ai-citations`
 - Search Engine Land - Microsoft Bing/Copilot use schema for its LLMs (March 2025) - `searchengineland.com/microsoft-bing-copilot-use-schema-for-its-llms-453455`
 - Nature Communications - Structured information extraction from scientific text with large language models (February 2024) - `nature.com/articles/s41467-024-45563-x`
-- Google - FAQPage structured data reference - `developers.google.com/search/docs/appearance/structured-data/faqpage`
+- Google - Search Central documentation updates (FAQ rich result deprecated May 2026, documentation removed June 2026) - `developers.google.com/search/updates`
 - Google - Rich Results Test - `search.google.com/test/rich-results`
 - Google - Changes to HowTo and FAQ rich results (August 2023) - `developers.google.com/search/blog/2023/08/howto-faq-changes`
 - OpenAI - Product feed spec for ChatGPT shopping - `developers.openai.com/commerce/specs`
-- Mark Williams-Cook - Schema, LLMs and the Low Bar for "Evidence" in GEO - `markwilliamscook.substack.com/p/schema-llms-and-the-low-bar-for-evidence`
+- Mark Williams-Cook - Schema, LLMs and the Low Bar for "Evidence" in GEO (May 2026) - `markwilliamscook.substack.com/p/schema-llms-and-the-low-bar-for-evidence`
+- Bing - Webmaster Guidelines - `bing.com/webmasters/help/webmaster-guidelines-30fba23a`
+- Perplexity - Crawlers documentation - `docs.perplexity.ai/docs/resources/perplexity-crawlers`
+- Google - Generative AI performance report (Search Console Help) - `support.google.com/webmasters/answer/16984139`
+- Bing - Introducing AI Performance in Bing Webmaster Tools Public Preview (February 2026) - `blogs.bing.com/webmaster/2026/2/Introducing-AI-Performance-in-Bing-Webmaster-Tools-Public-Preview`
