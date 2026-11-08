@@ -2,7 +2,7 @@
 title: "How to Turn Off AI Overviews: What Actually Works in 2026"
 description: "No official setting turns off Google AI Overviews. What works in 2026: the Web filter, udm=14, extensions, mobile fixes, and the real opt-out for site owners."
 date: "2026-07-23"
-updated: "2026-10-17"
+updated: "2026-11-08"
 author: "Samy BEN SADOK"
 tags: ["ai-overviews", "google-search", "udm-14", "guide"]
 draft: false
@@ -34,6 +34,11 @@ You cannot turn AI Overviews off. You can stop seeing them, which is a different
 Google ships an AI-free version of its own results. It's called the **Web filter**, it sits in the tab row or under the "More" tab after you run a search, depending on the query, and it returns plain blue links with no AI Overview, no shopping modules, and no panels. Google added it in May 2024, the same month AI Overviews launched in the US.
 
 Clicking the Web tab (in the tab row or under "More", depending on the query) on every single search is tedious. That's where **udm=14** comes in.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/how-to-turn-off-ai-overviews/web-filter-more-menu.png" alt="Two captures of a Google search for 'how do I keep basil alive indoors in winter'. First, the More menu opened from the tab row, listing News, Web, Books and Maps. Second, the Web view, loaded with udm=14 in the URL, with the Web tab selected and a plain Reddit link where the AI Overview was." w="2320" h="2082" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">For this query the Web filter sat under More; the Web view (loaded here with udm=14 in the URL) has no AI Overview. Logged out, US connection, captured November 8, 2026.</figcaption>
+</figure>
 
 The Web filter is just a URL parameter: append `&udm=14` to any Google search URL and you land on the text-only page directly. Tedium's Ernie Smith documented the trick days after the filter shipped in [a post that went viral](https://tedium.co/2024/05/17/google-web-search-make-default/), then put up [udm14.com](https://udm14.com) so anyone could use it without touching a URL. A search on udm14.com is a Google search with the parameter pre-applied; it does route through his third-party page first, so if that bothers you, the custom-engine setup below keeps everything between you and Google.
 
@@ -73,6 +78,11 @@ One safety note: install these only from the official Chrome Web Store or Firefo
 ## Query Tricks: The -AI Operator and Friends
 
 For one-off searches, there's a faster route: append a negative operator to your query. Searching `best running shoes -AI` usually returns a page with no AI Overview at all.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/how-to-turn-off-ai-overviews/minus-ai-operator.png" alt="The same basil search twice: without an operator the page opens with an AI Overview; with '-ai' added in the search box it opens with a plain Reddit result and no AI Overview." w="2320" h="2104" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">One query, with and without -ai. Logged out, US connection, captured November 8, 2026.</figcaption>
+</figure>
 
 Here's why. A minus operator tells Google to exclude results containing that term, and queries carrying exclusion operators generally don't trigger the overview. Google doesn't document this behavior anywhere, and the exclusion is real: `best running shoes -AI` also drops pages that mention AI, so on AI-adjacent topics the operator distorts what you get back. The effect is per-query, so it suits the occasional search on a machine you don't control. For daily use, set a default engine instead.
 
