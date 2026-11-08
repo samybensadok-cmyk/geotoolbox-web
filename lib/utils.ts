@@ -37,9 +37,18 @@ export function calculateReadingTime(content: string): number {
  * URL-safe anchor slug derived from heading text. Used to link the
  * table-of-contents sidebar to the MDX headings (which get matching
  * `id` attributes via the mdxComponents h2/h3 overrides).
+ * Accents are folded to plain letters first (« visibilité » → `visibilite`,
+ * « Übersicht » → `ubersicht`, ß → ss, œ → oe, æ → ae): `\w` is ASCII-only,
+ * so without the fold French/Spanish/German headings lost their accented
+ * letters and hand-written in-page anchors (`#...-visibilite-...`) broke.
  */
 export function slugify(text: string): string {
   return String(text)
+    .replace(/ß/g, "ss")
+    .replace(/[Œœ]/g, "oe")
+    .replace(/[Ææ]/g, "ae")
+    .normalize("NFKD")
+    .replace(/[̀-ͯ]/g, "")
     .toLowerCase()
     .trim()
     .replace(/[^\w\s-]/g, "")
