@@ -2,7 +2,8 @@
 title: "How to Run an LLM Locally (2026 Guide)"
 description: "Run a large language model on your own Mac or PC. A practical guide to hardware, tools, quantization, setup, using it for coding, and whether it's worth it."
 date: "2026-07-22"
-updated: "2026-07-28"  # backfilled 2026-08-18 freshness audit hygiene pass (frontmatter previously had no updated field at all)
+updated: "2026-11-08"
+recheckBy: "2026-12-08"  # re-read the Ollama library tag sizes (gemma4, qwen3.8, gpt-oss), the Gemma 4 / Qwen3.8 / gpt-oss model cards, the Ollama Claude Code doc and the GPT4All release page
 author: "Samy BEN SADOK"
 tags: ["local-llm", "run-llm-locally", "ollama", "open-source-llm", "llm"]
 draft: false
@@ -14,7 +15,7 @@ It is for developers and marketers who want a private, offline model of their ow
 
 ## What Running an LLM Locally Actually Means
 
-A local LLM is an open-weight language model that runs entirely on your own computer instead of calling a hosted service like ChatGPT or Claude. You download the model file once, and from then on every prompt is answered by your own hardware. Nothing is sent to a vendor, nothing is logged on someone else's server, and it keeps working with the Wi-Fi off.
+A local LLM is an open-weight language model that runs entirely on your own computer instead of calling a hosted service like ChatGPT or Claude. You download the model file once, and from then on every prompt is answered by your own hardware. Nothing is sent to a vendor, nothing is logged on someone else's server, and it keeps working with the Wi-Fi off. Two caveats: some apps still make network calls for updates or optional web search, and exposing the local server to your network lets other devices reach it, so keep it bound to your own machine.
 
 That is the whole appeal, and also the whole catch. A model running on your laptop is not a free copy of ChatGPT. It is a different tool that happens to share the same interface. It excels at private, repetitive, and offline work, and it is genuinely useful for learning [how these models actually work](https://geotoolbox.ai/blog/how-ai-models-think). It will not match a frontier cloud model on the hardest reasoning or on very long documents, and the largest open-weight models are a different exercise entirely: see [how to run Kimi K3 locally](https://geotoolbox.ai/blog/how-to-run-kimi-k3-locally) for what self-hosting a 2.8-trillion-parameter model actually takes.
 
@@ -32,7 +33,7 @@ Three numbers matter, and only one applies to you:
 - **System RAM** is your main memory. A model can run here on the CPU alone, but slowly.
 - **Unified memory** is Apple Silicon's trick: on an M-series Mac, the CPU and GPU share one pool, so a Mac with plenty of unified memory can load models that would need an expensive discrete GPU on a PC. This is why a mid-range Mac is often the smoothest place to start.
 
-A rough rule at the common Q4_K_M quantization (explained below): budget roughly half a gigabyte for the weights of each billion parameters, then add headroom for the runtime and your conversation. A 7-billion-parameter model needs roughly 5 GB all in, so an 8 GB card handles it with room to spare; an 8B model fits too, with less headroom for long chats.
+A rough rule at the common Q4_K_M quantization (explained below): budget about two-thirds of a gigabyte for the weights of each billion parameters, then add headroom for the runtime and your conversation. Ollama's own download sizes show it: Gemma 4 12B is 8.0 GB and Gemma 4 31B is 20 GB at Q4_K_M, and its default Qwen3.8 27B build is 18 GB. A 7-billion-parameter model needs roughly 5 to 6 GB all in, so an 8 GB card handles it with room to spare; an 8B model fits too, with less headroom for long chats.
 
 <table>
 <thead>
@@ -40,13 +41,18 @@ A rough rule at the common Q4_K_M quantization (explained below): budget roughly
 </thead>
 <tbody>
 <tr><td><strong>8 GB</strong> RAM or VRAM</td><td>7B to 8B</td><td>Roughly 30 to 50 tokens/sec on a GPU; single digits, and slow, on CPU only</td></tr>
-<tr><td><strong>16 GB</strong> RAM or VRAM</td><td>13B to 14B</td><td>The everyday sweet spot; roughly 20 to 40 tokens/sec on a GPU</td></tr>
-<tr><td><strong>24 GB</strong> VRAM (RTX 3090/4090)</td><td>up to 32B</td><td>Near the best quality you can run locally; roughly 15 to 30 tokens/sec</td></tr>
+<tr><td><strong>16 GB</strong> RAM or VRAM</td><td>13B to 20B</td><td>The everyday sweet spot (gpt-oss-20b is 14 GB); roughly 20 to 40 tokens/sec on a GPU</td></tr>
+<tr><td><strong>24 GB</strong> VRAM (RTX 3090/4090)</td><td>up to 32B</td><td>Near the best quality you can run locally (Qwen3.8 27B is 18 GB, Gemma 4 31B is 20 GB); roughly 15 to 30 tokens/sec</td></tr>
 <tr><td><strong>48 GB+</strong> (2x24GB, or a large-memory Mac)</td><td>up to 70B</td><td>Highest local quality; slower, roughly 8 to 15 tokens/sec, and worth it for the size</td></tr>
 </tbody>
 </table>
 
 Those speeds are rough and assume the model runs on a GPU or Apple Silicon; the exact number depends on your specific chip and the model. Interactive chat is comfortable once you are into the double digits of tokens per second, and the largest models trade speed for quality by design.
+
+<figure>
+  <BlogImage src="/blog/run-llm-locally/run-llm-memory-fit-nov-2026.png" alt="Horizontal bar chart of Ollama download sizes: Gemma 4 E2B 4.6 GB, E4B 6.6 GB, 12B 8.0 GB, gpt-oss-20b 14 GB, Gemma 4 26B A4B 16 to 19 GB, Qwen3.8 27B 18 GB, Gemma 4 31B 20 GB, Qwen3.6 35B-A3B 23 GB and gpt-oss-120b 65 GB, against dashed lines at 8, 12, 16 and 24 GB of memory." w="1240" h="811" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Where current open models land against common memory tiers, using Ollama's listed download sizes (checked November 8, 2026).</figcaption>
+</figure>
 
 One counterintuitive point: capacity beats raw speed. An older 24 GB RTX 3090 will out-run a newer 16 GB RTX 4080 on a large model, because the 3090 keeps the whole model in VRAM while the 4080 has to offload part of it to system RAM and pays the speed penalty.
 
@@ -64,14 +70,14 @@ Half a dozen apps all claim to "run local LLMs," which is where most people stal
 <tr><td><strong>Ollama</strong></td><td>Command line + API</td><td>Developers who want a model behind an API</td><td>One command to install and run; serves an OpenAI-compatible endpoint by default</td></tr>
 <tr><td><strong>LM Studio</strong></td><td>Desktop GUI</td><td>Beginners who want to point and click</td><td>Searches and downloads models in-app; no terminal needed</td></tr>
 <tr><td><strong>Jan</strong></td><td>Desktop GUI</td><td>Privacy-first users</td><td>Open source, fully offline, a clean ChatGPT-style window</td></tr>
-<tr><td><strong>GPT4All</strong></td><td>Desktop GUI</td><td>Absolute beginners on modest hardware</td><td>Runs well CPU-only; chatting in a couple of minutes</td></tr>
+<tr><td><strong>GPT4All</strong></td><td>Desktop GUI</td><td>Older, modest hardware</td><td>Its last GitHub release (v3.10.0) dates to February 2025, so newer models may not load; prefer Jan or LM Studio for new ones</td></tr>
 <tr><td><strong>llama.cpp</strong></td><td>Command line / engine</td><td>Tinkerers who want full control</td><td>The engine most other tools are built on, including Ollama</td></tr>
 </tbody>
 </table>
 
 A couple more are worth naming even though they are not starting points. [Open WebUI](https://docs.openwebui.com/) puts a ChatGPT-style browser interface on top of Ollama when you outgrow the terminal. [vLLM](https://github.com/vllm-project/vllm) is a serving engine for when a model needs to handle many users at once: Ollama is tuned for one person on one machine, while vLLM is built to batch many simultaneous requests, so a busy shared server is a different problem from running a model on your own desk.
 
-If you are not sure, the short version: install [Ollama](https://docs.ollama.com/quickstart) if you are comfortable in a terminal or want to build on it, and [LM Studio](https://lmstudio.ai/) if you would rather never see one. Both are free, both run the same underlying models, and you can switch later without losing anything. If leaving no trace is the whole point, Jan and GPT4All lean hardest into privacy and are built to run fully offline by default.
+If you are not sure, the short version: install [Ollama](https://docs.ollama.com/quickstart) if you are comfortable in a terminal or want to build on it, and [LM Studio](https://lmstudio.ai/) if you would rather never see one. Both are free, both run the same underlying models, and you can switch later without losing anything. If leaving no trace is the whole point, Jan leans hardest into privacy and is built to run fully offline by default.
 
 ## Understand the Model Files (Quantization and GGUF)
 
@@ -83,14 +89,33 @@ Those labels are **quantization** levels. A model's weights are originally store
 
 The default you want, in almost every case, is **Q4_K_M**. It is the accepted sweet spot: small enough to fit, good enough that you will not notice the compression. Step up to Q5_K_M or Q6_K if you have memory to spare and want a little more quality. Avoid Q2 and Q3 unless you are desperate to squeeze a model onto too little memory, because that is where output visibly degrades.
 
-Which model, though? That is a separate decision with its own moving parts, and the open-weight landscape shifts monthly. Rather than chase version numbers, start with a well-known family and a size your hardware can hold: Meta's Llama, Alibaba's Qwen (including its Qwen Coder variants), Google's Gemma, Mistral, or DeepSeek. For a current shortlist by use case, see our guide to the [best open-source LLMs](https://geotoolbox.ai/blog/best-open-source-llms), and note that several of the strongest options are [open-weight families like Qwen and DeepSeek](https://geotoolbox.ai/blog/chinese-ai-models-compared) you can run entirely offline. The rule that ages well: pick a family, pick a size that fits, download the Q4_K_M file.
+Which model, though? That is a separate decision with its own moving parts, and the open-weight landscape shifts monthly, so the next section gives a dated shortlist. The rule that ages well: pick a family, pick a size that fits, download the Q4_K_M file. For rankings across every size, see our guide to the [best open-source LLMs](https://geotoolbox.ai/blog/best-open-source-llms), and for the Chinese labs behind Qwen and DeepSeek, our [comparison of Chinese AI models](https://geotoolbox.ai/blog/chinese-ai-models-compared).
+
+## Which Models to Pull Right Now
+
+As of November 2026, three families cover consumer hardware well, and the model cards for all three list Apache 2.0: Google's Gemma 4, Alibaba's Qwen and OpenAI's gpt-oss. Sizes below are Ollama's listed downloads, and a model close to your limit still needs room for context.
+
+<table>
+<thead>
+<tr><th>Model</th><th>Download</th><th>Memory tier</th><th>Good for</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Gemma 4 E4B</strong> (<code>gemma4:e4b</code>)</td><td>6.6 GB</td><td>8 GB</td><td>Everyday chat on a small machine; accepts images (audio not yet in Ollama)</td></tr>
+<tr><td><strong>Gemma 4 12B</strong></td><td>8.0 GB</td><td>12 GB</td><td>A step up in quality, with a 256K context window</td></tr>
+<tr><td><strong>gpt-oss-20b</strong></td><td>14 GB</td><td>16 GB</td><td>Reasoning and tool calling; OpenAI says it runs within 16 GB</td></tr>
+<tr><td><strong>Qwen3.8 27B</strong> (<code>qwen3.8</code>)</td><td>18 GB</td><td>24 GB</td><td>General use and agentic coding, with image input</td></tr>
+<tr><td><strong>Gemma 4 31B</strong></td><td>20 GB</td><td>24 GB</td><td>The largest dense Gemma 4, with a 256K context window</td></tr>
+</tbody>
+</table>
+
+Two things to watch. Gemma 4 26B A4B activates only 3.8B of its 25.2B parameters per token, so it generates faster than its size suggests, but all 16 to 19 GB still has to fit in memory. And Mistral and DeepSeek are no longer the default starting points: their latest large releases (Mistral Large 4, DeepSeek V4.1 Flash) are server-class models, not desktop ones. Meta's open models moved from Llama (newest Hugging Face repositories: April 2025) to Muse; Muse Glimmer 30B (Apache 2.0, 18 GB on Ollama) fits the 24 GB tier.
 
 ## Run Your First Model in 15 Minutes
 
 With Ollama, the whole process is short, and most of the fifteen minutes is the model downloading in the background.
 
 1. **Install Ollama.** Download it from [ollama.com](https://ollama.com/download) and run the installer. It sets up a background service and adds the `ollama` command to your terminal.
-2. **Pull and run a model.** In a terminal, type `ollama run llama3.2`. Ollama downloads the model on the first run, then drops you into an interactive chat right there in the terminal. Swap `llama3.2` for any model in its [library](https://ollama.com/library); a 3B model is a safe first pull on modest hardware.
+2. **Pull and run a model.** In a terminal, type `ollama run gemma4`. Ollama downloads the model on the first run, then drops you into an interactive chat right there in the terminal. Swap `gemma4` for any model in its [library](https://ollama.com/library); on 8 GB or less, `gemma4:e2b` (4.6 GB at Q4_K_M) is a safe first pull.
 3. **Chat.** Type a message and press enter. That is a large language model answering from your own machine, no account and no internet required.
 
 <figure>
@@ -110,11 +135,11 @@ This is where a local model earns its keep, and it is the part most guides skip.
 
 Ollama serves that endpoint at `http://localhost:11434/v1`. Because the request never leaves your computer, the API key is not checked, so any placeholder value works.
 
-For **Cursor** or the **Continue** extension in VS Code and JetBrains, the setup is the same idea in both: add a model provider, set the base URL to your local endpoint, and choose a model you have pulled (a Qwen Coder model is the usual pick for this). [Continue](https://www.continue.dev/) has native Ollama support in its config, so it is often the smoothest path to a local coding assistant. For a wider set of options here, we keep a running list of [open-source tools for Claude Code](https://geotoolbox.ai/blog/claude-code-open-source-tools).
+For **Cursor** or the **Continue** extension in VS Code and JetBrains, the setup is the same idea in both: add a model provider, set the base URL to your local endpoint, and choose a model you have pulled (Qwen3.8 27B and Qwen3.6 35B-A3B both publish agentic-coding results on their model cards). [Continue](https://www.continue.dev/) has native Ollama support in its config, so it is often the smoothest path to a local coding assistant. For a wider set of options here, we keep a running list of [open-source tools for Claude Code](https://geotoolbox.ai/blog/claude-code-open-source-tools).
 
-**Claude Code has one gotcha worth knowing before you waste an hour on it.** Claude Code speaks Anthropic's message format, not OpenAI's, so it does not use the same `/v1` endpoint as Cursor or Continue. Ollama exposes a separate Anthropic-compatible endpoint for exactly this, and the simplest path is to let it connect everything for you with `ollama launch claude`. If you set it up by hand instead, export these variables and add them to your shell profile so they persist: `ANTHROPIC_BASE_URL` pointed at your local Ollama, `ANTHROPIC_AUTH_TOKEN` set to any value, and `ANTHROPIC_API_KEY` set to an empty string. Do not skip that last one: a cloud Anthropic key already sitting in your environment can otherwise override the local setup, which is the exact dead end this section is about. See [Ollama's documented Claude Code integration](https://docs.ollama.com/integrations/claude-code) for the full walkthrough.
+**Claude Code has one gotcha worth knowing before you waste an hour on it.** Claude Code speaks Anthropic's message format, not OpenAI's, so it does not use the same `/v1` endpoint as Cursor or Continue. Ollama exposes a separate Anthropic-compatible endpoint for exactly this, and the simplest path is to let it connect everything for you with `ollama launch claude`. Ollama's docs advise a context window of 64k or higher for local models here. If you set it up by hand instead, export these variables and add them to your shell profile so they persist: `ANTHROPIC_BASE_URL` pointed at your local Ollama, `ANTHROPIC_AUTH_TOKEN` set to any value, and `ANTHROPIC_API_KEY` set to an empty string. Do not skip that last one: a cloud Anthropic key already sitting in your environment can otherwise override the local setup, which is the exact dead end this section is about. See [Ollama's documented Claude Code integration](https://docs.ollama.com/integrations/claude-code) for the full walkthrough.
 
-Be honest with yourself about the result. A local 7B to 32B coding model is not GPT-5 or Claude Opus. It handles autocomplete, boilerplate, and private codebases you cannot paste into a cloud tool, and it costs nothing per token after the hardware. Treat it as a strong second seat for privacy-sensitive or offline work.
+Be honest with yourself about the result. A local 7B to 32B coding model is not a frontier cloud model. It handles autocomplete, boilerplate, and private codebases you cannot paste into a cloud tool, and it costs nothing per token after the hardware. Treat it as a strong second seat for privacy-sensitive or offline work.
 
 ## Why Is It Slow? Fixing Common Problems
 
@@ -148,27 +173,19 @@ That intuition pays off directly if you work in marketing or SEO. The open-weigh
 
 ### How much RAM do you need to run an LLM locally?
 
-Around 8 GB runs 7B to 8B models at Q4_K_M quantization, 16 GB is the comfortable everyday range and handles 13B to 14B, and 24 GB or more opens up models in the 32B class. On a discrete GPU the relevant number is VRAM; on an Apple Silicon Mac it is unified memory. A rough guide is about half a gigabyte for the weights of each billion parameters, plus headroom for the runtime and your conversation.
+Around 8 GB runs 7B to 8B models at Q4_K_M quantization, 16 GB is the comfortable everyday range and fits models up to about 20B (gpt-oss-20b is 14 GB), and 24 GB or more opens up the 27B to 31B class (Qwen3.8 27B is 18 GB, Gemma 4 31B is 20 GB). On a discrete GPU the relevant number is VRAM; on an Apple Silicon Mac it is unified memory. A rough guide is about two-thirds of a gigabyte for the weights of each billion parameters, plus headroom for the runtime and your conversation.
 
 ### Do I need a GPU to run an LLM locally?
 
 No, but it helps a lot. A modern CPU with enough RAM can run small models at roughly 3 to 8 tokens per second, which is fine for background tasks and slow for live chat. A GPU, or an Apple Silicon Mac's unified memory, is what makes local models feel responsive.
 
-### Is it worth running LLMs locally?
-
-It is worth it for privacy, offline use, bulk or repetitive jobs, and learning. It is not worth it as a cheaper replacement for a frontier model on complex reasoning, where a cloud model still wins. If you already own capable hardware, it costs nothing per token; if you would buy hardware just to save money, the math only works at high usage.
-
 ### What laptop can run an LLM locally?
 
 Any laptop with 16 GB of memory can run useful 7B to 8B models. Apple Silicon MacBooks (M-series) are especially strong because their unified memory lets the GPU use a large shared pool, so a high-memory Mac punches well above a PC laptop with the same total memory.
 
-### Is running an LLM locally actually private?
-
-Yes, in the sense that prompts are processed on your machine and are not sent to a model vendor. A couple of caveats: some apps still make network calls for updates or optional web search, and if you expose the local server to your network, other devices could reach it. Keep the server bound to your own machine and disable optional cloud features if privacy is the point.
-
 ### Which local model should I start with?
 
-Start with a well-known family at a size your memory can hold rather than chasing the newest version number: a small Llama or Qwen model at Q4_K_M is a safe first pull, and a Qwen Coder model is a good default for coding. Once one is running, try a larger size from the same family to feel the quality and speed trade-off.
+Match the model to your memory rather than the newest release number: Gemma 4 E4B on 8 GB, gpt-oss-20b on 16 GB and Qwen3.8 27B on 24 GB (see the shortlist above). Qwen3.8 27B is also a good default for coding. Once one is running, try a larger size from the same family to feel the quality and speed trade-off.
 
 ## Where to Go From Here
 
@@ -184,3 +201,8 @@ Once you have seen how a model reads and summarizes text, the natural next quest
 - LM Studio - Element Labs - `lmstudio.ai`
 - Continue (local AI code assistant) - Continue - `continue.dev`
 - llama.cpp inference engine - ggml-org, GitHub - `github.com/ggml-org/llama.cpp`
+- Ollama model library: gemma4, qwen3.8, gpt-oss tag pages (download sizes) - Ollama, checked November 8, 2026 - `ollama.com/library`
+- Qwen3.8-27B model card - Qwen on Hugging Face, last modified November 7, 2026 - `huggingface.co/Qwen/Qwen3.8-27B`
+- Gemma 4 26B A4B and 31B model cards - Google on Hugging Face, July 20, 2026 - `huggingface.co/google/gemma-4-26B-A4B-it`
+- gpt-oss-20b model card - OpenAI on Hugging Face - `huggingface.co/openai/gpt-oss-20b`
+- GPT4All releases (v3.10.0, February 25, 2025) - Nomic, GitHub - `github.com/nomic-ai/gpt4all/releases`
