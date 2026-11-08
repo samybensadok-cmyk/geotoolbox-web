@@ -3,7 +3,7 @@ title: "Gemini API Pricing in $YEAR: Every Model, Tier, and Hidden Cost"
 description: "Gemini API pricing $YEAR: every model's token cost, the four service tiers, the free tier, Vertex vs Developer API, and the hidden costs that inflate your bill."
 date: "2026-07-02"
 recheckBy: "2026-11-25"  # 2026-10-17: Argon $2/$10 to 11-30 then $4/$20; 3.6/3.8 Flash intro $0.75/$3.75 to 12-31; 3.5 and 3.7 Flash deprecated 10-08; comparators GPT-6.1 Sol, Claude Haiku/Sonnet 5.5.
-updated: "2026-11-02"
+updated: "2026-11-08"
 author: "Samy BEN SADOK"
 tags: ["gemini-api-pricing", "gemini-api", "google-gemini", "vertex-ai", "api-pricing", "ai-pricing"]
 draft: false
@@ -38,7 +38,7 @@ Here are the current pay-as-you-go rates for the models worth using, at Standard
 
 Three patterns run through that table. Flash-Lite is the floor and Pro is the ceiling, and the gap is wide: Gemini 3.1 Pro costs eight times more per input token than 3.1 Flash-Lite. For classification, extraction, and routine summarizing, the cheap models are usually enough, and routing simple work to Flash-Lite is where most teams find their savings.
 
-Output costs more than input, four to more than eight times on the Flash models, so long responses are where bills grow fastest. The 3.1 Pro and 2.5 Pro models also carry a context cliff: once a single prompt crosses 200,000 tokens, the input rate roughly doubles. Argon has none. More on that below.
+Output costs more than input, four to more than eight times on the Flash models, so long responses are where bills grow fastest. The 3.1 Pro and 2.5 Pro models also carry a context cliff: once a single prompt crosses 200,000 tokens, the input rate roughly doubles. [Gemini 4 Argon](https://geotoolbox.ai/blog/gemini-4-argon) has none. More on that below.
 
 One naming note, since older guides get it wrong. As of October 17, 2026, the current default workhorse is **Gemini 3.8 Flash** at $0.75 input and $3.75 output through December 31, 2026 ($1.50 / $7.50 after), the successor to 3.6 Flash (now Google's "previous generation" Flash, at the same price). The flagship is **Gemini 4 Argon**, paid only. The rates come straight from [Google's Gemini API pricing page](https://ai.google.dev/gemini-api/docs/pricing), the source of record, which changes often enough to check before you commit a budget. For how 3.6 Flash and 3.5 Flash-Lite compare head to head, see our [Gemini 3.6 Flash vs 3.5 Flash-Lite](https://geotoolbox.ai/blog/gemini-3-6-flash-vs-3-5-flash-lite) guide.
 
@@ -104,7 +104,7 @@ First, thinking tokens are billed as output. Gemini's reasoning models generate 
 
 Second, the 200K context cliff doubles Pro input. On 3.1 Pro and 2.5 Pro, once a single prompt crosses 200,000 tokens of [context](https://geotoolbox.ai/blog/how-does-ai-search-work), the input rate roughly doubles and output climbs with it: Gemini 3.1 Pro input goes from $2.00 to $4.00 per million, output from $12.00 to $18.00. Argon has no cliff. Retrieval pipelines that stuff large documents into every call cross that line on every request without anyone noticing, because dashboards show averages and the cliff hides in the few oversized prompts.
 
-Third, grounding with Google Search is a separate line. Letting a model check live Search is not free tokens; it is a per-query charge. The [Gemini 3 family and newer](https://ai.google.dev/gemini-api/docs/pricing) gets 5,000 search requests a month free, shared across the family, then $14 per thousand. The 2.5 models get 1,500 a day free, then $35 per thousand. Grounding with Google Maps runs $25 per thousand on the 2.5 models and shares the Gemini 3 family's $14 rate. A single request can also fire more than one billable search, so the line item grows faster than the request count.
+Third, grounding with Google Search is a separate line. Letting a model check live Search is not free tokens; it is a per-query charge. The [Gemini 3 family and newer](https://ai.google.dev/gemini-api/docs/pricing) gets 5,000 search requests a month free, shared across the family, then $14 per thousand, subject to a default limit of 1,500 grounded requests a day per project. The 2.5 models get 1,500 a day free, then $35 per thousand. Grounding with Google Maps runs $25 per thousand on the 2.5 models and shares the Gemini 3 family's $14 rate. A single request can also fire more than one billable search, so the line item grows faster than the request count.
 
 Fourth, audio input can cost more than text. On older models, audio input is priced above text input, about three times higher on 2.5 Flash (3.5 Flash-Lite charges one rate). A voice feature is not billed like a text feature, even before you add the separate audio-output meters.
 
@@ -153,6 +153,8 @@ Numbers in a table are abstract until you stack every meter into one bill. Take 
 <tr><td><strong>Real bill (all meters)</strong></td><td>the number that actually posts</td><td>~$3,393</td></tr>
 </tbody>
 </table>
+
+At more than 3,000 grounded searches a day, this example also exceeds that default 1,500-a-day grounding limit, so it would need a higher limit before launch.
 
 The sticker estimate misses by half: the real bill is about double what the calculator shows. Thinking tokens and grounding, neither of which appears in a per-token calculator, add about $1,700 a month on their own. This bot grounds on every turn, which is the high end; one answering mostly from its own knowledge base would ground less and see a smaller gap. The shape holds either way: the meters a calculator ignores are the ones that move the bill.
 
