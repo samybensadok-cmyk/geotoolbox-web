@@ -1,0 +1,249 @@
+---
+title: "Claude vs Copilot : quel assistant de code choisir ?"
+description: "Claude Code vs GitHub Copilot comparés : fonctionnement, modèles, fenêtre de contexte, vrai coût depuis la France, données et RGPD, et un verdict clair."
+date: "2026-11-09"
+updated: "2026-11-09"
+recheckBy: "2026-12-01"  # 09/11 : prix GitHub et Anthropic relevés depuis la France (IP France, déconnecté), Microsoft 365 Copilot sur microsoft.com/fr-fr ; échéances : 16/11 dépréciation d'Opus 4.8 et Opus 5 dans Copilot, 01/12 Copilot Business vendu sans abonnement de base, 31/12 fin de la promo à 15,60 € HT, fin 2026 Claude dans l'EU Data Boundary (Microsoft 365 Copilot)
+author: "Samy BEN SADOK"
+tags: ["claude-vs-copilot", "github-copilot", "claude-code", "copilot", "comparison", "ai-coding", "llm"]
+draft: false
+locale: "fr"
+donorSlug: "claude-vs-copilot"
+donorCommit: "1116aae"
+noindex: false
+---
+
+Claude ou Copilot ? Pour coder, GitHub Copilot est le meilleur choix par défaut pour la plupart des développeurs : il vit dans votre éditeur, coûte 10 $ par mois en Pro et vous laisse choisir le modèle qui tourne derrière, Claude compris. Claude Code, l'agent d'Anthropic qui travaille dans le terminal (inclus dans Claude Pro à 18 € HT par mois), est le meilleur choix dès qu'il s'agit de déléguer un travail de fond qui s'étend sur de nombreux fichiers, comme un gros refactoring ou une migration. Si vous pensez à Microsoft 365 Copilot, l'assistant de Word, Excel et Teams, passez directement à la section [De quel Copilot parle-t-on ?](#de-quel-copilot-parle-t-on).
+
+Beaucoup de comparatifs confondent les produits ou citent des scores de benchmark qui n'ont jamais existé. Nous détaillons ici ce qui distingue les deux outils, ce que chacun coûte vraiment et comment trancher, sans les chiffres enjolivés du marketing.
+
+## Ce qu'il faut retenir
+
+- **Pour coder, GitHub Copilot (Pro à 10 $ par mois) est le meilleur choix par défaut pour la plupart des développeurs**, et Claude Code (inclus dans Claude Pro à 18 € HT par mois) s'impose dès qu'il faut déléguer un travail qui touche de nombreux fichiers.
+- **GitHub Copilot utilise déjà Claude** : au 9 novembre 2026, son sélecteur propose notamment Claude Opus 5.5, Sonnet 5.5 et Fable 5.1, mais choisir Claude dans Copilot n'équivaut pas à utiliser Claude Code, et un abonnement Claude n'y donne pas accès.
+- **Depuis la France, GitHub affiche ses prix en dollars US et Anthropic en euros hors taxes**, et depuis le 1er juin 2026 Copilot décompte l'usage de l'agent en crédits GitHub AI (15 $ par mois inclus sur Pro), tandis que Claude fixe des plafonds d'usage par fenêtre de cinq heures et par semaine.
+- **Sur les forfaits individuels, GitHub (depuis le 24 avril 2026) et Anthropic peuvent entraîner leurs modèles sur votre code** tant que vous n'avez pas désactivé le réglage correspondant ; le désactiver est la façon concrète d'exercer le droit d'opposition que vous reconnaît le RGPD.
+- **Microsoft 365 Copilot est un autre produit** : une licence bureautique affichée à 18,20 € HT par utilisateur et par mois en France, qui ne se compare pas à Claude Code pour coder.
+
+## Claude vs Copilot : la réponse courte
+
+Les deux outils ne jouent pas dans la même catégorie, et c'est pour cela que tant de comparatifs passent à côté. **GitHub Copilot est un assistant intégré à l'IDE** : autocomplétion en temps réel, chat dans l'éditeur, mode agent, et un lien natif avec GitHub et les pull requests. Il fonctionne dans une dizaine d'éditeurs et d'outils, et laisse le choix du modèle sous le capot. **Claude Code est un agent qui travaille dans le terminal** : vous lui donnez un objectif, il établit un plan, modifie plusieurs fichiers, lance des commandes et vérifie lui-même son travail, avec les seuls modèles d'Anthropic.
+
+La bonne question n'est donc pas « lequel est le meilleur ? » mais « le meilleur pour quoi ? ». Copilot l'emporte pour la rapidité des suggestions au fil de la frappe, le nombre d'éditeurs pris en charge et l'intégration à GitHub. Claude Code passe devant dès que vous lui déléguez une tâche de fond sur plusieurs fichiers : refonte d'un module, migration de framework. Beaucoup de développeurs utilisent les deux, et avec un abonnement Copilot payant, vous pouvez même confier des tâches à Claude Code comme agent tiers.
+
+Voici le tableau d'ensemble. Chaque chiffre a été vérifié le 9 novembre 2026 sur les pages officielles de GitHub et d'Anthropic.
+
+<table>
+<thead>
+<tr><th>&nbsp;</th><th>GitHub Copilot</th><th>Claude Code</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Ce que c'est</strong></td><td>Un assistant de programmation intégré à votre éditeur et à GitHub</td><td>L'outil de code agentique d'Anthropic</td></tr>
+<tr><td><strong>Où il tourne</strong></td><td>VS Code, JetBrains, Visual Studio, Neovim, Xcode, GitHub.com et une CLI</td><td>Terminal, extensions VS Code et JetBrains, application de bureau et version web</td></tr>
+<tr><td><strong>Façon de travailler</strong></td><td>Autocomplétion, chat dans l'éditeur et mode agent</td><td>Agentique : plan, modifications sur plusieurs fichiers, tests, itérations</td></tr>
+<tr><td><strong>Modèles</strong></td><td>Multimodèle : Claude (Sonnet, Opus), GPT, Gemini et d'autres</td><td>Claude uniquement (Opus 5.5, Sonnet 5.5, Haiku 5.5 et Fable 5.1, ce dernier payé en crédits d'usage sur Pro)</td></tr>
+<tr><td><strong>Fenêtre de contexte</strong></td><td>Jusqu'à 1M de tokens pour les modèles compatibles, dans VS Code et la CLI</td><td>1M sur tous les forfaits payants de Claude Code et sur l'API pour les modèles actuels (Opus 5.5, Sonnet 5.5, Haiku 5.5, Fable 5.1)</td></tr>
+<tr><td><strong>Points forts</strong></td><td>Suggestions rapides au fil de la frappe, couverture des éditeurs, flux GitHub et pull requests</td><td>Travail autonome sur plusieurs fichiers, refactoring, migrations</td></tr>
+<tr><td><strong>Prix d'entrée</strong></td><td>Offre gratuite ; Pro à <strong>10 $ US/mois</strong> hors taxes</td><td>Inclus dans Claude Pro à <strong>18 €/mois HT</strong>, ou API à l'usage</td></tr>
+</tbody>
+</table>
+
+La suite reprend chaque ligne du tableau, corrige quelques chiffres que d'autres comparatifs répètent encore, et se termine par une grille de décision simple.
+
+## De quel Copilot parle-t-on ?
+
+Avant d'aller plus loin, précisez quel Copilot vous comparez : le mot désigne trois choses différentes, et la réponse change selon le cas.
+
+**GitHub Copilot** est l'assistant de code. Il vit dans votre éditeur et sur GitHub, écrit et relit du code, et c'est lui que l'on oppose à Claude Code. Cet article parle de GitHub Copilot.
+
+**Microsoft 365 Copilot** est l'assistant bureautique : la couche payante qui lit vos e-mails, vos réunions et vos fichiers dans Word, Excel, Teams et Outlook. Il concurrence Claude sur le travail de bureau et le chat en entreprise, pas sur l'écriture de code. Si c'est ce comparatif qui vous intéresse, commencez par notre guide de [Microsoft Copilot](https://geotoolbox.ai/blog/what-is-copilot), puis [Microsoft Copilot ou ChatGPT](https://geotoolbox.ai/blog/microsoft-copilot-vs-chatgpt). Côté prix, il s'agit d'une licence professionnelle payante intégrée à Office. Sur microsoft.com/fr-fr, Microsoft 365 Copilot Business est affiché à 18,20 € HT par utilisateur et par mois en engagement annuel, ou 15,60 € HT la première année pour une souscription passée entre le 1er juillet et le 31 décembre 2026 ; l'offre Entreprise est à 26,00 € HT. Jusqu'au 30 novembre 2026, Copilot Business se vend en complément d'un abonnement Microsoft 365 existant, et Microsoft annonce qu'à partir du 1er décembre 2026 les nouveaux achats n'en exigeront plus. Le comparer à Claude relève d'un choix d'entreprise, pas d'un choix de développeur.
+
+Un détail compte pour une organisation française : dans Microsoft 365 Copilot, les modèles Claude sont pour l'instant exclus de l'EU Data Boundary, le périmètre où Microsoft s'engage à traiter les données dans l'UE, et désactivés par défaut dans l'Union européenne, l'AELE et le Royaume-Uni jusqu'à ce qu'un administrateur les active (documentation Microsoft Learn, 4 novembre 2026). Le 5 novembre 2026, Microsoft a annoncé que ces modèles entreraient dans ce périmètre d'ici la fin de 2026 pour les organisations de l'UE et de l'AELE, sans date précise.
+
+**Claude dans Copilot** est le troisième cas, celui qui sème le plus de confusion, et il existe bel et bien. GitHub Copilot vous laisse choisir les modèles de Claude pour générer ses suggestions : « Claude » et « Copilot » ne sont donc pas toujours rivaux. Nous y revenons juste après, car c'est l'une des questions les plus posées sur le sujet.
+
+Dans la suite de l'article, « Copilot » désigne GitHub Copilot et « Claude » désigne le Claude d'Anthropic, le plus souvent via Claude Code.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/claude-vs-copilot/which-copilot-do-you-mean-fr.png" alt="Trois Copilot : GitHub Copilot, l'assistant de code dont parle cet article ; Microsoft 365 Copilot, l'assistant bureautique de Word, Excel, Teams et Outlook, licence professionnelle à 18,20 € HT par utilisateur et par mois ; et Claude dans Copilot, les modèles Claude du sélecteur de GitHub Copilot, à ne pas confondre avec l'agent Claude Code dans le terminal." w="1200" h="700" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Les trois sens de « Copilot ». Seul le premier se compare à Claude Code pour coder.</figcaption>
+</figure>
+
+## GitHub Copilot utilise-t-il Claude ?
+
+Oui. La question piège beaucoup de monde parce que la réponse évolue vite, et certains comparatifs plus anciens affirment encore le contraire.
+
+GitHub Copilot est multimodèle. Dans VS Code ou sur GitHub, un sélecteur vous laisse choisir le modèle qui alimente le chat et l'agent, et Claude figure dans la liste. C'est la réponse directe à « comment utiliser Claude avec Copilot ». Au 9 novembre 2026, la [page des modèles pris en charge](https://docs.github.com/en/copilot/reference/ai-models/supported-models) de GitHub liste Claude Fable 5.1, Fable 5, Opus 5.5, Opus 5, Opus 4.8, Sonnet 5.5, Sonnet 5, Haiku 5.5 et Haiku 4.5, aux côtés de modèles GPT, Gemini, Grok et Kimi (Sonnet 4.6 a été retiré le 1er septembre 2026, sauf pour les abonnés annuels Pro et Pro+). La disponibilité dépend du forfait et de l'interface : sur les forfaits mensuels, les modèles Opus et Fable ne sont proposés qu'à partir de Pro+. GitHub déprécie Opus 4.8 et Opus 5 au profit d'Opus 5.5 à compter du 16 novembre 2026 ; les abonnés individuels annuels conservent Opus 4.8. Opus 5.5 est arrivé dans Copilot le jour même de sa sortie chez Anthropic, le 22 septembre 2026, sur les forfaits Pro+, Max, Business et Enterprise. Un comparatif qui affirme que « Copilot n'utilise que des modèles OpenAI » est donc dépassé.
+
+Copilot utilise aussi Claude d'une seconde façon, plus directe. D'après la documentation de GitHub, tous les forfaits Copilot payants peuvent confier des tâches à des agents de code tiers, dont Claude Code et Codex d'OpenAI (le tableau de la page tarifaire ne coche pas Pro : vérifiez votre forfait). Vous pouvez ainsi passer une tâche à Claude depuis le flux de travail de Copilot. Il s'agit d'une intégration en préversion, décomptée sur vos crédits GitHub AI et vos minutes GitHub Actions, et non de l'outil Claude Code complet inclus dans un abonnement Claude. Considérez-la comme un endroit de plus où Claude apparaît dans Copilot, pas comme un moyen d'avoir Claude Code sans payer Anthropic.
+
+Deux nuances restent importantes. D'abord, choisir un modèle Claude dans Copilot n'équivaut pas à utiliser Claude Code. Vous profitez de la qualité du modèle dans le flux de Copilot (suggestions et agent), pas de la boucle d'agent de Claude Code dans le terminal, avec sa propre gestion des fichiers et sa configuration. Le modèle est le moteur, l'outil est la voiture.
+
+Ensuite, et c'est là que la question « Claude est-il moins cher via Copilot ? » se trompe de cible : un abonnement Claude ne vous donne pas Claude dans Copilot. Copilot facture son propre usage, quel que soit le modèle choisi. Claude Pro se règle auprès d'Anthropic, Copilot auprès de GitHub, et les deux compteurs restent séparés. Le détail des coûts arrive plus bas.
+
+## Claude Code vs GitHub Copilot : agent dans le terminal ou assistant dans l'IDE
+
+Entre Claude Code et GitHub Copilot, tout se joue sur une question : qui tient le volant ? Copilot vous laisse aux commandes et avance par petites touches dans votre éditeur. Claude Code reçoit un objectif et abat beaucoup de travail à chaque étape, pendant que vous relisez. C'est la différence que l'on ressent dans l'heure qui suit la prise en main des deux, et elle commande presque tous les autres arbitrages.
+
+GitHub Copilot vient à vous, là où vous écrivez déjà votre code. Il propose les lignes suivantes pendant la frappe, répond aux questions dans le chat de l'éditeur et, en mode agent, prend une tâche en charge et modifie plusieurs fichiers sous vos yeux dans l'IDE. Son centre de gravité, c'est l'éditeur et le dépôt GitHub : rien à apprendre, une suggestion s'accepte d'une touche. Le mode agent a comblé une bonne partie de l'écart d'autonomie, mais l'outil reste pensé pour un développeur qui pilote depuis l'éditeur.
+
+[Claude Code](https://geotoolbox.ai/blog/what-is-claude-code) part de l'autre bout. Il tourne dans le terminal comme un agent : vous décrivez un objectif, il lit la base de code, propose un plan, modifie les fichiers nécessaires, lance vos tests ou votre build, lit le résultat et se corrige. Vous supervisez un processus autonome au lieu d'accepter des suggestions une à une. D'où sa force sur les tâches qui touchent beaucoup de fichiers à la fois, mais aussi des débuts plus exigeants qu'un simple clic sur « accepter ».
+
+Les deux outils se configurent, et c'est là que leurs usages se rejoignent. Claude Code lit un fichier `CLAUDE.md` à la racine du dépôt (contexte du projet, conventions, commandes) et prend en charge des hooks qui lancent vos propres scripts à des moments précis de la boucle. Copilot lit des instructions personnalisées de dépôt dans le même but ; son agent cloud et Copilot CLI savent aussi lire un `CLAUDE.md`, de sorte qu'un même fichier de contexte peut servir aux deux. Tous deux se branchent enfin sur des outils et des données externes via le Model Context Protocol (MCP).
+
+Sur le terrain, la plainte la plus fréquente contre Copilot sur Reddit est qu'il « perd le fil » lors d'une grosse modification ; celle contre Claude Code, que son autonomie demande des garde-fous. C'est le même constat vu des deux côtés : l'un vous garde aux commandes et avance pas à pas, l'autre accomplit davantage à chaque étape et vous laisse moins la main.
+
+## Éditeurs pris en charge, plateformes et fenêtre de contexte
+
+Sur le nombre d'éditeurs et de plateformes, Copilot a une nette avance. Il est disponible dans VS Code, Visual Studio, les IDE JetBrains, Neovim, Xcode et sur GitHub.com, plus une interface en ligne de commande. Si votre équipe travaille déjà dans un éditeur courant, Copilot n'est qu'une extension à installer. Claude Code est conçu autour du terminal, avec des extensions pour VS Code et JetBrains, une application de bureau et une version web : sa couverture des éditeurs est plus étroite, par construction.
+
+La fenêtre de contexte est le point où les comparatifs se contredisent ouvertement, certains annonçant 1 million de tokens, d'autres 200 000. Le chiffre de 200 000 est dépassé pour les modèles Claude actuels. Voici la version vérifiée.
+
+Claude Code fait tourner Opus 4.7 et suivants, Sonnet 5 et suivants, Haiku 5.5 et les modèles Fable avec la fenêtre complète de **1 million de tokens** par défaut sur tous les forfaits payants, Pro compris, sans surcoût pour cette taille de fenêtre (Fable lui-même est décompté sur les crédits d'usage avec Pro), selon la [documentation de configuration des modèles](https://code.claude.com/docs/en/model-config) de Claude Code, vérifiée le 9 novembre 2026. L'API propose aussi 1 million de tokens sans majoration pour la taille de la fenêtre, à une exception près : Haiku 5.5 coûte plus cher par token au-delà de 100 000 tokens. Dans l'application de chat Claude, Fable 5.1, Opus 5.5, Opus 5, Sonnet 5.5, Sonnet 5 et Haiku 5.5 disposent également de 1 million de tokens sur les forfaits payants, tandis que des modèles plus anciens comme Fable 5, Opus 4.8 ou Sonnet 4.6 restent limités à 500 000, et les autres à 200 000.
+
+Copilot peut lui aussi utiliser une fenêtre de 1 million de tokens, mais uniquement dans VS Code et Copilot CLI, et pour les modèles compatibles (dont Claude, GPT et Kimi K3) ; activer cette grande fenêtre consomme davantage de crédits. Ce n'est pas un plafond fixe par forfait.
+
+En pratique, l'enjeu dépasse les chiffres. Une [fenêtre de contexte](https://geotoolbox.ai/blog/claude-code-context-window) plus large permet à un assistant de garder une grosse base de code sous les yeux assez longtemps pour mener une modification cohérente sur plusieurs fichiers. C'est précisément le terrain où Claude Code excelle, et c'est aussi pourquoi, tant que la grande fenêtre n'est pas activée, les utilisateurs de Copilot disent qu'il oublie le reste du dépôt. Si vous retouchez surtout un fichier déjà ouvert, la différence se remarque à peine. Si vous refactorez des dizaines de fichiers, elle devient décisive.
+
+## Prix et coût réel à prévoir
+
+Les prix affichés ne disent pas tout. Votre facture dépend avant tout de la façon dont chaque outil décompte un usage intensif, et sur ce point GitHub a changé les règles en 2026.
+
+<table>
+<thead>
+<tr><th>Forfait</th><th>Prix / mois</th><th>Ce qui est inclus</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Copilot Free</strong></td><td>0 $</td><td>2 000 complétions par mois, chat et agent en usage limité, modèles d'entrée de gamme via la sélection automatique uniquement, Copilot CLI</td></tr>
+<tr><td><strong>Copilot Pro</strong></td><td>10 $</td><td>Complétions illimitées, <strong>15 $ de crédits GitHub AI par mois</strong>, accès à Claude Code et Codex comme agents tiers (selon la documentation de GitHub)</td></tr>
+<tr><td><strong>Copilot Pro+</strong></td><td>39 $</td><td><strong>70 $ de crédits par mois</strong>, modèles premium dont Opus, plus d'usage que Pro</td></tr>
+<tr><td><strong>Copilot Max</strong></td><td>100 $</td><td><strong>200 $ de crédits par mois</strong>, l'enveloppe la plus large</td></tr>
+<tr><td><strong>Claude Free</strong></td><td>0 €</td><td>Chat Claude uniquement, sans Claude Code</td></tr>
+<tr><td><strong>Claude Pro</strong></td><td>18 € HT (15 € HT en facturation annuelle)</td><td>Claude Code inclus, dans la limite des quotas d'usage</td></tr>
+<tr><td><strong>Claude Max</strong></td><td>90 € HT</td><td>5 fois l'usage de Pro par fenêtre de cinq heures et par semaine ; Claude Code inclus</td></tr>
+<tr><td><strong>Claude Ultra</strong></td><td>180 € HT</td><td>10 fois l'usage hebdomadaire de Pro, sans limite de cinq heures pour les comptes vérifiés ; Claude Code inclus</td></tr>
+<tr><td><strong>API Claude</strong></td><td>à l'usage</td><td>Sonnet 5.5 à 2 $/10 $ par million de tokens en entrée/sortie, comme Sonnet 5 ; Opus 5.5 à 4 $/20 $ (Opus 5, le modèle précédent, reste à 5 $/25 $)</td></tr>
+</tbody>
+</table>
+
+Depuis la France, GitHub et Anthropic n'affichent pas leurs prix dans la même devise. La page des forfaits de GitHub, consultée sans connexion à un compte, affiche des dollars US et ne mentionne aucune taxe, et ses conditions d'utilisation laissent toutes les taxes à la charge de l'acheteur. La page tarifaire française de Claude, consultée elle aussi sans connexion, affiche des euros : 18 € par mois pour Pro (15 € par mois en facturation annuelle, soit 180 € payés d'avance), 90 € pour Max et 180 € pour Ultra, et précise que les prix « n'incluent pas les taxes applicables ». L'App Store français affiche d'autres montants : 22,00 € par mois pour Pro, 149,99 € pour Max et 299,99 € pour Ultra (relevés du 9 novembre 2026). Le détail des prix de Claude en euros est dans notre [guide des tarifs de Claude](https://geotoolbox.ai/blog/claude-pricing).
+
+Le changement de règles chez GitHub fait tomber le vieil argument « Copilot est le plus prévisible ». Depuis le 1er juin 2026, les [forfaits payants de GitHub Copilot](https://github.com/features/copilot/plans) décomptent l'usage des modèles et des agents en **crédits GitHub AI**, un crédit valant un centime de dollar, et chaque forfait inclut une enveloppe mensuelle (15 $ sur Pro, 70 $ sur Pro+, 200 $ sur Max). L'autocomplétion reste illimitée, mais chaque tâche d'agent et chaque requête vers un modèle premium puise dans cette enveloppe, d'autant plus vite que le modèle est lourd. Faites tourner l'agent intensivement sur Pro et les 15 $ peuvent s'épuiser bien avant la fin du mois : c'est exactement le « mon quota a été remis à zéro et je l'ai de nouveau atteint en une semaine » que rapportent les utilisateurs de Copilot. L'ancien quota fixe de « requêtes premium » ne subsiste que pour les abonnés annuels restés sur la facturation par requête.
+
+Chez Anthropic, la logique de facturation est différente, sans être forcément moins chère. Claude Code est inclus dans Pro à 18 €, Max à 90 € et Ultra à 180 € (prix hors taxes), avec des plafonds sur des fenêtres glissantes plutôt qu'un compteur de crédits. Une grosse journée peut donc vous bloquer jusqu'à la réinitialisation de la fenêtre, sauf si vous activez les crédits d'usage, qui vous permettent de continuer au tarif de l'API. Les équipes qui poussent l'un ou l'autre outil à fond finissent souvent sur l'API, où la vraie question budgétaire devient le nombre de tokens par tâche, pas le prix affiché du forfait. Si vous prenez ce chemin, notre guide pour [réduire le coût en tokens de Claude Code](https://geotoolbox.ai/blog/reduce-claude-code-token-costs) montre où se cache la dépense.
+
+Alors, lequel est le moins cher ? Tout dépend de votre intensité d'usage. Pour un usage léger, les deux ont une offre gratuite pour démarrer (celle de Claude sans Claude Code, toutefois), et Copilot Pro à 10 $ est le forfait payant le moins cher. En usage agentique intensif, les trajectoires divergent : les abonnements Claude restent à prix fixe mais vous bloquent une fois le plafond atteint, à moins de payer les crédits d'usage au tarif de l'API ; les crédits Copilot s'épuisent, puis vous vous arrêtez ou payez le dépassement ; et avec l'API, la facture suit directement les tokens consommés par chaque tâche.
+
+## Benchmarks : à lire avec méfiance
+
+Vous tomberez sur des comparatifs qui vous servent un tableau de scores bien propre, en général sur SWE-bench Verified, avec Claude bien au-delà de 85 % et Copilot à la traîne. Méfiez-vous de ces chiffres : beaucoup ne résistent pas à une vérification à la source.
+
+Deux problèmes reviennent souvent. D'abord, certains chiffres sont tout simplement inventés : une page très reprise cite, sur un benchmark donné, un score précis qui n'apparaît dans aucune source primaire. Ensuite, plus subtil, les System Cards d'Anthropic pour ses modèles actuels (Fable 5.1, Opus 5.5, Sonnet 5.5 et Haiku 5.5) ne donnent aucun score SWE-bench Verified. Elles mettent en avant SWE-bench Pro, plus difficile, où Opus 5.5 obtient 89,9 % et Sonnet 5.5 81,3 %. Un pourcentage SWE-bench Verified attribué à Opus 5.5 ou Sonnet 5.5 doit donc vous mettre la puce à l'oreille : il s'agit le plus souvent du score d'un modèle plus ancien recopié, ou d'un chiffre inventé. La génération précédente en publiait un (96,0 % pour Opus 5, 85,2 % pour Sonnet 5), ce qui explique qu'un chiffre valable pour une ancienne version se retrouve plaqué sur la plus récente.
+
+Ces tableaux contiennent aussi une erreur de catégorie : ils mesurent le modèle, puis attribuent le score à l'outil. Copilot et Claude Code peuvent faire tourner le même modèle Claude ; un benchmark de modèle renseigne donc sur le moteur, pas sur la manière dont chaque outil le transforme en travail fini. La qualité de l'environnement d'agent, sa gestion du contexte et sa façon de rebondir après un test raté pèsent souvent plus que quelques points de benchmark. On retrouve la même leçon quand on compare [Claude à d'autres modèles de code](https://geotoolbox.ai/blog/kimi-k3-vs-claude).
+
+La version fiable de « qui code le mieux » est plus étroite, et plus utile. Claude Code se montre régulièrement solide sur les modifications autonomes à travers plusieurs fichiers, là où sa boucle (modifier, exécuter, lire, corriger) paie. Copilot est fort sur la complétion rapide, le travail sans quitter l'éditeur et l'intégration native à GitHub. Quand ils partagent un modèle, le flux de travail autour fait la différence. Tout pourcentage que vous ne pouvez pas rattacher à l'éditeur du modèle ou au classement officiel de SWE-bench relève du marketing.
+
+## Où chacun l'emporte vraiment
+
+Une fois le battage médiatique écarté, la ligne de partage est nette.
+
+<figure>
+  <BlogImage src="/blog/claude-vs-copilot/claude-vs-copilot-scorecard-nov-2026-fr.png" alt="Tableau comparatif Claude Code vs GitHub Copilot daté de novembre 2026 : autonomie sur plusieurs fichiers, contexte (1M sur tous les forfaits payants et l'API pour Claude Code, 1M pour les modèles compatibles dans VS Code et la CLI pour Copilot), suggestions au fil de la frappe, éditeurs couverts, pull requests, choix du modèle et prix d'entrée." w="1200" h="868" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Critère par critère, l'outil qui prend l'avantage en novembre 2026. Aucun ne gagne sur toute la ligne, et beaucoup de développeurs utilisent les deux.</figcaption>
+</figure>
+
+**Prenez GitHub Copilot quand** le travail se fait dans l'éditeur et doit aller vite : écrire du nouveau code avec les suggestions au fil de la frappe, faire de petites modifications et du code répétitif (boilerplate), rester dans un IDE courant presque sans configuration, et tout ce qui touche directement GitHub, comme les résumés de pull requests et la revue de code. Si toute votre équipe code déjà dans VS Code ou JetBrains et veut un assistant que chacun peut activer dès aujourd'hui, Copilot est le choix par défaut le plus simple.
+
+**Prenez Claude Code quand** la tâche dépasse un seul fichier : une migration de framework, un refactoring qui se propage dans tout un module, une fonctionnalité à mettre en place de bout en bout, ou un nettoyage que vous préférez déléguer puis relire plutôt que taper vous-même. Un agent dans le terminal qui planifie, modifie de nombreux fichiers et lance vos tests ne fait pas le même travail qu'une autocomplétion, et c'est un travail pour lequel les suggestions de Copilot n'ont jamais été conçues.
+
+La réponse la plus courante reste « les deux », et les outils rendent désormais cette combinaison simple plutôt que redondante. Beaucoup de développeurs gardent Copilot pour la complétion pendant l'édition courante et basculent sur Claude Code pour les gros chantiers autonomes. Un `CLAUDE.md` partagé donne le même contexte de projet aux deux, et l'intégration d'agents tiers des forfaits Copilot payants permet de passer une tâche à Claude sans quitter Copilot. Si vous ne pouvez justifier qu'une seule facture, tranchez selon l'endroit où passent vos heures : Copilot si vous passez vos journées à taper dans un éditeur, Claude Code si vous orchestrez surtout des modifications d'ampleur.
+
+## Entreprise, sécurité et exécution du code en local
+
+Ces sujets pèsent surtout quand une entreprise choisit l'outil à généraliser, mais une partie concerne aussi les développeurs indépendants.
+
+Deux questions de gouvernance arrivent en premier. La propriété intellectuelle : GitHub offre une indemnisation sur les forfaits professionnels de Copilot (si du code généré déclenche une réclamation pour droit d'auteur, GitHub vous couvre), et Anthropic offre une protection comparable dans ses conditions commerciales (offres Team, Enterprise et API). Votre code ensuite : GitHub et Anthropic déclarent ne pas entraîner leurs modèles sur l'usage professionnel et entreprise, et proposent des contrôles au niveau de l'organisation. La profondeur des politiques, des journaux d'audit et des réglages de conservation mérite toutefois d'être confrontée à vos propres exigences de conformité plutôt qu'acceptée sur parole.
+
+Une nuance échappe souvent aux indépendants : ces garanties sont réservées aux offres professionnelles et entreprise. Depuis le 24 avril 2026, GitHub peut utiliser les prompts, les réponses et les extraits de code des forfaits Copilot Free, Pro, Pro+ et Max pour entraîner ses modèles d'IA, sauf si vous vous y opposez : dans vos paramètres Copilot, réglez “Allow GitHub to use my data for AI model training” sur Disabled. Côté Claude, sur Free, Pro, Max et Ultra, Anthropic peut entraîner ses modèles sur vos conversations et vos sessions Claude Code tant que le réglage « Aider à améliorer nos modèles d'IA » (Paramètres > Confidentialité) reste activé. Désactiver ces réglages, c'est la façon concrète d'exercer le droit d'opposition que le RGPD vous reconnaît face à la réutilisation de vos données pour l'entraînement, droit que la CNIL a détaillé dans un guide d'octobre 2025. Si le code de vos clients passe par ces outils, ne comptez pas sur la promesse des offres professionnelles tant que vous êtes sur un forfait individuel.
+
+Pour une équipe qui exige un traitement dans l'Union européenne, les options restent limitées. GitHub ne propose la résidence des données dans l'UE pour Copilot qu'avec l'offre GitHub Enterprise Cloud à résidence de données, et cette option augmente de 10 % la consommation de crédits. L'API d'Anthropic ne propose pas de région européenne : pour un traitement en Europe, il faut passer par Amazon Bedrock ou Google Cloud Vertex AI. L'accord de traitement des données (DPA) d'Anthropic, clauses contractuelles types comprises, est intégré à ses conditions commerciales.
+
+La différence de sécurité la plus intéressante est d'ordre architectural, et le spécialiste de la cybersécurité Wiz la résume bien dans son propre comparatif, publié en mars 2026. Les deux outils peuvent lancer des commandes, mais leur posture par défaut diffère : Copilot gravite autour de l'éditeur et de l'environnement géré de GitHub (même si Copilot CLI sait aussi exécuter des commandes en local), tandis que Claude Code tourne par défaut dans votre terminal et exécute de vraies commandes shell sur vos fichiers. Cette autonomie locale fait la force de Claude Code et constitue aussi son principal risque : un agent capable de lancer des commandes peut, en principe, en lancer une destructrice. Anthropic limite ce risque avec des modes de permission (par défaut, un modèle classificateur distinct bloque les actions qu'il juge dangereuses ; le mode manuel demande votre accord avant les modifications et les commandes que vous n'avez pas déjà autorisées), des listes d'autorisation, un bac à sable (sandboxing) et les mêmes hooks qui rendent l'outil configurable. La responsabilité de le brider reste la vôtre.
+
+Aucun des deux outils ne vérifie que le code est sûr une fois déployé, comme le souligne Wiz. L'agent cloud de Copilot lance bien par défaut CodeQL, l'analyse des secrets et une vérification des dépendances sur ses propres pull requests, mais il s'agit d'un contrôle avant fusion, pas d'une sécurité à l'exécution : secrets exposés et failles dans le code restent sous votre responsabilité, quel que soit l'outil. Si vous déployez l'un ou l'autre dans une équipe, la gouvernance et le bac à sable méritent autant d'attention que la liste des fonctionnalités.
+
+## Lequel choisir ? Une grille de décision
+
+Le verdict, sans détour. **Pour la plupart des développeurs, GitHub Copilot est le meilleur point de départ** : le travail se fait surtout dans un éditeur, le prix d'entrée est de 10 $ et l'outil laisse le choix du modèle, Claude compris. **Prenez Claude Code quand vous déléguez un travail qui touche plusieurs fichiers**, là où un agent capable de planifier puis de se corriger justifie son prix. Aucun ne remplace complètement l'autre, et utiliser les deux est une réponse légitime, de plus en plus courante.
+
+Partez de ce qui occupe l'essentiel de votre temps.
+
+<table>
+<thead>
+<tr><th>Si votre priorité est de…</th><th>Choisissez</th></tr>
+</thead>
+<tbody>
+<tr><td>Écrire du code dans VS Code, JetBrains ou Visual Studio, avec un minimum de configuration</td><td>GitHub Copilot</td></tr>
+<tr><td>Travailler dans les pull requests GitHub, avec revue de code et résumés natifs</td><td>GitHub Copilot</td></tr>
+<tr><td>Payer le moins cher possible pour démarrer et changer librement de modèle</td><td>GitHub Copilot</td></tr>
+<tr><td>Mener de gros refactorings, des migrations ou des fonctionnalités multi-fichiers à déléguer</td><td>Claude Code</td></tr>
+<tr><td>Travailler sur une base de code volumineuse avec la plus grande fenêtre de contexte utilisable</td><td>Claude Code (tout forfait payant ou l'API)</td></tr>
+<tr><td>Combiner suggestions rapides <em>et</em> délégation des gros chantiers</td><td>Les deux (Copilot pour les suggestions, Claude Code pour les gros chantiers)</td></tr>
+</tbody>
+</table>
+
+Si vous hésitez encore, commencez par Copilot Free ou Pro : c'est peu coûteux et vous connaissez déjà votre éditeur. Ajoutez Claude Code la première fois qu'une tâche est trop grosse pour être surveillée suggestion par suggestion. C'est à ce moment que l'agent dans le terminal cesse d'être un outil de plus à configurer et commence à vous faire gagner un après-midi.
+
+## Ce que cela change pour votre visibilité dans l'IA
+
+Prenez du recul sur la question des développeurs : une question marketing s'y cache. Aujourd'hui, la plupart des gens qui comparent « Claude vs Copilot » posent la question à une IA, et le moteur répond en citant une poignée de pages ; sur Google, un Aperçu IA fait de même en haut des résultats. Ces Aperçus IA sont disponibles en France, en français, et l'un d'eux s'affichait pour « claude vs copilot » le 9 novembre 2026. Si vous vendez un outil pour développeurs, ou n'importe quel logiciel, voilà la nouvelle vitrine : quand un acheteur demande « que dois-je utiliser pour X ? », l'IA vous recommande ou non selon les pages qu'elle peut lire et auxquelles elle se fie.
+
+Le 9 novembre 2026, nous avons posé neuf questions en français sur ce comparatif à ChatGPT (dans son interface et via son API), à Gemini, au Mode IA (AI Mode) de Google et à Perplexity. Les 45 réponses citaient surtout les sources officielles des deux fournisseurs : la documentation de GitHub dans 28 réponses, github.com dans 22, l'aide de Claude dans 14. Reddit et YouTube n'apparaissaient chacun que dans une seule réponse. Autrement dit, les moteurs reprennent d'abord les pages qui documentent les faits. Être cité ne consiste pas à manipuler un modèle : il faut être accessible aux robots d'exploration des IA, structurer ses réponses pour qu'elles puissent être reprises proprement et couvrir les questions précises que posent les acheteurs. La discipline est la même, que le moteur alimente [les réponses de Copilot](https://geotoolbox.ai/blog/copilot-seo) ou un assistant de code. Si votre site est invisible pour ces robots, d'autres sources parleront de vous à votre place, et aucune qualité de produit n'y changera rien.
+
+C'est précisément ce que geotoolbox sert à détecter. Avant d'investir dans du contenu, vérifiez si les moteurs d'IA peuvent réellement lire et citer votre site : notre [score de préparation IA](https://geotoolbox.ai/tools/ai-readiness), gratuit, vous montre où sont les blocages et quoi corriger en priorité. Bien choisir vos outils de développement est important ; être visible quand une IA recommande des outils comme le vôtre l'est tout autant.
+
+## Foire aux questions
+
+### Comment utiliser Claude avec Copilot ?
+
+GitHub Copilot est multimodèle : ouvrez son sélecteur de modèles (dans VS Code ou sur GitHub) et choisissez un modèle Claude, par exemple Sonnet 5 ou, à partir de Pro+, Opus 5.5, à côté de GPT et Gemini. Avec un forfait Copilot payant, vous pouvez aussi confier des tâches à Claude Code via une intégration d'agents tiers, encore en préversion. Utiliser Claude dans Copilot n'équivaut pas à utiliser l'outil Claude Code, et cela ne puise pas dans un éventuel abonnement Claude.
+
+### Claude ou Copilot : lequel est le meilleur ?
+
+Pour le travail autonome sur plusieurs fichiers, comme un refactoring ou une migration, Claude Code est généralement l'outil le plus solide : il planifie, modifie de nombreux fichiers et lance vos tests. Pour coder vite dans l'éditeur et travailler nativement avec GitHub, Copilot fait mieux. Comme Copilot peut faire tourner les modèles de Claude, ce qui compte est le flux de travail autour du modèle, plus que le modèle lui-même.
+
+### Claude est-il moins cher que Copilot ?
+
+Pour un usage léger, Copilot coûte moins cher au départ : son forfait Pro est à 10 $ par mois, contre 18 € HT pour Claude Pro (depuis la France, GitHub affiche ses prix en dollars et Anthropic en euros hors taxes). Pour un usage intensif, les compteurs diffèrent. Copilot puise l'usage de l'agent et des modèles premium dans une enveloppe mensuelle de crédits GitHub AI, puis facture le dépassement ou s'arrête. L'abonnement Claude garde un prix fixe mais vous bloque une fois le plafond atteint, sauf si vous activez les crédits d'usage, facturés au tarif de l'API. Avec l'API, la facture suit directement votre usage de l'agent.
+
+### Quels sont les inconvénients de Copilot ?
+
+Les plus cités : son enveloppe de crédits GitHub AI peut s'épuiser vite sous un usage intensif de l'agent, il peut perdre le fil du contexte lors de grosses modifications sur plusieurs fichiers, et son mode agent, même amélioré, reste moins autonome qu'un agent dédié dans le terminal. Il reste excellent pour les suggestions au fil de la frappe et l'intégration à l'éditeur.
+
+## Sources
+
+- Forfaits et prix de GitHub Copilot (page vue depuis la France) - GitHub, consulté le 9 novembre 2026 - `github.com/features/copilot/plans`
+- Facturation à l'usage pour les particuliers - GitHub Docs, 2026 - `docs.github.com/en/copilot/concepts/billing-and-usage/individuals/billing`
+- Modèles d'IA pris en charge dans Copilot - GitHub Docs, consulté le 9 novembre 2026 - `docs.github.com/en/copilot/reference/ai-models/supported-models`
+- Dépréciation de modèles Copilot mi-novembre - GitHub Changelog, 15 octobre 2026 - `github.blog/changelog/2026-10-15-upcoming-deprecation-of-selected-github-copilot-models-in-mid-november`
+- Claude Opus 5.5 disponible dans GitHub Copilot - GitHub Changelog, 22 septembre 2026 - `github.blog/changelog/2026-09-22-claude-opus-5-5-is-now-available-in-github-copilot`
+- Gérer les politiques Copilot - GitHub Docs, 2026 - `docs.github.com/en/copilot/how-tos/manage-your-account/manage-policies`
+- Copilot avec résidence des données - GitHub Docs, 2026 - `docs.github.com/en/enterprise-cloud@latest/admin/data-residency/github-copilot-with-data-residency`
+- Risques et mesures d'atténuation - GitHub Docs, 2026 - `docs.github.com/en/copilot/concepts/security-governance-and-network-settings/risks-and-mitigations`
+- Conditions d'utilisation de GitHub - GitHub, 2026 - `docs.github.com/en/site-policy/github-terms/github-terms-of-service`
+- Tarifs de Claude (page française) - Anthropic, consulté le 9 novembre 2026 - `claude.com/fr/pricing`
+- Claude by Anthropic (App Store France) - Apple, consulté le 9 novembre 2026 - `apps.apple.com/fr/app/claude-by-anthropic/id6473753684`
+- Configuration des modèles (Claude Code Docs) - Anthropic, consulté le 9 novembre 2026 - `code.claude.com/docs/en/model-config`
+- Taille de la fenêtre de contexte sur les forfaits payants - Anthropic Help Center, 30 octobre 2026 - `support.claude.com/en/articles/8606394-how-large-is-the-context-window-on-paid-claude-plans`
+- Gérer les crédits d'usage - Anthropic Help Center, 6 novembre 2026 - `support.claude.com/en/articles/12429409`
+- Utilisation de vos données pour améliorer les modèles - Anthropic, 3 août 2026 - `privacy.claude.com/fr/articles/12109829`
+- Résidence des données de l'API - Anthropic, 2026 - `platform.claude.com/docs/en/manage-claude/data-residency`
+- System Cards d'Opus 5.5 (22 sept. 2026), Sonnet 5.5 (28 sept. 2026), Haiku 5.5, Fable 5.1, Opus 5 (24 juil. 2026) et Sonnet 5 (30 juin 2026) - Anthropic - `anthropic.com/claude-opus-5-5-system-card`
+- Microsoft 365 Copilot Business : tarifs - Microsoft France, consulté le 9 novembre 2026 - `microsoft.com/fr-fr/copilot/pricing/business`
+- Connexion aux sous-traitants d'IA (modèles Anthropic) - Microsoft Learn, 4 novembre 2026 - `learn.microsoft.com/en-us/copilot/implement/connect-to-ai-subprocessor`
+- Bringing Claude models in Microsoft Copilot into the EU Data Boundary - Microsoft Copilot Blog, 5 novembre 2026 - `microsoft.com/en-us/copilot/blog/2026/11/05/bringing-claude-models-in-microsoft-copilot-into-the-eu-data-boundary`
+- Annonces Partner Center, octobre 2026 - Microsoft Learn, 2026 - `learn.microsoft.com/en-us/partner-center/announcements/2026-october`
+- IA : comment s'opposer à la réutilisation de ses données personnelles pour l'entraînement des agents conversationnels - CNIL, 16 octobre 2025 - `cnil.fr/fr/ia-comment-sopposer-la-reutilisation-de-ses-donnees-personnelles-entrainement-agent-conversationnel`
+- Claude Code vs GitHub Copilot, le point de vue sécurité - Wiz, 2026 - `wiz.io/academy/ai-security/claude-code-vs-github-copilot`
+- Aperçus IA dans la recherche Google - Aide Google, consulté le 9 novembre 2026 - `support.google.com/websearch/answer/14901683?hl=fr`
