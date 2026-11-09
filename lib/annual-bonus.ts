@@ -54,39 +54,35 @@ export const BONUS_COPY: Record<
   { lead: string; body: (d: string) => string; cta: string; timeLeft: (cd: string) => string; dismiss: string; strip: (d: string) => string }
 > = {
   en: {
-    lead: "Free SEO/GEO audit + 30-min call with any annual plan.",
-    body: (d) => `Until ${d}, midnight PT. We email you within 1 business day to book it.`,
-    cta: "See annual plans",
+    lead: "Free SEO/GEO audit + 30-min strategy call",
+    body: () => "with any annual plan. Ends Sunday midnight PT.",
+    cta: "Claim my audit",
     timeLeft: (cd) => `${cd} left`,
     dismiss: "Dismiss",
-    strip: (d) =>
-      `This week only: buy any annual plan before ${d}, midnight Pacific time, and get a free SEO/GEO audit of your site + a 30-minute consultation call. We email you within 1 business day of your purchase to book it.`,
+    strip: () => "Any annual plan = a free SEO/GEO audit of your site + a 30-min strategy call. Ends Sunday midnight PT.",
   },
   fr: {
-    lead: "Audit SEO/GEO offert + appel de 30 min avec toute formule annuelle.",
-    body: (d) => `Jusqu’au ${d}, minuit (heure du Pacifique). Nous vous écrivons sous 1 jour ouvré pour le planifier.`,
-    cta: "Voir les formules annuelles",
+    lead: "Audit SEO/GEO + appel stratégie de 30 min offerts",
+    body: () => "avec toute formule annuelle. Fin dimanche minuit (heure du Pacifique).",
+    cta: "Obtenir mon audit",
     timeLeft: (cd) => `reste ${cd}`,
     dismiss: "Fermer",
-    strip: (d) =>
-      `Cette semaine seulement : souscrivez une formule annuelle avant le ${d}, minuit (heure du Pacifique), et recevez un audit SEO/GEO de votre site + un appel de conseil de 30 minutes offerts. Nous vous écrivons sous 1 jour ouvré après l’achat pour le planifier.`,
+    strip: () => "Toute formule annuelle = un audit SEO/GEO de votre site + un appel stratégie de 30 min offerts. Fin dimanche minuit (heure du Pacifique).",
   },
   es: {
-    lead: "Auditoría SEO/GEO gratis + llamada de 30 min con cualquier plan anual.",
-    body: (d) => `Hasta el ${d}, a medianoche (hora del Pacífico). Te escribimos en 1 día laborable para agendarla.`,
-    cta: "Ver planes anuales",
+    lead: "Auditoría SEO/GEO + llamada de estrategia de 30 min gratis",
+    body: () => "con cualquier plan anual. Termina el domingo a medianoche (hora del Pacífico).",
+    cta: "Quiero mi auditoría",
     timeLeft: (cd) => `quedan ${cd}`,
     dismiss: "Cerrar",
-    strip: (d) =>
-      `Solo esta semana: contrata cualquier plan anual antes del ${d}, a medianoche (hora del Pacífico), y recibe gratis una auditoría SEO/GEO de tu sitio + una llamada de consultoría de 30 minutos. Te escribimos en 1 día laborable tras la compra para agendarla.`,
+    strip: () => "Cualquier plan anual = una auditoría SEO/GEO de tu sitio + una llamada de estrategia de 30 min gratis. Termina el domingo a medianoche (hora del Pacífico).",
   },
   de: {
-    lead: "Kostenloses SEO/GEO-Audit + 30-Min.-Call zu jedem Jahrestarif.",
-    body: (d) => `Bis ${d}, Mitternacht (Pazifikzeit). Wir melden uns innerhalb von 1 Werktag zur Terminabstimmung.`,
-    cta: "Jahrestarife ansehen",
+    lead: "Kostenloses SEO/GEO-Audit + 30-Min.-Strategiecall",
+    body: () => "zu jedem Jahrestarif. Endet Sonntag um Mitternacht (Pazifikzeit).",
+    cta: "Audit sichern",
     timeLeft: (cd) => `noch ${cd}`,
     dismiss: "Schließen",
-    strip: (d) =>
-      `Nur diese Woche: Buche bis ${d}, Mitternacht (Pazifikzeit), einen beliebigen Jahrestarif und erhalte ein kostenloses SEO/GEO-Audit deiner Website + ein 30-minütiges Beratungsgespräch. Wir melden uns innerhalb von 1 Werktag nach dem Kauf zur Terminabstimmung.`,
+    strip: () => "Jeder Jahrestarif = ein kostenloses SEO/GEO-Audit deiner Website + ein 30-Min.-Strategiecall. Endet Sonntag um Mitternacht (Pazifikzeit).",
   },
 }
