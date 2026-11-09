@@ -1,32 +1,30 @@
 ---
 title: "Claude Models Compared: Sonnet vs Opus vs Haiku vs Fable"
-description: "Claude models comparison as of November 6, 2026: Sonnet vs Opus vs Haiku vs Fable on API prices, benchmarks, effort levels, cost per task and plan access."
+description: "Claude models comparison as of November 9, 2026: Sonnet vs Opus vs Haiku vs Fable 5.2 on API prices, benchmarks, effort levels, cost per task and plan access."
 date: "2026-11-06"
 updated: "2026-11-09"
-recheckBy: "2026-11-20"  # volatile: Fable 5.2 launched 11-09 (full rewrite pending; launch offer ends 11-16), Sonnet 4.5 retirement 11-30 on Anthropic-operated platforms (Foundry alias still sonnet=4.5; Bedrock and Google-managed set their own dates), Haiku 4.5 retirement date, cache/plan changes, AA footnote on Sonnet pre-release build, AA and Terminal-Bench board refreshes
+recheckBy: "2026-11-17"  # volatile: Fable 5.2 launch offer ends 11-16 11:59pm PT (Pro/Team standard back to usage credits), Fable 5.2 on Terminal-Bench (no run on 11-09) and AA board moves, Sonnet 4.5 retirement 11-30 on Anthropic-operated platforms (Foundry alias still sonnet=4.5; Bedrock and Google-managed set their own dates), Haiku 4.5 retirement date, cache/plan changes
 author: "Samy BEN SADOK"
 tags: ["claude-models-compared", "claude", "claude-models", "sonnet-vs-opus", "claude-opus", "claude-sonnet", "claude-haiku", "claude-fable", "comparison"]
 draft: false
 ---
 
-Sonnet vs Opus is the common question, but Claude's current lineup has more tiers than that. As of November 6, 2026, the lineup is **Fable 5.1**, **Opus 5.5**, **Sonnet 5.5** and **Haiku 5.5**, and each has a 1M-token context window on the API.
+Sonnet vs Opus is the common question, but Claude's current lineup has more tiers than that. As of November 9, 2026, the lineup is **Fable 5.2**, **Opus 5.5**, **Sonnet 5.5** and **Haiku 5.5**, and each has a 1M-token context window on the API. Fable 5.2, launched that day, is the top tier for the hardest long-running work, Opus 5.5 the default for complex agentic work, Sonnet 5.5 the faster everyday model and Haiku 5.5 the cheap high-volume one.
 
-Anthropic's own guide says to start most workloads on Opus 5.5, while its Claude Code help page calls Sonnet "the right choice for the large majority of coding work." Our reading of that tension: Sonnet 5.5 for well-specified work you can check yourself, at medium effort, Opus 5.5 when the goal is vague or the work runs for hours, Haiku 5.5 for volume and subagents, and Fable (Fable 5.2 since November 9, 2026) only when Opus still falls short at xhigh or max effort. Try a different effort level before you change the tier.
-
-**Update, November 9, 2026:** Anthropic released [Claude Fable 5.2 and Mythos 5.2](https://www.anthropic.com/claude-fable-and-mythos-5-2) on November 9, 2026, with Fable 5.2 at $8 / $40 per MTok. The tables, charts, tests and verdicts below describe the lineup before that release, with Fable 5.1 as the top tier, and we are updating this comparison for Fable 5.2.
+Anthropic's own guide says to start most workloads on Opus 5.5, while its Claude Code help page calls Sonnet "the right choice for the large majority of coding work." Our reading of that tension: start Sonnet 5.5 at medium effort on well-specified work you can check yourself. Use Opus 5.5 when the goal is vague or the work runs for hours, Haiku 5.5 for volume and subagents, and Fable 5.2 when Opus still falls short at xhigh or max effort; on the hours-long agent and research work Anthropic built it for, test it alongside Opus. Try a different effort level before you change the tier.
 
 ## Claude Models at a Glance (November 2026)
 
 Anthropic's [models overview](https://platform.claude.com/docs/en/models/overview) lists the same specs for every current tier: a 1M-token context window on the API, 128K max output, a June 2026 knowledge cutoff, and support for text and image input, vision and tool use.
 
-What differs is price, speed and how hard each model thinks by default. Prices below are USD per million tokens (MTok) at standard API rates, captured November 6, 2026.
+What differs is price, speed and how hard each model thinks by default. Prices below are USD per million tokens (MTok) at standard API rates, captured November 9, 2026.
 
 <table>
 <thead>
 <tr><th>Model</th><th>API ID</th><th>Launched</th><th>Input / output per MTok</th><th>Cache read per MTok</th><th>Latency</th><th>Default effort (API)</th><th>Built for (Anthropic's wording)</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>Fable 5.1</strong></td><td><code>claude-fable-5-1</code></td><td>Sep 1, 2026</td><td>$10 / $50</td><td>$0.25</td><td>Slower</td><td>High</td><td>Demanding reasoning and long-horizon agentic work</td></tr>
+<tr><td><strong>Fable 5.2</strong></td><td><code>claude-fable-5-2</code></td><td>Nov 9, 2026</td><td>$8 / $40</td><td>$0.20</td><td>Moderate</td><td>High</td><td>Demanding reasoning and long-horizon agentic work</td></tr>
 <tr><td><strong>Opus 5.5</strong></td><td><code>claude-opus-5-5</code></td><td>Sep 22, 2026</td><td>$4 / $20</td><td>$0.20</td><td>Moderate</td><td>Medium</td><td>Long-running agentic coding and knowledge work</td></tr>
 <tr><td><strong>Sonnet 5.5</strong></td><td><code>claude-sonnet-5-5</code></td><td>Sep 28, 2026</td><td>$2 / $10</td><td>$0.10</td><td>Fast</td><td>High</td><td>The best combination of speed and intelligence</td></tr>
 <tr><td><strong>Haiku 5.5</strong></td><td><code>claude-haiku-5-5</code></td><td>Oct 7, 2026</td><td>$0.10 / $0.50 up to 100K-token prompts, $0.50 / $2.50 above</td><td>$0.01 (up to 100K), $0.05 (above)</td><td>Fastest</td><td>Medium</td><td>High-volume, latency-sensitive tasks such as classification, extraction and routing</td></tr>
@@ -34,15 +32,17 @@ What differs is price, speed and how hard each model thinks by default. Prices b
 </table>
 
 <figure className="not-prose my-8">
-  <BlogImage src="/blog/claude-models-compared/claude-lineup-november-2026.png" alt="Four Claude tiers side by side: Fable 5.1 at $10 / $50, Opus 5.5 at $4 / $20, Sonnet 5.5 at $2 / $10 and Haiku 5.5 from $0.10 / $0.50 per million tokens, with launch dates and default effort as of November 6, 2026" w="1100" h="972" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
-  <figcaption className="mt-3 text-center text-sm text-gray-500">The Claude lineup before Fable 5.2, captured November 6, 2026 from Anthropic's model and pricing docs.</figcaption>
+  <BlogImage src="/blog/claude-models-compared/claude-lineup-november-2026-v2.png" alt="Four Claude tiers side by side: Fable 5.2 at $8 / $40, Opus 5.5 at $4 / $20, Sonnet 5.5 at $2 / $10 and Haiku 5.5 from $0.10 / $0.50 per million tokens, with launch dates and default effort as of November 9, 2026" w="1100" h="853" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">The Claude lineup on November 9, 2026, from Anthropic's model and pricing docs.</figcaption>
 </figure>
 
 Haiku 5.5 is the only tier priced by prompt length: Anthropic's [pricing page](https://platform.claude.com/docs/en/about-claude/pricing) charges the higher rate on any request whose prompt is over 100,000 tokens, and the count includes cache reads and writes. The others include the full 1M window at the standard rate.
 
-Launch dates come from Anthropic's launch posts and [API release notes](https://platform.claude.com/docs/en/release-notes/overview). Fable 5.1's API release note is dated September 1, while its newsroom announcement is listed under September 15.
+Fable 5.1, the top tier until November 9, 2026, remains available. It still costs $10 / $50 per MTok with a $0.25 cache read, the [deprecations page](https://platform.claude.com/docs/en/about-claude/model-deprecations) lists it as active until at least September 1, 2027, and claude.com now files it under legacy models.
 
-**Mythos 5.1** is not a fifth tier you can pick. Anthropic describes [Fable 5.1 and Mythos 5.1](https://www.anthropic.com/claude-fable-and-mythos-5-1) as the same model with different safeguards, and Mythos is available only through Anthropic's trusted-access programs.
+Launch dates come from Anthropic's launch posts and [API release notes](https://platform.claude.com/docs/en/release-notes/overview), which date the Fable 5.2 release to November 9, 2026.
+
+**Mythos 5.2** is not a fifth tier you can pick. Anthropic describes [Fable 5.2 and Mythos 5.2](https://www.anthropic.com/claude-fable-and-mythos-5-2) as the same underlying model with different safeguards, and organizations apply for Mythos through Anthropic's cyber and life sciences verification programs.
 
 ## Sonnet vs Opus: What Separates Sonnet 5.5 and Opus 5.5
 
@@ -54,14 +54,14 @@ Opus 5.5 costs exactly twice as much per token as Sonnet 5.5 ($4 / $20 against $
 </thead>
 <tbody>
 <tr><td>Terminal-Bench 4.0, Anthropic launch table</td><td>70.6%</td><td>66.4%</td><td>Opus at xhigh effort, its highest score (standard error ±2.6)</td></tr>
-<tr><td>Terminal-Bench 4.1, public leaderboard (Claude Code, max effort; 4.0 runs re-graded November 9, 2026)</td><td>63.9% (±3.0, 95% CI)</td><td>65.8% (±3.1, 95% CI)</td><td>Sonnet's run cost about 55% more than Opus's (see below)</td></tr>
-<tr><td>CursorBench 4.0</td><td>55.5%</td><td><strong>57.8%</strong></td><td>Tasks taken from real Cursor sessions</td></tr>
-<tr><td>FrontierCode 1.1 (Main)</td><td>46.2% at max, 52.1% at xhigh</td><td><strong>54.4% at max, 54.6% at medium</strong></td><td>Sonnet scores lower at max than at xhigh, per its launch post; Opus's medium figure is from its own post</td></tr>
-<tr><td>GDPval-AA v2.1 (Elo)</td><td>1844</td><td>1846</td><td>Haiku post lists Sonnet at 1840; footnote: pre-release build with a since-fixed bug, effect expected small if any</td></tr>
+<tr><td>Terminal-Bench 4.1, public leaderboard (Claude Code, max effort; 4.0 runs re-graded by November 9, 2026)</td><td>63.9% (±3.0, 95% CI)</td><td>65.8% (±3.1, 95% CI)</td><td>Sonnet's run cost about 55% more than Opus's at September 29 prices (see below)</td></tr>
+<tr><td>CursorBench 4.0, Anthropic launch tables</td><td>55.5%</td><td><strong>57.8%</strong></td><td>Tasks taken from real Cursor sessions</td></tr>
+<tr><td>FrontierCode 1.1 (Main), Anthropic launch tables</td><td>46.2% at max, 52.1% at xhigh</td><td><strong>54.4% at max, 54.6% at medium</strong></td><td>Sonnet scores lower at max than at xhigh, per its launch post; Opus's medium figure is from its own post</td></tr>
+<tr><td>GDPval-AA v2.1 (Elo), Anthropic launch tables</td><td>1844</td><td>1846</td><td>Haiku post lists Sonnet at 1840; footnote: pre-release build with a since-fixed bug, effect expected small if any. Artificial Analysis's own board (effort section) has 1838 and 1866 at max</td></tr>
 </tbody>
 </table>
 
-Read the first two rows together. Anthropic's table has Sonnet ahead on Terminal-Bench and the [public leaderboard](https://www.tbench.ai/) has Opus ahead, and the error margins (a ±2.6 point standard error for Opus, 95% confidence intervals of about ±3 points on the board) mean neither gap clearly separates them. Treat the pair as roughly tied. The board itself moved to Terminal-Bench 4.1 on November 9, 2026: it re-graded the saved 4.0 runs with hardened task checkers, and every score stayed within its earlier 95% confidence interval, while Anthropic's launch tables still report 4.0.
+Read the first two rows together. Anthropic's table has Sonnet ahead on Terminal-Bench and the [public leaderboard](https://www.tbench.ai/) has Opus ahead, and the error margins (a ±2.6 point standard error for Opus, 95% confidence intervals of about ±3 points on the board) mean neither gap clearly separates them. Treat the pair as roughly tied. The board itself moved to [Terminal-Bench 4.1](https://www.tbench.ai/news/terminal-bench-4-1) by November 9, 2026: it re-graded the saved 4.0 runs with hardened task checkers, and every score stayed within its earlier 95% confidence interval, while Anthropic's launch tables still report 4.0.
 
 Cost is the more useful signal. The leaderboard's job pages for [the Sonnet run](https://hub.harborframework.com/jobs/0e520a82-ad44-56be-b1bd-ff351c5bd923) and [the Opus run](https://hub.harborframework.com/jobs/96ad98a5-70e6-5e7b-bd1e-67eecfbc644c) show that both started on September 29, before Anthropic [halved Sonnet 5.5's cache-read price](https://www.anthropic.com/claude-haiku-5-5) on October 7, and that each ran at a 97% cache-hit rate.
 
@@ -81,7 +81,7 @@ In Claude Code, the `opusplan` alias plans on Opus and executes on Sonnet, per t
 
 Haiku 5.5 is cheap enough to change how you build, but it is not a drop-in replacement for Sonnet. Anthropic positions it for quick and repetitive workloads such as summaries, compactions, database queries and classification, and says it pairs well with Opus 5.5 and Sonnet 5.5 as a subagent, in the [Haiku 5.5 launch post](https://www.anthropic.com/claude-haiku-5-5).
 
-The benchmark gap explains why. In that post's table, Haiku 5.5 scores 39.2% on Terminal-Bench 4.0 against 70.6% for Sonnet 5.5, and 1620 against 1840 on GDPval-AA v2.1 (the Sonnet post lists Sonnet at 1844). On FrontierCode 1.1 (Main) the gap is smaller: 46.4% against Sonnet's 52.1% at xhigh effort.
+The benchmark gap explains why. In that post's table, Haiku 5.5 scores 39.2% on Terminal-Bench 4.0 against 70.6% for Sonnet 5.5, and 1620 against 1840 on GDPval-AA v2.1. On FrontierCode 1.1 (Main) the gap is smaller: 46.4% against Sonnet's 52.1% at xhigh effort.
 
 Anthropic's choosing-a-model guide even offers an efficiency-first path that starts a project on Haiku 5.5 and upgrades only where it falls short, and price is why.
 
@@ -91,58 +91,62 @@ That changes the economics of subagents: a fleet of workers can read files, sear
 
 Two limits matter. The price steps up to $0.50 / $2.50 once a prompt passes 100,000 tokens, which sharply cuts Haiku's savings on large prompts even though it stays cheaper per token than Sonnet.
 
-And it is a weaker checker: a [Reddit user who reran a set of project tasks as subagents](https://www.reddit.com/r/ClaudeCode/comments/1x1e7ts/i_tested_haiku_55_sonnet_55_and_opus_55_as_subagents_on_6_real_tasks/) found Haiku close to Opus on code search (44 of 48 files against 45, at $0.44 against $6.17) but marking 30 correct sentences as errors while fact-checking two blog posts, against 0 for Opus.
+And it is a weaker checker: a [Reddit user who reran a set of project tasks as subagents](https://www.reddit.com/r/ClaudeCode/comments/1x1e7ts/i_tested_haiku_55_sonnet_55_and_opus_55_as_subagents_on_6_real_tasks/) found Haiku close to Opus on code search (44 of 48 files against 45, at $0.44 against $6.17) but marking 30 correct sentences as errors while fact-checking two blog posts, against 6 for Sonnet and 0 for Opus.
 
 It is one person's test at high effort, but it fits the pattern: let the small model fetch and sort, and let a stronger one verify.
 
 **Verdict:** use Haiku 5.5 for classification, extraction, routing, search and subagent legwork under 100K tokens per request, and keep Sonnet 5.5 or Opus 5.5 on consequential judgments and final verification.
 
-## Fable 5.1 vs Opus 5.5: Is the Top Tier Worth the Premium?
+## Fable 5.2 vs Opus 5.5: Is the Top Tier Worth the Premium?
 
-Fable 5.1 costs $10 / $50 per MTok, which is 2.5 times Opus 5.5 and five times Sonnet 5.5, and Anthropic's own guidance is not to start there.
+Fable 5.2 costs $8 / $40 per MTok, twice Opus 5.5 and four times Sonnet 5.5, with the same $0.20 cache-read price as Opus 5.5, and Anthropic's guide still starts most workloads on Opus 5.5.
 
-Its [choosing-a-model guide](https://platform.claude.com/docs/en/about-claude/models/choosing-a-model) says most workloads start with Opus 5.5, and that if your evals "at xhigh or max effort still fall short on demanding reasoning or long-horizon agentic work," you move to the top Fable model, which was Fable 5.1 until November 9, 2026 and has been Fable 5.2 since.
+Its [choosing-a-model guide](https://platform.claude.com/docs/en/about-claude/models/choosing-a-model) says most workloads start with Opus 5.5, and that if your evals "at xhigh or max effort still fall short on demanding reasoning or long-horizon agentic work," you move to Claude Fable 5.2.
 
-That is why Opus can feel expensive but is not the costly tier: Opus 5.5 costs $4 / $20 per MTok, less than Opus 5 did, and Fable is the costly tier: $10 / $50 for Fable 5.1, and $8 / $40 for Fable 5.2 since November 9, 2026.
+Anthropic's November 9 launch table puts Fable 5.2 above Opus 5.5 on most rows, reversing the Fable 5.1 result. The [Fable 5.2 launch post](https://www.anthropic.com/claude-fable-and-mythos-5-2) calls it "a step above Opus 5.5 in almost all the capabilities we evaluated," with each model at its highest available effort unless noted. In the [Opus 5.5 launch post](https://www.anthropic.com/claude-opus-5-5) of September 22, Fable 5.1 trailed Opus 5.5 on every row.
 
-The benchmark table in the [Opus 5.5 launch post](https://www.anthropic.com/claude-opus-5-5) shows why, and our own [Fable 5.1 guide](https://geotoolbox.ai/blog/claude-fable-5-1) covers the model in depth. Opus 5.5 leads Fable 5.1 on every row Anthropic published for the pair.
-
-Five rows are shown below; the rest range from under a point (Chartography, 89.0% against 88.4%) to six points (Terminal-Bench-Science, 58.7% against 52.6%). Anthropic adds that benchmark margins have become a less reliable guide at this capability level and that, in its own use, the gap between the two is narrower than these scores suggest.
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/claude-models-compared/fable-5-2-vs-opus-5-5-benchmarks.png" alt="Grouped bar chart of Anthropic's November 9, 2026 launch table: Fable 5.2 scores 49.1% on FrontierCode 2.0, 51.4% on AutomationBench, 74.6% on Terminal-Bench-Science 0.1 and 41.3% on Remote Labor Index, against 45.5%, 42.5%, 58.7% and 21.3% for Opus 5.5 and 32.4%, 31.4%, 52.6% and 17.9% for Fable 5.1" w="1100" h="722" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Four of the six rows in the table below, vendor-reported in the Fable 5.2 launch post. Opus 5.5 leads one of the six (AA-Briefcase Elo); independent GDPval-AA scores are in the text below.</figcaption>
+</figure>
 
 <table>
 <thead>
-<tr><th>Benchmark (Anthropic launch table)</th><th>Opus 5.5</th><th>Fable 5.1</th></tr>
+<tr><th>Benchmark (Anthropic launch table, Nov 9, 2026)</th><th>Fable 5.2</th><th>Fable 5.1</th><th>Opus 5.5</th></tr>
 </thead>
 <tbody>
-<tr><td>Terminal-Bench 4.0</td><td><strong>66.4%</strong></td><td>55.8%</td></tr>
-<tr><td>FrontierCode 1.1 (Main)</td><td><strong>54.4%</strong></td><td>50.3%</td></tr>
-<tr><td>CursorBench 4.0</td><td><strong>57.8%</strong></td><td>51.8%</td></tr>
-<tr><td>GDPval-AA v2.1 (Elo)</td><td><strong>1846</strong></td><td>1735</td></tr>
-<tr><td>AutomationBench</td><td><strong>40.0%</strong></td><td>31.4%</td></tr>
+<tr><td>FrontierCode 2.0</td><td><strong>49.1%</strong> (xhigh)</td><td>32.4% (xhigh)</td><td>45.5%</td></tr>
+<tr><td>FrontierSWE v2</td><td><strong>69.9%</strong></td><td>56.3%</td><td>62.3%</td></tr>
+<tr><td>AutomationBench</td><td><strong>51.4%</strong></td><td>31.4%</td><td>42.5%</td></tr>
+<tr><td>Terminal-Bench-Science 0.1</td><td><strong>74.6%</strong></td><td>52.6%</td><td>58.7%</td></tr>
+<tr><td>Remote Labor Index</td><td><strong>41.3%</strong> (high)</td><td>17.9%</td><td>21.3%</td></tr>
+<tr><td>AA-Briefcase v1.1 (Elo)</td><td>1785</td><td>1669</td><td><strong>1800</strong></td></tr>
 </tbody>
 </table>
 
-Opus 5.5 results use max effort unless noted, except Terminal-Bench, where Anthropic reports Opus at xhigh; the table does not state the effort used for Fable 5.1.
+Opus 5.5 still leads on AA-Briefcase's Elo score (1800 against 1785), a knowledge-work test, although Fable 5.2 leads on its rubric score (66.1% against 61.2%). These are also not the same runs as the September 22 post, which put Opus at 40.0% on AutomationBench rather than 42.5%, so compare figures within one table rather than across posts.
 
-The public [Terminal-Bench leaderboard](https://www.tbench.ai/) agrees on direction: on its 4.1 re-grade of November 9, 2026, Fable 5.1's best run scores 57.6% at xhigh effort against 65.8% for Opus 5.5 at max (95% confidence intervals of ±3.3 and ±3.1), and the board's cost column puts its run above Opus's, though separate submissions on a public board are only roughly comparable.
+Anthropic's [launch post](https://www.anthropic.com/claude-fable-and-mythos-5-2) says that in early testing on FrontierCode 2.0, Fable 5.2 at high effort scored about the same as Opus 5.5's best score at max effort (45.3% against 45.5%) "for roughly half the cost per task." It adds that at medium effort, its default in the Claude apps and Claude Code, Fable 5.2 finishes hard tasks with fewer tokens than Fable 5.1, and that it generates output up to 30% faster.
 
-On the Artificial Analysis board below, Fable 5.1 also scores under Opus 5.5 at every effort level from medium to max, although at each model's own default Fable leads. The creator tests charted in the cost section below priced it similarly: Fable cost roughly 1.5 to 1.9 times Opus 5.5.
+The first independent scores, which arrived on launch day, are mixed. Artificial Analysis's [GDPval-AA board](https://artificialanalysis.ai/evaluations/gdpval-aa) scored Fable 5.2 at every effort level by the evening of November 9, 2026 (UTC). At each model's API default, Fable 5.2 (high, 1718) leads Opus 5.5 (medium, 1593).
 
-That does not make Fable pointless. Until Fable 5.2's release on November 9, 2026, Anthropic's [choosing-a-model guide](https://platform.claude.com/docs/en/about-claude/models/choosing-a-model) described Fable 5.1 as its most capable model open to all customers, aimed at agent sessions that run for hours, multistep research and finished documents, spreadsheets or decks, and the [pricing page](https://platform.claude.com/docs/en/about-claude/pricing) puts Fable 5.1's cache-read price at $0.25 per MTok, a quarter of Fable 5's.
+At the same effort level, the result depends on the setting. Fable 5.2 is far ahead at low (1546 against 1240) and level at medium (1591 against 1593) and high (1718 against 1714). It is clearly behind at xhigh (1751 against 1835, with margins of about ±21 and ±23 that do not overlap) and slightly behind at max (1831 against 1866), where the margins overlap. The [Terminal-Bench leaderboard](https://www.tbench.ai/) had no Fable 5.2 run yet.
 
-The catch is access: Pro runs Fable on usage credits only, and Max and Ultra include it for up to half the weekly limit, after which you can keep going on usage credits or switch models. During the Fable 5.2 launch offer, from November 9 through November 16, 2026, Pro also includes every Fable model for up to half the weekly limit.
+For Fable 5.1 the independent data is fuller, and Opus 5.5 comes out ahead: on the Terminal-Bench 4.1 re-grade, Fable 5.1's best run scores 57.6% at xhigh against 65.8% for Opus 5.5 at max, and the Artificial Analysis board in the next section has Fable 5.1 under Opus 5.5 at every effort level from medium to max. Our [Fable 5.1 guide](https://geotoolbox.ai/blog/claude-fable-5-1) covers the previous model in depth.
 
-Anthropic's [newsroom](https://www.anthropic.com/news) listed no Fable model newer than Fable 5.1 until November 9, 2026, when it announced Fable 5.2 and Mythos 5.2; the comparison below predates that release.
+Anthropic's guide calls Fable 5.2 its most capable model open to all customers and points it at agent sessions that run for hours, multistep deep research, and analysis carried through to a finished document, spreadsheet or deck. The launch post also suggests using it as an advisor that Haiku, Sonnet or Opus models consult on harder problems.
 
-**Verdict:** run Opus 5.5 as the default. Fable 5.1 is a hypothesis to test on a sample of the tasks Opus at xhigh or max effort has missed, and keep it only if the result justifies the bill. We found no independent test of Fable's multi-hour research strengths, so the premium is hard to judge from public data.
+Access depends on your plan and, through November 16, 2026, on the Fable 5.2 launch offer (see the plan section). Fable 5.2 also requires 30-day data retention and is not available under zero data retention unless Anthropic expressly authorizes it, per its [What's new page](https://platform.claude.com/docs/en/models/fable-5-2/whats-new-fable-5-2).
+
+**Verdict:** run Opus 5.5 as the default. Fable 5.2 is cheaper than Fable 5.1 and, on most rows of Anthropic's own table, stronger than Opus 5.5, but the first independent board only partly agrees: there Fable 5.2 leads Opus at each model's default effort, is level at medium and high, trails clearly at xhigh and sits inside the margin at max. Test it on a sample of your hardest tasks, including ones Opus at xhigh or max has missed, and compare total cost, quality and time on completed tasks: list prices are twice Opus's, but the bill per task can differ. We found no independent test yet of the multi-hour agent and research work Anthropic aims it at.
 
 ## Effort Is Often a Better Lever Than Switching Tiers
 
-Anthropic's guide says it plainly: "Tuning effort is often a better lever than switching models." Every current tier supports five effort levels (low, medium, high, xhigh and max), and the [effort docs](https://platform.claude.com/docs/en/build-with-claude/effort) list the API defaults: high for Fable 5.1 and Sonnet 5.5, medium for Opus 5.5 and Haiku 5.5.
+Anthropic's guide says it plainly: "Tuning effort is often a better lever than switching models." Every current tier supports five effort levels (low, medium, high, xhigh and max), and the [effort docs](https://platform.claude.com/docs/en/build-with-claude/effort) list the API defaults: high for Fable 5.2 and Sonnet 5.5, medium for Opus 5.5 and Haiku 5.5.
 
-Opus 5.5 therefore runs one level lighter than Opus 5 when a request omits effort. Opus 5.5 and Fable 5.1 always use adaptive thinking, so effort is the main control over how much thinking they do on complex work. Per [Anthropic's Sonnet 5.5 launch post](https://www.anthropic.com/claude-sonnet-5-5), Claude Code and the Claude apps default Sonnet 5.5 to medium.
+Opus 5 defaulted to high, so Opus 5.5 runs one level lighter when a request omits effort. Opus 5.5 and Fable 5.2 always use adaptive thinking, so effort is the main control over how much thinking they do on complex work. Per [Anthropic's Sonnet 5.5 launch post](https://www.anthropic.com/claude-sonnet-5-5), Claude Code and the Claude apps default Sonnet 5.5 to medium, and the [Fable 5.2 launch post](https://www.anthropic.com/claude-fable-and-mythos-5-2) says the same of Fable 5.2. The effort docs advise starting Fable 5.2 at high and running your own effort sweep rather than carrying settings over from Fable 5.1.
 
-The independent numbers show how much that setting matters. Artificial Analysis scores each model at every effort level on GDPval-AA v2.1, a test of real professional tasks, and its [live board](https://artificialanalysis.ai/evaluations/gdpval-aa) was captured on November 6, 2026.
+The independent numbers show how much that setting matters. Artificial Analysis scores each model at every effort level on GDPval-AA v2.1, a test of real professional tasks. Its [live board](https://artificialanalysis.ai/evaluations/gdpval-aa) was captured on November 6, 2026 and again on November 9, when it had added Fable 5.2 at every effort level; the earlier rows were unchanged.
 
 <table>
 <thead>
@@ -151,22 +155,25 @@ The independent numbers show how much that setting matters. Artificial Analysis 
 <tbody>
 <tr><td><strong>Opus 5.5</strong> (API default: medium)</td><td>1240</td><td><strong>1593</strong></td><td>1714</td><td>1835</td><td>1866</td></tr>
 <tr><td><strong>Sonnet 5.5</strong> (API default: high)</td><td>1182</td><td>1329</td><td><strong>1557</strong></td><td>1735</td><td>1838</td></tr>
-<tr><td><strong>Fable 5.1</strong> (API default: high)</td><td>1477</td><td>1554</td><td><strong>1644</strong></td><td>1740</td><td>1763</td></tr>
+<tr><td><strong>Fable 5.2</strong> (API default: high)</td><td>1546</td><td>1591</td><td><strong>1718</strong></td><td>1751</td><td>1831</td></tr>
+<tr><td>Fable 5.1 (previous top tier, API default: high)</td><td>1477</td><td>1554</td><td><strong>1644</strong></td><td>1740</td><td>1763</td></tr>
 <tr><td><strong>Haiku 5.5</strong> (API default: medium)</td><td>1130</td><td><strong>1283</strong></td><td>1424</td><td>1522</td><td>1631</td></tr>
 </tbody>
 </table>
 
 Read across a row and the scores swing by hundreds of points. Opus 5.5 spans 626 points from low to max, while the tiers at max effort sit within 235 points of each other. The order of the tiers also changes with the setting.
 
-At their API defaults, Fable 5.1 leads (1644), then Opus 5.5 at medium (1593) and Sonnet 5.5 at high (1557). At max effort, Opus 5.5 (1866) and Sonnet 5.5 (1838) are close, with confidence intervals of about ±26 and ±23, and both beat Fable 5.1 (1763).
+At their API defaults, Fable 5.2 leads (1718 at high), ahead of Fable 5.1 (1644), Opus 5.5 at medium (1593) and Sonnet 5.5 at high (1557). At max effort, Opus 5.5 (1866) and Sonnet 5.5 (1838) are close, with confidence intervals of about ±26 and ±23, Fable 5.2 (1831, ±24) sits just below them, and Fable 5.1 (1763) trails.
 
 Higher effort is not free, and it is not always the cheaper lever. Effort changes how long the model works and how many tokens it spends. Changing the top-level effort between requests also invalidates the prompt cache, per the [effort docs](https://platform.claude.com/docs/en/build-with-claude/effort), while a per-message effort change preserves it on models that support it.
 
-Anthropic's [Sonnet 5.5 launch post](https://www.anthropic.com/claude-sonnet-5-5) says the model "complements Opus 5.5 best when running at lower effort settings, where it costs less per task." It also flags a ceiling: on FrontierCode, Sonnet 5.5 scores lower at max effort than at xhigh because it more often ran a code-review skill that splits the review across many subagents, which led to timeouts or extra edits in the cases examined. Sonnet's discount also comes with a quality gap: on the same board it trails Opus by 58 Elo at low effort and 264 at medium (1329 against 1593), so the saving only holds where the task is well specified enough to tolerate that. Raise effort one level at a time, and past xhigh price out a tier switch.
+Anthropic's [Sonnet 5.5 launch post](https://www.anthropic.com/claude-sonnet-5-5) says the model "complements Opus 5.5 best when running at lower effort settings, where it costs less per task." It also flags a ceiling: on FrontierCode, Sonnet 5.5 scores lower at max effort than at xhigh because it more often ran a code-review skill that splits the review across many subagents, which led to timeouts or extra edits in the cases examined. Sonnet's discount also comes with a quality gap. On the same board it trails Opus by 58 Elo at low effort and 264 at medium (1329 against 1593), or by 36 at each model's API default (1557 against 1593).
+
+The saving only holds where the task is well specified enough to tolerate that gap. Raise effort one level at a time, and past xhigh price out a tier switch.
 
 ## Cost per Task, Not Cost per Million Tokens
 
-The rate card tells you what one request costs. A task is many requests, and each model decides how many it needs. Here is the same single request priced on every tier, using the November 6 rates from Anthropic's [pricing page](https://platform.claude.com/docs/en/about-claude/pricing): 80,000 input tokens and 8,000 output tokens, with and without 60,000 of the input served from the prompt cache.
+The rate card tells you what one request costs. A task is many requests, and each model decides how many it needs. Here is the same single request priced on every tier, using the November 9 rates from Anthropic's [pricing page](https://platform.claude.com/docs/en/about-claude/pricing): 80,000 input tokens and 8,000 output tokens, with and without 60,000 of the input served from the prompt cache.
 
 <table>
 <thead>
@@ -176,13 +183,14 @@ The rate card tells you what one request costs. A task is many requests, and eac
 <tr><td><strong>Haiku 5.5</strong></td><td>$0.012</td><td>$0.0066</td></tr>
 <tr><td><strong>Sonnet 5.5</strong></td><td>$0.24</td><td>$0.126</td></tr>
 <tr><td><strong>Opus 5.5</strong></td><td>$0.48</td><td>$0.252</td></tr>
-<tr><td><strong>Fable 5.1</strong></td><td>$1.20</td><td>$0.615</td></tr>
+<tr><td><strong>Fable 5.2</strong></td><td>$0.96</td><td>$0.492</td></tr>
+<tr><td>Fable 5.1 (previous top tier)</td><td>$1.20</td><td>$0.615</td></tr>
 </tbody>
 </table>
 
-Our arithmetic, from list prices: the spread between tiers is 1x, 20x, 40x and 100x without caching, and caching cuts every bill by roughly 45% to 49%, before counting the 1.25x price of writing the cache on the first request.
+Our arithmetic, from list prices: the spread between the current tiers is 1x, 20x, 40x and 80x without caching (100x for Fable 5.1), and caching cuts every bill by roughly 45% to 49%, before counting the 1.25x price of writing the cache on the first request.
 
-Other modifiers stack on top, according to the [pricing page](https://platform.claude.com/docs/en/about-claude/pricing): batch processing takes 50% off input and output for work that can wait, Opus 5.5 fast mode costs $8 / $40 per MTok (twice the standard rate) and cannot be combined with batch, and US-only inference adds a 1.1x multiplier.
+Other modifiers stack on top, according to the [pricing page](https://platform.claude.com/docs/en/about-claude/pricing): batch processing takes 50% off input and output for work that can wait, fast mode costs twice the standard rate ($8 / $40 per MTok on Opus 5.5, $16 / $80 on Fable 5.2) and cannot be combined with batch, and US-only inference adds a 1.1x multiplier.
 
 Output tokens carry five times the weight of input tokens on every tier, so a model that talks less is cheaper at the same rate.
 
@@ -190,7 +198,7 @@ Per-token prices only tell part of the story: in the Terminal-Bench runs above, 
 
 <figure className="not-prose my-8">
   <BlogImage src="/blog/claude-models-compared/same-task-three-bills-v2.png" alt="Bar chart of creator-reported build costs from late September 2026: in Leon van Zyl's mini-golf build Fable 5.1 cost about $51, Opus 5.5 about $27 and Sonnet 5.5 about $26; in Brock Mesarich's voxel-world build Fable 5.1 cost $17.45, Opus 5.5 $11.95 and Sonnet 5.5 $9.02" w="1100" h="776" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
-  <figcaption className="mt-3 text-center text-sm text-gray-500">Two creators, two projects, one prompt each (late September 2026). The ordering holds, the size of the gap does not.</figcaption>
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Two creators, two projects, one prompt each (late September 2026, before Fable 5.2). The ordering holds, the size of the gap does not.</figcaption>
 </figure>
 
 Anthropic's choosing-a-model guide describes mixing tiers rather than picking one, with two patterns: an executor that escalates hard decisions to a stronger advisor, and an orchestrator that hands bulk work to cheaper workers, so that most tokens are billed at the lower rate.
@@ -199,23 +207,25 @@ In practice that can mean Haiku 5.5 for triage and search, Sonnet 5.5 for the ma
 
 ## Which Plan Gets Which Model: Free, Pro, Max and Ultra
 
-On a subscription, Opus 5.5, Sonnet 5.5 and Haiku 5.5 come with every paid plan, and Fable is the model family that changes by plan. Anthropic's [pricing page](https://claude.com/pricing) (US, captured November 6, 2026) lays it out like this, and our [Claude pricing guide](https://geotoolbox.ai/blog/claude-pricing) covers each plan in full.
+On a subscription, Opus 5.5, Sonnet 5.5 and Haiku 5.5 come with every paid plan, and Fable is the model family that changes by plan. Anthropic's [pricing page](https://claude.com/pricing) (US, captured November 9, 2026) lays it out like this, and our [Claude pricing guide](https://geotoolbox.ai/blog/claude-pricing) covers each plan in full.
 
 <table>
 <thead>
-<tr><th>Plan</th><th>Price per month</th><th>Weekly usage</th><th>Opus 5.5</th><th>Fable 5.1</th><th>Monthly API credits</th></tr>
+<tr><th>Plan</th><th>Price per month</th><th>Weekly usage</th><th>Opus 5.5</th><th>Fable models (5.2, 5.1, 5)</th><th>Monthly API credits</th></tr>
 </thead>
 <tbody>
 <tr><td><strong>Free</strong></td><td>$0</td><td>Limited</td><td>No</td><td>No</td><td>No</td></tr>
-<tr><td><strong>Pro</strong></td><td>$20 ($17 billed annually)</td><td>1x</td><td>Yes</td><td>Usage credits only</td><td>No</td></tr>
+<tr><td><strong>Pro</strong></td><td>$20 ($17 billed annually)</td><td>1x</td><td>Yes</td><td>Usage credits (included Nov 9-16, 2026, launch offer)</td><td>No</td></tr>
 <tr><td><strong>Max</strong></td><td>$100</td><td>5x Pro</td><td>Yes</td><td>Up to 50% of weekly limit</td><td>$100</td></tr>
 <tr><td><strong>Ultra</strong></td><td>$200</td><td>10x Pro</td><td>Yes</td><td>Up to 50% of weekly limit</td><td>$200</td></tr>
 </tbody>
 </table>
 
-Free includes Sonnet and Haiku models but not Opus. The Help Center article on [Fable models on your plan](https://support.claude.com/en/articles/15424964-claude-fable-models-on-your-plan) adds that on Max and Ultra, Fable counts toward your weekly limits (capped at half of them; the usage limits article adds that some plans show a separate weekly limit for Fable) and uses them faster than other models. On Pro, it runs on pay-as-you-go usage credits from the first request, except during the Fable 5.2 [launch offer](https://support.claude.com/en/articles/17506494-claude-fable-5-2-launch-offers) from November 9 through November 16, 2026, when Pro includes Fable models for up to half the weekly limit. Ultra has no five-hour limit for verified accounts.
+Free includes Sonnet and Haiku models but not Opus. The Help Center article on [Fable models on your plan](https://support.claude.com/en/articles/15424964-claude-fable-models-on-your-plan), updated November 9, 2026, applies the same rules to Fable 5.2, Fable 5.1 and Fable 5. On Max and Ultra, Fable counts toward your weekly limits, capped at half of them, and uses them faster than other models; the usage limits article adds that some plans show a separate weekly limit for Fable. Outside the launch offer below, Pro runs it on pay-as-you-go usage credits from the first request. Ultra has no five-hour limit for verified accounts.
 
-In [Claude Code](https://geotoolbox.ai/blog/what-is-claude-code), Anthropic's [model configuration docs](https://code.claude.com/docs/en/model-config) say the `default` setting resolves to Opus 5.5 on Pro, Max, Ultra, Team, Enterprise and the API. Before version 2.1.280, Pro and Team Standard defaulted to Sonnet 5. If your Pro sessions drain faster than they used to, check which model is selected before blaming the plan.
+The Fable 5.2 [launch offer](https://support.claude.com/en/articles/17506494-claude-fable-5-2-launch-offers) changes that for one week. From November 9 through November 16, 2026 at 11:59 pm PT, Pro plans and standard Team seats include every Fable model for up to half the weekly limit, plus one Fable limit reset that expires at the same deadline. Max, Ultra, premium Team seats and premium seats on legacy seat-based Enterprise plans get one to three Fable resets, depending on how long they have subscribed, usable until March 8, 2027; resets go only to accounts with paid billing in place before 10:00 am PT on November 9. After November 16, Pro plans and standard Team seats return to usage credits for Fable.
+
+In [Claude Code](https://geotoolbox.ai/blog/what-is-claude-code), Anthropic's [model configuration docs](https://code.claude.com/docs/en/model-config) say the `default` setting resolves to Opus 5.5 on Pro, Max, Ultra, Team, Enterprise and the API. Before version 2.1.280, Pro and Team Standard defaulted to Sonnet 5. If your Pro sessions drain faster than they used to, check which model is selected before blaming the plan. To try another model without changing your default, open `/model` and press `s` on its row: the switch then lasts for the current session only.
 
 Anthropic does not publish how many hours of Opus you get. Its [usage limits article](https://support.claude.com/en/articles/11647753-how-do-usage-and-length-limits-work) says paid plans have a session limit that resets every five hours (except verified Ultra accounts) plus weekly limits, that usage depends on the model and the effort level, and that in the Claude apps, where Opus 5.5 and Sonnet 5.5 have no thinking toggle, a lower effort level is the way to spend less.
 
@@ -231,18 +241,18 @@ For coding, Anthropic's [choosing-a-model guide](https://platform.claude.com/doc
 </thead>
 <tbody>
 <tr><td><strong>Everyday coding with a clear check (tests, a spec)</strong></td><td>Sonnet 5.5</td><td>Opus 5.5</td><td>Anthropic lists code generation, data analysis and content creation for Sonnet; the Terminal-Bench gap to Opus is a few points at each model's best effort, and Haiku is cheaper still</td></tr>
-<tr><td><strong>Multi-hour agents, large refactors, vague briefs</strong></td><td>Opus 5.5</td><td>Fable 5.1 if xhigh or max still misses</td><td>Anthropic lists multihour autonomous coding agents and large-scale refactoring for Opus</td></tr>
-<tr><td><strong>Planning and review</strong></td><td>Opus 5.5</td><td>Fable 5.1 if xhigh or max still misses</td><td>The <code>opusplan</code> alias plans on Opus and executes on Sonnet</td></tr>
+<tr><td><strong>Multi-hour agents, large refactors, vague briefs</strong></td><td>Opus 5.5</td><td>Fable 5.2 if xhigh or max still misses</td><td>Anthropic lists multihour autonomous coding agents and large-scale refactoring for Opus</td></tr>
+<tr><td><strong>Planning and review</strong></td><td>Opus 5.5</td><td>Fable 5.2 if xhigh or max still misses</td><td>The <code>opusplan</code> alias plans on Opus and executes on Sonnet</td></tr>
 <tr><td><strong>Classification, extraction, routing</strong></td><td>Haiku 5.5</td><td>Sonnet 5.5</td><td>Anthropic positions Haiku for high-volume, latency-sensitive work at the lowest price</td></tr>
 <tr><td><strong>Subagent legwork (search, file reads, summaries)</strong></td><td>Haiku 5.5</td><td>Sonnet 5.5</td><td>Listed for Haiku; one Reddit test found it near Opus on code search at a fraction of the cost</td></tr>
 <tr><td><strong>Writing and editing</strong></td><td>Sonnet 5.5</td><td>Opus 5.5</td><td>Anthropic says both 5.5 models write more clearly than the previous generation</td></tr>
-<tr><td><strong>Deep research and finished documents, sheets or decks</strong></td><td>Opus 5.5</td><td>Fable 5.1 if xhigh or max still misses</td><td>Anthropic lists multistep research and finished documents, spreadsheets and decks for Fable</td></tr>
-<tr><td><strong>Open-ended creative builds</strong></td><td>Opus 5.5</td><td>Fable 5.1 if xhigh or max still misses</td><td>The tests split: Nate Herk and Leon van Zyl preferred Opus on vague or open-ended builds, while Brock Mesarich preferred Sonnet's result</td></tr>
+<tr><td><strong>Deep research and finished documents, sheets or decks</strong></td><td>Opus 5.5</td><td>Fable 5.2 (test alongside Opus; Anthropic's suggested start for this work)</td><td>Anthropic lists multistep research and finished documents, spreadsheets and decks for Fable 5.2</td></tr>
+<tr><td><strong>Open-ended creative builds</strong></td><td>Opus 5.5</td><td>Fable 5.2 if xhigh or max still misses</td><td>The tests split: Nate Herk and Leon van Zyl preferred Opus on vague or open-ended builds, while Brock Mesarich preferred Sonnet's result</td></tr>
 </tbody>
 </table>
 
 <figure className="not-prose my-8">
-  <BlogImage src="/blog/claude-models-compared/which-claude-model-flowchart.png" alt="Decision flowchart: high-volume or subagent work goes to Haiku 5.5, tasks you can define and check go to Sonnet 5.5, everything else goes to Opus 5.5, and Fable 5.1 is for work Opus 5.5 still misses at xhigh or max effort" w="1100" h="956" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <BlogImage src="/blog/claude-models-compared/which-claude-model-flowchart-v2.png" alt="Decision flowchart: high-volume or subagent work goes to Haiku 5.5, tasks you can define and check go to Sonnet 5.5, everything else goes to Opus 5.5, and Fable 5.2 is for work Opus 5.5 still misses at xhigh or max effort" w="1100" h="966" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
   <figcaption className="mt-3 text-center text-sm text-gray-500">A starting point, not a rule: try effort before tier, then rerun on your own tasks.</figcaption>
 </figure>
 
@@ -254,21 +264,27 @@ Claude pages go stale within weeks, and most of the errors repeat. Run these thr
 
 1. **Which Haiku is it?** Haiku 5.5 launched on October 7, 2026. Haiku 4.5 ($1 / $5 per MTok on the [pricing page](https://platform.claude.com/docs/en/about-claude/pricing)) is the previous model, so a page that lists it as the current small tier predates October.
 2. **Is there one date, one benchmark version and one effort level per number?** Opus 5.5 scored 1846 on GDPval-AA v2.1 in [Anthropic's launch post](https://www.anthropic.com/claude-opus-5-5) and 1866 at max effort on [Artificial Analysis's board](https://artificialanalysis.ai/evaluations/gdpval-aa) on November 6, so a score only means something with its source and date.
-3. **What does it say about context?** Every current tier has a 1M-token window on the API. One Google AI Overview we captured on November 6, 2026 listed Haiku 5.5 at 200K tokens, which the models overview contradicts.
+3. **What does it say about context?** Every current tier has a 1M-token window on the API. Google AI Overviews we captured on November 6 and November 9, 2026 listed Haiku 5.5 at 200K tokens, which the models overview contradicts.
 
 ## Older Claude Models Still in Circulation
 
-The previous generation has not gone away. Anthropic's [deprecations page](https://platform.claude.com/docs/en/about-claude/model-deprecations) lists Opus 5, Sonnet 5 and Haiku 4.5 as active. Sonnet 4.5 is the exception: it was deprecated on September 30, 2026, and its retirement date is November 30, 2026 on the Claude API and Anthropic's other platforms, while Amazon Bedrock and the Google-managed Claude models on Google Cloud set their own dates.
+The previous generation has not gone away. Anthropic's [deprecations page](https://platform.claude.com/docs/en/about-claude/model-deprecations) lists Fable 5.1, Opus 5, Sonnet 5 and Haiku 4.5 as active. Sonnet 4.5 is the exception: it was deprecated on September 30, 2026, and its retirement date is November 30, 2026 on the Claude API and Anthropic's other platforms, while Amazon Bedrock and the Google-managed Claude models on Google Cloud set their own dates.
 
 Opus 5 still costs $5 / $25 per MTok on the [pricing page](https://platform.claude.com/docs/en/about-claude/pricing), so Opus 5.5 at $4 / $20 is cheaper, while Sonnet 5 stays at $2 / $10, the same as Sonnet 5.5.
 
-That means Opus 5.5 still costs twice as much as Sonnet 5. For the earlier models in depth, see our pages on [Claude Opus 5](https://geotoolbox.ai/blog/claude-opus-5) and [Claude Sonnet 5](https://geotoolbox.ai/blog/claude-sonnet-5).
+That means Opus 5.5 still costs twice as much as Sonnet 5. Against the oldest models, list prices also understate the bill: the pricing page says Claude 4.7 and later models use a newer tokenizer that produces approximately 30% more tokens for the same text, while Sonnet 4.6 and earlier use the previous one. Moving a prompt from Haiku 4.5 or Sonnet 4.5 to a 5.5 model therefore bills more tokens for the same words. For the earlier models in depth, see our pages on [Claude Opus 5](https://geotoolbox.ai/blog/claude-opus-5) and [Claude Sonnet 5](https://geotoolbox.ai/blog/claude-sonnet-5).
 
 Aliases can also leave you on an older model than you expect. In Claude Code, `opus`, `sonnet` and `haiku` resolve to the 5.5 models on the Anthropic API, but elsewhere they can land on older ones: Sonnet 4.6 and Haiku 4.5 on Claude Platform on AWS, Sonnet 4.5 and Haiku 4.5 on Amazon Bedrock and Google Cloud's Agent Platform, and Opus 4.6, Sonnet 4.5 and Haiku 4.5 on Microsoft Foundry.
 
-Pin the full model name, such as `claude-opus-5-5`, when the version matters, and check any setup where `sonnet` still points to Sonnet 4.5 before that model's retirement. Some API changes also affect code written for older models: per Anthropic's [release notes](https://platform.claude.com/docs/en/release-notes/overview), thinking cannot be disabled on Opus 5.5 (Sonnet 5.5 uses a `between_tools` setting instead of `disabled`), and forced tool use (`tool_choice` of type `any` or `tool`) returns an error on Opus 5.5, Sonnet 5.5 and Fable 5.1.
+The `fable` alias moved on launch day. It now resolves to Fable 5.2 everywhere except Claude apps gateway sessions, where it means Fable 5, and Fable 5.2 needs Claude Code v2.1.321 or later, per the [model configuration docs](https://code.claude.com/docs/en/model-config). A `claude-fable-5-1` setting saved in your user settings moves to the `fable` alias automatically on Pro and Max; on Team and Enterprise the move waits for your organization's settings, and Console accounts, third-party providers and project, local or managed settings keep Fable 5.1.
 
-One more Claude Code behavior can change the model under you. Fable 5.1, Opus 5.5 and Sonnet 5.5 run with safety classifiers that most often flag cybersecurity and biology content, and the same docs say a flagged request re-runs on a fallback model: Opus 5 or Opus 4.8 for Fable 5.1 and Opus 5.5, depending on the category, and Sonnet 5 for cybersecurity requests on Sonnet 5.5 (biology-flagged Sonnet 5.5 requests end in a refusal).
+Fable 5.2 runs on the Claude API, Claude Platform on AWS, Amazon Bedrock, Google Cloud and Microsoft Foundry, per Anthropic's [release notes](https://platform.claude.com/docs/en/release-notes/overview). On Bedrock, AWS's [model card](https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-anthropic-claude-fable-5-2.html) lists `anthropic.claude-fable-5-2` with US and global inference only and an opt-in to AWS review data retention.
+
+Pin the full model name, such as `claude-opus-5-5`, when the version matters, and check any setup where `sonnet` still points to Sonnet 4.5 before that model's retirement. Some API changes also affect code written for older models: per Anthropic's [release notes](https://platform.claude.com/docs/en/release-notes/overview), thinking cannot be disabled on Opus 5.5 (Sonnet 5.5 uses a `between_tools` setting instead of `disabled`), and forced tool use (`tool_choice` of type `any` or `tool`) returns an error on Opus 5.5, Sonnet 5.5, Fable 5.1 and Fable 5.2.
+
+Fable 5.2 adds changes of its own, per the same notes and Anthropic's [What's new in Fable 5.2](https://platform.claude.com/docs/en/models/fable-5-2/whats-new-fable-5-2) page. It enforces the prompt prefix check on every account, and outside Amazon Bedrock it supports computer use only through the `computer_toolset_20260801` toolset. In the advisor tool, every executor model accepts Fable 5.2 as its advisor, but a Fable 5.2 executor accepts only Fable 5.2 or Mythos 5.2.
+
+One more Claude Code behavior can change the model under you. Fable models, Opus 5.5, Sonnet 5.5 and Opus 5 run with safety classifiers that most often flag cybersecurity and biology content, and the [model configuration docs](https://code.claude.com/docs/en/model-config) say a flagged request re-runs on a fallback model. On Fable models and Opus 5.5, biology requests re-run on Opus 5 and cybersecurity requests on Opus 4.8. Sonnet 5.5 falls back to Sonnet 5 and Opus 5 to Opus 4.8 for cybersecurity requests, and biology-flagged requests on those two end in a refusal.
 
 The session then continues on the fallback model until you run `/model`, so a surprise model switch can be a safeguard rather than a setting.
 
@@ -298,29 +314,29 @@ Run geotoolbox's free [AI Readiness check](https://geotoolbox.ai/tools/ai-readin
 
 ## Sources
 
-- Models overview (lineup, API IDs, prices, context, default effort) - Anthropic docs, captured November 6, 2026 - `platform.claude.com/docs/en/models/overview`
-- Choosing the right model (selection matrix, effort guidance, combining models) - Anthropic docs, captured November 6, 2026 - `platform.claude.com/docs/en/about-claude/models/choosing-a-model`
-- Pricing (cache multipliers, Haiku 5.5 prompt-length tiers, batch, fast mode) - Anthropic docs, captured November 6, 2026 - `platform.claude.com/docs/en/about-claude/pricing`
-- Effort (levels and per-model defaults) - Anthropic docs, captured November 6, 2026 - `platform.claude.com/docs/en/build-with-claude/effort`
-- Release notes (Fable 5.1 API launch) - Anthropic docs, captured November 6, 2026 - `platform.claude.com/docs/en/release-notes/overview`
+- Models overview (lineup, API IDs, prices, context, default effort) - Anthropic docs, captured November 9, 2026 - `platform.claude.com/docs/en/models/overview`
+- Choosing the right model (selection matrix, effort guidance, combining models) - Anthropic docs, captured November 9, 2026 - `platform.claude.com/docs/en/about-claude/models/choosing-a-model`
+- Pricing (cache multipliers, Haiku 5.5 prompt-length tiers, batch, fast mode) - Anthropic docs, captured November 9, 2026 - `platform.claude.com/docs/en/about-claude/pricing`
+- Effort (levels and per-model defaults) - Anthropic docs, captured November 9, 2026 - `platform.claude.com/docs/en/build-with-claude/effort`
+- Release notes (Fable 5.2 launch, platforms and API changes) - Anthropic docs, captured November 9, 2026 - `platform.claude.com/docs/en/release-notes/overview`
 - Model deprecations (Sonnet 4.5 retirement, active models) - Anthropic docs, captured November 9, 2026 - `platform.claude.com/docs/en/about-claude/model-deprecations`
 - Introducing Claude Sonnet 5.5 (benchmark table, footnotes) - Anthropic, September 28, 2026 - `anthropic.com/claude-sonnet-5-5`
 - Introducing Claude Opus 5.5 (benchmark table vs Fable 5.1, usage limits) - Anthropic, September 22, 2026 - `anthropic.com/claude-opus-5-5`
 - Introducing Claude Haiku 5.5 (positioning, benchmark table) - Anthropic, October 7, 2026 - `anthropic.com/claude-haiku-5-5`
-- Introducing Claude Fable 5.1 and Claude Mythos 5.1 - Anthropic, September 2026 - `anthropic.com/claude-fable-and-mythos-5-1`
-- Model configuration (aliases, default model, opusplan) - Claude Code docs, captured November 9, 2026 - `code.claude.com/docs/en/model-config`
-- Newsroom index (Fable 5.2 and Mythos 5.2 announced November 9, 2026) - Anthropic, captured November 9, 2026 - `anthropic.com/news`
-- Introducing Claude Fable 5.2 and Claude Mythos 5.2 - Anthropic, November 9, 2026 - `anthropic.com/claude-fable-and-mythos-5-2`
+- Introducing Claude Fable 5.2 and Claude Mythos 5.2 (benchmark table, cost per task, availability) - Anthropic, November 9, 2026 - `anthropic.com/claude-fable-and-mythos-5-2`
+- Model configuration (aliases, fable alias, default model, opusplan, fallback) - Claude Code docs, captured November 9, 2026 - `code.claude.com/docs/en/model-config`
+- What's new in Claude Fable 5.2 (API changes, platforms) - Anthropic docs, captured November 9, 2026 - `platform.claude.com/docs/en/models/fable-5-2/whats-new-fable-5-2`
+- Claude Fable 5.2 model card (Bedrock IDs, inference profiles, data retention) - AWS documentation, captured November 9, 2026 - `docs.aws.amazon.com/bedrock/latest/userguide/model-card-anthropic-claude-fable-5-2.html`
 - Claude Fable 5.2 launch offers - Claude Help Center, captured November 9, 2026 - `support.claude.com/en/articles/17506494-claude-fable-5-2-launch-offers`
-- Plans and pricing (US, USD) - Anthropic, captured November 6, 2026 - `claude.com/pricing`
+- Plans and pricing (US, USD) - Anthropic, captured November 9, 2026 - `claude.com/pricing`
 - Choosing the right Claude model (usage ranking by model) - Claude Academy, captured November 6, 2026 - `academy.claude.com/tutorials/choosing-the-right-claude-model`
-- Models, usage, and limits in Claude Code - Claude Help Center, captured November 6, 2026 - `support.claude.com/en/articles/14552983-models-usage-and-limits-in-claude-code`
+- Models, usage, and limits in Claude Code - Claude Help Center, captured November 9, 2026 - `support.claude.com/en/articles/14552983-models-usage-and-limits-in-claude-code`
 - Terminal-Bench 4.0 job pages (Sonnet 5.5 and Opus 5.5 max-effort runs) - Harbor Hub, captured November 6, 2026 - `hub.harborframework.com/jobs/0e520a82-ad44-56be-b1bd-ff351c5bd923` and `hub.harborframework.com/jobs/96ad98a5-70e6-5e7b-bd1e-67eecfbc644c`
-- Claude Fable models on your plan - Claude Help Center, captured November 6, 2026 - `support.claude.com/en/articles/15424964-claude-fable-models-on-your-plan`
-- How do usage and length limits work? - Claude Help Center, captured November 6, 2026 - `support.claude.com/en/articles/11647753-how-do-usage-and-length-limits-work`
-- GDPval-AA v2.1 leaderboard (Elo by effort) - Artificial Analysis, captured November 6, 2026 - `artificialanalysis.ai/evaluations/gdpval-aa`
+- Claude Fable models on your plan - Claude Help Center, captured November 9, 2026 - `support.claude.com/en/articles/15424964-claude-fable-models-on-your-plan`
+- How do usage and length limits work? - Claude Help Center, captured November 9, 2026 - `support.claude.com/en/articles/11647753-how-do-usage-and-length-limits-work`
+- GDPval-AA v2.1 leaderboard (Elo by effort) - Artificial Analysis, captured November 6, 2026, rechecked November 9, 2026 - `artificialanalysis.ai/evaluations/gdpval-aa`
 - Terminal-Bench 4.1 leaderboard (re-graded 4.0 runs) - Terminal-Bench, captured November 9, 2026 - `tbench.ai`
-- Terminal-Bench 4.1: updating task verifiers - Terminal-Bench, November 9, 2026 - `tbench.ai/news/terminal-bench-4-1`
+- Terminal-Bench 4.1: updating task verifiers - Terminal-Bench, captured November 9, 2026 - `tbench.ai/news/terminal-bench-4-1`
 - I Tested Sonnet 5.5 vs Opus 5.5. What You Need to Know. - Nate Herk, YouTube, September 28, 2026 - `youtube.com/watch?v=7eo-11K2e3c`
 - Opus 5.5 vs Sonnet 5.5: Same Price, Very Different Game. - Leon van Zyl, YouTube, September 29, 2026 - `youtube.com/watch?v=NzyP4VjkrvM`
 - I Tested Sonnet 5.5 vs Opus 5.5 (WILD RESULTS) - Brock Mesarich, YouTube, September 28, 2026 - `youtube.com/watch?v=pn08Kdp998Y`
