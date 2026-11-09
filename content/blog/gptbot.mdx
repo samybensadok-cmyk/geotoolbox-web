@@ -2,7 +2,7 @@
 title: "GPTBot: What It Crawls and How to Allow or Block It"
 description: "GPTBot is OpenAI's training crawler. What it crawls, how to allow or block it in robots.txt, and why blocking GPTBot does not remove you from ChatGPT search."
 date: "2026-06-08"
-updated: "2026-11-04"
+updated: "2026-11-09"
 author: "Samy BEN SADOK"
 tags: ["ai-crawlers", "gptbot", "openai", "robots-txt", "guide"]
 draft: false
@@ -131,7 +131,7 @@ GPTBot identifies itself with a user agent ending in `+https://openai.com/gptbot
 
 ### Does GPTBot execute JavaScript?
 
-No; like most AI training crawlers it reads raw HTML. Content that only appears after scripts run is invisible to it, which matters more for the citation bots, but it means a JavaScript-heavy site contributes less to training than its rendered pages suggest.
+Not reliably, and the evidence is disputed. One 30-day log to September 24, 2026 showed no script fetches from it, and Crawl Lab saw no sign of rendering in July. JS SEO Lab logged it running an inline script but not a React component, a Genezio co-founder's October log saw it fetch scripts without proof they ran, and one developer's [server log](https://dev.to/hisashispace/traffic-from-chatgpt-jumped-is-it-because-its-crawlers-now-run-javascript-5961) says it began rendering on September 25. OpenAI's search crawler, OAI-SearchBot, has been seen rendering some sites after a delay in October 2026 logs; our [JavaScript SEO guide](https://geotoolbox.ai/blog/javascript-seo) tracks both bots. Until OpenAI says otherwise, put the text you want read in the HTML, since content that only appears after scripts run may be missing for training.
 
 ## Where to Start
 
@@ -146,3 +146,8 @@ The fastest first step is to see what your site tells GPTBot right now. Run your
 - OpenAI Has Tripled Their Crawl of the Web: An Analysis of 7B+ Log Files - Botify, April 2026 - `botify.com/blog/openai-tripled-web-crawl`
 - AI Crawler Spoofing: ChatGPT, Mistral, Perplexity - HUMAN Security - `humansecurity.com/learn/blog/ai-crawler-spoofing-chatgpt-mistral-perplexity`
 - No Robots.txt: How to Ask ChatGPT and Google Bard Not to Use Your Website for Training - Electronic Frontier Foundation, 2023 - `eff.org/deeplinks/2023/12/no-robotstxt-how-ask-chatgpt-and-google-bard-not-use-your-website-training`
+- Bogdan Ripa - An analysis of OpenAI's bots (October 22, 2026; log October 8 to 22) - `bogdanripa.substack.com/p/an-analysis-of-openais-bots`
+- Crawl Lab - OAI-SearchBot (undated; log July 20 to 27, 2026) - `crawl-lab.com/en/crawlers/oai-searchbot`
+- DEV Community, hisashispace - Traffic from ChatGPT jumped! Is it because its crawlers now run JavaScript? (September 30, 2026) - `dev.to/hisashispace/traffic-from-chatgpt-jumped-is-it-because-its-crawlers-now-run-javascript-5961`
+- Forge AI Bot Log - Can AI crawlers run JavaScript? (published September 24, 2026; 30-day log to September 24) - `forgeaibotlog.com/articles/can-ai-crawlers-execute-javascript`
+- JS SEO Lab, Jakub Sawa - JavaScript execution has two depths, and bots split cleanly between them (August 6, 2026, updated October 25, 2026) - `jsseo.dev/findings/javascript-execution-has-two-depths`
