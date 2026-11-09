@@ -1,0 +1,332 @@
+---
+title: "Gemini 4 Argon: Zugang, Kosten, Benchmarks und Limits"
+description: "Gemini 4 Argon erklärt: wer es in Deutschland nutzen kann (AI Pro ab 21,99 €), warum Argon im KI-Modus fehlt, API-Preise ab 1. Dezember und Benchmarks."
+date: "2026-11-09"
+updated: "2026-11-09"
+recheckBy: "2026-11-30"  # 08.11.: Abo-Preise von Googles deutschen Seiten (Berlin, ausgeloggt), API-Preise in USD; Fristen: 30.11. Ende Einführungspreis API (ab 01.12. 4/20 $), Länderliste Argon im KI-Modus, Carbon-Freigabe, Arena/AA-Werte
+author: "Samy BEN SADOK"
+tags: ["gemini-4-argon", "gemini", "google-gemini", "llm", "guide"]
+draft: false
+locale: "de"
+donorSlug: "gemini-4-argon"
+donorCommit: "d983e10"
+noindex: false
+---
+
+Gemini 4 Argon ist Googles leistungsstärkstes allgemein verfügbares KI-Modell, freigegeben am 13. Oktober 2026. In Deutschland nutzt du es in der Gemini-App mit Google AI Pro (21,99 € im Monat) oder Ultra. Über die API (Modell-ID `gemini-4-argon`) kostet es bis zum 30. November 2026 pro Million Token 2 $ für die Eingabe und 10 $ für die Ausgabe, ab dem 1. Dezember 4 $ und 20 $. Die Auswahl von Argon im KI-Modus der Google Suche bietet Google laut seiner Länderliste (Stand 8. November 2026) in Deutschland nicht an.
+
+Im kostenlosen Tarif und in AI Plus ist Argon nicht enthalten, eine kostenlose API-Stufe gibt es nicht. Googles stärkstes Modell ist es auch nicht mehr: Gemini 4 Carbon, vorgestellt am 28. Oktober, liegt in den Ranglisten vorne, steht aber nur einer kleinen Gruppe von Cyberabwehr-Partnern zur Verfügung.
+
+Zuletzt geprüft am 8. November 2026.
+
+## Das Wichtigste in Kürze
+
+- **Gemini 4 Argon ist seit dem 13. Oktober 2026 allgemein verfügbar** und in Deutschland ab Google AI Pro für 21,99 € im Monat in der Gemini-App nutzbar; AI Plus (4,99 €) und der kostenlose Tarif enthalten es nicht.
+- **Argon im KI-Modus der Google Suche bietet Google in Deutschland nicht an:** Googles Länderliste für diese Option nennt die USA, Großbritannien und die Schweiz, aber keinen EU-Staat (Stand 8. November 2026).
+- **Der API-Preis verdoppelt sich am 1. Dezember 2026** von 2 $/10 $ auf 4 $/20 $ pro Million Token; eine kostenlose API-Stufe für Argon gibt es nicht.
+- **Argon belegt auf der Text-Rangliste von Arena Platz zwei** (1522, 8. November 2026) und führt in Googles Tests bei juristischen und finanziellen Aufgaben sowie bei langem Kontext, liegt aber bei agentischem Programmieren teils hinten.
+- **Firmendaten gehören in die API oder in Workspace:** Für Nutzer im EWR gelten bei der Gemini API die Datenregeln für zahlende Kunden, in der privaten Gemini-App können Prüfer Chats lesen.
+
+## Gemini 4 Argon auf einen Blick
+
+Die Daten stammen von Googles eigenen Seiten (abgerufen am 8. November 2026), die Abo-Preise von der deutschen Tarifseite. Am ehesten veraltet in dieser Übersicht der API-Preis: Ab dem 1. Dezember gilt der höhere Standardpreis.
+
+<table>
+<thead>
+<tr><th>Merkmal</th><th>Gemini 4 Argon</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Hersteller</strong></td><td>Google DeepMind</td></tr>
+<tr><td><strong>Vorgestellt</strong></td><td>30. September 2026 (Vorabversion für Cyberabwehr-Partner im Fairwind-Programm)</td></tr>
+<tr><td><strong>Allgemein verfügbar</strong></td><td>13. Oktober 2026</td></tr>
+<tr><td><strong>Modell-ID in der API</strong></td><td><code>gemini-4-argon</code></td></tr>
+<tr><td><strong>Gemini-App</strong></td><td>Google AI Pro (21,99 € im Monat) und Google AI Ultra (ab 99,99 € im Monat); nicht im kostenlosen Tarif und nicht in AI Plus</td></tr>
+<tr><td><strong>KI-Modus der Google Suche</strong></td><td>AI Pro und Ultra ab 18 Jahren, nur in den Ländern auf Googles Liste (kein EU-Staat, also nicht in Deutschland; Stand 8. November 2026); mit Tageslimit</td></tr>
+<tr><td><strong>Google Antigravity</strong></td><td>Bezahltes AI-Pro-Abo und Ultra; nicht im kostenlosen Tarif und nicht in AI Plus</td></tr>
+<tr><td><strong>API-Preis bis 30. November 2026</strong></td><td>2 $ Eingabe / 10 $ Ausgabe pro 1 Mio. Token</td></tr>
+<tr><td><strong>API-Preis ab 1. Dezember 2026</strong></td><td>4 $ Eingabe / 20 $ Ausgabe pro 1 Mio. Token</td></tr>
+<tr><td><strong>Kostenlose API-Stufe</strong></td><td>Keine</td></tr>
+<tr><td><strong>Kontextfenster</strong></td><td>1.048.576 Token (Eingabe und Ausgabe zusammen)</td></tr>
+<tr><td><strong>Maximale Ausgabe</strong></td><td>Standardmäßig 65.536 Token, mit Long Decode bis 1.048.576</td></tr>
+<tr><td><strong>Denkstufen</strong></td><td>Niedrig, mittel, hoch (in der API standardmäßig mittel, in der Gemini-App niedrig)</td></tr>
+<tr><td><strong>Wissensstand</strong></td><td>März 2026</td></tr>
+</tbody>
+</table>
+
+## Was ist Gemini 4 Argon?
+
+Gemini 4 Argon ist das stärkste allgemein verfügbare Modell von Google DeepMind und das erste Modell der Gemini-4-Generation. Google hat es laut seiner [Ankündigung vom 30. September](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/) für lange, anspruchsvolle Aufgaben entwickelt: Softwareentwicklung unter realen Bedingungen, juristische und finanzielle Aufgaben sowie Cyberabwehr.
+
+Die Freigabe lief in zwei Schritten:
+
+1. **30. September 2026:** Vorstellung als Vorabversion für Cyberabwehr-Partner im Fairwind-Programm von Google. Laut Googles Launch-Beitrag vom 13. Oktober bekommen Fairwind-Mitglieder Argon weiterhin ohne die Cyber-Schutzvorkehrungen (im englischen Original „without cyber guardrails“), die in der öffentlichen Version aktiv bleiben.
+2. **13. Oktober 2026:** [weltweit freigegeben](https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-argon/) über die API, in der Gemini-App für AI-Pro- und Ultra-Abonnenten und im KI-Modus der Suche. Für den KI-Modus gilt allerdings eine eigene Länderliste, dazu gleich mehr.
+
+Wegen dieser zwei Wochen beschreiben manche Artikel Argon noch als vorgestellt, aber nicht freigegeben. Sie entstanden zwischen dem 30. September und dem 13. Oktober. In den deutschen Google-Ergebnissen für „gemini 4 argon“ standen am 8. November noch solche Seiten, etwa ein Beitrag, dem zufolge Argon nur für ausgewählte Cyberabwehr-Partner startet.
+
+In Googles Modellreihe steht Argon über Gemini 3.1 Pro und den Flash-Modellen, aber unter Gemini 4 Carbon. Im Abo AI Pro erscheint Argon neben „unserem Pro-Modell“ (3.1 Pro), das weiter verfügbar ist: Du bekommst also beide. Wie die Tarife insgesamt zusammenhängen, steht in unserem Überblick über [Googles Gemini-Modelle](https://geotoolbox.ai/blog/what-is-gemini).
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/gemini-4-argon/gemini-lineup-argon-carbon-ladder-de.png" alt="Googles Gemini-Modelle im November 2026, von Flash-Lite bis Gemini 4 Carbon, mit den Abos, in denen du sie nutzen kannst" w="1100" h="819" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Googles Gemini-Modelle und wer sie nutzen kann, Stand 8. November 2026. Quellen: Googles deutsche Tarifseite, Dokumentation der Gemini API, Googles Carbon-Ankündigung und Länderliste für Argon im KI-Modus.</figcaption>
+</figure>
+
+**Eine Namensfalle:** Ein „Gemini 4 Pro“ gibt es nicht. Viele suchen danach, weil frühere Generationen ein Pro-Modell hatten, aber die Gemini-4-Modelle sind nach chemischen Elementen benannt: erst Argon, dann Carbon. Das Modell, das in Googles Apps weiterhin „Pro“ heißt, ist Gemini 3.1 Pro.
+
+**Argon im Vergleich zu Gemini 3.1 Pro.** In der [Gemini API](https://aistudio.google.com/docs/pricing) kostet 3.1 Pro (noch eine Vorschauversion) 2 $ Eingabe und 12 $ Ausgabe pro Million Token bei Prompts bis 200.000 Token, darüber 4 $ und 18 $.
+
+Argon hat keinen Aufschlag für lange Prompts. Bis zum 30. November kostet es bei jeder Prompt-Länge höchstens so viel wie 3.1 Pro, ab dem 1. Dezember insgesamt bei jeder Länge mehr (über 200.000 Token ist der Eingabepreis mit 4 $ zwar gleich, die Ausgabe kostet aber 20 $ statt 18 $).
+
+Der Wissensstand von Argon reicht laut [Modellkarte zu Gemini 4](https://deepmind.google/models/model-cards/gemini-4-argon/) bis März 2026: Spätere Ereignisse kennt es nur, wenn es danach sucht. Außerdem bietet es drei Denkstufen (niedrig, mittel, hoch). Sie beeinflussen, wie gut die Antworten ausfallen und wie schnell dein Kontingent aufgebraucht ist.
+
+## Ist Gemini 4 Argon kostenlos? Wer es in Deutschland nutzen kann
+
+Nein. Gemini 4 Argon ist weder in der Gemini-App noch im KI-Modus noch über die API kostenlos. Am günstigsten kommst du laut [Googles deutscher Tarifseite](https://gemini.google/de/subscriptions/) mit dem Abo Google AI Pro für 21,99 € im Monat an Argon. Eine Steuerangabe steht dort nicht.
+
+Ein Missverständnis hält sich in Kommentaren unter deutschen YouTube-Videos zu Argon: Google AI Plus enthält Argon nicht. Plus kostet 4,99 € im Monat (bei Google One gibt es auch eine Variante mit 2 TB für 9,99 €), aber Argon ist erst ab Pro dabei. Das gilt auch für das kostenlose Jahr, das Google One Studierenden und Auszubildenden anbietet: Es umfasst AI Plus und damit kein Argon. Im kostenlosen Tarif läuft ein Flash-Lite-Modell.
+
+Was du bekommst, hängt vom Abo und vom jeweiligen Google-Dienst ab. Die Übersicht gilt für ein Konto in Deutschland, Stand 8. November 2026:
+
+<table>
+<thead>
+<tr><th>Abo (Preis in Deutschland)</th><th>Gemini-App</th><th>KI-Modus der Suche</th><th>Google Antigravity</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Kostenlos</strong> (0 €)</td><td>Nein (Flash-Lite-Modell)</td><td>Nein</td><td>Nein</td></tr>
+<tr><td><strong>AI Plus</strong> (4,99 € im Monat)</td><td>Nein</td><td>Nein</td><td>Nein</td></tr>
+<tr><td><strong>AI Pro</strong> (21,99 € im Monat)</td><td>Ja</td><td>Nicht in Deutschland (Länderliste ohne EU-Staat, Stand 8. Nov. 2026)</td><td>Ja (bezahltes Pro-Abo), Standard-Rate-Limits</td></tr>
+<tr><td><strong>AI Ultra</strong> (99,99 € oder 219,99 € im Monat)</td><td>Ja, höchster Zugang</td><td>Nicht in Deutschland (Länderliste ohne EU-Staat, Stand 8. Nov. 2026)</td><td>Ja, höhere bzw. höchste Rate-Limits</td></tr>
+</tbody>
+</table>
+
+**Der KI-Modus ist der Haken für deutsche Nutzer.** Den KI-Modus selbst gibt es in Deutschland, die Option Gemini 4 Argon darin laut Google aber nicht. Googles [Hilfeseite zum KI-Modus](https://support.google.com/websearch/answer/16011537?hl=de) nennt für Argon eine eigene Länderliste mit den USA, Großbritannien und der Schweiz, aber keinem EU-Staat (Stand 8. November 2026). Außerdem brauchst du AI Pro oder Ultra, musst mindestens 18 Jahre alt sein und ein privates Google-Konto nutzen, das du selbst verwaltest.
+
+Googles deutsche Seiten verweisen für diese Option per Fußnote auf genau diese Liste, auch Google One, das Argon im KI-Modus als Pro-Vorteil aufführt. Das „weltweit“ aus Googles Launch-Beitrag vom 13. Oktober, das viele deutsche Artikel und KI-Antworten übernehmen, schließt zwar den KI-Modus ein, ist aber die Formulierung vom Starttag: Für diese Option gilt zusätzlich die Länderliste. Ob Argon bei dir im Menü der Leiste „Frage stellen“ auftaucht, siehst du nur in deinem eigenen Konto. Schließ AI Pro deshalb nicht wegen Argon in der Suche ab.
+
+Die API ist von den Abos getrennt. Auf Googles [Preisseite für die Gemini API](https://aistudio.google.com/docs/pricing) steht: „Gemini 4 Argon is not available on the Free tier“. Entwickler zahlen deshalb ab dem ersten Aufruf. Über die Gemini API und AI Studio funktioniert Argon auch von hier aus: Deutschland steht auf Googles [Liste der unterstützten Regionen](https://ai.google.dev/gemini-api/docs/available-regions). Für die API brauchst du allerdings ein Projekt mit aktivierter Abrechnung.
+
+**Bei Antigravity hat sich nach dem Start etwas geändert.** In seinem Launch-Beitrag vom 13. Oktober nannte Google Antigravity nur für AI-Ultra-Abonnenten. Die [Modell-Dokumentation von Antigravity](https://antigravity.google/docs/models) führt inzwischen auch AI Pro auf, mit der Fußnote: „Available with paid Google AI Pro plans or on trial with eligible premium devices.“
+
+Im Entwicklerforum von Google melden Nutzer, deren Pro-Abo [über den Mobilfunkanbieter gebucht](https://discuss.ai.google.dev/t/subject-gemini-4-argon-unavailable-on-jio-google-ai-pro/189886) oder [per Familienfreigabe geteilt](https://discuss.ai.google.dev/t/gemini-4-argon-unavailable-for-paid-google-ai-pro-family-members-only-claude-4-6-available/189933) ist, dass Argon in Antigravity als „Unavailable“ erscheint. [Einige direkt zahlende Pro-Abonnenten](https://discuss.ai.google.dev/t/active-paid-google-ai-pro-shows-antigravity-starter-quota-on-app-2-29-0/198730) berichten Ähnliches.
+
+**Es gibt zwei eng begrenzte Ausnahmen.** Die Antigravity-Fußnote deckt auch Testzugänge auf berechtigten Premium-Geräten ab. Außerdem bekommen laut [Googles Launch-Beitrag](https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-argon/) 10.000 Forschende sechs Monate lang kostenlos die höchste Antigravity-Stufe, sofern sie berechtigt sind, Kapazität frei ist und Google sie auswählt.
+
+Alle Gemini-Abos im Preisvergleich findest du in unserem Überblick über die [Gemini-Kosten](https://geotoolbox.ai/blog/gemini-pricing).
+
+## Nutzungslimits: Warum Argon das Kontingent in AI Pro so schnell aufbraucht
+
+Eine der häufigsten Beschwerden über Argon betrifft nicht die Qualität, sondern das Tempo, mit dem es das Kontingent der Gemini-App im Abo AI Pro aufbraucht.
+
+Wie viele Nachrichten das Kontingent umfasst, sagt Google nicht. Laut der Fußnote auf der [deutschen Tarifseite](https://gemini.google/de/subscriptions/) sind die Limits „rechenbasiert“ und berücksichtigen „die Komplexität deiner Prompts, die von dir genutzten Funktionen sowie die Länge des Chats“. Weiter heißt es: „Dein Limit wird alle 5 Stunden aktualisiert, bis du dein Wochenlimit erreicht hast.“ AI Pro bekommt ein 4-mal so großes Kontingent wie der kostenlose Tarif, AI Ultra je nach Stufe ein 5-mal oder 20-mal so großes wie AI Pro.
+
+Weil das Kontingent nach Rechenaufwand bemessen wird, ist es mit einem schweren Modell auf hoher Denkstufe weit schneller leer als mit einem Flash-Modell. Pro-Abonnenten haben beschrieben, wie das in der Praxis aussieht:
+
+- Der Autor eines [Threads in r/GeminiAI](https://www.reddit.com/r/GeminiAI/comments/1xd6kze/whats_wrong_with_argons_usage_limit) mit 582 Upvotes (Ende Oktober) schrieb, schon die Ausgabe „This is a test“ habe 2 % seines Fünf-Stunden-Limits verbraucht.
+- Ein anderer Pro-Nutzer im selben Thread berichtete, eine kurze Frage zur Börse auf hoher Denkstufe habe 100 % seines gerade erneuerten Fünf-Stunden-Limits gekostet.
+
+Das sind Erfahrungsberichte, keine Messungen, und andere Nutzer in denselben Threads berichten von deutlich geringerem Verbrauch. Zu dem Mechanismus, den Google beschreibt, passen die Berichte trotzdem.
+
+Der erste Hebel ist die Denkstufe. Argon bietet die Stufen niedrig, mittel und hoch.
+
+In der API und in Google Cloud ist [mittel der Standard](https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/4-argon); in der Gemini-App läuft Argon laut Googles [Hilfeseite](https://support.google.com/gemini/answer/18648722) auf niedrig, wenn du nichts einstellst. Laut derselben Seite verbrauchen höhere Denkstufen mehr von deinem Kontingent. Wenn du die Stufe hoch nur für schwierige Fragen nutzt, sollte dein Pro-Kontingent länger reichen; wie viel länger, hängt von der Aufgabe ab. Eine der Antworten mit den meisten Upvotes im Thread lautete schlicht: von hoch auf mittel wechseln.
+
+Im KI-Modus hat Argon laut Googles Hilfeseite zum KI-Modus ein eigenes Tageslimit: „Für Gemini 4 Argon im KI-Modus gelten tägliche Nutzungslimits“. Ist das Tageslimit erreicht, musst du warten, bis es sich erneuert, oder auf ein höheres Abo wechseln. Das betrifft dich aber nur in einem Land auf Googles Liste.
+
+Wenn du in Pro regelmäßig ans Limit stößt, senke die Denkstufe oder verlagere Routinearbeit auf ein leichteres Modell (Gemini 3.1 Pro oder ein Flash-Modell, beide in Pro enthalten). Du kannst auch KI-Guthaben kaufen, mit dem du laut Tarifseite deine Limits erweiterst, oder zu Ultra wechseln. Entwickler können die App-Limits ganz umgehen und in der API pro Token zahlen.
+
+## API-Preise für Gemini 4 Argon (und die Preiserhöhung am 1. Dezember)
+
+In der API startete Gemini 4 Argon mit einem Einführungspreis, der am 30. November 2026 endet. Ab dem 1. Dezember 2026 gilt der Standardpreis von 4 $ Eingabe und 20 $ Ausgabe pro Million Token, doppelt so viel wie zum Start. Googles [Preistabelle](https://aistudio.google.com/docs/pricing) zeigt beide Preise schon nebeneinander. Google nennt die Preise in US-Dollar.
+
+<table>
+<thead>
+<tr><th>Pro 1 Mio. Token (USD)</th><th>Bis 30. Nov. 2026</th><th>Ab 1. Dez. 2026</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Eingabe (Standard)</strong></td><td>2,00 $</td><td>4,00 $</td></tr>
+<tr><td><strong>Ausgabe inkl. Denk-Token (Standard)</strong></td><td>10,00 $</td><td>20,00 $</td></tr>
+<tr><td><strong>Eingabe aus dem Cache (Standard)</strong></td><td>0,10 $</td><td>0,20 $</td></tr>
+<tr><td><strong>Eingabe (Batch oder Flex)</strong></td><td>1,00 $</td><td>2,00 $</td></tr>
+<tr><td><strong>Ausgabe (Batch oder Flex)</strong></td><td>5,00 $</td><td>10,00 $</td></tr>
+<tr><td><strong>Eingabe (Priority)</strong></td><td>3,60 $</td><td>7,20 $</td></tr>
+<tr><td><strong>Ausgabe (Priority)</strong></td><td>18,00 $</td><td>36,00 $</td></tr>
+</tbody>
+</table>
+
+Drei Details zur Abrechnung wiegen schwerer als der Listenpreis:
+
+- **Denk-Token zählen als Ausgabe.** Der Ausgabepreis schließt sie ausdrücklich ein. Eine hohe Denkstufe erhöht damit deine Rechnung und die Wartezeit.
+- **Caching gibt es nur implizit.** Laut Googles [Preisseite](https://aistudio.google.com/docs/pricing) unterstützt Argon kein explizites Caching: Du kannst keinen Prompt-Anfang fest hinterlegen, den Rabatt gibt es nur, wenn das System eine Wiederholung erkennt.
+- **Die Anbindung an die Google Suche (Grounding) kostet extra.** Pro Monat sind 5.000 Anfragen kostenlos, die sich alle Modelle ab Gemini 3 teilen. Danach kosten 1.000 Anfragen 14 $, bei höchstens 1.500 Anfragen pro Tag.
+
+Ein kurzes Rechenbeispiel: Eine Anwendung mit 10 Millionen Eingabe- und 2 Millionen Ausgabe-Token im Monat zahlt zum Einführungspreis 40 $ (20 $ + 20 $). Ab dem 1. Dezember kostet dasselbe Volumen 80 $. Wer sein Budget im Oktober geplant hat, sollte das einrechnen.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/gemini-4-argon/gemini-4-argon-api-price-dec-1-chart-de.png" alt="Balkendiagramm der API-Listenpreise pro Million Token: Gemini 4 Argon zum Einführungspreis und ab 1. Dezember 2026, daneben Claude Opus 5.5 und GPT-6.1 Sol" w="1100" h="691" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Standard-API-Listenpreise pro Million Token in US-Dollar, abgerufen am 8. November 2026 von den Preisseiten von Google, Anthropic und OpenAI.</figcaption>
+</figure>
+
+Im Vergleich zur Konkurrenz rückt Argon vom Preisniveau von GPT-6.1 Sol auf das von Claude Opus 5.5. Bis zum 30. November kostet es dieselben 2 $/10 $ wie [GPT-6.1 Sol](https://developers.openai.com/api/docs/pricing) bei Prompts bis 272.000 Eingabe-Token; darüber verlangt OpenAI mehr, während Argon im ganzen Kontextfenster gleich viel kostet. Ab dem 1. Dezember liegt es mit 4 $/20 $ gleichauf mit [Claude Opus 5.5](https://platform.claude.com/docs/en/about-claude/pricing).
+
+Der Listenpreis allein lässt Argon günstiger erscheinen, als es ist, weil es viele Token verbraucht. Laut [Artificial Analysis](https://artificialanalysis.ai/models/gemini-4-argon) brauchte Argon auf hoher Stufe 113 Millionen Token für einen Durchlauf des Intelligence Index, der Median liegt bei 72,6 Millionen. Die Tester nennen es „notably slow“: 27,7 Minuten pro Aufgabe gegenüber 12,6 Minuten im Median.
+
+Artificial Analysis setzt für Argon den Standardpreis von 4 $/20 $ an. Damit kostet Argon (high) auf der [Rangliste](https://artificialanalysis.ai/leaderboards/models) von Artificial Analysis 9,95 $ pro Aufgabe.
+
+In deutschen Berichten liest du dagegen 1,99 $ pro Aufgabe. Das war der Stand von Artificial Analysis in der Launch-Woche: ältere Index-Version v4.3.2, gerechnet zum Einführungspreis von 2 $/10 $. Die ebenfalls kursierenden 3,98 $ hat heise daraus selbst hochgerechnet. Im aktuellen Index v5.0.1 sind es die genannten 9,95 $ (Stand 8. November 2026).
+
+Das ist ungefähr so viel wie Claude Opus 5.5 auf maximaler Stufe (10,04 $), seiner bestbewerteten Einstellung, und weit mehr als Opus 5.5 auf hoher Stufe (3,46 $). Zum Einführungspreis würde derselbe Tokenverbrauch im aktuellen Index etwa die Hälfte kosten, also rund 5 $. Die Rechnung pro Token für alle Gemini-Modelle steht in unserem Leitfaden zu den [Preisen der Gemini API](https://geotoolbox.ai/blog/gemini-api-pricing), mehr zu den Grundlagen in unserem Beitrag darüber, [was KI-Token wirklich kosten](https://geotoolbox.ai/blog/ai-token-cost).
+
+## Wie gut ist Gemini 4 Argon? Die Benchmarks
+
+Auf der Text-Rangliste von Arena, die auf menschlichen Bewertungen beruht, steht Argon auf Platz zwei. Im Index von Artificial Analysis liegt es klar über dem Durchschnitt, aber hinter der Spitzengruppe. In den meisten von Googles eigenen Tests liegt es vor der Konkurrenz.
+
+### Googles eigene Zahlen
+
+In Googles Tabelle führt Argon bei Wissensarbeit und langem Kontext. Beim agentischen Programmieren fällt das Ergebnis gemischt aus: vorne bei DeepSWE und Vibe Code Bench, hinten bei FrontierSWE und Terminal-Bench 4.0. Die [Modellkarte](https://deepmind.google/models/model-cards/gemini-4-argon/) vergleicht Argon mit GPT-6 Astra, Claude Fable 5.1 und Claude Opus 5.5:
+
+<table>
+<thead>
+<tr><th>Benchmark (Angaben von Google)</th><th>Gemini 4 Argon</th><th>Bester Konkurrent</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Harvey Legal Agent Benchmark</strong></td><td>19,6 %</td><td>6,7 % (Fable 5.1)</td></tr>
+<tr><td><strong>Vals Finance Agent v2</strong></td><td>65,4 %</td><td>58,9 % (Fable 5.1)</td></tr>
+<tr><td><strong>GraphWalks, 256.000 bis 1 Mio. Token</strong></td><td>84,2 %</td><td>71,8 % (GPT-6 Astra)</td></tr>
+<tr><td><strong>DeepSWE v1.1</strong></td><td>77,9 %</td><td>74,2 % (Opus 5.5)</td></tr>
+<tr><td><strong>OSWorld-2.0 (Computersteuerung, Offline-Teilmenge)</strong></td><td>69,2 %</td><td>72,6 % (GPT-6 Astra, als einziger Konkurrent angegeben)</td></tr>
+<tr><td><strong>FrontierSWE v2</strong></td><td>55,0 %</td><td>65,5 % (GPT-6 Astra)</td></tr>
+<tr><td><strong>Terminal-Bench 4.0</strong></td><td>57,4 %</td><td>66,4 % (Opus 5.5)</td></tr>
+</tbody>
+</table>
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/gemini-4-argon/gemini-4-argon-benchmarks-leads-trails-de.png" alt="Von Google gemeldete Benchmark-Werte: wo Gemini 4 Argon vor Claude Fable 5.1, Claude Opus 5.5 und GPT-6 Astra liegt und wo es zurückliegt" w="1100" h="676" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Differenz zwischen Argons Wert und dem des besten Konkurrenten, Benchmarks aus Googles Modellkarte zu Gemini 4 (Angaben des Herstellers, Oktober 2026).</figcaption>
+</figure>
+
+Nach Googles Zahlen ist Argon am stärksten bei langer, dokumentlastiger Wissensarbeit (Recht, Finanzen, sehr langer Kontext) und durchwachsen beim agentischen Programmieren und bei der Computersteuerung. Die größten Rückstände hat es bei FrontierSWE und bei Terminal-Bench Science (57,6 % gegenüber 68,1 %, ebenfalls in der Modellkarte), wo es jeweils 10,5 Punkte hinter GPT-6 Astra liegt, und bei Terminal-Bench 4.0, wo Opus 5.5 um 9 Punkte führt.
+
+### Unabhängige Ranglisten
+
+Auf der [Text-Rangliste von Arena](https://arena.ai/leaderboard/text) vom 8. November steht Argon (High) mit 1522 auf Platz zwei, hinter Gemini 4 Carbon (High) mit 1527, das noch als vorläufig markiert ist. Claude Opus 5.5 steht mit 1506 auf Platz vier.
+
+[Artificial Analysis](https://artificialanalysis.ai/leaderboards/models) gibt Argon (high) im Intelligence Index v5.0.1 einen Wert von 50, hinter Carbon (high) mit 60, Claude Opus 5.5 (max) mit 59, GPT-6 Astra (max) mit 57 und GPT-6.1 Sol (max) mit 55. Jedes Modell wird in seiner bestbewerteten Einstellung verglichen. Werte aus dem älteren Index v4.3.2 sind nicht vergleichbar: Die 53 Punkte für Argon in Berichten aus der Launch-Woche stammen aus dieser älteren Version.
+
+### Halluzinationen
+
+Im Test AA-Omniscience von Artificial Analysis hat Argon (high) die [niedrigste Halluzinationsrate](https://artificialanalysis.ai/models/gemini-4-argon) der Modelle in der Standardansicht. Diese Kennzahl misst den Anteil falscher Antworten an allen nicht korrekten Antworten (falsch, teilweise richtig oder nicht beantwortet): Wenn Argon eine Frage nicht richtig beantwortet, antwortet es also selten falsch.
+
+Seine Trefferquote im selben Test liegt unter der von Carbon, Opus 5.5 und GPT-6.1 Sol. Eine niedrige Halluzinationsrate heißt hier nicht, dass Argon mehr weiß.
+
+Wie Argon im Vergleich mit allen großen Modellen je nach Aufgabe abschneidet, zeigt unser [Ranking der besten KI-Modelle](https://geotoolbox.ai/blog/best-ai-model). Den direkten Vergleich mit Anthropic findest du unter [Claude vs. Gemini](https://geotoolbox.ai/blog/claude-vs-gemini).
+
+## Gemini 4 Argon vs. Gemini 4 Carbon: Lohnt sich das Warten?
+
+Gemini 4 Carbon ist Googles neueres und stärkeres Modell, vorgestellt am 28. Oktober 2026, rund zwei Wochen nachdem Argon öffentlich verfügbar wurde. Auf Arena und bei Artificial Analysis liegt es derzeit vorne. Nutzen kannst du es aber höchstwahrscheinlich nicht.
+
+Laut Googles [Carbon-Ankündigung](https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-carbon/) geht es zuerst „to a subset of cyber defenders“ im Fairwind-Programm, danach schrittweise an weitere vertrauenswürdige Partner. Für alle anderen nennt Google keinen Termin, nur dass Carbon Entwickler, Unternehmen und Privatnutzer „as soon as possible“ erreichen soll. Argon hat denselben Weg genommen, von der Vorabversion für Cyberabwehr-Partner am 30. September bis zur öffentlichen Freigabe am 13. Oktober.
+
+<table>
+<thead>
+<tr><th></th><th>Gemini 4 Argon</th><th>Gemini 4 Carbon</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Öffentlich seit</strong></td><td>13. Oktober 2026</td><td>Noch nicht (nur Fairwind-Partner)</td></tr>
+<tr><td><strong>Gemini-App / KI-Modus</strong></td><td>AI Pro und Ultra (KI-Modus laut Länderliste nicht in Deutschland, Stand 8. Nov. 2026)</td><td>Nein</td></tr>
+<tr><td><strong>API-Startpreis</strong></td><td>2 $ / 10 $ pro 1 Mio. Token, dann 4 $ / 20 $</td><td>Zu denselben Preisen angekündigt, noch keine öffentliche API</td></tr>
+<tr><td><strong>Arena Text (8. Nov.)</strong></td><td>1522, Platz 2</td><td>1527, Platz 1 (vorläufig)</td></tr>
+<tr><td><strong>Artificial Analysis Index v5.0.1</strong></td><td>50 (high)</td><td>60 (high)</td></tr>
+</tbody>
+</table>
+
+Für die meisten lautet die Antwort: jetzt Argon, denn für Carbon gibt es weder ein Abo noch einen API-Termin. Mit AI Pro oder Ultra hast du Argon schon; in welche Abos Carbon kommt, hat Google nicht gesagt.
+
+Für die API wurde Carbon zu denselben Listenpreisen angekündigt (2 $/10 $ zur Einführung, dann 4 $/20 $). Wie lange Carbons Einführungspreis gilt, hat Google aber nicht festgelegt, und die Kosten pro Aufgabe hängen davon ab, wie viele Token es verbraucht.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/gemini-4-argon/which-gemini-model-decision-flow-de.png" alt="Entscheidungshilfe für die Wahl zwischen Gemini 4 Argon, Gemini 4 Carbon, Gemini 3.1 Pro und Gemini Flash" w="1100" h="929" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Welches Gemini-Modell im November 2026, nach Abo und Aufgabe. Preise von Googles deutscher Tarifseite.</figcaption>
+</figure>
+
+Nicht automatisch zu Argon greifen sollte, wer die API mit hohem Volumen und knappem Budget nutzt. Für Klassifizierung, Extraktion und kurze Antworten kostet ein Flash-Modell pro Token nur einen Bruchteil und verbraucht bei einfachen Aufgaben weniger Token.
+
+## Wo Argon stark ist und wo es schwächelt
+
+Seinen Preis ist Argon bei langen, mehrstufigen Aufgaben wert, bei denen es vor allem viel Material lesen und abwägen muss. Neben den Benchmark-Vorsprüngen oben fallen diese Stärken auf:
+
+- **Sehr lange Ausgaben.** Standardmäßig endet eine Antwort nach 65.536 Token. Mit Long Decode und [Ausführung im Hintergrund](https://aistudio.google.com/docs/latest-model) erzeugt das Modell Abschnitte von bis zu 64.000 Token, die jeweils dort weitermachen, wo der vorige aufgehört hat. Eine einzelne Antwort kann so auf rund 1 Million Token abzüglich deiner Eingabe kommen. Das passt zu großen Refactorings, vollständigen Berichten und umfangreichen Code-Migrationen.
+- **Agentisches Programmieren in Antigravity.** Laut [Googles Launch-Beitrag](https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-argon/) half Argon dem Chrome-Team, Code aus einem Legacy-Ordner mit rund 6 Millionen Zeilen herauszulösen. Google-Teams hätten mit Argon in Antigravity über 35 % mehr Code von Agenten eingereicht und fast ein Drittel weniger Änderungen zurücknehmen müssen. Fallstudien von Herstellern zeigen eher die Obergrenze als den Durchschnitt.
+- **Widerstand gegen Prompt Injection.** Im Gray-Swan-Benchmark für indirekte Prompt Injection meldet Google für Argon eine Erfolgsquote der Angriffe von 0,7 %. Das war das beste Ergebnis, bis [Carbon](https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-carbon/) 0,0 % erreichte. Wichtig ist das, wenn du das Modell im Web surfen oder E-Mails lesen lässt.
+
+Die Schwächen folgen aus derselben Bauweise:
+
+- **Tempo.** Artificial Analysis maß 27,7 Minuten pro Index-Aufgabe, mehr als das Doppelte des Medians.
+- **Kosten pro Aufgabe.** Weil Argon so ausführlich arbeitet, kostet es auf der Rangliste von Artificial Analysis zum Dezember-Listenpreis 9,95 $ pro Aufgabe (zum Einführungspreis etwa die Hälfte). Außerdem leert es das Kontingent der App schnell.
+- **Agentisches Programmieren.** Bei FrontierSWE und Terminal-Bench liegt es hinten. Agenten, die viel über die Shell arbeiten, sind anderswo womöglich besser aufgehoben.
+- **Aktuelles Wissen.** Weil sein Wissen im März 2026 endet, braucht es für alles Neuere die Anbindung an die Suche.
+
+Wenn du vor allem kurze Fragen stellst, zahlst du für Fähigkeiten, die du nicht nutzt.
+
+## So nutzt du Gemini 4 Argon
+
+Je nachdem, ob du eine Chat-App oder eine API willst, gibt es mehrere Wege:
+
+1. **Gemini-App (Web, Android, iOS, macOS):** AI Pro oder Ultra abschließen und im Modellmenü Gemini 4 Argon wählen.
+2. **KI-Modus der Google Suche:** in einem Land auf Googles Liste Argon im Menü der Leiste „Frage stellen“ auswählen. Deutschland gehört Stand 8. November 2026 nicht dazu. Wie der KI-Modus funktioniert, erklärt unser Beitrag zum [Google KI-Modus](https://geotoolbox.ai/blog/what-is-google-ai-mode).
+3. **Google Antigravity:** in Googles agentischer Entwicklungsplattform mit einem bezahlten AI-Pro-Abo oder Ultra die Modellauswahl öffnen.
+4. **Gemini API und Google AI Studio:** die Modell-ID `gemini-4-argon` in einem kostenpflichtigen API-Projekt aufrufen; die [Modellseite](https://aistudio.google.com/docs/models/gemini-4-argon) nennt Limits und Denkstufen.
+5. **Google Cloud oder ein Router:** Googles [Gemini Enterprise Agent Platform](https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/4-argon) für Unternehmensfunktionen nutzen oder einen Router wie [OpenRouter](https://openrouter.ai/google/gemini-4-argon).
+
+Für Firmendaten ist entscheidend, welchen Weg du wählst. Laut Googles [Zusatzbedingungen für die Gemini API](https://ai.google.dev/gemini-api/terms) (gültig seit 23. März 2026) behandelt Google Nutzer im EWR, in der Schweiz und in Großbritannien bei der Datennutzung immer wie zahlende Kunden, auch in AI Studio. Prompts und Antworten fließen dann nicht in die Verbesserung von Googles Produkten ein. Für Argon zahlst du ohnehin ab dem ersten Token. Für die private Gemini-App gelten dagegen die [Datenschutzhinweise für Gemini-Apps](https://support.google.com/gemini/answer/13594961?hl=de): Laut diesen Hinweisen können Prüfer Chats lesen, und Google rät, keine vertraulichen Daten einzugeben. Kunden- und Firmendaten gehören darum in die API oder in Workspace, nicht in ein privates Gemini-Konto.
+
+## Was Argon für deine Marke in der KI-Suche bedeutet
+
+Argon antwortet auch in der Google Suche, allerdings nicht überall. Seit dem 13. Oktober können AI-Pro- und Ultra-Abonnenten in den von Google gelisteten Ländern (USA, Großbritannien, Schweiz, aber kein EU-Staat) ihre Antworten im KI-Modus auf Argon umstellen. Diese Antworten nennen Quellen und gehören zur selben Suche, die deine Kunden ohnehin nutzen. Für Nutzer in Deutschland bleibt es laut dieser Liste beim Standardmodell des KI-Modus.
+
+Was wir bei geotoolbox noch nicht wissen: ob Argon andere Quellen auswählt als das Standardmodell des KI-Modus. Wir haben das nicht getestet, und Google hat sich nicht dazu geäußert. Vergleiche wie [Grok vs. Gemini](https://geotoolbox.ai/blog/grok-vs-gemini) zeigen, wie stark sich das Zitierverhalten zwischen Engines unterscheidet; es lohnt sich daher, das selbst zu prüfen, statt es einfach vorauszusetzen.
+
+Der Schritt ist bei jedem neuen Modell derselbe: Prüf, ob KI-Antworten deine Marke bei den Fragen erwähnen und zitieren, die dir wichtig sind, und bleib dran, wenn sich die Modelle ändern. Der [AI Visibility Tracker](https://geotoolbox.ai/features/ai-visibility-tracker) von geotoolbox schickt deine Prompts unter anderem durch Gemini und den KI-Modus (im Tracker als „Google AI Mode“ geführt) und hält fest, wer genannt und zitiert wird, auch für den deutschen Markt. Im Starter-Tarif gehören diese beiden nicht zu den festen Engines; bei Plus und Growth kannst du sie in deiner Engine-Auswahl dazunehmen, Pro und Scale nutzen alle Engines.
+
+Die Gemini- und KI-Modus-Ergebnisse jedes Trackers, auch unseres, zeigen, was ein Standardnutzer sieht: Argon antwortet nur, wenn ein angemeldeter Abonnent es auswählt.
+
+## Häufige Fragen
+
+### Ist Gemini 4 Argon besser als Claude Opus 5.5?
+Das hängt von der Aufgabe ab. Auf der [Text-Rangliste von Arena](https://arena.ai/leaderboard/text) liegt Argon vor Opus 5.5 (1522 zu 1506 am 8. November 2026) und in Googles Tests bei juristischen und finanziellen Aufgaben sowie bei langem Kontext vorne. Opus 5.5 führt dagegen bei Terminal-Bench 4.0 und im [Index von Artificial Analysis](https://artificialanalysis.ai/leaderboards/models) (59 auf maximaler Stufe gegenüber 50 für Argon auf hoher Stufe, jeweils in der besten Einstellung). Ab dem 1. Dezember 2026 kosten beide in der API 4 $ Eingabe und 20 $ Ausgabe pro Million Token, laut [Google](https://aistudio.google.com/docs/pricing) und [Anthropic](https://platform.claude.com/docs/en/about-claude/pricing).
+
+### Ist Gemini 4 Argon besser als ChatGPT?
+Das hängt davon ab, was du misst. Verglichen mit GPT-6.1 Sol, dem OpenAI-Modell in Argons Preisklasse, liegt Argon auf der [Text-Rangliste von Arena](https://arena.ai/leaderboard/text) mit 1522 deutlich vor GPT-6.1 Sol auf maximaler Stufe (1482): Menschen bevorzugen hier die Antworten von Argon. Im [Index von Artificial Analysis](https://artificialanalysis.ai/leaderboards/models) erreicht GPT-6.1 Sol auf maximaler Stufe 55 Punkte gegenüber Argons 50 und kostet 1,27 $ pro Aufgabe statt 9,95 $. Der [API-Listenpreis](https://developers.openai.com/api/docs/pricing) von GPT-6.1 Sol liegt bei 2 $ Eingabe und 10 $ Ausgabe pro Million Token für Prompts bis 272.000 Token, so viel wie Argons Einführungspreis bis zum 30. November 2026.
+
+### Kann ich Gemini 4 Argon in Deutschland nutzen?
+In der Gemini-App ja: Google hat Argon am 13. Oktober 2026 weltweit für AI Pro und Ultra freigeschaltet, in Deutschland ab 21,99 € im Monat. Im KI-Modus der Google Suche nicht: Googles [Länderliste für Argon im KI-Modus](https://support.google.com/websearch/answer/16011537?hl=de) enthält die USA, Großbritannien und die Schweiz, aber keinen EU-Staat (Stand 8. November 2026). Über die Gemini API und AI Studio kannst du Argon von Deutschland aus mit einem kostenpflichtigen Projekt nutzen.
+
+## Quellen
+
+- Gemini 4 Argon: our next era of frontier intelligence (Ankündigung vom 30. September, Fairwind-Vorabversion) - Google, 30. September 2026 - `blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon`
+- Gemini 4 Argon: built to solve your hardest problems (allgemeine Verfügbarkeit, Zugang nach Abo, Fußnote zum Einführungspreis) - Google, 13. Oktober 2026 - `blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-argon`
+- Gemini 4 Argon: Entwickelt, um eure schwierigsten Probleme zu lösen (deutsche Fassung des Launch-Beitrags) - Google Deutschland, 13. Oktober 2026 - `blog.google/intl/de-de/produkte/suchen-entdecken/gemini-4`
+- Google AI Pro und Ultra (deutsche Tarifseite: Preise in Euro, Modelle je Abo, Fußnoten zu Nutzungslimits und KI-Modus) - Google, abgerufen am 8. November 2026 aus Deutschland - `gemini.google/de/subscriptions`
+- Google AI-Abos mit Cloud-Speicher (AI Plus 4,99 € und 9,99 €, Pro, Ultra, Fußnote zum KI-Modus) - Google One, abgerufen am 8. November 2026 aus Deutschland - `one.google.com/intl/de_de/about/google-ai-plans`
+- Mit dem KI-Modus in der Google Suche KI-basierte Antworten erhalten (Gemini 4 Argon im KI-Modus, Bedingungen, Länderliste) - Google Suche Hilfe, abgerufen am 8. November 2026 - `support.google.com/websearch/answer/16011537`
+- Gemini Developer API pricing (Gemini 4 Argon: Standard, Batch, Flex, Priority) - Google AI for Developers, abgerufen am 8. November 2026 - `aistudio.google.com/docs/pricing`
+- Gemini 4 Argon model page (Modell-ID, Token-Limits, Denkstufen) - Google AI for Developers, abgerufen am 8. November 2026 - `aistudio.google.com/docs/models/gemini-4-argon`
+- What's new in Gemini 4 Argon (Long Decode, Ausführung im Hintergrund, Denkstufen) - Google AI for Developers, abgerufen am 8. November 2026 - `aistudio.google.com/docs/latest-model`
+- Available regions for Google AI Studio and Gemini API (Deutschland gelistet) - Google AI for Developers, abgerufen am 8. November 2026 - `ai.google.dev/gemini-api/docs/available-regions`
+- Gemini API Additional Terms of Service (EWR, Schweiz, Großbritannien; gültig seit 23. März 2026) - Google, abgerufen am 8. November 2026 - `ai.google.dev/gemini-api/terms`
+- Datenschutzhinweise für Gemini-Apps (Prüfer, vertrauliche Daten) - Gemini-Apps Hilfe, abgerufen am 8. November 2026 - `support.google.com/gemini/answer/13594961`
+- Gemini 4 model card (Benchmark-Tabelle, Wissensstand) - Google DeepMind, 13. Oktober 2026 - `deepmind.google/models/model-cards/gemini-4-argon`
+- Models in Google Antigravity (Verfügbarkeit nach Abo) - Google Antigravity, abgerufen am 8. November 2026 - `antigravity.google/docs/models`
+- Gemini 4 Argon auf der Gemini Enterprise Agent Platform (Denkstufen) - Google Cloud, 7. November 2026 - `docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/4-argon`
+- Über Gemini-Modelle (Denkstufen, Standard in der App) - Gemini-Apps Hilfe, abgerufen am 8. November 2026 - `support.google.com/gemini/answer/18648722`
+- Gemini 4 Carbon announcement (Fairwind-Zugang, Startpreis, Gray-Swan-Ergebnis) - Google, 28. Oktober 2026 - `blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-carbon`
+- Text Arena leaderboard - Arena, 8. November 2026 - `arena.ai/leaderboard/text`
+- LLM Leaderboard (Intelligence Index v5.0.1, Kosten pro Aufgabe) - Artificial Analysis, abgerufen am 8. November 2026 - `artificialanalysis.ai/leaderboards/models`
+- Gemini 4 Argon model analysis (Index v5.0.1, AA-Omniscience, Kosten pro Aufgabe; ältere Fassung vom 14. Oktober mit Index v4.3.2) - Artificial Analysis, abgerufen am 8. November 2026 - `artificialanalysis.ai/models/gemini-4-argon`
+- Gemini 4 Argon: Google öffnet Spitzenmodell für zahlende Nutzer (Kosten pro Aufgabe zum Einführungspreis, Hochrechnung) - heise online, Oktober 2026 - `heise.de/news/Gemini-4-Argon-Google-oeffnet-Spitzenmodell-fuer-zahlende-Nutzer-11487463.html`
+- Claude API pricing (Opus 5.5) - Anthropic, abgerufen am 8. November 2026 - `platform.claude.com/docs/en/about-claude/pricing`
+- OpenAI API pricing (GPT-6.1 Sol) - OpenAI, abgerufen am 8. November 2026 - `developers.openai.com/api/docs/pricing`
+- Gemini 4 Argon auf OpenRouter - OpenRouter, abgerufen am 8. November 2026 - `openrouter.ai/google/gemini-4-argon`
+- „what's wrong with Argon's usage limit?“ - r/GeminiAI, Oktober 2026 - `reddit.com/r/GeminiAI/comments/1xd6kze/whats_wrong_with_argons_usage_limit`
+- „Gemini 4 Argon unavailable on Jio Google AI Pro“ - Google AI Developers Forum, Oktober 2026 - `discuss.ai.google.dev/t/subject-gemini-4-argon-unavailable-on-jio-google-ai-pro/189886`
+- „Gemini 4 Argon unavailable for paid Google AI Pro family members“ - Google AI Developers Forum, Oktober 2026 - `discuss.ai.google.dev/t/gemini-4-argon-unavailable-for-paid-google-ai-pro-family-members-only-claude-4-6-available/189933`
+- „Active paid Google AI Pro shows Antigravity Starter Quota on app 2.29.0“ - Google AI Developers Forum, November 2026 - `discuss.ai.google.dev/t/active-paid-google-ai-pro-shows-antigravity-starter-quota-on-app-2-29-0/198730`
