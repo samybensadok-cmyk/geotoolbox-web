@@ -2,8 +2,8 @@
 title: "JavaScript SEO: What Google and AI Crawlers Actually See"
 description: "JavaScript SEO in 2026: Google renders scripts, but ChatGPT-User, Claude-User and PerplexityBot read raw HTML in the tests we found. See which bots run JS."
 date: "2026-10-04"
-updated: "2026-10-13"
-recheckBy: "2026-10-18"  # a 2026-09-30 report says OpenAI crawlers began rendering 2026-09-25; re-run the bot table
+updated: "2026-11-09"
+recheckBy: "2026-12-01"  # OAI-SearchBot rendering new (Genezio 2026-10-22), GPTBot disputed, OpenAI may announce; re-run the bot table
 author: "Samy BEN SADOK"
 tags: ["javascript-seo", "technical-seo", "ai-crawlers", "rendering", "ai-visibility", "guide"]
 draft: false
@@ -11,7 +11,7 @@ draft: false
 
 JavaScript SEO now serves a second audience. Googlebot renders your scripts, within limits worth knowing. In the tests we found, ChatGPT-User, Claude-User and PerplexityBot read only the HTML, so a page whose text only exists after a script runs can rank in Google and still look empty to them.
 
-The evidence is dated, uneven and moving: one report says OpenAI's crawlers began rendering on September 25. The cheapest fix is the same either way: get the text into the first HTML response.
+The evidence is dated, uneven and moving: three site owners' logs now show OpenAI's search crawler, OAI-SearchBot, running JavaScript, one of them with an endpoint only running JavaScript can call (October 2026). The cheapest fix is the same either way: get the text into the first HTML response.
 
 ## What JavaScript SEO Means in 2026
 
@@ -38,7 +38,7 @@ Before you read on, open view-source on your most important page and search for 
 
 ### The 2MB Cutoff
 
-[Google's March 2026 crawler post](https://developers.google.com/search/blog/2026/03/crawler-blog-post) says Googlebot fetches up to 2MB of any individual URL except PDFs, headers included, and stops there. Bytes past the cutoff are not fetched, not rendered and not indexed. Each script and stylesheet gets its own separate 2MB counter, so a bundle over 2MB loses its tail even when the HTML is tiny. The 15MB figure you may have seen was Googlebot's documented limit in Google's [2022 post on the 15MB limit](https://developers.google.com/search/blog/2022/06/googlebot-15mb); the 2026 post puts Googlebot at 2MB and keeps 15MB as the default for other Google crawlers that set no limit.
+[Google's March 2026 crawler post](https://developers.google.com/search/blog/2026/03/crawler-blog-post) says Googlebot fetches up to 2MB of any individual URL except PDFs, HTTP response headers included, and stops there. Bytes past the cutoff are not fetched, not rendered and not indexed. Each script and stylesheet gets its own separate 2MB counter, so a bundle over 2MB loses its tail even when the HTML is tiny. The 15MB figure you may have seen was Googlebot's documented limit in Google's [2022 post on the 15MB limit](https://developers.google.com/search/blog/2022/06/googlebot-15mb); the 2026 post puts Googlebot at 2MB and keeps 15MB as the default for other Google crawlers that set no limit.
 
 ### No Published Render Timeout
 
@@ -60,7 +60,7 @@ Google's own guide adds a line worth keeping: server-side or pre-rendering "is s
 
 ## Which AI Crawlers Execute JavaScript?
 
-In the tests we found, ChatGPT-User, Claude-User and PerplexityBot read the HTML your server sends and stop, with an open question about OpenAI's crawlers below. The search engine crawlers Googlebot, Applebot and, selectively, Bingbot render pages, and several assistants outside the US did in the one test that measured them.
+In the tests we found, ChatGPT-User, Claude-User and PerplexityBot read the HTML your server sends and stop. The search engine crawlers Googlebot, Applebot and, selectively, Bingbot render pages, OpenAI's search crawler OAI-SearchBot now does on some sites, and several assistants outside the US did in the one test that measured them.
 
 Separate the kinds of bot first, because they behave differently. Training crawlers collect data for models, search crawlers build the index an assistant draws on, and user fetchers load a URL the moment a person asks. [Our AI crawler list](https://geotoolbox.ai/blog/ai-crawlers) names each bot and its job. A user fetcher like ChatGPT-User decides whether a link pasted into a chat gets read properly.
 
@@ -72,12 +72,12 @@ Separate the kinds of bot first, because they behave differently. Training crawl
     <tr><td>Googlebot</td><td>Search indexing</td><td>Yes</td><td>Vendor doc: <a href="https://developers.google.com/search/blog/2026/03/crawler-blog-post">Google crawler post</a>, March 2026. To appear as a supporting link in AI Overviews or AI Mode, a page must be indexed and eligible to appear in Google Search with a snippet (<a href="https://developers.google.com/search/docs/appearance/ai-features">Google</a>, December 2025)</td></tr>
     <tr><td>Applebot</td><td>Apple search</td><td>Yes</td><td>Vendor doc: Apple says Applebot <a href="https://support.apple.com/en-us/119829">may render</a> content in a browser. Independent test: 3,133 script fetches across 4,838 page reads (<a href="https://www.forgeaibotlog.com/articles/can-ai-crawlers-execute-javascript/">Forge</a>, September 2026)</td></tr>
     <tr><td>Bingbot</td><td>Bing index</td><td>Selectively</td><td>Vendor doc: Bing says Bingbot <a href="https://blogs.bing.com/webmaster/2018/10/bingbot-Series-JavaScript,-Dynamic-Rendering,-and-Cloaking-Oh-My/">is generally able to render</a> JavaScript but not at scale, and recommends dynamic rendering (October 2018). Independent test: scripts fetched on roughly 1 in 800 page reads (<a href="https://www.forgeaibotlog.com/articles/can-ai-crawlers-execute-javascript/">Forge</a>, September 2026)</td></tr>
-    <tr><td>Gemini (a URL pasted into the app)</td><td>User fetch</td><td>Disputed</td><td>Independent test: raw HTML only in <a href="https://www.searchengineworld.com/do-ai-assistants-actually-render-your-javascript-when-grounding-we-put-it-to-the-test">Search Engine World</a> (June 2026) and <a href="https://www.forgeaibotlog.com/articles/can-ai-crawlers-execute-javascript/">Forge</a> (September 2026). <a href="https://www.searchviu.com/en/schema-markup-and-ai-in-2025-what-chatgpt-claude-perplexity-gemini-really-see/">searchVIU</a> (October 2025) saw it return a script-written price. <a href="https://vercel.com/blog/the-rise-of-the-ai-crawler">Vercel</a> (December 2024) said Gemini's crawler uses Googlebot's infrastructure, a different path from a pasted URL</td></tr>
-    <tr><td>OAI-SearchBot</td><td>ChatGPT search crawler</td><td>Almost never, per logs to September 24</td><td>Independent test: 10 script fetches across 1,738 page requests; one page loaded browser-style (<a href="https://www.forgeaibotlog.com/articles/can-ai-crawlers-execute-javascript/">Forge</a>). A <a href="https://dev.to/hisashispace/traffic-from-chatgpt-jumped-is-it-because-its-crawlers-now-run-javascript-5961">September 30 report</a> from the author's own server says rendering began September 25</td></tr>
-    <tr><td>GPTBot</td><td>OpenAI training crawler</td><td>No, per logs to September 24</td><td>Independent test: 37 page requests and no script fetches (<a href="https://www.forgeaibotlog.com/articles/can-ai-crawlers-execute-javascript/">Forge</a>). The same September 30 report says GPTBot began rendering September 25; the author found no OpenAI announcement</td></tr>
+    <tr><td>Gemini (a URL pasted into the app)</td><td>User fetch</td><td>Disputed</td><td>Independent test: raw HTML only in <a href="https://www.searchengineworld.com/do-ai-assistants-actually-render-your-javascript-when-grounding-we-put-it-to-the-test">Search Engine World</a> (June 2026) and <a href="https://www.forgeaibotlog.com/articles/can-ai-crawlers-execute-javascript/">Forge</a> (September 2026). <a href="https://www.searchviu.com/en/guides/schema-markup-ai/">searchVIU</a> (October 2025) saw it return a script-written price. <a href="https://vercel.com/blog/the-rise-of-the-ai-crawler">Vercel</a> (December 2024) said Gemini's crawler uses Googlebot's infrastructure, a different path from a pasted URL</td></tr>
+    <tr><td>OAI-SearchBot</td><td>ChatGPT search crawler</td><td>Yes, on some sites, after a delay</td><td>Independent test: 10 script fetches across 1,738 page requests to September 24, one page loaded browser-style (<a href="https://www.forgeaibotlog.com/articles/can-ai-crawlers-execute-javascript/">Forge</a>). Later site-owner logs show rendering: <a href="https://crawl-lab.com/en/crawlers/oai-searchbot/">Crawl Lab</a> (July 20 to 27, 2026: 33.3% of requests carried Next.js's ?_rsc= parameter), a <a href="https://dev.to/hisashispace/traffic-from-chatgpt-jumped-is-it-because-its-crawlers-now-run-javascript-5961">September 30 report</a> (from September 25) and <a href="https://genezio.com/research/openai-crawler-runs-javascript/">Genezio</a> (October 22, 2026), which logged a call to an endpoint only running JavaScript can reach, from OpenAI's IP ranges. A <a href="https://bogdanripa.substack.com/p/an-analysis-of-openais-bots">co-founder's write-up of the same test</a> (log of October 8 to 22) puts the scripts a median 32 minutes after the HTML, from many IP addresses. All three checked OpenAI's IP ranges; OpenAI has announced nothing</td></tr>
+    <tr><td>GPTBot</td><td>OpenAI training crawler</td><td>Disputed</td><td>Independent test: 37 page requests and no script fetches to September 24 (<a href="https://www.forgeaibotlog.com/articles/can-ai-crawlers-execute-javascript/">Forge</a>). The September 30 report says GPTBot began rendering September 25; Crawl Lab saw no ?_rsc= requests from it in July, and <a href="https://bogdanripa.substack.com/p/an-analysis-of-openais-bots">a Genezio co-founder's October log</a> saw it fetch scripts and stylesheets without proof they ran. <a href="https://jsseo.dev/findings/javascript-execution-has-two-depths/">JS SEO Lab</a> logged seven beacon calls from GPTBot's inline script, from two addresses on OpenAI's published list, and none from a React component. No OpenAI announcement</td></tr>
     <tr><td>ChatGPT-User</td><td>User fetch</td><td>No</td><td>Independent test: 37,045 page reads, 0 script fetches (<a href="https://www.forgeaibotlog.com/articles/can-ai-crawlers-execute-javascript/">Forge</a>). The ChatGPT assistant reported the HTML-written value in the <a href="https://www.searchengineworld.com/do-ai-assistants-actually-render-your-javascript-when-grounding-we-put-it-to-the-test">Search Engine World</a> and Forge tests, and Forge matched its fetch to ChatGPT-User</td></tr>
     <tr><td>ClaudeBot and Claude-User</td><td>Training crawler and user fetch</td><td>No</td><td>Independent test: Claude-User 10,028 page reads and ClaudeBot 915 page requests, no script fetches (<a href="https://www.forgeaibotlog.com/articles/can-ai-crawlers-execute-javascript/">Forge</a>). Vendor doc, API tool only: Anthropic says its <a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-fetch-tool">web fetch tool</a> does not support JavaScript-rendered sites</td></tr>
-    <tr><td>PerplexityBot</td><td>Perplexity search crawler</td><td>No in logs, disputed by one test</td><td>Independent test: 3,193 page requests, 0 script fetches (<a href="https://www.forgeaibotlog.com/articles/can-ai-crawlers-execute-javascript/">Forge</a>). <a href="https://www.searchviu.com/en/schema-markup-and-ai-in-2025-what-chatgpt-claude-perplexity-gemini-really-see/">searchVIU</a> saw Perplexity return a script-written price after indexing; the test does not show how that content reached the index</td></tr>
+    <tr><td>PerplexityBot</td><td>Perplexity search crawler</td><td>No in logs, disputed by one test</td><td>Independent test: 3,193 page requests, 0 script fetches (<a href="https://www.forgeaibotlog.com/articles/can-ai-crawlers-execute-javascript/">Forge</a>). <a href="https://www.searchviu.com/en/guides/schema-markup-ai/">searchVIU</a> saw Perplexity return a script-written price after indexing; the test does not show how that content reached the index</td></tr>
     <tr><td>DeepSeek, Qwen, Kimi, ERNIE, Mistral</td><td>User fetch</td><td>Yes, in one test</td><td>Independent test: each reported the number only a script could write, one prompt per assistant (<a href="https://www.searchengineworld.com/do-ai-assistants-actually-render-your-javascript-when-grounding-we-put-it-to-the-test">Search Engine World</a>, June 2026). Meta AI and Copilot reported the HTML value in the same test</td></tr>
     <tr><td>Grok</td><td>User fetch</td><td>Ran it, then ignored it</td><td>Independent test: a script executed on one node, but the answer quoted the HTML value (<a href="https://www.searchengineworld.com/do-ai-assistants-actually-render-your-javascript-when-grounding-we-put-it-to-the-test">Search Engine World</a>)</td></tr>
   </tbody>
@@ -87,11 +87,11 @@ Separate the kinds of bot first, because they behave differently. Training crawl
 
 Read the "No" rows as observations, not announcements. OpenAI's and Perplexity's crawler pages say nothing about JavaScript either way, and Anthropic's statement covers its API tool rather than ClaudeBot.
 
-The tests have their own limits. Search Engine World is an SEO publication, Forge makes a bot-log plugin, searchVIU sells SEO monitoring, and Vercel is a hosting vendor. We sell a related check ourselves (the Content Analyzer, below), so weigh our reading the same way. Each test is also a snapshot: one site queried once per assistant, one news site's 30-day log, one fresh test page. Forge's bot table counts requests by name without checking them against published IP ranges. We did not test any of these bots ourselves.
+The tests have their own limits. Search Engine World is an SEO publication, Forge makes a bot-log plugin, searchVIU sells SEO monitoring, Vercel is a hosting vendor, Genezio sells AI visibility analytics, and Crawl Lab publishes a free log analyzer. We sell a related check ourselves (the Content Analyzer, below), so weigh our reading the same way. Each test is also a snapshot: one site queried once per assistant, one news site's 30-day log, one fresh test page. Forge's bot table counts requests by name without checking them against published IP ranges. We did not test any of these bots ourselves.
 
 The "AI crawlers don't run JavaScript" claim began with a [December 2024 Vercel and MERJ analysis](https://vercel.com/blog/the-rise-of-the-ai-crawler). It found that none of the OpenAI, Anthropic, Meta, ByteDance or Perplexity crawlers it measured rendered JavaScript, while Gemini used Googlebot's infrastructure and Applebot rendered through a browser. It is no longer a single study, and the newer ones agree on ChatGPT and Claude, with the Perplexity, Gemini and OpenAI-crawler caveats in the table.
 
-One later report cuts the other way. A [September 30 developer post](https://dev.to/hisashispace/traffic-from-chatgpt-jumped-is-it-because-its-crawlers-now-run-javascript-5961) from the author's own server, with requests checked against OpenAI's published IP ranges, says OAI-SearchBot and GPTBot began rendering JavaScript on September 25, just after Forge's log ends. The evidence is Next.js prefetch requests that only appear when a page is rendered, and the detailed counts come from one Next.js site. Those prefetches also inflate raw request counts. The author found no OpenAI announcement, so treat the OpenAI crawler rows as in flux and re-run the test yourself.
+Newer logs cut the other way, at least for OpenAI's search crawler. A developer saw Next.js prefetch requests, which only a rendered page sends, from OAI-SearchBot and GPTBot on their own sites from September 25, and Crawl Lab had logged the same pattern for OAI-SearchBot in July. The strongest evidence comes from Genezio in October 2026: a script on its pages called an endpoint nothing links to, and OAI-SearchBot triggered that call from OpenAI's published IP ranges. A co-founder's write-up of the same test puts the rendering about half an hour after the HTML fetch. Each of these comes from one site owner's servers, and Genezio sells AI visibility analytics. OpenAI has announced nothing, so treat OAI-SearchBot as rendering some pages after a delay, GPTBot as an open question, and re-run the test yourself.
 
 You may also see a "69 percent" statistic attached to AI crawlers that cannot execute JavaScript. [Forge](https://www.forgeaibotlog.com/articles/can-ai-crawlers-execute-javascript/) says that figure counts names on a list of 23 crawlers and measures nothing.
 
@@ -105,7 +105,7 @@ Fetching a script is not proof of running it. [Vercel's data](https://vercel.com
 
 Bingbot is the hardest row to pin down. It renders selectively, and Microsoft's last detailed statement we found dates from October 2018 and gives no rule for which pages it renders. If you care about ChatGPT search, our guide to [how ChatGPT search works](https://geotoolbox.ai/blog/how-chatgpt-search-works) covers which index it draws on.
 
-The practical read: Google and Apple can run your scripts. The big US assistants mostly won't, so text that only a script writes is not reliably there for them.
+The practical read: Google and Apple can run your scripts, and OpenAI's search crawler now does on some sites, after a delay. ChatGPT-User, Claude-User and PerplexityBot didn't in any test, so text that only a script writes is not reliably there for them.
 
 ## How to Test What a Bot Sees
 
@@ -114,13 +114,13 @@ Compare the HTML your server returns with the DOM a browser builds. The DOM is t
 1. **Fetch the raw HTML.** Request the page the way a bot does and save the response without running anything. A spoofed user agent only tests how your own server and firewall respond. It does not prove the real bot gets through, and a fetcher may serve a cached copy, so a clean result is a floor, not proof.
 
    ```bash
-   curl -s -A "GPTBot/1.1" https://example.com/page > raw.html
+   curl -s -A "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatible; GPTBot/1.4; +https://openai.com/gptbot" https://example.com/page > raw.html
    ```
 
 2. **Capture the rendered DOM.** In Chrome DevTools, compare View Source (the HTML source code your server sent) with the Elements panel (the live DOM). For Google's version, Google's guide says to use the Rich Results Test or the URL Inspection tool and [look at the rendered HTML](https://developers.google.com/search/docs/crawling-indexing/javascript/javascript-seo-basics). If the content is missing from that rendered HTML, the guide says Google can't index it.
 3. **Diff what matters.** Pull the JSON-LD blocks out of the raw HTML first, then strip scripts and styles before you count body text and links, and compare the title, canonical tag, robots meta tag, H1, links, JSON-LD and the main copy against the rendered version.
 4. **Rule out the firewall.** A 403 or a challenge page looks like a rendering failure in your tools but is a delivery failure. A CDN or firewall rule can turn AI crawlers away even when robots.txt allows them, as our [GPTBot guide](https://geotoolbox.ai/blog/gptbot) explains, so check status codes in your CDN logs before you rewrite the app.
-5. **Read your server logs.** A rendering bot usually asks for the page and then for its scripts, stylesheets and Ajax or API calls. A fetcher asks for the page and leaves. That difference is how [Forge](https://www.forgeaibotlog.com/articles/can-ai-crawlers-execute-javascript/) sorted the bots in the table above, and it needs no special tooling. Treat logs as supporting evidence, since caching or inline scripts can hide a render; a unique marker that only a script can write is the stronger test. Check the requests against any IP ranges the vendor publishes, since a user agent string alone proves nothing.
+5. **Read your server logs.** A rendering bot usually asks for the page and then for its scripts, stylesheets and Ajax or API calls. A fetcher asks for the page and leaves. That difference is how [Forge](https://www.forgeaibotlog.com/articles/can-ai-crawlers-execute-javascript/) sorted the bots in the table above, and it needs no special tooling. Some renderers come back later: in one October 2026 log, OAI-SearchBot fetched scripts about half an hour after the HTML, from different IP addresses. Treat logs as supporting evidence, since caching or inline scripts can hide a render; a unique marker that only a script can write is the stronger test. Check the requests against any IP ranges the vendor publishes, since a user agent string alone proves nothing.
 
 Tested, October 4, 2026: we ran steps 1 to 3 on one product page built in different ways, as local fixtures served from a local web server. The first is a client-rendered shell, the second is server-rendered HTML, and the third is server-rendered HTML that a script then adds one line to. Each cell shows the raw response, then the rendered DOM in Chromium.
 
@@ -211,7 +211,7 @@ Google Search does not interact with your page, according to [its lazy-loading g
 
 ### Structured Data Added by Script
 
-Google's guide says you can generate JSON-LD with JavaScript and inject it, and to test the result. Assistants are a different case. In [searchVIU's October 2025 test](https://www.searchviu.com/en/schema-markup-and-ai-in-2025-what-chatgpt-claude-perplexity-gemini-really-see/), a price that existed only in JSON-LD, whether static or script-injected, was returned by none of the assistants it tested. That is one test, and the assistants ignored JSON-LD whether or not a script injected it. Put the key facts in visible HTML text, and ship the JSON-LD in the HTML as well, so Google and any parser that skips scripts can read it without rendering.
+Google's guide says you can generate JSON-LD with JavaScript and inject it, and to test the result. Assistants are a different case. In [searchVIU's October 2025 test](https://www.searchviu.com/en/guides/schema-markup-ai/), a price that existed only in JSON-LD, whether static or script-injected, was returned by none of the assistants it tested. That is one test, and the assistants ignored JSON-LD whether or not a script injected it. Put the key facts in visible HTML text, and ship the JSON-LD in the HTML as well, so Google and any parser that skips scripts can read it without rendering.
 
 Our guide to [schema markup for AI search](https://geotoolbox.ai/blog/schema-markup-for-ai) covers what it does and does not do.
 
@@ -221,7 +221,7 @@ A firewall that makes visitors prove they are human with JavaScript shows a non-
 
 ## What to Fix First
 
-Does JavaScript hurt SEO? For Google, usually not, as long as the page renders, returns correct status codes and stays under the size cutoff. For AI search, JavaScript-only text is a retrieval risk, especially with direct fetchers that don't render, as ChatGPT-User and Claude-User didn't in the tests above. How much of it reaches an answer through search indexes varies, and OpenAI's crawlers may be changing.
+Does JavaScript hurt SEO? For Google, usually not, as long as the page renders, returns correct status codes and stays under the size cutoff. For AI search, JavaScript-only text is a retrieval risk, especially with direct fetchers that don't render, as ChatGPT-User and Claude-User didn't in the tests above. How much of it reaches an answer through search indexes varies, and OpenAI's search crawler now renders some pages. In one October 2026 log it did so about half an hour after fetching them.
 
 Fix in this order, since each step makes the next one easier:
 
@@ -245,7 +245,7 @@ Where React renders matters more than React itself. A React app rendered on the 
 
 ### Can ChatGPT, Claude, and Perplexity read JavaScript?
 
-In the tests we found, ChatGPT-User, Claude-User and PerplexityBot fetched no scripts in a 30-day log of one news site, and in Search Engine World's test ChatGPT, Claude and Perplexity reported the HTML value (Forge's Perplexity test returned no result). The exception to watch is OpenAI's crawlers, OAI-SearchBot for search and GPTBot for training: a [September 30 report](https://dev.to/hisashispace/traffic-from-chatgpt-jumped-is-it-because-its-crawlers-now-run-javascript-5961) from the author's own server says both began rendering on September 25, and the author found no OpenAI announcement. Their vendors' own bot pages do not confirm any of this, so treat it as measured behavior that could change.
+In the tests we found, ChatGPT-User, Claude-User and PerplexityBot fetched no scripts in a 30-day log of one news site, and in Search Engine World's test ChatGPT, Claude and Perplexity reported the HTML value (Forge's Perplexity test returned no result). The exception is OpenAI's search crawler, OAI-SearchBot: three site owners' logs from July to October 2026 show it running JavaScript, one with an endpoint only running JavaScript can reach ([Genezio](https://genezio.com/research/openai-crawler-runs-javascript/)). For GPTBot, OpenAI's training crawler, the evidence is disputed. OpenAI's and Perplexity's bot pages say nothing about JavaScript (checked November 9, 2026), so treat this as measured behavior that could change.
 
 ### Why does my Next.js page say "Discovered - currently not indexed"?
 
@@ -254,17 +254,21 @@ Rendering is rarely the only suspect. In an [r/nextjs thread](https://www.reddit
 ## Sources
 
 - Anthropic - Web fetch tool, API documentation (undated, read October 4, 2026) - `platform.claude.com/docs/en/agents-and-tools/tool-use/web-fetch-tool`
-- Apple - About Applebot (undated, read October 4, 2026) - `support.apple.com/en-us/119829`
+- Apple - About Applebot (published September 4, 2026) - `support.apple.com/en-us/119829`
 - Bing Webmaster Blog - bingbot Series: JavaScript, Dynamic Rendering, and Cloaking. Oh My! (October 31, 2018) - `blogs.bing.com/webmaster/2018/10/bingbot-Series-JavaScript,-Dynamic-Rendering,-and-Cloaking-Oh-My`
+- Bogdan Ripa - An analysis of OpenAI's bots (October 22, 2026; log October 8 to 22) - `bogdanripa.substack.com/p/an-analysis-of-openais-bots`
+- Crawl Lab - OAI-SearchBot (undated; log July 20 to 27, 2026) - `crawl-lab.com/en/crawlers/oai-searchbot`
 - DEV Community, hisashispace - Traffic from ChatGPT jumped! Is it because its crawlers now run JavaScript? (September 30, 2026) - `dev.to/hisashispace/traffic-from-chatgpt-jumped-is-it-because-its-crawlers-now-run-javascript-5961`
 - Forge AI Bot Log - Can AI crawlers run JavaScript? (published September 24, 2026; 30-day log to September 24; code-word test September 25) - `forgeaibotlog.com/articles/can-ai-crawlers-execute-javascript`
+- Genezio, Bogdan Vlad - OpenAI's Search Crawler Runs JavaScript. Here's the Proof. (October 22, 2026) - `genezio.com/research/openai-crawler-runs-javascript`
 - Google Search Central Blog - Googlebot and the 15 MB thing (June 28, 2022) - `developers.google.com/search/blog/2022/06/googlebot-15mb`
 - Google Search Central - AI features and your website (last updated December 10, 2025) - `developers.google.com/search/docs/appearance/ai-features`
 - Google Search Central - Fix Lazy-Loaded Website Content (last updated December 10, 2025) - `developers.google.com/search/docs/crawling-indexing/javascript/lazy-loading`
 - Google Search Central - Dynamic rendering as a workaround (last updated December 10, 2025) - `developers.google.com/search/docs/crawling-indexing/javascript/dynamic-rendering`
 - Google Search Central - Understand JavaScript SEO basics (last updated March 4, 2026) - `developers.google.com/search/docs/crawling-indexing/javascript/javascript-seo-basics`
-- Google Search Central Blog - Inside Googlebot: demystifying crawling, fetching, and the bytes we process (March 31, 2026) - `developers.google.com/search/blog/2026/03/crawler-blog-post`
+- Google Search Central Blog - Inside Googlebot: demystifying crawling, fetching, and the bytes we process (March 31, 2026; corrected October 29, 2026) - `developers.google.com/search/blog/2026/03/crawler-blog-post`
+- JS SEO Lab, Jakub Sawa - JavaScript execution has two depths, and bots split cleanly between them (August 6, 2026, updated October 25, 2026) - `jsseo.dev/findings/javascript-execution-has-two-depths`
 - Reddit r/nextjs - Why Google refuses to index many Next.js sites (thread 1qs38nw, read October 4, 2026) - `reddit.com/r/nextjs/comments/1qs38nw`
 - Search Engine World, Andre Alpar - Do AI assistants actually render your JavaScript when grounding? (June 9, 2026, updated July 2, 2026) - `searchengineworld.com/do-ai-assistants-actually-render-your-javascript-when-grounding-we-put-it-to-the-test`
-- searchVIU - Schema Markup and AI in 2025 (December 2, 2025; test run October 30, 2025) - `searchviu.com/en/schema-markup-and-ai-in-2025-what-chatgpt-claude-perplexity-gemini-really-see`
+- searchVIU - Do AI systems really read schema markup? (December 2, 2025, updated October 15, 2026; test run October 30, 2025) - `searchviu.com/en/guides/schema-markup-ai`
 - Vercel with MERJ - The rise of the AI crawler (December 17, 2024) - `vercel.com/blog/the-rise-of-the-ai-crawler`
