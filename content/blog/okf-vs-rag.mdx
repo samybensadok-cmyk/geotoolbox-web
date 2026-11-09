@@ -2,7 +2,7 @@
 title: "OKF vs RAG: Does Google's Open Knowledge Format Replace RAG?"
 description: "Google's Open Knowledge Format (OKF) is being called a RAG killer. It isn't. What OKF v0.2 actually does, where it beats RAG, and how the two work together."
 date: "2026-07-26"
-updated: "2026-07-26"  # backfilled 2026-08-18 freshness audit hygiene pass (frontmatter previously had no updated field at all)
+updated: "2026-11-09"
 author: "Samy BEN SADOK"
 tags: ["okf-vs-rag", "okf", "open-knowledge-format", "rag", "knowledge-graph", "ai-agents", "geo"]
 draft: false
@@ -10,7 +10,7 @@ draft: false
 
 Search for "OKF vs RAG" and you get two stories. One says Google just killed RAG. The other says the two have nothing to do with each other. Both are wrong.
 
-The Open Knowledge Format (OKF) and retrieval-augmented generation (RAG) solve different problems at different layers. The useful question is not which one wins but where each belongs, including the part almost every explainer still skips: what changed in OKF v0.2.
+The Open Knowledge Format (OKF) and retrieval-augmented generation (RAG) solve different problems at different layers. The useful question is not which one wins but where each belongs, including the part many explainers still skip: what changed in OKF v0.2.
 
 There is a fitting demonstration of why curated knowledge matters. Ask an AI model with no web access what OKF is: in a test we ran, Gemini invented a wrong definition while Claude said it did not know. OKF launched in mid-2026, after both models' training cutoffs, so only a model wired to live retrieval gets it right. Which is, more or less, the whole argument for writing your knowledge down where machines can read it.
 
@@ -23,13 +23,13 @@ There is a fitting demonstration of why curated knowledge matters. Ask an AI mod
 
 **The Open Knowledge Format (OKF) is an open, vendor-neutral specification from Google Cloud for handing curated knowledge to AI agents as plain Markdown files.** [Google Cloud introduced it](https://cloud.google.com/blog/products/data-analytics/how-the-open-knowledge-format-can-improve-data-sharing) on June 12, 2026 as a way to package the facts an organization already knows and trusts, so an agent can read them directly instead of re-deriving them from raw documents every time.
 
-The format itself is deliberately boring, which is the point. An OKF bundle is a directory tree of Markdown files, one concept per file, each carrying a small block of YAML frontmatter. A concept can be a metric definition, a database schema, a business rule, an API, or a policy. Files link to each other with ordinary Markdown links, so a cross-linked bundle reads as a lightweight knowledge graph an agent can walk, not a pile of disconnected pages.
+The format itself is deliberately boring, which is the point. An OKF bundle is a directory tree of Markdown files, one concept per file, each carrying a small block of YAML frontmatter. A concept can be a metric definition, a database schema, a business rule, an API, a runbook, or a policy. Files link to each other with ordinary Markdown links, so a cross-linked bundle reads as a lightweight knowledge graph an agent can walk, not a pile of disconnected pages.
 
-Per the [OKF specification](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md), the only always-required field is `type`. A concept carrying nothing but `type` is already valid. Recommended fields (`title`, `description`, `resource`, `tags`) add context, and two reserved filenames do the structural work: `index.md` lists a directory for progressive disclosure, and `log.md` records history.
+Per the [OKF specification](https://github.com/GoogleCloudPlatform/open-knowledge-format/blob/main/SPEC.md), the only always-required field is `type`. A concept carrying nothing but `type` is already valid. Recommended fields (`title`, `description`, `resource`, `tags`) add context, and two reserved filenames do the structural work: `index.md` lists a directory for progressive disclosure, and `log.md` records history.
 
 The idea is not new. It formalizes the "LLM wiki" pattern [Andrej Karpathy floated in April 2026](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f): a persistent set of Markdown files an agent maintains, compiled once and kept current rather than reconstructed on every query. OKF gives that pattern a shared contract so any agent or vendor can read the same bundle.
 
-Two caveats. OKF ships inside Google Cloud's Knowledge Catalog under the Apache 2.0 license, but the repository carries a plain "not an official Google product" disclaimer. And it is early: Google published three sample bundles (GA4 e-commerce, Stack Overflow, and Bitcoin datasets) to seed adoption, but the ecosystem around it is weeks old.
+Two caveats. OKF is published by Google Cloud under the Apache 2.0 license. It started inside the Knowledge Catalog repository and moved to its own repository in August 2026, and an open pull request from November 2026 announces a further move to a vendor-neutral GitHub organization. And it is early: Google launched with three sample bundles (GA4 e-commerce, Stack Overflow, and Bitcoin datasets) and added a fourth with v0.2, but as of November 2026 the ecosystem around it is still small.
 
 ## What Is RAG, and Where Does It Break Down?
 
@@ -57,7 +57,7 @@ RAG treats knowledge as a large body of text to be searched at query time. OKF t
 <tr><td><strong>Knowledge type</strong></td><td>Curated known-knowns you can name</td><td>Large, unstructured, "it's in here somewhere"</td></tr>
 <tr><td><strong>How the agent gets it</strong></td><td>Reads a concept file directly</td><td>Retrieves and reranks chunks at query time</td></tr>
 <tr><td><strong>Structure</strong></td><td>Explicit graph via Markdown links</td><td>A bag of chunks, relationships inferred</td></tr>
-<tr><td><strong>Provenance &amp; trust</strong></td><td>Standardized fields (<a href="https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md"><code>sources</code>, <code>verified</code></a>)</td><td>Per-implementation metadata, not standardized</td></tr>
+<tr><td><strong>Provenance &amp; trust</strong></td><td>Standardized fields (<a href="https://github.com/GoogleCloudPlatform/open-knowledge-format/blob/main/SPEC.md"><code>sources</code>, <code>verified</code></a>)</td><td>Per-implementation metadata, not standardized</td></tr>
 <tr><td><strong>Freshness</strong></td><td>Declared with <code>stale_after</code></td><td>Depends on re-indexing the corpus</td></tr>
 <tr><td><strong>Best for</strong></td><td>Stable, high-stakes facts</td><td>Long-tail, exploratory search</td></tr>
 </tbody>
@@ -67,7 +67,7 @@ Read the provenance and freshness rows again. That is where OKF v0.2 standardize
 
 ## The v0.2 Trust Layer: What OKF Standardizes That RAG Doesn't
 
-The version that matters is 0.2. It adds what amounts to a trust layer to the spec, and it is the reason the versus framing keeps missing the point. Almost every OKF-vs-RAG explainer online still describes v0.1 and skips this entirely.
+The version that matters is 0.2, which [Google announced on July 25, 2026](https://cloud.google.com/blog/products/data-analytics/okf-v0-2-adds-trust-signals). As of November 2026 it is still the current public spec; an open pull request announces a v0.3 that has not been published yet. Version 0.2 adds what amounts to a trust layer to the spec, and it is the reason the versus framing keeps missing the point. Many OKF-vs-RAG explainers written at launch still describe v0.1 and skip this entirely.
 
 RAG can tell you what a passage says. The bare pattern does not standardize who wrote it, whether anyone checked it, or whether it is still true. Individual RAG systems can bolt those on as chunk metadata, but every team invents its own schema. OKF v0.2 writes them into the frontmatter as a shared contract, through the optional field families below.
 
@@ -76,12 +76,17 @@ RAG can tell you what a passage says. The bare pattern does not standardize who 
 <tr><th>Family</th><th>Key fields</th><th>What it answers</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>Provenance</strong></td><td><code>sources</code>, <code>usage_count</code></td><td>Where did this come from, and how much is it relied on?</td></tr>
+<tr><td><strong>Provenance</strong></td><td><code>sources</code> (with per-source signals such as <code>usage_count</code>)</td><td>Where did this come from, and how much is it relied on?</td></tr>
 <tr><td><strong>Trust</strong></td><td><code>generated</code>, <code>verified</code></td><td>Who produced it, and who confirmed it?</td></tr>
 <tr><td><strong>Lifecycle</strong></td><td><code>status</code>, <code>stale_after</code></td><td>Is it current, and when should it expire?</td></tr>
-<tr><td><strong>Attestation</strong></td><td><code>runtime</code>, <code>computation</code>, <code>attester</code></td><td>Was this value actually computed, and by what?</td></tr>
+<tr><td><strong>Attestation</strong></td><td><code>runtime</code>, <code>computation</code>, <code>attester</code> (on Attested Computation concepts)</td><td>Was this value actually computed, and by what?</td></tr>
 </tbody>
 </table>
+
+<figure>
+  <BlogImage src="/blog/okf-vs-rag/okf-v02-trust-layer.png" alt="OKF v0.2 trust layer: four optional field families (provenance, trust, lifecycle, attestation) and the three trust tiers the verified field sets: unverified, machine-confirmed, human-reviewed." w="1100" h="660" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">What a v0.2 concept can record, and how the verified field turns it into a trust tier.</figcaption>
+</figure>
 
 The `verified` field is the centerpiece. It turns a flat file into a claim with a trust tier: unverified, machine-confirmed, or human-reviewed (marked with a `human:` actor). An agent can then treat a human-reviewed metric definition differently from an unverified note. A vector store can carry that in metadata too, but OKF makes it a defined field every reader interprets the same way, instead of a per-pipeline convention. This is also why v0.2 restructured v0.1's flat `timestamp` into `generated: { by, at }`: a fact now records who produced it and when, not just a bare date.
 
@@ -92,14 +97,16 @@ A concept with the v0.2 fields looks like this:
 type: metric
 title: Weekly Active Users
 verified:
-  - { by: "human:data-team", at: 2026-07-20 }
-stale_after: 2026-10-20
+  - { by: "human:data-team", at: 2026-11-02T09:00:00Z }
+stale_after: 2027-02-01T00:00:00Z
 sources:
   - id: wau-sql
     resource: /queries/weekly-active-users.sql
     title: WAU definition query
 ---
 ```
+
+Since August 2026 the spec defines every timestamp as a full ISO 8601 datetime with an explicit offset, so write `2027-02-01T00:00:00Z`, not `2027-02-01`; date-only values still count as conformant.
 
 `stale_after` is the quiet one. The bare RAG pattern has no built-in notion of a fact expiring; unless you add time-to-live logic yourself, a stale chunk sits in the index looking exactly as retrievable as a fresh one. OKF lets the knowledge itself declare an expiry date, which pushes staleness from an invisible failure into a field you can query and act on. Combined with the `sources` block, this gives a bundle a kind of [grounding](https://geotoolbox.ai/blog/how-does-ai-search-work) and accountability that a retrieval index does not carry by default.
 
@@ -168,13 +175,13 @@ okf/
     refund-policy.md
 ```
 
-Then host it. A bundle is just files, so the options are ordinary: commit it to a Git repository, ship it as a tarball, or serve it from your site under a path like `/okf/`. Nothing about it requires Vertex AI, a vector database, or a Google account, which is what "vendor-neutral" means in practice, at least by design: no other major vendor has adopted OKF yet.
+Then host it. A bundle is just files, so the options are ordinary: commit it to a Git repository, ship it as a tarball, or serve it from your site under a path like `/okf/`. Nothing about it requires Vertex AI, a vector database, or a Google account, which is what "vendor-neutral" means in practice, at least by design. Adoption outside Google is still thin. Google's own [Knowledge Catalog ingests OKF bundles](https://cloud.google.com/blog/products/data-analytics/scale-okf-bundles-across-an-organization-with-knowledge-catalog), [LangChain's open-source OpenWiki](https://www.langchain.com/blog/openwiki-0-2-adds-okf-support) has written its wikis in OKF since version 0.2 in July 2026, and AWS has published an [open-source sample](https://github.com/aws-samples/sample-okf-llm-wiki) that turns data into OKF bundles and serves them to agents over MCP. As of November 2026, no other major cloud, model, or data-platform vendor has shipped OKF support in a product.
 
 One caution before you publish. A bundle of metric definitions, business rules, and schemas is internal knowledge. Serve publicly only what you would want public, and keep sensitive concepts behind auth or off the public tree entirely.
 
-The most useful real example comes from GEO practitioner [Suganthan Mohanadasan](https://suganthan.com/blog/open-knowledge-format/), who converted his published writing into a live bundle and built a free generator that turns a site or sitemap into OKF without code. His live bundle, at the time of writing, runs 61 concepts, of which only 18 carry a `verified` entry and eight are already past their `stale_after` date. That is the trust layer working as intended: the maintenance signal is visible in the file instead of hidden in a stale index. Google's three sample bundles are another starting point if you would rather adapt than build from scratch.
+The most useful real example comes from GEO practitioner [Suganthan Mohanadasan](https://suganthan.com/blog/open-knowledge-format/), who converted his published writing into a live bundle and built a free generator that turns a site or sitemap into OKF without code. His live bundle runs 81 concepts as of November 2026, of which only 20 carry a `verified` entry and eight are already past their `stale_after` date. That is the trust layer working as intended: the maintenance signal is visible in the file instead of hidden in a stale index (his `stale_after` values still use the older date-only form). Google's sample bundles are another starting point if you would rather adapt than build from scratch.
 
-The one caveat to set expectations: as of this writing, no major crawler ingests OKF bundles automatically. Publishing one is a bet on where [agent-ready sites](https://geotoolbox.ai/blog/agent-ready-website) are heading, not a switch that lights up traffic today.
+The one caveat to set expectations: as of November 2026, no major crawler ingests OKF bundles automatically. Publishing one is a bet on where [agent-ready sites](https://geotoolbox.ai/blog/agent-ready-website) are heading, not a switch that lights up traffic today.
 
 ## OKF and AI Visibility: Should SEOs Adopt It Yet?
 
@@ -200,12 +207,6 @@ No. OKF replaces RAG only for the slice of knowledge that is small, stable, and 
 ### Does OKF replace the vector database?
 Not in general. It removes the need to re-retrieve stable facts from a vector store, but anything outside your curated concept set still needs retrieval. In hybrid setups an OKF bundle can even feed the RAG pipeline as clean input rather than replacing it.
 
-### Do I need Vertex AI or Google Cloud to use OKF?
-No. An OKF bundle is plain Markdown files with YAML frontmatter. It requires no SDK, no vector database, and no Google account. You can store it in any Git repository or serve it from your own site.
-
-### Is OKF the same as llms.txt?
-No, and they work together. An llms.txt file is an index that points agents to content. OKF is the structured knowledge itself. One tells an agent where to look; the other is what it reads when it gets there.
-
 ### What's the difference between OKF and a knowledge graph?
 A formal knowledge graph stores facts as queryable triples and needs specialized tooling. OKF gets a graph shape from Markdown cross-links while staying human-readable and Git-friendly. You trade some query power for far lower maintenance cost.
 
@@ -215,7 +216,11 @@ There is no evidence it affects rankings. OKF was designed for internal agent kn
 ## Sources
 
 - How the Open Knowledge Format can improve data sharing - Google Cloud (official OKF announcement, June 2026, and the three sample bundles) - `cloud.google.com/blog/products/data-analytics/how-the-open-knowledge-format-can-improve-data-sharing`
-- okf/SPEC.md - GoogleCloudPlatform/knowledge-catalog, GitHub (the v0.2 specification: required fields, trust layer, Apache 2.0 license) - `github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md`
+- SPEC.md - GoogleCloudPlatform/open-knowledge-format, GitHub (the v0.2 specification: required fields, trust layer, ISO 8601 timestamps; Apache 2.0; moved here from knowledge-catalog/okf in August 2026) - `github.com/GoogleCloudPlatform/open-knowledge-format/blob/main/SPEC.md`
+- Open Knowledge format v0.2 tackles agentic trust - Google Cloud (v0.2 announcement, July 25, 2026: provenance, trust, freshness, lifecycle, attestation) - `cloud.google.com/blog/products/data-analytics/okf-v0-2-adds-trust-signals`
+- OpenWiki 0.2 brings OKF to codebase documentation - LangChain (July 16, 2026) - `langchain.com/blog/openwiki-0-2-adds-okf-support`
+- Using OKF with Knowledge Catalog to serve context for agents - Google Cloud (August 27, 2026: Knowledge Catalog ingests OKF bundles) - `cloud.google.com/blog/products/data-analytics/scale-okf-bundles-across-an-organization-with-knowledge-catalog`
+- sample-okf-llm-wiki - aws-samples, GitHub (open-source sample, created July 6, 2026: data turned into OKF bundles and served over MCP) - `github.com/aws-samples/sample-okf-llm-wiki`
 - llm-wiki - Andrej Karpathy, GitHub Gist (the LLM-wiki pattern OKF standardizes, April 2026) - `gist.github.com/karpathy/442a6bf555914893e9891c11519de94f`
 - The OKF from Google is a new layer for agents - Marie Haynes (GEO practitioner treating OKF as an agent-knowledge layer; early hands-on experiments) - `mariehaynes.com/okf`
 - Open Knowledge Format (OKF): Google's New Markdown Format for AI Agents - Suganthan Mohanadasan (GEO practitioner build + free OKF generator) - `suganthan.com/blog/open-knowledge-format`
