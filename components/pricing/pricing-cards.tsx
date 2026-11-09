@@ -197,6 +197,15 @@ export function PricingCards({ copy, locale, creditsLabel = "Monthly credits" }:
   // window.location (not useSearchParams) so the static page needs no
   // Suspense boundary and stays fully prerendered.
   const [promo, setPromo] = useState<{ code: string; variant: string } | null>(null)
+  // SG_ANNUAL_BONUS_NOV15_V1: `?interval=annual` (the annual-bonus banner CTA) opens on the annual toggle.
+  // Own effect on purpose: the promo effect below returns early once FOUNDING30 is dead.
+  useEffect(() => {
+    try {
+      if (new URLSearchParams(window.location.search).get("interval") === "annual") setAnnual(true)
+    } catch {
+      /* ignore */
+    }
+  }, [])
   useEffect(() => {
     if (!isPromoLive()) return
     let qs: URLSearchParams | null = null

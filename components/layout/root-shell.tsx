@@ -4,6 +4,7 @@ import { Footer } from "@/components/layout/footer"
 import { PromoBanner } from "@/components/layout/promo-banner"
 import { ExitIntentPopup } from "@/components/layout/exit-intent-popup"
 import { SaleBanner } from "@/components/layout/sale-banner"
+import { AnnualBonusBanner } from "@/components/layout/annual-bonus-banner"
 import { ReportExitPopup } from "@/components/layout/report-exit-popup"
 import { ConsentManager } from "@/components/consent/consent-manager"
 import { ImageLightbox } from "@/components/ui/image-lightbox"
@@ -55,6 +56,8 @@ export function RootShell({
         {/* SG_SALE_OCT30_V1 (2026-10-24): October sale banner, hides itself after 2026-10-31. Replaces the free-scan
             banner (components/layout/scan-banner.tsx, LIVE=false, no longer mounted). */}
         <SaleBanner locale={locale} />
+        {/* SG_ANNUAL_BONUS_NOV15_V1 (2026-11-09): free audit + 30-min call with annual plans, hides itself after Sun Nov 15 midnight PT. */}
+        <AnnualBonusBanner locale={locale} />
         <Header nav={nav} locale={locale} />
         <main id="main-content" className="flex-1">{children}</main>
         <Footer nav={nav} footer={footer} locale={locale} />

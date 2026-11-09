@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import { usePathname } from "next/navigation"
 import { trackEvent } from "@/lib/analytics"
 import { isPromoLive } from "@/lib/promo"
+import { isBonusLive } from "@/lib/annual-bonus"
 import { REPORT_OFFER } from "@/lib/report-offer"
 
 /**
@@ -54,7 +55,7 @@ export function ReportExitPopup({ locale = "en" }: { locale?: string }) {
   }, [suppressed])
 
   useEffect(() => {
-    if (suppressed || isPromoLive()) return
+    if (suppressed || isPromoLive() || isBonusLive()) return
     let dismissed = false
     let shown = false
     try {
