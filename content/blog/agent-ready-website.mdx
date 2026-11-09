@@ -2,7 +2,7 @@
 title: "Agentic Browsers Are Here: Is Your Site Agent-Ready?"
 description: "Perplexity's Comet, Gemini in Chrome, and ChatGPT's cloud browser now navigate and buy on your site for users. Here's what breaks, how to make your website agent-ready, and how to check."
 date: "2026-06-08"
-updated: "2026-11-03"
+updated: "2026-11-09"
 author: "Samy BEN SADOK"
 tags: ["agent-ready-website", "agentic-browsing", "ai-agents", "geo", "ai-visibility"]
 draft: false
@@ -30,7 +30,7 @@ This is not a forecast. Perplexity's Comet and Gemini in Chrome are shipping pro
 
 The traffic shows it. Agentic-browser traffic grew more than [1,300% between January and August 2025, reaching nearly 4.5 million requests a month](https://snowplow.io/blog/what-is-an-agentic-browser), per HUMAN Security data reported by Snowplow, then jumped another 131% month over month into September. And 87% of those agent visits are product-related, which suggests most of this is shopping intent, not idle crawling. That surge was driven by Comet and ChatGPT Agent; ChatGPT Atlas briefly joined Comet at the front of it after its October 2025 launch, before OpenAI discontinued the standalone Atlas browser on August 9, 2026 and moved the same agentic browsing into the ChatGPT app itself, putting it inside an app people already use instead of a separate download, though only in ChatGPT Work on paid plans (not Free or Go) in supported regions.
 
-The catch is that not all of these agents see your site the same way. Comet and Gemini in Chrome are built on Chromium, so they do run your JavaScript and even reason over a screenshot of the rendered page. ChatGPT Work's cloud browser runs on a separate computer in OpenAI's cloud rather than on the user's device, and OpenAI does not document how it renders scripts. But many of the agents that matter most for visibility, the answer-fetching bots behind ChatGPT and Perplexity citations, do not run JavaScript at all and read your raw HTML. A button obvious to a screenshot-reading agent can be invisible to a text-reading one, and content that only appears after a script runs is simply not there for the bots that skip JavaScript.
+The catch is that not all of these agents see your site the same way. Comet and Gemini in Chrome are built on Chromium, so they do run your JavaScript and even reason over a screenshot of the rendered page. ChatGPT Work's cloud browser runs on a separate computer in OpenAI's cloud rather than on the user's device, and OpenAI does not document how it renders scripts. But many of the agents that matter most for visibility, the answer-fetching bots behind ChatGPT and Perplexity citations, mostly read your raw HTML and do not run JavaScript. In the logs we found, ChatGPT-User and PerplexityBot fetched no scripts; OpenAI's search crawler, OAI-SearchBot, rendered some sites after a delay in October 2026 logs ([JavaScript SEO guide](https://geotoolbox.ai/blog/javascript-seo)). A button obvious to a screenshot-reading agent can be invisible to a text-reading one, and content that only appears after a script runs is simply not there for the bots that skip JavaScript.
 
 So "agent traffic" is not one audience with one set of needs. It is several, arriving through the same [AI crawlers](https://geotoolbox.ai/blog/ai-crawlers) you already know, each tripping over a different part of your site.
 
@@ -43,7 +43,7 @@ Most agent failures are not exotic. They are the same patterns that have always 
     <tr><th>What breaks</th><th>Why it stops the agent</th><th>Hits hardest</th></tr>
   </thead>
   <tbody>
-    <tr><td>JavaScript-only content (SPA)</td><td>The answer-fetching bots and many agents do not run JavaScript, so a script-built price, button, or whole page renders as empty; even agents that do render JS miss content that loads too late</td><td>React/Vue/Angular sites, infinite-scroll feeds</td></tr>
+    <tr><td>JavaScript-only content (SPA)</td><td>Most answer-fetching bots and many agents do not run JavaScript, so a script-built price, button, or whole page renders as empty; even agents that do render JS miss content that loads too late</td><td>React/Vue/Angular sites, infinite-scroll feeds</td></tr>
     <tr><td>Hover and click-to-reveal menus</td><td>An agent does not move a mouse to hover; navigation that only opens on hover never opens</td><td>Mega-menus, dropdown nav</td></tr>
     <tr><td>Login, 2FA, and OAuth walls</td><td>An agent cannot read an SMS code or pass a biometric prompt, so the task halts at the gate</td><td>Account areas, B2B portals, saved-cart checkout</td></tr>
     <tr><td>CAPTCHA and bot detection</td><td>Controls built to stop automation stop the legitimate agent too, with no way to tell them apart</td><td>Checkout, sign-up, contact forms</td></tr>
@@ -151,7 +151,7 @@ The cheapest first move is to stop guessing. Run your homepage and a key product
 
 ### Can AI agents execute JavaScript, or is my React site invisible to them?
 
-Know which class you are serving: Chromium-based agentic browsers (Comet, Gemini in Chrome) run JavaScript and even read screenshots, while the answer-fetching bots behind citations (OAI-SearchBot, PerplexityBot and peers) read raw HTML only. A React site is fine for the first group and invisible to the second unless it renders server-side.
+Know which class you are serving: Chromium-based agentic browsers (Comet, Gemini in Chrome) run JavaScript and even read screenshots, while the answer-fetching bots behind citations (ChatGPT-User, PerplexityBot and peers) read raw HTML only, and OpenAI's OAI-SearchBot has been seen rendering some sites, after a delay. A React site is fine for the first group and at risk with the second unless it renders server-side.
 
 ### Will Cloudflare or a CAPTCHA block AI shopping agents from buying on my site?
 
