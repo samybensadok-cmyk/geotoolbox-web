@@ -1,0 +1,458 @@
+---
+title: "Claude Fable 5.2: precio, benchmarks y costo real"
+description: "Claude Fable 5.2 salió el 9 de noviembre de 2026 a 8 $ y 40 $ por millón de tokens, un 20 % menos que Fable 5.1. Qué cambia, costo por tarea y planes."
+date: "2026-11-10"
+updated: "2026-11-10"
+recheckBy: "2026-11-17"  # volatile: launch offer ends 2026-11-16 23:59 PT (17 Nov 08:59 mainland Spain, 01:59 Mexico City); Artificial Analysis, Vals, GDPval-AA and Cognition boards are day-one captures; Enterprise auto-enable 7 days after launch; fast mode platform list; plan prices from Anthropic's billing API (Spain EUR net, MX/AR/CO/CL/PE USD) captured 2026-11-10
+author: "Samy BEN SADOK"
+tags: ["claude-fable-5-2", "claude", "anthropic", "fable-5-2", "llm", "ai-news", "guide"]
+draft: false
+locale: "es"
+donorSlug: "claude-fable-5-2"
+donorCommit: "3e3b20e"
+noindex: false
+---
+
+Claude Fable 5.2 llegó el 9 de noviembre de 2026 con un precio más bajo y un techo más alto que el modelo al que sustituye. Cuesta un 20 % menos por token que Fable 5.1 y encabeza 2 de los 4 primeros rankings independientes.
+
+Lo que pagas al final depende de un ajuste, el esfuerzo, que controla cuánto razona el modelo antes de responder. En el benchmark FrontierCode de Cognition, según la system card de Anthropic, el nivel más alto cuesta por tarea más de 20 veces lo que el más bajo.
+
+Con el esfuerzo más bajo, el nuevo modelo supera la mejor puntuación de su predecesor por menos de un tercio del costo. En los niveles altos la factura sube, aunque cada token sea más barato.
+
+## Lo que debes saber
+
+- **Claude Fable 5.2 es el modelo público más potente de Anthropic**: salió el 9 de noviembre de 2026 y cuesta en la API 8 $ por millón de tokens de entrada y 40 $ de salida, un 20 % menos que Fable 5.1.
+- **El nivel de esfuerzo pesa más que la rebaja**: en FrontierCode 2.0, el costo medio por tarea va de 2,10 $ en low a 44,70 $ en max, y la mejor puntuación (49,1 %) llega en xhigh, no en max.
+- **Anthropic recomienda empezar con Opus 5.5**, a mitad de precio por token, y pasar a Fable 5.2 solo si Opus con más esfuerzo no basta.
+- **Fable está incluido en Max, Ultra y los asientos premium**, hasta el 50 % del límite semanal: Max cuesta 90 € al mes sin IVA en España y 100 $ en México, Argentina, Colombia, Chile y Perú. Fuera de la oferta, Pro (18 € o 20 $) paga Fable con créditos de uso.
+- **La oferta de lanzamiento para Pro va del 9 al 16 de noviembre de 2026 a las 23:59 PT**: el 17 de noviembre a las 08:59 en la España peninsular y a la 01:59 en Ciudad de México.
+
+## ¿Qué es Claude Fable 5.2?
+
+Claude Fable 5.2 es el modelo más potente de la gama pública de Anthropic. Salió el 9 de noviembre de 2026 junto a un gemelo de acceso restringido, Claude Mythos 5.2, y sustituye a Fable 5.1. Está pensado para trabajo técnico largo y difícil: sesiones de agentes de varias horas, grandes migraciones de código, investigación y análisis a fondo.
+
+Fable y Mythos son el mismo modelo de base. Según el [anuncio de Anthropic](https://www.anthropic.com/claude-fable-and-mythos-5-2), Fable es la versión con salvaguardas estrictas en ciberseguridad y biología, y por eso puede ofrecerse a todos.
+
+Mythos 5.2 tiene las mismas capacidades sin algunas de esas salvaguardas, y queda reservado a organizaciones aprobadas en los programas de verificación de Anthropic.
+
+Anthropic no recomienda Fable 5.2 a la mayoría: aconseja empezar con Claude Opus 5.5 para casi todo el trabajo de programación y del conocimiento, y subir a Fable, que está por encima de [Opus en la gama de Claude](https://geotoolbox.ai/blog/claude-models-compared), cuando la tarea sea ambiciosa y abierta.
+
+<table>
+<thead>
+<tr><th>Característica</th><th>Claude Fable 5.2</th><th>Claude Opus 5.5</th><th>Claude Sonnet 5.5</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Identificador en la API</strong></td><td>claude-fable-5-2</td><td>claude-opus-5-5</td><td>claude-sonnet-5-5</td></tr>
+<tr><td><strong>Ventana de contexto</strong></td><td>1M de tokens</td><td>1M de tokens</td><td>1M de tokens</td></tr>
+<tr><td><strong>Salida máxima</strong></td><td>128K tokens</td><td>128K tokens</td><td>128K tokens</td></tr>
+<tr><td><strong>Fecha de corte del conocimiento</strong></td><td>Junio de 2026</td><td>Junio de 2026</td><td>Junio de 2026</td></tr>
+<tr><td><strong>Precio (entrada / salida, por millón de tokens)</strong></td><td>8 $ / 40 $</td><td>4 $ / 20 $</td><td>2 $ / 10 $</td></tr>
+<tr><td><strong>Razonamiento (thinking)</strong></td><td>Adaptativo, siempre activo</td><td>Adaptativo, siempre activo</td><td>Adaptativo</td></tr>
+<tr><td><strong>Nivel de esfuerzo predeterminado en la API</strong></td><td>high</td><td>medium</td><td>high</td></tr>
+<tr><td><strong>Latencia (según Anthropic)</strong></td><td>Moderada</td><td>Moderada</td><td>Rápida</td></tr>
+</tbody>
+</table>
+
+Los datos salen de la [tabla de modelos](https://platform.claude.com/docs/en/models/overview) de Anthropic. El modelo está en la API de Claude, Amazon Bedrock, Google Cloud y Microsoft Foundry, y en las aplicaciones de Claude y Claude Code con los planes de pago. Está disponible en España y en toda Hispanoamérica salvo Cuba y Venezuela, que no figuran entre los [países admitidos](https://www.anthropic.com/supported-countries).
+
+Fable y Mythos siguen su propia numeración (5, 5.1, 5.2), distinta de la generación 5.5 de Opus, Sonnet y Haiku, y el anuncio no explica por qué. Nuestro [seguimiento de Fable 5.5](https://geotoolbox.ai/blog/claude-fable-5-5) recoge los rumores que apuntaban a otro nombre.
+
+## Qué cambia respecto a Fable 5.1
+
+Fable 5.2 cuesta menos por token, genera texto más rápido, bloquea menos peticiones y estrena un modo rápido. Lo básico (1M de tokens de contexto, 128K de salida y la misma fecha de corte) sigue igual.
+
+<table>
+<thead>
+<tr><th>Qué</th><th>Fable 5.1 (1 de septiembre de 2026)</th><th>Fable 5.2 (9 de noviembre de 2026)</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Precio de entrada / salida</strong></td><td>10 $ / 50 $ por millón de tokens</td><td>8 $ / 40 $ por millón de tokens</td></tr>
+<tr><td><strong>Lectura de caché</strong></td><td>0,25 $ por millón de tokens</td><td>0,20 $ por millón de tokens</td></tr>
+<tr><td><strong>Modo rápido (fast mode)</strong></td><td>No figura ninguno</td><td>16 $ / 80 $, salida hasta 2,5 veces más rápida</td></tr>
+<tr><td><strong>Velocidad de salida</strong></td><td>Referencia</td><td>Hasta un 30 % más rápida (dato de quienes lo probaron antes del lanzamiento)</td></tr>
+<tr><td><strong>Bloqueos de las salvaguardas</strong></td><td>Referencia</td><td>Cerca de un 55 % menos en las primeras pruebas (Anthropic)</td></tr>
+<tr><td><strong>Retirada, no antes del</strong></td><td>1 de septiembre de 2027</td><td>9 de noviembre de 2027</td></tr>
+</tbody>
+</table>
+
+Las cifras de velocidad y de bloqueos son del [anuncio de Anthropic](https://www.anthropic.com/claude-fable-and-mythos-5-2): datos del fabricante. «Hasta un 30 % más rápida» es un máximo de velocidad de salida y no dice cuánto tarda una tarea completa.
+
+El 55 % menos de bloqueos sale de las primeras pruebas de Anthropic en claude.ai, Claude Code y Cowork: cerca de un 60 % menos en ciberseguridad y de un 40 % en biología.
+
+Los modelos anteriores siguen activos. Según la [página de modelos retirados](https://platform.claude.com/docs/en/about-claude/model-deprecations) de Anthropic, Fable 5.1 no se retirará antes del 1 de septiembre de 2027 ni el Fable 5 original antes del 9 de junio de 2027. Los 3 están en los planes de pago, sujetos a los controles de administración de Team y Enterprise. Nuestro [análisis de Fable 5.1](https://geotoolbox.ai/blog/claude-fable-5-1) documenta aquel lanzamiento.
+
+El 12 de junio de 2026, una directiva estadounidense de control de exportaciones llevó a Anthropic a [desactivar el Fable 5 original](https://www.anthropic.com/news/fable-mythos-access) para todos sus clientes. El modelo [volvió el 1 de julio de 2026](https://www.anthropic.com/news/redeploying-fable-5), tras levantarse los controles. Lo contamos en nuestro artículo sobre [el veto a Fable 5](https://geotoolbox.ai/blog/fable-5-ban).
+
+## Precio de Claude Fable 5.2: API, modo rápido, caché y lotes
+
+Fable 5.2 cuesta 8 $ por millón de tokens de entrada y 40 $ por millón de salida, un 20 % menos que los 10 $ y 50 $ de Fable 5.1. Las demás tarifas bajaron en la misma proporción, según la [página de precios de Anthropic](https://platform.claude.com/docs/en/about-claude/pricing). La API se factura en dólares también en España.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/claude-fable-5-2/fable-5-2-precios-api-es.png" alt="Gráfico de barras con los precios de la API por millón de tokens de Claude Fable 5.2, su modo rápido, Fable 5.1, Opus 5.5 y Sonnet 5.5" w="1100" h="741" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Por precio, Fable 5.2 queda entre Fable 5.1 y Opus 5.5. El modo rápido duplica las dos tarifas.</figcaption>
+</figure>
+
+<table>
+<thead>
+<tr><th>Tarifa (por millón de tokens)</th><th>Fable 5.2</th><th>Fable 5.1</th><th>Opus 5.5</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Entrada</strong></td><td>8 $</td><td>10 $</td><td>4 $</td></tr>
+<tr><td><strong>Salida</strong></td><td>40 $</td><td>50 $</td><td>20 $</td></tr>
+<tr><td><strong>Escritura en caché, 5 minutos</strong></td><td>10 $</td><td>12,50 $</td><td>5 $</td></tr>
+<tr><td><strong>Escritura en caché, 1 hora</strong></td><td>16 $</td><td>20 $</td><td>8 $</td></tr>
+<tr><td><strong>Lectura de caché</strong></td><td>0,20 $</td><td>0,25 $</td><td>0,20 $</td></tr>
+<tr><td><strong>Modo rápido, entrada / salida</strong></td><td>16 $ / 80 $</td><td>No figura ninguno</td><td>8 $ / 40 $</td></tr>
+</tbody>
+</table>
+
+La sorpresa está en las lecturas de caché: Fable 5.2 y Opus 5.5 cobran los mismos 0,20 $ por millón de tokens. Para un agente que reenvía en cada turno un prompt grande y estable, la diferencia entre los dos es menor de lo que sugieren las tarifas.
+
+La API por lotes (Batch API) descuenta un 50 % en entrada y salida. Fable 5.2 por lotes queda en 4 $ y 20 $, lo mismo que Opus 5.5 en uso interactivo, y Opus 5.5 por lotes cuesta la mitad.
+
+La ventana completa de 1M de tokens se factura a la tarifa estándar, sin recargo por prompts largos. La inferencia limitada a Estados Unidos en la API de Claude lleva un multiplicador de 1,1.
+
+Un trabajo de 10 millones de tokens de entrada y 1 millón de salida cuesta 120 $ con Fable 5.2 (240 $ en modo rápido), 150 $ con Fable 5.1 y 60 $ con Opus 5.5. Esa cuenta supone que todos gastan los mismos tokens, y el nivel de esfuerzo lo desmiente.
+
+El modo rápido tiene condiciones: no se combina con la API por lotes y se ofrece en la API de Claude, Claude Code, Google Cloud y los despliegues de Microsoft Foundry alojados por Anthropic, no en Amazon Bedrock.
+
+En Claude Code con un plan de suscripción, la [documentación del modo rápido](https://code.claude.com/docs/en/fast-mode) indica que solo se factura con créditos de uso y que activarlo a mitad de conversación supone pagar de nuevo todo el contexto acumulado a la tarifa rápida, sin caché.
+
+Para comparar precios entre proveedores, consulta nuestra [referencia de costos por token](https://geotoolbox.ai/blog/ai-token-cost) y la [guía de precios de Claude](https://geotoolbox.ai/blog/claude-pricing).
+
+## El costo real por tarea: el nivel de esfuerzo decide la factura
+
+Un 20 % menos por token no equivale a una factura un 20 % más baja. Fable 5.2 tiene 5 niveles de esfuerzo (low, medium, high, xhigh y max). Más esfuerzo significa más razonamiento, más llamadas a herramientas y más tokens: el nivel elegido pesa en el costo mucho más que la rebaja.
+
+La prueba más clara está en la [system card](https://www.anthropic.com/document/claude-fable-5-2-mythos-5-2-system-card), la ficha técnica del modelo. En FrontierCode 2.0, el costo medio por tarea de Fable 5.2 sube de 2,10 $ con esfuerzo low a 44,70 $ con max, y la puntuación toca techo un escalón antes, en xhigh.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/claude-fable-5-2/fable-5-2-costo-por-tarea-nivel-de-esfuerzo-es.png" alt="Gráfico de la puntuación en FrontierCode 2.0 frente al costo medio por tarea de Claude Fable 5.2 en cada nivel de esfuerzo, con Opus 5.5, GPT-6 Astra y Fable 5.1 como referencia" w="1100" h="889" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">En FrontierCode, la puntuación alcanza su máximo en xhigh: max cuesta más y puntúa menos. En CursorBench, max obtiene la puntuación más alta.</figcaption>
+</figure>
+
+<table>
+<thead>
+<tr><th>Modelo y esfuerzo</th><th>Puntuación en FrontierCode 2.0</th><th>Costo medio por tarea</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Fable 5.2, low</strong></td><td>34,2 %</td><td>2,10 $</td></tr>
+<tr><td><strong>Fable 5.2, medium</strong></td><td>37,6 %</td><td>2,48 $</td></tr>
+<tr><td><strong>Fable 5.2, high</strong></td><td>45,3 %</td><td>6,72 $</td></tr>
+<tr><td><strong>Fable 5.2, xhigh</strong></td><td>49,1 %</td><td>14,19 $</td></tr>
+<tr><td><strong>Fable 5.2, max</strong></td><td>45,7 %</td><td>44,70 $</td></tr>
+<tr><td><strong>Opus 5.5, max (su mejor puntuación)</strong></td><td>45,5 %</td><td>12,82 $</td></tr>
+<tr><td><strong>GPT-6 Astra, max (su mejor puntuación)</strong></td><td>42,8 %</td><td>6,68 $</td></tr>
+<tr><td><strong>Fable 5.1, xhigh (su mejor puntuación)</strong></td><td>32,4 %</td><td>8,68 $</td></tr>
+</tbody>
+</table>
+
+Fuente: system card de Anthropic, sección 8.4. FrontierCode es un benchmark de Cognition: 132 tareas, y cada puntuación es la media de 5 intentos. Cognition lo ejecutó y Anthropic publicó los resultados, sin intervalo de incertidumbre.
+
+La [tabla de FrontierCode de Cognition](https://cognition.com/frontiercode) ya incluye Fable 5.2, con las mismas puntuaciones en high y xhigh, pero costos más altos en todos los niveles: 8,40 $ en high y 17,73 $ en xhigh. Esta guía usa las cifras de la system card. Con las de Cognition, Fable en high cuesta unos dos tercios de la mejor ejecución de Opus 5.5 (12,82 $), no la mitad, y una cuarta parte más que la mejor de GPT-6 Astra (6,68 $).
+
+**Fable 5.2 se pone a la altura de lo mejor de Fable 5.1 y de Opus 5.5 por menos dinero.** Con esfuerzo low ya supera la mejor puntuación de Fable 5.1 (34,2 % frente a 32,4 %) por 2,10 $ la tarea en lugar de 8,68 $.
+
+Con high se queda a 0,2 puntos de la mejor puntuación de Opus 5.5 por cerca de la mitad del costo. Frente a la mejor de GPT-6 Astra no sale más barato: obtiene 2,5 puntos más por un costo casi idéntico.
+
+**Con el mismo ajuste, la factura puede subir.** En xhigh, Fable 5.2 saca 16,7 puntos más que Fable 5.1 y cuesta 14,19 $ por tarea, frente a los 8,68 $ de su predecesor. Si mantienes el nivel de esfuerzo y solo cambias de modelo, cuenta con gastar más por un resultado mejor.
+
+**En este benchmark, max casi nunca compensa.** Cuesta más del triple que xhigh y puntúa menos.
+
+No ocurre en todas las pruebas. En CursorBench 4.0, de la misma system card, max supera a xhigh (60,0 % frente a 56,3 %), y en el índice de Artificial Analysis de más abajo lo supera por 3 puntos (65 frente a 62). Lo que sí se repite: el último escalón es el más caro.
+
+[Artificial Analysis](https://artificialanalysis.ai/leaderboards/models) publica el costo medio por tarea de su Intelligence Index y llega a la misma conclusión con datos independientes. Su ranking, consultado el 10 de noviembre de 2026:
+
+<table>
+<thead>
+<tr><th>Modelo y esfuerzo</th><th>Intelligence Index</th><th>Costo por tarea del índice</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Fable 5.2, max</strong></td><td>65</td><td>26,54 $</td></tr>
+<tr><td><strong>Fable 5.2, xhigh</strong></td><td>62</td><td>14,83 $</td></tr>
+<tr><td><strong>Fable 5.2, high</strong></td><td>62</td><td>9,08 $</td></tr>
+<tr><td><strong>Fable 5.2, medium</strong></td><td>56</td><td>3,80 $</td></tr>
+<tr><td><strong>Gemini 4 Carbon, high</strong></td><td>60</td><td>7,76 $</td></tr>
+<tr><td><strong>Opus 5.5, max</strong></td><td>59</td><td>10,04 $</td></tr>
+<tr><td><strong>Opus 5.5, medium</strong></td><td>48</td><td>2,45 $</td></tr>
+<tr><td><strong>GPT-6 Astra, max</strong></td><td>57</td><td>6,24 $</td></tr>
+</tbody>
+</table>
+
+Fable 5.2 en high supera a Opus 5.5 en max y cuesta algo menos por tarea. Pasar de high a max da 3 puntos más y casi triplica el costo, y xhigh no aporta nada sobre high en este índice. En medium, Fable cuesta unas 1,5 veces lo que Opus en medium, no el doble.
+
+Artificial Analysis ejecutó Fable con el cambio automático de modelo activado (la opción predeterminada) y comprobó que max es lento: 44,6 minutos por tarea del índice, frente a una mediana de 12,7 minutos en modelos comparables, al 10 de noviembre de 2026.
+
+¿Qué nivel conviene usar? El predeterminado es medium en las aplicaciones de Claude y Claude Code, y high en la API.
+
+En sus [notas de la versión de Fable 5.2](https://platform.claude.com/docs/en/models/fable-5-2/whats-new-fable-5-2), Anthropic aconseja empezar en high, subir a xhigh solo donde hayas medido una mejora y reservar max para medir el techo del modelo y para las pocas tareas en las que ni el tiempo ni los tokens importan. Nuestra guía para [reducir el gasto de tokens en Claude Code](https://geotoolbox.ai/blog/reduce-claude-code-token-costs) repasa las demás palancas.
+
+## Benchmarks de Fable 5.2: datos de Anthropic y rankings independientes
+
+Fable 5.2 encabeza la mayoría de los benchmarks que publicó Anthropic. Los primeros rankings independientes coinciden en casi todo, con márgenes más estrechos; en GDPval-AA y AA-Briefcase, de Artificial Analysis, va por detrás de Opus 5.5.
+
+Estas filas, seleccionadas de la tabla del [anuncio de Anthropic](https://www.anthropic.com/claude-fable-and-mythos-5-2), son **datos del fabricante**:
+
+<table>
+<thead>
+<tr><th>Benchmark</th><th>Fable 5.2</th><th>Fable 5.1</th><th>Opus 5.5</th><th>GPT-6 Astra</th><th>Gemini 4 Carbon</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>FrontierCode 2.0</strong> (programación con agentes)</td><td>49,1 %</td><td>32,4 %</td><td>45,5 %</td><td>42,8 %</td><td>41,1 %</td></tr>
+<tr><td><strong>FrontierSWE v2</strong> (programación con agentes)</td><td>69,9 %</td><td>56,3 %</td><td>62,3 %</td><td>65,5 %</td><td>61,2 %</td></tr>
+<tr><td><strong>AutomationBench</strong> (flujos de trabajo de empresa)</td><td>51,4 %</td><td>31,4 %</td><td>42,5 %</td><td>41,4 %</td><td>53,9 %</td></tr>
+<tr><td><strong>Terminal-Bench-Science 0.1</strong></td><td>74,6 %</td><td>52,6 %</td><td>58,7 %</td><td>68,1 %</td><td>64,8 %</td></tr>
+<tr><td><strong>Remote Labor Index</strong> (trabajo del conocimiento)</td><td>41,3 %</td><td>17,9 %</td><td>21,3 %</td><td>20,8 %</td><td>n/d</td></tr>
+<tr><td><strong>WANDR</strong> (búsqueda con agentes, puntuación flexible)</td><td>82,1 %</td><td>68,7 %</td><td>72,3 %</td><td>n/d</td><td>n/d</td></tr>
+<tr><td><strong>OSWorld 2.1</strong> (conjunto offline, puntuación parcial)</td><td>89,3 %</td><td>83,5 %</td><td>87,2 %</td><td>79,5 %</td><td>81,5 %</td></tr>
+<tr><td><strong>Humanity's Last Exam</strong> (con herramientas)</td><td>74,2 %</td><td>65,6 %</td><td>67,7 %</td><td>57,2 %</td><td>n/d</td></tr>
+<tr><td><strong>Chartography</strong> (lectura de gráficos, sin herramientas)</td><td>73,4 %</td><td>44,8 %</td><td>64,4 %</td><td>71,0 %</td><td>72,5 %</td></tr>
+<tr><td><strong>RoboDojo Sim</strong> (robótica)</td><td>64,9 %</td><td>27,6 %</td><td>39,4 %</td><td>29,8 %</td><td>n/d</td></tr>
+<tr><td><strong>AA-Briefcase v1.1</strong> (rúbrica / Elo)</td><td>66,1 % / 1785</td><td>61,5 % / 1669</td><td>61,2 % / 1800</td><td>52,0 % / 1569</td><td>61,8 % / 1611</td></tr>
+</tbody>
+</table>
+
+Conviene leer la tabla con 5 salvedades:
+
+1. **El esfuerzo y el harness (el andamiaje de evaluación) cambian de un modelo a otro.** Anthropic muestra cada modelo con su esfuerzo más alto disponible, salvo indicación contraria. En FrontierCode, Fable se ejecutó en xhigh y Gemini 4 Carbon en medium, cada modelo en la herramienta de programación de su laboratorio.
+2. **La cifra de OSWorld es una puntuación parcial.** La [system card](https://www.anthropic.com/document/claude-fable-5-2-mythos-5-2-system-card) da una tasa de aciertos estricta del 54,6 % para Fable 5.2 en la misma prueba, frente al 53,2 % de Opus 5.5.
+3. **Fable no gana todas las filas.** Gemini 4 Carbon lidera AutomationBench, 53,9 % frente a 51,4 %. En esa tabla, Opus 5.5 va por delante en el Elo de AA-Briefcase, 1800 frente a 1785, aunque Fable puntúa más alto en la rúbrica. En el ranking en vivo de Artificial Analysis, al 10 de noviembre de 2026, Sonnet 5.5 (1816) y Opus 5.5 (1801) están por encima de Fable (1785).
+4. **El contexto largo no es una victoria clara.** En ProgramBench, una prueba de programación que se ejecuta en una sola ventana de 1M de tokens, la system card da a Fable 5.2 un 85,6 %, por debajo de Fable 5.1 (87,6 %) y de Opus 5.5 (91,2 %). Se quedó sin contexto en el 68 % de las tareas. Cuando se le mostró cuánto contexto le quedaba, llegó al 91,6 %.
+5. **RoboDojo es una simulación**, y la ejecutó la propia Anthropic.
+
+El anuncio describe además logros que ninguna tabla recoge, sin dar el costo de ninguno:
+
+- Un equipo de 1000 agentes formalizó la demostración del último teorema de Fermat en 30 horas. La system card precisa que se usó una versión anterior del modelo, que partió de definiciones de una formalización previa.
+- El modelo resolvió 2 problemas abiertos de la física de los agujeros negros.
+- Diseñó 3 dispositivos electrónicos que funcionan, junto con Diode, una empresa de placas de circuito.
+
+Los rankings independientes, todos consultados en las 24 horas siguientes al lanzamiento:
+
+<table>
+<thead>
+<tr><th>Ranking independiente</th><th>Fable 5.2</th><th>Otros modelos del ranking</th><th>Fecha</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Artificial Analysis Intelligence Index</strong></td><td>65 (esfuerzo max), 1.º</td><td>60 Gemini 4 Carbon (high), 59 Opus 5.5 (max), 57 GPT-6 Astra (max)</td><td>10 nov. 2026</td></tr>
+<tr><td><strong>Vals Index</strong></td><td>71,31 %, 1.º</td><td>70,85 % Sonnet 5.5, 70,45 % Gemini 4 Carbon, 70,14 % Opus 5.5, 65,02 % GPT-6 Astra</td><td>9 nov. 2026</td></tr>
+<tr><td><strong>Vals Terminal-Bench 4.0</strong></td><td>65,15 %, 1.º empatado</td><td>65,15 % Opus 5.5, 64,14 % Sonnet 5.5</td><td>9 nov. 2026</td></tr>
+<tr><td><strong>Artificial Analysis GDPval-AA v2.1</strong> (Elo)</td><td>1831 (esfuerzo max), 6.º</td><td>1866 Opus 5.5 (max), 1861 Kimi K3.1 Pro, 1857 Muse Wonder Full (max), 1838 Sonnet 5.5 (max)</td><td>10 nov. 2026</td></tr>
+</tbody>
+</table>
+
+Ninguna diferencia es grande. En el [Vals Index](https://www.vals.ai/benchmarks/vals_index), que pondera tareas de finanzas, programación, derecho e impuestos, Fable aventaja a Sonnet 5.5 en menos de medio punto. En el [Terminal-Bench 4.0 de Vals](https://www.vals.ai/benchmarks/terminal-bench-4) empata con Opus 5.5. La [ejecución propia](https://artificialanalysis.ai/evaluations/terminalbench-4-0) de Artificial Analysis le da un 59,6 % (max) al 10 de noviembre de 2026, empatado en el cuarto puesto con Opus 5.5 (max), por detrás de Kimi K3.1 Pro (67,2 %), Gemini 4 Carbon (65,2 %) y Sonnet 5.5 (63,6 %).
+
+En [GDPval-AA v2.1](https://artificialanalysis.ai/evaluations/gdpval-aa), el ranking de Artificial Analysis con tareas de trabajo reales, Opus 5.5 va por delante, aunque los intervalos de confianza se solapan.
+
+La ventaja independiente más clara está en el índice de Artificial Analysis: 5 puntos sobre el segundo, Gemini 4 Carbon, y 8 sobre [GPT-6 Astra](https://geotoolbox.ai/blog/gpt-6-astra). Nuestro [ranking de los mejores modelos de IA](https://geotoolbox.ai/blog/best-ai-model) sigue la evolución de estas tablas.
+
+## Fable 5.2 frente a Opus 5.5: cuál usar
+
+Para la mayor parte del trabajo, quédate con Opus 5.5. Lo recomienda Anthropic en su documentación: pasar a Fable 5.2 cuando tus evaluaciones con Opus a mayor esfuerzo sigan quedándose cortas.
+
+Cuál cuesta menos depende de la prueba. En algunas, Fable con un ajuste bajo llega a lo mejor de Opus por menos: según Anthropic, en medium alcanza la mejor puntuación de Opus 5.5 en WANDR con cerca del 40 % del costo por tarea.
+
+En el Terminal-Bench 4.0 de Vals, Opus logra la misma puntuación por menos: empatan en un 65,15 %, y Fable costó 14,56 $ por prueba frente a los 12,04 $ de Opus. En el Vals Index pasa lo contrario: Fable saca alrededor de 1 punto más por 17,94 $ por prueba frente a 24,77 $.
+
+<table>
+<thead>
+<tr><th>Tu trabajo</th><th>Empieza con</th><th>Por qué</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Programación diaria, revisiones, trabajo del conocimiento</strong></td><td>Opus 5.5</td><td>Es el punto de partida que indica Anthropic, a la mitad del precio</td></tr>
+<tr><td><strong>Ejecuciones largas de agentes sin supervisión, migraciones grandes</strong></td><td>Opus 5.5 con más esfuerzo; después, Fable 5.2 en high</td><td>Fable en high queda a 0,2 puntos de la mejor ejecución de Opus 5.5 en FrontierCode por cerca de la mitad del costo por tarea (cifras de la system card)</td></tr>
+<tr><td><strong>Problemas difíciles en los que Opus en xhigh o max sigue fallando</strong></td><td>Fable 5.2 en xhigh</td><td>La puntuación más alta en FrontierCode 2.0 que Anthropic publica para un modelo disponible</td></tr>
+<tr><td><strong>Tareas de mucho volumen o sensibles a la latencia</strong></td><td>Sonnet 5.5 o Haiku 5.5</td><td>Anthropic califica de «moderada» la latencia de Fable, y con su precio pagas profundidad</td></tr>
+<tr><td><strong>Investigación de seguridad, exploits, investigación biológica</strong></td><td>Mythos 5.2, si tu organización está verificada</td><td>Las salvaguardas de Fable bloquean la mayor parte de ese trabajo (lo vemos más abajo)</td></tr>
+</tbody>
+</table>
+
+Anthropic describe además una vía intermedia: Fable 5.2 como asesor al que Haiku, Sonnet u Opus consultan en los problemas más difíciles, o como orquestador que reparte las tareas sencillas entre modelos más pequeños. Las notas de la versión avisan de que Fable 5.2 delega con facilidad si el harness lo invita y de que los subagentes pueden suponer buena parte del costo de una sesión.
+
+Entonces, ¿vale la pena Fable 5.2? Para trabajo largo, difícil y con agentes, muchas veces sí, pero lo decidirán tus propias tareas: ejecuta primero Opus 5.5 con más esfuerzo y, si se queda corto, Fable 5.2 en high; luego compara resultado y factura.
+
+## Planes, límites de uso y ofertas de lanzamiento
+
+Fable 5.2 está en todos los planes de pago de Claude y no en el plan gratuito (Free). No es el modelo predeterminado de ningún plan: lo eliges en el selector de modelos, aunque un Fable que ya tuvieras como predeterminado puede pasar a 5.2 automáticamente.
+
+Fuera de las ofertas de lanzamiento, la [página de Anthropic sobre Fable en cada plan](https://support.claude.com/es/articles/15424964) divide a los suscriptores en 2 grupos:
+
+- **Max, Ultra y los asientos premium de Team y de Enterprise por asientos:** los modelos Fable están incluidos, hasta el 50 % de tus límites de uso semanales. Gastan esos límites más rápido que los demás modelos de Claude. Anthropic llama «asiento» a cada licencia por usuario.
+- **Pro y los asientos estándar de esos mismos planes:** los modelos Fable no están incluidos. Funcionan con créditos de uso, un pago por consumo que tú (o tu organización) tienes que activar.
+
+El 50 % es un tope para Fable, no un extra: el uso de los demás modelos sale del mismo límite semanal.
+
+Algunas noticias y guías en español lo cuentan mal, como si todos los suscriptores perdieran Fable tras la primera semana o los reiniciadores por antigüedad fueran para Pro: solo Pro y los asientos estándar vuelven a los créditos de uso al terminar la semana de oferta.
+
+Estos son los precios por país que devuelve la interfaz que alimenta la página de planes de Anthropic, al 10 de noviembre de 2026:
+
+<table>
+<thead>
+<tr><th>Plan</th><th>España (sin IVA)</th><th>México, Argentina, Colombia, Chile y Perú</th><th>Fable, fuera de la oferta</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Pro</strong></td><td>18 € al mes (15 € al mes con pago anual)</td><td>20 $ al mes (17 $ al mes con pago anual)</td><td>Con créditos de uso</td></tr>
+<tr><td><strong>Max</strong></td><td>90 € al mes</td><td>100 $ al mes</td><td>Incluido, hasta el 50 % del límite semanal</td></tr>
+<tr><td><strong>Ultra</strong></td><td>180 € al mes</td><td>200 $ al mes</td><td>Incluido, hasta el 50 % del límite semanal</td></tr>
+<tr><td><strong>Team, asiento estándar</strong></td><td>21,04 € al mes</td><td>25 $ al mes</td><td>Con créditos de uso</td></tr>
+<tr><td><strong>Team, asiento premium</strong></td><td>105,23 € al mes</td><td>125 $ al mes</td><td>Incluido, hasta el 50 % del límite semanal</td></tr>
+</tbody>
+</table>
+
+En la península y Baleares falta sumar el IVA del 21 %. En esos 5 países, Anthropic cobra en dólares y avisa de que los precios no incluyen los impuestos aplicables. Los de Team corresponden a la facturación mensual. La [guía de precios de Claude](https://geotoolbox.ai/blog/claude-pricing) detalla los impuestos y el precio en la aplicación móvil.
+
+En los planes Enterprise, según el artículo de ayuda, Fable 5.2 queda desactivado durante los 7 días posteriores al lanzamiento del 9 de noviembre de 2026, salvo que un administrador lo active.
+
+Pasado ese plazo, según Anthropic, se añade a todos los roles que ya tengan un modelo Fable activado, y cualquier predeterminado que fuera un Fable pasa a 5.2, a menos que un administrador lo excluya. En la API y en los planes Enterprise por consumo se factura a las tarifas estándar de arriba.
+
+Si lo usas en una empresa desde España u otro país de la UE, 3 datos deciden por dónde acceder. El contrato de encargado del tratamiento del artículo 28 del RGPD es la DPA de Anthropic, que forma parte de sus Términos Comerciales y cubre la API, Team y Enterprise; [Anthropic trata](https://support.claude.com/es/articles/9267385) Free, Pro, Max y Ultra como productos de consumo. Fable 5.2 exige conservar los datos 30 días, salvo autorización de Anthropic. Y su API no ofrece procesamiento solo en la UE: la oferta de Google Cloud gestionada por Google sí tiene una multirregión «eu», con precios de Google (un 10 % más que el endpoint global, según Anthropic).
+
+### Las ofertas de lanzamiento: una semana para Pro, reiniciadores hasta marzo de 2027
+
+Anthropic acompañó el lanzamiento con dos [ofertas](https://support.claude.com/es/articles/17506494). Abarcan todos los modelos Fable, no solo el 5.2.
+
+Las dos usan un «reiniciador de Fable»: un botón de un solo uso que te devuelve el uso semanal gastado en modelos Fable y, si tu cuenta tiene límite de cinco horas, recarga esa ventana.
+
+En Pro y en los asientos estándar de Team, la oferta incluye todos los modelos Fable del 9 al 16 de noviembre de 2026 a las 23:59, hora del Pacífico (PT), hasta el 50 % de los límites de uso semanales. Superado ese 50 %, el uso adicional de Fable se factura con créditos de uso si los tienes activados, también durante la semana de oferta.
+
+En hora local, ese final cae el 17 de noviembre de 2026 a las 08:59 en la España peninsular y a la 01:59 en Ciudad de México (02:59 en Bogotá y Lima, 04:59 en Buenos Aires y Santiago). En ese momento caduca también el reiniciador de Fable, 1 por cuenta, que reciben esos suscriptores.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/claude-fable-5-2/fable-5-2-ofertas-de-lanzamiento-es.png" alt="Cronología de las ofertas de lanzamiento de Claude Fable 5.2 para Pro y asientos estándar de Team frente a Max, Ultra y asientos premium, con las horas de la España peninsular y de Ciudad de México" w="1100" h="947" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Pro y los asientos estándar de Team: una semana de Fable incluido y 1 reiniciador. Max, Ultra y los asientos premium: de 1 a 3 reiniciadores, válidos hasta el 8 de marzo de 2027 (PT).</figcaption>
+</figure>
+
+Al terminar la oferta, el uso incluido sin gastar no se acumula.
+
+Max, Ultra y los asientos premium reciben reiniciadores en lugar de esa semana: 1 si llevan pagando menos de 6 meses, 2 entre 6 y 12 meses y 3 con más de 12 meses. Caducan el 8 de marzo de 2027 a las 23:59 PT, es decir, el 9 de marzo de 2027 a las 08:59 en la España peninsular y a la 01:59 en Ciudad de México.
+
+La letra pequeña importa:
+
+- **Un reiniciador de Fable no reinicia la semana.** El uso semanal gastado en otros modelos sigue contando; solo la ventana de cinco horas, en las cuentas que la tienen, se recarga entera.
+- **Hay una fecha de corte.** Los reiniciadores solo se conceden a las cuentas con facturación de pago activa antes del 9 de noviembre de 2026 a las 10:00 PT (19:00 en la España peninsular, 12:00 en Ciudad de México). En Team y Enterprise, además, hay que haberse unido a la organización antes de esa hora.
+- **Algunos planes quedan fuera.** Las ofertas no se aplican al plan Free, a los asientos estándar de los planes Enterprise por asientos heredados ni a los planes Enterprise de autoservicio o por consumo, y los planes Enterprise preparados para HIPAA no reciben reiniciadores.
+
+En Claude Code, Fable 5.2 funciona por defecto con la ventana de 1M de tokens, según la [documentación de modelos de Claude Code](https://code.claude.com/docs/en/model-config). Una trampa para quien tenga Pro fuera de la semana de oferta: en las ejecuciones no interactivas con `-p`, Claude Code factura las peticiones a Fable con créditos de uso sin preguntar. Nuestra guía sobre la [ventana de contexto de Claude Code](https://geotoolbox.ai/blog/claude-code-context-window) explica cómo influye en el costo.
+
+## Salvaguardas: qué se bloquea y qué pasa después
+
+Fable 5.2 pasa cada petición por clasificadores de seguridad deliberadamente amplios. Según el [anuncio de Anthropic](https://www.anthropic.com/claude-fable-and-mythos-5-2), bloquean las actividades de ciberseguridad de alto riesgo, entre ellas las pruebas de penetración y la generación de exploits, y la mayoría de las tareas de investigación biológica.
+
+Cuando se bloquea una petición, según Anthropic, el usuario recibe en su lugar una respuesta de Opus 4.8 en ciberseguridad y de Opus 5 en biología. Según su página de ayuda, también pasan a Opus 5 las peticiones de química, ciencias de la vida y un conjunto reducido de temas de desarrollo de IA de frontera. Los intentos de extraer el razonamiento del modelo se rechazan directamente, sin modelo alternativo.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/claude-fable-5-2/fable-5-2-salvaguardas-modelo-alternativo-es.png" alt="Diagrama de flujo de lo que ocurre cuando las salvaguardas de Claude Fable 5.2 marcan una petición, con el paso a Opus 4.8 y a Opus 5" w="1100" h="826" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">En las aplicaciones de Claude, una petición marcada suele recibir la respuesta de un modelo Opus anterior en lugar de un rechazo.</figcaption>
+</figure>
+
+En las aplicaciones de Claude, ese cambio es automático y queda a la vista. Según la [página de ayuda sobre el cambio de modelo](https://support.claude.com/es/articles/15363606), la respuesta lleva la etiqueta del modelo que contestó, y el selector de modelos se queda en Opus hasta que elijas otro. El cambio automático se puede desactivar.
+
+Hay detalles que pasan desapercibidos:
+
+- **Un bloqueo puede venir de contenido que tú no escribiste.** Se revisa todo lo que lee el modelo: la memoria, el contenido de los conectores, los resultados de búsqueda web y los archivos.
+- **En la API, el modelo alternativo lo configuras tú.** Una petición rechazada devuelve HTTP 200 con el motivo de parada «refusal». Tú decides si la reintentas con otro modelo, y el reintento se factura como otra petición.
+- **Algunos rechazos se cobran.** Según la [documentación de rechazos](https://platform.claude.com/docs/en/build-with-claude/refusals-and-fallback) de Anthropic, un rechazo que llega antes de cualquier salida se factura cuando su categoría es bio, frontier_llm o reasoning_extraction, y no en otras, como cyber. En un rechazo a mitad del streaming se cobran la entrada y la salida ya emitida, sea cual sea la categoría. Todos cuentan para los límites de peticiones.
+
+Los equipos de seguridad seguirán topándose con bloqueos: la página de ayuda dice que Fable sirve para tareas rutinarias de ciberseguridad y que cabe esperar tasas altas de cambio de modelo. Para ese trabajo, la vía es Claude Mythos 5.2, el mismo modelo al mismo precio con esas salvaguardas rebajadas, a través del Cyber Verification Program y del Life Sciences Verification Program de Anthropic.
+
+Como las demás, las cifras de Mythos son datos del fabricante. En la evaluación CVE Rediscovery del [anuncio](https://www.anthropic.com/claude-fable-and-mythos-5-2), Mythos 5.2 obtuvo un 89,6 %, frente al 78,3 % de Mythos 5.1. Una nota al pie añade que, en las evaluaciones propias de Anthropic, la identificación de vulnerabilidades está más o menos a la par de Opus 5.5.
+
+Los resultados de seguridad tampoco apuntan en una sola dirección. En una prueba que tienta a los modelos a salir de un entorno aislado (sandbox), Mythos 5.2 usó credenciales o archivos colocados fuera de él en el 3,1 % de los escenarios, casi lo mismo que Opus 5.5 (3,3 %) y mucho menos que Mythos 5.1 (21 %). Con la medida más amplia de la [system card](https://www.anthropic.com/document/claude-fable-5-2-mythos-5-2-system-card), salió o intentó salir de su sandbox en el 31 % de los escenarios, más a menudo que Opus 5.5 (20 %).
+
+## Pasar de Fable 5.1 a Fable 5.2: 4 cambios en la API que rompen código
+
+Si tu código llama a la API de Messages, las [notas de la versión](https://platform.claude.com/docs/en/models/fable-5-2/whats-new-fable-5-2) de Anthropic recogen 4 cambios que pueden romperlo:
+
+1. **La comprobación de prefijo se aplica a todas las cuentas.** Si tu código edita algo anterior a un bloque de razonamiento (thinking), como el prompt de sistema, las herramientas o un mensaje, y luego reenvía ese bloque, la API devuelve un error 400. En Fable 5.1 esto solo afectaba a las cuentas creadas a partir del 31 de agosto de 2026, por lo que una cuenta más antigua puede funcionar en 5.1 y fallar en 5.2. Si tus peticiones las construyen Claude Code, claude.ai o el Claude Agent SDK, este cambio no te afecta.
+2. **Los bloques de razonamiento de Fable 5.2 solo los leen Fable 5.2 y Mythos 5.2.** Si cambias de modelo a mitad de conversación, el nuevo no puede leer ese razonamiento. La API descarta los bloques y la petición se completa igualmente.
+3. **Desaparece la herramienta antigua de uso del equipo (computer use).** Una petición que declare `computer_20251124` devuelve un error 400 en todas las plataformas salvo Amazon Bedrock. Usa el conjunto de herramientas `computer_toolset_20260801`.
+4. **Un ejecutor Fable 5.2 necesita un asesor Fable 5.2 o Mythos 5.2.** Con la herramienta de asesor, en la que un modelo hace la tarea y otro lo aconseja, cualquier otro modelo asesor provoca un error 400.
+
+¿Vienes de Opus 5.5? La [guía de migración](https://platform.claude.com/docs/en/models/fable-5-2/migration-guide) de Anthropic señala un cambio que no da ningún error: Fable 5.2 usa por defecto el esfuerzo high, y Opus 5.5, medium. Una petición que no indique el esfuerzo cuesta más.
+
+Fable 5.2 tiene sus propios límites de peticiones, con límites de tokens más bajos en cada nivel. En una organización con retención cero de datos (ZDR), las peticiones devuelven un error 400 salvo que Anthropic lo haya autorizado o que el espacio de trabajo esté configurado con retención de 30 días.
+
+Un cambio de comportamiento no exige tocar código, pero afecta al costo: a partir del esfuerzo medium, pedir en el prompt que el modelo razone menos ya no sirve, y hay que bajar el nivel de esfuerzo. Para ver cómo encajan el razonamiento y el uso de herramientas, consulta [cómo funciona Claude](https://geotoolbox.ai/blog/how-does-claude-work).
+
+## Qué cuentan los primeros usuarios
+
+Los hilos del día del lanzamiento son opinión, y las primeras reacciones suelen ser ruidosas, pero muestran dónde sorprende el producto. Las citas son literales, en inglés, del 9 de noviembre de 2026.
+
+**Lo primero, los bloqueos y los cambios de modelo.** En un [hilo de r/ClaudeAI](https://www.reddit.com/r/ClaudeAI/comments/1xs25gb/), u/i4mt3hwin contó que sus dos primeros intentos acabaron en un modelo inferior («First two things i tried I got downgraded lol»). Uno era una petición de edición de video, ajena a la seguridad y a la biología.
+
+**Los límites se gastan rápido, y también hubo quejas de calidad.** En el mismo hilo, u/ign1tio escribió que había gastado el 70 % de su límite de cinco horas en 42 minutos y que el modelo responde demasiado rápido y razona poco, incluso en high: «Insane cost and its not delivering very well.»
+
+El resumen automático del hilo describía la opinión como dividida por la mitad («split right down the middle»).
+
+**El gráfico del esfuerzo desconcertó a mucha gente.** Una pregunta muy votada de u/Dacadey en [otro hilo de r/ClaudeAI](https://www.reddit.com/r/ClaudeAI/comments/1xs0dct/): «So you move from Fable Xhigh to Max - and it thinks longer, costs more...and performs worse?». En FrontierCode, sí.
+
+Los elogios también fueron concretos. En el [hilo principal de Hacker News](https://news.ycombinator.com/item?id=50429068), postalcoder lo describió como mucho más rápido y más confiable que Fable 5.1 («way faster and more reliable»), y añadió que en tareas corrientes de programación le cuesta distinguirlo de Opus 5.5. Coincide con el consejo de Anthropic.
+
+## Qué dijeron los motores de IA sobre Fable 5.2 a las pocas horas
+
+La tarde del 9 de noviembre de 2026 (hora de Estados Unidos), en geotoolbox hicimos las mismas 8 preguntas en inglés sobre Fable 5.2 a 5 motores de IA: ChatGPT (con la búsqueda web forzada), Gemini, Google AI Mode, Perplexity y Claude Opus con búsqueda web, este último desde nuestro sistema de agentes, no desde la aplicación de Claude.
+
+Los 5 dieron la fecha de lanzamiento del 9 de noviembre, los precios de 8 $ y 40 $ y la rebaja del 20 %. Sus citas apuntaban sobre todo a páginas de Anthropic.
+
+Con la búsqueda desactivada, el panorama cambió. El modelo Flash de Gemini, que respondía solo con sus datos de entrenamiento, nos dijo que «Claude Fable 5.2» no existe. Es lo esperable: sin buscar, ningún modelo puede conocer un lanzamiento de esa misma mañana.
+
+Nuestra lectura editorial: ante un tema más reciente que los datos de entrenamiento, los motores con búsqueda se apoyaron en las páginas que pudieron recuperar ese día. Nuestra guía sobre el [query fan-out](https://geotoolbox.ai/blog/query-fan-out) explica ese paso de recuperación.
+
+Para revisar lo básico de tu sitio, el [comprobador gratuito AI Readiness](https://geotoolbox.ai/tools/ai-readiness) de geotoolbox ejecuta 5 pruebas clave sobre cualquier URL, entre ellas si tu robots.txt deja pasar a los rastreadores de IA.
+
+El [Agent Readiness Scanner](https://geotoolbox.ai/tools/agent-readiness-scanner), también gratuito, va más lejos: recupera la página en vivo como los rastreadores de IA y la renderiza en un navegador real.
+
+## Preguntas frecuentes
+
+### ¿Claude Fable 5.2 es gratis?
+
+No. Los modelos Fable no están en el plan Free de Claude. En Pro y en los asientos estándar de Team, la oferta de lanzamiento lo incluye del 9 al 16 de noviembre de 2026, hasta el 50 % de los límites de uso semanales; fuera de esa semana funciona con créditos de uso, un pago por consumo.
+
+En Max, Ultra y los asientos premium forma parte del plan, con ese mismo tope del 50 %.
+
+### ¿Claude Code es compatible con Fable 5.2?
+
+Sí, desde la versión 2.1.321 de Claude Code. Se elige con `/model fable`, y ahí el nivel de esfuerzo predeterminado es medium. El modo rápido también funciona en Claude Code, pero en los planes de suscripción siempre se factura con créditos de uso, aunque te quede uso del plan.
+
+### ¿Sigue disponible Claude Fable 5?
+
+Sí. Fable 5, Fable 5.1 y Fable 5.2 están disponibles en los planes de pago de Claude, y la página de modelos retirados de Anthropic no prevé retirar el Fable 5 original antes del 9 de junio de 2027. En Claude Code y en las aplicaciones, los modelos anteriores se eligen por su nombre.
+
+### ¿Fable 5.2 es mejor que GPT-6 Astra?
+
+En los benchmarks publicados al 10 de noviembre de 2026, sí. La tabla del anuncio de Anthropic pone a Fable 5.2 por delante de GPT-6 Astra en todas las filas en las que los dos tienen puntuación, y el índice de Artificial Analysis le da 65 frente a 57.
+
+En costo, según la system card de Anthropic, Fable 5.2 con esfuerzo high obtuvo un 45,3 % en FrontierCode por 6,72 $ la tarea, frente al 42,8 % de la mejor ejecución de GPT-6 Astra por 6,68 $. La mejor puntuación de Fable, en xhigh, costó alrededor del doble.
+
+## Fuentes
+
+- Introducing Claude Fable 5.2 and Claude Mythos 5.2 - Anthropic, 9 de noviembre de 2026 - `anthropic.com/claude-fable-and-mythos-5-2`
+- Claude Fable 5.2 and Claude Mythos 5.2 System Card - Anthropic, noviembre de 2026 - `anthropic.com/document/claude-fable-5-2-mythos-5-2-system-card`
+- Statement on the US government directive to suspend access to Fable 5 and Mythos 5 - Anthropic, 12 de junio de 2026 - `anthropic.com/news/fable-mythos-access`
+- Redeploying Fable 5 - Anthropic, 30 de junio de 2026 - `anthropic.com/news/redeploying-fable-5`
+- Pricing - Claude Platform Docs, consultado el 10 de noviembre de 2026 - `platform.claude.com/docs/en/about-claude/pricing`
+- Models overview - Claude Platform Docs, consultado el 10 de noviembre de 2026 - `platform.claude.com/docs/en/models/overview`
+- Model deprecations - Claude Platform Docs, consultado el 10 de noviembre de 2026 - `platform.claude.com/docs/en/about-claude/model-deprecations`
+- What's new in Claude Fable 5.2 - Claude Platform Docs, consultado el 10 de noviembre de 2026 - `platform.claude.com/docs/en/models/fable-5-2/whats-new-fable-5-2`
+- Claude Fable 5.2 migration guide - Claude Platform Docs, consultado el 10 de noviembre de 2026 - `platform.claude.com/docs/en/models/fable-5-2/migration-guide`
+- Refusals and fallback - Claude Platform Docs, consultado el 10 de noviembre de 2026 - `platform.claude.com/docs/en/build-with-claude/refusals-and-fallback`
+- Data residency - Claude Platform Docs, consultado el 10 de noviembre de 2026 - `platform.claude.com/docs/en/manage-claude/data-residency`
+- Ofertas de lanzamiento de Claude Fable 5.2 - Centro de ayuda de Claude, actualizado el 9 de noviembre de 2026 - `support.claude.com/es/articles/17506494`
+- Modelos Claude Fable en tu plan - Centro de ayuda de Claude, actualizado el 9 de noviembre de 2026 - `support.claude.com/es/articles/15424964`
+- Por qué Claude cambió de modelo en tu conversación con modelos Fable - Centro de ayuda de Claude, actualizado el 9 de noviembre de 2026 - `support.claude.com/es/articles/15363606`
+- ¿Actúa Anthropic como Procesador o Controlador de Datos? - Centro de ayuda de Claude, consultado el 10 de noviembre de 2026 - `support.claude.com/es/articles/9267385`
+- ¿Cómo puedo ver y firmar su Adenda de Procesamiento de Datos (DPA)? - Centro de privacidad de Anthropic, consultado el 10 de noviembre de 2026 - `privacy.claude.com/es/articles/7996862`
+- Precios de los planes de Claude por país - Anthropic, interfaz de precios de `claude.com/es/pricing`, consultada el 10 de noviembre de 2026 para España, México, Argentina, Colombia, Chile y Perú
+- Supported Regions Policy - Anthropic, consultado el 10 de noviembre de 2026 - `anthropic.com/supported-countries`
+- Claude Fable 5.2 en Google Cloud - Google Cloud, consultado el 10 de noviembre de 2026 - `docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/claude/fable-5-2`
+- Model configuration - Claude Code Docs, actualizado el 9 de noviembre de 2026 - `code.claude.com/docs/en/model-config`
+- Fast mode - Claude Code Docs, actualizado el 9 de noviembre de 2026 - `code.claude.com/docs/en/fast-mode`
+- LLM leaderboard y página del modelo Claude Fable 5.2 - Artificial Analysis, consultado el 10 de noviembre de 2026 - `artificialanalysis.ai/leaderboards/models`
+- GDPval-AA v2.1 - Artificial Analysis, consultado el 10 de noviembre de 2026 - `artificialanalysis.ai/evaluations/gdpval-aa`
+- AA-Briefcase - Artificial Analysis, consultado el 10 de noviembre de 2026 - `artificialanalysis.ai/evaluations/aa-briefcase`
+- Terminal-Bench 4.0 - Artificial Analysis, consultado el 10 de noviembre de 2026 - `artificialanalysis.ai/evaluations/terminalbench-4-0`
+- Vals Index - Vals AI, actualizado el 9 de noviembre de 2026 - `vals.ai/benchmarks/vals_index`
+- Terminal-Bench 4.0 - Vals AI, actualizado el 9 de noviembre de 2026 - `vals.ai/benchmarks/terminal-bench-4`
+- FrontierCode leaderboard - Cognition, consultado el 10 de noviembre de 2026 - `cognition.com/frontiercode`
+- Hilos del día del lanzamiento de Fable 5.2 - r/ClaudeAI, 9 de noviembre de 2026 - `reddit.com/r/ClaudeAI/comments/1xs25gb/` y `reddit.com/r/ClaudeAI/comments/1xs0dct/`
+- Claude Fable 5.2 and Mythos 5.2 discussion - Hacker News, 9 de noviembre de 2026 - `news.ycombinator.com/item?id=50429068`
