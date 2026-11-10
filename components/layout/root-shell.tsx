@@ -1,4 +1,4 @@
-import { DM_Sans, DM_Mono } from "next/font/google"
+import localFont from "next/font/local"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { PromoBanner } from "@/components/layout/promo-banner"
@@ -15,16 +15,51 @@ import "@/app/globals.css"
 // same font objects and CSS variables. Keeping the <html>/<body>/chrome shell in
 // one component is what lets us have two root layouts without the two <html>
 // trees drifting apart.
-const dmSans = DM_Sans({
-  variable: "--font-body",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+// Fonts are SELF-HOSTED (next/font/local, files in ./fonts). They used to come from
+// next/font/google, which downloads them from Google at build time: when that fetch
+// failed the whole production build failed ("next/font/google queries have exactly one
+// entry"). The files are the same latin + latin-ext woff2 subsets Google serves, with
+// the same unicode ranges, so rendering is unchanged and the build needs no network.
+// Each family is two instances because next/font/local takes one unicode-range per
+// instance; globals.css joins them into --font-body / --font-mono. The loader only
+// accepts literal values, so the two unicode ranges are written out in full.
+const dmSans = localFont({
+  src: [{ path: "./fonts/dm-sans-latin-variable.woff2", weight: "400 700", style: "normal" }],
+  variable: "--font-body-latin",
+  display: "swap",
+  adjustFontFallback: false,
+  declarations: [{ prop: "unicode-range", value: "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD" }],
 })
 
-const dmMono = DM_Mono({
-  variable: "--font-mono",
-  subsets: ["latin"],
-  weight: ["400", "500"],
+const dmSansExt = localFont({
+  src: [{ path: "./fonts/dm-sans-latin-ext-variable.woff2", weight: "400 700", style: "normal" }],
+  variable: "--font-body-ext",
+  display: "swap",
+  preload: false,
+  declarations: [{ prop: "unicode-range", value: "U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF" }],
+})
+
+const dmMono = localFont({
+  src: [
+    { path: "./fonts/dm-mono-latin-400.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/dm-mono-latin-500.woff2", weight: "500", style: "normal" },
+  ],
+  variable: "--font-mono-latin",
+  display: "swap",
+  adjustFontFallback: false,
+  declarations: [{ prop: "unicode-range", value: "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD" }],
+})
+
+const dmMonoExt = localFont({
+  src: [
+    { path: "./fonts/dm-mono-latin-ext-400.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/dm-mono-latin-ext-500.woff2", weight: "500", style: "normal" },
+  ],
+  variable: "--font-mono-ext",
+  display: "swap",
+  preload: false,
+  adjustFontFallback: false,
+  declarations: [{ prop: "unicode-range", value: "U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF" }],
 })
 
 export function RootShell({
@@ -48,7 +83,7 @@ export function RootShell({
   return (
     <html
       lang={lang}
-      className={`${dmSans.variable} ${dmMono.variable} h-full`}
+      className={`${dmSans.variable} ${dmSansExt.variable} ${dmMono.variable} ${dmMonoExt.variable} h-full`}
     >
       <body className="min-h-full flex flex-col antialiased">
         <a href="#main-content" className="skip-link">{common?.skipToContent ?? "Skip to main content"}</a>
