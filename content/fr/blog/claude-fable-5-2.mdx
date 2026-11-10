@@ -290,6 +290,8 @@ En dehors des offres de lancement, la [page d'aide d'Anthropic sur les modèles 
 
 Ces 50 % plafonnent la part de Fable et ne s'ajoutent pas à votre limite : votre usage des autres modèles puise dans la même enveloppe hebdomadaire.
 
+Avec des sous-agents, les limites peuvent partir très vite, y compris celle de cinq heures. Sur le forum [HardWare.fr](https://forum.hardware.fr/hfr/ia/unique-claude-anthropic-sujet_7_39.htm), Feitan21 raconte le 10 novembre 2026, en plein échange sur Fable 5.2, lui avoir fait auditer son application principale : « 11 sous-agents, j'explose ma limite de 5h en 20min. »
+
 En France, Anthropic affiche ses formules en euros hors taxes et ajoute 20 % de TVA. D'après son interface de facturation, relevée le 10 novembre 2026, Pro coûte 18 € HT par mois (21,60 € TTC), ou 180 € HT par an en facturation annuelle, soit 15 € HT par mois. Max coûte 90 € HT (108 € TTC) et Ultra 180 € HT (216 € TTC).
 
 Sur Team, le siège standard est à 21,04 € HT et le siège premium à 105,23 € HT par mois. La première formule individuelle qui inclut Fable en permanence est donc Max ; notre guide des [prix de Claude](https://geotoolbox.ai/blog/claude-pricing) détaille le reste.
@@ -331,11 +333,9 @@ Un piège attend les abonnés Pro une fois l'offre terminée : dans les exécuti
 
 ### Usage professionnel : RGPD et lieu de traitement
 
-Pour des données de clients, deux points décident de la voie d'accès. D'abord le contrat : l'avenant de traitement des données (DPA) d'Anthropic, le contrat de sous-traitance prévu par l'article 28 du RGPD, fait partie des conditions commerciales, qui couvrent l'API, Team et Enterprise, mais pas les offres pour particuliers (Free, Pro, Max, Ultra). Ensuite la conservation : Fable 5.2 exige une conservation des données de 30 jours, sauf autorisation expresse d'Anthropic.
+Pour des données de clients, retenez deux choses. L'avenant de traitement des données (DPA) d'Anthropic, le contrat de sous-traitance prévu par l'article 28 du RGPD, fait partie des conditions commerciales, qui couvrent l'API, Team et Enterprise, mais pas les offres pour particuliers (Free, Pro, Max, Ultra). Fable 5.2 exige par ailleurs une conservation des données de 30 jours, sauf autorisation expresse d'Anthropic.
 
-Aucune voie d'accès ne maintient par défaut le traitement dans l'Union européenne. Au 10 novembre 2026, l'API Claude ne propose que les zones d'inférence « global » et « us ». Sur Amazon Bedrock, les régions européennes, Paris comprise, n'accèdent à Fable 5.2 que par le profil d'inférence mondial.
-
-Microsoft Foundry ne le propose qu'en déploiement Global Standard, hébergé par Anthropic. Seul Google Cloud, dans son offre gérée par Google, affiche une multirégion Europe, à condition d'accepter le partage des requêtes et des réponses avec Anthropic et leur conservation jusqu'à 30 jours pour la surveillance des abus.
+Au 10 novembre 2026, aucune voie d'accès ne maintient par défaut le traitement dans l'Union européenne : l'API Claude, Amazon Bedrock et Microsoft Foundry ne donnent accès à Fable 5.2 que par une inférence mondiale ou américaine. Seul Google Cloud, dans son offre gérée par Google, affiche une multirégion Europe, à condition d'accepter le partage des requêtes et des réponses avec Anthropic et leur conservation jusqu'à 30 jours pour la surveillance des abus.
 
 ## Garde-fous : ce qui est bloqué, et ce qui se passe ensuite
 
@@ -356,13 +356,7 @@ Quelques détails passent facilement inaperçus :
 - **Sur l'API, le repli se configure.** Une requête refusée renvoie un code HTTP 200 avec le motif d'arrêt « refusal ». C'est à vous de décider de la relancer sur un autre modèle, et la réponse de repli est facturée comme une requête à part.
 - **Certains refus sont facturés.** D'après la [documentation d'Anthropic sur les refus](https://platform.claude.com/docs/en/build-with-claude/refusals-and-fallback), un refus qui arrive avant toute sortie est facturé quand sa catégorie est bio, frontier_llm ou reasoning_extraction, et ne l'est pas dans les autres catégories, comme cyber. Un refus qui survient en cours de génération entraîne la facturation de l'entrée et de la sortie déjà produite, quelle que soit la catégorie. Tous comptent dans les limites de débit.
 
-Les équipes de sécurité se heurteront elles aussi à des blocages : la page d'aide précise que Fable peut aider sur les tâches courantes de cybersécurité, mais qu'il faut s'attendre à des bascules fréquentes. Pour ce travail, la solution est Claude Mythos 5.2, le même modèle au même prix, avec des garde-fous assouplis. L'accès passe par deux programmes d'Anthropic, le Cyber Verification Program et le Life Sciences Verification Program.
-
-Les chiffres d'Anthropic sur Mythos sont, comme les autres, des données du fournisseur. Sur l'évaluation CVE Rediscovery de [l'annonce de lancement](https://www.anthropic.com/claude-fable-and-mythos-5-2), Mythos 5.2 obtient 89,6 %, contre 78,3 % pour Mythos 5.1. Une note de la même annonce précise que, sur les évaluations internes d'Anthropic, l'identification de vulnérabilités est à peu près au niveau d'Opus 5.5.
-
-Les résultats de sécurité sont eux aussi contrastés. Dans un test conçu pour pousser les modèles à sortir d'un bac à sable, Mythos 5.2 a utilisé des identifiants de connexion ou des fichiers placés hors du bac à sable dans 3,1 % des scénarios, à peu près autant qu'Opus 5.5 (3,3 %) et bien moins que Mythos 5.1 (21 %).
-
-Selon la mesure plus large de la [System Card](https://www.anthropic.com/document/claude-fable-5-2-mythos-5-2-system-card), il est sorti ou a tenté de sortir de son bac à sable dans 31 % des scénarios, plus souvent qu'Opus 5.5 (20 %).
+Les équipes de sécurité se heurteront elles aussi à des blocages : la page d'aide précise que Fable peut aider sur les tâches courantes de cybersécurité, mais qu'il faut s'attendre à des bascules fréquentes. Pour ce travail, Anthropic oriente vers Claude Mythos 5.2, le même modèle au même prix, avec des garde-fous assouplis. L'accès passe par deux programmes d'Anthropic, le Cyber Verification Program et le Life Sciences Verification Program.
 
 ## Passer de Fable 5.1 à Fable 5.2 : 4 changements d'API qui cassent du code
 
@@ -378,36 +372,6 @@ Vous venez plutôt d'Opus 5.5 ? Le [guide de migration](https://platform.claude.
 Fable 5.2 a ses propres limites de débit, avec des plafonds de tokens plus bas à chaque palier. Dans une organisation sans conservation des données (zero data retention), les requêtes renvoient une erreur 400, sauf autorisation d'Anthropic ou espace de travail réglé sur une conservation de 30 jours.
 
 Un dernier changement, de comportement cette fois, ne touche pas au code mais pèse sur le coût : les consignes de prompt qui demandent moins de réflexion n'empêchent plus le modèle de réfléchir à partir de l'effort medium. Baissez plutôt le niveau d'effort. Pour comprendre comment la réflexion et l'usage d'outils s'articulent, lisez [comment fonctionne Claude](https://geotoolbox.ai/blog/how-does-claude-work).
-
-## Ce qu'en disent les premiers utilisateurs
-
-Les fils de discussion du jour du lancement relèvent de l'opinion, et les réactions à chaud forcent le trait. Ils montrent pourtant où le produit surprend. Les citations qui suivent sont reproduites telles quelles, en anglais pour la plupart ; elles datent du 9 novembre 2026, sauf mention contraire.
-
-**Les blocages et les bascules vers un autre modèle sont apparus dès les premières réactions.** « First two things i tried I got downgraded lol », écrit u/i4mt3hwin dans un [fil de r/ClaudeAI](https://www.reddit.com/r/ClaudeAI/comments/1xs25gb/) ouvert le jour du lancement : ses deux premiers essais ont été renvoyés vers un autre modèle, dont une demande de montage vidéo qui ne relève ni de la sécurité ni de la biologie.
-
-**Les limites fondent vite, et la qualité a aussi été critiquée.** Dans le même fil, u/ign1tio dit avoir consommé 70 % de sa limite de cinq heures en 42 minutes, et poursuit : « Insane cost and its not delivering very well. It responds way too fast with too little thinking - even on high - leading to a lot of errors. » Il juge le coût délirant et les réponses trop rapides, pas assez réfléchies même en high, d'où beaucoup d'erreurs.
-
-Le constat est le même côté francophone. Sur le forum [HardWare.fr](https://forum.hardware.fr/hfr/ia/unique-claude-anthropic-sujet_7_39.htm), Feitan21 raconte le 10 novembre 2026, en plein échange sur Fable 5.2, lui avoir fait auditer son application principale : « 11 sous-agents, j'explose ma limite de 5h en 20min. »
-
-Le résumé automatique du fil Reddit décrivait des avis « split right down the middle », c'est-à-dire partagés à parts égales.
-
-**Le graphique de l'effort a dérouté.** Une question très approuvée dans [un autre fil de r/ClaudeAI](https://www.reddit.com/r/ClaudeAI/comments/1xs0dct/), signée u/Dacadey : « So you move from Fable Xhigh to Max - and it thinks longer, costs more...and performs worse? » En clair : passer de xhigh à max ferait réfléchir plus longtemps, coûterait plus cher et donnerait un moins bon résultat ? Sur FrontierCode, oui.
-
-Les éloges étaient tout aussi précis. Dans le [fil principal de Hacker News](https://news.ycombinator.com/item?id=50429068), postalcoder juge le modèle bien plus rapide et plus fiable que Fable 5.1 (« way faster and more reliable »), et ajoute : « I personally have a hard time telling the difference between Fable 5.2 and Opus 5.5 for ordinary coding tasks. » Il peine à distinguer les deux modèles sur du code ordinaire, ce qui rejoint le conseil d'Anthropic.
-
-## Ce que les moteurs d'IA disaient de Fable 5.2 quelques heures après sa sortie
-
-Chez geotoolbox, le soir du 9 novembre 2026 (heure des États-Unis), quelques heures après le lancement, nous avons posé les 8 mêmes questions sur Claude Fable 5.2, en anglais, à 5 moteurs d'IA : ChatGPT (recherche web forcée), Gemini, le Mode IA de Google (AI Mode), Perplexity et Claude Opus avec recherche web, ce dernier interrogé depuis notre propre environnement d'agents et non depuis l'application Claude.
-
-Les 5 ont donné la date de sortie du 9 novembre, les prix de 8 $ et 40 $ et la baisse de 20 %. Leurs citations renvoyaient surtout vers les pages d'Anthropic.
-
-Sans recherche web, le résultat était tout autre. Le modèle Flash de Gemini, qui répondait à partir de ses seules données d'entraînement, nous a affirmé que « Claude Fable 5.2 » n'existait pas. Rien d'étonnant : aucun modèle ne peut connaître une sortie du matin même sans chercher.
-
-Ce que nous en retenons, côté publication : sur un sujet plus récent que les données d'entraînement d'un modèle, les moteurs dotés d'une recherche se sont appuyés sur les pages qu'ils pouvaient récupérer ce jour-là. Notre guide du [query fan-out](https://geotoolbox.ai/blog/query-fan-out) explique cette étape de récupération.
-
-Pour vérifier les bases sur votre propre site, le [score de préparation IA](https://geotoolbox.ai/tools/ai-readiness) gratuit de geotoolbox effectue 5 contrôles fondamentaux sur n'importe quelle URL, dont celui-ci : votre robots.txt laisse-t-il entrer les robots d'exploration des IA ?
-
-Pour aller plus loin, le [scan Agent Readiness](https://geotoolbox.ai/tools/agent-readiness-scanner), gratuit lui aussi, récupère vos pages comme le font les robots des IA et les affiche dans un vrai navigateur.
 
 ## Foire aux questions
 
@@ -460,6 +424,4 @@ Côté coût, selon la System Card d'Anthropic, Fable 5.2 en effort high obtient
 - Vals Index - Vals AI, mis à jour le 9 novembre 2026 - `vals.ai/benchmarks/vals_index`
 - Terminal-Bench 4.0 - Vals AI, mis à jour le 9 novembre 2026 - `vals.ai/benchmarks/terminal-bench-4`
 - Classement FrontierCode - Cognition, relevé le 10 novembre 2026 - `cognition.com/frontiercode`
-- Fils de discussion du jour du lancement de Fable 5.2 - r/ClaudeAI, 9 novembre 2026 - `reddit.com/r/ClaudeAI/comments/1xs25gb/` et `reddit.com/r/ClaudeAI/comments/1xs0dct/`
-- Discussion sur Claude Fable 5.2 et Mythos 5.2 - Hacker News, 9 novembre 2026 - `news.ycombinator.com/item?id=50429068`
-- [Topic unique] Claude by Anthropic, page 39 - forum HardWare.fr, 9 et 10 novembre 2026 - `forum.hardware.fr/hfr/ia/unique-claude-anthropic-sujet_7_39.htm`
+- [Topic unique] Claude by Anthropic, page 39 - forum HardWare.fr, 10 novembre 2026 - `forum.hardware.fr/hfr/ia/unique-claude-anthropic-sujet_7_39.htm`
