@@ -1,3 +1,5 @@
+import { ToolIntro } from "@/components/tools/tool-intro"
+import styles from "@/components/tools/tool-experience.module.css"
 import type { Metadata } from "next"
 import Link from "next/link"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
@@ -80,7 +82,7 @@ export default function AiReadinessPage() {
   return (
     <>
       {/* Hero + the tool */}
-      <section className="relative overflow-hidden bg-[var(--surface-steel)] px-6 pt-16 pb-16 sm:pt-20 sm:pb-20">
+      <section className={styles.hero}>
         <JsonLd
           data={[
             softwareApplicationSchema({
@@ -99,32 +101,25 @@ export default function AiReadinessPage() {
 
         <div className="mx-auto max-w-5xl">
           <Breadcrumbs
+            tone="dark"
             trail={[
               { name: "Home", href: "/" },
               { name: "Tools", href: "/tools" },
               { name: "AI-Readiness Score", href: "" },
             ]}
           />
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">Free AI-readiness tool</p>
-            <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-              Free AI Readiness Checker: Is Your Site Ready for AI Agents?
-            </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
-              Before AI can mention you, it has to reach you. This free AI readiness checker scores any domain on the five
-              foundations AI agents need first: robots.txt validity, AI-crawler access, content signals, sitemap, markdown
-              negotiation. Scored exactly the way our full Agent Readiness scan scores them. Server-side, no sign-up.
-            </p>
-          </div>
+          <ToolIntro slug="ai-readiness" />
 
-          <div className="mt-10">
+          <div className={styles.workbench}>
             <AiReadinessWidget />
           </div>
         </div>
       </section>
 
       {/* Honest evidence panel */}
-      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
+      <details className={styles.guide}>
+        <summary>What this tool checks and how to read the results</summary>
+<section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
         <div className="mx-auto max-w-3xl">
           <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">Straight answer</p>
           <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
@@ -147,6 +142,7 @@ export default function AiReadinessPage() {
           </div>
         </div>
       </section>
+      </details>
 
       {/* How it works */}
       <HowItWorks3Step heading="From a domain to a readiness score in three steps" steps={steps} />
