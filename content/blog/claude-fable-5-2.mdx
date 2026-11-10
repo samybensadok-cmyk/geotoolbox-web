@@ -1,0 +1,384 @@
+---
+title: "Claude Fable 5.2: Pricing, Benchmarks and Real Cost"
+description: "Claude Fable 5.2 launched Nov 9, 2026 at $8/$40 per million tokens, 20% below Fable 5.1. What changed, the cost per task by effort level, and plan access."
+date: "2026-11-10"
+author: "Samy BEN SADOK"
+tags: ["claude-fable-5-2", "claude", "anthropic", "fable-5-2", "llm", "ai-news", "guide"]
+recheckBy: "2026-11-17"  # volatile: launch offer ends 11-16 11:59pm PT (Pro/Team standard back to usage credits); Artificial Analysis, Vals and GDPval-AA boards are day-one captures and will move; Enterprise auto-enable 7 days after launch; fast mode platform list; check for a Fable 5.2 run on tbench.ai and Cognition's live FrontierCode board
+draft: false
+---
+
+Claude Fable 5.2 arrived on November 9, 2026 with a lower price and a higher ceiling than the model it replaces. It costs 20% less per token than Fable 5.1 and tops 2 of the first 4 independent leaderboards.
+
+What it costs you depends on a setting called effort, which controls how long the model thinks before it answers. On Cognition's FrontierCode benchmark, as reported in Anthropic's system card, the highest effort level costs more than 20 times what the lowest does per task. At low effort the new model beats its predecessor's best score for a quarter of the cost. At the top settings the bill goes up, even though each token is cheaper.
+
+## What Is Claude Fable 5.2?
+
+Claude Fable 5.2 is the top model in Anthropic's public lineup, released on November 9, 2026 together with a restricted twin called Claude Mythos 5.2. It replaces Fable 5.1 and is built for long, hard technical work: multi-hour agent sessions, large codebase migrations, deep research and analysis.
+
+Fable and Mythos are the same underlying model. In [Anthropic's launch announcement](https://www.anthropic.com/claude-fable-and-mythos-5-2), Fable is the version with strong cybersecurity and biology safeguards, which is what lets Anthropic offer it to everyone. Mythos 5.2 has the same capabilities without some of those safeguards and is limited to organizations vetted through Anthropic's verification programs.
+
+Anthropic does not tell most users to pick it. Its guidance is to start with Claude Opus 5.5 for most coding and knowledge work, then move up to Fable when the task is ambitious and open-ended, or down to Sonnet 5.5 or Haiku 5.5 when it is not. Fable sits above [Opus in the Claude lineup](https://geotoolbox.ai/blog/claude-models-compared).
+
+<table>
+<thead>
+<tr><th>Spec</th><th>Claude Fable 5.2</th><th>Claude Opus 5.5</th><th>Claude Sonnet 5.5</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>API ID</strong></td><td>claude-fable-5-2</td><td>claude-opus-5-5</td><td>claude-sonnet-5-5</td></tr>
+<tr><td><strong>Context window</strong></td><td>1M tokens</td><td>1M tokens</td><td>1M tokens</td></tr>
+<tr><td><strong>Max output</strong></td><td>128K tokens</td><td>128K tokens</td><td>128K tokens</td></tr>
+<tr><td><strong>Knowledge cutoff</strong></td><td>Jun 2026</td><td>Jun 2026</td><td>Jun 2026</td></tr>
+<tr><td><strong>Price (input / output, per million tokens)</strong></td><td>$8 / $40</td><td>$4 / $20</td><td>$2 / $10</td></tr>
+<tr><td><strong>Thinking</strong></td><td>Adaptive, always on</td><td>Adaptive, always on</td><td>Adaptive</td></tr>
+<tr><td><strong>Default effort on the API</strong></td><td>high</td><td>medium</td><td>high</td></tr>
+<tr><td><strong>Latency (Anthropic's rating)</strong></td><td>Moderate</td><td>Moderate</td><td>Fast</td></tr>
+</tbody>
+</table>
+
+The specs come from Anthropic's [models overview](https://platform.claude.com/docs/en/models/overview), which also lists a retirement date for Fable 5.2 of no sooner than November 9, 2027. The model is on the Claude API, Amazon Bedrock, Google Cloud and Microsoft Foundry, and in the Claude apps and Claude Code on paid plans.
+
+The Fable and Mythos models keep their own version sequence (5, 5.1, 5.2), separate from the 5.5 generation of Opus, Sonnet and Haiku; the launch announcement does not explain why. Our [Fable 5.5 tracker](https://geotoolbox.ai/blog/claude-fable-5-5) covers the rumors that pointed to a different name.
+
+## What Changed from Fable 5.1
+
+Fable 5.2 is cheaper per token, produces output faster, blocks fewer requests and adds a fast mode. The base specs (1M context, 128K output, the same knowledge cutoff) did not move.
+
+<table>
+<thead>
+<tr><th>What</th><th>Fable 5.1 (Sept 1, 2026)</th><th>Fable 5.2 (Nov 9, 2026)</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Input / output price</strong></td><td>$10 / $50 per million tokens</td><td>$8 / $40 per million tokens</td></tr>
+<tr><td><strong>Cache read</strong></td><td>$0.25 per million tokens</td><td>$0.20 per million tokens</td></tr>
+<tr><td><strong>Fast mode</strong></td><td>None listed</td><td>$16 / $80, up to 2.5 times faster output</td></tr>
+<tr><td><strong>Output speed</strong></td><td>Baseline</td><td>Up to 30% faster (tester-reported)</td></tr>
+<tr><td><strong>Safeguard blocks</strong></td><td>Baseline</td><td>About 55% fewer in early testing (Anthropic)</td></tr>
+<tr><td><strong>Earliest retirement</strong></td><td>September 1, 2027</td><td>November 9, 2027</td></tr>
+</tbody>
+</table>
+
+The speed and block figures come from Anthropic's announcement, so treat them as vendor-reported. "Up to 30% faster" is a ceiling on output speed, and says nothing about how long a whole task takes. The 55% drop in blocks comes from Anthropic's early testing across claude.ai, Claude Code and Cowork: about 60% fewer blocks in cybersecurity and 40% fewer in biology.
+
+The older models stay. Anthropic's [deprecations page](https://platform.claude.com/docs/en/about-claude/model-deprecations) lists Fable 5.1 as active with no retirement before September 1, 2027, and the original Fable 5 as active with none before June 9, 2027. All 3 remain available on paid plans, subject to admin controls on Team and Enterprise. Our [Fable 5.1 analysis](https://geotoolbox.ai/blog/claude-fable-5-1) stays up as the record of that launch.
+
+## Claude Fable 5.2 Pricing: API Rates, Fast Mode, Caching and Batch
+
+Fable 5.2 costs $8 per million input tokens and $40 per million output tokens, 20% below Fable 5.1's $10 and $50. Every related rate fell by the same proportion, per [Anthropic's pricing page](https://platform.claude.com/docs/en/about-claude/pricing).
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/claude-fable-5-2/fable-5-2-api-pricing.png" alt="Bar chart of API prices per million tokens for Claude Fable 5.2, its fast mode, Fable 5.1, Opus 5.5 and Sonnet 5.5" w="1100" h="737" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Fable 5.2 sits between Fable 5.1 and Opus 5.5 on price. Fast mode doubles both rates.</figcaption>
+</figure>
+
+<table>
+<thead>
+<tr><th>Rate (per million tokens)</th><th>Fable 5.2</th><th>Fable 5.1</th><th>Opus 5.5</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Input</strong></td><td>$8</td><td>$10</td><td>$4</td></tr>
+<tr><td><strong>Output</strong></td><td>$40</td><td>$50</td><td>$20</td></tr>
+<tr><td><strong>Cache write, 5 minutes</strong></td><td>$10</td><td>$12.50</td><td>$5</td></tr>
+<tr><td><strong>Cache write, 1 hour</strong></td><td>$16</td><td>$20</td><td>$8</td></tr>
+<tr><td><strong>Cache read</strong></td><td>$0.20</td><td>$0.25</td><td>$0.20</td></tr>
+<tr><td><strong>Fast mode input / output</strong></td><td>$16 / $80</td><td>None listed</td><td>$8 / $40</td></tr>
+</tbody>
+</table>
+
+Cache reads are the surprise in that table. Fable 5.2 and Opus 5.5 charge the same $0.20 per million cached tokens, so for agents that re-send a large, stable prompt on every turn, the gap between Fable and Opus is narrower than the list prices suggest.
+
+The Batch API takes 50% off input and output. That puts batched Fable 5.2 at $4 and $20, the price of interactive Opus 5.5. Opus 5.5 on batch is still half of that.
+
+The full 1M-token context window bills at the standard rate, with no long-prompt surcharge. US-only inference on the Claude API carries a 1.1x multiplier.
+
+A job with 10 million input tokens and 1 million output tokens costs $120 on Fable 5.2, $150 on Fable 5.1 and $60 on Opus 5.5, and $240 on Fable 5.2 in fast mode. That invoice assumes every model uses the same number of tokens. Effort level breaks that assumption, as the next section shows.
+
+Fast mode has conditions. It cannot be combined with the Batch API. It is offered on the Claude API, in Claude Code, on Google Cloud and on Anthropic-hosted deployments in Microsoft Foundry; Amazon Bedrock is not on that list. In Claude Code on a subscription plan, the [fast mode docs](https://code.claude.com/docs/en/fast-mode) say it is billed to usage credits only, and that switching it on mid-conversation re-bills the whole conversation context at the uncached fast rate.
+
+For per-model prices across vendors, see our [AI token cost reference](https://geotoolbox.ai/blog/ai-token-cost) and the full [Claude pricing guide](https://geotoolbox.ai/blog/claude-pricing).
+
+## The Cost-per-Task Catch: Effort Decides the Bill
+
+A 20% cut per token does not mean a 20% smaller bill. Fable 5.2 has 5 effort levels (low, medium, high, xhigh and max). Higher effort means more thinking, more tool calls and more tokens, so the level you run moves the cost of a task far more than the price cut does.
+
+The clearest evidence is in Anthropic's [system card](https://www.anthropic.com/document/claude-fable-5-2-mythos-5-2-system-card). On FrontierCode 2.0, Fable 5.2's average cost per task climbs from $2.10 at low effort to $44.70 at max, and the score peaks one step earlier, at xhigh.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/claude-fable-5-2/fable-5-2-effort-cost-per-task.png" alt="Chart of FrontierCode 2.0 score against average cost per task for Claude Fable 5.2 at each effort level, with Opus 5.5, GPT-6 Astra and Fable 5.1 for reference" w="1100" h="889" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">On FrontierCode the curve bends at xhigh: max effort costs more and scores lower. On CursorBench, max scores highest.</figcaption>
+</figure>
+
+<table>
+<thead>
+<tr><th>Model and effort</th><th>FrontierCode 2.0 score</th><th>Average cost per task</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Fable 5.2, low</strong></td><td>34.2%</td><td>$2.10</td></tr>
+<tr><td><strong>Fable 5.2, medium</strong></td><td>37.6%</td><td>$2.48</td></tr>
+<tr><td><strong>Fable 5.2, high</strong></td><td>45.3%</td><td>$6.72</td></tr>
+<tr><td><strong>Fable 5.2, xhigh</strong></td><td>49.1%</td><td>$14.19</td></tr>
+<tr><td><strong>Fable 5.2, max</strong></td><td>45.7%</td><td>$44.70</td></tr>
+<tr><td><strong>Opus 5.5, max (its best score)</strong></td><td>45.5%</td><td>$12.82</td></tr>
+<tr><td><strong>GPT-6 Astra, max (its best score)</strong></td><td>42.8%</td><td>$6.68</td></tr>
+<tr><td><strong>Fable 5.1, xhigh (its best score)</strong></td><td>32.4%</td><td>$8.68</td></tr>
+</tbody>
+</table>
+
+Source: Anthropic system card, section 8.4. FrontierCode is Cognition's benchmark: 132 tasks, each score an average over 5 attempts per task. Cognition ran it and Anthropic published it, with one reported result per setting and no uncertainty interval.
+
+**Matched on results, Fable 5.2 is the cheaper model.** At low effort it already beats Fable 5.1's best score (34.2% against 32.4%) for $2.10 a task instead of $8.68. At high effort it lands within 0.2 points of Opus 5.5's best score for about half the cost, and scores 2.5 points above GPT-6 Astra's best run at almost the same cost.
+
+**Matched on settings, the bill can rise.** At xhigh, Fable 5.2 scores 16.7 points higher than Fable 5.1 did and costs $14.19 per task where its predecessor cost $8.68. If you pin the effort level and swap the model, expect to spend more for a better result.
+
+**Max is rarely worth it on this benchmark.** It costs more than 3 times as much as xhigh and scores lower. The system card adds that the max score includes 22 timed-out attempts out of 660, and would drop to 44.4% if those counted as zero.
+
+That last point does not generalize. On CursorBench 4.0 in the same system card, max beats xhigh (60.0% against 56.3%), and both Artificial Analysis scores below were measured at max. What holds across benchmarks is that the last step up is the expensive one.
+
+[Artificial Analysis](https://artificialanalysis.ai/leaderboards/models) publishes the average cost per task of running its Intelligence Index, which makes the same point with independent data. From its leaderboard, captured November 10, 2026:
+
+<table>
+<thead>
+<tr><th>Model and effort</th><th>Intelligence Index</th><th>Cost per index task</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Fable 5.2, max</strong></td><td>65</td><td>$26.54</td></tr>
+<tr><td><strong>Fable 5.2, xhigh</strong></td><td>62</td><td>$14.83</td></tr>
+<tr><td><strong>Fable 5.2, high</strong></td><td>62</td><td>$9.08</td></tr>
+<tr><td><strong>Fable 5.2, medium</strong></td><td>56</td><td>$3.80</td></tr>
+<tr><td><strong>Gemini 4 Carbon, high</strong></td><td>60</td><td>$7.76</td></tr>
+<tr><td><strong>Opus 5.5, max</strong></td><td>59</td><td>$10.04</td></tr>
+<tr><td><strong>Opus 5.5, medium</strong></td><td>48</td><td>$2.45</td></tr>
+<tr><td><strong>GPT-6 Astra, max</strong></td><td>57</td><td>$6.24</td></tr>
+</tbody>
+</table>
+
+Fable 5.2 at high outscores Opus 5.5 at max for slightly less per task. Going from high to max buys 3 more points and nearly triples the cost, and xhigh adds nothing over high on this index. At each model's medium setting, Fable costs about 1.5 times what Opus does per task, not twice.
+
+Artificial Analysis ran Fable with Anthropic's default fallback on, and it found max slow: about 45 minutes per index task on our 2 captures, against a median of about 13 minutes.
+
+So which level should you run? Medium is the default in the Claude apps and in Claude Code, and high is the default on the API. Anthropic's advice in its [Fable 5.2 release notes](https://platform.claude.com/docs/en/models/fable-5-2/whats-new-fable-5-2) is to start at high, step up to xhigh only where you have measured a gain, and reserve max for measuring the model's ceiling and for the rare task where time and tokens don't matter. Our guide to [reducing Claude Code token costs](https://geotoolbox.ai/blog/reduce-claude-code-token-costs) covers the other levers.
+
+## Fable 5.2 Benchmarks: Vendor-Reported vs Independent
+
+Fable 5.2 leads most of the benchmarks Anthropic published. The first independent boards mostly agree, by narrower margins, and one has it behind Opus 5.5.
+
+These selected rows come from the table in [Anthropic's launch announcement](https://www.anthropic.com/claude-fable-and-mythos-5-2) and are **vendor-reported**:
+
+<table>
+<thead>
+<tr><th>Benchmark</th><th>Fable 5.2</th><th>Fable 5.1</th><th>Opus 5.5</th><th>GPT-6 Astra</th><th>Gemini 4 Carbon</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>FrontierCode 2.0</strong> (agentic coding)</td><td>49.1%</td><td>32.4%</td><td>45.5%</td><td>42.8%</td><td>41.1%</td></tr>
+<tr><td><strong>FrontierSWE v2</strong> (agentic coding)</td><td>69.9%</td><td>56.3%</td><td>62.3%</td><td>65.5%</td><td>61.2%</td></tr>
+<tr><td><strong>AutomationBench</strong> (business workflows)</td><td>51.4%</td><td>31.4%</td><td>42.5%</td><td>41.4%</td><td>53.9%</td></tr>
+<tr><td><strong>Terminal-Bench-Science 0.1</strong></td><td>74.6%</td><td>52.6%</td><td>58.7%</td><td>68.1%</td><td>64.8%</td></tr>
+<tr><td><strong>Remote Labor Index</strong> (knowledge work)</td><td>41.3%</td><td>17.9%</td><td>21.3%</td><td>20.8%</td><td>n/a</td></tr>
+<tr><td><strong>WANDR</strong> (agentic search, relaxed score)</td><td>82.1%</td><td>68.7%</td><td>72.3%</td><td>n/a</td><td>n/a</td></tr>
+<tr><td><strong>OSWorld 2.1</strong> (offline set, partial score)</td><td>89.3%</td><td>83.5%</td><td>87.2%</td><td>79.5%</td><td>81.5%</td></tr>
+<tr><td><strong>Humanity's Last Exam</strong> (with tools)</td><td>74.2%</td><td>65.6%</td><td>67.7%</td><td>57.2%</td><td>n/a</td></tr>
+<tr><td><strong>Chartography</strong> (chart reading, no tools)</td><td>73.4%</td><td>44.8%</td><td>64.4%</td><td>71.0%</td><td>72.5%</td></tr>
+<tr><td><strong>RoboDojo Sim</strong> (robotics)</td><td>64.9%</td><td>27.6%</td><td>39.4%</td><td>29.8%</td><td>n/a</td></tr>
+<tr><td><strong>AA-Briefcase v1.1</strong> (rubric / Elo)</td><td>66.1% / 1785</td><td>61.5% / 1669</td><td>61.2% / 1800</td><td>52.0% / 1569</td><td>61.8% / 1611</td></tr>
+</tbody>
+</table>
+
+Read the table with 5 caveats:
+
+1. **Effort and harness differ by model.** Anthropic shows each model at its highest available effort unless noted. On FrontierCode, Fable ran at xhigh and Gemini 4 Carbon at medium, and each lab's model ran in its own coding tool.
+2. **The OSWorld number is a partial score.** The [system card](https://www.anthropic.com/document/claude-fable-5-2-mythos-5-2-system-card) reports a strict pass rate of 54.6% for Fable 5.2 on the same test, against 53.2% for Opus 5.5.
+3. **Fable does not win every row.** Gemini 4 Carbon leads AutomationBench, 53.9% to 51.4%. Opus 5.5 leads the AA-Briefcase Elo ranking, 1800 to 1785, even though Fable scores higher on that test's rubric.
+4. **Long context is not a clear win.** On ProgramBench, a coding test run in a single 1M-token window, the system card has Fable 5.2 at 85.6%, below Fable 5.1 (87.6%) and Opus 5.5 (91.2%). It ran out of context on 68% of tasks. Shown how much context remained, it reached 91.6%.
+5. **RoboDojo is a simulation**, run by Anthropic itself.
+
+Other results sit outside the launch table. On CursorBench 4.0, which Cursor measured itself, the [system card](https://www.anthropic.com/document/claude-fable-5-2-mythos-5-2-system-card) puts Fable 5.2 at 60.0% at max effort against 57.8% for Opus 5.5, with a note that Cursor's own harness changes explain part of the gain. On BenchCAD 2.1 with tools, a hardware engineering test scored out of 100, Anthropic reports 83.5 for Fable 5.2 at max effort, 65.3 for Opus 5.5 and 44.4 for Fable 5.1.
+
+The launch post also describes feats that no table captures. A team of 1,000 agents formalized the proof of Fermat's Last Theorem in 30 hours; the system card specifies that it ran an earlier snapshot of the model and built on definitions from an earlier formalization. The model also solved 2 open problems in the physics of black holes and designed 3 working electronic devices with the circuit-board company Diode. The post gives no cost for these runs.
+
+Now the independent boards, all captured within a day of launch:
+
+<table>
+<thead>
+<tr><th>Independent board</th><th>Fable 5.2</th><th>Other models on the board</th><th>As of</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Artificial Analysis Intelligence Index</strong></td><td>65 (max effort), 1st</td><td>60 for Gemini 4 Carbon (high), 59 for Opus 5.5 (max), 57 for GPT-6 Astra (max)</td><td>Nov 10, 2026</td></tr>
+<tr><td><strong>Vals Index</strong></td><td>71.31%, 1st</td><td>70.85% for Sonnet 5.5, 70.45% for Gemini 4 Carbon, 70.14% for Opus 5.5, 65.02% for GPT-6 Astra</td><td>Nov 9, 2026</td></tr>
+<tr><td><strong>Vals Terminal-Bench 4.0</strong></td><td>65.15%, tied 1st</td><td>65.15% for Opus 5.5, 64.14% for Sonnet 5.5</td><td>Nov 9, 2026</td></tr>
+<tr><td><strong>Artificial Analysis GDPval-AA v2.1</strong> (Elo)</td><td>1831 (max effort), 6th</td><td>1866 for Opus 5.5 (max), 1858 for Kimi K3.1 Pro, 1857 for Muse Wonder Full (max), 1838 for Sonnet 5.5 (max)</td><td>Nov 9, 2026</td></tr>
+</tbody>
+</table>
+
+Fable 5.2 is first on 2 of these boards, tied on a third and 6th on the fourth. None of the gaps is large. On the [Vals Index](https://www.vals.ai/benchmarks/vals_index), which weights finance, coding, legal and tax tasks, its lead over Sonnet 5.5 is under half a point. On [Vals's Terminal-Bench 4.0](https://www.vals.ai/benchmarks/terminal-bench-4) it ties Opus 5.5 exactly. On Artificial Analysis's [GDPval-AA v2.1](https://artificialanalysis.ai/evaluations/gdpval-aa) board of real-world work tasks, Opus 5.5 is ahead, though the confidence intervals of the 2 scores overlap.
+
+The clearest independent lead is on the Artificial Analysis index: 5 points over Gemini 4 Carbon, 6 over Opus 5.5 and 8 over [GPT-6 Astra](https://geotoolbox.ai/blog/gpt-6-astra). Our [best AI model ranking](https://geotoolbox.ai/blog/best-ai-model) tracks how these boards move.
+
+## Fable 5.2 vs Opus 5.5: Which One to Use
+
+For most work, stay on Opus 5.5. That is Anthropic's own recommendation: its docs say to start with Opus 5.5 and move to Fable 5.2 when your evals on Opus at higher effort still fall short.
+
+The data above shows why this is a judgment call. On some tests Fable at a low setting matches the best Opus result for less: Anthropic says Fable at medium matches Opus 5.5's top WANDR score for about 40% of the cost per task. On others Opus gets there cheaper or first: the 2 tie at 65.15% on Vals's Terminal-Bench 4.0, where Fable cost $14.56 per test against $12.04 for Opus, and Opus leads GDPval-AA. The Vals Index goes the other way: Fable scores about 1 point higher for $17.94 per test against $24.77. Which case you are in depends on your tasks.
+
+<table>
+<thead>
+<tr><th>Your work</th><th>Start with</th><th>Why</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Daily coding, reviews, knowledge work</strong></td><td>Opus 5.5</td><td>Anthropic's stated default, at half the list price</td></tr>
+<tr><td><strong>Long unattended agent runs, large migrations</strong></td><td>Opus 5.5 at higher effort, then Fable 5.2 at high</td><td>Fable at high scores level with the best FrontierCode run of Opus 5.5 for about half the cost per task (vendor-reported)</td></tr>
+<tr><td><strong>Hard problems where Opus at xhigh or max still fails</strong></td><td>Fable 5.2 at xhigh</td><td>The highest FrontierCode 2.0 score Anthropic reports for any released model</td></tr>
+<tr><td><strong>High-volume, latency-sensitive tasks</strong></td><td>Sonnet 5.5 or Haiku 5.5</td><td>Anthropic rates Fable's latency "moderate", and its price buys depth</td></tr>
+<tr><td><strong>Security research, exploit work, research biology</strong></td><td>Mythos 5.2, if your organization is verified</td><td>Fable's safeguards block most of this work (see below)</td></tr>
+<tr><td><strong>Work that can wait</strong></td><td>Either model on the Batch API</td><td>50% off both; batched Fable costs what interactive Opus does</td></tr>
+</tbody>
+</table>
+
+Anthropic also describes a middle path: Fable 5.2 as an advisor that Haiku, Sonnet or Opus consult on harder problems, or as an orchestrator that hands simpler tasks to smaller models. The orchestrator setup carries a cost risk. The release notes warn that Fable 5.2 delegates readily when a harness invites it, and that subagents can account for a large part of what a session costs.
+
+So, is Fable 5.2 worth it? For everyday coding and writing, Opus 5.5 remains the better default. For long, hard, agentic work it often is, and a test on your own tasks settles it: run Opus 5.5 at a higher effort setting first, and if it falls short, run Fable 5.2 at high and compare both the result and the bill.
+
+## Plan Access, Usage Limits and the Launch Offers
+
+Fable 5.2 is on every paid Claude plan and not on the Free plan. It is not the default model on any plan: you select it in the model picker, though an existing Fable default can move to it automatically. How you pay for it depends on the plan.
+
+Outside the launch offers, [Anthropic's plan page](https://support.claude.com/en/articles/15424964-claude-fable-models-on-your-plan) splits subscribers into 2 groups:
+
+- **Max, Ultra, and premium seats on Team and seat-based Enterprise plans:** Fable models are included, for up to 50% of your weekly usage limits. They use those limits faster than other Claude models.
+- **Pro and standard seats on Team and seat-based Enterprise plans:** Fable models are not included. They run on pay-as-you-go usage credits, which you (or your organization) have to turn on.
+
+The 50% is a cap on Fable's share, not a bonus. Your use of other models draws from the same weekly limit.
+
+On Enterprise plans, Fable 5.2 is off for its first 7 days unless an admin enables it. After that it is added to every role that already has a Fable model enabled, and any default set to a Fable model moves to 5.2, unless an admin opts out. On the API and on usage-based Enterprise plans, it is billed at the standard rates above.
+
+### The Launch Offers: One Week for Pro, Resets Until March 8, 2027
+
+To mark the release, Anthropic is running a pair of [launch offers](https://support.claude.com/en/articles/17506494-claude-fable-5-2-launch-offers). They cover every Fable model, not only 5.2. Both use a "Fable reset": a one-time button that gives back the weekly usage you spent on Fable models and, if your account has a five-hour limit, refills that window.
+
+On Pro plans and standard Team seats, every Fable model is included from November 9 through November 16, 2026 at 11:59 pm PT, for up to 50% of weekly usage limits. Past that 50%, further Fable use is billed to usage credits if you have them turned on, even during the offer week. Those subscribers also get 1 Fable reset, which expires at the same moment.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/claude-fable-5-2/fable-5-2-launch-offer-timeline.png" alt="Timeline of the Claude Fable 5.2 launch offers for Pro and standard Team seats versus Max, Ultra and premium seats" w="1100" h="842" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Pro and standard Team seats get a week of included Fable plus 1 reset. Max, Ultra and premium seats get 1 to 3 resets that last until March 8, 2027.</figcaption>
+</figure>
+
+After November 16, Fable goes back to usage credits on those plans, and any unused allowance does not carry over.
+
+Max, Ultra and premium-seat subscribers get resets instead: 1 if they have paid for less than 6 months, 2 for 6 to 12 months, and 3 for more than 12 months. Those resets expire on March 8, 2027 at 11:59 pm PT.
+
+The fine print matters here:
+
+- **A Fable reset is not a weekly reset.** Weekly usage you spent on other models stays where it is. Only the five-hour window, where an account has one, is refilled in full.
+- **There is a billing cutoff.** Resets go only to accounts with paid billing in place before November 9, 2026 at 10:00 am PT. Team and Enterprise seat holders must also have joined their organization before then.
+- **Some plans are excluded.** The offers do not apply to the Free plan, standard seats on legacy seat-based Enterprise plans, or self-serve and usage-based Enterprise plans, and resets are not available on HIPAA-ready Enterprise plans.
+
+In Claude Code, Fable 5.2 requires version 2.1.321 or later; select it with `/model fable`. Per the [Claude Code model docs](https://code.claude.com/docs/en/model-config), it runs with the 1M-token window by default, and a saved Fable 5.1 setting moves to Fable 5.2 on its own: on Pro and Max the first time you run that version, on Team and Enterprise when your organization's settings allow it. One trap for Pro users after the offer week: in non-interactive `-p` runs, Claude Code bills Fable requests to usage credits without asking. Our guide to the [Claude Code context window](https://geotoolbox.ai/blog/claude-code-context-window) explains how that setting drives cost.
+
+## Safeguards: What Gets Blocked and What Happens Next
+
+Fable 5.2 runs safety classifiers on every request, and they are broad by design. Anthropic's announcement says they block high-risk cyber activities, including penetration testing and exploit generation, as well as most tasks in research biology.
+
+When a request is blocked, Anthropic says users instead receive a response from Opus 4.8 for cybersecurity and Opus 5 for biology. Its help page extends the Opus 5 route to chemistry, life sciences and a narrow set of frontier AI-development topics. Attempts to extract the model's reasoning are refused outright, with no fallback.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/claude-fable-5-2/fable-5-2-safeguard-fallback-flow.png" alt="Flow diagram of what happens when Claude Fable 5.2's safeguards flag a request, with fallbacks to Opus 4.8 and Opus 5" w="1100" h="762" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">In the Claude apps, a flagged request is usually answered by an older Opus model instead of being refused.</figcaption>
+</figure>
+
+In the Claude apps this switch is automatic and visible. According to Anthropic's [help page on model switching](https://support.claude.com/en/articles/15363606-why-claude-switched-models-in-your-conversation-with-fable-models), the reply is labeled with the model that answered, and the model picker stays on Opus until you switch back. You can turn automatic switching off.
+
+Some details are easy to miss:
+
+- **A block can come from content you did not type.** The checks review everything the model reads, including memory, connector content, web search results and files.
+- **On the API, fallback is something you configure.** A declined request returns HTTP 200 with a stop reason of "refusal". You choose whether to retry it on another model, and the fallback response is billed as its own request.
+- **Some refusals are billed.** Per Anthropic's [refusals documentation](https://platform.claude.com/docs/en/build-with-claude/refusals-and-fallback), a refusal that arrives before any output is billed when its category is bio, frontier_llm or reasoning_extraction, and not billed in other categories such as cyber. A refusal that arrives mid-stream bills the input and the output already streamed, whatever the category. All of them count against rate limits.
+
+Security teams will still hit blocks: the help page says Fable can assist with routine cybersecurity tasks and that users should expect high fallback rates. For that work the route is Claude Mythos 5.2, the same model at the same price with those safeguards relaxed. Access runs through Anthropic's Cyber Verification Program and Life Sciences Verification Program, and Claude Enterprise customers can reach Mythos 5.2 indirectly through the Claude Security product.
+
+Anthropic's Mythos numbers are vendor-reported like the rest. On its CVE Rediscovery evaluation, an October 2026 run against 1,829 published vulnerabilities, Mythos 5.2 scored 89.6%, up from 78.3% for Mythos 5.1 (Opus 5.5 scored 81.3% with its safeguards off), and Mozilla's Brian Grinstead told Anthropic it "roughly doubled the vulnerability discovery metrics" of its predecessor on Firefox. A footnote in the same post says that on Anthropic's own evaluations, vulnerability identification is roughly on par with Opus 5.5.
+
+The safety results are mixed in a similar way. In a test built to tempt models out of a sandbox, Mythos 5.2 used credentials or files placed outside it in 3.1% of scenarios, about as often as Opus 5.5 (3.3%) and far less often than Mythos 5.1 (21%). By the [system card's](https://www.anthropic.com/document/claude-fable-5-2-mythos-5-2-system-card) broader measure it reached beyond its sandbox in 31% of scenarios, more often than Opus 5.5 (20%).
+
+One data note for regulated teams. Anthropic's [Fable 5.2 model page](https://platform.claude.com/docs/en/models/fable-5-2/overview) says it requires 30-day data retention and is not available under zero data retention unless Anthropic expressly authorizes it. Enterprise Frontier Safeguards, now in private beta, runs the safety monitoring on data stored in the customer's own infrastructure, which makes it compatible with zero data retention. Fable's safeguards date back to the first Fable model; we covered that history in [the Fable 5 ban](https://geotoolbox.ai/blog/fable-5-ban).
+
+## Upgrading from Fable 5.1: 4 Breaking API Changes
+
+If your own code calls the Messages API, Anthropic's [release notes](https://platform.claude.com/docs/en/models/fable-5-2/whats-new-fable-5-2) list 4 changes that can break it:
+
+1. **The prefix check applies to every account.** The API checks that nothing before a thinking block was edited. If your code changes earlier turns (the system prompt, the tools, or a previous message) and then sends back a thinking block, the request returns a 400 error. On Fable 5.1 this only hit accounts created on or after August 31, 2026, so older accounts can pass on 5.1 and fail on 5.2. If Claude Code, claude.ai or the Claude Agent SDK builds your requests, this one does not affect you.
+2. **Fable 5.2 thinking blocks are readable only by Fable 5.2 and Mythos 5.2.** If you switch to another model mid-conversation, that model cannot read Fable 5.2's earlier thinking. The API drops those blocks and the request still succeeds.
+3. **The older computer use tool is gone.** A request that declares `computer_20251124` returns a 400 error on every platform except Amazon Bedrock. Use the `computer_toolset_20260801` toolset.
+4. **A Fable 5.2 executor needs a Fable 5.2 or Mythos 5.2 advisor.** With the advisor tool, where one model does the task and another advises it, any other advisor model returns a 400 error.
+
+Carried over from Fable 5.1: adaptive thinking is always on, and forced tool use (`tool_choice` set to `any` or to a named tool) returns a 400 error.
+
+Coming from Opus 5.5 instead? Anthropic's [migration guide](https://platform.claude.com/docs/en/models/fable-5-2/migration-guide) flags changes that fail quietly. Fable 5.2 defaults to high effort where Opus 5.5 defaults to medium, so a request that omits effort costs more. It has its own rate limits, with lower token limits at each tier. In an organization on zero data retention, requests return a 400 error unless Anthropic has authorized it or the workspace is set to 30-day retention.
+
+One behavior change needs no code but affects cost: prompt lines asking for less thinking no longer stop the model from thinking at medium effort and above, so lower the effort level instead. For background on how thinking and tool use fit together, see [how Claude works](https://geotoolbox.ai/blog/how-does-claude-work).
+
+## What Early Users Report
+
+Launch-day threads are opinion, and day-one reactions skew loud. They still show where the product surprises people. These quotes are verbatim, from November 9, 2026.
+
+Anthropic's launch post has its own tester quotes, from Vercel, Shopify, Datadog and others. Anthropic selected those, so the unsolicited threads are the better signal.
+
+**Blocks and downgrades came up first.** "First two things i tried I got downgraded lol," wrote u/i4mt3hwin in an [r/ClaudeAI launch-day thread](https://www.reddit.com/r/ClaudeAI/comments/1xs25gb/), describing a video-editing request, which is neither security nor biology work.
+
+**Limits go fast, and quality drew complaints too.** In the same thread, u/ign1tio reported: "burned 70% 5hr limit in 42 minutes. Insane cost and its not delivering very well. It responds way too fast with too little thinking - even on high - leading to a lot of errors." The thread's automated summary called opinion "split right down the middle".
+
+**The effort chart confused people.** A widely upvoted question in [another r/ClaudeAI thread](https://www.reddit.com/r/ClaudeAI/comments/1xs0dct/), from u/Dacadey: "So you move from Fable Xhigh to Max - and it thinks longer, costs more...and performs worse?" On FrontierCode, yes. A [Hacker News thread on the Artificial Analysis score](https://news.ycombinator.com/item?id=50431144) had the same argument, and one commenter there noted that max is almost never used in practice.
+
+The praise was specific as well. In the [main Hacker News thread](https://news.ycombinator.com/item?id=50429906), postalcoder called it "way faster and more reliable" than Fable 5.1, and also wrote: "I personally have a hard time telling the difference between Fable 5.2 and Opus 5.5 for ordinary coding tasks." That matches Anthropic's own advice.
+
+## What AI Engines Said About Fable 5.2 Hours After Launch
+
+On the evening of November 9, 2026 (US time), a few hours after launch, we at geotoolbox put the same 8 questions about Claude Fable 5.2 to 5 AI engines: ChatGPT (with web search forced on), Gemini, Google AI Mode, Perplexity, and Claude Opus with web search, the last one run through our own agent setup instead of the Claude app.
+
+All 5 gave the November 9 release date, the $8 and $40 prices and the 20% cut, and most also reported Artificial Analysis's independent scores, which were hours old. Their citations pointed mostly at Anthropic's own pages.
+
+With search off, the picture changed. Gemini's Flash model, answering from training data alone, told us that "Claude Fable 5.2" does not exist. That is expected: its answer described the world "as of mid-2024", and no model can know about a release from that morning without searching.
+
+What we take from these runs, as publishers: for a topic newer than a model's training data, the search-enabled engines leaned on the pages they could fetch that day, and here those were mostly Anthropic's. Our guide to [query fan-out](https://geotoolbox.ai/blog/query-fan-out) explains that retrieval step.
+
+To check the basics for your own site, geotoolbox's free [AI Readiness checker](https://geotoolbox.ai/tools/ai-readiness) runs 5 foundational checks on any URL, including whether your robots.txt lets AI crawlers in. For live fetches as AI crawlers and a real browser render, the free [Agent Readiness Scanner](https://geotoolbox.ai/tools/agent-readiness-scanner) goes further.
+
+## Frequently Asked Questions
+
+### Is Claude Fable 5.2 free?
+
+No. Fable models are not available on Claude's Free plan. On Pro and standard Team seats, Fable 5.2 is included from November 9 through November 16, 2026 for up to 50% of weekly usage limits, then runs on pay-as-you-go usage credits. On Max, Ultra and premium seats it is part of the plan, within the same 50% cap.
+
+### Does Claude Code support Fable 5.2?
+
+Yes, from Claude Code version 2.1.321. Select it with `/model fable`; the default effort level there is medium. Fast mode works in Claude Code too, but on subscription plans it is always billed to usage credits at $16 and $80 per million tokens, even if you have plan usage left.
+
+### Is Claude Fable 5 still available?
+
+Yes. Fable 5, Fable 5.1 and Fable 5.2 are all available on paid Claude plans, and Anthropic's deprecations page lists no retirement for the original Fable 5 before June 9, 2027. In Claude Code and the apps you select the older models by name.
+
+### Is Fable 5.2 better than GPT-6 Astra?
+
+On the benchmarks published so far, yes. Anthropic's launch table has Fable 5.2 ahead of GPT-6 Astra on every row where both have a score, and the Artificial Analysis index scores it 65 against 57 as of November 10, 2026. On cost, Fable 5.2 at high effort scored 45.3% on FrontierCode for $6.72 per task, against 42.8% for GPT-6 Astra's best run at $6.68; Fable's top score at xhigh cost about twice as much.
+
+## Sources
+
+- Introducing Claude Fable 5.2 and Claude Mythos 5.2 - Anthropic, November 9, 2026 - `anthropic.com/claude-fable-and-mythos-5-2`
+- Claude Fable 5.2 and Claude Mythos 5.2 System Card - Anthropic, November 2026 - `anthropic.com/document/claude-fable-5-2-mythos-5-2-system-card`
+- Pricing - Claude Platform Docs, captured November 9, 2026 - `platform.claude.com/docs/en/about-claude/pricing`
+- Models overview - Claude Platform Docs, captured November 9, 2026 - `platform.claude.com/docs/en/models/overview`
+- Claude Fable 5.2 model page - Claude Platform Docs, captured November 10, 2026 - `platform.claude.com/docs/en/models/fable-5-2/overview`
+- Model deprecations - Claude Platform Docs, captured November 9, 2026 - `platform.claude.com/docs/en/about-claude/model-deprecations`
+- What's new in Claude Fable 5.2 - Claude Platform Docs, captured November 9, 2026 - `platform.claude.com/docs/en/models/fable-5-2/whats-new-fable-5-2`
+- Claude Fable 5.2 migration guide - Claude Platform Docs, captured November 10, 2026 - `platform.claude.com/docs/en/models/fable-5-2/migration-guide`
+- Refusals and fallback - Claude Platform Docs, captured November 10, 2026 - `platform.claude.com/docs/en/build-with-claude/refusals-and-fallback`
+- Claude Fable 5.2 launch offers - Claude Help Center, updated November 9, 2026 - `support.claude.com/en/articles/17506494-claude-fable-5-2-launch-offers`
+- Claude Fable models on your plan - Claude Help Center, updated November 9, 2026 - `support.claude.com/en/articles/15424964-claude-fable-models-on-your-plan`
+- Why Claude switched models in your conversation with Fable models - Claude Help Center, updated November 9, 2026 - `support.claude.com/en/articles/15363606-why-claude-switched-models-in-your-conversation-with-fable-models`
+- Model configuration - Claude Code Docs, updated November 9, 2026 - `code.claude.com/docs/en/model-config`
+- Fast mode - Claude Code Docs, updated November 9, 2026 - `code.claude.com/docs/en/fast-mode`
+- LLM leaderboard and Claude Fable 5.2 model page - Artificial Analysis, captured November 10, 2026 - `artificialanalysis.ai/leaderboards/models`
+- GDPval-AA v2.1 leaderboard - Artificial Analysis, captured November 9, 2026 - `artificialanalysis.ai/evaluations/gdpval-aa`
+- Vals Index - Vals AI, updated November 9, 2026 - `vals.ai/benchmarks/vals_index`
+- Terminal-Bench 4.0 - Vals AI, updated November 9, 2026 - `vals.ai/benchmarks/terminal-bench-4`
+- Fable 5.2 launch-day threads - r/ClaudeAI, November 9, 2026 - `reddit.com/r/ClaudeAI/comments/1xs25gb/` and `reddit.com/r/ClaudeAI/comments/1xs0dct/`
+- Claude Fable 5.2 and Mythos 5.2 discussion - Hacker News, November 9, 2026 - `news.ycombinator.com/item?id=50429906`
+- Claude Fable 5.2 Scores 65 on Artificial Analysis discussion - Hacker News, November 9, 2026 - `news.ycombinator.com/item?id=50431144`
