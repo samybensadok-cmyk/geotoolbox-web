@@ -3,7 +3,7 @@ title: "Gemini 3.6 Flash vs 3.5 Flash-Lite: Which to Use ($YEAR)"
 description: "Google shipped Gemini 3.6 Flash and 3.5 Flash-Lite on July 21, 2026. Here's what each costs, how they benchmark, and which cheap Gemini model to actually use."
 date: "2026-07-22"
 recheckBy: "2026-11-30"
-updated: "2026-11-02"  # Sep refresh: Gemini 3.8 Flash GA 09-02 + intro pricing, SemiAnalysis Gemini 3.5 Pro cancellation report (disputed)
+updated: "2026-11-14"  # Sep refresh: Gemini 3.8 Flash GA 09-02 + intro pricing, SemiAnalysis Gemini 3.5 Pro cancellation report (disputed)
 author: "Samy BEN SADOK"
 tags: ["gemini-flash-vs-flash-lite", "gemini-flash", "gemini-3-6-flash", "gemini-3-5-flash-lite", "google-gemini", "gemini-api", "llm", "ai-pricing"]
 draft: false
@@ -11,7 +11,7 @@ draft: false
 
 On July 21, 2026, Google made two new Gemini Flash models generally available: **Gemini 3.6 Flash** and **Gemini 3.5 Flash-Lite**. Both run in the Gemini API today, both carry a 1-million-token context window, and both are aimed at the cheap, high-volume end of the lineup.
 
-The specs are the easy part. The harder question is the one developers are actually asking: with several overlapping low-cost Gemini models now live, which one do you use, and did the newest Flash quietly get more expensive? Short version: Flash-Lite for high-volume work, **Gemini 3.8 Flash** (Google's newer top Flash tier, added September 2, 2026, now price-matched with 3.6 Flash) for agentic coding, 3.6 Flash where it's already proven in production, and a flagship when the code gets hard. The reasons are below.
+The specs are the easy part. The harder question is the one developers are actually asking: with several overlapping low-cost Gemini models now live, which one do you use, and did the newest Flash quietly get more expensive? Short version: Flash-Lite for high-volume work, **Gemini 3.8 Flash** (added September 2, 2026, price-matched with 3.6 Flash) or, at twice the price, **Gemini 4 Hydrogen** (November 12, 2026, Google's recommended upgrade from 3.8 Flash) for agentic coding, 3.6 Flash where it's already proven in production, and a flagship when the code gets hard. The reasons are below.
 
 ## What Google Actually Shipped on July 21
 
@@ -46,12 +46,13 @@ Set against the rest of the low-cost lineup, at Google's official Standard-tier 
     <tr><th>Model</th><th>Input / 1M</th><th>Output / 1M</th><th>Positioning</th></tr>
   </thead>
   <tbody>
-    <tr><td><strong>Gemini 3.8 Flash</strong></td><td>$0.75*</td><td>$3.75*</td><td>New top Flash tier (GA Sept 2, 2026): long-horizon coding, agents</td></tr>
+    <tr><td><strong>Gemini 4 Hydrogen</strong></td><td>$1.50</td><td>$7.50</td><td>Google's fast Gemini 4 model (Nov 12, 2026), pitched as the upgrade from 3.8 Flash</td></tr>
+    <tr><td><strong>Gemini 3.8 Flash</strong></td><td>$0.75*</td><td>$3.75*</td><td>Previous-generation Flash per Google's model list (GA Sept 2, 2026): long-horizon coding, agents</td></tr>
     <tr><td>Gemini 3.7 Flash</td><td>$0.75* (former)</td><td>$3.75* (former)</td><td>Mid-cycle Flash refresh (GA Aug 13, 2026); deprecated Oct 8, 2026, API requests now route to 3.8 Flash</td></tr>
     <tr><td><strong>Gemini 3.6 Flash</strong></td><td>$0.75*</td><td>$3.75*</td><td>Previous-gen workhorse: agentic coding, multimodal, now on the same promo</td></tr>
     <tr><td><strong>Gemini 3.5 Flash-Lite</strong></td><td>$0.30</td><td>$2.50</td><td>Budget tier: high-volume, low-latency</td></tr>
     <tr><td>Gemini 3.5 Flash</td><td>$1.50 (former)</td><td>$9.00 (former)</td><td>Deprecated Oct 8, 2026; API requests now route to 3.6 Flash</td></tr>
-    <tr><td>Gemini 2.5 Flash</td><td>$0.30</td><td>$2.50</td><td>Prior general-purpose cheap model</td></tr>
+    <tr><td>Gemini 2.5 Flash</td><td>$0.30</td><td>$2.50</td><td>Deprecated; routes to 3.5 Flash-Lite Dec 1</td></tr>
     <tr><td>Gemini 2.5 Flash-Lite</td><td>$0.10</td><td>$0.40</td><td>Cheapest list price, but open only to projects that already used it</td></tr>
     <tr><td>Gemini 3.1 Pro Preview</td><td>$2.00</td><td>$12.00</td><td>Pro tier (doubles above 200k context)</td></tr>
   </tbody>
@@ -71,7 +72,7 @@ The token-efficiency angle changes the real math on 3.6 Flash. Its output rate i
 
 Google's benchmark table shows gains everywhere. Independent testing tells a flatter story, and it is worth holding both in view.
 
-On the [Artificial Analysis Intelligence Index](https://artificialanalysis.ai/models/comparisons/gemini-3-5-flash-lite-vs-gemini-3-6-flash), a composite score, Gemini 3.6 Flash lands at **50**, the same score as the 3.5 Flash it replaced. Flash-Lite scores 36. Read together with the per-benchmark wins, the takeaway is specific: 3.6 Flash is faster, cheaper, and more token-efficient than 3.5 Flash, but not measurably smarter on general reasoning. The gains landed in cost and throughput, not in the aggregate intelligence score.
+On the [Artificial Analysis Intelligence Index](https://artificialanalysis.ai/models/gemini-3-6-flash), a composite score, Gemini 3.6 Flash landed at **50** at its July launch, the same score as the 3.5 Flash it replaced, and Flash-Lite scored 36 (the current v5.0.1 index, checked November 14, 2026, does not score 3.6 Flash). Read together with the per-benchmark wins, the takeaway is specific: 3.6 Flash is faster, cheaper, and more token-efficient than 3.5 Flash, but not measurably smarter on general reasoning. The gains landed in cost and throughput, not in the aggregate intelligence score.
 
 Against the frontier, it trails. [DataCamp's benchmark roundup](https://www.datacamp.com/blog/gemini-3-6-flash-3-5-flash-lite-3-5-flash-cyber) has frontier models ahead on hard coding: Grok scores 64.7% on SWE-Bench Pro to 3.6 Flash's 58.7%, and Claude Sonnet 5 leads on machine-learning engineering (66.9% versus 63.9%). Those are each lab's reported figures rather than one shared harness, so treat them as directional. The same roundup notes 3.6 Flash wins on long-context retrieval and chart reasoning but trails on pure coding, which is why the launch-day social reaction was harsh. That is the right lens, though: Flash is a mid-tier model, not a flagship. Judged against the frontier it looks middling; judged on price-per-task for high-volume agentic work, it is competitive.
 
@@ -81,7 +82,7 @@ One practical wrinkle: latency. 3.6 Flash's throughput is strong, among the fast
 
 Google didn't stop at 3.6 Flash and 3.5 Flash-Lite. Gemini 3.7 Flash went generally available August 13, 2026, then [Gemini 3.8 Flash](https://ai.google.dev/gemini-api/docs/changelog) followed September 2, 2026, pitched at "long-horizon software engineering, autonomous agents, and complex enterprise workflows," the exact territory 3.6 Flash was covering above. Google then deprecated 3.7 Flash on October 8, 2026 (its endpoint stays up and routes to 3.8 Flash). 3.6 and 3.8 Flash both carry the same $0.75 / $3.75 introductory rate, so the choice between them is not a price question today; it's a capability and maturity one. 3.8 Flash is the newer, more capable model on Google's own benchmarks; 3.6 Flash is the one with more production mileage behind it. Verify the capability claim against your own workload rather than taking Google's benchmark table at face value, since the independent picture on 3.6 Flash already ran flatter than the vendor numbers above.
 
-For anyone standing up a new pipeline today, the comparison this article set out to answer, 3.6 Flash vs 3.5 Flash-Lite, is no longer the full picture: it is now a three-way field of current Flash tiers (Flash-Lite for cheap high-volume work, and 3.6 and 3.8 Flash, price-matched, for everything else). Rerun your own benchmark before committing, since Google's own model list still carries 3.6 Flash as Stable rather than deprecated.
+For anyone standing up a new pipeline today, the comparison this article set out to answer, 3.6 Flash vs 3.5 Flash-Lite, is no longer the full picture: it is now a three-way field of current Flash tiers (Flash-Lite for cheap high-volume work, and 3.6 and 3.8 Flash, price-matched, for everything else). Rerun your own benchmark before committing, since Google's own model list still carries 3.6 Flash as Stable rather than deprecated. Since November 12, 2026 a fourth option sits above them: [Gemini 4 Hydrogen](https://geotoolbox.ai/blog/gemini-4-hydrogen) at $1.50 / $7.50, which Google pitches as the upgrade for teams migrating from 3.8 Flash; its API model list now calls 3.8 Flash its previous-generation Flash.
 
 ## Which Gemini Flash Model Should You Use?
 
@@ -89,7 +90,7 @@ Match the model to the workload, not to the version number.
 
 <figure className="not-prose my-8">
   <BlogImage src="/blog/gemini-3-6-flash-vs-3-5-flash-lite/gemini-flash-decision-matrix-v2.png" alt="Decision matrix for the Gemini Flash models, shown at July 2026 launch pricing (since superseded, see the pricing table above for current rates). Use 3.5 Flash-Lite ($0.30 / $2.50) for high-volume extraction, classification, and routing, and for fast user-facing features where latency shows. 2.5 Flash-Lite ($0.10 / $0.40) has the lowest list price for simple tasks but is open only to projects that already used it. Use a flagship model for frontier-grade code quality, since Flash trails Grok 4.5 and Sonnet 5 on hard coding. For agentic coding and multi-step reasoning, Gemini 3.8 Flash has since superseded the 3.6 Flash this chart recommends." w="2200" h="1616" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto" />
-  <figcaption className="mt-3 text-center text-sm text-gray-500">Which Gemini Flash model to use, by workload. This chart predates the September 2026 Flash refresh (3.7 and 3.8 Flash): pricing shown is now stale (see the pricing table above), and 3.8 Flash has replaced 3.6 Flash as the top pick for agentic coding.</figcaption>
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Which Gemini Flash model to use, by workload. This chart predates the September 2026 Flash refresh (3.7 and 3.8 Flash): pricing shown is now stale (see the pricing table above), and 3.8 Flash replaced 3.6 Flash as the agentic-coding pick before Gemini 4 Hydrogen arrived in November 2026.</figcaption>
 </figure>
 
 A pattern worth stealing for agent builds: use **3.6 Flash as a coordinating agent** that plans work and reviews results, and hand the parallel grunt work (file search, extraction, test writing) to multiple copies of **3.5 Flash-Lite**. Treat both as dependable for repeated coding loops rather than something to trust blindly on critical production code. Keep a human on the path that matters.
@@ -100,12 +101,12 @@ Switching to the new models is mostly a model-ID change, but Gemini 3.x brings b
 
 The mechanical steps:
 
-1. Update the model string to `gemini-3.6-flash`, `gemini-3.5-flash-lite`, or `gemini-3.8-flash` if you're moving straight to the newer top Flash tier.
+1. Update the model string to `gemini-3.6-flash`, `gemini-3.5-flash-lite`, or `gemini-3.8-flash` if you're moving straight to the newer Flash model.
 2. Remove `temperature`, `top_p`, and `top_k`. These sampling parameters are [deprecated and ignored](https://dev.to/googleai/gemini-36-flash-35-flash-lite-developer-guide-268i) on Gemini 3.x, and future versions will reject them with an HTTP 400.
 3. Replace `thinking_budget` with the `thinking_level` string enum (`minimal`, `medium`, or `high`). Set Flash-Lite to `minimal` for high-volume extraction, higher for tool-calling subagents.
 4. Drop `candidate_count`, which is unsupported, and stop sending prefilled model turns, which now return a 400.
 
-Do not swap prod on faith. Run both models against 20 to 50 representative tasks and compare accuracy, latency, output length, and total cost before you commit. Watch specifically for the weaker frontend and UI generation some early testers flagged, and re-tune prompts where you see it. Google deprecated 3.5 Flash on October 8, 2026: the `gemini-3.5-flash` ID can no longer be selected in AI Studio and its API requests already route to 3.6 Flash. The 2.5 models have no shutdown date, but Google now limits them to projects that already used them.
+Do not swap prod on faith. Run both models against 20 to 50 representative tasks and compare accuracy, latency, output length, and total cost before you commit. Watch specifically for the weaker frontend and UI generation some early testers flagged, and re-tune prompts where you see it. Google deprecated 3.5 Flash on October 8, 2026: the `gemini-3.5-flash` ID can no longer be selected in AI Studio and its API requests already route to 3.6 Flash. Google now limits the 2.5 models to projects that already used them, and on November 2, 2026 it deprecated 2.5 Pro and 2.5 Flash: from December 1, their requests route to 3.8 Flash and 3.5 Flash-Lite, billed at those models' rates (2.5 Flash-Lite is not deprecated).
 
 ## What the New Flash Models Mean for AI Search Visibility
 
@@ -117,7 +118,7 @@ A common reason we see a brand's fresh information never reach an AI answer is a
 
 ## The Short Answer
 
-For high-volume, latency-sensitive work like extraction, classification, routing, and agentic search, use **3.5 Flash-Lite**: it is the fastest and Google's named choice for new low-cost projects (the older 3.1 Flash-Lite lists lower at $0.25 / $1.50, but its earliest shutdown date is May 7, 2027), and it beats the older Gemini 3 Flash on Google's reported benchmarks. For long-horizon agentic coding and complex workflows, **Gemini 3.8 Flash** (GA September 2, 2026) is now Google's top Flash model, price-matched with 3.6 Flash at $0.75 / $3.75 through the end of 2026. 3.6 Flash itself still fits multimodal and multi-step reasoning work where it is already proven in production. If you need the absolute floor on price for simple work, **2.5 Flash-Lite** is six times cheaper on output than 3.5 Flash-Lite, but Google now limits the 2.5 models to projects that already used them and points new projects to 3.5 Flash-Lite or 3.8 Flash. And if frontier code quality is the goal, Flash is the wrong tier, reach for a flagship. Pick by workload, retest on your own tasks, and price against Google's official rates, not a reseller's.
+For high-volume, latency-sensitive work like extraction, classification, routing, and agentic search, use **3.5 Flash-Lite**: it is the fastest and Google's named choice for new low-cost projects (the older 3.1 Flash-Lite lists lower at $0.25 / $1.50, but its earliest shutdown date is May 7, 2027), and it beats the older Gemini 3 Flash on Google's reported benchmarks. For long-horizon agentic coding and complex workflows, **Gemini 3.8 Flash** (GA September 2, 2026) is the budget pick, price-matched with 3.6 Flash at $0.75 / $3.75 through the end of 2026, and **Gemini 4 Hydrogen** ($1.50 / $7.50) is the upgrade Google now recommends. 3.6 Flash itself still fits multimodal and multi-step reasoning work where it is already proven in production. If you need the absolute floor on price for simple work, **2.5 Flash-Lite** is six times cheaper on output than 3.5 Flash-Lite, but Google now limits the 2.5 models to projects that already used them and points new projects to Gemini 4 Hydrogen or 3.5 Flash-Lite. And if frontier code quality is the goal, Flash is the wrong tier, reach for a flagship. Pick by workload, retest on your own tasks, and price against Google's official rates, not a reseller's.
 
 ## Frequently Asked Questions
 
@@ -129,7 +130,7 @@ Gemini 2.5 Flash-Lite, at $0.10 per million input tokens and $0.40 per million o
 
 ### Is Gemini 3.6 Flash better than 3.5 Flash?
 {/* date-ok: dates the Artificial Analysis index snapshot, not this guide — the score is what it was in March and must not follow the clock */}
-On Google's benchmarks, yes, it wins on coding, knowledge work, and computer use. On the independent Artificial Analysis Intelligence Index it scores the same 50, so it is not measurably smarter overall. What it clearly is: cheaper output (currently $3.75 on promo, $7.50 standard, versus 3.5 Flash's flat $9.00), 17% more token-efficient, and current to March 2026.
+On Google's benchmarks, yes, it wins on coding, knowledge work, and computer use. On the independent Artificial Analysis Intelligence Index it scored the same 50 at launch (the current v5.0.1 index does not score it), so it was not measurably smarter overall. What it clearly is: cheaper output (currently $3.75 on promo, $7.50 standard, versus 3.5 Flash's flat $9.00), 17% more token-efficient, and current to March 2026.
 
 ### What is the difference between Gemini Flash and Flash-Lite?
 Flash (3.6) is the higher-quality workhorse for coding, reasoning, and multimodal tasks, currently $0.75 / $3.75 on promo ($1.50 / $7.50 standard from 2027). Flash-Lite (3.5) is the cheaper, faster tier for high-volume extraction and low-latency features at $0.30 / $2.50, with lower intelligence but higher throughput.
@@ -139,7 +140,7 @@ Flash (3.6) is the higher-quality workhorse for coding, reasoning, and multimoda
 - Introducing Gemini 3.6 Flash, 3.5 Flash-Lite, and 3.5 Flash Cyber - Google, July 21 2026 - `blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-6-flash-3-5-flash-lite-3-5-flash-cyber`
 - Gemini API Pricing - Google AI for Developers - `ai.google.dev/gemini-api/docs/pricing`
 - Gemini API Release Notes (3.8 Flash GA) - Google AI for Developers, September 2 2026 - `ai.google.dev/gemini-api/docs/changelog`
-- Gemini 3.5 Flash-Lite vs Gemini 3.6 Flash - Artificial Analysis - `artificialanalysis.ai/models/comparisons/gemini-3-5-flash-lite-vs-gemini-3-6-flash`
+- Gemini 3.6 Flash: Intelligence, Performance & Price Analysis - Artificial Analysis - `artificialanalysis.ai/models/gemini-3-6-flash`
 - Google launches Gemini 3.6 Flash and 3.5 Flash-Lite, teases Gemini 4 - 9to5Google, July 21 2026 - `9to5google.com/2026/07/21/gemini-3-6-flash-launch`
 - Gemini 3.6 Flash & 3.5 Flash-Lite Developer Guide - dev.to/googleai - `dev.to/googleai/gemini-36-flash-35-flash-lite-developer-guide-268i`
 - Gemini 3.6 Flash, 3.5 Flash-Lite, and 3.5 Flash Cyber - DataCamp - `datacamp.com/blog/gemini-3-6-flash-3-5-flash-lite-3-5-flash-cyber`

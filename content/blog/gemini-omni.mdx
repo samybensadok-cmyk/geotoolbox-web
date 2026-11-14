@@ -1,8 +1,8 @@
 ---
 title: "Gemini Omni: What It Is, Pricing, and How to Get Access (2026)"
-description: "Gemini Omni is Google's any-input-to-video AI model. What Omni Flash does, which Google AI plans include it, API pricing at $0.10/sec, and what breaks."
+description: "Gemini Omni is Google's any-input-to-video AI model. What Omni Flash does, which Google AI plans include it, API pricing about $0.07/sec at 720p, and what breaks."
 date: "2026-07-02"
-updated: "2026-11-03"
+updated: "2026-11-14"
 author: "Samy BEN SADOK"
 tags: ["gemini-omni", "gemini", "google-gemini", "ai-video", "ai-models"]
 draft: false
@@ -17,7 +17,7 @@ Gemini Omni went from I/O stage demo to a model you can bill against in six week
 Video is only the starting point. Google says image and audio output are on the Omni roadmap, which is why the family carries the "anything from anything" framing rather than a video-generator label.
 
 <figure>
-  <BlogImage src="/blog/gemini-omni/gemini-omni-inputs-outputs-access-diagram-v2.png" alt="How Gemini Omni Flash works: mixed inputs, one model, a video up to 10 seconds per generation, and the six official ways in: Gemini app, Google Flow, Google Vids, YouTube Shorts, AI Studio, and the Gemini API." w="1040" h="614" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <BlogImage src="/blog/gemini-omni/gemini-omni-inputs-outputs-access-diagram-v3.png" alt="How Gemini Omni Flash works: mixed inputs, one model, a video up to 15 seconds per API generation on Omni 1.2 (about $0.07 per second at 720p), and the six official ways in: Gemini app, Google Flow, Google Vids, YouTube Shorts, AI Studio, and the Gemini API." w="1040" h="614" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
   <figcaption>One model takes any mix of inputs and returns a finished clip. Six official ways to reach it.</figcaption>
 </figure>
 
@@ -88,17 +88,17 @@ The spec sheet, as the model ships today:
 <tr><th>Spec</th><th>Gemini Omni Flash today</th></tr>
 </thead>
 <tbody>
-<tr><td><strong>Model ID</strong></td><td>gemini-omni-1.1-flash, shipped as Gemini Omni 1.1 Flash (general availability). The original preview ID, gemini-omni-flash-preview, is deprecated September 30, 2026</td></tr>
+<tr><td><strong>Model ID</strong></td><td>gemini-omni-1.2-flash, Gemini Omni 1.2 Flash (generally available since November 5, 2026). The August model, gemini-omni-1.1-flash, keeps working, and its requests route to 1.2 from December 3, 2026; the preview ID, gemini-omni-flash-preview, is shut down</td></tr>
 <tr><td><strong>Output</strong></td><td>Video with native synchronized audio</td></tr>
 <tr><td><strong>Resolution</strong></td><td>360p, 720p (default), 1080p, or 4K (1080p and 4K are upscaled), in 16:9 or 9:16. Resolution control shipped with the August 27 GA release</td></tr>
-<tr><td><strong>Clip length</strong></td><td>3 to 10 seconds per generation, at any of the supported resolutions. Video extension shipped with the GA release: chain extensions in 10-second increments up to 40 seconds cumulative</td></tr>
-<tr><td><strong>Inputs</strong></td><td>Any mix of text, images (up to 5 reference photos), video, and voice references</td></tr>
+<tr><td><strong>Clip length</strong></td><td>3 to 15 seconds per API generation on 1.2 (10 by default; 3 to 10 seconds when you set first and last frames). Each extension adds 3 to 10 seconds, up to 30 seconds total. On 1.1, a generation ran 3 to 10 seconds</td></tr>
+<tr><td><strong>Inputs</strong></td><td>Consumer apps: any mix of text, up to 5 reference photos, video, and voice references. API: text, images (up to 6 reference images since 1.2) and video; audio uploads are unsupported</td></tr>
 <tr><td><strong>Provenance</strong></td><td>SynthID watermark on every clip; C2PA Content Credentials on Gemini app, Flow, and YouTube output, verifiable in the Gemini app</td></tr>
 <tr><td><strong>Age gate</strong></td><td>18+</td></tr>
 </tbody>
 </table>
 
-The API still carries a list of caveats, though it's shorter than it was at preview. Per [Google's GA announcement](https://blog.google/innovation-and-ai/technology/developers-tools/build-with-gemini-omni-1-1-flash/) and the [API docs](https://ai.google.dev/gemini-api/docs/omni): the August 27 GA release, which Google calls **Gemini Omni 1.1 Flash**, added video extension and interpolation, which were unsupported at preview. What's still unsupported as of September 17, 2026: audio reference uploads (the live docs state "uploading audio references is unsupported in the current version of the API"), and multi-video reasoning ("referencing or reasoning across multiple videos is not supported"). In the API, video references support up to 3 clips of up to 3 seconds each, though the docs note audio in a video reference is ignored. Google's launch materials described character consistency degrading on scene changes and panning shots; that has not been re-addressed in the GA changelog. English remains the only evaluated language.
+The API still carries a list of caveats, though it's shorter than it was at preview. Per [Google's GA announcement](https://blog.google/innovation-and-ai/technology/developers-tools/build-with-gemini-omni-1-1-flash/) and the [API docs](https://ai.google.dev/gemini-api/docs/omni): the August 27 GA release, which Google calls **Gemini Omni 1.1 Flash**, added video extension and interpolation, which were unsupported at preview. What's still unsupported as of November 14, 2026: audio reference uploads (the live docs state "Uploading audio inputs or audio references is unsupported in the current version of the API"), and multi-video reasoning ("referencing or reasoning across multiple videos is not supported"). In the API, video references support up to 3 clips of up to 3 seconds each (only 1 for 11- to 15-second videos on 1.2), though the docs note audio in a video reference is ignored. Google's launch materials described character consistency degrading on scene changes and panning shots; the November 5 changelog for Omni 1.2 claims improved character and subject consistency, which we have not seen tested independently. English remains the only evaluated language.
 
 App-side, the limits are fuzzier by design. Gemini subscriptions use [compute-based usage limits](https://support.google.com/gemini/answer/16275805) that refresh every 5 hours under a weekly cap, with AI Plus at 2x standard limits, Pro at 4x, and Ultra at 5x to 20x Pro's limits depending on the specific Ultra plan. Google publishes no per-video quota, and video generation burns compute fast.
 
@@ -116,7 +116,7 @@ There are six official doors in, and one of them is free.
 <tr><td><strong>Gemini app</strong></td><td>Google AI Plus, Pro, and Ultra subscribers, globally, 18+</td><td>From $4.99/mo (AI Plus)</td></tr>
 <tr><td><strong>Google Flow</strong></td><td>Same subscribers; Flow AI credits: 200/mo on Plus, 1,000 on Pro, 10,000 to 25,000 on Ultra</td><td>Included in plan</td></tr>
 <tr><td><strong>YouTube Shorts + YouTube Create</strong></td><td>YouTube users as the rollout reaches them</td><td>Free</td></tr>
-<tr><td><strong>Google AI Studio + Gemini API</strong></td><td>Developers, generally available</td><td>$0.10 per second of 720p video, paid tier only (other resolutions priced separately)</td></tr>
+<tr><td><strong>Google AI Studio + Gemini API</strong></td><td>Developers, generally available</td><td>About $0.07 per second of 720p video on Omni 1.2 Flash, paid tier only (other resolutions priced separately)</td></tr>
 <tr><td><strong>Google Vids</strong></td><td>Workspace Business, Enterprise, Education Plus and Nonprofits tiers, plus consumer AI Pro and Ultra. Rolling out from July 16, 2026</td><td>Included in plan</td></tr>
 <tr><td><strong>Gemini Enterprise Agent Platform</strong></td><td>Enterprise customers</td><td>Enterprise terms</td></tr>
 </tbody>
@@ -132,11 +132,11 @@ There is no official Gemini Omni APK, login portal, or desktop app. "Gemini omni
 
 ## Gemini Omni API Pricing
 
-Developer access arrived on June 30, 2026, when Google [brought Omni Flash to the Gemini API and AI Studio](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-omni-flash-nano-banana-2-lite/) in public preview, priced at **$0.10 per second of generated 720p video**. The model [reached general availability on August 27, 2026](https://blog.google/innovation-and-ai/technology/developers-tools/build-with-gemini-omni-1-1-flash/) as **Gemini Omni 1.1 Flash**, model ID `gemini-omni-1.1-flash`; the original preview ID is deprecated September 30, 2026 (Google's deprecation table lists that as the earliest possible retirement date). A 10-second clip at 720p, the maximum length of a single generation, still costs about a dollar; chained extensions can now run the total up to 40 seconds.
+Developer access arrived on June 30, 2026, when Google [brought Omni Flash to the Gemini API and AI Studio](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-omni-flash-nano-banana-2-lite/) in public preview, priced at **$0.10 per second of generated 720p video**. The model [reached general availability on August 27, 2026](https://blog.google/innovation-and-ai/technology/developers-tools/build-with-gemini-omni-1-1-flash/) as **Gemini Omni 1.1 Flash**, model ID `gemini-omni-1.1-flash`; the original preview ID has since been shut down. On [November 5, 2026](https://ai.google.dev/gemini-api/docs/changelog) Google released **Gemini Omni 1.2 Flash** (`gemini-omni-1.2-flash`) with 30% cheaper video output, clips up to 15 seconds and doubled paid-tier rate limits; requests to 1.1 route to 1.2, at 1.2 rates, from December 3, 2026. A 10-second 720p clip now costs about $0.70 and a 15-second one about $1.04, per Google's pricing page.
 
-Under the hood that dollar is token math: video output is billed at [5,792 tokens per second of 720p footage](https://ai.google.dev/gemini-api/docs/pricing) against a $17.50 per million video-output-token rate, with input at $1.50 per million tokens across text, image, video, and audio.
+Under the hood the price is token math: video output is billed at [5,792 tokens per second of 720p footage](https://ai.google.dev/gemini-api/docs/pricing) against $12.00 per million video-output tokens on 1.2 ($17.50 on 1.1), with input at $1.50 per million tokens across text, image, and video.
 
-Here's how that sat against the rest of Google's video lineup at 720p, with the Veo prices taken from the Gemini API pricing page as archived on October 15, 2026 (the three Veo 3.1 API preview models have since been shut down):
+Here's how Omni compares with the rest of Google's video lineup at 720p, with the Veo prices taken from the Gemini API pricing page as archived on October 15, 2026 (the three Veo 3.1 API preview models have since been shut down):
 
 <table>
 <thead>
@@ -144,13 +144,13 @@ Here's how that sat against the rest of Google's video lineup at 720p, with the 
 </thead>
 <tbody>
 <tr><td><strong>Veo 3.1 Lite</strong> (API preview, shut down)</td><td>$0.05</td><td>Cheapest, 1080p max</td></tr>
-<tr><td><strong>Gemini Omni Flash</strong></td><td>$0.10</td><td>Any-input generation + conversational editing, now with resolution control</td></tr>
+<tr><td><strong>Gemini Omni 1.2 Flash</strong></td><td>About $0.07 ($0.10 on 1.1)</td><td>Any-input generation + conversational editing, now with resolution control</td></tr>
 <tr><td><strong>Veo 3.1 Fast</strong> (API preview, shut down)</td><td>$0.10</td><td>Speed-tier realism, up to 4K at $0.30</td></tr>
 <tr><td><strong>Veo 3.1</strong> (API preview, shut down)</td><td>$0.40</td><td>Full realism tier, up to 4K at $0.60</td></tr>
 </tbody>
 </table>
 
-Since the August 27 GA release, Omni Flash bills each resolution at its own rate rather than a single 720p price: about **$0.034/sec at 360p**, **$0.10/sec at 720p** (unchanged), **$0.152/sec at 1080p**, and **$0.304/sec at 4K**, all derived from the [per-resolution token counts Google publishes on its enterprise pricing page](https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing) at the same $17.50-per-million-output-token rate. That 4K rate lands almost exactly on the archived Gemini API 4K price of Veo 3.1 Fast ($0.30/sec) and well under that of standard Veo 3.1 ($0.60/sec), though Omni's 4K is an upscale of a 720p-native generation, not Veo's native 4K output.
+Each resolution bills at its own token count. On 1.2, Google's pricing page puts it at about **$0.023/sec at 360p**, **$0.07/sec at 720p**, **$0.104/sec at 1080p**, and **$0.209/sec at 4K** (1080p and 4K upsampled); on 1.1, the same [per-resolution token counts](https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing) at $17.50 per million work out to about $0.034, $0.10, $0.152 and $0.304. Omni 1.2's 4K rate is below the archived Gemini API 4K price of Veo 3.1 Fast ($0.30/sec) and about a third of standard Veo 3.1's ($0.60/sec), though Omni's 4K is an upscale of a 720p-native generation, not Veo's native 4K output.
 
 The multi-turn editing runs on Google's **Interactions API**, a stateful interface that carries the previous video and its references into each new turn, which is what lets you stack sequential edits. It is the same multimodal session layer Nano Banana uses, which is what makes the two models chainable.
 
@@ -166,7 +166,7 @@ That leaves a different rival at the top of power users' rankings: **ByteDance's
 
 The rest of the field: **Kling** and **Grok-Imagine-Video** tied Omni Flash on DeepMind's own image-to-video benchmark, so treat "leading results" claims from any of the three with that context. We covered xAI's entry separately in our [Grok Imagine](https://geotoolbox.ai/blog/grok-imagine) review. Runway remains the professional editing suite of the group.
 
-Omni's genuine differentiators are narrower than the marketing but real: conversational editing with scene memory, the stateful Interactions API workflow, and a $0.10-per-second 720p price that undercuts most premium rivals. Native audio in a single pass helps, though it is no longer unique, and former Sora users rate Omni's generated voices as robotic. Omni now advertises up to 4K since GA, upscaled from a 720p-native generation. Where it still trails: single-generation length (10 seconds per call, even with chained extensions), stylized output, and, by heavy-user consensus, raw text-to-video fidelity.
+Omni's genuine differentiators are narrower than the marketing but real: conversational editing with scene memory, the stateful Interactions API workflow, and a 720p price of about $0.07 per second since Omni 1.2 that undercuts most premium rivals. Native audio in a single pass helps, though it is no longer unique, and former Sora users rate Omni's generated voices as robotic. Omni now advertises up to 4K since GA, upscaled from a 720p-native generation. Where it still trails: stylized output and, by heavy-user consensus, raw text-to-video fidelity. Single-call length improved with 1.2, to 15 seconds per API call, though extensions now cap the total at 30 seconds.
 
 ## What Gemini Omni Means for Brands and GEO
 
@@ -184,7 +184,7 @@ The family is also just getting started: Google has teased image and audio outpu
 
 ## Where This Goes Next
 
-The model has moved since the API's June 30 preview launch. On August 27, 2026, Omni Flash reached general availability under a new model ID, `gemini-omni-1.1-flash`, and shipped three of the items that had been sitting on the roadmap: resolution control (360p through 4K), video extension, and interpolation. The old preview ID, `gemini-omni-flash-preview`, is deprecated September 30, 2026, so anything still pointing at it needs to migrate. Audio reference uploads in the API and image/audio output remain roadmap items, not shipped. Two smaller things also landed outside the roadmap list: developer logs on the Interactions API on July 6, aimed squarely at the opaque-rejection complaints above, and Omni landing in Google Vids with personal avatars on July 16. Expect the spec table to keep moving in weeks, not months. We update this page as the family grows.
+The model has moved since the API's June 30 preview launch. On August 27, 2026, Omni Flash reached general availability under a new model ID, `gemini-omni-1.1-flash`, and shipped three of the items that had been sitting on the roadmap: resolution control (360p through 4K), video extension, and interpolation. The old preview ID, `gemini-omni-flash-preview`, has since been shut down. On November 5, 2026 Google followed with `gemini-omni-1.2-flash`: clips up to 15 seconds, up to 6 reference images, 30% cheaper video output, and 1.1 requests routing to 1.2 from December 3. Audio reference uploads in the API and image/audio output remain roadmap items, not shipped. Two smaller things also landed outside the roadmap list: developer logs on the Interactions API on July 6, aimed squarely at the opaque-rejection complaints above, and Omni landing in Google Vids with personal avatars on July 16. Expect the spec table to keep moving in weeks, not months. We update this page as the family grows.
 
 Meanwhile, the searches AI engines answer about your brand are already being fed by whoever publishes first, in text and now in video. If you want to know where you stand before that wave hits, you can [check how AI systems see your site](https://geotoolbox.ai/tools/ai-readiness) with GEO Toolbox's free AI readiness scan; it takes about a minute and shows what the crawlers behind these answers can actually reach.
 
@@ -192,7 +192,7 @@ Meanwhile, the searches AI engines answer about your brand are already being fed
 
 ### Is Gemini Omni released?
 
-Yes. Google announced the Omni family at I/O 2026 on May 19 and began rolling Gemini Omni Flash out to Google AI subscribers in the Gemini app the same day, then opened developer access via the Gemini API on June 30, 2026 as a preview. It reached general availability on August 27, 2026 under the model ID `gemini-omni-1.1-flash`.
+Yes. Google announced the Omni family at I/O 2026 on May 19 and began rolling Gemini Omni Flash out to Google AI subscribers in the Gemini app the same day, then opened developer access via the Gemini API on June 30, 2026 as a preview. It reached general availability on August 27, 2026 under the model ID `gemini-omni-1.1-flash`, and Gemini Omni 1.2 Flash (`gemini-omni-1.2-flash`) followed on November 5, 2026.
 
 ### Is Gemini Omni free?
 
@@ -200,17 +200,18 @@ Partly. Omni Flash video generation is rolling out at no cost inside YouTube Sho
 
 ### How much does the Gemini Omni API cost?
 
-$0.10 per second of generated 720p video, billed as 5,792 video tokens per second at $17.50 per million output tokens, the same per-second rate Veo 3.1 Fast charged on the Gemini API before its preview models shut down. Since the August 27, 2026 GA release, other resolutions bill at their own token rate: about $0.034/sec at 360p, $0.152/sec at 1080p, and $0.304/sec at 4K.
+About $0.07 per second of generated 720p video on Gemini Omni 1.2 Flash, billed as 5,792 video tokens per second at $12.00 per million output tokens; other resolutions run about $0.023/sec at 360p, $0.104/sec at 1080p, and $0.209/sec at 4K. The older `gemini-omni-1.1-flash` bills $17.50 per million (about $0.10/sec at 720p) until its requests route to 1.2 on December 3, 2026.
 
 ### Can you make Gemini Omni videos longer than 10 seconds?
-Yes, since the August 27, 2026 GA release. A single generation still runs 3 to 10 seconds at 24fps, but you can now chain extensions in 10-second increments up to 40 seconds cumulative. Before GA, extension was announced but unavailable.
+Yes. Since Gemini Omni 1.2 Flash (November 5, 2026), a single API generation runs 3 to 15 seconds at 24fps, and each extension adds 3 to 10 seconds, up to 30 seconds total. On 1.1 (August 27, 2026), a generation ran 3 to 10 seconds; before that GA release, extension was announced but unavailable.
 
 ## Sources
 
 - Introducing Gemini Omni - blog.google - `blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-omni`
 - Start building with Nano Banana 2 Lite and Gemini Omni Flash - blog.google - `blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-omni-flash-nano-banana-2-lite`
 - Gemini Omni Flash API documentation - ai.google.dev - `ai.google.dev/gemini-api/docs/omni`
-- Gemini API changelog (GA transition, Aug 27, 2026) - ai.google.dev - `ai.google.dev/gemini-api/docs/changelog`
+- Gemini API changelog (1.1 GA, Aug 27, 2026; Omni 1.2 Flash GA, Nov 5, 2026) - ai.google.dev - `ai.google.dev/gemini-api/docs/changelog`
+- Gemini Developer API pricing (Omni 1.2 and 1.1 Flash rates), checked November 14, 2026 - ai.google.dev - `ai.google.dev/gemini-api/docs/pricing`
 - Gemini Omni 1.1 Flash lets you build with more control (GA announcement) - blog.google - `blog.google/innovation-and-ai/technology/developers-tools/build-with-gemini-omni-1-1-flash`
 - Gemini Enterprise Agent Platform pricing (per-resolution token counts) - cloud.google.com - `cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing`
 - Gemini Omni model page and benchmarks - Google DeepMind - `deepmind.google/models/gemini-omni`
