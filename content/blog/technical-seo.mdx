@@ -17,7 +17,7 @@ The rules that differ, such as which robots.txt token controls training versus A
 
 Technical SEO is the work that lets search engines and AI crawlers reach your pages, render them, index them and serve them.
 
-Google's own floor is short. A page has to be reachable by Googlebot, return HTTP 200 and carry indexable content. Google calls these the [Search technical requirements](https://developers.google.com/search/docs/essentials/technical), and meeting them only makes a page eligible.
+A page has to be reachable by Googlebot, return HTTP 200 and carry indexable content. Google calls these the [Search technical requirements](https://developers.google.com/search/docs/essentials/technical), and meeting them only makes a page eligible.
 
 The three classic layers split like this:
 
@@ -31,8 +31,6 @@ The three classic layers split like this:
 <tr><td><strong>Off-page SEO</strong></td><td>Signals from other sites</td><td>Backlinks, brand mentions, reviews</td><td>SEO, PR, partnerships</td></tr>
 </tbody>
 </table>
-
-AI crawlers add a second set of rules on top of Google's.
 
 ## How Google and AI Crawlers Process a Page
 
@@ -196,13 +194,13 @@ Indexing is Google's decision, and you influence it with consistent signals: one
 
 Google Search Console for technical SEO work starts with the Page indexing report, which groups the URLs Google left out by the reason it gives.
 
-Use a noindex meta robots tag to keep a page out of results, and canonical tags or redirects to consolidate duplicates.
-
 Google treats a canonical tag as a strong signal, not an order, so it works best when internal links, sitemaps and redirects point the same way. Our guide to [canonical tags](https://geotoolbox.ai/blog/canonical-tags) covers how Google and AI engines pick one URL.
 
 ### Sitemaps and IndexNow
 
-Google says a site of [about 500 pages or fewer](https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview) that is fully linked internally may not need a sitemap. Bing adds IndexNow, a ping that tells Bing when a URL is added, updated or removed, and [its guidelines](https://www.bing.com/webmasters/help/webmaster-guidelines-30fba23a) tie that freshness to Copilot answers. See our [XML sitemap guide](https://geotoolbox.ai/blog/xml-sitemap) for setup.
+Google says a site of [about 500 pages or fewer](https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview) that is fully linked internally may not need a sitemap. Bing adds IndexNow, a ping that tells Bing when a URL is added, updated or removed, and [its guidelines](https://www.bing.com/webmasters/help/webmaster-guidelines-30fba23a) tie that freshness to Copilot answers.
+
+To submit a sitemap to Google, add it in Search Console's Sitemaps report, which also shows when Googlebot read it and any processing errors, or put a `Sitemap:` line in robots.txt (the Search Console API also works). Google calls submission [merely a hint](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap): it does not guarantee that Google downloads the file or uses it. See our [XML sitemap guide](https://geotoolbox.ai/blog/xml-sitemap) for setup.
 
 ### "Crawled - Currently Not Indexed"
 
@@ -218,9 +216,13 @@ The Request Indexing button only asks Google to [crawl the URL again](https://su
 
 ### Faceted Navigation
 
-Faceted navigation creates duplicate URLs at scale. Filters and sort orders can create thousands of near-identical URLs. To keep crawlers off the combinations nobody searches for, Google's [faceted navigation guidance](https://developers.google.com/crawling/docs/faceted-navigation) prefers blocking them in robots.txt or putting filters in URL fragments; it calls canonical tags generally less effective for that. If those URLs are already indexed, noindex them first and block them only once they drop out. Our [ecommerce SEO guide](https://geotoolbox.ai/blog/ecommerce-seo) walks through that decision per filter.
+Filters and sort orders can create thousands of near-identical URLs. To keep crawlers off the combinations nobody searches for, Google's [faceted navigation guidance](https://developers.google.com/crawling/docs/faceted-navigation) prefers blocking them in robots.txt or putting filters in URL fragments; it calls canonical tags generally less effective for that. If those URLs are already indexed, noindex them first and block them only once they drop out. Our [ecommerce SEO guide](https://geotoolbox.ai/blog/ecommerce-seo) walks through that decision per filter.
 
 B2B catalogs add another crawl problem: specs and certificates published only as PDFs or behind forms, which our [B2B SEO guide](https://geotoolbox.ai/blog/b2b-seo) covers.
+
+### Pagination
+
+Long lists such as category pages and blog archives span several pages. Google's [pagination guidance](https://developers.google.com/search/docs/specialty/ecommerce/pagination-and-incremental-page-loading) asks for a unique URL per page, such as `?page=2`, with its own canonical: don't point every page's canonical at page 1. Link each page to the next with a plain `<a href>`, and don't put page numbers in `#` fragments, which Google ignores. Google no longer uses `rel="next"` and `rel="prev"`.
 
 ## Site Architecture and Internal Links
 
@@ -228,7 +230,7 @@ Search engines and AI crawlers find most pages by following links, so your inter
 
 Use plain `<a href>` links. [Bing's guidelines](https://www.bing.com/webmasters/help/webmaster-guidelines-30fba23a) ask for exactly that, with relevant anchor text, and links that only exist after a click handler runs are invisible to fetchers that skip JavaScript.
 
-Keep important pages close to the homepage through category pages and breadcrumbs. What matters is that every page you want indexed has a crawlable path to it. Keep the URL structure short, readable and stable, because every change needs redirects.
+Keep important pages close to the homepage through category pages and breadcrumbs. Every page you want indexed needs a crawlable path to it. Keep the URL structure short, readable and stable, because every change needs redirects.
 
 ### Orphan Pages and Broken Links
 
@@ -236,9 +238,9 @@ Orphan pages, with no internal links pointing at them, are the usual casualty of
 
 Broken internal links waste crawling for every bot, AI fetchers included. A full site audit, as in our [SEO audit checklist](https://geotoolbox.ai/blog/seo-audit), finds orphan pages and broken links at scale.
 
-### Retiring URLs: Redirect or 404
+### Redirects: 301 vs 302, or 404
 
-When you retire a URL, redirect it to a page that genuinely replaces it. If nothing does, return 404 or 410, which [Google recommends](https://developers.google.com/crawling/docs/crawl-budget) for permanently removed pages, and update the links that pointed to it.
+When you move or retire a URL, redirect it to a page that genuinely replaces it, with a permanent server-side redirect (301 or 308). Google [uses a permanent redirect](https://developers.google.com/search/docs/crawling-indexing/301-redirects) as a signal that the target should be canonical and shows the target in results. A temporary redirect (302 or 307) is for a move you will undo: Google generally keeps showing the source page and does not use the redirect as a canonical signal, though other signals can still get the target indexed. If nothing replaces the page, return 404 or 410, which [Google recommends](https://developers.google.com/crawling/docs/crawl-budget) for permanently removed pages, and update the links that pointed to it.
 
 ## Page Experience: Core Web Vitals, Mobile and HTTPS
 
@@ -264,6 +266,17 @@ Judge the field data, not the lab score: the lab number moves from run to run, w
   <figcaption className="mt-3 text-center text-sm text-gray-500">PageSpeed Insights on one of our articles, mobile: with too little URL-level data, it shows origin-level field data for the whole site. Captured logged out, Nov 11, 2026.</figcaption>
 </figure>
 
+### How to Speed Up a Slow Page
+
+For LCP, web.dev's [optimization guide](https://web.dev/articles/optimize-lcp) covers these fixes:
+
+- **Images:** never lazy-load the LCP image, and compress images in modern formats such as AVIF or WebP
+- **Render-blocking code:** minify and compress critical CSS, and defer or inline JavaScript that blocks rendering
+- **Caching and distance:** an efficient cache-control policy makes repeat loads near-instant, and a CDN serves files closer to visitors
+- **Server response:** a slow time to first byte, often from redirect chains or responses the CDN cannot cache, delays everything after it
+
+For INP, web.dev's [INP guide](https://web.dev/articles/optimize-inp) recommends breaking long JavaScript tasks into smaller ones so the page responds to input sooner.
+
 ### Mobile-First Indexing and HTTPS
 
 Google indexes the mobile version of your pages, [crawled with the smartphone agent](https://developers.google.com/search/docs/crawling-indexing/mobile/mobile-sites-mobile-first-indexing), so content or links missing on mobile are missing for Google. And pages should be served over HTTPS on one host, with HTTP URLs and the other host version (www or non-www) redirecting to it.
@@ -278,11 +291,11 @@ Structured data labels what a page is about in a format machines parse without g
 
 Google's [AI optimization guide](https://developers.google.com/search/docs/fundamentals/ai-optimization-guide) says: "Structured data isn't required for generative AI search, and there's no special schema.org markup you need to add." It still recommends markup for rich result eligibility. [Bing's guidelines](https://www.bing.com/webmasters/help/webmaster-guidelines-30fba23a) say structured data "may support clearer grounding but does not guarantee visibility or grounding traffic."
 
-Whether markup raises AI citations is a separate question. In the one intervention study we know of, [Ahrefs tracked 1,885 pages](https://ahrefs.com/blog/schema-ai-citations/) that added schema and found AI citations barely moved. Our [schema markup for AI search](https://geotoolbox.ai/blog/schema-markup-for-ai) breakdown covers the studies.
+In the one intervention study we know of, [Ahrefs tracked 1,885 pages](https://ahrefs.com/blog/schema-ai-citations/) that added schema and found AI citations barely moved. Our [schema markup for AI search](https://geotoolbox.ai/blog/schema-markup-for-ai) breakdown covers the studies.
 
 ### Validating Structured Data
 
-Validate before you ship. A JSON-LD block with a syntax error can't be read at all, and Bing warns that misleading markup "may be ignored."
+A JSON-LD block with a syntax error can't be read at all, and Bing warns that misleading markup "may be ignored."
 
 <figure>
   <BlogImage src="/blog/technical-seo/schema-validator-article-jsonld.png" alt="Schema Markup Validator result for a geotoolbox.ai article detecting BreadcrumbList, Article and FAQPage with 0 errors and 0 warnings." w="1160" h="581" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
@@ -333,7 +346,7 @@ One file you can skip for Google: its [AI optimization guide](https://developers
 
 ### A Shared No-Training Signal
 
-A shared no-training signal is arriving too. Anthropic's [crawler page](https://support.claude.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler) says that as of October 30, 2026 it "has begun recognizing" a "no AI training" preference that follows a draft from the IETF's aipref work. Google's [common crawlers page](https://developers.google.com/crawling/docs/crawlers-fetchers/google-common-crawlers) says it intends to support the same signal, set with `user-agent: __usage_ai-training`, in early 2027.
+Anthropic's [crawler page](https://support.claude.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler) says that as of October 30, 2026 it "has begun recognizing" a "no AI training" preference that follows a draft from the IETF's aipref work. Google's [common crawlers page](https://developers.google.com/crawling/docs/crawlers-fetchers/google-common-crawlers) says it intends to support the same signal, set with `user-agent: __usage_ai-training`, in early 2027.
 
 <figure>
   <BlogImage src="/blog/technical-seo/anthropic-bots-table.png" alt="Anthropic support article table describing ClaudeBot, Claude-User and Claude-SearchBot and what disabling each one does, plus the new no AI training preference signal." w="1160" h="2084" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
@@ -346,8 +359,8 @@ These technical SEO best practices build on each other. A page that cannot be fe
 
 1. **Access:** important URLs return 200, robots.txt allows the bots you want, and your CDN does not block them
 2. **Rendering:** main text and links are in the raw HTML (the view-source test)
-3. **Indexing:** no stray noindex, one canonical per page, a sitemap of canonical URLs only
-4. **Architecture:** every important page has a crawlable internal link path; retired URLs redirect to a real replacement or return 404 or 410
+3. **Indexing:** no stray noindex, one canonical per page, a sitemap of canonical URLs only, submitted in Search Console or listed in robots.txt
+4. **Architecture:** every important page has a crawlable internal link path; moved or retired URLs redirect permanently (301) to a real replacement, or return 404 or 410 if none exists
 5. **Page experience:** Core Web Vitals pass on field data, on mobile, over HTTPS
 6. **Structured data:** valid JSON-LD that matches the visible page; hreflang links every language version to itself and every other
 7. **AI controls:** each robots.txt group, snippet setting and Search Console setting chosen on purpose
@@ -397,12 +410,17 @@ It can explain an error, draft robots.txt rules, redirects or JSON-LD, and summa
 - Google Crawling Infrastructure - Crawl budget management (updated July 22, 2026) - `developers.google.com/crawling/docs/crawl-budget`
 - Google Crawling Infrastructure - Managing crawling of faceted navigation URLs (updated December 18, 2025) - `developers.google.com/crawling/docs/faceted-navigation`
 - Google Search Central - What is a sitemap (updated December 10, 2025) - `developers.google.com/search/docs/crawling-indexing/sitemaps/overview`
+- Google Search Central - Build and submit a sitemap (updated July 8, 2026) - `developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap`
+- Google Search Central - Pagination best practices for Google (updated December 10, 2025) - `developers.google.com/search/docs/specialty/ecommerce/pagination-and-incremental-page-loading`
+- Google Search Central - Redirects and Google Search (updated April 14, 2026) - `developers.google.com/search/docs/crawling-indexing/301-redirects`
 - Google Search Central - Localized versions of your pages (updated September 21, 2026) - `developers.google.com/search/docs/specialty/international/localized-versions`
 - Google Search Central - Mobile-first indexing best practices (updated December 10, 2025) - `developers.google.com/search/docs/crawling-indexing/mobile/mobile-sites-mobile-first-indexing`
 - Google Search Central - Understanding Core Web Vitals and Google search results (updated December 10, 2025) - `developers.google.com/search/docs/appearance/core-web-vitals`
 - Search Console Help - URL Inspection tool (read November 11, 2026) - `support.google.com/webmasters/answer/9012289`
 - web.dev - Web Vitals (updated October 31, 2024) - `web.dev/articles/vitals`
 - web.dev - Interaction to Next Paint (INP) (updated September 2, 2025) - `web.dev/articles/inp`
+- web.dev - Optimize Largest Contentful Paint (updated March 31, 2025) - `web.dev/articles/optimize-lcp`
+- web.dev - Optimize Interaction to Next Paint (updated September 2, 2025) - `web.dev/articles/optimize-inp`
 - IETF - RFC 9309, Robots Exclusion Protocol (September 2022) - `www.rfc-editor.org/rfc/rfc9309.html`
 - OpenAI - Overview of OpenAI Crawlers (read November 11, 2026) - `developers.openai.com/api/docs/bots`
 - Anthropic - Does Anthropic crawl data from the web, and how can site owners block the crawler? (updated November 4, 2026) - `support.claude.com/en/articles/8896518`
