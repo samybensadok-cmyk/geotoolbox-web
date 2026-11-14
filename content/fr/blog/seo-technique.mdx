@@ -9,7 +9,7 @@ tags: ["technical-seo", "seo", "ai-crawlers", "crawling", "indexing", "guide"]
 draft: false
 locale: "fr"
 donorSlug: "technical-seo"
-donorCommit: "b2cd08e"
+donorCommit: "116319d"
 noindex: false
 ---
 
@@ -43,8 +43,6 @@ On présente souvent le SEO en trois piliers (technique, contenu, popularité). 
 <tr><td><strong>SEO off-page</strong></td><td>Les signaux venus d'autres sites</td><td>Backlinks, mentions de marque, avis</td><td>SEO, relations presse, partenariats</td></tr>
 </tbody>
 </table>
-
-Les robots IA ajoutent un second jeu de règles à celles de Google.
 
 ## Comment Google et les robots IA traitent une page
 
@@ -212,13 +210,13 @@ L'indexation reste une décision de Google, que vous influencez par des signaux 
 
 Dans la Google Search Console, le travail de SEO technique commence par le rapport « Indexation des pages », qui regroupe les URL laissées de côté par Google selon le motif qu'il donne.
 
-Utilisez une balise meta robots noindex pour garder une page hors des résultats, et des balises canoniques ou des redirections pour regrouper les doublons.
-
 Google traite la balise canonique comme un signal fort, pas comme un ordre : elle fonctionne mieux quand les liens internes, les sitemaps et les redirections vont dans le même sens. Notre guide des [balises canoniques](https://geotoolbox.ai/blog/canonical-tags) explique comment Google et les moteurs IA choisissent une URL.
 
 ### Sitemaps et IndexNow
 
-D'après Google, un site d'[environ 500 pages ou moins](https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview?hl=fr) dont toutes les pages sont reliées par des liens internes peut se passer de sitemap. Bing ajoute IndexNow, un signal qui le prévient quand une URL est ajoutée, modifiée ou supprimée, et [ses consignes](https://www.bing.com/webmasters/help/webmaster-guidelines-30fba23a) relient cette fraîcheur aux réponses de Copilot. Pour la mise en place, voyez notre [guide du sitemap XML](https://geotoolbox.ai/blog/xml-sitemap).
+D'après Google, un site d'[environ 500 pages ou moins](https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview?hl=fr) dont toutes les pages sont reliées par des liens internes peut se passer de sitemap. Bing ajoute IndexNow, un signal qui le prévient quand une URL est ajoutée, modifiée ou supprimée, et [ses consignes](https://www.bing.com/webmasters/help/webmaster-guidelines-30fba23a) relient cette fraîcheur aux réponses de Copilot.
+
+Pour soumettre un sitemap à Google, ajoutez-le dans le rapport sur les sitemaps de la Search Console, qui indique aussi quand Googlebot l'a lu et les éventuelles erreurs de traitement, ou déclarez-le sur une ligne `Sitemap:` du robots.txt (l'API Search Console fonctionne aussi). Pour Google, l'envoi n'est [qu'une suggestion](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap?hl=fr) : il ne garantit pas que Google télécharge le fichier ni qu'il l'utilise. Pour la mise en place, voyez notre [guide du sitemap XML](https://geotoolbox.ai/blog/xml-sitemap).
 
 ### « Explorée, actuellement non indexée »
 
@@ -234,9 +232,13 @@ Le bouton « Demander une indexation » de l'[outil d'inspection d'URL](https://
 
 ### Navigation à facettes
 
-La navigation à facettes crée des URL en double à grande échelle : filtres et ordres de tri peuvent produire des milliers d'URL presque identiques. Pour éloigner les robots des combinaisons que personne ne recherche, les [recommandations de Google sur la navigation à facettes](https://developers.google.com/crawling/docs/faceted-navigation?hl=fr) privilégient le blocage dans le robots.txt ou le passage des filtres dans des fragments d'URL ; Google y juge les balises canoniques généralement moins efficaces pour cela. Si ces URL sont déjà indexées, passez-les d'abord en noindex et ne les bloquez qu'une fois sorties de l'index. Notre [guide du SEO e-commerce](https://geotoolbox.ai/blog/ecommerce-seo) déroule ce choix filtre par filtre.
+Filtres et ordres de tri peuvent produire des milliers d'URL presque identiques. Pour éloigner les robots des combinaisons que personne ne recherche, les [recommandations de Google sur la navigation à facettes](https://developers.google.com/crawling/docs/faceted-navigation?hl=fr) privilégient le blocage dans le robots.txt ou le passage des filtres dans des fragments d'URL ; Google y juge les balises canoniques généralement moins efficaces pour cela. Si ces URL sont déjà indexées, passez-les d'abord en noindex et ne les bloquez qu'une fois sorties de l'index. Notre [guide du SEO e-commerce](https://geotoolbox.ai/blog/ecommerce-seo) déroule ce choix filtre par filtre.
 
 Les catalogues B2B ajoutent un autre problème d'exploration : des fiches techniques et des certificats publiés uniquement en PDF ou derrière des formulaires, un cas traité dans notre [guide du SEO B2B](https://geotoolbox.ai/blog/b2b-seo).
+
+### Pagination
+
+Les longues listes, comme les pages catégories et les archives de blog, s'étalent sur plusieurs pages. Les [bonnes pratiques de pagination](https://developers.google.com/search/docs/specialty/ecommerce/pagination-and-incremental-page-loading?hl=fr) de Google demandent une URL unique par page, par exemple `?page=2`, avec sa propre URL canonique : ne faites pas pointer la balise canonique de chaque page vers la page 1. Reliez chaque page à la suivante par un simple lien `<a href>`, et ne placez pas les numéros de page dans des fragments `#`, que Google ignore. Google n'utilise plus `rel="next"` ni `rel="prev"`.
 
 ## Architecture du site et maillage interne
 
@@ -244,7 +246,7 @@ Les moteurs de recherche et les robots IA découvrent la plupart des pages en su
 
 Utilisez de simples liens `<a href>`. Les [consignes de Bing](https://www.bing.com/webmasters/help/webmaster-guidelines-30fba23a) demandent exactement cela, avec des ancres pertinentes. Un lien qui n'existe qu'après l'exécution d'un gestionnaire de clic reste invisible pour les robots qui n'exécutent pas le JavaScript.
 
-Gardez les pages importantes proches de la page d'accueil grâce aux pages catégories et au fil d'Ariane. L'essentiel est que chaque page à indexer soit reliée par un chemin de liens explorable. Conservez des URL courtes, lisibles et stables, car chaque changement exige des redirections.
+Gardez les pages importantes proches de la page d'accueil grâce aux pages catégories et au fil d'Ariane. Chaque page à indexer doit être reliée par un chemin de liens explorable. Conservez des URL courtes, lisibles et stables, car chaque changement exige des redirections.
 
 ### Pages orphelines et liens cassés
 
@@ -252,9 +254,9 @@ Les pages orphelines, vers lesquelles aucun lien interne ne pointe, sont les vic
 
 Les liens internes cassés gaspillent les requêtes de tous les robots, robots IA compris. Un audit complet, comme dans notre [checklist d'audit SEO](https://geotoolbox.ai/blog/seo-audit), repère les pages orphelines et les liens cassés à grande échelle.
 
-### Supprimer une URL : redirection ou 404
+### Redirections : 301, 302 ou 404
 
-Quand vous supprimez une URL, redirigez-la vers une page qui la remplace vraiment. Si aucune ne la remplace, renvoyez un code 404 ou 410, que [Google recommande](https://developers.google.com/crawling/docs/crawl-budget?hl=fr) pour les pages supprimées définitivement, et mettez à jour les liens qui pointaient vers elle.
+Quand vous déplacez ou supprimez une URL, redirigez-la vers une page qui la remplace vraiment, avec une redirection permanente côté serveur (301 ou 308). Google [traite une redirection permanente](https://developers.google.com/search/docs/crawling-indexing/301-redirects?hl=fr) comme un signal indiquant que la cible doit être canonique, et affiche la cible dans les résultats. Une redirection temporaire (302 ou 307) sert à un déplacement que vous annulerez : Google continue en général d'afficher la page source et n'utilise pas la redirection comme signal de canonicité, même si d'autres signaux peuvent faire indexer la cible. Si aucune page ne la remplace, renvoyez un code 404 ou 410, que [Google recommande](https://developers.google.com/crawling/docs/crawl-budget?hl=fr) pour les pages supprimées définitivement, et mettez à jour les liens qui pointaient vers elle.
 
 ## Expérience de page : Core Web Vitals, mobile et HTTPS
 
@@ -280,6 +282,17 @@ Fiez-vous aux données terrain, pas au score de laboratoire : le chiffre de labo
   <figcaption className="mt-3 text-center text-sm text-gray-500">PageSpeed Insights sur l'un de nos articles en français, sur mobile : faute de données suffisantes pour l'URL, l'outil affiche les données terrain de l'origine, c'est-à-dire de tout le site. Capture en mode non connecté, 14 novembre 2026.</figcaption>
 </figure>
 
+### Comment accélérer une page lente
+
+Pour le LCP, le [guide d'optimisation de web.dev](https://web.dev/articles/optimize-lcp) cite notamment ces leviers :
+
+- **Images :** ne chargez jamais l'image LCP en différé (lazy loading), et compressez les images dans des formats modernes comme AVIF ou WebP
+- **Code bloquant le rendu :** minifiez et compressez le CSS critique, et différez ou intégrez dans la page le JavaScript qui bloque le rendu
+- **Cache et distance :** une politique cache-control efficace rend les chargements répétés quasi instantanés, et un CDN sert les fichiers plus près des visiteurs
+- **Réponse du serveur :** un temps de réponse initial (TTFB) lent, souvent dû à des chaînes de redirections ou à des réponses que le CDN ne peut pas mettre en cache, retarde tout ce qui suit
+
+Pour l'INP, le [guide INP de web.dev](https://web.dev/articles/optimize-inp) recommande de découper les longues tâches JavaScript en tâches plus courtes, pour que la page réagisse plus vite aux interactions.
+
 ### Indexation mobile first et HTTPS
 
 Google indexe la version mobile de vos pages, [explorée avec son agent pour smartphone](https://developers.google.com/search/docs/crawling-indexing/mobile/mobile-sites-mobile-first-indexing?hl=fr) : un contenu ou un lien absent sur mobile est absent pour Google. Les pages doivent aussi être servies en HTTPS sur un seul hôte, les URL en HTTP et l'autre version de l'hôte (avec ou sans www) redirigeant vers lui.
@@ -294,11 +307,11 @@ Les données structurées décrivent le sujet d'une page dans un format que les 
 
 Le [guide d'optimisation pour l'IA](https://developers.google.com/search/docs/fundamentals/ai-optimization-guide?hl=fr) de Google le dit à propos des données structurées : « ces données ne sont pas une obligation pour la recherche par IA générative et aucun balisage schema.org spécial n'est nécessaire ». Google recommande toujours le balisage pour être éligible aux résultats enrichis. Selon les [consignes de Bing](https://www.bing.com/webmasters/help/webmaster-guidelines-30fba23a), les données structurées peuvent rendre l'ancrage des réponses plus clair, sans garantir ni visibilité ni trafic issu de cet ancrage.
 
-Savoir si le balisage augmente les citations par l'IA est une autre question. Dans la seule étude d'intervention que nous connaissions, [Ahrefs a suivi 1 885 pages](https://ahrefs.com/blog/schema-ai-citations/) après l'ajout d'un balisage schema et a constaté que leurs citations par l'IA bougeaient à peine. Notre analyse du [balisage schema pour la recherche IA](https://geotoolbox.ai/blog/schema-markup-for-ai) passe ces études en revue.
+Dans la seule étude d'intervention que nous connaissions, [Ahrefs a suivi 1 885 pages](https://ahrefs.com/blog/schema-ai-citations/) après l'ajout d'un balisage schema et a constaté que leurs citations par l'IA bougeaient à peine. Notre analyse du [balisage schema pour la recherche IA](https://geotoolbox.ai/blog/schema-markup-for-ai) passe ces études en revue.
 
 ### Valider les données structurées
 
-Validez avant de mettre en ligne. Un bloc JSON-LD qui contient une erreur de syntaxe ne peut pas être lu du tout, et Bing prévient qu'un balisage trompeur risque d'être ignoré.
+Un bloc JSON-LD qui contient une erreur de syntaxe ne peut pas être lu du tout, et Bing prévient qu'un balisage trompeur risque d'être ignoré.
 
 <figure>
   <BlogImage src="/blog/seo-technique/validateur-schema-jsonld-article.png" alt="Résultat du Schema Markup Validator pour un article de geotoolbox.ai en français : BreadcrumbList, Article et FAQPage détectés, avec 0 erreur et 0 avertissement." w="1160" h="619" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
@@ -364,8 +377,8 @@ Ces bonnes pratiques de SEO technique s'appuient les unes sur les autres. Une pa
 
 1. **Accès :** les URL importantes renvoient un code 200, le robots.txt autorise les robots voulus et votre CDN ne les bloque pas
 2. **Rendu :** le texte principal et les liens figurent dans le HTML brut (le test du code source)
-3. **Indexation :** aucun noindex égaré, une URL canonique par page, un sitemap limité aux URL canoniques
-4. **Architecture :** chaque page importante est reliée par un chemin de liens internes explorable ; les URL supprimées redirigent vers un vrai remplaçant ou renvoient 404 ou 410
+3. **Indexation :** aucun noindex égaré, une URL canonique par page, un sitemap limité aux URL canoniques, soumis dans la Search Console ou déclaré dans le robots.txt
+4. **Architecture :** chaque page importante est reliée par un chemin de liens internes explorable ; les URL déplacées ou supprimées redirigent de façon permanente (301) vers un vrai remplaçant, ou renvoient 404 ou 410 s'il n'y en a pas
 5. **Expérience de page :** l'évaluation des Core Web Vitals est réussie sur les données terrain mobiles, et le site est servi en HTTPS
 6. **Données structurées :** un JSON-LD valide et conforme à la page visible ; hreflang relie chaque version linguistique à elle-même et à toutes les autres
 7. **Contrôles IA :** chaque groupe du robots.txt, chaque réglage d'extrait et chaque réglage de la Search Console est choisi en connaissance de cause
@@ -418,6 +431,9 @@ Il peut expliquer une erreur, rédiger des règles de robots.txt, des redirectio
 - Infrastructure d'exploration de Google - Gestion du budget d'exploration (mis à jour le 16 septembre 2026) - `developers.google.com/crawling/docs/crawl-budget?hl=fr`
 - Infrastructure d'exploration de Google - Gérer l'exploration des URL de navigation à facettes (mis à jour le 6 mars 2026) - `developers.google.com/crawling/docs/faceted-navigation?hl=fr`
 - Google Search Central - Qu'est-ce qu'un sitemap ? (mis à jour le 18 décembre 2025) - `developers.google.com/search/docs/crawling-indexing/sitemaps/overview?hl=fr`
+- Google Search Central - Créer et envoyer un sitemap (mis à jour le 15 juillet 2026) - `developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap?hl=fr`
+- Google Search Central - Bonnes pratiques de pagination pour Google (mis à jour le 18 décembre 2025) - `developers.google.com/search/docs/specialty/ecommerce/pagination-and-incremental-page-loading?hl=fr`
+- Google Search Central - Redirections et recherche Google (mis à jour le 5 mai 2026) - `developers.google.com/search/docs/crawling-indexing/301-redirects?hl=fr`
 - Google Search Central - Versions localisées de vos pages (mis à jour le 24 septembre 2026) - `developers.google.com/search/docs/specialty/international/localized-versions?hl=fr`
 - Google Search Central - Indexation orientée mobile : bonnes pratiques (mis à jour le 20 février 2026) - `developers.google.com/search/docs/crawling-indexing/mobile/mobile-sites-mobile-first-indexing?hl=fr`
 - Google Search Central - Comprendre les métriques Core Web Vitals et les résultats de recherche Google (mis à jour le 18 décembre 2025) - `developers.google.com/search/docs/appearance/core-web-vitals?hl=fr`
@@ -425,6 +441,8 @@ Il peut expliquer une erreur, rédiger des règles de robots.txt, des redirectio
 - Aide Search Console - Outil d'inspection d'URL (consulté le 14 novembre 2026) - `support.google.com/webmasters/answer/9012289?hl=fr`
 - web.dev - Web Vitals (mis à jour le 31 octobre 2024) - `web.dev/articles/vitals`
 - web.dev - Interaction to Next Paint (INP) (mis à jour le 2 septembre 2025) - `web.dev/articles/inp`
+- web.dev - Optimize Largest Contentful Paint (mis à jour le 31 mars 2025) - `web.dev/articles/optimize-lcp`
+- web.dev - Optimize Interaction to Next Paint (mis à jour le 2 septembre 2025) - `web.dev/articles/optimize-inp`
 - IETF - RFC 9309, Robots Exclusion Protocol (septembre 2022) - `www.rfc-editor.org/rfc/rfc9309.html`
 - OpenAI - Overview of OpenAI Crawlers (consulté le 14 novembre 2026) - `developers.openai.com/api/docs/bots`
 - Anthropic - Anthropic explore-t-il les données du web et comment les propriétaires de sites peuvent-ils bloquer l'explorateur ? (mis à jour le 4 novembre 2026) - `support.claude.com/fr/articles/8896518`

@@ -9,7 +9,7 @@ tags: ["technical-seo", "seo", "ai-crawlers", "crawling", "indexing", "guide"]
 draft: false
 locale: "de"
 donorSlug: "technical-seo"
-donorCommit: "b2cd08e"
+donorCommit: "116319d"
 noindex: false
 ---
 
@@ -43,8 +43,6 @@ Die drei klassischen Teilbereiche der Suchmaschinenoptimierung lassen sich so ab
 <tr><td><strong>OffPage-SEO</strong></td><td>Signale von anderen Websites</td><td>Backlinks, Markenerwähnungen, Bewertungen</td><td>SEO, PR, Partnerschaften</td></tr>
 </tbody>
 </table>
-
-Mit den KI-Crawlern kommt zu Googles Regeln ein zweites Regelwerk hinzu.
 
 ## Wie Google und KI-Crawler eine Seite verarbeiten
 
@@ -214,13 +212,13 @@ Ob eine Seite in den Index kommt, entscheidet Google. Beeinflussen kannst du das
 
 Für technisches SEO ist in der Google Search Console der Bericht zur Seitenindexierung der Ausgangspunkt. Er gruppiert die URLs, die Google nicht indexiert hat, nach dem angegebenen Grund.
 
-Mit einem noindex im Meta-Robots-Tag hältst du eine Seite aus den Ergebnissen heraus; doppelte Inhalte führst du mit Canonical-Tags oder Weiterleitungen zusammen.
-
 Google behandelt ein Canonical-Tag als starkes Signal, nicht als Anweisung. Am besten wirkt es daher, wenn interne Links, Sitemaps und Weiterleitungen in dieselbe Richtung zeigen. Wie Google und KI-Systeme eine URL auswählen, erklärt unser Leitfaden zu [Canonical-Tags](https://geotoolbox.ai/blog/canonical-tags).
 
 ### XML-Sitemaps und IndexNow
 
-Laut Google braucht eine Website mit [etwa 500 Seiten oder weniger](https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview?hl=de), die intern vollständig verlinkt ist, unter Umständen keine Sitemap. Bing bietet zusätzlich IndexNow an, einen Ping, der Bing meldet, wenn eine URL hinzukommt, sich ändert oder entfernt wird; [Bings Richtlinien](https://www.bing.com/webmasters/help/webmaster-guidelines-30fba23a) stellen einen Zusammenhang zwischen dieser Aktualität und den Antworten von Copilot her. Die Einrichtung zeigt unser [Leitfaden zur XML-Sitemap](https://geotoolbox.ai/blog/xml-sitemap).
+Laut Google braucht eine Website mit [etwa 500 Seiten oder weniger](https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview?hl=de), die intern vollständig verlinkt ist, unter Umständen keine Sitemap. Bing bietet zusätzlich IndexNow an, einen Ping, der Bing meldet, wenn eine URL hinzukommt, sich ändert oder entfernt wird; [Bings Richtlinien](https://www.bing.com/webmasters/help/webmaster-guidelines-30fba23a) stellen einen Zusammenhang zwischen dieser Aktualität und den Antworten von Copilot her.
+
+Bei Google reichst du eine Sitemap im Sitemaps-Bericht der Search Console ein, der auch zeigt, wann der Googlebot sie gelesen hat und welche Verarbeitungsfehler auftraten, oder du trägst eine `Sitemap:`-Zeile in die robots.txt ein (auch die Search Console API funktioniert). Google nennt das Einreichen [nur einen Hinweis](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap?hl=de): Es garantiert nicht, dass Google die Datei herunterlädt oder nutzt. Die Einrichtung zeigt unser [Leitfaden zur XML-Sitemap](https://geotoolbox.ai/blog/xml-sitemap).
 
 ### „Gecrawlt – zurzeit nicht indexiert“
 
@@ -236,9 +234,13 @@ Mit der Schaltfläche „Indexierung beantragen“ bittest du Google nur, die [U
 
 ### Facettennavigation
 
-Facettennavigation lässt massenhaft Duplikate entstehen: Filter und Sortierungen können Tausende fast identische URLs erzeugen. Damit Crawler die Kombinationen meiden, nach denen niemand sucht, empfiehlt Googles [Leitfaden zur Facettensuche](https://developers.google.com/crawling/docs/faceted-navigation?hl=de), solche URLs per robots.txt zu sperren oder die Filter in URL-Fragmente zu legen; Canonical-Tags seien dafür im Allgemeinen weniger effektiv. Sind die URLs schon indexiert, setzt du zuerst noindex und sperrst sie erst, wenn sie aus dem Index gefallen sind. Wie du das pro Filter entscheidest, zeigt unser [Leitfaden zu E-Commerce-SEO](https://geotoolbox.ai/blog/ecommerce-seo).
+Filter und Sortierungen können Tausende fast identische URLs erzeugen. Damit Crawler die Kombinationen meiden, nach denen niemand sucht, empfiehlt Googles [Leitfaden zur Facettensuche](https://developers.google.com/crawling/docs/faceted-navigation?hl=de), solche URLs per robots.txt zu sperren oder die Filter in URL-Fragmente zu legen; Canonical-Tags seien dafür im Allgemeinen weniger effektiv. Sind die URLs schon indexiert, setzt du zuerst noindex und sperrst sie erst, wenn sie aus dem Index gefallen sind. Wie du das pro Filter entscheidest, zeigt unser [Leitfaden zu E-Commerce-SEO](https://geotoolbox.ai/blog/ecommerce-seo).
 
 B2B-Kataloge bringen ein weiteres Crawling-Problem mit: technische Daten und Zertifikate, die es nur als PDF oder hinter Formularen gibt. Darum geht es in unserem [Leitfaden zu B2B-SEO](https://geotoolbox.ai/blog/b2b-seo).
+
+### Paginierung
+
+Lange Listen wie Kategorieseiten und Blogarchive verteilen sich auf mehrere Seiten. Googles [Best Practices zur Paginierung](https://developers.google.com/search/docs/specialty/ecommerce/pagination-and-incremental-page-loading?hl=de) empfehlen eine eigene URL pro Seite, etwa `?page=2`, mit eigenem Canonical-Tag: Lass die Canonical-Tags der Folgeseiten nicht auf Seite 1 zeigen. Verlinke jede Seite mit einem einfachen `<a href>` auf die nächste und setze Seitenzahlen nicht in `#`-Fragmente, die Google ignoriert. `rel="next"` und `rel="prev"` nutzt Google nicht mehr.
 
 ## Seitenstruktur und interne Verlinkung
 
@@ -246,7 +248,7 @@ Suchmaschinen und KI-Crawler finden die meisten Seiten, indem sie Links folgen. 
 
 Setze einfache `<a href>`-Links. [Bings Richtlinien](https://www.bing.com/webmasters/help/webmaster-guidelines-30fba23a) verlangen genau das, mit aussagekräftigem Ankertext. Links, die erst entstehen, wenn ein Klick-Handler läuft, bleiben für Crawler ohne JavaScript unsichtbar.
 
-Halte wichtige Seiten über Kategorieseiten und Breadcrumbs nah an der Startseite. Entscheidend ist, dass jede Seite, die indexiert werden soll, über einen crawlbaren Pfad erreichbar ist. Die URL-Struktur sollte kurz, lesbar und stabil bleiben, denn jede Änderung zieht Weiterleitungen nach sich.
+Halte wichtige Seiten über Kategorieseiten und Breadcrumbs nah an der Startseite. Jede Seite, die indexiert werden soll, braucht einen crawlbaren Pfad. Die URL-Struktur sollte kurz, lesbar und stabil bleiben, denn jede Änderung zieht Weiterleitungen nach sich.
 
 ### Verwaiste Seiten und kaputte Links
 
@@ -254,9 +256,9 @@ Verwaiste Seiten (Seiten, auf die kein interner Link zeigt) entstehen typischerw
 
 Kaputte interne Links kosten jeden Bot unnötige Abrufe, KI-Crawler eingeschlossen. Ein vollständiges Website-Audit, wie es unsere [SEO-Audit-Checkliste](https://geotoolbox.ai/blog/seo-audit) beschreibt, findet verwaiste Seiten und kaputte Links auf der gesamten Website.
 
-### URLs stilllegen: Weiterleitung oder 404
+### Weiterleitungen: 301 vs. 302 oder 404
 
-Wenn du eine URL stilllegst, leite sie auf eine Seite weiter, die sie wirklich ersetzt. Gibt es keine, liefere 404 oder 410; das [empfiehlt Google](https://developers.google.com/crawling/docs/crawl-budget?hl=de) für dauerhaft entfernte Seiten. Pass außerdem die Links an, die auf sie gezeigt haben.
+Wenn du eine URL verschiebst oder stilllegst, leite sie mit einer dauerhaften serverseitigen Weiterleitung (301 oder 308) auf eine Seite weiter, die sie wirklich ersetzt. Google [wertet eine dauerhafte Weiterleitung](https://developers.google.com/search/docs/crawling-indexing/301-redirects?hl=de) als Signal, dass das Ziel kanonisch sein soll, und zeigt das Ziel in den Suchergebnissen. Eine temporäre Weiterleitung (302 oder 307) ist für Umzüge gedacht, die du wieder rückgängig machst: Google zeigt in der Regel weiter die Ausgangsseite und nutzt die Weiterleitung nicht als Signal für die kanonische URL; über andere Signale kann das Ziel trotzdem indexiert werden. Gibt es keinen Ersatz, liefere 404 oder 410; das [empfiehlt Google](https://developers.google.com/crawling/docs/crawl-budget?hl=de) für dauerhaft entfernte Seiten. Pass außerdem die Links an, die auf sie gezeigt haben.
 
 ## Page Experience: Core Web Vitals, Mobilgeräte und HTTPS
 
@@ -282,6 +284,17 @@ Bewerte die Felddaten, nicht den Lab-Wert: Der Lab-Wert schwankt von Lauf zu Lau
   <figcaption className="mt-3 text-center text-sm text-gray-500">PageSpeed Insights für einen unserer deutschen Artikel, mobil: Weil auf URL-Ebene zu wenige Daten vorliegen, zeigt das Tool Felddaten für den Ursprung, das heißt für die gesamte Website. Abgerufen ohne Anmeldung über eine Verbindung in Deutschland, 14. November 2026.</figcaption>
 </figure>
 
+### So wird eine langsame Seite schneller
+
+Für den LCP nennt der [Optimierungsleitfaden von web.dev](https://web.dev/articles/optimize-lcp?hl=de) unter anderem diese Hebel:
+
+- **Bilder:** das LCP-Bild nie per Lazy Loading laden, Bilder komprimieren und in modernen Formaten wie AVIF oder WebP ausliefern
+- **Render-blockierender Code:** kritisches CSS minimieren und komprimieren, render-blockierendes JavaScript aufschieben oder inline einbinden
+- **Caching und Entfernung:** Eine effiziente Cache-Control-Richtlinie macht wiederholte Abrufe nahezu verzögerungsfrei, und ein CDN liefert Dateien näher an den Besuchern aus
+- **Serverantwort:** Eine lange Time to First Byte, oft durch Weiterleitungsketten oder Antworten, die das CDN nicht cachen kann, verzögert alles, was danach kommt
+
+Für den INP empfiehlt der [INP-Leitfaden von web.dev](https://web.dev/articles/optimize-inp?hl=de), lange JavaScript-Aufgaben in kleinere aufzuteilen, damit die Seite schneller auf Eingaben reagiert.
+
 ### Mobile-First-Indexierung und HTTPS
 
 Google indexiert die mobile Version deiner Seiten, [gecrawlt mit dem Smartphone-Crawler](https://developers.google.com/search/docs/crawling-indexing/mobile/mobile-sites-mobile-first-indexing?hl=de). Inhalte oder Links, die mobil fehlen, fehlen dann auch für Google. Deine Seiten sollten zudem per HTTPS auf einem einzigen Host laufen; HTTP-URLs und die jeweils andere Host-Variante (mit oder ohne www) leiten auf ihn weiter.
@@ -296,11 +309,11 @@ Strukturierte Daten beschreiben in einem maschinenlesbaren Format, worum es auf 
 
 Googles [Leitfaden zur Optimierung für generative KI](https://developers.google.com/search/docs/fundamentals/ai-optimization-guide?hl=de) sagt dazu: „Strukturierte Daten sind für die Suche mit generativer KI nicht erforderlich und es gibt kein spezielles schema.org-Markup, das du hinzufügen musst.“ Damit Seiten für Rich-Suchergebnisse infrage kommen, empfiehlt Google Markup aber weiterhin. Laut [Bings Richtlinien](https://www.bing.com/webmasters/help/webmaster-guidelines-30fba23a) können strukturierte Daten ein klareres Grounding unterstützen, garantieren aber weder einen Platz in den Antworten noch Traffic aus dem Grounding.
 
-Ob Markup die Zahl der KI-Zitate erhöht, ist eine andere Frage. In der einzigen Interventionsstudie, die wir kennen, [beobachtete Ahrefs 1.885 Seiten](https://ahrefs.com/blog/schema-ai-citations/), denen Schema-Markup hinzugefügt worden war: Die Zahl ihrer KI-Zitate veränderte sich kaum. Die Studien im Einzelnen fasst unser Beitrag zu [Schema-Markup für die KI-Suche](https://geotoolbox.ai/blog/schema-markup-for-ai) zusammen.
+In der einzigen Interventionsstudie, die wir kennen, [beobachtete Ahrefs 1.885 Seiten](https://ahrefs.com/blog/schema-ai-citations/), denen Schema-Markup hinzugefügt worden war: Die Zahl ihrer KI-Zitate veränderte sich kaum. Die Studien im Einzelnen fasst unser Beitrag zu [Schema-Markup für die KI-Suche](https://geotoolbox.ai/blog/schema-markup-for-ai) zusammen.
 
 ### Strukturierte Daten validieren
 
-Prüfe das Markup, bevor du es live stellst. Ein JSON-LD-Block mit einem Syntaxfehler lässt sich gar nicht lesen, und Bing warnt, dass irreführendes Markup ignoriert werden kann.
+Ein JSON-LD-Block mit einem Syntaxfehler lässt sich gar nicht lesen, und Bing warnt, dass irreführendes Markup ignoriert werden kann.
 
 <figure>
   <BlogImage src="/blog/technisches-seo/schema-validator-jsonld.png" alt="Ergebnis des Schema Markup Validator mit deutscher Oberfläche für einen deutschen geotoolbox.ai-Artikel: BreadcrumbList, Article und FAQPage erkannt, 0 Fehler und 0 Warnungen." w="1160" h="602" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
@@ -364,8 +377,8 @@ Die Punkte bauen aufeinander auf, und die ersten zählen am meisten: Eine Seite,
 
 1. **Zugriff:** Wichtige URLs liefern 200, die robots.txt erlaubt die Bots, die du zulassen willst, und dein CDN blockiert sie nicht
 2. **Rendering:** Haupttext und Links stehen im rohen HTML (der Quelltext-Test)
-3. **Indexierung:** kein versehentliches noindex, ein Canonical-Tag pro Seite, eine Sitemap nur mit kanonischen URLs
-4. **Seitenstruktur:** Jede wichtige Seite hat einen crawlbaren internen Linkpfad; stillgelegte URLs leiten auf echten Ersatz weiter oder liefern 404 bzw. 410
+3. **Indexierung:** kein versehentliches noindex, ein Canonical-Tag pro Seite, eine Sitemap nur mit kanonischen URLs, eingereicht in der Search Console oder in der robots.txt angegeben
+4. **Seitenstruktur:** Jede wichtige Seite hat einen crawlbaren internen Linkpfad; verschobene oder stillgelegte URLs leiten dauerhaft (301) auf echten Ersatz weiter oder liefern 404 bzw. 410, wenn es keinen gibt
 5. **Page Experience:** Die Core Web Vitals sind in den Felddaten bestanden, auch mobil, und die Seiten laufen über HTTPS
 6. **Strukturierte Daten:** gültiges JSON-LD, das zur sichtbaren Seite passt; hreflang verknüpft jede Sprachversion mit sich selbst und allen anderen
 7. **KI-Steuerung:** Jede robots.txt-Gruppe, jede Snippet-Einstellung und jede Search-Console-Einstellung ist bewusst gewählt
@@ -415,6 +428,9 @@ ChatGPT kann einen Fehler erklären, robots.txt-Regeln, Weiterleitungen oder JSO
 - Google-Crawling-Infrastruktur - Verwaltung des Crawling-Budgets (aktualisiert am 16. September 2026) - `developers.google.com/crawling/docs/crawl-budget`
 - Google-Crawling-Infrastruktur - Crawling von Facettensuche-URLs verwalten (aktualisiert am 6. März 2026) - `developers.google.com/crawling/docs/faceted-navigation`
 - Google Search Central - Was ist eine Sitemap? (aktualisiert am 18. Dezember 2025) - `developers.google.com/search/docs/crawling-indexing/sitemaps/overview`
+- Google Search Central - Sitemap erstellen und einreichen (aktualisiert am 15. Juli 2026) - `developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap`
+- Google Search Central - Best Practices für die Paginierung bei Google (aktualisiert am 18. Dezember 2025) - `developers.google.com/search/docs/specialty/ecommerce/pagination-and-incremental-page-loading`
+- Google Search Central - Weiterleitungen und die Google Suche (aktualisiert am 20. April 2026) - `developers.google.com/search/docs/crawling-indexing/301-redirects`
 - Google Search Central - Lokalisierte Versionen deiner Seiten (aktualisiert am 22. September 2026) - `developers.google.com/search/docs/specialty/international/localized-versions`
 - Google Search Central - Best Practices für die Mobile-First-Indexierung (aktualisiert am 20. Februar 2026) - `developers.google.com/search/docs/crawling-indexing/mobile/mobile-sites-mobile-first-indexing`
 - Google Search Central - Core Web Vitals und Google-Suchergebnisse (aktualisiert am 18. Dezember 2025) - `developers.google.com/search/docs/appearance/core-web-vitals`
@@ -424,6 +440,8 @@ ChatGPT kann einen Fehler erklären, robots.txt-Regeln, Weiterleitungen oder JSO
 - Google Deutschland - Der KI-Modus startet in Deutschland, Österreich und der Schweiz (8. Oktober 2025) - `blog.google/intl/de-de/produkte/suchen-entdecken/ki-modus-startet-in-dach`
 - web.dev - Web Vitals (aktualisiert am 31. Oktober 2024) - `web.dev/articles/vitals`
 - web.dev - Interaction to Next Paint (INP) (aktualisiert am 2. September 2025) - `web.dev/articles/inp`
+- web.dev - Optimize Largest Contentful Paint (aktualisiert am 31. März 2025) - `web.dev/articles/optimize-lcp`
+- web.dev - Optimize Interaction to Next Paint (aktualisiert am 2. September 2025) - `web.dev/articles/optimize-inp`
 - IETF - RFC 9309, Robots Exclusion Protocol (September 2022) - `www.rfc-editor.org/rfc/rfc9309.html`
 - OpenAI - Overview of OpenAI Crawlers (abgerufen am 14. November 2026) - `developers.openai.com/api/docs/bots`
 - Anthropic - Crawlt Anthropic Daten aus dem Web, und wie können Website-Besitzer den Crawler blockieren? (aktualisiert am 4. November 2026) - `support.claude.com/de/articles/8896518`
