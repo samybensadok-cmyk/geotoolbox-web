@@ -1,0 +1,326 @@
+---
+title: "Programmatic SEO: So skalierst du Seiten ohne Spam"
+description: "Programmatic SEO baut aus einer Vorlage und einem Datensatz Tausende Seiten. Was Googles Spamrichtlinien verbieten und welche Seiten in KI-Antworten landen."
+date: "2026-11-14"
+updated: "2026-11-14"
+recheckBy: "2026-12-14"  # Test (12 Prompts + LLM Mentions DE) neu laufen lassen, Status Dashboard 2026, Search-Console-Berichte zu generativer KI
+author: "Samy BEN SADOK"
+tags: ["programmatic-seo", "seo", "ai-search", "content-strategy", "guide"]
+draft: false
+locale: "de"
+donorSlug: "programmatic-seo"
+donorCommit: "6a9717e"
+noindex: false
+---
+
+Mit Programmatic SEO veröffentlichst du Tausende Seiten aus einer Vorlage und einem Datensatz: eine Seite für jede Variante einer Suche, etwa „Dollar in Euro“ oder „Wohnungen in Leipzig“. Das funktioniert, wenn jede Seite Daten enthält, die Suchende brauchen. Es geht schief, wenn sich von Seite zu Seite nur das Keyword ändert.
+
+Googles Richtlinie gegen den Missbrauch mit massenhaft generierten Inhalten zielt auf die zweite Sorte, egal wie die Seiten entstanden sind. Zitieren KI-Antworten Template-Seiten überhaupt?
+
+Wir haben 300 Antworten aus AI Overviews (auf Deutsch „Übersichten mit KI“) in Deutschland ausgewertet und 12 deutsche Long-Tail-Prompts getestet. In unserer Stichprobe landeten Datenfragen oft auf Template-Seiten, Fragen nach Integrationsanleitungen dagegen meist auf den Hilfeseiten der App-Hersteller.
+
+## Das Wichtigste in Kürze
+
+- **Programmatic SEO** erzeugt viele Landingpages aus einer Vorlage und einem strukturierten Datensatz, eine Seite pro Zeile; es lohnt sich nur, wenn jede Zeile eigene Daten liefert.
+- Google bestraft die Methode nicht, aber seine Spamrichtlinien gegen massenhaft generierte Inhalte (seit dem 5. März 2024) und gegen Brückenseiten treffen Seiten, die nur das Keyword austauschen.
+- In unserem deutschen Test vom 14. November 2026 gingen 83 von 147 Zitaten in ChatGPT, Perplexity und im KI-Modus von Google an Template-Seiten, bei Währungs- und Bankcode-Fragen 28 von 34, bei Integrationsanleitungen nur 14 von 56.
+- Unter den je 100 volumenstärksten Keywords, deren AI Overview in Deutschland die jeweilige Website zitiert, erschienen Template-Seiten von Wise in 54 Antworten, Angebots- und Ortsseiten von ImmoScout24 in 68, Integrationsseiten von Zapier in keiner.
+- Starte mit 25 bis 50 Pilotseiten, miss pro Vorlage in der Search Console und leg vor dem Start fest, wann du schwache Seiten streichst.
+
+## Was ist Programmatic SEO?
+
+**Programmatic SEO** (kurz pSEO) heißt: Du veröffentlichst viele Landingpages aus einer Vorlage und einem strukturierten Datensatz, eine Seite pro Zeile. Jede Seite zielt auf eine Variante desselben Suchmusters, etwa „[App] + [App] Integration“ oder „Wohnungen in [Stadt]“.
+
+Wie funktioniert Programmatic SEO? Nitin Manchanda zerlegt es in drei Bausteine:
+
+- **Ein Suchmuster:** ein Hauptbegriff plus Modifikatoren, in vielen Kombinationen gesucht, jede mit eigenem, meist kleinem Suchvolumen
+- **Ein Datensatz:** die Zeilen, die jede Seite einzigartig machen, zum Beispiel Wechselkurse, Immobilienangebote, Preise oder die Trigger, die zwei Apps gemeinsam haben
+- **Eine Vorlage:** das Seitenlayout, das aus einer Zeile eine Antwort macht
+
+Ein Skript oder ein CMS-Import veröffentlicht dann jede Zeile als eigene Landingpage auf deiner Website.
+
+[Manchandas Leitfaden im Search Engine Journal](https://www.searchenginejournal.com/good-vs-bad-pseo-learnings-from-a-decade-of-building-scalable-content-engines/594204/) vom 10. November 2026 beschreibt Programmatic SEO als eine Art des Veröffentlichens, nicht als eigene Art von Inhalt.
+
+<table>
+  <thead>
+    <tr><th></th><th>Programmatic SEO</th><th>Klassische SEO-Seiten</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Arbeitseinheit</strong></td><td>Eine Vorlage und ein Datensatz</td><td>Eine Seite nach der anderen, von Hand geschrieben</td></tr>
+    <tr><td><strong>Ziel</strong></td><td>Hunderte oder Tausende Long-Tail-Varianten eines Musters</td><td>Ein Hauptkeyword oder ein Cluster verwandter Suchanfragen</td></tr>
+    <tr><td><strong>Was eine Seite einzigartig macht</strong></td><td>Die Datenzeile dahinter</td><td>Text, Recherche und Beispiele</td></tr>
+    <tr><td><strong>Hauptrisiko</strong></td><td>Thin Content und Duplicate Content in großer Zahl</td><td>Langsamer Output und Lücken in der Abdeckung</td></tr>
+    <tr><td><strong>Wo du misst</strong></td><td>Pro Vorlage (das ganze Seitenset)</td><td>Pro Seite</td></tr>
+  </tbody>
+</table>
+
+Der Knackpunkt steht in den beiden Tabellenzeilen zu Einzigartigkeit und Risiko: Eine Vorlage vervielfacht, was in ihr steckt, gute Daten genauso wie leere Füllsätze, und zwar auf allen URLs gleichzeitig.
+
+## Programmatic-SEO-Beispiele: welche Daten hinter jeder Seite stecken
+
+Diese Beispiele haben eines gemeinsam: Jede Seite liefert genau die Daten, nach denen jemand sucht.
+
+<table>
+  <thead>
+    <tr><th>Website</th><th>Suchmuster</th><th>Was sich auf jeder Seite ändert</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Zapier</strong></td><td>„[App] [App] Integration“</td><td>Trigger, Aktionen und fertige Workflows für genau dieses App-Paar</td></tr>
+    <tr><td><strong>Wise</strong></td><td>„[Währung] in [Währung]“</td><td>Der Devisenmittelkurs des Währungspaars und sein Kursverlauf</td></tr>
+    <tr><td><strong>ImmoScout24</strong></td><td>„Wohnung kaufen [Stadt]“, „Wohnung mieten [Stadt]“</td><td>Aktuelle Inserate, Preise und Filter für diesen Ort</td></tr>
+    <tr><td><strong>ImmoScout24 Mietspiegel</strong></td><td>„Mietspiegel [Stadt]“</td><td>Durchschnittliche Nettokaltmiete pro Quadratmeter in dieser Stadt, ihre Spanne und die Veränderung zum Vorjahr</td></tr>
+  </tbody>
+</table>
+
+Zapier veröffentlicht eine Seite für jede App und für jedes App-Paar, das es verbindet, jeweils mit den Triggern, Aktionen und fertigen Workflows für genau diese Kombination.
+
+<figure>
+  <BlogImage src="/blog/programmatic-seo/zapier-google-sheets-slack-integrationsseite-de.png" alt="Zapiers Integrationsseite für Google Sheets und Slack auf zapier.com/de mit nummerierten Markierungen: Brotkrumen Apps, Google Sheets, Slack, die Überschrift mit beiden App-Namen, die Auswahl für Trigger und Aktion und eine Reihe fertiger Workflow-Vorlagen für beide Apps." w="1160" h="1435" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Eine Template-Seite pro App-Paar: Zapier, Google Sheets + Slack, deutsche Oberfläche. Abgemeldet, Verbindung aus Deutschland, aufgenommen am 14. November 2026.</figcaption>
+</figure>
+
+Softwarefirmen nutzen dasselbe Muster für ihre Integrationsseiten, wie wir sie im Guide zu [SaaS-SEO](https://geotoolbox.ai/blog/saas-seo) beschreiben.
+
+Wise betreibt für jedes Währungspaar eine eigene Rechnerseite, und jede zeigt den aktuellen Devisenmittelkurs dieses Paars samt Kursverlauf.
+
+<figure>
+  <BlogImage src="/blog/programmatic-seo/wise-usd-eur-waehrungsrechner-de.png" alt="Wise-Rechnerseite für US-Dollar in Euro auf wise.com/de mit Markierungen auf der Überschrift mit beiden Währungen, dem Devisenmittelkurs von 1 USD = 0,9073 EUR, einem Kursdiagramm über einen Monat und Zeitraum-Schaltflächen von 48 Stunden bis 5 Jahren." w="1160" h="1532" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Eine Seite pro Währungspaar: Wise, USD in EUR. Abgemeldet, Verbindung aus Deutschland, aufgenommen am 14. November 2026.</figcaption>
+</figure>
+
+ImmoScout24 baut für jede Stadt und jeden Filter eine Ergebnisseite. Wer nach Eigentumswohnungen in Leipzig sucht, landet deshalb auf einer Seite voller aktueller Inserate.
+
+<figure>
+  <BlogImage src="/blog/programmatic-seo/immoscout24-leipzig-wohnung-kaufen-de.png" alt="ImmoScout24-Suchseite für Eigentumswohnungen in Leipzig mit nummerierten Markierungen: Überschrift 2.205 Eigentumswohnungen in Leipzig, Suchleiste mit Filtern und Schnellfiltern, Inserate mit Preisen wie 118.000 bis 776.000 € für ein Bauprojekt und 430.000 € für eine 4-Zimmer-Wohnung, daneben eine Karte." w="1160" h="912" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Eine Ergebnisseite pro Stadt und Objekttyp: ImmoScout24, Eigentumswohnungen in Leipzig. Abgemeldet, Verbindung aus Deutschland, aufgenommen am 14. November 2026.</figcaption>
+</figure>
+
+In unserem Test weiter unten zitierten KI-Antworten Seiten derselben Art auch von immowelt, Engel & Völkers und immobilien.de sowie von Finanzportalen wie finanzen.net, comdirect und investing.com.
+
+Unterscheiden sich deine Seiten nur durch das Keyword im Titel, hast du eine Keyword-Liste, aber nichts, worauf du aufbauen kannst.
+
+## Funktioniert Programmatic SEO noch? Googles Regeln zu massenhaft generierten Inhalten und Brückenseiten
+
+Ja, solange du zwei Regeln einhältst. Google bestraft Programmatic SEO nicht als Methode; die Spamrichtlinien zielen auf das, wofür Vorlagen oft missbraucht werden.
+
+[Googles Spamrichtlinien](https://developers.google.com/search/docs/essentials/spam-policies) definieren den **Missbrauch mit massenhaft generierten Inhalten** (engl. Scaled Content Abuse) so: „Beim Missbrauch mit massenhaft generierten Inhalten werden viele Seiten in erster Linie erstellt, um das Suchranking zu manipulieren, aber nicht, um Nutzern zu helfen.“
+
+In der Regel gehe es um die Erstellung „großer Mengen von Nicht-Originalinhalten, die für Nutzer unabhängig von der Art der Erstellung wenig oder gar keinen Mehrwert bieten“.
+
+Google hat diese Richtlinie am [5. März 2024](https://developers.google.com/search/blog/2024/03/core-update-spam-policies) eingeführt.
+
+Dieselbe Seite beschreibt den **Missbrauch von Brückenseiten** (Doorway Pages): Solche Seiten entstehen, „um bei bestimmten, ähnlichen Suchanfragen in den Suchergebnissen zu erscheinen“, und leiten Nutzer „auf Zwischenseiten weiter, die weniger hilfreich als das Endziel sind“. Drei Beispiele aus Googles Listen zu beiden Richtlinien lesen sich wie typische Programmatic-SEO-Fehler:
+
+- „Mehrere Domainnamen oder Seiten, die auf bestimmte Regionen oder Städte ausgerichtet sind, die Nutzer jedoch alle zur selben Seite weiterleiten“
+- „Im Wesentlichen ähnliche Seiten erstellen, die eher Suchergebnissen ähneln als einer klar definierten, durchsuchbaren Hierarchie“
+- „Verwendung von Tools mit generativer KI oder ähnlichen Tools, um viele Seiten zu generieren, ohne Nutzern einen Mehrwert zu bieten“
+
+Dieselbe Regel gilt für Googles KI-Funktionen. Im [Leitfaden zur Optimierung für generative KI-Funktionen](https://developers.google.com/search/docs/fundamentals/ai-optimization-guide) geht Google auf separate Inhalte für jede Variante einer Suche ein.
+
+Dort heißt es: „Wenn du dies jedoch hauptsächlich tust, um Rankings oder generative KI-Antworten in der Google Suche zu manipulieren, verstößt das gegen die Spamrichtlinie von Google zu Missbrauch von in großem Umfang generierten Inhalten.“ Es sei auch „keine effektive langfristige Strategie“.
+
+Google setzt die Regeln weiter durch. Das [Google Search Status Dashboard](https://status.search.google.com/products/rGHU1u87FJnkP6W2GwMi/history) führt Spam-Updates im März, Juni, August und September 2026 auf, dazu ein Core Update, das seit dem 10. November 2026 ausgerollt wird.
+
+### Der Test, der eine Vorlage von einer Brückenseite trennt
+
+Die Spamrichtlinien nennen Programmatic SEO nirgends beim Namen. Sie beschreiben Seiten, die gebaut wurden, um zu ranken, und Lesern nichts Neues bieten. Mit diesen drei Fragen erkennst du solche Seiten, bevor Google es tut:
+
+1. **Was ändert sich noch, wenn sich die Zeile ändert?** Auf einer Währungsseite ändern sich Kurs, Chart und Verlauf mit. Auf einer Brückenseite wechselt nur der Städtename.
+2. **Woher stammt jede Zahl, und von wann?** Eine Seite, deren Fakten auf einen gepflegten Datensatz zurückgehen, besteht den Test. Zahlen, die ein Sprachmodell geraten hat, ohne Quelle und ohne Datum, fallen durch.
+3. **Bedient jede Seite eine eigene Suchintention?** Zwei Zeilen, deren Modifikatoren dieselbe Suche meinen, etwa „CRM für Zahnärzte“ und „CRM für Zahnarztpraxen“, gehören auf eine Seite. Danny Sullivans Test läuft laut Search Engine Journal auf die Frage hinaus, ob jemand die Seite gebaut hat, um Traffic einzusammeln, oder weil Nutzer sie tatsächlich erwarten.
+
+In einer [von Search Engine Roundtable zitierten Antwort](https://www.seroundtable.com/google-lose-faith-42032.html) äußerte sich Googles John Mueller zu einer Website, die nach seiner Lesart alle Kombinationen aus Domainnamen, Technologien und Attributen durchspielte.
+
+Er schrieb, Programmatic SEO dieser Art führe oft zu einer Website, die Spam, beinahe Spam oder schlicht minderwertig sei. Googles Systeme hätten wegen der alten Seiten womöglich das Vertrauen verloren, dass die Website Nutzern echten Mehrwert bietet.
+
+### Wann Programmatic SEO die falsche Wahl ist
+
+Lass es bleiben oder halte es klein, wenn einer dieser Fälle zutrifft:
+
+- **Keine Zeile liefert Daten, ein Tool oder einen Vergleich, die Leser nicht schon anderswo finden.** Die Seiten wären Umformulierungen desselben Absatzes.
+- **Deine Modifikatoren ändern die Suchintention nicht.** Synonyme und Schreibvarianten gehören auf eine Seite.
+- **Das Muster ergibt nur ein paar Dutzend Seiten.** Sie von Hand zu schreiben, kostet meist weniger.
+- **Die Daten kämen per Scraping von anderen Websites und fügten kaum etwas hinzu.** Zu Googles Beispielen für massenhaft generierte Inhalte zählt das „Scraping von Feeds, Suchergebnissen oder anderen Inhalten, um viele Seiten zu generieren“, wenn Nutzern dabei wenig Mehrwert geboten wird.
+- **Du hast in einer Stadt keinen Standort, die Seite tut aber so.** In Deutschland kommt dann ein wettbewerbsrechtliches Risiko dazu. Die [Wettbewerbszentrale berichtet](https://www.wettbewerbszentrale.de/wp-content/uploads/2023/10/Sicherheitswirtschaft.pdf) von einem Urteil des Landgerichts Frankfurt am Main vom 30. September 2015 (Az. 3-08 O 55/15): Ein Frankfurter Detektiv hatte bei Google und auf seiner Website mit „Detektei Remscheid“ geworben, ohne dort eine Niederlassung zu haben, und wurde zur Unterlassung verurteilt. Ein Hinweis am Seitenende, Remscheid sei nur Einsatzgebiet, reichte dem Gericht nicht. Das ist ein einzelnes Urteil eines Landgerichts, und dieser Absatz ist keine Rechtsberatung.
+
+## Zitieren KI-Antworten programmatische Seiten? Unser Test aus Deutschland
+
+Oft, wenn die Frage nach Daten verlangt, die eine Vorlage bereithält. Bei Integrationsanleitungen ging die Mehrheit der Zitate dagegen an die Hilfeseiten, Dokus und Blogs der App-Hersteller.
+
+### So haben wir getestet
+
+Bei geotoolbox haben wir am 14. November 2026 zwei Prüfungen auf Deutsch und mit Standort Deutschland durchgeführt. Die englische Fassung dieses Artikels beruht auf einem US-Test vom Vortag; alle Zahlen unten stammen aus dem deutschen Durchlauf.
+
+**Keywords mit dem höchsten Suchvolumen.** Die Datenbank DataForSEO LLM Mentions erfasst Antworten aus AI Overviews (hier: Deutschland, Deutsch). Daraus haben wir für Zapier, Wise und ImmoScout24 je die 100 Keywords mit dem höchsten Volumen laut DataForSEO gezogen, deren Antwort die jeweilige Website als Quelle führt.
+
+Zuletzt gesehen wurden diese Antworten zwischen dem 1. August und dem 14. November 2026 (ImmoScout24 ab dem 31. August). Bei Zapier nennt eine der 100 Antworten keine Zapier-Seite; die übrigen 99 enthalten zusammen 100 Zapier-Zitate, weil eine Antwort zwei Zapier-Seiten zitiert. Insgesamt zitieren die Antworten 47, 70 und 63 verschiedene Seiten der drei Websites.
+
+Die Seiten haben wir in Template-Seiten (Integrations-, Währungspaar-, Bankcode-, Angebots- und Ortsseiten) und Artikel sortiert, anhand von URL-Mustern, die vor dem Abruf feststanden.
+
+Einmal mussten wir die Muster danach korrigieren: Die Orts- und Stadtteilseiten von ImmoScout24 waren durchgerutscht, ebenso Zapiers deutscher Blog. ImmoScout24 stieg dadurch von 62 auf 68 von 100; bei Zapier änderte sich das Ergebnis nicht. Übersichtsseiten von Rechnern und Code-Verzeichnissen zählen nicht als Template-Seiten.
+
+**Long-Tail-Prompts nach Muster.** Wir haben 12 deutsche Prompts geschrieben, die eine Template-Seite beantworten sollte, gleichmäßig verteilt auf Integrationen, Währungen und Bankcodes sowie Immobilien in deutschen Städten. Keiner nannte eine Template-Website wie Zapier, Wise oder ImmoScout24; Integrations-Prompts mussten beide Apps nennen.
+
+Jeder Prompt endete mit „Nenne Quellen.“ und lief je einmal in ChatGPT (Websuche erzwungen), über die Sonar-API von Perplexity und im KI-Modus (engl. „AI Mode“) von Google.
+
+Eine Seite zählte nur, wenn die Antwort sie zitierte. „Template-Seite“ meint hier jede Seite eines Seitensets, das nach einem Muster gebaut ist, egal von welcher Website. Eine zweite, unabhängige Zählung aus den Rohdaten deckte ein übersehenes Zitat auf (jetzt 147) und ordnete fünf Zitate anders ein; zwei dieser Einordnungen haben wir übernommen, drei nicht.
+
+### Was wir gefunden haben
+
+Die Template-Seiten von Zapier tauchten bei keinem der volumenstärksten Keywords auf, deren Antwort Zapier zitiert. Alle 100 Zapier-Zitate gingen an Blogartikel zu breiten Themen wie „business intelligence platform“. Solche Suchen kann eine App-Paar-Seite gar nicht beantworten. Bei Wise wurden die Template-Seiten (Währungspaare, Seiten pro Währung, SWIFT/BIC-Seiten) in 54 von 100 Antworten zitiert, bei ImmoScout24 die Angebots- und Ortsseiten in 68.
+
+In den Antworten auf die 12 Prompts gingen 83 der 147 Zitate an Template-Seiten, und 31 der 36 Antworten zitierten mindestens eine. Die ChatGPT-Antwort zum BIC enthielt keine Quelle, die nach unserer Regel zählt.
+
+<figure>
+  <BlogImage src="/blog/programmatic-seo/ki-antworten-template-seiten-test-de.png" alt="Balkendiagramm unseres Tests aus Deutschland. Volumenstärkste Keywords in AI Overviews: Antworten mit mindestens einer Template-Seite, Zapier 0 von 100 (alle 100 Zitate gingen an Blogartikel), Wise 54 von 100, ImmoScout24 68 von 100 (62 nach unseren ersten URL-Mustern). Long-Tail-Prompts in ChatGPT, Perplexity und KI-Modus: Zitate auf Template-Seiten, Integrationen 14 von 56 (Hilfeseiten der App-Hersteller: 35), Währungen und Bankcodes 28 von 34, Immobilien nach Stadt 41 von 57." w="1100" h="761" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Unser Test, Deutschland: 300 Antworten in AI Overviews aus der Datenbank DataForSEO LLM Mentions (zuletzt gesehen 1. August bis 14. November 2026) und 147 Zitate in 36 Antworten auf 12 deutsche Prompts (14. November 2026).</figcaption>
+</figure>
+
+Bei Datenfragen war der Anteil der Template-Seiten am höchsten: 28 von 34 Zitaten bei Währungen und Bankcodes, 41 von 57 bei Immobilien. Bei Integrations-Prompts sah es anders aus: Nur 14 von 56 Zitaten entfielen auf Integrations- oder Marktplatzseiten, 35 auf Hilfeseiten, Dokus und Blogs der App-Hersteller (16 davon von Calendly, alle zu einem einzigen Prompt) und 7 auf andere Anleitungen.
+
+Eine deutsche Besonderheit: Offizielle Quellen bekamen einen Teil der Zitate. Die Referenzkursseiten der EZB wurden 9-mal zitiert (davon 6 Zitate auf Seiten pro Währung, also selbst Template-Seiten), Mietspiegel- und Mietobergrenzenseiten sowie Marktberichte der Stadt München 7-mal, Pressemitteilungen der Stadt Dortmund 3-mal.
+
+Auf die Frage nach dem BIC der Deutschen Bank in Frankfurt am Main zitierte der KI-Modus im Test nur Template-Seiten: die SWIFT-Code-Seite von Wise, die von Qonto und ein weiteres Bankcode-Verzeichnis (3 von 3 Quellen). Perplexity nannte vier weitere Quellen, ebenfalls alles Einzelseiten aus Bankverzeichnissen.
+
+<figure>
+  <BlogImage src="/blog/programmatic-seo/google-ki-modus-bic-deutsche-bank-de.png" alt="Antwort des KI-Modus von Google auf die Frage, wie der BIC der Deutschen Bank in Frankfurt am Main lautet: DEUTDEFFXXX für den Hauptsitz, mit Inline-Quelle Wise bei der Antwort und Remitly beim Hinweis auf Unter-BICs, einer Quellenliste mit Wise, Xe und Qonto und drei Quellenkarten von Wise, Qonto und Xe zum BIC der Deutschen Bank." w="1160" h="934" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Eine spätere Aufnahme derselben Frage im KI-Modus von Google: Als Quellen erscheinen die BIC-Verzeichnisse von Wise, Xe und Qonto, dazu Remitly beim Hinweis. Abgemeldet, Verbindung aus Deutschland (Google: Berlin), aufgenommen am 14. November 2026.</figcaption>
+</figure>
+
+### Was eine Template-Seite zitierfähig macht
+
+Mit 12 Prompts und je einem Durchlauf lassen sich keine Ursachen isolieren. Aber wo ein Prompt nach einem Kurs, einem Code oder einem Inserat fragte, ging die Mehrheit der Zitate an Template-Seiten.
+
+Bei den beiden Fragen nach Marktpreisen war das Bild gemischt: Bei den Hauspreisen in Dortmund entfielen 7 von 12 Zitaten auf Template-Seiten, bei der Kaltmiete in München nur 6 von 14. Dort ging die Hälfte der Zitate (7) an Seiten und Berichte der Stadt.
+
+Auch die eigene Integrationsseite eines App-Herstellers ist eine Template-Seite: Die Salesforce-Seite von Calendly gehört zu den 14 Zitaten auf Integrations- und Marktplatzseiten; Calendlys Hilfeartikel und Blog kamen auf 16 weitere.
+
+<figure>
+  <BlogImage src="/blog/programmatic-seo/calendly-salesforce-integrationsseite-de.png" alt="Calendlys Salesforce-Integrationsseite auf calendly.com/de mit Markierungen auf der Überschrift Calendly + Salesforce, dem Hinweis Entwickelt von Calendly, dem Link Hilfeartikel anzeigen und dem Übersichtstext, wie Buchungen in Salesforce Leads, Kontakte oder Geschäftsmöglichkeiten anlegen." w="1160" h="1085" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Calendly + Salesforce: die Integrationsseite eines App-Herstellers, eine pro Partner-App, verlinkt mit den Hilfeartikeln. Abgemeldet, Verbindung aus Deutschland, aufgenommen am 14. November 2026.</figcaption>
+</figure>
+
+Bei Zapiers breiten Keywords zitierten die Antworten seine Artikel. Bau deshalb [thematische Autorität](https://geotoolbox.ai/blog/topical-authority) rund um deine Seitensets auf. Prüf außerdem den Crawler-Zugang. Eine robots.txt-Sperre für einen KI-Bot stoppt nur dessen Crawler. Googles KI-Funktionen stützen sich dagegen auf den Googlebot, und manche Assistenten rufen Seiten erst auf Anfrage eines Nutzers ab (unser Guide zu [KI-Crawlern](https://geotoolbox.ai/blog/ai-crawlers) zeigt, welche).
+
+## Ein Programmatic-SEO-Projekt Schritt für Schritt aufbauen
+
+In einer Programmatic-SEO-Strategie kommen Daten und Prüfstufen vor der Skalierung: Jede Zeile muss eine Vollständigkeitsprüfung bestehen, bevor sie zur Seite werden darf, und zuerst geht nur eine Pilotcharge live.
+
+<figure>
+  <BlogImage src="/blog/programmatic-seo/programmatic-seo-ablauf-pruefstufen-de.png" alt="Ablaufdiagramm eines Programmatic-SEO-Projekts: Suchmuster, Datensatz, Vollständigkeitsprüfung als Prüfstufe 1, Vorlage und eine Pilotcharge von 25 bis 50 Seiten als Prüfstufe 2, danach zwei Wege: das Set stufenweise ausbauen oder Seiten verbessern, für leere Zeilen 410 senden oder Duplikate zusammenlegen, bevor mehr erscheint." w="1100" h="492" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Prüfstufen, bevor ein Seitenset wächst. Pilotgröße und Vollständigkeitsregel folgen Nitin Manchandas Leitfaden im Search Engine Journal.</figcaption>
+</figure>
+
+### 1. Ein Suchmuster mit echter Nachfrage finden
+
+Starte mit einem Hauptbegriff und den Modifikatoren, die Nutzer daran anhängen: „[App] + [App] Integration“, „[Tool A] vs. [Tool B]“, „[Produkt] für [Branche]“. Prüf per Keyword-Recherche an einer Stichprobe der Kombinationen, ob sie überhaupt Suchvolumen haben.
+
+Kläre dann, ob jeder Modifikator die Suchintention ändert (die dritte der Brückenseiten-Fragen oben). Im [B2B-SEO](https://geotoolbox.ai/blog/b2b-seo) trägt ein Muster wie „[Leistung] für [Branche]“ nur, wenn jede Branchenseite eigene Spezifikationen und Belege mitbringt.
+
+### 2. Daten beschaffen, die sich auf jeder Seite unterscheiden
+
+Eigene Produktdaten, Partner-Feeds, lizenzierte öffentliche Datensätze, APIs und nutzergenerierte Inhalte wie Bewertungen kommen alle infrage. Leg eine Mindestanforderung fest, bevor irgendetwas live geht. [Manchandas Checkliste](https://www.searchenginejournal.com/good-vs-bad-pseo-learnings-from-a-decade-of-building-scalable-content-engines/594204/) ist hier eindeutig: Definiere, wie vollständig eine Zeile mindestens sein muss, damit daraus eine Seite entsteht, und setze das im Code durch.
+
+Leg für jedes Feld, das sich ändert, eine verantwortliche Person und einen Aktualisierungsrhythmus fest, sonst veraltet das ganze Seitenset auf einmal. Die Mietspiegelseiten von ImmoScout24 nutzen für jede Stadt dieselbe Vorlage.
+
+Durchschnittsmiete, Spanne und Vorjahresvergleich stammen aber aus den Daten der jeweiligen Stadt, und die Seite nennt das Quartal, für das die Werte gelten. Am Aufnahmetag nannte sie für München 21,02 €/m² als Wert des 3. Quartals 2026.
+
+<figure>
+  <BlogImage src="/blog/programmatic-seo/immoscout24-mietspiegel-muenchen-de.png" alt="ImmoScout24-Seite Mietspiegel für München 2026 mit Markierungen: Überschrift mit Stadt und Jahr, Durchschnitt 21,02 €/m² im 3. Quartal 2026, Spanne 16,02 bis 26,82 €/m², Vergleich München plus 5,6 % und Bayern 10,86 €/m² (plus 5,0 %) zum 3. Quartal 2025 und eine Zeitreihe vom 3. Quartal 2022 bis zum 3. Quartal 2026." w="1160" h="1175" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Dieselbe Vorlage für jede Stadt, gefüllt mit den Werten dieser Stadt und dem Zeitraum, für den sie gelten: ImmoScout24, Mietspiegel München. Abgemeldet, Verbindung aus Deutschland, aufgenommen am 14. November 2026.</figcaption>
+</figure>
+
+### 3. Die Vorlage um die Daten herum bauen
+
+Trenn in der Vorlage feste Bestandteile (Layout, Hinweise zur Methode, Navigation) von variablen, die aus der Zeile kommen. Zeig, woher jede Zahl stammt und wann sie zuletzt aktualisiert wurde. Lass Titel und Meta-Beschreibungen mit den Daten variieren und erzeuge die strukturierten Daten der Seite (JSON-LD) aus derselben Zeile (siehe [Schema-Markup für KI](https://geotoolbox.ai/blog/schema-markup-for-ai)).
+
+Für deutsche Seiten braucht die Vorlage zwei zusätzliche Regeln. Die erste betrifft Umlaute in der URL. Google empfiehlt in seinem [Leitfaden zur URL-Struktur](https://developers.google.com/search/docs/crawling-indexing/url-structure) lesbare Wörter in der Sprache der Zielgruppe, „gegebenenfalls transliterierte Wörter“, und rät, Zeichen außerhalb des ASCII-Bereichs in Links prozentcodiert anzugeben.
+
+Unser Rat: Entscheide dich pro Zeile für eine Schreibweise (koeln oder köln), erzeuge sie in der Vorlage und leite die andere per 301 weiter. Die zweite betrifft die Grammatik: „Wohnungen in München“ und „Reinigung für Bürogebäude“ brauchen je eigene Präpositionen und Fälle. Leg sie als Felder in der Vorlage fest, statt sie später per KI umschreiben zu lassen.
+
+### 4. Programmatic-SEO-Tools passend zum Team wählen
+
+Kleine Teams arbeiten mit einer Tabelle oder einer Airtable-Basis, die über ein Import-Plugin Webflow oder WordPress befüllt. Größere Teams erzeugen die Seiten mit einem Framework wie Next.js direkt aus einer Datenbank.
+
+Wenn eine KI die Texte rund um die Daten entwirft, gilt Googles [Leitfaden zu Inhalten mit generativer KI](https://developers.google.com/search/docs/fundamentals/using-gen-ai-content) auch hier. Darin steht: „Achte beim Erstellen von Webinhalten auf Richtigkeit, Qualität und Relevanz, insbesondere wenn die Inhalte automatisch generiert werden.“ Lass das Modell deine Daten beschreiben und prüf, was es schreibt.
+
+### 5. Mit einer Pilotcharge starten
+
+Veröffentliche zuerst 25 bis 50 Seiten. Manchanda nennt es den häufigsten Fehler im Programmatic SEO, 10.000 Seiten zu veröffentlichen, bevor man die Indexierungsrate kennt, und rät, zum Start etwa zehn Seiten komplett durchzulesen.
+
+### 6. Die Seiten in die Website einbinden
+
+Plane die interne Verlinkung: Jedes Seitenset bekommt eine Hub-Seite und Breadcrumbs. Verlinke außerdem verwandte Seiten untereinander, etwa die Seiten von Nachbarstädten oder andere App-Paare mit derselben App. Seiten, die nur über die Sitemap erreichbar sind, werden weniger zuverlässig gecrawlt und indexiert. Beantworte verwandte Unterfragen auf der Seite, zu der sie gehören, wie wir es im Guide zu [Query Fan-Out](https://geotoolbox.ai/blog/query-fan-out) erklären.
+
+## Tausende Seiten in den Index bringen
+
+Ein veröffentlichtes Seitenset ist noch lange kein indexiertes. Im [Bericht zur Seitenindexierung](https://support.google.com/webmasters/answer/7440203) der Search Console stauen sich programmatische Seiten meist in zwei Status:
+
+- **Gefunden – zurzeit nicht indexiert:** Google kennt die URL, hat sie aber noch nicht gecrawlt. Laut Googles Hilfeseite wollte Google sie normalerweise crawlen, „aber das hätte die Website überlastet“.
+- **Gecrawlt – zurzeit nicht indexiert:** Google hat die Seite abgerufen und sich gegen die Indexierung entschieden. Google nennt diese Meldung „für viele Websites üblich“. Landet aber ein großer Teil der Seiten einer Vorlage hier, prüf, ob sie sich zu sehr ähneln.
+
+Das Crawling-Budget, eines der Themen in unserem Guide zu [technischem SEO](https://geotoolbox.ai/blog/technical-seo), spielt vor allem bei großen Seitenmengen eine Rolle. [Googles Leitfaden zum Crawling-Budget](https://developers.google.com/crawling/docs/crawl-budget) richtet sich an Websites mit über 1 Million Seiten, die sich etwa wöchentlich ändern, und an Websites mit mehr als 10.000 Seiten, die sich täglich ändern.
+
+Dazu kommen Websites mit einem großen Anteil an URLs im Status „Gefunden – zurzeit nicht indexiert“.
+
+Diese Maßnahmen beheben bei Seitensets die häufigsten Ursachen für Indexierungsprobleme:
+
+1. **Gib 404 oder 410 für Zeilen zurück, die nie Daten haben werden**, statt einer „Keine Ergebnisse“-Seite mit Status 200. Der Leitfaden warnt: „Seiten mit soft 404-Fehlern werden weiterhin gecrawlt und verschwenden damit dein Crawling-Budget.“ Von noindex für Seiten, die gar nicht gecrawlt werden sollen, rät er ab. Eine Seite, die gerade keine Ergebnisse hat, darf bleiben, wenn sie trotzdem nützliche Zahlen zeigt.
+2. **Teil die XML-Sitemap nach Vorlage auf**, damit die Zahl der indexierten Seiten pro Seitenset sichtbar wird (siehe unseren Guide zu [XML-Sitemaps](https://geotoolbox.ai/blog/xml-sitemap)).
+3. **Fass echte Duplikate mit [Canonical-Tags](https://geotoolbox.ai/blog/canonical-tags) zusammen**, etwa eine Filtervariante, die dieselbe Ergebnismenge liefert wie eine andere URL. Eine Filterseite mit eigener Ergebnismenge, wie die Kaufwohnungen in Leipzig bei ImmoScout24, darf indexierbar bleiben.
+4. **Prüf bei JavaScript-Frameworks das gerenderte HTML**, denn ein fehlender Titel oder ein falscher Statuscode kann wie ein Inhaltsproblem aussehen (unser Guide zu [JavaScript-SEO](https://geotoolbox.ai/blog/javascript-seo) zeigt die Prüfungen).
+
+## Pro Vorlage messen und reagieren, wenn der Traffic fällt
+
+Bewerte ein Seitenset als Ganzes. Der Bericht zur Seitenindexierung zeigt, welcher Anteil der URLs einer Vorlage im Index ist; der Leistungsbericht, gefiltert mit einem regulären Ausdruck für Seiten wie `/integrations/`, zeigt Impressionen, organische Klicks und Rankings. Die Conversions dieser Seiten misst du in deiner Webanalyse.
+
+Die [Leistungsberichte zu generativen KI-Funktionen](https://developers.google.com/search/blog/2026/06/gen-ai-performance-reports) in der Search Console zeigen, wie oft deine URLs in AI Overviews und im KI-Modus erscheinen. Sie sind am 3.
+
+Juni 2026 gestartet und laut Google seit dem 31. August 2026 für alle Websites weltweit verfügbar. Das gilt auch für deutsche Websites: AI Overviews gibt es in Deutschland seit dem 26. März 2025, den KI-Modus seit dem 8. Oktober 2025. Gruppiere auch diese URLs nach Vorlage.
+
+Leg vor dem Start eine Abbruchregel fest. Manchandas Regel lautet sinngemäß: Bringt ein festgelegter Anteil eines Seitensets innerhalb eines festgelegten Zeitraums keine Impressionen, auch nicht in KI-Funktionen, wird er gestrichen oder zusammengelegt. Wähl Anteil und Zeitraum vor der Veröffentlichung und prüf vor dem Streichen, ob die Seiten überhaupt im Index sind.
+
+Wie die Zahlen dazu aussehen können, zeigt der Freiburger Webentwickler Antonio Pacino (Infinityware) an [seiner eigenen Website](https://infinityware.de/wissen/seo/was-ist-programmatic-seo/). Von 73 Ortsseiten nach dem Muster „Leistung mal Ort“ hatten 54 nach 90 Tagen keine einzige Einblendung in der Google-Suche. Von allen Seiten seiner Sitemap standen nur 44 % im Index.
+
+Verliert ein Seitenset nach einem Update Traffic, öffne zuerst den Bericht „Manuelle Maßnahmen“. Eine [manuelle Maßnahme](https://support.google.com/webmasters/answer/9044175) nennt die Muster der betroffenen Seiten oder die ganze Website und verlangt eine Korrektur plus einen Antrag auf erneute Überprüfung; ein algorithmischer Einbruch braucht Diagnose, Korrektur und Zeit. Danach wählst du den nächsten Schritt passend zur einzelnen Seite:
+
+<table>
+  <thead>
+    <tr><th>Situation</th><th>Maßnahme</th><th>Warum</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Seite hat nützliche Daten, aber eine dünne Darstellung</td><td>Verbessern: fehlende Felder, Quellen und Datumsangaben ergänzen</td><td>Die Daten rechtfertigen die Seite</td></tr>
+    <tr><td>Zeile hat keine Daten und wird keine bekommen</td><td>410 (oder 404) zurückgeben</td><td>Signalisiert Google, dass die Seite weg ist, sie fällt aus dem Index</td></tr>
+    <tr><td>Seite dupliziert eine stärkere Seite im Set</td><td>Per 301 auf diese Seite weiterleiten oder zusammenlegen</td><td>Eine URL pro Suchintention</td></tr>
+    <tr><td>Seite hilft Besuchern auf der Website, hat aber keine Suchnachfrage</td><td>Behalten, noindex setzen</td><td>Bleibt in der Navigation nützlich, erscheint aber nicht im Index; bei großen Mengen besser noch nicht indexierte Pfade per robots.txt sperren</td></tr>
+    <tr><td>Der Großteil des Sets besteht aus Beinahe-Duplikaten</td><td>Veröffentlichung stoppen, auf die Seiten reduzieren, die du einzeln verteidigen würdest</td><td>Googles Systeme können die ganze Website beurteilen, nicht nur die schwachen Seiten</td></tr>
+  </tbody>
+</table>
+
+Die Erholung dauert. In der oben zitierten Antwort schrieb Mueller, es koste in der Regel Zeit und erheblichen Aufwand, das zu beheben und den Mehrwert zu belegen.
+
+## Starte mit einer Vorlage
+
+Wähl das eine Suchmuster, bei dem deine Daten die beste Antwort liefern, die es gibt, starte mit einer kleinen Pilotcharge und lies die Seiten selbst, bevor du mehr veröffentlichst.
+
+Prüf danach, ob Crawler sie erreichen. Der kostenlose [robots.txt Tester](https://geotoolbox.ai/tools/robots-txt-tester) von geotoolbox (Oberfläche auf Englisch) prüft jede URL mit Googles Abgleichregeln gegen die robots.txt einer Website. So stellst du sicher, dass ein Vorlagenpfad wie `/integrations/` offen ist, bevor du skalierst.
+
+## Quellen
+
+- Spamrichtlinien für die Google Websuche - Google Search Central, aktualisiert am 2. September 2026 (DE) - `developers.google.com/search/docs/essentials/spam-policies`
+- Wichtige Informationen für Web-Creator über das grundlegende Update vom März 2024 und die neuen Spamrichtlinien - Google Search Central Blog, 5. März 2024 - `developers.google.com/search/blog/2024/03/core-update-spam-policies`
+- Leitfaden von Google zur Optimierung für generative KI-Funktionen in der Google Suche - Google Search Central, aktualisiert am 15. Juli 2026 (DE) - `developers.google.com/search/docs/fundamentals/ai-optimization-guide`
+- History for Ranking - Google Search Status Dashboard, abgerufen am 14. November 2026 - `status.search.google.com/products/rGHU1u87FJnkP6W2GwMi/history`
+- Google Can Lose Faith In Sites Based On Low Value Programmatic SEO Pages - Search Engine Roundtable, 7. September 2026 - `seroundtable.com/google-lose-faith-42032.html`
+- Good vs. Bad pSEO: Learnings From A Decade Of Building Scalable Content Engines - Search Engine Journal (Nitin Manchanda), 10. November 2026 - `searchenginejournal.com/good-vs-bad-pseo-learnings-from-a-decade-of-building-scalable-content-engines/594204/`
+- Bericht zur Seitenindexierung - Search Console-Hilfe - `support.google.com/webmasters/answer/7440203`
+- Verwaltung des Crawling-Budgets - Google Crawling Infrastructure, aktualisiert am 16. September 2026 (DE) - `developers.google.com/crawling/docs/crawl-budget`
+- Leitfaden der Google Suche zur Verwendung von KI-generierten Inhalten auf deiner Website - Google Search Central, aktualisiert am 7. Oktober 2026 (DE) - `developers.google.com/search/docs/fundamentals/using-gen-ai-content`
+- Leistungsberichte für generative KI in der Google Suche in der Search Console - Google Search Central Blog, 3. Juni 2026 - `developers.google.com/search/blog/2026/06/gen-ai-performance-reports`
+- Bericht „Manuelle Maßnahmen“ - Search Console-Hilfe - `support.google.com/webmasters/answer/9044175`
+- Übersicht mit KI startet in Deutschland und weiteren Ländern - Google Blog (DE), 26. März 2025 - `blog.google/intl/de-de/produkte/suchen-entdecken/uebersicht-mit-ki-start/`
+- Der KI-Modus startet in Deutschland, Österreich und der Schweiz - Google Blog (DE), 8. Oktober 2025 - `blog.google/intl/de-de/produkte/suchen-entdecken/ki-modus-startet-in-dach/`
+- Best Practices für die URL-Struktur für die Google Suche - Google Search Central, aktualisiert am 26. Oktober 2026 (DE) - `developers.google.com/search/docs/crawling-indexing/url-structure`
+- Was ist Programmatic SEO? - Infinityware (Antonio Pacino), aktualisiert am 7. Oktober 2026 - `infinityware.de/wissen/seo/was-ist-programmatic-seo/`
+- Jahresbericht 2015, Sicherheitswirtschaft (S. 87) - Wettbewerbszentrale - `wettbewerbszentrale.de/wp-content/uploads/2023/10/Sicherheitswirtschaft.pdf`
+- Unsere Testdaten: DataForSEO LLM Mentions (AI Overviews, Deutschland, Deutsch, zuletzt gesehen 1. August bis 14. November 2026) und 12 deutsche Prompts in ChatGPT, Perplexity Sonar und im KI-Modus von Google, 14. November 2026
