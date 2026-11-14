@@ -1,0 +1,447 @@
+---
+title: "Technisches SEO: Was Google und KI-Crawler jeweils brauchen"
+description: "Technisches SEO 2026: Crawling, Rendering, Indexierung, Core Web Vitals und strukturierte Daten. Mit Matrix der Unterschiede zwischen Google und KI-Crawlern."
+date: "2026-11-14"
+updated: "2026-11-14"
+recheckBy: "2026-12-01"
+author: "Samy BEN SADOK"
+tags: ["technical-seo", "seo", "ai-crawlers", "crawling", "indexing", "guide"]
+draft: false
+locale: "de"
+donorSlug: "technical-seo"
+donorCommit: "b2cd08e"
+noindex: false
+---
+
+Technisches SEO (engl. Technical SEO) entscheidet, ob Suchmaschinen deine Seiten erreichen, rendern und indexieren können; erst darauf bauen Inhalte und Links auf. 2026 hat es zwei Zielgruppen. Die eine ist der Googlebot, der JavaScript rendert und die Grundlage sowohl für die klassischen Ergebnisse als auch für AI Overviews liefert. Die andere sind die KI-Crawler von OpenAI, Anthropic und Perplexity, die oft nur das HTML lesen, das dein Server ausliefert.
+
+Die Regeln unterscheiden sich zum Beispiel darin, welches robots.txt-Token das Training steuert und welches die KI-Suche, ob ein Bot JavaScript ausführt und welche Einstellung dich von AI Overviews ausschließt. An genau diesen Stellen verschwinden Websites ungewollt aus der Suche und aus KI-Antworten.
+
+## Das Wichtigste in Kürze
+
+- **Technisches SEO** sorgt dafür, dass Suchmaschinen und KI-Crawler eine Seite abrufen, rendern, indexieren und ausspielen können; Googles Mindestanforderungen sind Erreichbarkeit für den Googlebot, Statuscode 200 und indexierbare Inhalte.
+- Der Googlebot rendert JavaScript, während die KI-Crawler von OpenAI, Anthropic und Perplexity in Messungen meist nur rohes HTML lasen; OpenAIs OAI-SearchBot führte 2026 auf einigen Websites Skripte aus, dokumentiert hat OpenAI das nicht.
+- Eine Sperre von GPTBot oder ClaudeBot betrifft das Training, nicht die Suche in ChatGPT oder Claude, und Google-Extended ändert nichts an der Aufnahme in AI Overviews. Diese steuerst du mit nosnippet und der Search-Console-Einstellung „Generative KI-Funktionen der Google Suche“, die es seit dem 31. August 2026 für alle Websites weltweit gibt.
+- In Deutschland laufen AI Overviews seit dem 26. März 2025 und der KI-Modus seit dem 8. Oktober 2025; ob eine robots.txt-Zeile als maschinenlesbarer Vorbehalt nach § 44b UrhG gilt, bleibt offen, mindestens bis zum Verkündungstermin des BGH am 17. Dezember 2026.
+- Beginne mit dem Zugriff: Prüfe, welche Bots deine robots.txt sperrt und was deine Firewall oder dein Hoster ihnen tatsächlich antwortet.
+
+## Was ist technisches SEO?
+
+Technisches SEO ist der Teil der Suchmaschinenoptimierung, der dafür sorgt, dass Suchmaschinen und KI-Crawler deine Seiten erreichen, rendern, indexieren und ausspielen können.
+
+Die Liste von Googles Mindestanforderungen ist kurz: Der Googlebot muss die Seite abrufen können, sie muss den Statuscode 200 liefern, und sie muss indexierbare Inhalte haben. Google nennt sie die [technischen Anforderungen der Google Suche](https://developers.google.com/search/docs/essentials/technical?hl=de). Wer sie erfüllt, kommt damit für die Suche überhaupt erst infrage; eine gute Platzierung folgt daraus nicht.
+
+Die drei klassischen Teilbereiche der Suchmaschinenoptimierung lassen sich so abgrenzen:
+
+<table>
+<thead>
+<tr><th>Bereich</th><th>Worum es geht</th><th>Typische Aufgaben</th><th>Wer meist zuständig ist</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Technisches SEO</strong></td><td>Zugriff, Rendering, Indexierung, Seitenstruktur, Ladezeit</td><td>robots.txt-Regeln, Statuscodes, Canonical-Tags, XML-Sitemaps, Core Web Vitals, strukturierte Daten</td><td>SEO und Entwicklung</td></tr>
+<tr><td><strong>OnPage-SEO</strong></td><td>Inhalt jeder Seite und seine Auszeichnung (Titel, Überschriften)</td><td>Themenabdeckung, Title-Tags, Überschriften, Ankertexte interner Links</td><td>SEO und Redaktion</td></tr>
+<tr><td><strong>OffPage-SEO</strong></td><td>Signale von anderen Websites</td><td>Backlinks, Markenerwähnungen, Bewertungen</td><td>SEO, PR, Partnerschaften</td></tr>
+</tbody>
+</table>
+
+Mit den KI-Crawlern kommt zu Googles Regeln ein zweites Regelwerk hinzu.
+
+## Wie Google und KI-Crawler eine Seite verarbeiten
+
+Google arbeitet mit einem einzigen Ablauf. [JavaScript-Seiten verarbeitet Google in drei Phasen](https://developers.google.com/search/docs/crawling-indexing/javascript/javascript-seo-basics?hl=de): Crawling, Rendering und Indexierung. Das Rendering wartet nach dem ersten Abruf in einer Warteschlange und läuft dann in einem Headless Chromium. AI Overviews und der KI-Modus (engl. „AI Mode“) beziehen ihre Quellenlinks aus genau diesem Suchindex; laut Google gelten für sie darum die normalen Anforderungen der Suche.
+
+In Deutschland zeigt Google AI Overviews (bei Google: „Übersicht mit KI“) seit dem 26. März 2025 und den KI-Modus seit dem 8. Oktober 2025. Damit gelten auch für deutsche Seiten diese Voraussetzungen: Eine Seite muss indexiert und für ein Snippet geeignet sein und darf in der Search Console nicht ausgeschlossen sein.
+
+### Wie KI-Anbieter ihre Crawler nach Zweck trennen
+
+KI-Anbieter trennen ihr Crawling nach Zweck, und jeder Zweck hat einen eigenen User-Agent:
+
+- **Trainings-Crawler** sammeln Seiten für das Modelltraining: GPTBot, ClaudeBot
+- **Such-Crawler** bauen den Index hinter einem KI-Suchprodukt auf: OAI-SearchBot, Claude-SearchBot, PerplexityBot
+- **Abruf-Bots** (nutzergesteuerte Abrufe) laden eine Seite, weil gerade jemand eine Frage zu ihr gestellt hat: ChatGPT-User, Claude-User, Perplexity-User
+
+<figure>
+  <BlogImage src="/blog/technisches-seo/googlebot-vs-ki-fetcher-ablauf.png" alt="Diagramm: Der Googlebot crawlt, rendert, indexiert und spielt Ergebnisse aus; die KI-Crawler für Training, Suche und nutzergesteuerte Abrufe lasen in Messungen meist nur rohes HTML." w="1100" h="759" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Der Googlebot rendert und indexiert für die Suche und ihre KI-Funktionen in einem gemeinsamen Ablauf; KI-Anbieter betreiben getrennte Crawler für Training, Suche und Live-Antworten.</figcaption>
+</figure>
+
+Der praktische Unterschied liegt darin, was jeder Crawler liest. Der Googlebot indexiert die gerenderte Seite. Die KI-Crawler von OpenAI, Anthropic und Perplexity lasen in Messungen dagegen meist nur das HTML, das dein Server ausliefert; OpenAIs Such-Crawler ist auf einigen Websites die Ausnahme. Alle User-Agents findest du in unserer [Liste der KI-Crawler](https://geotoolbox.ai/blog/ai-crawlers).
+
+## Google vs. KI-Crawler: die Anforderungsmatrix
+
+Für Googles KI-Funktionen muss eine Seite indexiert und für ein Snippet geeignet sein, und eine Einstellung in der Search Console darf sie nicht ausschließen. Die KI-Anbieter haben eigene Regeln, und die gehen in den zwei wichtigsten Fragen auseinander: Welches Token steuert welche Nutzung, und führt der Crawler JavaScript aus?
+
+Die Matrix beruht auf der Dokumentation der Anbieter, abgerufen am 14. November 2026, und auf den unabhängigen Rendering-Tests aus dem Abschnitt zum Rendering.
+
+<figure>
+  <BlogImage src="/blog/technisches-seo/google-vs-ki-crawler-anforderungen.png" alt="Matrix: Google, OpenAI, Anthropic, Perplexity und Bing im Vergleich bei robots.txt-Token, JavaScript-Rendering, Voraussetzungen für KI-Antworten, Begrenzung der KI-Nutzung pro Seite und dem Umgang nutzergesteuerter Abrufe mit der robots.txt." w="1240" h="900" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Anforderungen von Google und KI-Crawlern laut Anbieterdokumentation, abgerufen am 14. November 2026, ergänzt um unabhängige Rendering-Tests.</figcaption>
+</figure>
+
+<table>
+<thead>
+<tr><th>Anforderung</th><th>Google (Suche, AI Overviews, KI-Modus)</th><th>OpenAI (ChatGPT)</th><th>Anthropic (Claude)</th><th>Perplexity</th><th>Bing (Copilot)</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>robots.txt-Token</strong></td><td>Googlebot für die Suche; <a href="https://developers.google.com/crawling/docs/crawlers-fetchers/google-common-crawlers?hl=de">Google-Extended</a> für Gemini-Training und Grounding, nicht für die Aufnahme in die Suche</td><td><a href="https://developers.openai.com/api/docs/bots">GPTBot</a> (Training), OAI-SearchBot (Suche), ChatGPT-User (Nutzeraktionen)</td><td><a href="https://support.claude.com/de/articles/8896518-crawlt-anthropic-daten-aus-dem-web-und-wie-konnen-website-besitzer-den-crawler-blockieren">ClaudeBot</a> (Training), Claude-SearchBot (Suche), Claude-User (Nutzeranfragen)</td><td><a href="https://docs.perplexity.ai/docs/resources/perplexity-crawlers">PerplexityBot</a> (Suche), Perplexity-User (Nutzeranfragen)</td><td><a href="https://www.bing.com/webmasters/help/webmaster-guidelines-30fba23a">Bingbot</a></td></tr>
+<tr><td><strong>Führt JavaScript aus</strong></td><td>Ja, in einem Rendering-Schritt mit Warteschlange</td><td>Nicht dokumentiert. OAI-SearchBot führte in <a href="https://genezio.com/research/openai-crawler-runs-javascript/">Tests von 2026</a> auf einigen Websites Skripte aus; bei GPTBot ist das <a href="https://jsseo.dev/findings/javascript-execution-has-two-depths/">umstritten</a>; ChatGPT-User rief in <a href="https://www.forgeaibotlog.com/articles/can-ai-crawlers-execute-javascript/">einem Log von 2026</a> keine Skripte ab</td><td>Nicht dokumentiert. ClaudeBot und Claude-User riefen beim Laden einer Seite in <a href="https://www.forgeaibotlog.com/articles/can-ai-crawlers-execute-javascript/">einem Log von 2026</a> keine Skripte ab</td><td>Nicht dokumentiert. PerplexityBot rief in <a href="https://www.forgeaibotlog.com/articles/can-ai-crawlers-execute-javascript/">einem Log von 2026</a> keine Skripte ab; <a href="https://www.searchviu.com/de/ratgeber/schema-markup-ki/">ein Test von 2025</a> widerspricht dem</td><td>Rendert selektiv (etwa 1 von 800 Seitenaufrufen in <a href="https://www.forgeaibotlog.com/articles/can-ai-crawlers-execute-javascript/">einem Log von 2026</a>); <a href="https://www.bing.com/webmasters/help/webmaster-guidelines-30fba23a">Bing rät</a>, wichtige Inhalte nicht hinter Client-Side-Rendering zu verstecken</td></tr>
+<tr><td><strong>Für KI-Antworten nötig</strong></td><td><a href="https://developers.google.com/search/docs/fundamentals/ai-optimization-guide?hl=de">Indexiert, für ein Snippet geeignet</a>, und die Search-Console-Einstellung zu generativen KI-Funktionen bleibt eingeschaltet (Standard)</td><td><a href="https://developers.openai.com/api/docs/bots">OAI-SearchBot zulassen</a></td><td><a href="https://support.claude.com/de/articles/8896518-crawlt-anthropic-daten-aus-dem-web-und-wie-konnen-website-besitzer-den-crawler-blockieren">Claude-SearchBot zulassen</a> (und Claude-User für Live-Antworten)</td><td><a href="https://docs.perplexity.ai/docs/resources/perplexity-crawlers">PerplexityBot zulassen</a></td><td>Im Bing-Index; <a href="https://www.bing.com/webmasters/help/webmaster-guidelines-30fba23a">NOINDEX</a> entfernt die URL auch aus Copilot</td></tr>
+<tr><td><strong>KI-Nutzung pro Seite begrenzen</strong></td><td><a href="https://developers.google.com/search/docs/crawling-indexing/robots-meta-tag?hl=de">nosnippet, data-nosnippet, max-snippet</a></td><td>Über die robots.txt hinaus keine dokumentiert</td><td>Über die robots.txt hinaus keine dokumentiert</td><td>Über die robots.txt hinaus keine dokumentiert</td><td><a href="https://www.bing.com/webmasters/help/webmaster-guidelines-30fba23a">NOARCHIVE, NOCACHE, nosnippet, data-nosnippet</a></td></tr>
+<tr><td><strong>Nutzergesteuerte Abrufe und robots.txt</strong></td><td>Google-Agent und andere <a href="https://developers.google.com/crawling/docs/crawlers-fetchers/google-user-triggered-fetchers?hl=de">nutzergesteuerte Fetcher</a> ignorieren robots.txt-Regeln laut Google meist</td><td>Für <a href="https://developers.openai.com/api/docs/bots">ChatGPT-User</a> gelten robots.txt-Regeln laut OpenAI möglicherweise nicht</td><td><a href="https://support.claude.com/de/articles/8896518-crawlt-anthropic-daten-aus-dem-web-und-wie-konnen-website-besitzer-den-crawler-blockieren">Claude-User</a> lässt sich in der robots.txt sperren</td><td><a href="https://docs.perplexity.ai/docs/resources/perplexity-crawlers">Perplexity-User</a> ignoriert robots.txt-Regeln laut Perplexity meist</td><td>Entfällt</td></tr>
+</tbody>
+</table>
+
+### Was die Matrix zeigt
+
+Drei Muster fallen auf.
+
+Erstens trennen OpenAI und Anthropic Training und Suche, und Perplexity erklärt, dass sein Crawler nicht für das Modelltraining genutzt wird.
+
+Zweitens ist rohes HTML der kleinste gemeinsame Nenner. Google rendert, doch ChatGPT-User und Claude-User riefen in dem unten zitierten Log von 2026 keine Skripte ab. Die Ausnahme sind Agenten-Browser wie der Claude-Agent-Browser, mit dem Claude Aufgaben für Nutzer erledigt: Browser führen Skripte aus.
+
+Drittens dokumentieren nur Google und Bing, wie sich die KI-Nutzung auf Seitenebene steuern lässt.
+
+Googles [Leitfaden zur Optimierung für generative KI](https://developers.google.com/search/docs/fundamentals/ai-optimization-guide?hl=de) nennt eine zusätzliche Anforderung: Eine Website „muss … in der Search Console in generative KI-Funktionen der Google Suche einbezogen werden“.
+
+Standardmäßig ist jede Website einbezogen. Eine Property erbt die Einstellung von der nächstgelegenen übergeordneten Property, in der jemand die Einstellung geändert hat; prüfe daher auch deine Domain-Property. Auf Googles älterer [Seite zu KI-Funktionen](https://developers.google.com/search/docs/appearance/ai-features?hl=de) (Dezember 2025) steht weiterhin: „Es gelten keine zusätzlichen technischen Anforderungen.“
+
+## Crawlbarkeit: robots.txt, Statuscodes und Crawl-Budget
+
+Crawlbarkeit heißt: Ein Bot kann eine URL abrufen und bekommt eine brauchbare Antwort. Viele Probleme im technischen SEO beginnen genau hier.
+
+### Warum die robots.txt das Crawling steuert, nicht die Indexierung
+
+Die robots.txt bittet Crawler, bestimmte Pfade zu meiden; aus dem Google-Index hält sie eine URL nicht heraus. Laut Google kann eine [in der robots.txt gesperrte Seite trotzdem indexiert werden](https://developers.google.com/search/docs/crawling-indexing/robots/intro?hl=de), wenn andere Websites auf sie verlinken. Der Standard selbst, [RFC 9309](https://www.rfc-editor.org/rfc/rfc9309.html), stellt klar: „These rules are not a form of access authorization.“ Die Regeln sind also keine Zugangskontrolle.
+
+Schütze eine Staging-Umgebung oder eine private Seite mit einem Passwort: robots.txt und noindex sind keine Sicherheitsmaßnahmen. Für eine öffentliche Seite, die nicht in der Suche erscheinen soll, empfiehlt Google [noindex](https://developers.google.com/search/docs/crawling-indexing/robots-meta-tag?hl=de). Sperre sie nicht zusätzlich in der robots.txt, denn Google muss die Seite crawlen, um das Tag zu sehen.
+
+Welche Bereiche eine Software-Domain aus dem Index heraushalten sollte (App, Staging-Umgebung, alte Versionen der Dokumentation), zeigt unser [Leitfaden zu SaaS-SEO](https://geotoolbox.ai/blog/saas-seo).
+
+Die Anweisung crawl-delay ignoriert der Googlebot; Googles [robots.txt-Spezifikation](https://developers.google.com/crawling/docs/robots-txt/robots-txt-spec?hl=de) führt sie als nicht unterstützt. [Anthropic gibt an](https://support.claude.com/de/articles/8896518-crawlt-anthropic-daten-aus-dem-web-und-wie-konnen-website-besitzer-den-crawler-blockieren), dass seine Bots sie beachten, wo es angemessen ist.
+
+Jeder Crawler folgt der Gruppe, die seinen User-Agent nennt, und greift sonst auf die Gruppe `*` zurück. Du musst nur die Bots aufführen, die du anders behandeln willst. Mit den folgenden Gruppen bittest du OpenAI, Anthropic und Google, deine Seiten nicht für das Training zu verwenden (Google-Extended ist ein Steuerungs-Token, kein Crawler); für die Such-Crawler ändert sich dadurch nichts.
+
+Prüfe auch bestehende Gruppen für diese Bots: Mehrere Gruppen für denselben User-Agent werden zusammengefasst, und eine spezifischere Allow-Zeile hat dann Vorrang vor `Disallow: /`. Die Gruppe für Google-Extended nimmt deine Seiten außerdem aus dem Grounding in den Gemini-Apps; lass sie weg, wenn Gemini-Antworten deine Seiten nutzen sollen.
+
+```
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+```
+
+In Deutschland hat diese Sperre auch eine rechtliche Seite (Stand 14. November 2026). Nach § 44b Abs. 3 UrhG ist ein Nutzungsvorbehalt gegen Text und Data Mining bei online zugänglichen Werken „nur dann wirksam, wenn er in maschinenlesbarer Form erfolgt“. Das [OLG Hamburg](https://www.landesrecht-hamburg.de/bsha/document/NJRE001628040) (Urteil vom 10. Dezember 2025, 5 U 104/24, nicht rechtskräftig) sah es für einen Download in der zweiten Jahreshälfte 2021 nicht als dargelegt an, dass der in natürlicher Sprache verfasste Vorbehalt einer Bildagentur damals maschinenlesbar war. Das Gericht erwähnt die robots.txt dabei nur als eine Form, die als maschinenlesbar diskutiert wird, und lässt offen, ob sie genügt. Den Verkündungstermin im Verfahren I ZR 281/25 hat der [BGH auf den 17. Dezember 2026 gelegt](https://www.bundesgerichtshof.de/SharedDocs/Termine/DE/Termine/IZR281-25.html). Wer KI-Training ausschließen will, sollte den Vorbehalt deshalb maschinenlesbar erklären und nicht nur in den AGB oder im Seitentext.
+
+<figure>
+  <BlogImage src="/blog/technisches-seo/faz-robots-txt-ki-bots.png" alt="Ausschnitte aus faz.net/robots.txt mit eigenen Gruppen für GPTBot, Google-Extended, PerplexityBot, ClaudeBot, Claude-SearchBot, Claude-User, OAI-SearchBot und ChatGPT-User, jeweils mit Disallow: / und einzelnen Allow-Ausnahmen." w="1160" h="1619" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">faz.net/robots.txt gibt jedem KI-Bot eine eigene Gruppe und sperrt Trainings- und Such-Crawler gleichermaßen; für die Bots von OpenAI bleibt nur /kaufkompass/ erlaubt, für Google-Extended gelten zwei eigene Allow-Ausnahmen. Abgerufen ohne Anmeldung über eine Verbindung in Deutschland, 14. November 2026.</figcaption>
+</figure>
+
+Gib eine Domain in unseren [AI Crawler Checker](https://geotoolbox.ai/tools/ai-crawler-checker) ein: Er prüft die aktuell ausgelieferte robots.txt für den Pfad der Startseite gegen 34 Crawler-User-Agents, die meisten davon KI-Bots. Bei jeder Sperre zeigt er die verantwortliche Zeile.
+
+<figure>
+  <BlogImage src="/blog/technisches-seo/ki-crawler-checker-ergebnis.png" alt="AI Crawler Checker von geotoolbox für geotoolbox.ai: 34 von 34 Crawler-User-Agents laut robots.txt für den Pfad der Startseite erlaubt, nach Zweck gruppiert; die Oberfläche ist englisch." w="1160" h="1682" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Unser AI Crawler Checker (Oberfläche auf Englisch) für geotoolbox.ai: alle 34 Crawler-User-Agents für den Pfad der Startseite erlaubt, mit dem Hinweis, dass eine Firewall sie trotzdem blockieren kann. Abgerufen ohne Anmeldung über eine Verbindung in Deutschland, 14. November 2026.</figcaption>
+</figure>
+
+Auch der Statuscode der Datei selbst zählt. Nach [RFC 9309](https://www.rfc-editor.org/rfc/rfc9309.html) darf ein Crawler bei einem 4xx-Code alles abrufen; ist die Datei wegen eines Serverfehlers nicht erreichbar, muss er annehmen, dass alles gesperrt ist.
+
+### Dein CDN kann die robots.txt aushebeln
+
+Bot-Regeln in CDN und Firewall greifen, bevor die robots.txt überhaupt gelesen wird. Eine Datei, die OAI-SearchBot erlaubt, nützt nichts, wenn schon das CDN mit 403 antwortet. Cloudflare zum Beispiel [begann am 1. Juli 2025, bei jeder neuen Domain abzufragen](https://www.cloudflare.com/press/press-releases/2025/cloudflare-just-changed-how-ai-crawlers-scrape-the-internet-at-large/), ob KI-Crawler zugelassen werden sollen; voreingestellt war die Sperre. Am 15. September 2026 kündigte Cloudflare [Voreinstellungen für neue Domains](https://blog.cloudflare.com/accountable-mixed-use-ai-crawlers/) an: Such-Crawler bleiben erlaubt. Für werbefinanzierte Websites untersagen die Voreinstellungen das KI-Training und sperren Agenten auf Seiten mit Werbung; für Websites ohne Werbung lassen sie Suche, Training und Agenten zu.
+
+Auch der Hoster kann KI-Bots aussperren. Im August 2025 berichtete [SEO Südwest](https://www.seo-suedwest.de/10169-shared-hosting-ionos-blockiert-zugriffe-mancher-ki-bots.html), dass IONOS bei einigen Shared-Hosting-Paketen KI-Bots wie GPTBot und ClaudeBot mit dem Statuscode 429 abwies, sodass sie nicht einmal die robots.txt abrufen konnten. IONOS bestätigte, dass ausgewählte KI-Bots wegen der gestiegenen Serverlast ausgeschlossen werden. Such in deinen Logs nach 429-Antworten an KI-Bots und frag im Zweifel deinen Hoster.
+
+Laut der [Crawler-Dokumentation von Perplexity](https://docs.perplexity.ai/docs/resources/perplexity-crawlers) müssen Website-Betreiber dessen Bots in einer Web Application Firewall unter Umständen ausdrücklich zulassen.
+
+<figure>
+  <BlogImage src="/blog/technisches-seo/perplexity-crawler-doku.png" alt="Crawler-Dokumentation von Perplexity mit PerplexityBot für die Suche und Perplexity-User für Nutzeranfragen (ignoriert robots.txt-Regeln meist) sowie dem Abschnitt zur WAF-Konfiguration." w="1160" h="1835" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Die Crawler-Seite von Perplexity (auf Englisch): PerplexityBot für die Suche, Perplexity-User für Live-Anfragen. Abgerufen ohne Anmeldung über eine Verbindung in Deutschland, 14. November 2026.</figcaption>
+</figure>
+
+Teste deshalb, was jeder Bot tatsächlich erhält, und nicht nur, was die Regeln sagen. Der [Agent Readiness Scan](https://geotoolbox.ai/tools/agent-readiness-scanner) von geotoolbox ruft deine Website mit sechs Crawler-User-Agents von unserem Server aus ab und meldet 403-Antworten und Firewall-Sperren. Eine Firewall, die Bots über ihre IP-Adresse verifiziert, kann den echten Crawler dennoch anders behandeln; prüfe das in den Bot-Einstellungen oder Logs deines CDN.
+
+### Crawl-Budget ist ein Problem großer Websites
+
+Googles [Leitfaden zum Crawl-Budget](https://developers.google.com/crawling/docs/crawl-budget?hl=de) richtet sich an Websites mit mehr als 1 Million eindeutigen Seiten, die sich wöchentlich ändern, oder mit mehr als 10.000 Seiten, die sich täglich ändern. Gemeint sind auch Websites mit einem großen Anteil an URLs im Status „Gefunden – zurzeit nicht indexiert“. Google nennt diese Zahlen selbst grobe Schätzungen. Bei kleineren Websites ist eine Seite meist aus einem anderen Grund nicht indexiert, etwa wegen doppelter oder dünner Inhalte. Wenn du Tausende Seiten aus einer Vorlage erzeugst, zeigt unser [Leitfaden zu Programmatic SEO](https://geotoolbox.ai/blog/programmatic-seo), wie sie gecrawlt und indexiert werden.
+
+Was bei Websites jeder Größe Abrufe verschwendet: Weiterleitungsketten, Soft-404-Seiten („Seiten mit soft 404-Fehlern werden weiterhin gecrawlt und verschwenden damit dein Crawling-Budget“) und langsame oder fehlerhafte Server. Google senkt die Crawling-Frequenz, wenn der Server langsamer antwortet oder die Codes 5xx oder 429 liefert.
+
+## Rendering: Was jeder Crawler wirklich sieht
+
+Erscheint dein Haupttext erst, wenn JavaScript läuft, sieht Google ihn in der Regel; die KI-Crawler von OpenAI, Anthropic und Perplexity sehen ihn dagegen meist nicht.
+
+Google rendert in einem zweiten Schritt mit Warteschlange, der dem Crawling hinterherhinken kann. [Bings Richtlinien](https://www.bing.com/webmasters/help/webmaster-guidelines-30fba23a) raten davon ab, wichtige Inhalte hinter Client-Side-Rendering zu verstecken, denn Inhalte, die sich nicht zuverlässig rendern lassen, werden womöglich weder indexiert noch für das Grounding ausgewählt.
+
+Im Dezember 2024 kam die [Log-Analyse von Vercel und MERJ](https://vercel.com/blog/the-rise-of-the-ai-crawler) im Netzwerk von Vercel zu diesem Ergebnis: „none of the major AI crawlers currently render JavaScript“. Keiner der großen KI-Crawler renderte damals JavaScript. Auf nextjs.org entfielen 11,50 % der Abrufe von ChatGPTs Crawler auf JavaScript-Dateien, bei Claude waren es 23,84 %; ausgeführt wurden die Dateien nicht.
+
+<figure>
+  <BlogImage src="/blog/technisches-seo/vercel-ki-crawler-javascript.png" alt="Blogbeitrag The rise of the AI crawler von Vercel mit dem Befund, dass keiner der großen KI-Crawler JavaScript rendert, und den JavaScript-Anteilen von 11,50 % und 23,84 % an den Abrufen." w="1160" h="2243" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Die Log-Studie von Vercel und MERJ aus dem Dezember 2024 (auf Englisch), die Vergleichsbasis für die Tests von 2026. Abgerufen ohne Anmeldung über eine Verbindung in Deutschland, 14. November 2026.</figcaption>
+</figure>
+
+Für OpenAIs Such-Crawler hat sich das geändert. Am 22. Oktober 2026 veröffentlichte [Genezio](https://genezio.com/research/openai-crawler-runs-javascript/), ein Anbieter von Software für KI-Sichtbarkeit, einen Test auf der eigenen Website: Ein Crawler aus OpenAIs IP-Bereichen rief einen Endpunkt auf, den nur ausgeführtes JavaScript erreichen konnte.
+
+[Forges 30-Tage-Log einer Nachrichtenseite](https://www.forgeaibotlog.com/articles/can-ai-crawlers-execute-javascript/), das bis zum 24. September 2026 reicht, zeigt einen einzigen Fall, in dem OAI-SearchBot eine Seite so lud, wie ein Browser es tut: einmal unter 1.738 Seitenanfragen mit diesem Bot-Namen. Forge glich diese Anfragen nicht mit OpenAIs IP-Liste ab und betont, dass ein Log nicht zeigen kann, ob die Skripte liefen.
+
+OpenAI hat davon nichts dokumentiert. Im selben Log riefen ChatGPT-User, Claude-User und PerplexityBot keine Skripte ab.
+
+Zwei weitere Tests machen das Bild weniger eindeutig. Ein [Beacon-Test von JS SEO Lab](https://jsseo.dev/findings/javascript-execution-has-two-depths/) protokollierte, dass GPTBot Inline-Skripte ausführte, und ein [Test von searchVIU](https://www.searchviu.com/de/ratgeber/schema-markup-ki/) vom 30. Oktober 2025 deutet darauf hin, dass per Skript geschriebene Inhalte in den Index von Perplexity gelangen können.
+
+<figure>
+  <BlogImage src="/blog/technisches-seo/genezio-oai-searchbot-javascript-test.png" alt="Forschungsbeitrag von Genezio vom 22. Oktober 2026 mit der Aussage, dass OAI-SearchBot JavaScript ausführt, und dem Callback-Test, der als Beleg dient." w="1160" h="1583" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Genezios Test vom 22. Oktober 2026 auf der eigenen Website (auf Englisch): ein Skript, das sich nur bei ausgeführtem JavaScript zurückmeldet, ausgelöst aus OpenAIs Crawler-IP-Bereichen. Abgerufen ohne Anmeldung über eine Verbindung in Deutschland, 14. November 2026.</figcaption>
+</figure>
+
+### Der Quelltext-Test
+
+Öffne den Seitenquelltext (Strg+U bzw. Cmd+Option+U), suche nach einem Satz aus deinem Haupttext und prüfe, ob er dort steht. Fehlt er im Quelltext, können ihn die Crawler, die rohes HTML lesen, nicht zitieren.
+
+<figure>
+  <BlogImage src="/blog/technisches-seo/view-source-roh-html-test.png" alt="Chrome-Quelltextansicht eines deutschen geotoolbox.ai-Artikels: Der erste Satz steht markiert in einem Absatz-Tag im rohen HTML." w="1160" h="495" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Der Quelltext-Test an unserem deutschen Leitfaden zu JavaScript-SEO: Der erste Satz steht im HTML, das der Server ausliefert. Abgerufen ohne Anmeldung über eine Verbindung in Deutschland, 14. November 2026.</figcaption>
+</figure>
+
+Die Lösung für Inhaltsseiten heißt Server-Side Rendering, statische Generierung oder Prerendering. Die Testergebnisse Bot für Bot und die Optionen je Framework stehen in unserem [Leitfaden zu JavaScript-SEO](https://geotoolbox.ai/blog/javascript-seo).
+
+## Indexierung, Canonical-Tags und XML-Sitemaps
+
+Ob eine Seite in den Index kommt, entscheidet Google. Beeinflussen kannst du das mit einheitlichen Signalen: eine kanonische URL pro Inhalt, kein versehentliches noindex und eine Sitemap, die nur Seiten enthält, die indexiert werden sollen.
+
+Für technisches SEO ist in der Google Search Console der Bericht zur Seitenindexierung der Ausgangspunkt. Er gruppiert die URLs, die Google nicht indexiert hat, nach dem angegebenen Grund.
+
+Mit einem noindex im Meta-Robots-Tag hältst du eine Seite aus den Ergebnissen heraus; doppelte Inhalte führst du mit Canonical-Tags oder Weiterleitungen zusammen.
+
+Google behandelt ein Canonical-Tag als starkes Signal, nicht als Anweisung. Am besten wirkt es daher, wenn interne Links, Sitemaps und Weiterleitungen in dieselbe Richtung zeigen. Wie Google und KI-Systeme eine URL auswählen, erklärt unser Leitfaden zu [Canonical-Tags](https://geotoolbox.ai/blog/canonical-tags).
+
+### XML-Sitemaps und IndexNow
+
+Laut Google braucht eine Website mit [etwa 500 Seiten oder weniger](https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview?hl=de), die intern vollständig verlinkt ist, unter Umständen keine Sitemap. Bing bietet zusätzlich IndexNow an, einen Ping, der Bing meldet, wenn eine URL hinzukommt, sich ändert oder entfernt wird; [Bings Richtlinien](https://www.bing.com/webmasters/help/webmaster-guidelines-30fba23a) stellen einen Zusammenhang zwischen dieser Aktualität und den Antworten von Copilot her. Die Einrichtung zeigt unser [Leitfaden zur XML-Sitemap](https://geotoolbox.ai/blog/xml-sitemap).
+
+### „Gecrawlt – zurzeit nicht indexiert“
+
+In der Google Search Console bedeutet dieser Status: Google hat die Seite abgerufen und sich entschieden, sie vorerst nicht zu indexieren. Ein Fehler ist das nicht. Google indexiert nicht jede URL, die es crawlt, und bezeichnet die Meldung in seiner Hilfe als bei vielen Websites üblich.
+
+Geh die möglichen Ursachen in dieser Reihenfolge durch:
+
+1. Prüfe, ob die Seite ein Duplikat einer anderen URL ist und ob Google eine andere kanonische URL gewählt hat
+2. Prüfe, wie viele interne Links auf sie zeigen und von wo
+3. Prüfe, ob sie etwas bietet, das die indexierten Seiten zum selben Thema nicht haben
+
+Mit der Schaltfläche „Indexierung beantragen“ bittest du Google nur, die [URL erneut zu crawlen](https://support.google.com/webmasters/answer/9012289?hl=de). Solange die Ursache besteht, ändert das am Ergebnis selten etwas.
+
+### Facettennavigation
+
+Facettennavigation lässt massenhaft Duplikate entstehen: Filter und Sortierungen können Tausende fast identische URLs erzeugen. Damit Crawler die Kombinationen meiden, nach denen niemand sucht, empfiehlt Googles [Leitfaden zur Facettensuche](https://developers.google.com/crawling/docs/faceted-navigation?hl=de), solche URLs per robots.txt zu sperren oder die Filter in URL-Fragmente zu legen; Canonical-Tags seien dafür im Allgemeinen weniger effektiv. Sind die URLs schon indexiert, setzt du zuerst noindex und sperrst sie erst, wenn sie aus dem Index gefallen sind. Wie du das pro Filter entscheidest, zeigt unser [Leitfaden zu E-Commerce-SEO](https://geotoolbox.ai/blog/ecommerce-seo).
+
+B2B-Kataloge bringen ein weiteres Crawling-Problem mit: technische Daten und Zertifikate, die es nur als PDF oder hinter Formularen gibt. Darum geht es in unserem [Leitfaden zu B2B-SEO](https://geotoolbox.ai/blog/b2b-seo).
+
+## Seitenstruktur und interne Verlinkung
+
+Suchmaschinen und KI-Crawler finden die meisten Seiten, indem sie Links folgen. Deine interne Verlinkung entscheidet somit, was zuerst entdeckt wird und was wichtig wirkt.
+
+Setze einfache `<a href>`-Links. [Bings Richtlinien](https://www.bing.com/webmasters/help/webmaster-guidelines-30fba23a) verlangen genau das, mit aussagekräftigem Ankertext. Links, die erst entstehen, wenn ein Klick-Handler läuft, bleiben für Crawler ohne JavaScript unsichtbar.
+
+Halte wichtige Seiten über Kategorieseiten und Breadcrumbs nah an der Startseite. Entscheidend ist, dass jede Seite, die indexiert werden soll, über einen crawlbaren Pfad erreichbar ist. Die URL-Struktur sollte kurz, lesbar und stabil bleiben, denn jede Änderung zieht Weiterleitungen nach sich.
+
+### Verwaiste Seiten und kaputte Links
+
+Verwaiste Seiten (Seiten, auf die kein interner Link zeigt) entstehen typischerweise bei Relaunches und CMS-Migrationen.
+
+Kaputte interne Links kosten jeden Bot unnötige Abrufe, KI-Crawler eingeschlossen. Ein vollständiges Website-Audit, wie es unsere [SEO-Audit-Checkliste](https://geotoolbox.ai/blog/seo-audit) beschreibt, findet verwaiste Seiten und kaputte Links auf der gesamten Website.
+
+### URLs stilllegen: Weiterleitung oder 404
+
+Wenn du eine URL stilllegst, leite sie auf eine Seite weiter, die sie wirklich ersetzt. Gibt es keine, liefere 404 oder 410; das [empfiehlt Google](https://developers.google.com/crawling/docs/crawl-budget?hl=de) für dauerhaft entfernte Seiten. Pass außerdem die Links an, die auf sie gezeigt haben.
+
+## Page Experience: Core Web Vitals, Mobilgeräte und HTTPS
+
+Die Core Web Vitals sind die Faktoren des technischen SEO, die mit Daten echter Besucher gemessen werden: Ladezeit, Reaktionsfähigkeit und visuelle Stabilität. Laut Google entsprechen gute Werte dem, was seine [zentralen Ranking-Systeme](https://developers.google.com/search/docs/appearance/core-web-vitals?hl=de) belohnen wollen. Sie sind aber ein Signal unter vielen, und Relevanz geht vor.
+
+<table>
+<thead>
+<tr><th>Messwert</th><th>Was er misst</th><th>Gut</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Largest Contentful Paint (LCP)</strong></td><td>Ladezeit: wann der Hauptinhalt erscheint</td><td>2,5 Sekunden oder weniger</td></tr>
+<tr><td><strong>Interaction to Next Paint (INP)</strong></td><td>Reaktion auf Klicks, Fingertipps und Tastendrücke</td><td>200 Millisekunden oder weniger</td></tr>
+<tr><td><strong>Cumulative Layout Shift (CLS)</strong></td><td>Visuelle Stabilität (unerwartete Layoutverschiebungen)</td><td>0,1 oder weniger</td></tr>
+</tbody>
+</table>
+
+[Der Core-Web-Vitals-Leitfaden von web.dev](https://web.dev/articles/vitals?hl=de) legt diese Ziele für das 75. Perzentil der Seitenaufrufe fest, getrennt nach Mobilgeräten und Desktop. INP hat First Input Delay als Messwert für die Reaktionsfähigkeit abgelöst, und [alles über 500 Millisekunden](https://web.dev/articles/inp?hl=de) gilt als schlecht.
+
+Bewerte die Felddaten, nicht den Lab-Wert: Der Lab-Wert schwankt von Lauf zu Lauf, die Felddaten stammen von echten Chrome-Nutzern. Hat eine URL zu wenig Traffic, zeigt PageSpeed Insights stattdessen Felddaten für den gesamten Ursprung, sofern für diesen genug Daten vorliegen, wie im Screenshot unten.
+
+<figure>
+  <BlogImage src="/blog/technisches-seo/pagespeed-insights-felddaten.png" alt="PageSpeed Insights mit deutscher Oberfläche, mobile Felddaten für den Ursprung geotoolbox.ai, weil der Artikel zu wenige Daten auf URL-Ebene hatte: Core Web Vitals-Bewertung bestanden mit LCP 1,5 s, INP 82 ms und CLS 0." w="1160" h="1035" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">PageSpeed Insights für einen unserer deutschen Artikel, mobil: Weil auf URL-Ebene zu wenige Daten vorliegen, zeigt das Tool Felddaten für den Ursprung, das heißt für die gesamte Website. Abgerufen ohne Anmeldung über eine Verbindung in Deutschland, 14. November 2026.</figcaption>
+</figure>
+
+### Mobile-First-Indexierung und HTTPS
+
+Google indexiert die mobile Version deiner Seiten, [gecrawlt mit dem Smartphone-Crawler](https://developers.google.com/search/docs/crawling-indexing/mobile/mobile-sites-mobile-first-indexing?hl=de). Inhalte oder Links, die mobil fehlen, fehlen dann auch für Google. Deine Seiten sollten zudem per HTTPS auf einem einzigen Host laufen; HTTP-URLs und die jeweils andere Host-Variante (mit oder ohne www) leiten auf ihn weiter.
+
+### Hilft eine kurze Ladezeit bei KI-Zitaten?
+
+Veröffentlichte Belege dafür haben wir nicht gefunden, und keine der Crawler-Seiten von OpenAI, Anthropic oder Perplexity, die wir abgerufen haben, erwähnt die Ladezeit.
+
+## Strukturierte Daten und hreflang
+
+Strukturierte Daten beschreiben in einem maschinenlesbaren Format, worum es auf einer Seite geht, ohne dass ein Programm raten muss. Schreib sie als JSON-LD und halte sie deckungsgleich mit dem, was die Seite sichtbar zeigt.
+
+Googles [Leitfaden zur Optimierung für generative KI](https://developers.google.com/search/docs/fundamentals/ai-optimization-guide?hl=de) sagt dazu: „Strukturierte Daten sind für die Suche mit generativer KI nicht erforderlich und es gibt kein spezielles schema.org-Markup, das du hinzufügen musst.“ Damit Seiten für Rich-Suchergebnisse infrage kommen, empfiehlt Google Markup aber weiterhin. Laut [Bings Richtlinien](https://www.bing.com/webmasters/help/webmaster-guidelines-30fba23a) können strukturierte Daten ein klareres Grounding unterstützen, garantieren aber weder einen Platz in den Antworten noch Traffic aus dem Grounding.
+
+Ob Markup die Zahl der KI-Zitate erhöht, ist eine andere Frage. In der einzigen Interventionsstudie, die wir kennen, [beobachtete Ahrefs 1.885 Seiten](https://ahrefs.com/blog/schema-ai-citations/), denen Schema-Markup hinzugefügt worden war: Die Zahl ihrer KI-Zitate veränderte sich kaum. Die Studien im Einzelnen fasst unser Beitrag zu [Schema-Markup für die KI-Suche](https://geotoolbox.ai/blog/schema-markup-for-ai) zusammen.
+
+### Strukturierte Daten validieren
+
+Prüfe das Markup, bevor du es live stellst. Ein JSON-LD-Block mit einem Syntaxfehler lässt sich gar nicht lesen, und Bing warnt, dass irreführendes Markup ignoriert werden kann.
+
+<figure>
+  <BlogImage src="/blog/technisches-seo/schema-validator-jsonld.png" alt="Ergebnis des Schema Markup Validator mit deutscher Oberfläche für einen deutschen geotoolbox.ai-Artikel: BreadcrumbList, Article und FAQPage erkannt, 0 Fehler und 0 Warnungen." w="1160" h="602" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Der Schema Markup Validator für einen unserer deutschen Artikel: drei JSON-LD-Typen, keine Fehler und keine Warnungen. Abgerufen ohne Anmeldung über eine Verbindung in Deutschland, 14. November 2026.</figcaption>
+</figure>
+
+### hreflang auf mehrsprachigen Websites
+
+Mit hreflang teilst du Google mit, welche Sprach- oder Regionalversion einer Seite angezeigt werden soll. Jeder Wert ist ein Sprachcode im [Format ISO 639-1](https://developers.google.com/search/docs/specialty/international/localized-versions?hl=de), optional gefolgt von einem Regionscode (de-AT, de-CH).
+
+Die häufigsten Fehler sind einseitige Verweise (die deutsche Seite nennt die englische, aber nicht umgekehrt) und Verweise auf weitergeleitete oder auf noindex gesetzte URLs. Verknüpfe jede Sprachversion mit sich selbst und mit allen anderen, verweise nur auf kanonische URLs und ergänze einen x-default-Wert für die Ausweichseite.
+
+Keine der Crawler-Seiten der KI-Anbieter, die wir abgerufen haben, erwähnt hreflang. Was diese Crawler nutzen können, ist eine eigene, crawlbare URL pro Sprache, die auch als rohes HTML funktioniert.
+
+## Steuerung für die KI-Suche: Was jeder Schalter bewirkt
+
+Die meisten Fehler beim KI-Opt-out entstehen, weil jemand ein Problem mit der KI-Suche über eine Einstellung für das Training lösen will oder umgekehrt.
+
+<figure>
+  <BlogImage src="/blog/technisches-seo/ki-steuerung-karte.png" alt="Übersicht der Maßnahmen zur Steuerung der KI-Suche: welche davon das Modelltraining, KI-Antworten oder die klassischen Suchergebnisse betrifft." w="1180" h="829" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Welche Maßnahme sich auf Modelltraining, KI-Antworten oder die klassische Suche auswirkt, laut Anbieterdokumentation, abgerufen am 14. November 2026.</figcaption>
+</figure>
+
+<table>
+<thead>
+<tr><th>Steuerung</th><th>Was sie bewirkt</th><th>Was sie nicht bewirkt</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>GPTBot oder ClaudeBot sperren</strong></td><td><a href="https://developers.openai.com/api/docs/bots">Signalisiert</a>, dass deine Inhalte nicht ins Modelltraining sollen</td><td>Kein Ausschluss aus der Suche von ChatGPT oder Claude</td></tr>
+<tr><td><strong>OAI-SearchBot sperren</strong></td><td><a href="https://developers.openai.com/api/docs/bots">Hält</a> deine Seiten aus den Suchantworten von ChatGPT heraus</td><td>Keine Sperre von Navigationslinks zu deiner Website</td></tr>
+<tr><td><strong>Google-Extended sperren</strong></td><td><a href="https://developers.google.com/crawling/docs/crawlers-fetchers/google-common-crawlers?hl=de">Widerspricht</a> dem Training von Gemini-Modellen und dem Grounding in den Gemini-Apps und in Vertex AI; laut Search-Console-Hilfe auch dem Training der Modelle hinter AI Overviews und dem KI-Modus</td><td>Keine Änderung daran, ob du in der Google Suche, in AI Overviews oder im KI-Modus erscheinst</td></tr>
+<tr><td><strong>nosnippet oder max-snippet setzen</strong></td><td><a href="https://developers.google.com/search/docs/crawling-indexing/robots-meta-tag?hl=de">Sperrt</a> oder begrenzt den Text, den Google direkt für AI Overviews und den KI-Modus nutzen darf, und kann auch klassische Snippets kürzen oder entfernen</td><td>Keine Begrenzung von Inhalten, die du an Google lizenzierst oder als strukturierte Daten auf der Seite bereitstellst (max-snippet)</td></tr>
+<tr><td><strong>Search-Console-Einstellung für generative KI-Funktionen ausschalten</strong></td><td><a href="https://support.google.com/webmasters/answer/16908024?hl=de">Schließt</a> die Property und untergeordnete Properties, die ihre Einstellung erben, von AI Overviews, dem KI-Modus und generativer KI in Discover aus</td><td>Keine Änderung der Rankings an anderer Stelle der Suche</td></tr>
+<tr><td><strong>NOARCHIVE für Bing setzen</strong></td><td><a href="https://www.bing.com/webmasters/help/webmaster-guidelines-30fba23a">Hält</a> Inhalte aus Copilot-Antworten und dem Grounding heraus</td><td>Kein Entfernen der URL aus der Bing-Suche (das macht NOINDEX)</td></tr>
+</tbody>
+</table>
+
+Websites, die [OAI-SearchBot aussperren](https://developers.openai.com/api/docs/bots), erscheinen laut OpenAI nicht mehr in den Suchantworten von ChatGPT, können aber weiterhin als Navigationslinks auftauchen. Zu Google-Extended schreibt Google auf der [Seite zu gewöhnlichen Crawlern](https://developers.google.com/crawling/docs/crawlers-fetchers/google-common-crawlers?hl=de): „Google-Extended hat keinen Einfluss auf die Aufnahme einer Website in die Google Suche und wird auch nicht als Ranking-Signal in der Google Suche verwendet.“
+
+Für AI Overviews sind die Hebel also die [nosnippet-Regeln](https://developers.google.com/search/docs/crawling-indexing/robots-meta-tag?hl=de) und die [Einstellung für generative KI in der Search Console](https://support.google.com/webmasters/answer/16908024?hl=de), die Google seit dem 31. August 2026 allen Websites weltweit anbietet. Laut Google dauert der Ausschluss in der Regel einige Tage: Sobald die Einstellung wirksam ist, verschwinden Inhalte innerhalb von ein bis zwei Tagen, manche wegen Caching später.
+
+<figure>
+  <BlogImage src="/blog/technisches-seo/openai-crawler-doku.png" alt="Crawler-Dokumentation von OpenAI mit OAI-SearchBot für die ChatGPT-Suche und GPTBot für das Modelltraining; beide lassen sich unabhängig voneinander einstellen." w="1160" h="1797" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">OpenAIs Crawler-Seite (auf Englisch): OAI-SearchBot steuert die ChatGPT-Suche, GPTBot das Training. Abgerufen ohne Anmeldung über eine Verbindung in Deutschland, 14. November 2026.</figcaption>
+</figure>
+
+Eine Datei kannst du dir für Google sparen: Laut Googles [Leitfaden zur Optimierung für generative KI](https://developers.google.com/search/docs/fundamentals/ai-optimization-guide?hl=de) wirkt sich eine llms.txt in der Google Suche weder positiv noch negativ aus. Was sie bei anderen Engines bringt, steht in unserem [Beitrag zur llms.txt](https://geotoolbox.ai/blog/llms-txt), die Schritte zum Opt-out in der Anleitung, [wie du AI Overviews ausschaltest](https://geotoolbox.ai/blog/how-to-turn-off-ai-overviews).
+
+### Ein gemeinsames Signal gegen KI-Training
+
+Ein gemeinsames Signal gegen KI-Training ist im Kommen. Laut Anthropics [Crawler-Seite](https://support.claude.com/de/articles/8896518-crawlt-anthropic-daten-aus-dem-web-und-wie-konnen-website-besitzer-den-crawler-blockieren) hat das Unternehmen zum 30. Oktober 2026 begonnen, ein maschinenlesbares Signal zu berücksichtigen, mit dem Website-Betreiber dem KI-Training widersprechen können. Das Signal folgt einem Entwurf aus der aipref-Arbeitsgruppe der IETF und wird nach Anthropics Angaben schrittweise eingeführt. Google schreibt auf der [Seite zu gewöhnlichen Crawlern](https://developers.google.com/crawling/docs/crawlers-fetchers/google-common-crawlers?hl=de): „Google plant, das gemeinsame maschinenlesbare Signal für Trainingseinstellungen AIPREF (mit „user-agent: __usage_ai-training“) Anfang 2027 zu unterstützen.“
+
+<figure>
+  <BlogImage src="/blog/technisches-seo/anthropic-bots-tabelle.png" alt="Deutsche Hilfeseite von Anthropic mit der Tabelle zu ClaudeBot, Claude-User und Claude-SearchBot, der Wirkung des Deaktivierens je Bot und dem neuen Signal gegen KI-Training." w="1160" h="2666" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Anthropics drei Bots auf der deutschen Hilfeseite, was das Deaktivieren jedes einzelnen bewirkt, und das neue Signal gegen KI-Training. Abgerufen ohne Anmeldung über eine Verbindung in Deutschland, 14. November 2026.</figcaption>
+</figure>
+
+## Kurze Checkliste für technisches SEO
+
+Die Punkte bauen aufeinander auf, und die ersten zählen am meisten: Eine Seite, die sich nicht abrufen lässt, gewinnt nichts durch Schema-Markup.
+
+1. **Zugriff:** Wichtige URLs liefern 200, die robots.txt erlaubt die Bots, die du zulassen willst, und dein CDN blockiert sie nicht
+2. **Rendering:** Haupttext und Links stehen im rohen HTML (der Quelltext-Test)
+3. **Indexierung:** kein versehentliches noindex, ein Canonical-Tag pro Seite, eine Sitemap nur mit kanonischen URLs
+4. **Seitenstruktur:** Jede wichtige Seite hat einen crawlbaren internen Linkpfad; stillgelegte URLs leiten auf echten Ersatz weiter oder liefern 404 bzw. 410
+5. **Page Experience:** Die Core Web Vitals sind in den Felddaten bestanden, auch mobil, und die Seiten laufen über HTTPS
+6. **Strukturierte Daten:** gültiges JSON-LD, das zur sichtbaren Seite passt; hreflang verknüpft jede Sprachversion mit sich selbst und allen anderen
+7. **KI-Steuerung:** Jede robots.txt-Gruppe, jede Snippet-Einstellung und jede Search-Console-Einstellung ist bewusst gewählt
+8. **Messung:** der Leistungsbericht zu generativen KI-Funktionen in der Google Search Console, Bings AI-Performance-Bericht und Server-Logs, nach User-Agent gefiltert
+
+Fang mit Punkt 1 an. Gib deine Domain in den kostenlosen AI Crawler Checker von geotoolbox ein: Er zeigt, welche KI-Bots deine robots.txt für den Pfad der Startseite sperrt. Lass danach den Agent Readiness Scan laufen; er zeigt, was deine Firewall den Bots antwortet.
+
+### KI-Crawler und Zitate messen
+
+Jeder kann einen User-Agent-String fälschen. Gleiche angebliche KI-Bots in deinen Logs mit den IP-Listen ab, die OpenAI, Anthropic und Perplexity für ihre Crawler veröffentlichen. Bei Google verweist der [Leitfaden zur Optimierung für generative KI](https://developers.google.com/search/docs/fundamentals/ai-optimization-guide?hl=de) auf den Leistungsbericht zu generativen KI-Funktionen in der Google Search Console.
+
+Bings [AI-Performance-Bericht](https://www.bing.com/webmasters/help/ai-performance-9f8e7d6c) zeigt, welche deiner Seiten von Copilot und Bings KI-Zusammenfassungen zitiert werden und welche Grounding-Anfragen dahinterstehen. Er zählt Zitate; Klicks weist er nicht aus.
+
+<figure>
+  <BlogImage src="/blog/technisches-seo/bing-webmaster-ki-performance.png" alt="AI-Performance-Bericht der Bing Webmaster Tools für geotoolbox.ai mit Zitaten insgesamt, durchschnittlich zitierten Seiten, einem täglichen Verlaufsdiagramm und Grounding-Anfragen." w="1160" h="1692" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Bings AI-Performance-Bericht für geotoolbox.ai über drei Monate, Oberfläche auf Deutsch, Berichtstexte teils auf Englisch. Angemeldet als Websiteinhaber, Kontodaten abgeschnitten, Verbindung in Deutschland, 14. November 2026.</figcaption>
+</figure>
+
+## Häufige Fragen
+
+### Muss man programmieren können, um technisches SEO zu machen?
+
+Nein, aber du musst Code lesen können. Der Großteil der Arbeit ist Diagnose: robots.txt, Statuscodes, Seitenquelltext und Berichte der Search Console lesen. Die Umsetzung, etwa Server-Side Rendering oder Weiterleitungsregeln, übernimmt meist die Entwicklung.
+
+### Lohnt sich technisches SEO in Zeiten der KI-Suche noch?
+
+Ja, eher noch mehr als zuvor. Copilot nutzt Bings Index, und KI-Crawler, die rohes HTML lesen, verzeihen weniger Fehler als der Googlebot. Eine Seite, die sie nicht abrufen oder lesen können, kann auch nicht zitiert werden.
+
+### Was ist die 80/20-Regel im technischen SEO?
+
+Die größte Wirkung erzielst du mit wenigen Prüfungen: ob wichtige Seiten gecrawlt, gerendert und indexiert werden können. Kümmere dich um Zugriff, Inhalte im rohen HTML und Indexierungssignale, bevor du Zeit in Werte wie die Lighthouse-Performance oder kleinere Validator-Warnungen steckst.
+
+### Kann ChatGPT technisches SEO übernehmen?
+
+ChatGPT kann einen Fehler erklären, robots.txt-Regeln, Weiterleitungen oder JSON-LD entwerfen und einen eingefügten Crawl-Export zusammenfassen. Deine Server-Logs, deine Search-Console-Daten und das, was jeder Bot tatsächlich erhalten hat, sieht es nicht. Gleiche seine Vorschläge mit diesen Daten ab, bevor du eine Änderung live stellst.
+
+## Quellen
+
+- Google Search Central - Technische Anforderungen für die Google Suche (aktualisiert am 18. Dezember 2025) - `developers.google.com/search/docs/essentials/technical`
+- Google Search Central - KI-Funktionen und deine Website (aktualisiert am 31. Dezember 2025) - `developers.google.com/search/docs/appearance/ai-features`
+- Google Search Central - Leitfaden von Google zur Optimierung für generative KI-Funktionen in der Google Suche (aktualisiert am 15. Juli 2026) - `developers.google.com/search/docs/fundamentals/ai-optimization-guide`
+- Search Console-Hilfe - Freigabe von Inhalten für generative KI in der Google Suche managen (abgerufen am 14. November 2026) - `support.google.com/webmasters/answer/16908024`
+- Google-Crawling-Infrastruktur - Gewöhnliche Crawler von Google, Google-Extended (aktualisiert am 3. November 2026) - `developers.google.com/crawling/docs/crawlers-fetchers/google-common-crawlers`
+- Google Search Central - Spezifikationen für Robots-Meta-Tags (aktualisiert am 25. März 2026) - `developers.google.com/search/docs/crawling-indexing/robots-meta-tag`
+- Google Search Central - Grundlagen von JavaScript-SEO (aktualisiert am 10. November 2026) - `developers.google.com/search/docs/crawling-indexing/javascript/javascript-seo-basics`
+- Google Search Central - Einführung und Leitfaden zu robots.txt-Dateien (aktualisiert am 18. Dezember 2025) - `developers.google.com/search/docs/crawling-indexing/robots/intro`
+- Google-Crawling-Infrastruktur - Verwaltung des Crawling-Budgets (aktualisiert am 16. September 2026) - `developers.google.com/crawling/docs/crawl-budget`
+- Google-Crawling-Infrastruktur - Crawling von Facettensuche-URLs verwalten (aktualisiert am 6. März 2026) - `developers.google.com/crawling/docs/faceted-navigation`
+- Google Search Central - Was ist eine Sitemap? (aktualisiert am 18. Dezember 2025) - `developers.google.com/search/docs/crawling-indexing/sitemaps/overview`
+- Google Search Central - Lokalisierte Versionen deiner Seiten (aktualisiert am 22. September 2026) - `developers.google.com/search/docs/specialty/international/localized-versions`
+- Google Search Central - Best Practices für die Mobile-First-Indexierung (aktualisiert am 20. Februar 2026) - `developers.google.com/search/docs/crawling-indexing/mobile/mobile-sites-mobile-first-indexing`
+- Google Search Central - Core Web Vitals und Google-Suchergebnisse (aktualisiert am 18. Dezember 2025) - `developers.google.com/search/docs/appearance/core-web-vitals`
+- Search Console-Hilfe - URL-Prüftool (abgerufen am 14. November 2026) - `support.google.com/webmasters/answer/9012289`
+- Search Console-Hilfe - Bericht zur Seitenindexierung (abgerufen am 14. November 2026) - `support.google.com/webmasters/answer/7440203`
+- Google Deutschland - Übersicht mit KI startet in Deutschland und weiteren Ländern (26. März 2025) - `blog.google/intl/de-de/produkte/suchen-entdecken/uebersicht-mit-ki-start`
+- Google Deutschland - Der KI-Modus startet in Deutschland, Österreich und der Schweiz (8. Oktober 2025) - `blog.google/intl/de-de/produkte/suchen-entdecken/ki-modus-startet-in-dach`
+- web.dev - Web Vitals (aktualisiert am 31. Oktober 2024) - `web.dev/articles/vitals`
+- web.dev - Interaction to Next Paint (INP) (aktualisiert am 2. September 2025) - `web.dev/articles/inp`
+- IETF - RFC 9309, Robots Exclusion Protocol (September 2022) - `www.rfc-editor.org/rfc/rfc9309.html`
+- OpenAI - Overview of OpenAI Crawlers (abgerufen am 14. November 2026) - `developers.openai.com/api/docs/bots`
+- Anthropic - Crawlt Anthropic Daten aus dem Web, und wie können Website-Besitzer den Crawler blockieren? (aktualisiert am 4. November 2026) - `support.claude.com/de/articles/8896518`
+- Perplexity - Perplexity Crawlers (aktualisiert am 12. November 2026) - `docs.perplexity.ai/docs/resources/perplexity-crawlers`
+- Microsoft Bing - Bing Webmaster Guidelines (abgerufen am 14. November 2026) - `www.bing.com/webmasters/help/webmaster-guidelines-30fba23a`
+- Microsoft Bing - AI Performance in Bing Webmaster Tools (abgerufen am 14. November 2026) - `www.bing.com/webmasters/help/ai-performance-9f8e7d6c`
+- Bundesgerichtshof - Verkündungstermin am 17. Dezember 2026 in Sachen I ZR 281/25 (Terminhinweis, abgerufen am 14. November 2026) - `www.bundesgerichtshof.de/SharedDocs/Termine/DE/Termine/IZR281-25.html`
+- Bundesgerichtshof - Verhandlungstermin am 3. September 2026 in Sachen I ZR 281/25 (Pressemitteilung Nr. 085/2026, 20. Mai 2026) - `www.bundesgerichtshof.de/SharedDocs/Pressemitteilungen/DE/2026/2026085.html`
+- Hanseatisches Oberlandesgericht - KI und Urheberrecht, Berufung zurückgewiesen, 5 U 104/24 (Pressemitteilung, 10. Dezember 2025) - `justiz.hamburg.de`
+- Hanseatisches Oberlandesgericht - Urteil vom 10. Dezember 2025, 5 U 104/24 (Volltext) - `www.landesrecht-hamburg.de/bsha/document/NJRE001628040`
+- SEO Südwest - Shared Hosting: IONOS blockiert Zugriffe mancher KI-Bots auf Websites (21. August 2025) - `www.seo-suedwest.de/10169-shared-hosting-ionos-blockiert-zugriffe-mancher-ki-bots.html`
+- Vercel - The rise of the AI crawler (17. Dezember 2024) - `vercel.com/blog/the-rise-of-the-ai-crawler`
+- Genezio - OpenAI's Search Crawler Runs JavaScript (22. Oktober 2026) - `genezio.com/research/openai-crawler-runs-javascript`
+- JS SEO Lab - JavaScript execution has two depths, and bots split cleanly between them (aktualisiert am 25. Oktober 2026) - `jsseo.dev/findings/javascript-execution-has-two-depths`
+- searchVIU - Schema Markup und KI im Test (Test vom 30. Oktober 2025) - `www.searchviu.com/de/ratgeber/schema-markup-ki`
+- Ahrefs - Studie zu 1.885 Seiten mit nachträglich ergänztem Schema-Markup (11. Mai 2026) - `ahrefs.com/blog/schema-ai-citations`
+- Forge - Can AI crawlers run JavaScript? What ChatGPT-User really sees on your page (24. September 2026) - `www.forgeaibotlog.com/articles/can-ai-crawlers-execute-javascript`
+- Google-Crawling-Infrastruktur - Vom Nutzer ausgelöste Google-Fetcher (aktualisiert am 18. September 2026) - `developers.google.com/crawling/docs/crawlers-fetchers/google-user-triggered-fetchers`
+- Google-Crawling-Infrastruktur - Wie Google die robots.txt-Spezifikation interpretiert (aktualisiert am 27. Oktober 2026) - `developers.google.com/crawling/docs/robots-txt/robots-txt-spec`
+- Cloudflare - Cloudflare just changed how AI crawlers scrape the Internet-at-large (Pressemitteilung, 1. Juli 2025) - `www.cloudflare.com/press/press-releases/2025/cloudflare-just-changed-how-ai-crawlers-scrape-the-internet-at-large`
+- Cloudflare - Have it both ways: stay discoverable in search while disallowing AI training (15. September 2026) - `blog.cloudflare.com/accountable-mixed-use-ai-crawlers`
