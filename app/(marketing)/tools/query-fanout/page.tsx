@@ -24,7 +24,7 @@ const steps: Step[] = [
   {
     verb: "Add",
     title: "Your own API key",
-    body: "Paste a free Google AI Studio (Gemini) key, and optionally a Perplexity key for a second engine. Keys stay in your browser; requests go straight to Google and Perplexity, never to a GEO Toolbox server.",
+    body: "Paste a Google AI Studio (Gemini) key with billing turned on (Google's free API tier no longer includes Search grounding on current models; paid keys get 5,000 free Search queries a month, tokens billed separately; keys that already used Gemini 2.5 can still run it free), and optionally a Perplexity key for a second engine. Keys stay in your browser; requests go straight to Google and Perplexity, never to a GEO Toolbox server.",
   },
   {
     verb: "Run",

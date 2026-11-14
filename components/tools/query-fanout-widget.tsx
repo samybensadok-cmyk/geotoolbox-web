@@ -24,7 +24,13 @@ import { ToolResultCapture } from "@/components/tools/tool-result-capture"
  * the in-app version's job — said plainly in the UI.
  */
 
-const GEMINI_MODELS = ["gemini-2.5-flash", "gemini-2.0-flash"] as const
+// Fan-out needs Search grounding. Hydrogen is AI Mode's default model (Nov 2026), so it mirrors the real
+// fan-out best. Google's free API tier has no grounding on Gemini 3+ models; only the legacy 2.5 Flash-Lite
+// (not deprecated, open to keys that already used 2.5) grounds for free, so it is the last fallback.
+// gemini-2.5-flash is deprecated (routes to 3.5 Flash-Lite on Dec 1, 2026); gemini-2.0-flash is shut down.
+const FANOUT_MODELS = ["gemini-4-hydrogen", "gemini-3.5-flash-lite", "gemini-2.5-flash-lite"] as const
+// Clustering is a plain structured-JSON call (no grounding), available on the free tier: cheapest model first.
+const CLUSTER_MODELS = ["gemini-3.5-flash-lite", "gemini-4-hydrogen", "gemini-2.5-flash-lite"] as const
 
 type Kind = "fired" | "related"
 interface FanQuery {
@@ -53,6 +59,8 @@ class ApiError extends Error {
 
 function friendlyError(e: unknown): string {
   if (e instanceof ApiError) {
+    if (e.engine === "Gemini" && isGroundingTierError(e))
+      return "Gemini's free API tier doesn't include Search grounding on current models. Turn on billing for this key in Google AI Studio: paid keys get 5,000 free Search queries a month across Gemini 3 and newer models (tokens are billed separately, at a fraction of a cent per run)."
     const where = e.engine === "Gemini" ? "Google AI Studio" : e.engine
     if (e.status === 400 || e.status === 401 || e.status === 403)
       return `${e.engine} rejected the key (${e.status}). Check it's a valid ${where} API key with access to the model.`
@@ -64,11 +72,35 @@ function friendlyError(e: unknown): string {
   return e instanceof Error ? e.message : "Something went wrong. Try again."
 }
 
+/** Free-tier refusal of Search grounding (current models): the only failure billing can fix. */
+function isGroundingTierError(e: ApiError): boolean {
+  return (
+    (e.status === 400 || e.status === 403 || e.status === 429) &&
+    /grounding|google_search|search tool/i.test(e.message) &&
+    /free|tier|billing|limit: 0|not available|not supported/i.test(e.message)
+  )
+}
+
+/** Failures that depend on the model, so the next model in the list may succeed. */
+function isModelSpecific(e: ApiError): boolean {
+  if (e.status === 404 || e.status === 429) return true // model missing/retired for this key, or that model's quota
+  if (e.status === 400 || e.status === 403) {
+    if (/api key|permission denied|location/i.test(e.message)) return false // key or region: no model will help
+    return isGroundingTierError(e) || /model|not found|not supported|no longer available/i.test(e.message)
+  }
+  return false
+}
+
 /* ---------------------------------------------------------------- engines -- */
 
-async function geminiGenerate(key: string, body: unknown): Promise<{ data: Record<string, unknown>; model: string }> {
+async function geminiGenerate(
+  key: string,
+  body: unknown,
+  models: readonly string[],
+): Promise<{ data: Record<string, unknown>; model: string }> {
+  let preferredErr: ApiError | null = null
   let lastErr: ApiError | null = null
-  for (const model of GEMINI_MODELS) {
+  for (const model of models) {
     const res = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(key)}`,
       { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) },
@@ -76,17 +108,26 @@ async function geminiGenerate(key: string, body: unknown): Promise<{ data: Recor
     if (res.ok) return { data: await res.json(), model }
     const err = await res.json().catch(() => null)
     lastErr = new ApiError("Gemini", res.status, err?.error?.message ?? "")
-    // Only fall through to the next model when the first one isn't available to this key.
-    if (res.status !== 404) break
+    // Key, region, malformed-request and server errors are not model-specific: report them as they are.
+    // Exception: once an earlier model accepted the key (and failed for a model reason), a later 4xx is about
+    // that fallback model, so keep going and report the preferred model's reason.
+    if (!isModelSpecific(lastErr) && !(preferredErr && lastErr.status < 500)) throw lastErr
+    // Missing model, that model's quota, or (free tier) grounding refused: try the next model.
+    if (lastErr.status !== 404 && !preferredErr) preferredErr = lastErr
   }
-  throw lastErr ?? new ApiError("Gemini", 0, "no response")
+  // Every model failed in a model-specific way: report the preferred model's reason, not the last fallback's.
+  throw preferredErr ?? lastErr ?? new ApiError("Gemini", 0, "no response")
 }
 
 async function geminiFanout(key: string, seed: string): Promise<FanQuery[]> {
-  const { data } = await geminiGenerate(key, {
-    contents: [{ parts: [{ text: seed }] }],
-    tools: [{ google_search: {} }],
-  })
+  const { data } = await geminiGenerate(
+    key,
+    {
+      contents: [{ parts: [{ text: seed }] }],
+      tools: [{ google_search: {} }],
+    },
+    FANOUT_MODELS,
+  )
   const cand = (data?.candidates as Array<Record<string, unknown>> | undefined)?.[0]
   const grounding = cand?.groundingMetadata as { webSearchQueries?: string[] } | undefined
   const queries = grounding?.webSearchQueries ?? []
@@ -165,7 +206,7 @@ async function clusterQueries(key: string, seed: string, queries: FanQuery[]): P
           },
         },
       },
-    })
+    }, CLUSTER_MODELS)
     const cand = (data?.candidates as Array<Record<string, unknown>> | undefined)?.[0]
     const parts = (cand?.content as { parts?: Array<{ text?: string }> } | undefined)?.parts ?? []
     const text = parts.map((p) => p.text ?? "").join("")
@@ -249,7 +290,7 @@ export function QueryFanoutWidget() {
       >
         {/* Keys */}
         <label htmlFor="qf-gemini" className="mb-1 block text-[12px] font-medium text-gray-600">
-          Google AI Studio (Gemini) API key <span className="font-normal text-gray-400">— required, free at aistudio.google.com</span>
+          Google AI Studio (Gemini) API key <span className="font-normal text-gray-400">— required, from aistudio.google.com (Search grounding on current models needs billing; keys that already used Gemini 2.5 can still run free)</span>
         </label>
         <div className="flex items-stretch gap-2">
           <input
