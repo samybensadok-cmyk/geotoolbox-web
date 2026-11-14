@@ -1,0 +1,266 @@
+---
+title: "Gemini 4 Hydrogen : prix, gratuité, benchmarks et limites"
+description: "Gemini 4 Hydrogen expliqué : qui l'utilise gratuitement en France, forfaits dès 4,99 €/mois, prix de l'API face à 3.8 Flash et Argon, benchmarks et Mode IA."
+date: "2026-11-14"
+updated: "2026-11-14"
+recheckBy: "2026-11-30"  # 14/11 : prix des forfaits relevés sur les pages françaises de Google (IP France, déconnecté), API en USD ; échéances : 01/12 prix d'Argon et Carbon x2, 14/12 retrait de 3.8 Flash et Argon de GitHub Copilot, 01/01/2027 prix de 3.8 Flash x2, fin du déploiement de la mise à jour principale de novembre, tableaux AA
+author: "Samy BEN SADOK"
+tags: ["gemini-4-hydrogen", "gemini", "google-gemini", "llm", "guide"]
+draft: false
+locale: "fr"
+donorSlug: "gemini-4-hydrogen"
+donorCommit: "f5eb16d"
+noindex: false
+---
+
+
+Gemini 4 Hydrogen est le modèle Gemini 4 rapide et peu coûteux de Google, sorti le 12 novembre 2026. Sur l'API, il coûte 1,50 $ par million de tokens en entrée et 7,50 $ par million de tokens en sortie, avec un palier gratuit. Dans la recherche Google, il est accessible à tous, et le vice-président produit de Google Search le présente comme le nouveau modèle par défaut du Mode IA (AI Mode).
+
+Deux réserves : dans l'appli Gemini, les utilisateurs sans forfait n'y ont droit que lorsque la sélection automatique du modèle le choisit, et ses tarifs standard par token valent le double de ceux de Gemini 3.8 Flash jusqu'au 31 décembre 2026. En France, les forfaits qui permettent de le choisir commencent à 4,99 € par mois.
+
+Dernière vérification : 14 novembre 2026.
+
+## Ce qu'il faut retenir
+
+- **Gemini 4 Hydrogen, sorti le 12 novembre 2026, est le modèle rapide et bon marché de la gamme Gemini 4** : sur l'API, il coûte 1,50 $ en entrée et 7,50 $ en sortie par million de tokens, soit le double des tarifs de Gemini 3.8 Flash jusqu'au 31 décembre 2026, et dispose d'un palier gratuit.
+- **En France, Hydrogen se choisit dans l'appli Gemini avec Google AI Plus (4,99 €/mois), AI Pro (21,99 €/mois) ou AI Ultra (99,99 € ou 219,99 €/mois)** ; sans forfait, seule la sélection automatique du modèle y fait parfois appel, et le mode Tâche n'est pas proposé en France.
+- **Pour un développeur résidant en France, les quotas gratuits de l'API Gemini suivent les règles de données des Services payants** (conditions en vigueur depuis le 23 mars 2026) : Google n'utilise pas vos requêtes pour améliorer ses produits.
+- **D'après Artificial Analysis (14 novembre 2026), Hydrogen obtient 51 sur l'indice d'intelligence à son niveau par défaut, contre 50 pour Argon**, mais son taux d'hallucination en xhigh (8 %) reste le double de celui d'Argon en high et de Carbon en medium (4 %).
+- **Dans la recherche Google, Hydrogen devient le modèle par défaut du Mode IA selon Robby Stein de Google**, sans annonce propre à la France ; l'option Carbon du Mode IA n'est proposée dans aucun pays de l'Union européenne.
+
+## Gemini 4 Hydrogen en bref
+
+Ces caractéristiques proviennent de la [fiche du modèle Hydrogen](https://deepmind.google/models/model-cards/gemini-4-hydrogen/) publiée par Google DeepMind, de la [page du modèle dans AI Studio](https://aistudio.google.com/docs/models/gemini-4-hydrogen) et de la page de tarifs de l'API Gemini, toutes consultées le 14 novembre 2026.
+
+<table>
+<thead>
+<tr><th>Élément</th><th>Gemini 4 Hydrogen</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Éditeur</strong></td><td>Google DeepMind (modèle dérivé de Gemini 4 Carbon)</td></tr>
+<tr><td><strong>Sortie</strong></td><td>12 novembre 2026</td></tr>
+<tr><td><strong>Identifiant API</strong></td><td><code>gemini-4-hydrogen</code></td></tr>
+<tr><td><strong>Entrées / sortie</strong></td><td>Texte, image, vidéo, audio et PDF en entrée ; texte en sortie</td></tr>
+<tr><td><strong>Fenêtre de contexte</strong></td><td>1 048 576 tokens, partagés entre l'entrée, la réflexion et la sortie</td></tr>
+<tr><td><strong>Sortie maximale</strong></td><td>65 536 tokens par réponse synchrone ; davantage avec le long decode, jusqu'à la fenêtre de 1 048 576 tokens moins l'entrée</td></tr>
+<tr><td><strong>Date de coupure des connaissances</strong></td><td>Mars 2026</td></tr>
+<tr><td><strong>Niveaux de réflexion (API)</strong></td><td>low, medium, high (par défaut), xhigh</td></tr>
+<tr><td><strong>Prix de l'API</strong></td><td>1,50 $ en entrée, 7,50 $ en sortie par million de tokens ; entrée en cache à 0,075 $ (cache implicite)</td></tr>
+<tr><td><strong>Batch et Flex</strong></td><td>0,75 $ en entrée, 3,75 $ en sortie par million de tokens</td></tr>
+<tr><td><strong>Palier gratuit de l'API</strong></td><td>Oui, dans Google AI Studio et l'API Gemini</td></tr>
+<tr><td><strong>Date d'arrêt</strong></td><td>Aucune annoncée</td></tr>
+<tr><td><strong>Licence</strong></td><td>Modèle propriétaire, pas de poids ouverts à télécharger</td></tr>
+</tbody>
+</table>
+
+Le billet de lancement de Google associe l'entrée d'un million de tokens à « up to 1 million output tokens », et des médias comme The Decoder en ont fait une limite de sortie pure et simple. La documentation, elle, plafonne une réponse synchrone à 64K tokens : on ne dépasse ce seuil qu'avec le [long decode](https://aistudio.google.com/docs/whats-new-gemini-4-hydrogen), c'est-à-dire par une exécution en arrière-plan ou une reprise de la génération côté client.
+
+## Qu'est-ce que Gemini 4 Hydrogen ?
+
+Gemini 4 Hydrogen est le modèle rapide et bon marché de la famille Gemini 4 : il occupe la place que tenaient jusqu'ici les modèles Flash. Il arrive après [Gemini 4 Argon](https://geotoolbox.ai/blog/gemini-4-argon) et Gemini 4 Carbon, que Google a conçus pour les raisonnements longs et difficiles. Google le présente comme le modèle des tâches courantes : écrire du code, lancer des tests, appeler des outils, résumer de longs fichiers.
+
+Selon Google, Hydrogen suit vos consignes de plus près dans l'appli Gemini et puise son contexte dans Gmail, Google Drive et des applis connectées comme Airtable et Dropbox.
+
+Dans Google Antigravity, l'outil de développement agentique de Google, un nouvel Orchestrator bascule entre Carbon et Hydrogen au sein d'une même session. Sur Terminal-Bench 4.0, d'après [le billet de lancement de Google](https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-hydrogen/), ce duo approche le taux de réussite de Carbon seul en consommant 24 % de quota en moins et en allant 19 % plus vite.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/gemini-4-hydrogen/gemini-4-lineup-hydrogen-ladder-fr.png" alt="La gamme Gemini de Google au 14 novembre 2026, de Flash-Lite à Gemini 4 Carbon, avec le prix d'Hydrogen sur l'API et les forfaits de l'appli" w="1100" h="819" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Les modèles Gemini au 14 novembre 2026. Sources : pages Pricing et Deprecations de l'API Gemini, aide des applis Gemini, page française des forfaits Google AI, annonce d'Hydrogen.</figcaption>
+</figure>
+
+Dans la grille tarifaire de Google, Hydrogen se place au-dessus de 3.8 Flash et en dessous d'Argon. Ars Technica et The Decoder écrivent qu'il remplace, ou doit remplacer, Gemini 3.8 Flash. Le [guide développeur](https://aistudio.google.com/docs/whats-new-gemini-4-hydrogen) de Google le décrit comme la « recommended upgrade from Gemini 3.8 Flash », tandis que la [page Deprecations de l'API](https://aistudio.google.com/docs/deprecations) mentionne toujours 3.8 Flash sans date d'arrêt. En pratique, 3.8 Flash a disparu de la liste des modèles de l'appli Gemini, alors qu'il continue de tourner sur l'API.
+
+Hydrogen est par ailleurs trop récent pour les modèles qui répondent de mémoire : lors de notre test du 14 novembre via l'API de DataForSEO, Gemini 3.8 Flash, recherche web désactivée, a affirmé que ce modèle n'existait pas.
+
+## Gemini 4 Hydrogen est-il gratuit ? Qui peut l'utiliser en France
+
+En grande partie, oui. Tout dépend de l'endroit où vous l'utilisez et de votre forfait.
+
+**Recherche Google :** gratuit pour tous. Google le dit « available globally in Google Search for all users » (pour la France, voir plus bas).
+
+**Appli Gemini sans forfait :** le [tableau de disponibilité des modèles](https://support.google.com/gemini/answer/18648722?hl=en) de Google détaille qui a droit à quoi. Sans abonnement, la sélection automatique du modèle choisit pour vous : la plupart des prompts partent vers Flash-Lite, et « prompts that require more reasoning may use Hydrogen ». Si vous désactivez la sélection automatique, toutes les réponses passent par Flash-Lite, et vous ne pouvez pas choisir Hydrogen vous-même.
+
+**Forfaits payants :** les abonnés Google AI Plus, Pro et Ultra peuvent sélectionner Hydrogen dans le menu des modèles. Ars Technica écrivait que les abonnés AI Plus restaient bloqués sur Flash-Lite ; au 14 novembre 2026, la page d'aide en anglais et la [page française des forfaits](https://gemini.google/fr/subscriptions/?hl=fr) indiquent bien Hydrogen dans Google AI Plus. Les prix relevés ce jour-là depuis la France, sans compte connecté :
+
+<table>
+<thead>
+<tr><th>Forfait (France)</th><th>Prix affiché</th><th>Hydrogen dans l'appli Gemini</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Sans forfait</strong></td><td>0 €</td><td>Seulement via la sélection automatique</td></tr>
+<tr><td><strong>Google AI Plus</strong></td><td>4,99 €/mois</td><td>Oui, au choix dans le menu</td></tr>
+<tr><td><strong>Google AI Pro</strong></td><td>21,99 €/mois</td><td>Oui, au choix dans le menu</td></tr>
+<tr><td><strong>Google AI Ultra</strong></td><td>99,99 €/mois (limites 5 fois celles d'AI Pro) ou 219,99 €/mois (20 fois)</td><td>Oui, au choix dans le menu</td></tr>
+</tbody>
+</table>
+
+Les pages françaises n'affichent aucune mention de taxe. Attention, la version française de la page d'aide de Gemini montrait encore, le 14 novembre, l'ancien tableau (Flash et Pro, sans Hydrogen) : fiez-vous à la version anglaise et à la page des forfaits.
+
+Là où Google propose le mode Tâche (Tasks), les abonnés Pro et Ultra y retrouvent aussi Hydrogen. Ce mode n'est [pas proposé en France](https://support.google.com/gemini/answer/17094507?hl=fr) : Google l'exclut de l'Espace économique européen, du Royaume-Uni, de la Suisse et du Nigeria.
+
+Pour savoir quel modèle a répondu, ouvrez le menu d'une réponse, choisissez **« Afficher les étapes du raisonnement »** et descendez tout en bas.
+
+**Développeurs :** Hydrogen est proposé sur les paliers gratuit et payant de Google AI Studio et de l'API Gemini (ainsi que dans Android Studio). La page de tarifs indique que les requêtes du palier gratuit peuvent servir à améliorer les produits de Google. Ce n'est pas le cas si vous résidez en France : les [conditions de l'API Gemini](https://aistudio.google.com/docs/terms?hl=fr), en vigueur depuis le 23 mars 2026, appliquent les règles de données des Services payants à tous les Services dans l'EEE, au Royaume-Uni et en Suisse, Google AI Studio et quotas gratuits compris. Google n'utilise alors ni vos requêtes ni ses réponses pour améliorer ses produits, mais les conserve un temps limité pour détecter les abus. Autre règle : une application proposée à des utilisateurs de l'EEE, du Royaume-Uni ou de la Suisse ne peut s'appuyer que sur les Services payants. Les prix sont publiés en dollars, et le palier payant demande un prépaiement minimal de 5 $, ou l'équivalent dans une autre devise.
+
+Les entreprises accèdent à Hydrogen par Gemini for business, et l'accès dans Antigravity exige un forfait payant AI Pro ou Ultra. [GitHub Copilot](https://github.blog/changelog/2026-11-13-gemini-4-hydrogen-in-github-copilot) le propose sur ses formules Pro, Pro+, Max, Business et Enterprise.
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/gemini-4-hydrogen/where-to-use-gemini-4-hydrogen-by-plan-fr.png" alt="Où utiliser Gemini 4 Hydrogen depuis la France, par produit et par forfait, au 14 novembre 2026" w="1100" h="842" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Où Gemini 4 Hydrogen est disponible depuis la France, par produit et par forfait, au 14 novembre 2026.</figcaption>
+</figure>
+
+### Limites d'utilisation
+
+Google ne publie aucun nombre de prompts pour Hydrogen. Sa [page sur les limites des applis Gemini](https://support.google.com/gemini/answer/16275805?hl=en) décrit des limites fondées sur la puissance de calcul consommée, qui se réinitialisent toutes les 5 heures jusqu'à un plafond hebdomadaire. AI Plus a droit à 2 fois les limites standard et AI Pro à 4 fois ; AI Ultra obtient 5 ou 20 fois les limites d'AI Pro. La fenêtre de contexte de l'appli varie également selon le forfait : 32K tokens sans abonnement, 128K avec Plus, 1 million avec Pro et Ultra.
+
+Une fois la limite d'un forfait payant atteinte, la conversation continue avec Flash-Lite. Les premiers utilisateurs sur [Reddit](https://www.reddit.com/r/GeminiAI/comments/1xvk6kx/gemini_4_hydrogen_usage_is_confusing) racontent que leur quota fond vite : vérifiez **« Paramètres »** > **« Limites d'utilisation »** avant une longue session.
+
+## Prix de l'API Gemini 4 Hydrogen (et le piège de 3.8 Flash)
+
+Hydrogen coûte **1,50 $ par million de tokens en entrée et 7,50 $ par million de tokens en sortie**, au même tarif sur toute la fenêtre d'un million de tokens et sans date de fin sur la [page de tarifs de l'API Gemini](https://aistudio.google.com/docs/pricing).
+
+<table>
+<thead>
+<tr><th>Modèle</th><th>Prix au 14 novembre (entrée / sortie par million de tokens)</th><th>Changement prévu</th><th>Palier gratuit de l'API</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Gemini 3.5 Flash-Lite</strong></td><td>0,30 $ / 2,50 $</td><td>Aucun annoncé</td><td>Oui</td></tr>
+<tr><td><strong>Gemini 3.8 Flash</strong></td><td>0,75 $ / 3,75 $</td><td>1,50 $ / 7,50 $ à partir du 1er janvier 2027</td><td>Oui</td></tr>
+<tr><td><strong>Gemini 4 Hydrogen</strong></td><td>1,50 $ / 7,50 $</td><td>Aucun annoncé</td><td>Oui</td></tr>
+<tr><td><strong>Gemini 4 Argon</strong></td><td>2 $ / 10 $</td><td>4 $ / 20 $ à partir du 1er décembre 2026</td><td>Non</td></tr>
+<tr><td><strong>Gemini 4 Carbon</strong></td><td>2 $ / 10 $</td><td>4 $ / 20 $ à partir du 1er décembre 2026</td><td>Non</td></tr>
+</tbody>
+</table>
+
+Gemini 3.8 Flash reste à 0,75 $ et 3,75 $ jusqu'au 31 décembre 2026 : passer à Hydrogen double donc les tarifs standard d'entrée et de sortie d'ici là. Ensuite, les tarifs standard s'alignent, et l'entrée en cache d'Hydrogen (0,075 $) coûte moitié moins que celle de 3.8 Flash (0,15 $).
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/gemini-4-hydrogen/gemini-api-output-price-by-date-chart-fr.png" alt="Graphique des prix de sortie de l'API Gemini par million de tokens à trois dates : 3.8 Flash double le 1er janvier, Argon et Carbon doublent le 1er décembre, Hydrogen reste à 7,50 $" w="1100" h="709" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Prix de sortie standard par million de tokens au 14 novembre, au 1er décembre et au 1er janvier. Source : page Pricing de l'API Gemini, relevée le 14 novembre 2026.</figcaption>
+</figure>
+
+Le prix par token ne fait pas toute la facture. Sur l'indice d'[Artificial Analysis](https://artificialanalysis.ai/models/gemini-3-8-flash), avec les deux modèles réglés sur high, Hydrogen a produit 110 millions de tokens de sortie contre 126 millions pour 3.8 Flash, pour un score de 51 contre 31. Mais à son réglage par défaut, medium, 3.8 Flash n'en a produit que 83,9 millions : aux réglages par défaut, Hydrogen en a donc produit davantage. Google affirme de son côté que des partenaires qui font tourner des requêtes SQL et des traitements gourmands en données ont constaté de 12 % à 23 % de tokens en moins.
+
+Un exemple chiffré : une tâche qui envoie 1 million de tokens en entrée et se voit facturer 200 000 tokens en sortie, réflexion comprise, sur plusieurs requêtes, coûte 3,00 $ avec Hydrogen, 1,50 $ avec 3.8 Flash aujourd'hui, et 4,00 $ avec Argon jusqu'au 30 novembre (8,00 $ à partir du 1er décembre).
+
+L'ancrage dans la recherche Google (Grounding with Google Search) est réservé au palier payant : 5 000 requêtes gratuites par mois, partagées entre Gemini 3 et les modèles plus récents, puis 14 $ les 1 000 requêtes, avec un plafond par défaut de 1 500 requêtes par jour.
+
+## Que vaut Gemini 4 Hydrogen ? Benchmarks de Google et tests indépendants
+
+La plupart des chiffres publiés le jour du lancement viennent de Google. Artificial Analysis (AA), l'organisme de test indépendant que Google cite lui-même, confirme dans l'ensemble ses affirmations face à 3.8 Flash, avec deux bémols : le niveau xhigh est lent et bavard, et Argon réglé sur high hallucine moins.
+
+### Ce que publie Google
+
+Face à Gemini 3.8 Flash, [Google affirme](https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-hydrogen/) qu'Hydrogen termine les tâches 2,5 fois plus vite à son réglage par défaut (high), obtient 57 % sur Terminal-Bench 4.1 contre 18,2 % et produit plus de 5 fois moins d'affirmations inventées. Google annonce également 58,8 % sur HLE-Diamond, 52,3 % sur le Vals Tax Agent Bench, 53,4 % sur le nouveau benchmark Multimodal Knowledge Agent et la cinquième place de l'Agent Arena. Côté sécurité, il revendique jusqu'à 81 % de dépassements du cadre fixé (overreach) en moins dans les tâches agentiques et un taux d'honnêteté de 94 % sur son test interne d'agents.
+
+La [fiche du modèle](https://deepmind.google/models/model-cards/gemini-4-hydrogen/) confronte Hydrogen à Claude Sonnet 5.5 et à GPT-6.1 Terra. Hydrogen devance les deux sur 7 des 10 tests listés, dont SWE-sweep (13,5 % contre 3,1 % pour Sonnet et 5,8 % pour Terra). Il reste derrière Sonnet sur Terminal-Bench 4.1 (57 % contre 63,9 %) et sur OSWorld-2.1, qui mesure l'utilisation d'un ordinateur (77,6 % contre 83,9 %), et derrière les deux rivaux sur Terminal-Bench-Science 0.1 (51,4 % contre 59,9 % et 58,3 %).
+
+Google met en avant l'indice d'intelligence d'AA : 51 pour Hydrogen à son niveau par défaut (high), contre 50 pour Argon. Ars Technica a préféré comparer le score d'Hydrogen en xhigh, 54, aux 50 d'Argon.
+
+### Ce que montrent les tests indépendants
+
+<table>
+<thead>
+<tr><th>Mesure (AA, 14 novembre)</th><th>xhigh</th><th>high (par défaut)</th><th>Médiane des modèles comparables</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Indice d'intelligence</strong></td><td>54</td><td>51</td><td>41</td></tr>
+<tr><td><strong>Tokens de sortie sur l'ensemble de l'indice</strong></td><td>304 millions</td><td>110 millions</td><td>77,3 millions</td></tr>
+<tr><td><strong>Temps par tâche de l'indice</strong></td><td>14,8 minutes</td><td>8,4 minutes</td><td>13,1 minutes</td></tr>
+<tr><td><strong>Coût par tâche de l'indice</strong></td><td>3,16 $</td><td>1,87 $</td><td>Non indiqué</td></tr>
+</tbody>
+</table>
+
+La [page d'AA consacrée au modèle](https://artificialanalysis.ai/models/gemini-4-hydrogen) range Hydrogen en xhigh « amongst the leading models in intelligence and reasonably priced », mais le juge aussi « slower than average per task and very verbose ». À son réglage par défaut, high, il fait mieux que la médiane en temps par tâche, mais il génère, là aussi, plus de tokens que la médiane des modèles comparables.
+
+Sur [AA-Omniscience](https://artificialanalysis.ai/evaluations/omniscience), Hydrogen en xhigh affiche un taux d'hallucination de 8 %, le troisième plus bas de la liste d'AA, derrière Carbon en medium et Argon en high (4 % chacun). Ce taux rapporte les réponses fausses à l'ensemble des réponses non correctes : 8 % ne signifie pas 8 % de toutes les réponses. D'après les données d'AA, le taux d'Hydrogen est du même ordre à son réglage par défaut (high) ; Carbon en high et Argon en medium, le réglage par défaut de ce dernier sur l'API, affichent en revanche des taux plus élevés que celui d'Hydrogen. Le chiffre de Google (plus de 5 fois moins d'affirmations inventées) compare Hydrogen à 3.8 Flash, pas à Argon.
+
+## Hydrogen, Argon ou 3.8 Flash : lequel choisir ?
+
+Choisissez le modèle selon ce que vous coûte une mauvaise réponse, pas selon le score mis en avant.
+
+<table>
+<thead>
+<tr><th>Modèle</th><th>Gemini 3.8 Flash</th><th>Gemini 4 Hydrogen</th><th>Gemini 4 Argon</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Point fort</strong></td><td>Tâches déjà rodées, à moindre coût</td><td>Développement rapide, agents, longs fichiers</td><td>Raisonnements longs</td></tr>
+<tr><td><strong>Indice d'intelligence AA (high)</strong></td><td>31</td><td>51</td><td>50</td></tr>
+<tr><td><strong>Prix de sortie</strong></td><td>3,75 $, puis 7,50 $ à partir du 1er janvier</td><td>7,50 $</td><td>10 $, puis 20 $ à partir du 1er décembre</td></tr>
+<tr><td><strong>Affirmations inventées (test de Google)</strong></td><td>Plus de 5 fois celles d'Hydrogen</td><td>Référence</td><td>Non publié</td></tr>
+<tr><td><strong>Taux d'hallucination AA</strong></td><td>Non comparé ici</td><td>8 % en xhigh, proche en high</td><td>4 % en high</td></tr>
+<tr><td><strong>GitHub Copilot</strong></td><td>Retrait le 14 décembre</td><td>Disponible</td><td>Retrait le 14 décembre</td></tr>
+</tbody>
+</table>
+
+<figure className="not-prose my-8">
+  <BlogImage src="/blog/gemini-4-hydrogen/which-gemini-4-model-decision-flow-fr.png" alt="Arbre de décision pour choisir entre Flash-Lite, Gemini 3.8 Flash, 4 Hydrogen, 4 Argon et 4 Carbon" w="1100" h="939" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Une méthode rapide pour choisir un modèle Gemini, d'après les tarifs et la documentation de Google et les données d'Artificial Analysis, au 14 novembre 2026.</figcaption>
+</figure>
+
+**Prenez Flash-Lite** pour la classification et le routage en grand volume.
+
+**Restez sur 3.8 Flash** s'il vous donne déjà satisfaction et que le coût prime, et testez Hydrogen avant le 1er janvier, date à laquelle le prix de 3.8 Flash rejoint le sien.
+
+**Passez à Hydrogen** quand des tests, un relecteur ou un outil de validation contrôlent le résultat et que la vitesse compte : agents de code, chaînes de traitement de documents, prototypes. Testez medium et high.
+
+**Testez Argon en high, ou Carbon en medium,** quand un client risque de lire la réponse avant toute vérification. Ces réglages ont obtenu les taux d'hallucination les plus bas chez AA, ce qui justifie de payer 20 $ par million de tokens de sortie à partir du 1er décembre, même si aucun modèle ne remplace une relecture quand une erreur coûte cher.
+
+Si vous utilisez GitHub Copilot, le [retrait programmé au 14 décembre](https://github.blog/changelog/2026-11-13-upcoming-deprecation-of-selected-github-copilot-models-in-december) touche 3.8 Flash (remplaçant suggéré : Hydrogen) et Argon (remplaçant suggéré : Carbon).
+
+## Niveaux de réflexion et limites de sortie en pratique
+
+Sur l'API, Hydrogen propose les niveaux de réflexion low, medium, high (par défaut) et un nouveau niveau, xhigh. Le [guide développeur](https://aistudio.google.com/docs/whats-new-gemini-4-hydrogen) de Google prévient que xhigh ajoute de la latence et consomme plus de tokens, et qu'il « can cause overthinking on simpler prompts » ; le guide conseille de tester medium et high sur vos propres évaluations.
+
+Quitter 3.8 Flash ne se résume pas à changer d'identifiant. Toujours selon ce guide, Hydrogen passe par défaut en high au lieu de medium et refuse le niveau `minimal` ; il ne prend pas en charge le cache explicite ; il ignore les valeurs de temperature, top_p et top_k situées dans la plage autorisée, et renvoie une erreur 400 pour celles qui en sortent. Enfin, `max_output_tokens` plafonne à la fois la réflexion et la réponse : laissez de la marge pour la réponse.
+
+L'appli Gemini ne propose que trois niveaux, Faible, Moyen et Élevé, et applique Faible si vous n'en choisissez aucun.
+
+## Ce qu'Hydrogen change dans la recherche Google et le Mode IA
+
+Robby Stein, vice-président produit de Google Search, a écrit sur [X](https://x.com/rmstein/status/2120941443359576166) qu'Hydrogen est « the new default model in AI Mode » et qu'il est « being used for your hardest questions in AI Overviews ».
+
+Le [billet de Stein sur le blog de Google](https://blog.google/products-and-platforms/products/search/gemini-4-hydrogen-search-upgrade/) qualifie Hydrogen de « biggest model upgrade to Search yet » sans employer le mot « default », et ni ce billet ni celui du lancement ne parlent des Aperçus IA (AI Overviews). Il promet une meilleure prise en charge des questions confuses et en plusieurs parties, plus d'images, des réponses structurées, des tableaux comparatifs et des outils sur mesure, ainsi qu'une [décomposition de la requête (query fan-out)](https://geotoolbox.ai/blog/query-fan-out) améliorée qui oriente les internautes « to a broader range of helpful links than before ».
+
+Google n'a rien confirmé de propre à la France : le pays figure dans la liste du Mode IA, le français fait partie de ses langues et les Aperçus IA y sont proposés, mais l'éditeur ne parle que d'un déploiement « globally ». Une option, en revanche, ne vous concerne pas : d'après la [page d'aide du Mode IA](https://support.google.com/websearch/answer/16011537?hl=en), les abonnés Google AI Ultra de 18 ans et plus peuvent passer à Gemini 4 Carbon dans les pays pris en charge, et au 14 novembre 2026 cette liste ne compte aucun État membre de l'Union européenne (la Suisse, Monaco, le Royaume-Uni et le Canada y figurent). La version française de cette page d'aide en est restée à une ancienne section sur Argon.
+
+Ni Stein ni Google n'ont précisé quelles questions comptent parmi les « hardest » pour les Aperçus IA, et Google n'a donné aucun chiffre sur cet éventail de liens plus large. Le changement est en outre intervenu en pleine mise à jour du classement : Google a lancé la [mise à jour principale de novembre 2026](https://status.search.google.com/incidents/WLxcJyC6jMWMfryxsKMc) le 10 novembre et prévenu que son déploiement pouvait prendre jusqu'à 2 semaines.
+
+Gardez vos données antérieures au 10 novembre comme point de référence et notez les deux dates : puisque les deux changements se chevauchent, aucune comparaison avant/après ne pourra isoler l'effet d'Hydrogen. Recalibrez votre suivi du [référencement dans le Mode IA](https://geotoolbox.ai/blog/google-ai-mode-seo) dès que le tableau de bord de Google indique la fin du déploiement. Pour les autres moteurs d'IA qui citent des pages web, le [score de préparation IA](https://geotoolbox.ai/tools/ai-readiness) gratuit de geotoolbox vérifie si votre robots.txt bloque leurs robots d'exploration. Le [Citation Interceptor](https://geotoolbox.ai/features/citation-interceptor) de geotoolbox (formules Plus et supérieures) repère les pages tierces que les réponses d'IA citent sur vos sujets sans mentionner votre marque, et en fait une liste d'actions.
+
+## Foire aux questions
+
+### Gemini 4 Hydrogen, c'est Gemini 4 Flash ?
+
+Pas sous ce nom : aucun modèle ne s'appelle Gemini 4 Flash. Hydrogen occupe le créneau du modèle rapide et bon marché, qui revenait aux modèles Flash, et le [changelog de GitHub](https://github.blog/changelog/2026-11-13-gemini-4-hydrogen-in-github-copilot) le décrit comme « Google's latest Flash model ».
+
+### Gemini 4 Hydrogen est-il meilleur que Gemini 3.1 Pro ?
+
+Les pages de Google sur Hydrogen ne publient aucune comparaison directe avec 3.1 Pro. Le guide développeur de Google recommande Hydrogen pour remplacer 3.8 Flash et les « earlier Gemini 3 and 2.5 models », et Hydrogen coûte moins cher que 3.1 Pro Preview, facturé [2 $ en entrée et 12 $ en sortie](https://aistudio.google.com/docs/pricing) par million de tokens pour les prompts jusqu'à 200K tokens.
+
+## Sources
+
+- Introducing Gemini 4 Hydrogen - Google, 12 novembre 2026 (mis à jour le 13 novembre) - `blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-hydrogen/`
+- Google Search gets a major upgrade with Gemini 4 Hydrogen - Google, 12 novembre 2026 - `blog.google/products-and-platforms/products/search/gemini-4-hydrogen-search-upgrade/`
+- What's new in Gemini 4 Hydrogen - documentation Google AI Studio, consultée le 14 novembre 2026 - `aistudio.google.com/docs/whats-new-gemini-4-hydrogen`
+- Gemini Developer API pricing - documentation Google AI Studio, consultée le 14 novembre 2026 - `aistudio.google.com/docs/pricing`
+- Gemini API deprecations - documentation Google AI Studio, consultée le 14 novembre 2026 - `aistudio.google.com/docs/deprecations`
+- Conditions d'utilisation supplémentaires de l'API Gemini - Google, en vigueur le 23 mars 2026 - `aistudio.google.com/docs/terms`
+- Gemini API billing - documentation Google AI Studio, consultée le 14 novembre 2026 - `aistudio.google.com/docs/billing`
+- Fiche du modèle Gemini 4 Hydrogen - Google DeepMind, 12 novembre 2026 - `deepmind.google/models/model-cards/gemini-4-hydrogen/`
+- Page du modèle Gemini 4 Hydrogen - documentation Google AI Studio, consultée le 14 novembre 2026 - `aistudio.google.com/docs/models/gemini-4-hydrogen`
+- À propos des modèles Gemini - Aide Applications Gemini (versions anglaise et française), consultée le 14 novembre 2026 - `support.google.com/gemini/answer/18648722`
+- Limites et disponibilité des fonctionnalités des applis Gemini - Aide Applications Gemini, consultée le 14 novembre 2026 - `support.google.com/gemini/answer/16275805`
+- Tâches dans les applis Gemini - Aide Applications Gemini, consultée le 14 novembre 2026 - `support.google.com/gemini/answer/17094507`
+- Forfaits Google AI (France) - Google, relevés le 14 novembre 2026 - `gemini.google/fr/subscriptions/`
+- Forfaits Google AI avec stockage cloud (France) - Google One, relevés le 14 novembre 2026 - `one.google.com/intl/fr_fr/about/google-ai-plans/`
+- Mode IA dans la recherche Google - Aide Recherche Google, consultée le 14 novembre 2026 - `support.google.com/websearch/answer/16011537`
+- Aperçus IA dans la recherche Google - Aide Recherche Google, consultée le 14 novembre 2026 - `support.google.com/websearch/answer/14901683`
+- Robby Stein sur X, 12 novembre 2026 - `x.com/rmstein/status/2120941443359576166`
+- Gemini 4 Hydrogen, page du modèle - Artificial Analysis, consultée le 14 novembre 2026 - `artificialanalysis.ai/models/gemini-4-hydrogen`
+- Gemini 3.8 Flash, page du modèle - Artificial Analysis, consultée le 14 novembre 2026 - `artificialanalysis.ai/models/gemini-3-8-flash`
+- AA-Omniscience - Artificial Analysis, consulté le 14 novembre 2026 - `artificialanalysis.ai/evaluations/omniscience`
+- Upcoming deprecation of selected GitHub Copilot models in December - GitHub, 13 novembre 2026 - `github.blog/changelog/2026-11-13-upcoming-deprecation-of-selected-github-copilot-models-in-december`
+- Gemini 4 Hydrogen in GitHub Copilot - GitHub, 13 novembre 2026 - `github.blog/changelog/2026-11-13-gemini-4-hydrogen-in-github-copilot`
+- Mise à jour principale de novembre 2026 - Tableau de bord d'état de la recherche Google, 10 novembre 2026 - `status.search.google.com/incidents/WLxcJyC6jMWMfryxsKMc`
+- Gemini 4 Hydrogen usage is confusing - r/GeminiAI sur Reddit, novembre 2026 - `reddit.com/r/GeminiAI/comments/1xvk6kx/gemini_4_hydrogen_usage_is_confusing`
