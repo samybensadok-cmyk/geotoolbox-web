@@ -2,7 +2,7 @@
 title: "GPTBot: What It Crawls and How to Allow or Block It"
 description: "GPTBot is OpenAI's training crawler. What it crawls, how to allow or block it in robots.txt, and why blocking GPTBot does not remove you from ChatGPT search."
 date: "2026-06-08"
-updated: "2026-11-09"
+updated: "2026-11-14"
 author: "Samy BEN SADOK"
 tags: ["ai-crawlers", "gptbot", "openai", "robots-txt", "guide"]
 draft: false
@@ -105,7 +105,7 @@ Mostly yes, with two caveats.
 
 GPTBot honors robots.txt, so a correct Disallow stops the real crawler, and that behavior is reliable in practice. But robots.txt is [a published policy, not a wall](https://www.eff.org/deeplinks/2023/12/no-robotstxt-how-ask-chatgpt-and-google-bard-not-use-your-website-training), and two things sit outside it.
 
-First, your content delivery network (CDN) may already be deciding for you. Cloudflare now [blocks AI crawlers by default](https://www.cloudflare.com/press/press-releases/2025/cloudflare-just-changed-how-ai-crawlers-scrape-the-internet-at-large/) for new domains, so GPTBot can be stopped at the edge even when your robots.txt says nothing, which surprises owners who never set it. If you want GPTBot in and it is missing, check your CDN's bot rules, not just your robots.txt. Across scans run through our crawler checker, this is the most common GPTBot surprise at geotoolbox: a site that meant to allow the crawler but is quietly blocked at the edge by a default it never set.
+First, your content delivery network (CDN) may already be deciding for you. Cloudflare [began blocking AI crawlers by default](https://www.cloudflare.com/press/press-releases/2025/cloudflare-just-changed-how-ai-crawlers-scrape-the-internet-at-large/) for new domains in July 2025. On September 15, 2026 it [announced presets for new domains](https://blog.cloudflare.com/accountable-mixed-use-ai-crawlers/): everything allowed for sites without ads, and for ad-supported sites AI training disallowed, with training-only crawlers such as GPTBot blocked at the edge. CDN rules can stop GPTBot even when your robots.txt says nothing. If you want GPTBot in and it is missing, check your CDN's bot rules, not just your robots.txt.
 
 Second, robots.txt does nothing against impostors. The GPTBot user agent is trivially copied, and HUMAN Security found [about one in six requests](https://www.humansecurity.com/learn/blog/ai-crawler-spoofing-chatgpt-mistral-perplexity/) claiming to be ChatGPT-User is a fake, about two million spoofed requests a day. A Disallow stops the real, well-behaved GPTBot; it does not stop a scraper wearing its name. For that you need the next step.
 
@@ -142,6 +142,7 @@ The fastest first step is to see what your site tells GPTBot right now. Run your
 - Overview of OpenAI Crawlers - OpenAI developer documentation - `developers.openai.com/api/docs/bots`
 - GPTBot IP ranges (gptbot.json) - OpenAI - `openai.com/gptbot.json`
 - Cloudflare Just Changed How AI Crawlers Scrape the Internet - Cloudflare, 2025 - `cloudflare.com/press/press-releases/2025/cloudflare-just-changed-how-ai-crawlers-scrape-the-internet-at-large`
+- Have it both ways: stay discoverable in search while disallowing AI training - Cloudflare, September 2026 - `blog.cloudflare.com/accountable-mixed-use-ai-crawlers`
 - The crawl-to-click gap: Cloudflare data on AI bots, training, and referrals - Cloudflare, August 2025 - `blog.cloudflare.com/crawlers-click-ai-bots-training`
 - OpenAI Has Tripled Their Crawl of the Web: An Analysis of 7B+ Log Files - Botify, April 2026 - `botify.com/blog/openai-tripled-web-crawl`
 - AI Crawler Spoofing: ChatGPT, Mistral, Perplexity - HUMAN Security - `humansecurity.com/learn/blog/ai-crawler-spoofing-chatgpt-mistral-perplexity`
