@@ -2,7 +2,7 @@
 title: "How ChatGPT Cites Sources (and Why It Gets Them Wrong)"
 description: "How ChatGPT cites sources: what a citation is, how it decides what to cite, why so many citations are wrong, and how to track which sources it shows you."
 date: "2026-06-09"
-updated: "2026-11-12"
+updated: "2026-11-15"
 author: "Samy BEN SADOK"
 tags: ["chatgpt", "ai-citation", "geo", "ai-visibility", "chatgpt-search"]
 draft: false
@@ -23,7 +23,7 @@ A ChatGPT citation is a link to a web page the model retrieved to build its answ
 
 The most useful thing to know is the tell. Per [OpenAI's documentation](https://help.openai.com/en/articles/9237897-chatgpt-search), a ChatGPT Search answer carries inline citations plus a Sources button, so in practice, no visible evidence it used search means ChatGPT did not search the web for that answer. It answered from **parametric memory**, the patterns the large language model absorbed during training, and cited nothing, even when it sounds just as sure of itself.
 
-That distinction is the foundation for everything below. A citation only exists when ChatGPT actually searched, and what it shows you is a filtered slice of what it read, not the whole list. Our guide to [getting cited by AI](https://geotoolbox.ai/blog/how-to-get-cited-by-ai) defines the term; this piece is about the machinery behind it, which starts with [how AI search works](https://geotoolbox.ai/blog/how-does-ai-search-work).
+A citation only exists when ChatGPT actually searched, and what it shows you is a filtered slice of what it read, not the whole list. Our guide to [getting cited by AI](https://geotoolbox.ai/blog/how-to-get-cited-by-ai) defines the term; this piece is about the machinery behind it, which starts with [how AI search works](https://geotoolbox.ai/blog/how-does-ai-search-work).
 
 ## How ChatGPT Decides What to Cite
 
@@ -56,13 +56,13 @@ When you ask one question, ChatGPT does not run one search. It expands your prom
 
 ## The Reddit Paradox: Read but Not Credited
 
-ChatGPT pulls Reddit constantly and almost never credits it. In the same analysis, [67.8% of all non-cited URLs came from Reddit](https://ahrefs.com/blog/why-chatgpt-cites-pages/), even though Reddit's own citation rate was just 1.93%. Independent network-traffic analysis backs the same pattern. When Suganthan Mohanadasan [read ChatGPT's own network traffic](https://suganthan.com/blog/how-chatgpt-picks-sources/) across a few dozen searches on one logged-in Pro account in June 2026, Reddit was fetched 278 times and cited just 11, while YouTube was fetched 201 times and cited not once.
+ChatGPT pulls Reddit constantly and almost never credits it. In the same analysis, [67.8% of all non-cited URLs came from Reddit](https://ahrefs.com/blog/why-chatgpt-cites-pages/), even though Reddit's own citation rate was just 1.93%. When Suganthan Mohanadasan [read ChatGPT's own network traffic](https://suganthan.com/blog/how-chatgpt-picks-sources/) across a few dozen searches on one logged-in Pro account in June 2026, Reddit was fetched 278 times and cited just 11, while YouTube was fetched 201 times and cited not once.
 
 His read on YouTube's zero is mechanical: a fetched YouTube page hands back metadata, not the video transcript, so there is little for a citation to bind to; a fetched Reddit thread, by contrast, arrives as full readable text the model can quote. The model mines those Reddit threads for context, opinions, and phrasing, then writes the answer and cites a cleaner-looking source instead.
 
 This is the gap most people miss: retrieval is not citation. Suganthan's traffic analysis splits it into three states worth naming. **Fetched** means ChatGPT's retrieval tool pulled your page into the model's working context. **Cited** means a numbered footnote pins your page to one specific claim, the link you can see. **Mentioned** means your brand name turns up in the answer while a different page gets the citation. That is narrower than a plain brand mention, where you can be both named and cited. The states come apart constantly: a page can be fetched and never cited, so it can shape the wording of an answer while never surfacing in the Sources panel. That hidden layer is exactly what the panel undercounts.
 
-Why does it swap in a different source? The model leans toward a citation that looks authoritative and self-contained (a clean article over a sprawling forum thread), even when the thread is where the substance came from. So a Reddit discussion can shape the answer while a tidy blog post takes the visible credit.
+Why does it swap in a different source? The model leans toward a citation that looks authoritative and self-contained (a clean article over a sprawling forum thread), even when the thread is where the substance came from. So a Reddit discussion can shape the answer while a tidy blog post takes the visible credit. The winning site may still go unnamed in the answer: a [ghost citation](https://geotoolbox.ai/blog/ghost-citations).
 
 One denominator note keeps these numbers honest. The 1.93% above is the rate at which retrieved Reddit URLs earn a citation, not Reddit's slice of the citations you actually see. By share of all citations, Reddit sits near the top of the table: [Profound's February 2026 study](https://www.tryprofound.com/blog/chatgpt-citation-sources) of roughly 730,000 US ChatGPT conversations with web citations (October to December 2025 data) measured Reddit at about 3% of all citations, and a [May 2026 5W Public Relations audit](https://www.prnewswire.com/news-releases/wikipedia-and-reddit-now-drive-over-25-of-chatgpt-citations-in-the-us-new-5w-research-finds--wsj-nyt-and-bloomberg-do-not-appear-in-the-top-20-302768339.html) put it at 11.97%, second only to Wikipedia's 13.15%. The two numbers differ by a factor of four because the studies are built differently: Profound counted one dataset from late 2025, while 5W synthesized nine datasets reaching into spring 2026, and as the sections below show, these shares move fast enough that the window matters. What they agree on is the rank, with Reddit at or near number two. Both pictures are true at once: ChatGPT retrieves so much Reddit that even a tiny per-URL citation rate leaves Reddit among its most-cited domains. Whenever you compare citation stats, check the denominator first.
 
