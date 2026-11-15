@@ -1,0 +1,304 @@
+---
+title: "SEO Migration Checklist: Keep Rankings and AI Citations"
+description: "An SEO migration checklist for domain, CMS and URL changes: redirect maps, launch-day checks, realistic recovery timelines and how to keep AI search citations."
+date: "2026-11-15"
+author: "Samy BEN SADOK"
+tags: ["seo-migration", "technical-seo", "seo", "redirects", "ai-crawlers", "guide"]
+recheckBy: "2026-12-15"  # Cloudflare AI-crawler presets, Search generative AI control, Bing Site Move tool status, AI fetcher JS tests
+draft: false
+---
+
+An SEO migration goes wrong in predictable places: a redirect map with gaps, a staging block that leaks into production, a new domain nobody set up in Search Console, or a new host that turns away AI crawlers.
+
+This website migration checklist follows the order the work happens, for domain changes, CMS and platform switches, URL restructures and redesigns. It adds our own redirect data and the checks that keep AI answer engines able to reach the new site.
+
+## What Is an SEO Migration?
+
+An **SEO migration** is any change to a site's domain, URLs, platform or page rendering that forces search engines to relearn where your content lives.
+
+Most site migration projects combine several of these changes. Each carries a different risk, and only domain and subdomain moves use Google's Change of Address tool:
+
+<table>
+<thead>
+<tr><th>Migration type</th><th>What changes</th><th>Risk to search traffic</th><th>Change of Address tool?</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>HTTP to HTTPS</strong></td><td>Protocol only; every URL gets a new form</td><td>Low if every URL redirects in one hop</td><td>No, Google detects it</td></tr>
+<tr><td><strong>www to non-www (or back)</strong></td><td>Host name on the same domain</td><td>Low</td><td>No, use redirects and canonicals</td></tr>
+<tr><td><strong>URL restructure</strong></td><td>Paths, folders, slugs</td><td>Medium to high; depends on redirect coverage</td><td>No, redirect and update sitemaps</td></tr>
+<tr><td><strong>CMS or platform switch, same URLs</strong></td><td>Templates, HTML, rendering, speed</td><td>Medium; content and markup drift</td><td>No</td></tr>
+<tr><td><strong>CMS switch with new URLs</strong></td><td>Templates plus every URL</td><td>High</td><td>No, unless the domain changes too</td></tr>
+<tr><td><strong>Domain change or rebrand</strong></td><td>Domain, often brand and URLs too</td><td>Highest; months of recovery are common</td><td>Yes, for every domain and subdomain variant</td></tr>
+<tr><td><strong>Site merge</strong></td><td>Two sites become one</td><td>High; overlapping pages compete</td><td>Yes, when a whole domain or subdomain moves; merge sites one at a time</td></tr>
+<tr><td><strong>Hosting move, same URLs</strong></td><td>Servers, IPs, CDN</td><td>Low if uptime holds and crawlers are not blocked</td><td>No</td></tr>
+</tbody>
+</table>
+
+The tool column follows [Google's Change of Address documentation](https://support.google.com/webmasters/answer/9370220?hl=en): it applies when you move from one domain or subdomain to another, and not to HTTPS moves, www switches or path changes inside a site.
+
+A platform switch that keeps every URL can still change the HTML that Googlebot and AI crawlers read on every page.
+
+## How Much Traffic Will You Lose, and for How Long?
+
+Plan for a dip in organic traffic after a website migration, especially a domain move, and for it to last longer than your project plan says.
+
+[Google's site-move guide](https://developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes) says a small to medium-sized site can take **a few weeks** for most pages to move, and larger sites take longer. Rankings fluctuate meanwhile, and traffic can take far longer. A [Search Engine Journal study of 892 domain migrations](https://www.searchenginejournal.com/study-how-long-should-seo-migration-take/492050/) found it took **523 days on average** for third-party SEO tools to show the new domain at the old domain's traffic level, and **17%** had not got there after 1,000 days.
+
+Read that as a rough average from selected domain moves, not a forecast for your site. The figures are tool estimates rather than Search Console data, the sample mixes Ahrefs data with migrations SEOs submitted, and an earlier 2023 run of 171 migrations, which the 892-domain study expanded, found 229 days and 42% never recovering.
+
+A move that looks finished can also stall. In a case [Search Engine Journal reported](https://www.searchenginejournal.com/google-says-why-site-migrations-can-exceed-4-months/592757/), one site owner said the new domain was fully indexed and earning about 5,000 impressions a day until Google showed the old domain again four months later. The cause was never confirmed.
+
+### What Our Own Redirects Showed
+
+We measured the lag on our own site. On September 19, 2026, we retired the geotoolbox.ai glossary in English and French: 72 term URLs got a 301 to the article that now covers the term, the two glossary index pages got a 301 to the blog, 5 terms got a 410, and we repointed 442 internal links.
+
+Google kept showing our retired glossary URLs for about six weeks before their impressions fell away. They were already sliding before the change, from about 147 a day in the second half of August to about 85 in the two weeks before it, then averaged about 69 a day in the first four weeks after and about 48 from October 17 to November 3. From November 4, day 46, they dropped to about 2.5 a day.
+
+<figure>
+  <BlogImage src="/blog/seo-migration/redirected-url-impressions-after-301.png" alt="Line chart of daily Google impressions for geotoolbox.ai's retired glossary URLs, still showing for about six weeks after the September 19, 2026 redirects, then dropping near zero in November" w="1040" h="711" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Daily impressions for geotoolbox.ai's retired glossary term URLs (mostly 301s, five 410s), August 1 to November 13, 2026. Source: our Google Search Console, pulled November 15, 2026.</figcaption>
+</figure>
+
+Treat this as a small, low-stakes sample. Clicks were close to zero throughout, one URL drew more than half of the late October impressions, and it was a consolidation into broader articles, not a like-for-like move of a whole site. We did not chart the target articles, and we don't know what triggered the November 4 drop. So even on a healthy domain, Google took weeks to stop showing URLs we had retired.
+
+## Before Launch: Scope, Benchmark and Inventory
+
+Most of the work in a website migration happens before launch day. A URL inventory and a baseline are what let you diagnose a drop later.
+
+<figure>
+  <BlogImage src="/blog/seo-migration/seo-migration-timeline.png" alt="SEO migration timeline with tasks for the weeks before launch, launch day and the months after" w="1040" h="672" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Where each task in this migration checklist sits, from planning to post-launch monitoring.</figcaption>
+</figure>
+
+Name an owner for each stream (SEO, development, content, analytics) and date each milestone, from staging review to post-launch checks. Take a full backup of the site's files, database and server configuration, and agree the rollback triggers in writing, such as mapped URLs failing or checkout errors.
+
+Add and verify the new domain in Google Search Console and Bing Webmaster Tools now, and give the same people access. Moving to a domain you bought? Check its Wayback Machine history and its Manual actions report first.
+
+### Change One Thing at a Time
+
+[Google's site-move guide](https://developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes) says to plan changes one after the other, not all at the same time. Its own example: if you need a new domain, a new CMS and a new layout, move to the new domain first, then change the layout. Change the domain, the URL structure, the templates and the copy in one weekend, and a traffic drop has too many suspects to isolate.
+
+Sequencing the changes is different from splitting the URLs. Google recommends moving all URLs of a small or medium site at once, while a large site can move one section first to test the effect on traffic and indexing.
+
+### Benchmark What You Will Compare Against
+
+Record the numbers you will need in month three, while the old site is still live:
+
+- Search Console clicks and impressions per page, plus keyword rankings for your top queries, ideally 12 months
+- Indexed page count, the Page indexing report's top reasons, the Crawl Stats report and Core Web Vitals
+- Conversions per landing page from Google Analytics 4 (GA4) or your analytics tool
+- Backlinks per URL, so you know which pages carry external authority
+- Which of your URLs AI answers cite for a fixed set of prompts
+
+For that last line, run 20 to 50 prompts your buyers ask in ChatGPT, Perplexity, Claude and Google AI Mode, and log which of your pages each answer cites. AI answers change from run to run, so repeat the set a few times over a week before launch and compare citation rates. Our guide on [measuring AI visibility](https://geotoolbox.ai/blog/how-to-track-ai-visibility) covers how to build that prompt set.
+
+### Inventory Every Old URL
+
+Pull the old URLs from several sources, because each one misses something:
+
+- A full crawl of the current site with a crawler such as Screaming Frog or Sitebulb, including PDFs and images that earn traffic or links (the same crawl you'd run in an [SEO audit](https://geotoolbox.ai/blog/seo-audit))
+- Every URL in your XML sitemaps; our [sitemap extractor](https://geotoolbox.ai/tools/sitemap-extractor) lists up to 50,000 of them in one pass
+- Search Console's Pages report and 12 months of landing pages from analytics
+- URLs with backlinks, including ones that already 404
+- Server logs, which show the old URLs crawlers still request
+
+Then rank the list by traffic, links, conversions and AI citations, and decide now which pages to keep, merge or retire, so the map records each decision before launch. Save the full old-URL list as an XML sitemap for launch day. The top few hundred URLs get hand-checked mappings; the long tail can use pattern rules that also normalize trailing slashes, letter case and query parameters.
+
+## Build the Redirect Map
+
+In a site migration, every old URL gets one server-side permanent redirect to its closest new equivalent, in one hop.
+
+[Google's site-move guide](https://developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes) recommends HTTP permanent redirects such as **301** and **308**, set on the server where technically possible. A spreadsheet with three columns (old URL, new URL, expected status code) becomes both the build spec for developers and the test file for launch day.
+
+Not every old URL should redirect:
+
+<table>
+<thead>
+<tr><th>What happened to the old URL</th><th>Return</th><th>Why</th></tr>
+</thead>
+<tbody>
+<tr><td>Moved to a new URL with the same content</td><td><strong>301</strong> or <strong>308</strong> to the new URL</td><td>Permanent move; signals transfer to the new URL</td></tr>
+<tr><td>Merged with other pages into one new page</td><td><strong>301</strong> to the consolidated page</td><td>Google accepts redirecting several old URLs to the page that now holds their content</td></tr>
+<tr><td>Removed, no equivalent exists</td><td><strong>404</strong> or <strong>410</strong></td><td>Tells crawlers the page is gone instead of pretending it moved</td></tr>
+<tr><td>Removed, but a close substitute exists</td><td><strong>301</strong> to the substitute</td><td>Only when a reader looking for the old page would be satisfied there</td></tr>
+<tr><td>Temporarily moved (maintenance, short test)</td><td><strong>302</strong> or <strong>307</strong></td><td>Tells Google to keep showing the old URL; wrong for a migration</td></tr>
+</tbody>
+</table>
+
+### Don't Dump Unmatched URLs on the Homepage
+
+Pointing hundreds of old URLs at the homepage with a 301 redirect feels safe because nothing 404s. Google's guide says the opposite: many old URLs pointed at one irrelevant destination can be treated as a **soft 404**.
+
+### Collapse Chains to One Hop
+
+When the migration adds a new layer on top, URLs that were redirected years ago now sit in a redirect chain of two or three hops. Googlebot can follow up to 10 hops, but Google advises redirecting straight to the final destination and, where a chain can't be avoided, keeping it to ideally no more than 3 and fewer than 5.
+
+<figure>
+  <BlogImage src="/blog/seo-migration/redirect-chain-collapse.png" alt="Diagram showing a two-hop redirect chain rewritten so each old URL redirects to the final URL in one hop" w="1040" h="523" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Merge your legacy redirect table into the new map so each old URL resolves in a single hop.</figcaption>
+</figure>
+
+Collapse every chain so each old URL points straight at its final destination in one hop. Export the legacy rules from the old server, CMS plugin or CDN, rewrite their targets against the new map, and keep all redirects in one layer so two systems never disagree about the same URL. Images, PDFs, CSS and JavaScript files that move need redirects too.
+
+### Keep the Old URLs Crawlable
+
+[Google considers a move complete](https://developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes) only once Googlebot has visited every URL on the old and new site at least once. Nothing on the old site may hide the redirects from it: no robots.txt Disallow, no noindex, no URL removal requests, and no shutting down the old host before the redirects are processed.
+
+### Keep Redirects for at Least a Year
+
+[Google says](https://developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes) to keep redirects as long as possible, generally **at least one year**, and to consider keeping them indefinitely for users. A [2020 migration guide on Bing's webmaster blog](https://blogs.bing.com/webmaster/2020/12/Website-Migration-with-Bing/) goes further: at least one to two years, preferably longer. Keep the old domain registered and served over HTTPS for the same period, or the redirects stop working the day it lapses.
+
+## Test on Staging Without Getting Indexed
+
+Put the staging build behind a password or a correctly set IP allowlist, the only blocks that keep every crawler out. The common alternatives each fail in a specific way.
+
+A `robots.txt` Disallow stops crawling but not indexing, so a staging URL that gets linked somewhere can still appear in results as a bare URL. A `noindex` tag works only if crawlers can fetch the page to read it, and the two together cancel out: a blocked page's noindex is never seen.
+
+Once staging is locked down, test it as if it were production:
+
+1. Run the redirect map against staging in list mode, with your crawler let through the password or allowlist: each row should return its expected status code, and redirects should reach the expected URL in one hop
+2. Crawl the new site with a smartphone user agent and compare titles, meta descriptions, H1s, canonicals, hreflang and structured data against the old crawl for your top pages, and flag broken images, duplicate pages and leftover placeholder text
+3. Fetch the raw HTML of key templates and confirm the main content is in it, not injected later by JavaScript (our [JavaScript SEO guide](https://geotoolbox.ai/blog/javascript-seo) explains why that matters for AI crawlers)
+4. Check analytics, tag manager and conversion tags fire on every template
+5. Write the production `robots.txt` now and validate it with a [robots.txt tester](https://geotoolbox.ai/tools/robots-txt-tester), so the staging file never gets copied by accident
+
+A password-protected staging site can't tell you whether the new host's CDN or firewall lets crawlers in. For that, [Google's hosting-move guide](https://developers.google.com/search/docs/crawling-indexing/site-move-no-url-changes) suggests a public temporary hostname on the new infrastructure, with a noindex rule so the test site doesn't get indexed.
+
+## Launch Day: The First 48 Hours
+
+Launch day proves the redirects work, then tells search engines where everything went. In order:
+
+1. **Deploy to production and confirm nothing leaked from staging.** Keep the staging hostname restricted, then load the live `robots.txt` and spot-check the meta robots tag on each template. A Disallow or noindex copied from staging can stall the whole move.
+2. **Turn on redirects and crawl the full old-URL list.** Every row should return its expected status: redirect rows reach a 200 in one hop, retired rows return 404 or 410. [Google's guide](https://developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes) warns that it temporarily crawls a moved site more heavily than usual, so check the new server's capacity and fix mismatches the same day.
+3. **Submit the new sitemap.** Add it in Search Console and as a `Sitemap:` line in the live `robots.txt`. Also submit the old-URL sitemap you saved, to watch its indexed count fall as the new one climbs (redirect warnings on it are expected), and remove it once the old URLs drop out.
+4. **File a Change of Address for domain moves.** Verify every variant of the old domain in Search Console, including www, non-www and subdomains, then submit the request for each. Per [Google's Change of Address help page](https://support.google.com/webmasters/answer/9370220?hl=en), the old homepage must already 301 to the new one, signals are forwarded for 180 days and redirects must stay up at least that long (keep them a year or more, as above). After 180 days, Google treats the old site as unrelated if it is still crawlable, you can't immediately chain a second move from the new domain, and a request can be cancelled within those 180 days if you roll back.
+5. **Handle Bing separately.** Submit the new sitemap in Bing Webmaster Tools and send the new URLs and the redirected old URLs through IndexNow, which shares them with Amazon, Naver, Seznam, Yandex and Yep, per the [IndexNow FAQ](https://www.indexnow.org/faq). The 2020 Bing guide points to a Site Move tool, but its help page now returns a 404 and we found no Site Move tool in the current Bing Webmaster Tools console, so rely on redirects, sitemaps and IndexNow. Our [Bing Webmaster Tools guide](https://geotoolbox.ai/blog/bing-webmaster-tools) covers the setup.
+6. **Verify the repointing.** Internal links, canonical tags, hreflang and structured data URLs should already name the final URLs from staging; confirm they survived the deploy.
+7. **Check tracking.** Confirm analytics records sessions on the new URLs and that conversions still fire.
+8. **Start on the links outside the site.** Ask the sites behind your most valuable backlinks to update them, and update social profiles, business listings and paid ad destination URLs.
+9. **Check AI crawler access on the live site.** Confirm the live `robots.txt` and the CDN or firewall bot settings let the AI crawlers in (see the next section).
+
+Step 4 only applies to domain and subdomain changes.
+
+## Keep Your AI Search Visibility Through the Move
+
+Your Google rankings can hold through a migration while some AI crawlers lose access to the new site. Each engine reaches it through its own crawler, and every new host, CDN rule or `robots.txt` file is a new place to block one. We have not found published data on how often migrations cost AI citations; the risk comes from how crawler access works.
+
+[Google's AI features documentation](https://developers.google.com/search/docs/appearance/ai-features) says a page must be indexed and eligible to show with a snippet to appear as a supporting link in AI Overviews or AI Mode, so a clean Google migration keeps your pages eligible, provided the setting below matches.
+
+Search Console's **"Search generative AI"** control, under **"Settings"**, decides whether a property's content can appear in those features. [Google's help page](https://support.google.com/webmasters/answer/16908024?hl=en) says it is set per property, defaults to included, and child properties inherit it from their parent. Google doesn't say the setting follows a Change of Address, so if you changed it on the old property, check it on the new one.
+
+The other engines depend on their own crawlers and indexes:
+
+<table>
+<thead>
+<tr><th>AI engine</th><th>Crawler the new site must allow</th><th>What can break in a migration</th><th>How to check</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Google AI Overviews and AI Mode</strong></td><td>Googlebot</td><td>Indexing of new URLs; a Search generative AI setting that differs between properties</td><td>Page indexing report; Settings on the new property</td></tr>
+<tr><td><strong>ChatGPT search</strong></td><td>OAI-SearchBot</td><td>A robots.txt or firewall rule that blocks it; <a href="https://developers.openai.com/api/docs/bots">OpenAI says</a> opted-out sites are not shown in ChatGPT search answers, apart from navigational links</td><td>Read the live robots.txt; check server logs for OAI-SearchBot hits</td></tr>
+<tr><td><strong>Microsoft Copilot</strong></td><td>Bingbot</td><td>New URLs missing from Bing's index</td><td>Bing Webmaster Tools, whose <a href="https://blogs.bing.com/webmaster/2026/2/Introducing-AI-Performance-in-Bing-Webmaster-Tools-Public-Preview/">AI Performance report</a> shows Copilot citations</td></tr>
+<tr><td><strong>Perplexity</strong></td><td>PerplexityBot</td><td>Firewall or bot-protection rules that challenge its published IP ranges</td><td>Logs, and allowlist rules on the new host</td></tr>
+<tr><td><strong>Claude</strong></td><td>Claude-SearchBot</td><td>A blanket "block AI bots" rule added to the new robots.txt or CDN</td><td>Read the live robots.txt and firewall rules</td></tr>
+</tbody>
+</table>
+
+Each vendor also runs a user-triggered fetcher (ChatGPT-User, Perplexity-User, Claude-User) that loads a page when someone asks about it, so firewall rules need to let those through too; our guide to [AI crawlers](https://geotoolbox.ai/blog/ai-crawlers) lists every user agent. None of OpenAI's, Perplexity's or [Anthropic's crawler pages](https://support.claude.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler) says how their bots handle redirects, so check your logs for each bot requesting old URLs and receiving the 301.
+
+### The New Host Can Block What robots.txt Allows
+
+A new CDN or firewall account starts with its own bot settings, not your old ones. Since [Cloudflare's update of September 15](https://blog.cloudflare.com/accountable-mixed-use-ai-crawlers/), its training controls changed: **"Block"** stops mixed-use crawlers such as Googlebot, Bingbot and Applebot everywhere, and **"Block on pages with ads"** stops them on pages serving ads, so either choice cuts search access too.
+
+Its new-domain presets keep search crawlers allowed. For ad-supported sites, they also set training crawlers to **"Disallow AI Training"** and AI agents to **"Block on pages with ads"**, which stops user-triggered AI fetchers on those pages. [Perplexity's crawler docs](https://docs.perplexity.ai/docs/resources/perplexity-crawlers) add that Cloudflare's Bot Fight Mode can still challenge its bots even when a custom rule allows them.
+
+<figure>
+  <BlogImage src="/blog/seo-migration/ai-crawler-access-path.png" alt="Diagram of the layers an AI crawler passes on a migrated site, from DNS and CDN rules to robots.txt, status codes and the HTML response" w="1040" h="757" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">The five layers to check across the old and new stack, and what a migration can break at each.</figcaption>
+</figure>
+
+An AI crawler has to pass every layer between it and the page before it can read a word. The last layer catches replatforms in particular. In the logs summarized in our JavaScript SEO guide, ChatGPT-User, Claude-User and PerplexityBot fetched no scripts, though one test suggests script-written content can still reach Perplexity, so content injected after rendering may never reach some of them.
+
+### Old URLs in AI Answers
+
+AI answers can keep citing your old URLs after the move. The 301s carry readers to the right page, but no AI vendor documents how quickly answers switch to the new URLs. Re-run your baseline prompt set weekly until the old URLs stop appearing and compare citation rates for old URLs, new URLs and answers that dropped you. Old URLs still cited after that are a reason to keep their redirects, not to change the map.
+
+## After Launch: Monitor, Diagnose and Recover
+
+After a website migration, watch the redirected URLs and the new URLs as separate groups: for a domain change, compare the old and new Search Console properties side by side; on one domain, a page filter with a regex on the old path separates them. A healthy migration looks like one line falling while the other rises. A broken one looks like both falling.
+
+<table>
+<thead>
+<tr><th>When</th><th>What to check</th><th>Warning sign</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Days 1 to 2</strong></td><td>Old-URL crawl, live robots.txt, analytics, 404 log</td><td>Any URL not returning its mapped status, or a redirect not reaching a 200 in one hop</td></tr>
+<tr><td><strong>Week 1</strong></td><td>Page indexing, both sitemaps, Crawl Stats, server logs</td><td>Crawlers not requesting old URLs, or server errors in Crawl Stats</td></tr>
+<tr><td><strong>Weeks 2 to 6</strong></td><td>Clicks by URL group, top-query rankings, AI prompt baseline</td><td>New URLs still stuck in "Discovered" or "Crawled - currently not indexed", or not gaining what the old ones lose</td></tr>
+<tr><td><strong>Months 2 to 8</strong></td><td>Old domain in results, backlink updates, recovery against benchmark</td><td>Old URLs reappearing as the indexed version</td></tr>
+<tr><td><strong>Months 6 to 12</strong></td><td>Remaining traffic on redirects, a technical audit of the new site</td><td>Pressure to remove redirects before the year is up</td></tr>
+</tbody>
+</table>
+
+Annotate the launch date in analytics and your rank tracker.
+
+### Tell a Migration Drop from Everything Else
+
+Core updates and AI Overviews move traffic too. Start with the pattern:
+
+- **Clicks fall on new URLs while average position holds:** look at what changed on the results page, such as a new AI Overview, before blaming the move.
+- **Impressions vanish on old URLs without appearing on new ones:** it's indexing. Check the Page indexing report and server logs.
+- **Traffic holds but conversions fall:** test forms, checkout and calls to action on the new templates before looking at SEO.
+
+Log file analysis answers the question Search Console can't: is Googlebot still requesting old URLs, and does it get a 301 every time? The [Bing blog guide](https://blogs.bing.com/webmaster/2020/12/Website-Migration-with-Bing/) recommends monitoring logs daily for at least three months after a move.
+
+### When the Old Domain Comes Back
+
+If Google starts showing the old domain again months later, start with the Search Console setup. Google's John Mueller, replying in the four-month case above, pointed to Change of Address requests for both the www and non-www versions. Search Engine Journal's write-up added hardcoded internal links to the old domain and registrar-level redirects that may not keep the URL path.
+
+Keep the old origin running until the new URLs are indexed and its logs show crawlers following the redirects, and keep whatever serves the redirects running for the year or more they need. If you inherit a migration that never got its redirects, rebuild the old URL list from Search Console, backlink data and the Wayback Machine, and put them in place before anything else.
+
+## Redesigning Without Changing URLs
+
+A website redesign that keeps every URL needs no redirects, but the content on those URLs still changes. The losses come from what the new templates drop.
+
+Run the same old-versus-new crawl diff from the staging checklist, adding body copy length and internal links for your top pages. Watch for a tab that loads the paragraph that ranked only on click, a navigation that drops links to deep pages, or a product template without its FAQ or review markup.
+
+If the release also moves hosting, keep the URLs, content and domain stable for it. [Google's hosting-move guide](https://developers.google.com/search/docs/crawling-indexing/site-move-no-url-changes) lists the infrastructure steps: lower your DNS time-to-live (TTL) to a few hours at least a week ahead, check that firewall or denial-of-service (DoS) protection doesn't block Googlebot, and remove temporary crawl blocks before you change DNS.
+
+## Frequently Asked Questions
+
+### How much does an SEO migration cost?
+
+There is no neutral public benchmark: most published price lists come from agencies that sell website migration services. Cost scales with the number of URLs to map, how many legacy redirects need untangling, how many templates change and how long someone monitors afterward.
+
+### When is the best time to execute a site migration?
+
+When traffic is low and the people who own the redirects can watch the launch. [Google's guide](https://developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes) suggests timing a move for a recurring dip, such as a quiet season or weekday, so fewer visitors hit early errors and more server capacity is left for Googlebot. Avoid peak sales periods.
+
+### What is the first step in any website migration project?
+
+Decide exactly what changes (the domain, the URLs, the platform or the design) and write it down before anyone builds. That scope decides which steps apply, whether you need a Change of Address, and what the benchmark captures.
+
+## Check AI Access Before and After Launch
+
+Search Console and Bing Webmaster Tools report on the search side of a move. Most AI engines give site owners no such report, so the access check is yours.
+
+Run the old domain through our free [AI Crawler Checker](https://geotoolbox.ai/tools/ai-crawler-checker) before launch to record which AI crawlers its `robots.txt` allows, then run the new domain on launch day and again the next day. It tests the live file for your homepage path against 34 AI crawler user agents and shows the exact line blocking each one; test key section paths in the robots.txt tester. Our free [Agent Readiness Scanner](https://geotoolbox.ai/tools/agent-readiness-scanner) goes a layer further: it fetches your pages as AI crawlers and renders them, which catches a firewall rule or a 403 that `robots.txt` knows nothing about. It can't reproduce rules that check a crawler's IP address, so launch-week logs still matter.
+
+## Sources
+
+- Google Search Central - Site moves with URL changes (updated August 20, 2026) - `developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes`
+- Search Console Help - Change of Address tool (read November 15, 2026) - `support.google.com/webmasters/answer/9370220`
+- Search Engine Journal - How Long Should An SEO Migration Take? 892-domain study (January 8, 2025) - `www.searchenginejournal.com/study-how-long-should-seo-migration-take/492050`
+- Search Engine Journal - Google Says Why Site Migrations Can Exceed 4 Months (October 13, 2026) - `www.searchenginejournal.com/google-says-why-site-migrations-can-exceed-4-months/592757`
+- Google Search Central - AI features and your website (updated December 10, 2025) - `developers.google.com/search/docs/appearance/ai-features`
+- Search Console Help - Search generative AI control (read November 15, 2026) - `support.google.com/webmasters/answer/16908024`
+- The Cloudflare Blog - Have it both ways: stay discoverable in search while disallowing AI training (September 15, 2026) - `blog.cloudflare.com/accountable-mixed-use-ai-crawlers`
+- Bing Webmaster Blog - Website Migration with Bing, guest guide (December 17, 2020) - `blogs.bing.com/webmaster/2020/12/Website-Migration-with-Bing`
+- OpenAI - Overview of OpenAI crawlers (read November 15, 2026) - `developers.openai.com/api/docs/bots`
+- Bing Webmaster Blog - Introducing AI Performance in Bing Webmaster Tools, public preview (February 2026) - `blogs.bing.com/webmaster/2026/2/Introducing-AI-Performance-in-Bing-Webmaster-Tools-Public-Preview`
+- Perplexity - Perplexity crawlers (read November 15, 2026) - `docs.perplexity.ai/docs/resources/perplexity-crawlers`
+- Anthropic - Does Anthropic crawl data from the web, and how can site owners block the crawler? (updated November 4, 2026) - `support.claude.com/en/articles/8896518`
+- IndexNow - FAQ (read November 15, 2026) - `www.indexnow.org/faq`
+- Google Search Central - Changing your web hosting and SEO (updated December 10, 2025) - `developers.google.com/search/docs/crawling-indexing/site-move-no-url-changes`
+- geotoolbox.ai - Google Search Console data for our retired glossary URLs (pulled November 15, 2026)
