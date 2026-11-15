@@ -30,7 +30,7 @@ export const TOPICS: Topic[] = [
       "gemini-flash-vs-flash-lite", "kimi-k3-vs-claude", "llm-comparison", "best-ai-model", "llm-rankings",
       "claude-models-compared", "sonnet-vs-opus", "perplexity-vs-claude", "claude-vs-perplexity",
       "semrush-vs-ahrefs", "seo-tools", "okf-vs-rag",
-      "ai seo agency", "geo agency", "generative engine optimization",
+      "ai seo agency", "geo agency", "generative engine optimization", "seo-agency",
     ],
   },
   {
