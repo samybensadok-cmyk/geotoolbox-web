@@ -1,0 +1,297 @@
+---
+title: "SEO programático: cómo escalar páginas sin caer en spam"
+description: "El SEO programático crea miles de páginas con una plantilla y una base de datos: cómo funciona, qué persigue Google y qué páginas citan las respuestas de IA."
+date: "2026-11-15"
+updated: "2026-11-15"
+recheckBy: "2026-12-14"  # repetir la prueba (12 prompts + LLM Mentions España), lista 2026 del Panel de Estado de la Búsqueda (actualización principal de noviembre), informes de IA generativa de Search Console
+author: "Samy BEN SADOK"
+tags: ["programmatic-seo", "seo", "ai-search", "content-strategy", "guide"]
+draft: false
+locale: "es"
+donorSlug: "programmatic-seo"
+donorCommit: "6a9717e"
+noindex: false
+---
+
+El SEO programático publica miles de páginas a partir de una plantilla y un conjunto de datos, una página por cada variación de una búsqueda como «USD a EUR» o «pisos en Valencia». Funciona cuando cada página lleva datos que el usuario necesita. Falla cuando solo cambia la palabra clave.
+
+La política de Google sobre contenido a gran escala apunta a ese segundo tipo, sin importar cómo se hayan escrito las páginas. ¿Las respuestas de IA citan páginas de plantilla? Revisamos 300 respuestas de las Vistas creadas con IA de Google en España y lanzamos 12 prompts de plantilla en español: en nuestra muestra, las respuestas a preguntas de datos citaban a menudo páginas de plantilla, y las de integración, más la ayuda, la documentación y los blogs de los fabricantes de las apps (28 de 54 citas) que páginas de plantilla (20).
+
+## Lo que debes saber
+
+- El SEO programático publica una página por fila de un conjunto de datos, y solo funciona si cada fila cambia algo que el lector necesita.
+- Google no penaliza el método, pero su política contra el abuso de contenido a gran escala y de páginas puerta alcanza a las páginas que solo cambian el nombre de la ciudad, y en España además puede entrar en juego la Ley 3/1991 de Competencia Desleal.
+- En nuestra prueba desde España, 77 de las 126 citas de ChatGPT, Perplexity y el Modo IA fueron a páginas de plantilla (44 de 48 en inmobiliaria), pero en las integraciones ganaron la ayuda y los blogs de los fabricantes (28 de 54 citas frente a 20).
+- Publica primero un piloto de 25 a 50 páginas, mide por plantilla y fija una regla de eliminación antes de lanzar.
+
+## Qué es el SEO programático
+
+El **SEO programático** (pSEO, por *programmatic SEO*) consiste en publicar muchas páginas orientadas a búsquedas a partir de una plantilla y un conjunto de datos estructurado, una página por fila. Cada página apunta a una variación de una consulta repetible, como «[app] + [app] integración» o «pisos en [ciudad]».
+
+¿Cómo funciona? Nitin Manchanda lo divide en tres partes: un patrón de búsqueda repetible, un conjunto de datos estructurado y una plantilla. Así las desarrollamos nosotros:
+
+- **Un patrón de búsqueda:** un término principal más los modificadores que la gente busca en muchas combinaciones, cada una con un volumen pequeño
+- **Un conjunto de datos:** las filas que hacen distinta a cada página, como tipos de cambio, anuncios, precios o los disparadores que comparten dos apps
+- **Una plantilla:** el diseño de página que convierte una fila en una respuesta
+
+Después, un script o una importación al CMS publica cada fila como su propia página de destino en tu sitio web.
+
+La [guía de Manchanda en Search Engine Journal](https://www.searchenginejournal.com/good-vs-bad-pseo-learnings-from-a-decade-of-building-scalable-content-engines/594204/), publicada el 10 de noviembre de 2026, describe el SEO programático como una forma de publicar y no como un tipo de contenido.
+
+<table>
+  <thead>
+    <tr><th></th><th>SEO programático</th><th>Páginas SEO tradicionales</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Unidad de trabajo</strong></td><td>Una plantilla y un conjunto de datos</td><td>Una página cada vez, escrita a mano</td></tr>
+    <tr><td><strong>Objetivo</strong></td><td>Cientos o miles de variaciones de cola larga de un mismo patrón</td><td>Un término principal o un grupo de consultas relacionadas</td></tr>
+    <tr><td><strong>Qué hace única a una página</strong></td><td>La fila de datos que la respalda</td><td>La redacción, la investigación y los ejemplos</td></tr>
+    <tr><td><strong>Riesgo principal</strong></td><td>Contenido pobre y duplicado a escala</td><td>Producción lenta y lagunas de cobertura</td></tr>
+    <tr><td><strong>Dónde se mide</strong></td><td>Por plantilla (todo el conjunto de páginas)</td><td>Por página</td></tr>
+  </tbody>
+</table>
+
+Lo decisivo está en las filas «Qué hace única a una página» y «Riesgo principal»: una plantilla multiplica lo que contiene, datos buenos o relleno, en todas las URL a la vez.
+
+## Ejemplos de SEO programático y los datos que hay detrás
+
+Estos ejemplos de SEO programático tienen un rasgo en común: cada página lleva el dato que el usuario venía a buscar.
+
+<table>
+  <thead>
+    <tr><th>Sitio</th><th>Patrón de búsqueda</th><th>Qué cambia en cada página</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Zapier</strong></td><td>«[app] [app] integración»</td><td>Los disparadores, las acciones y los flujos ya preparados para esa pareja de apps</td></tr>
+    <tr><td><strong>Wise</strong></td><td>«[divisa] a [divisa]»</td><td>El tipo de cambio medio del mercado del par y su histórico</td></tr>
+    <tr><td><strong>Idealista</strong> (anuncios)</td><td>«pisos en venta en [ciudad]», «alquiler en [ciudad]»</td><td>Los anuncios en vivo, los precios y los filtros de ese lugar</td></tr>
+    <tr><td><strong>Idealista</strong> (informes de precios)</td><td>«precio de la vivienda en [ciudad]»</td><td>El precio medio por m² de esa ciudad, su variación y el periodo al que corresponde el dato</td></tr>
+  </tbody>
+</table>
+
+Zapier publica una página para cada app y para cada pareja de apps que conecta.
+
+<figure>
+  <BlogImage src="/blog/programmatic-seo/zapier-google-sheets-slack-pagina-integracion-es.png" alt="Página de integración de Zapier para Google Sheets y Slack, con llamadas numeradas sobre la ruta de navegación Aplicaciones, Hojas de cálculo de Google, Slack, el título que nombra las dos apps, los selectores de disparador y de acción y una cuadrícula de flujos de trabajo ya preparados para las dos apps." w="1160" h="1479" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Una página de plantilla para una pareja de apps: Zapier, Google Sheets + Slack. Sin sesión, conexión desde España, capturada el 15 de noviembre de 2026.</figcaption>
+</figure>
+
+Las empresas de software hacen lo mismo con las páginas de integración que tratamos en [SEO para SaaS](https://geotoolbox.ai/blog/saas-seo).
+
+Wise tiene una página de conversor para cada par de divisas.
+
+<figure>
+  <BlogImage src="/blog/programmatic-seo/wise-conversor-usd-eur-es.png" alt="Página del conversor de dólares estadounidenses a euros de Wise, con llamadas numeradas sobre el título que nombra las dos divisas, el tipo de cambio medio del mercado de 1 USD = 0,9073 EUR, el conversor con 1000 USD igual a 907,28 EUR, un gráfico del último mes y los botones de periodo de 48 horas a 5 años." w="1160" h="1812" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Una página por par de divisas: Wise, USD a EUR. Sin sesión, conexión desde España, capturada el 15 de noviembre de 2026.</figcaption>
+</figure>
+
+Idealista genera una página de anuncios para cada ciudad y cada filtro: una búsqueda de casas y pisos en venta en Valencia lleva a una página llena de anuncios en vivo (5.948 casas y pisos el día de la captura).
+
+<figure>
+  <BlogImage src="/blog/programmatic-seo/idealista-valencia-pisos-en-venta-es.png" alt="Página de Idealista con 5.948 casas y pisos en venta en València, con llamadas numeradas sobre el título con el recuento, la ruta de navegación con recuentos por nivel, el orden Relevancia, los filtros de tipo de inmueble y precio, y el primer anuncio, un piso en Jorge Juan a 895.000 euros." w="1160" h="1087" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Una página de ciudad con anuncios en vivo: Idealista, casas y pisos en venta en València, con el orden por defecto de la página y sin filtro de precio. Sin sesión, conexión desde España, capturada el 15 de noviembre de 2026.</figcaption>
+</figure>
+
+En nuestra prueba, más abajo, las respuestas de IA citaron también el mismo tipo de página de Fotocasa, Spotahome, Trovit y Mitula, y de sitios de finanzas (las páginas del BCE para cada divisa, Investing.com, exchange-rates.org y Google Finance).
+
+Si tus páginas solo van a diferenciarse por la palabra clave del título, tienes una lista de palabras clave y nada sobre lo que construir.
+
+## ¿Sigue funcionando? Las reglas de Google sobre contenido a gran escala y páginas puerta
+
+Puede funcionar si respetas dos reglas. Google no penaliza el SEO programático como método: sus políticas de spam apuntan a aquello para lo que se suelen usar las plantillas.
+
+Las [políticas de spam de Google](https://developers.google.com/search/docs/essentials/spam-policies?hl=es) hablan de **abuso de contenido a gran escala** «cuando se generan muchas páginas con la finalidad principal de manipular el posicionamiento de los resultados de búsqueda en lugar de ayudar a los usuarios», una práctica que suele centrarse en crear «grandes cantidades de contenido no original que aporta poco o ningún valor a los usuarios, independientemente de cómo se haya creado». Google añadió la política el [5 de marzo de 2024](https://developers.google.com/search/blog/2024/03/core-update-spam-policies?hl=es).
+
+La misma página define el **abuso de páginas puerta**: sitios o páginas que se crean «para que aparezcan como respuesta a consultas de búsqueda similares y específicas» y que dirigen a los usuarios hacia «páginas intermedias que no son tan útiles como el destino final». Tres ejemplos de las dos listas describen errores típicos del SEO programático:
+
+- «Tener varias páginas o nombres de dominio orientados a regiones o ciudades específicas que canalizan usuarios a una página»
+- Crear páginas muy parecidas entre sí, más cercanas a una página de resultados de búsqueda que a una jerarquía clara por la que se pueda navegar
+- «Utilizar herramientas de IA generativa u otras herramientas similares para generar muchas páginas sin añadir valor para los usuarios»
+
+Google aplica la misma regla a sus funciones de IA. Sobre crear contenido distinto para cada variante de una búsqueda, su [guía para optimizar para las funciones de IA generativa](https://developers.google.com/search/docs/fundamentals/ai-optimization-guide?hl=es) dice que hacerlo «principalmente para manipular el posicionamiento o las respuestas de la IA generativa en la Búsqueda de Google infringe la política de spam de abuso de contenido a gran escala de Google», y añade que esa estrategia no es eficaz a largo plazo.
+
+Google sigue publicando actualizaciones. El [Panel de Estado de la Búsqueda de Google](https://status.search.google.com/products/rGHU1u87FJnkP6W2GwMi/history) registra actualizaciones de spam en marzo, junio, agosto y septiembre de 2026, y una actualización principal que empezó el 10 de noviembre de 2026 y seguía desplegándose el 15 de noviembre.
+
+### La prueba que separa una plantilla de una página puerta
+
+Las políticas de spam no mencionan el SEO programático por su nombre. Describen páginas creadas para posicionar que no le dan nada nuevo al lector. Estas tres preguntas detectan el problema antes que Google:
+
+1. **Cuando cambia la fila, ¿qué más cambia?** En una página de divisas cambian el tipo de cambio, el gráfico y el histórico. En una página puerta solo cambia el nombre de la ciudad.
+2. **¿De dónde salió cada cifra y de cuándo es?** Pasa la prueba una página cuyas cifras salen de una base de datos que alguien mantiene. Las cifras que un modelo de lenguaje adivinó, sin fuente ni fecha, no.
+3. **¿Cada página atiende su propia intención?** Dos filas cuyos modificadores equivalen a la misma búsqueda, como «CRM para dentistas» y «CRM para clínicas dentales», son una sola página. La prueba de Danny Sullivan, tal como la cuenta SEJ, consiste en ver si la intención era conseguir ese tráfico o si de verdad algún usuario esperaba esa página.
+
+John Mueller respondió sobre un sitio que, tal como él lo entendió, recorría combinaciones de nombres de dominio, tecnologías y atributos. En esa [respuesta recogida por Search Engine Roundtable](https://www.seroundtable.com/google-lose-faith-42032.html), escribió que un SEO programático así suele dar lugar a un sitio que es spam, casi spam o de baja calidad, y que los sistemas de Google pueden haber perdido la confianza en el sitio por sus páginas antiguas.
+
+### Cuándo el SEO programático es una mala opción
+
+Evítalo, o mantenlo pequeño, en estos casos:
+
+- **Ninguna fila aporta datos, una herramienta o una comparación que los lectores no encuentren ya.** Las páginas serían reescrituras de un mismo párrafo.
+- **Tus modificadores no cambian la intención.** Los sinónimos y las variantes ortográficas pertenecen a una sola página.
+- **El patrón da unas pocas decenas de páginas.** Escribirlas a mano suele costar menos.
+- **Los datos saldrían de otros sitios y aportarían poco.** Entre los ejemplos de contenido a gran escala, Google incluye «Raspar feeds, resultados de búsqueda u otro contenido para generar muchas páginas» que aportan poco valor a los usuarios.
+- **Las páginas cubrirían ciudades donde no prestas el servicio.** «Fontanero en [ciudad]» sin oficina ni servicio allí recuerda al caso de páginas orientadas a ciudades que Google cita como página puerta.
+
+En España hay además un límite legal. Una página de ciudad que aparenta una sede que no existe también puede ser un acto de engaño: la [Ley 3/1991, de Competencia Desleal](https://www.boe.es/buscar/act.php?id=BOE-A-1991-628), considera desleal la información falsa, o que pueda inducir a error, sobre la «existencia o la naturaleza del bien o servicio» o sobre la identidad del empresario (art. 5), y el [texto refundido de la ley de consumidores](https://www.boe.es/buscar/act.php?id=BOE-A-2007-20555) tipifica como infracción el «uso de prácticas comerciales desleales con los consumidores o usuarios» (art. 47), con multas de entre 150 y 10.000 euros si es leve y de entre 10.001 y 100.000 si es grave, importes que pueden superarse según el beneficio ilícito obtenido (art. 49). No hemos encontrado ninguna sentencia ni sanción española sobre páginas de ciudad falsas: hablamos del texto de la ley. Si atiendes una ciudad sin tener oficina allí, dilo: indica tu zona de servicio y tu domicilio real. Esto no es asesoramiento jurídico.
+
+## ¿Las respuestas de IA citan páginas programáticas? Nuestra prueba
+
+A menudo, cuando la pregunta pide un dato que está en una página de plantilla. En las preguntas de integración, los propios fabricantes de las apps reciben más citas con su ayuda, su documentación y sus blogs que con sus páginas de plantilla.
+
+### Cómo lo hicimos
+
+En geotoolbox hicimos dos comprobaciones desde España, en español, el 15 de noviembre de 2026 (la versión en inglés de este artículo se basa en una prueba hecha en EE. UU. el 13 de noviembre).
+
+**Palabras clave más buscadas.** De la base de datos LLM Mentions de DataForSEO con respuestas de Vistas creadas con IA de Google en España, sacamos, para cada sitio (Zapier, Wise e Idealista), las 100 palabras clave de mayor volumen según DataForSEO cuya respuesta lo cita, vistas por última vez entre el 1 de agosto y el 14 de noviembre de 2026. Muchas son variantes ortográficas de una misma búsqueda: las respuestas citan 56, 68 y 93 páginas distintas de los tres sitios.
+
+Clasificamos esas páginas en páginas de plantilla (integraciones, pares de divisas, códigos bancarios, anuncios y páginas de ubicación) y artículos, con patrones de URL fijados antes de la extracción. Los corregimos dos veces después: se nos habían escapado las páginas de calle, de zona y de búsqueda por lugar de Idealista y las páginas de integración de Zapier en español, y las páginas de cotizaciones y de países de Wise también son páginas por fila. Zapier pasó de 1 a 2 de 100, Wise de 46 a 59 e Idealista de 12 a 54.
+
+**Prompts de cola larga.** Escribimos 12 prompts que una página de plantilla debería responder, cuatro por grupo: integraciones, divisas y códigos bancarios, e inmobiliaria en ciudades españolas. Ninguno nombraba un sitio de páginas de plantilla (los de integración sí nombraban las dos apps). Cada uno terminaba con «Cita tus fuentes.» y se ejecutó una vez en ChatGPT (con la búsqueda web forzada), en la API Sonar de Perplexity y en el Modo IA de Google. Una página contaba solo si la respuesta la citaba. Por «página de plantilla» entendemos cualquier página de un conjunto construido a partir de un patrón, sea del sitio que sea.
+
+### Qué encontramos
+
+Las páginas de plantilla de Zapier casi nunca aparecieron en las respuestas que citan a Zapier para las palabras clave más buscadas: 96 de sus 105 citas fueron a artículos de blog sobre temas amplios, 7 a su página de inicio y a páginas de producto y 2 a páginas de integración. Las páginas por fila de Wise (pares de divisas, códigos bancarios, cotizaciones y países) se citaron en 59 de 100 respuestas, y las páginas de anuncios y de ubicación de Idealista, en 54.
+
+En los 12 prompts de plantilla, 77 de las 126 citas fueron a páginas de plantilla, y 29 de las 36 respuestas citaron al menos una (la respuesta del Modo IA sobre el euro y la libra no mostró ninguna fuente).
+
+<figure>
+  <BlogImage src="/blog/programmatic-seo/ai-answers-template-page-citations-test-es.png" alt="Gráfico de barras de nuestra prueba. Palabras clave más buscadas en las Vistas creadas con IA de España: respuestas que citan una página de plantilla, Zapier 2 de 100 con 105 citas casi todas a blog, Wise 59 de 100, Idealista 54 de 100 (con nuestras primeras reglas de URL: Zapier 1, Wise 46, Idealista 12). Prompts de cola larga en ChatGPT, Perplexity y el Modo IA de Google: citas que van a páginas de plantilla, integraciones 20 de 54 (las páginas de ayuda, documentación y blogs de los fabricantes, otras 28), divisas y códigos bancarios 13 de 24, inmobiliaria por ciudad 44 de 48." w="1100" h="826" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Nuestra prueba, España: 300 respuestas de Vistas creadas con IA de la base de datos LLM Mentions de DataForSEO (vistas por última vez entre el 1 de agosto y el 14 de noviembre de 2026) y 126 citas en 36 respuestas a 12 prompts de plantilla (15 de noviembre de 2026).</figcaption>
+</figure>
+
+En las preguntas de datos hubo más páginas de plantilla: 13 de 24 citas en divisas y códigos bancarios, y 44 de 48 en inmobiliaria. En los prompts de integración, 20 de 54 citas correspondieron a páginas de integración o de directorios de apps, 28 a las páginas de ayuda, la documentación y los blogs de los propios fabricantes (9 de ellas de Calendly, todas en un solo prompt) y 6 a otros artículos prácticos.
+
+Una diferencia española: para el tipo de cambio entre el euro y la libra, 4 de 5 citas fueron páginas de plantilla (tres de ellas, la página del BCE para una divisa concreta); para el franco suizo, 3 de 5 (ni el feed de tipos del Banco Nacional de Suiza ni la herramienta de conversión de XE lo eran); y para el BIC de Banco Santander en Madrid, solo 2 de 8, mientras que el resto fue la calculadora SWIFT del propio banco, otras páginas suyas y un artículo.
+
+Cuando le preguntamos por el BIC de Banco Santander en Madrid, el Modo IA de Google citó, en la ejecución de la prueba, la calculadora SWIFT del propio banco y las páginas de códigos SWIFT de Wise y Remitly: 2 de sus 3 fuentes eran páginas de plantilla.
+
+<figure>
+  <BlogImage src="/blog/programmatic-seo/google-modo-ia-codigo-bic-banco-santander-es.png" alt="Respuesta del Modo IA de Google a la pregunta «¿Cuál es el código BIC de Banco Santander en Madrid?», con el código BSCHESMMXXX, el desglose de sus letras, etiquetas de fuente de Banco Santander y un panel con tres tarjetas de fuentes: dos de Banco Santander con el título «Calcular SWIFT y BIC» y una de Wise con el código BSCHESMMXXX." w="1160" h="1055" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">El Modo IA de Google, sin sesión y desde España (Google lo ubicó en la Comunidad de Madrid), con la misma pregunta, recapturado el 15 de noviembre de 2026. En esta captura posterior las tarjetas de fuentes son dos de Banco Santander y una de Wise; no coinciden exactamente con las fuentes de la ejecución de la prueba.</figcaption>
+</figure>
+
+### Qué hace citable a una página de plantilla
+
+Doce prompts ejecutados una vez no aíslan causas, pero cuando el prompt pedía un listado, un alquiler o un precio por ciudad, las páginas de plantilla se llevaron la mayoría de las citas (alquiler de un estudio en Madrid, 11 de 11; pisos en Valencia, 10 de 10; casas en Bilbao, 8 de 10). La página de integración de una app también es una página de plantilla: la de Calendly con Salesforce figura entre las 20, y la ayuda y el blog de Calendly sumaron 9 más.
+
+<figure>
+  <BlogImage src="/blog/programmatic-seo/calendly-salesforce-pagina-integracion-es.png" alt="Página de integración de Calendly con Salesforce, con llamadas numeradas sobre el título Calendly + Salesforce, la etiqueta Desarrollado por Calendly, el enlace Ver artículos de ayuda y la descripción general de la integración." w="1160" h="1049" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Calendly + Salesforce: la página de integración de una app, una por aplicación asociada, enlazada con sus artículos de ayuda. Sin sesión, conexión desde España, capturada el 15 de noviembre de 2026.</figcaption>
+</figure>
+
+En las palabras clave amplias, las respuestas citaron los artículos de Zapier: sigue construyendo [autoridad temática](https://geotoolbox.ai/blog/topical-authority) alrededor de tus conjuntos de páginas. Comprueba también el acceso de los rastreadores: un bloqueo en robots.txt para un bot de IA detiene a ese rastreador, mientras que las funciones de IA de Google se apoyan en Googlebot y algunos asistentes obtienen las páginas cuando un usuario lo pide (nuestra guía de [rastreadores de IA](https://geotoolbox.ai/blog/ai-crawlers) explica cuáles).
+
+## Cómo montar un proyecto de SEO programático, paso a paso
+
+En una estrategia de SEO programático, los datos y los controles de calidad van antes que la escala: cada fila pasa un control de completitud antes de poder convertirse en página, y al principio solo se publica un lote piloto.
+
+<figure>
+  <BlogImage src="/blog/programmatic-seo/programatico-pipeline-controles-es.png" alt="Diagrama de un proyecto de SEO programático: patrón de búsqueda, base de datos, un control de completitud marcado como control 1, plantilla y un lote piloto de 25 a 50 páginas marcado como control 2, seguido de los resultados: ampliar el conjunto por fases, o mejorar las páginas, devolver un 410 o fusionarlas antes de publicar más." w="1100" h="536" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">Controles de calidad antes de escalar un conjunto de páginas. El tamaño del lote piloto y la regla de completitud siguen la guía de Nitin Manchanda en Search Engine Journal.</figcaption>
+</figure>
+
+### 1. Encuentra un patrón con demanda real
+
+Parte de un término principal y de los modificadores que la gente le añade: «[app] + [app] integración», «[herramienta A] vs [herramienta B]», «[producto] para [sector]». Haz una investigación de palabras clave sobre una muestra de combinaciones para confirmar que tienen volumen de búsqueda.
+
+Después comprueba que cada modificador cambia la intención de búsqueda. En el [SEO B2B](https://geotoolbox.ai/blog/b2b-seo), un patrón «[servicio] para [sector]» solo se sostiene si cada página de sector lleva sus propias especificaciones y pruebas.
+
+### 2. Consigue datos que cambien en cada página
+
+Sirven tus propios datos de producto, los feeds de socios, los conjuntos de datos públicos con licencia, las API y el contenido de los usuarios, como las reseñas. Fija un mínimo antes de publicar nada: la [lista de comprobación de Manchanda](https://www.searchenginejournal.com/good-vs-bad-pseo-learnings-from-a-decade-of-building-scalable-content-engines/594204/) pide definir la completitud mínima de datos para que una fila genere una página y exigirla en el código.
+
+Asigna un responsable y un calendario de actualización a cada campo que cambia, o todo el conjunto de páginas se queda obsoleto a la vez. La página de precios de Idealista para cada ciudad sale de una misma plantilla, pero las cifras de cada ciudad vienen de sus propios datos: la de Bilbao muestra 4.219 €/m² en octubre de 2026, con su variación mensual, trimestral y anual, e indica el periodo al que corresponde el dato.
+
+<figure>
+  <BlogImage src="/blog/programmatic-seo/idealista-precio-vivienda-bilbao-es.png" alt="Informe de precios de la vivienda en venta en Bilbao de Idealista, de octubre de 2026, con llamadas numeradas sobre el título, el periodo, los selectores de comunidad, provincia y municipio, un precio de 4.219 euros por m², su variación frente a septiembre y julio de 2026 y a octubre de 2025, un gráfico desde 2008 y la fila de Bilbao de la tabla por distritos." w="1160" h="1680" sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto rounded-2xl border border-[var(--surface-warm-border)]" />
+  <figcaption className="mt-3 text-center text-sm text-gray-500">La misma plantilla para cada municipio, rellena con los datos de ese municipio y el periodo al que corresponden: Idealista, Bilbao, octubre de 2026. Sin sesión, conexión desde España, capturada el 15 de noviembre de 2026.</figcaption>
+</figure>
+
+### 3. Diseña la plantilla alrededor de los datos
+
+Divide la plantilla de página en partes fijas (diseño, notas de método, navegación) y partes variables que se rellenan desde la fila. Muestra de dónde sale cada cifra y cuándo se actualizó por última vez. Deja que los títulos y las metadescripciones varíen con los datos, y genera los datos estructurados JSON-LD de la página desde la misma fila (consulta [el marcado schema para IA](https://geotoolbox.ai/blog/schema-markup-for-ai)).
+
+Los nombres de lugar españoles piden un cuidado extra. Los nombres oficiales de los 8.132 municipios de España (INE, 1 de enero de 2026) no están pensados para una URL: 2.075 llevan tildes, eñes u otros caracteres no ASCII, 608 llevan el artículo pospuesto («Coruña, A») y 130 son dobles («Donostia/San Sebastián»). La [guía de Google sobre la estructura de las URL](https://developers.google.com/search/docs/crawling-indexing/url-structure?hl=es) recomienda usar palabras en el idioma de tu audiencia y codificar con porcentajes los caracteres no ASCII en los enlaces. Nuestra recomendación, que no es de Google: genera el slug en la plantilla con una sola forma por fila (a-coruna, donostia-san-sebastian), redirige con un 301 las demás variantes y deja que la plantilla resuelva el artículo y la preposición en el texto («en A Coruña», «en Las Palmas de Gran Canaria»). Usa el código INE como clave de la fila y no el nombre: 17 nombres, como Sada o Mieres, corresponden cada uno a dos municipios distintos.
+
+### 4. Elige herramientas de SEO programático que encajen con tu equipo
+
+Los equipos pequeños trabajan con una hoja de cálculo o una base de Airtable que alimenta Webflow o WordPress mediante un plugin de importación. Los más grandes generan las páginas desde una base de datos en un framework como Next.js.
+
+Si una IA redacta el texto que une los datos, se aplica la [guía de Google sobre contenido de IA generativa](https://developers.google.com/search/docs/fundamentals/using-gen-ai-content?hl=es): «céntrate en la exactitud, la calidad y la relevancia, sobre todo si se trata de contenido generado automáticamente». Pídele al modelo que describa tus datos y revisa lo que escribe.
+
+### 5. Lanza un lote piloto
+
+Publica primero entre 25 y 50 páginas. Manchanda considera que publicar 10.000 páginas antes de conocer la tasa de indexación es el fallo más común de esta disciplina, y recomienda leer unas diez páginas enteras en el lanzamiento.
+
+### 6. Enlázalo con el resto del sitio
+
+Planifica el enlazado interno: da a cada conjunto de páginas una página central (hub), migas de pan y enlaces entre filas relacionadas (ciudades cercanas, otros pares de la misma app). Las páginas a las que solo se llega por el sitemap se rastrean e indexan peor. Responde las subpreguntas relacionadas en la página a la que corresponden, como explicamos en nuestra guía de [query fan-out](https://geotoolbox.ai/blog/query-fan-out) (la «ramificación de búsquedas» de Google).
+
+## Cómo lograr que Google indexe miles de páginas
+
+Publicar un conjunto de páginas no hace que se indexe. En el informe «Indexación de páginas» de Search Console, las páginas programáticas tienden a acumularse en dos estados:
+
+- **Descubierta: actualmente sin indexar:** Google ha encontrado la URL, pero todavía no la ha rastreado. Según la [ayuda de Google](https://support.google.com/webmasters/answer/7440203?hl=es), probablemente porque determinó que rastrearla sobrecargaría el sitio.
+- **Rastreada: actualmente sin indexar:** Google ha rastreado la página y ha decidido no indexarla. Google dice que este mensaje es habitual en muchos sitios, pero si una gran parte de una misma plantilla acaba aquí, comprueba si sus páginas se parecen demasiado entre sí.
+
+El presupuesto de rastreo, uno de los temas de nuestra guía de [SEO técnico](https://geotoolbox.ai/blog/technical-seo), importa sobre todo a gran escala. La [guía de presupuesto de rastreo de Google](https://developers.google.com/crawling/docs/crawl-budget?hl=es) está pensada para sitios con más de un millón de páginas únicas que cambian más o menos cada semana, con más de 10.000 que cambian a diario o con una gran parte de sus URL atascadas en «Descubierta: actualmente sin indexar». Google aclara que no son umbrales exactos.
+
+Estas correcciones atacan las causas más comunes en los conjuntos de páginas:
+
+1. **Devuelve un 404 o un 410 en las filas que nunca tendrán datos** en lugar de una página de «sin resultados» con estado 200. La guía de presupuesto de rastreo avisa de que las páginas con errores soft 404 se siguen rastreando y consumen parte del presupuesto, y desaconseja usar noindex en las páginas que no quieres que se rastreen. Una página a la que hoy le faltan datos puede quedarse si aún muestra cifras útiles.
+2. **Divide el sitemap XML por plantilla** para ver cuántas páginas de cada conjunto están indexadas (consulta nuestra guía de [sitemaps XML](https://geotoolbox.ai/blog/xml-sitemap))
+3. **Consolida los duplicados reales** con [etiquetas canónicas](https://geotoolbox.ai/blog/canonical-tags), por ejemplo una variante de filtro que devuelve el mismo conjunto que otra URL. Una página de filtro con su propio conjunto de resultados, como los pisos en venta en Valencia con un precio máximo en Idealista, puede seguir siendo indexable.
+4. **Revisa el HTML renderizado** en los frameworks de JavaScript, donde un título que falta o un código de estado erróneo puede pasar por un problema de contenido (la guía de [SEO para JavaScript](https://geotoolbox.ai/blog/javascript-seo) explica las comprobaciones)
+
+## Cómo medir por plantilla y qué hacer cuando baja el tráfico
+
+Juzga un conjunto de páginas como un todo: usa el informe «Indexación de páginas» de Search Console para ver qué parte de las URL de una plantilla está indexada, y el informe «Rendimiento», filtrado con una expresión regular de página como `/integrations/` (el filtro «Personalizada (regex)»), para ver impresiones, clics y posición media. Mide en tu herramienta de analítica las conversiones que generan esas páginas.
+
+El [informe de rendimiento de IA generativa](https://developers.google.com/search/blog/2026/06/gen-ai-performance-reports?hl=es) de Search Console, lanzado el 3 de junio de 2026 y disponible desde el 31 de agosto de 2026 para todos los sitios web del mundo según Google, muestra cuántas veces aparecen tus URL en las Vistas creadas con IA y en el Modo IA. En España, las Vistas creadas con IA funcionan desde el 26 de marzo de 2025 y el Modo IA desde el 8 de octubre de 2025, y el informe cubre también las propiedades españolas. Agrupa esas URL por plantilla.
+
+Fija una regla de eliminación antes del lanzamiento. La de Manchanda dice que, si una parte determinada de un conjunto de páginas no recibe impresiones, ni siquiera en las funciones de IA, en un plazo determinado, hay que podarla o fusionarla. Elige la parte y el plazo antes de publicar, y confirma que las páginas están indexadas antes de podar.
+
+Cuando un conjunto de páginas pierde tráfico tras una actualización, abre primero el informe «Acciones manuales». Una [acción manual](https://support.google.com/webmasters/answer/9044175?hl=es) enumera los patrones de URL afectados, o todo el sitio, y exige una corrección y una solicitud de reconsideración; una caída algorítmica exige diagnóstico, corrección y tiempo. Luego ajusta la solución a cada página:
+
+<table>
+  <thead>
+    <tr><th>Situación</th><th>Acción</th><th>Por qué</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>La página tiene datos útiles pero una presentación pobre</td><td>Mejórala: añade los campos, las fuentes y las fechas que faltan</td><td>Los datos justifican que la página exista</td></tr>
+    <tr><td>La fila no tiene datos ni perspectivas de tenerlos</td><td>Devuelve un 410 (o un 404)</td><td>Indica a Google que la página ya no existe, y esta sale del índice</td></tr>
+    <tr><td>La página duplica otra más fuerte del conjunto</td><td>Redirígela con un 301 a esa página, o fusiona ambas</td><td>Una URL por intención</td></tr>
+    <tr><td>La página ayuda a los visitantes dentro del sitio pero no tiene demanda de búsqueda</td><td>Consérvala y añade noindex</td><td>Sigue siendo útil en la navegación y queda fuera del índice; a gran escala, bloquea en robots.txt las rutas aún no indexadas</td></tr>
+    <tr><td>La mayor parte del conjunto es casi un duplicado</td><td>Deja de publicar y reduce el conjunto a las páginas que defenderías una por una</td><td>Los sistemas de Google pueden juzgar todo el sitio, no solo las páginas débiles</td></tr>
+  </tbody>
+</table>
+
+La recuperación es lenta. En la misma respuesta, Mueller escribió que resolverlo suele llevar tiempo y un esfuerzo considerable para demostrar el valor.
+
+## Empieza por una plantilla
+
+Elige el patrón de búsqueda en el que tus datos son la mejor respuesta de todo internet, lanza un piloto pequeño y lee tú mismo las páginas antes de publicar más.
+
+Por último, comprueba que los rastreadores pueden llegar a ellas. El [robots.txt Tester](https://geotoolbox.ai/tools/robots-txt-tester) gratuito de geotoolbox (interfaz en inglés) contrasta cualquier URL con el robots.txt de un sitio según las reglas de coincidencia de Google, así que puedes confirmar que una ruta de plantilla como `/integrations/` está abierta antes de escalar.
+
+## Fuentes
+
+- Políticas de spam de la Búsqueda web de Google - Centro de la Búsqueda de Google, actualizado el 1 de septiembre de 2026 (ES) - `developers.google.com/search/docs/essentials/spam-policies`
+- Qué deben saber los creadores web sobre la actualización principal de marzo del 2024 y las nuevas políticas de spam - Google Search Central Blog, 5 de marzo de 2024 - `developers.google.com/search/blog/2024/03/core-update-spam-policies`
+- Guía de Google sobre la optimización para las funciones de IA generativa de la Búsqueda de Google - Centro de la Búsqueda de Google, actualizado el 15 de julio de 2026 (ES) - `developers.google.com/search/docs/fundamentals/ai-optimization-guide`
+- History for Ranking - Google Search Status Dashboard, consultado el 15 de noviembre de 2026 - `status.search.google.com/products/rGHU1u87FJnkP6W2GwMi/history`
+- Google Can Lose Faith In Sites Based On Low Value Programmatic SEO Pages - Search Engine Roundtable, 7 de septiembre de 2026 - `seroundtable.com/google-lose-faith-42032.html`
+- Good vs. Bad pSEO: Learnings From A Decade Of Building Scalable Content Engines - Search Engine Journal (Nitin Manchanda), 10 de noviembre de 2026 - `searchenginejournal.com/good-vs-bad-pseo-learnings-from-a-decade-of-building-scalable-content-engines/594204/`
+- Informe «Indexación de páginas» - Ayuda de Search Console - `support.google.com/webmasters/answer/7440203`
+- Gestión del presupuesto de rastreo - Infraestructura de rastreo de Google, actualizado el 16 de septiembre de 2026 (ES) - `developers.google.com/crawling/docs/crawl-budget`
+- Directrices de la Búsqueda de Google sobre el uso de contenido generado por IA en tu sitio web - Centro de la Búsqueda de Google, actualizado el 5 de octubre de 2026 (ES) - `developers.google.com/search/docs/fundamentals/using-gen-ai-content`
+- Presentamos los informes de rendimiento de la IA generativa en la Búsqueda en Search Console - Google Search Central Blog, 3 de junio de 2026 - `developers.google.com/search/blog/2026/06/gen-ai-performance-reports`
+- Informe «Rendimiento» (resultados de la Búsqueda): filtros y comparaciones avanzados - Ayuda de Search Console - `support.google.com/webmasters/answer/17011165`
+- Informe «Acciones manuales» - Ayuda de Search Console - `support.google.com/webmasters/answer/9044175`
+- La Vista creada con IA en la Búsqueda llega a Europa - Blog de Google España, 26 de marzo de 2025 - `blog.google/intl/es-es/productos/la-vista-creada-con-ia-en-la-busqueda-llega-a-europa/`
+- La Búsqueda de Google: el Modo IA llega a España - Blog de Google España, 8 de octubre de 2025 - `blog.google/intl/es-es/productos/la-busqueda-de-google-el-modo-ia-llega-a-espana/`
+- Prácticas recomendadas para la estructura de las URLs en la Búsqueda de Google - Centro de la Búsqueda de Google, actualizado el 5 de noviembre de 2026 (ES) - `developers.google.com/search/docs/crawling-indexing/url-structure`
+- Ley 3/1991, de 10 de enero, de Competencia Desleal (texto consolidado, última actualización publicada el 27 de diciembre de 2025) - BOE - `boe.es/buscar/act.php?id=BOE-A-1991-628`
+- Real Decreto Legislativo 1/2007, texto refundido de la Ley General para la Defensa de los Consumidores y Usuarios (texto consolidado, última actualización publicada el 4 de noviembre de 2026) - BOE - `boe.es/buscar/act.php?id=BOE-A-2007-20555`
+- Relación de municipios y códigos por comunidades autónomas y provincias a 1 de enero de 2026 - INE, archivo modificado el 13 de marzo de 2026, consultado el 15 de noviembre de 2026 - `ine.es/daco/daco42/codmun/diccionario26.xlsx`
+- Nuestros datos de prueba: DataForSEO LLM Mentions (Vistas creadas con IA, España, español, respuestas vistas por última vez entre el 1 de agosto y el 14 de noviembre de 2026) y 12 prompts en español en ChatGPT, Perplexity Sonar y el Modo IA de Google, 15 de noviembre de 2026
