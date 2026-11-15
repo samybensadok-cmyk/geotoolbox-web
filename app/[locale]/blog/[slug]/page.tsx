@@ -175,6 +175,32 @@ const RELATED_FEATURES: Record<string, { slug: string; name: string; blurb: stri
       dot: "bg-slate-500",
     },
   ],
+  de: [
+    {
+      slug: "geo-scan",
+      name: "GEO Scan",
+      blurb: "Miss, wie 8 KI-Engines deine Marke zu jedem Keyword zitieren. Ergebnis in Minuten.",
+      bg: "bg-[var(--surface-mint)]",
+      border: "border-[var(--surface-mint-border)]",
+      dot: "bg-accent-500",
+    },
+    {
+      slug: "content-analyzer",
+      name: "Content Analyzer",
+      blurb: "Bewerte jede URL von A bis F nach Zitierbarkeit durch KI. 21 Signale, samt der exakten Korrekturen.",
+      bg: "bg-[var(--surface-lilac)]",
+      border: "border-[var(--surface-lilac-border)]",
+      dot: "bg-indigo-500",
+    },
+    {
+      slug: "domain-overview",
+      name: "Domain Overview",
+      blurb: "Die Kommandozentrale für deine KI-Sichtbarkeit. Alle Scans in einer Ansicht.",
+      bg: "bg-[var(--surface-steel)]",
+      border: "border-[var(--surface-steel-border)]",
+      dot: "bg-slate-500",
+    },
+  ],
 }
 
 export default async function BlogPost({

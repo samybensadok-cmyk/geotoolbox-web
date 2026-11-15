@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { getTranslations, getLocale } from "next-intl/server"
+import { makeLocalizer } from "@/lib/i18n/siblings"
 
 type Faq = { q: string; a: string }
 
@@ -7,12 +8,9 @@ export async function Playbook() {
   const t = await getTranslations("home.playbook")
   const locale = await getLocale()
   const faqs = t.raw("faqs") as Faq[]
-  const guideHref =
-    locale === "fr"
-      ? "/fr/blog/generative-engine-optimization"
-      : locale === "es"
-        ? "/es/blog/que-es-geo"
-        : "/blog/what-is-geo"
+  // Pillar guide: the localized sibling of the EN article (donorSlug map, the
+  // same source as hreflang); falls back to the EN guide when a locale has none.
+  const guideHref = makeLocalizer(locale)("/blog/what-is-geo")
 
   const faqJsonLd = {
     "@context": "https://schema.org",

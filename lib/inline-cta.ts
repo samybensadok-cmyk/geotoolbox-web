@@ -75,7 +75,7 @@ const TARGET_DEPTH = 0.66
 // `H2` map). It always follows the FAQ H2, so it is already excluded transitively — listed
 // anyway, because a pattern missing from here fails silently rather than loudly.
 const TERMINAL_H2 =
-  /^(frequently asked|faqs?\b|more questions|sources|references|further reading|foire aux questions|questions fr[ée]quentes|preguntas frecuentes|fuentes|referencias|m[áa]s informaci[óo]n)/i
+  /^(frequently asked|faqs?\b|more questions|sources|references|further reading|foire aux questions|questions fr[ée]quentes|preguntas frecuentes|fuentes|referencias|m[áa]s informaci[óo]n|h[äa]ufige fragen|quellen)/i
 // any in-body link to a product/tool surface counts as an existing CTA
 const CTA_LINK = /\(\/(app|features|tools)([/)#?]|$)/
 
@@ -155,7 +155,7 @@ export function injectInlineCta(post: Post): { source: string; injected: boolean
  * Topic routing table, most specific first. Each entry maps a subject the
  * article is actually ABOUT to the free tool that answers the reader's next
  * question about their OWN site. Patterns are matched against the article body
- * (lowercased) plus its slug and tags, and are written in EN + FR + ES because
+ * (lowercased) plus its slug and tags, and are written in EN + FR + ES + DE because
  * the same component serves all three locales and the bodies are transcreated,
  * not translated.
  *
@@ -181,12 +181,12 @@ const TOPIC_ROUTES: { target: Exclude<InlineCtaTarget, "signup">; pattern: RegEx
   },
   {
     target: "query-fanout",
-    pattern: /query fan-?out|fan-?out|follow-?up quer|sub-?quer|requête dérivée|éclatement de requête|consulta derivada|abanico de consultas/gi,
+    pattern: /query fan-?out|fan-?out|follow-?up quer|sub-?quer|requête dérivée|éclatement de requête|consulta derivada|abanico de consultas|unterfrage|teilanfrage|folgefrage|abgeleitete anfrage/gi,
     min: 3,
   },
   {
     target: "keyword-to-prompts",
-    pattern: /keyword research|keyword volume|search volume|keyword cluster|recherche de mots-?clés|volume de recherche|investigación de palabras clave|volumen de búsqueda/gi,
+    pattern: /keyword research|keyword volume|search volume|keyword cluster|recherche de mots-?clés|volume de recherche|investigación de palabras clave|volumen de búsqueda|keyword-recherche|suchvolumen|keyword-cluster|keyword-volumen/gi,
     min: 3,
   },
 ]

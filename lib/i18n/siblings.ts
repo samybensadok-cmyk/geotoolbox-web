@@ -1,6 +1,7 @@
 import { getAllPosts, getAllGlossaryTerms } from "@/lib/content"
 import { routing, bcp47, type Locale } from "@/i18n/routing"
 import { siteConfig } from "@/lib/config"
+import { createHrefLocalizer } from "./localize-href"
 
 type Kind = "blog" | "glossary"
 
@@ -98,35 +99,26 @@ export function marketingAlternatesFor(path: string, locale: string) {
   return { canonical, languages }
 }
 
-// Per-locale internal-link localizer for MDX body links. Given an href, it
-// rewrites an internal /blog/<en-slug> or /glossary/<en-slug> (relative OR
-// absolute geotoolbox.ai/...) to the localized sibling for `locale` when one
-// exists, preserving the origin style and any trailing /#? suffix. Links whose
-// EN slug has no sibling in this locale (EN-only pages), already-localized
-// links (/fr/blog/...), and non-content/external links are returned unchanged.
-// Built from the SAME donor-slug sibling map that drives hreflang, so an
-// in-body link and the page's hreflang can never point at different siblings.
-// For the default locale (en, the hub) it's a no-op — no index build, no cost.
+// Per-locale internal-link localizer for MDX body links and the .md twins.
+// Given an href, it rewrites an internal /blog/<en-slug> or /glossary/<en-slug>
+// (relative OR absolute geotoolbox.ai/...) to the localized sibling for `locale`
+// when one exists, and /pricing, /features and /features/<slug> to their
+// /<locale>/... form when that route is mounted under app/[locale]/ (see
+// localized-routes.ts), preserving the origin style and any trailing /#? suffix.
+// Links whose EN slug has no sibling in this locale (EN-only pages), EN-only
+// routes (e.g. the /features/content-brief redirect), already-localized links
+// (/fr/blog/..., /fr/pricing), and non-content/external links are returned
+// unchanged, so applying it twice is a no-op. Built from the SAME donor-slug
+// sibling map that drives hreflang, so an in-body link and the page's hreflang
+// can never point at different siblings. For the default locale (en, the hub)
+// it's a no-op: no index build, no cost.
 export function makeLocalizer(locale: string): (href: string) => string {
   if (locale === routing.defaultLocale) return (href) => href
   const idx: Record<Kind, Map<string, Record<string, string>>> = {
     blog: siblingIndex("blog"),
     glossary: siblingIndex("glossary"),
   }
-  // Optional origin, then /blog|/glossary, the slug, then an optional
-  // /#? suffix. Note this does NOT match /fr/blog/... (path must START with
-  // /blog or /glossary), so already-localized links pass through untouched.
-  const re = /^(https?:\/\/(?:www\.)?geotoolbox\.ai)?\/(blog|glossary)\/([a-z0-9-]+)([/#?].*)?$/i
-  return (href: string): string => {
-    if (!href) return href
-    const m = href.match(re)
-    if (!m) return href
-    const [, origin, kind, slug, suffix = ""] = m
-    const target = idx[kind as Kind].get(slug)?.[locale]
-    if (!target) return href // no sibling in this locale -> keep the EN link
-    const path = `/${locale}/${kind}/${target}${suffix}`
-    return origin ? `${origin}${path}` : path
-  }
+  return createHrefLocalizer(locale, routing.defaultLocale, (kind, slug) => idx[kind].get(slug)?.[locale])
 }
 
 // All indexable content URLs across locales, for the sitemap (spec §5).

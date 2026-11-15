@@ -181,6 +181,38 @@ const variants: Record<string, Record<InlineCtaTarget, Variant>> = {
       href: `/tools/keyword-to-prompts`,
     },
   },
+  de: {
+    signup: {
+      text: "Du vergleichst Tools? Sieh dir das Ergebnis zuerst an deiner eigenen Domain an: ein Scan über bis zu 8 KI-Engines, 7 Tage kostenlos testen.",
+      button: "Kostenlos testen",
+      href: SIGNUP_BASE,   // replaced per-render by signupHref(locale) — see InlineCta below
+    },
+    "ai-readiness": {
+      text: "Neugierig, wie deine eigene Website abschneidet? Starte den kostenlosen KI-Readiness-Check: fünf Live-Prüfungen für deine Domain, ohne Konto.",
+      button: "Website kostenlos prüfen",
+      href: `/tools/ai-readiness`,
+    },
+    "ai-crawler-checker": {
+      text: "Welche KI-Crawler lässt deine robots.txt durch? Prüfe sie gegen alle großen KI-Bots: kostenlos, ohne Konto.",
+      button: "Crawler prüfen",
+      href: `/tools/ai-crawler-checker`,
+    },
+    "llms-txt-checker": {
+      text: "Ist deine llms.txt gültig? Prüfe sie in Sekunden gegen die Spezifikation: kostenlos, ohne Konto.",
+      button: "llms.txt prüfen",
+      href: `/tools/llms-txt-checker`,
+    },
+    "query-fanout": {
+      text: "Sieh dir die echten Unterfragen an, die eine KI-Engine zu deinem Thema auslöst: kostenlos, im Browser und mit deinem eigenen Gemini-Key.",
+      button: "Fan-out starten",
+      href: `/tools/query-fanout`,
+    },
+    "keyword-to-prompts": {
+      text: "Mach aus einem Keyword rund 15 Dialog-Prompts in sechs Intentionen, markiert sind die, in denen Marken auftauchen: kostenlos, ohne Konto.",
+      button: "Keyword in Prompts umwandeln",
+      href: `/tools/keyword-to-prompts`,
+    },
+  },
 }
 
 /**

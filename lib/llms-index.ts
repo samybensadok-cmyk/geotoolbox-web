@@ -52,6 +52,7 @@ export function buildLlmsIndex(): string {
   const posts = getAllPosts("en")
   const frPosts = getAllPosts("fr")
   const esPosts = getAllPosts("es")
+  const dePosts = getAllPosts("de")
   const features = siteConfig.featureGroups.flatMap((g) =>
     g.features.map((f) => `- [${f.name}](${base}/features/${f.slug}): ${f.desc}`)
   )
@@ -87,7 +88,7 @@ export function buildLlmsIndex(): string {
     `## Blog (${posts.length} English articles)`,
     "",
     `- [Blog index](${base}/blog): every article, newest first`,
-    `- [Complete article index, all locales](${base}/llms-blog.txt): every published article in en, fr and es`,
+    `- [Complete article index, all locales](${base}/llms-blog.txt): every published article in en, fr, es and de`,
     `- [Full text of every English article](${base}/llms-full.txt): one fetch, no per-article requests`,
     "",
     `The ${Math.min(RECENT_LIMIT, posts.length)} most recent:`,
@@ -103,6 +104,11 @@ export function buildLlmsIndex(): string {
     "",
     `- [Blog en español](${base}/es/blog)`,
     `- [Índice completo de artículos](${base}/llms-blog.txt)`,
+    "",
+    `## Deutsch (${dePosts.length} Artikel)`,
+    "",
+    `- [Blog auf Deutsch](${base}/de/blog)`,
+    `- [Vollständiger Artikelindex](${base}/llms-blog.txt)`,
     "",
     "## Optional",
     "",
@@ -164,7 +170,7 @@ export function buildAgentsMd(): string {
     "| --- | --- |",
     `| [/llms.txt](${base}/llms.txt) | Navigation index: what this site is, when to use it, links to every section |`,
     `| [/llms-full.txt](${base}/llms-full.txt) | Full text of every English article in one fetch |`,
-    `| [/llms-blog.txt](${base}/llms-blog.txt) | Complete article index, all locales (en, fr, es) |`,
+    `| [/llms-blog.txt](${base}/llms-blog.txt) | Complete article index, all locales (en, fr, es, de) |`,
     `| [/home.md](${base}/home.md) | Markdown twin of the homepage |`,
     `| [/404.md](${base}/404.md) | The not-found recovery document (returns HTTP 404 by design) |`,
     `| [/sitemap.xml](${base}/sitemap.xml) | Every indexable URL, with lastmod |`,
