@@ -208,7 +208,7 @@ const variants: Record<string, Record<InlineCtaTarget, Variant>> = {
       href: `/tools/query-fanout`,
     },
     "keyword-to-prompts": {
-      text: "Mach aus einem Keyword rund 15 Dialog-Prompts in sechs Intentionen, markiert sind die, in denen Marken auftauchen: kostenlos, ohne Konto.",
+      text: "Mach aus einem Keyword rund 15 Dialog-Prompts zu sechs Suchintentionen; die Prompts, in denen Marken auftauchen, sind markiert. Kostenlos, ohne Konto.",
       button: "Keyword in Prompts umwandeln",
       href: `/tools/keyword-to-prompts`,
     },
