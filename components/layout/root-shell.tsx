@@ -5,6 +5,7 @@ import { PromoBanner } from "@/components/layout/promo-banner"
 import { ExitIntentPopup } from "@/components/layout/exit-intent-popup"
 import { SaleBanner } from "@/components/layout/sale-banner"
 import { AnnualBonusBanner } from "@/components/layout/annual-bonus-banner"
+import { BlackFridayBanner } from "@/components/layout/black-friday-banner"
 import { ReportExitPopup } from "@/components/layout/report-exit-popup"
 import { ConsentManager } from "@/components/consent/consent-manager"
 import { ImageLightbox } from "@/components/ui/image-lightbox"
@@ -93,6 +94,8 @@ export function RootShell({
         <SaleBanner locale={locale} />
         {/* SG_ANNUAL_BONUS_NOV15_V1 (2026-11-09): free audit + 30-min call with annual plans, hides itself after Sun Nov 15 midnight PT. */}
         <AnnualBonusBanner locale={locale} />
+        {/* SG_BF2026_V1 (2026-11-16): Black Friday teaser until Mon Nov 23 00:00 PT, then the live offer until Wed Dec 2 23:59:59 PT; hides itself outside that window. */}
+        <BlackFridayBanner locale={locale} />
         <Header nav={nav} locale={locale} />
         <main id="main-content" className="flex-1">{children}</main>
         <Footer nav={nav} footer={footer} locale={locale} />

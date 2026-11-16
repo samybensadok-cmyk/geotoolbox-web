@@ -9,6 +9,7 @@ import { TryFreeBand, type TryFreeCopy } from "@/components/pricing/try-free-ban
 import { PromoSignupLink } from "@/components/pricing/promo-signup-link"
 import { SaleStrip } from "@/components/pricing/sale-strip"
 import { AnnualBonusStrip } from "@/components/pricing/annual-bonus-strip"
+import { BlackFridayStrip } from "@/components/pricing/black-friday-strip"
 import { FeatureFaq } from "@/components/features/feature-faq"
 import { JsonLd } from "@/components/seo/json-ld"
 import { siteConfig } from "@/lib/config"
@@ -126,6 +127,7 @@ export default async function PricingPage({
       <section className={styles.plans}>
         <SaleStrip locale={locale} />
         <AnnualBonusStrip locale={locale} />
+        <BlackFridayStrip locale={locale} />
         <div className={styles.cards}>
           <PricingCards copy={cardsCopy} locale={locale} creditsLabel={compareCopy.groups[0].rows[0].label} />
         </div>
