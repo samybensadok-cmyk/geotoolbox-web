@@ -80,6 +80,16 @@ export const bfEndLabel = (l: SaleLocale) => label(BF.endIso, l)
 export { formatSaleCountdown as formatBfCountdown }
 
 type Copy = {
+  /** Banner (one line on desktop): badge, punchy headline, short qualifier, CTA, countdown prefix. */
+  badge: string
+  headline: string
+  sub: string
+  rushSub: string
+  bannerCta: string
+  /** Mobile (< 640 px): one short line + short CTA. */
+  mobileHeadline: string
+  mobileCta: string
+  endsIn: string
   teaserLead: string
   teaserBody: (start: string) => string
   liveLead: string
@@ -95,6 +105,14 @@ type Copy = {
 
 export const BF_COPY: Record<SaleLocale, Copy> = {
   en: {
+    badge: "BLACK FRIDAY",
+    headline: "Up to 40% off GEO Toolbox",
+    sub: "40% off year one (annual) · 30% off 3 months (monthly) · no code needed",
+    rushSub: "+ free GEO audit & strategy call with annual",
+    bannerCta: "Claim my discount",
+    mobileHeadline: "Black Friday: up to 40% off",
+    mobileCta: "Claim",
+    endsIn: "Ends in",
     teaserLead: "Black Friday: 40% off your first year on annual plans, 30% off your first 3 months on monthly.",
     teaserBody: (s) => `Starts ${s}, 12:00 AM PT.`,
     liveLead: "Black Friday: 40% off your first year on annual plans, 30% off your first 3 months on monthly.",
@@ -110,6 +128,14 @@ export const BF_COPY: Record<SaleLocale, Copy> = {
       `Black Friday until ${e}, 11:59 PM PT: 40% off the first year of any annual plan, 30% off the first 3 months of any monthly plan, for new subscriptions. Applied automatically at checkout, where you see the exact amount before you pay. Prices below are list prices.`,
   },
   fr: {
+    badge: "BLACK FRIDAY",
+    headline: "Jusqu’à −40 % sur GEO Toolbox",
+    sub: "−40 % la 1re année (annuel) · −30 % pendant 3 mois (mensuel) · sans code",
+    rushSub: "+ audit GEO et appel stratégie offerts en annuel",
+    bannerCta: "J’en profite",
+    mobileHeadline: "Black Friday : jusqu’à −40 %",
+    mobileCta: "J’en profite",
+    endsIn: "Fin dans",
     teaserLead: "Black Friday : −40 % sur votre première année en annuel, −30 % sur vos 3 premiers mois en mensuel.",
     teaserBody: (s) => `À partir du ${s}, 0 h (heure du Pacifique).`,
     liveLead: "Black Friday : −40 % sur votre première année en annuel, −30 % sur vos 3 premiers mois en mensuel.",
@@ -125,6 +151,14 @@ export const BF_COPY: Record<SaleLocale, Copy> = {
       `Black Friday jusqu’au ${e} à 23 h 59 (heure du Pacifique) : −40 % sur la première année de toute formule annuelle, −30 % sur les 3 premiers mois de toute formule mensuelle, pour les nouveaux abonnements. Appliqué automatiquement au paiement, où le montant exact s’affiche avant de payer. Les prix ci-dessous sont les prix catalogue.`,
   },
   es: {
+    badge: "BLACK FRIDAY",
+    headline: "Hasta un 40 % de descuento en GEO Toolbox",
+    sub: "−40 % el primer año (anual) · −30 % durante 3 meses (mensual) · sin código",
+    rushSub: "+ auditoría GEO y llamada de estrategia gratis en anual",
+    bannerCta: "Quiero mi descuento",
+    mobileHeadline: "Black Friday: hasta −40 %",
+    mobileCta: "Lo quiero",
+    endsIn: "Termina en",
     teaserLead: "Black Friday: 40 % de descuento en tu primer año con plan anual, 30 % en tus 3 primeros meses con plan mensual.",
     teaserBody: (s) => `Empieza el ${s}, a las 0:00 (hora del Pacífico).`,
     liveLead: "Black Friday: 40 % de descuento en tu primer año con plan anual, 30 % en tus 3 primeros meses con plan mensual.",
@@ -140,6 +174,14 @@ export const BF_COPY: Record<SaleLocale, Copy> = {
       `Black Friday hasta el ${e} a las 23:59 (hora del Pacífico): 40 % de descuento en el primer año de cualquier plan anual y 30 % en los 3 primeros meses de cualquier plan mensual, para nuevas suscripciones. Se aplica automáticamente al pagar, donde ves el importe exacto antes de confirmar. Los precios de abajo son precios de lista.`,
   },
   de: {
+    badge: "BLACK FRIDAY",
+    headline: "Bis zu 40 % Rabatt auf GEO Toolbox",
+    sub: "−40 % im ersten Jahr (jährlich) · −30 % für 3 Monate (monatlich) · ohne Code",
+    rushSub: "+ kostenloses GEO-Audit und Strategiegespräch beim Jahrestarif",
+    bannerCta: "Rabatt sichern",
+    mobileHeadline: "Black Friday: bis zu −40 %",
+    mobileCta: "Sichern",
+    endsIn: "Endet in",
     teaserLead: "Black Friday: 40 % Rabatt auf dein erstes Jahr im Jahrestarif, 30 % auf deine ersten 3 Monate im Monatstarif.",
     teaserBody: (s) => `Ab ${s}, 0:00 Uhr (Pazifikzeit).`,
     liveLead: "Black Friday: 40 % Rabatt auf dein erstes Jahr im Jahrestarif, 30 % auf deine ersten 3 Monate im Monatstarif.",

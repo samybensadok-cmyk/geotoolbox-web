@@ -24,12 +24,23 @@ export function BlackFridayStrip({ locale = "en" }: { locale?: string }) {
   if (phase === "off") return null
   const loc = bfLocale(locale)
   const t = BF_COPY[loc]
+  const endLabel = bfEndLabel(loc)
+  if (phase === "teaser") {
+    return (
+      <p className="mx-auto mb-6 max-w-3xl rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-2.5 text-center text-[13px] font-medium text-neutral-800" data-bf-campaign={`${BF.campaign}-${phase}`}>
+        {t.stripTeaser(bfStartLabel(loc), endLabel)}
+      </p>
+    )
+  }
+  // Redesign (operator review 2026-11-16): black card + yellow badge, headline first, terms in small print.
   return (
-    <p
-      className="mx-auto mb-6 max-w-3xl rounded-xl border border-accent-200 bg-accent-50 px-4 py-2.5 text-center text-[13px] font-medium text-accent-900"
-      data-bf-campaign={`${BF.campaign}-${phase}`}
-    >
-      {phase === "teaser" ? t.stripTeaser(bfStartLabel(loc), bfEndLabel(loc)) : `${t.stripLive(bfEndLabel(loc))}${rush === "1" ? ` ${t.rushBonus}` : ""}`}
-    </p>
+    <div className="mx-auto mb-8 max-w-3xl rounded-2xl bg-neutral-950 px-5 py-4 text-center text-white shadow-lg sm:px-7" data-bf-campaign={`${BF.campaign}-${phase}`}>
+      <p className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5">
+        <span className="rounded-sm bg-yellow-400 px-2 py-0.5 text-[11px] font-extrabold tracking-[0.12em] text-neutral-950">{t.badge}</span>
+        <strong className="text-lg font-extrabold sm:text-xl">{t.headline}</strong>
+      </p>
+      <p className="mt-1.5 text-[14px] text-white/85">{t.sub}{rush === "1" ? ` ${t.rushSub}` : ""}</p>
+      <p className="mt-1.5 text-[12px] text-white/55">{t.stripLive(endLabel)}</p>
+    </div>
   )
 }
