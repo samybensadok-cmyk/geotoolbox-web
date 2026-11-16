@@ -197,3 +197,32 @@ export const BF_COPY: Record<SaleLocale, Copy> = {
       `Black Friday bis ${e}, 23:59 Uhr (Pazifikzeit): 40 % Rabatt auf das erste Jahr jedes Jahrestarifs, 30 % auf die ersten 3 Monate jedes Monatstarifs, für neue Abos. Wird beim Bezahlen automatisch abgezogen; dort siehst du den genauen Betrag vor dem Bezahlen. Die Preise unten sind Listenpreise.`,
   },
 }
+
+/**
+ * SG_BF2026_SVC_V1 (2026-11-16, operator): Black Friday on the SERVICES pages only (never in the sitewide banner).
+ * 25% off the three direct-buy services, applied by inc/actions/service_checkout.php (Stripe coupon BFSVC25-2026,
+ * duration once), same window as the SaaS offer. Call-based sprint/retainers: 15% off the first month when signed
+ * by the end date (applied by hand in the proposal).
+ */
+export const BF_SERVICES = {
+  percentOff: 25,
+  retainerMonth1PercentOff: 15,
+  /** Only these checkout links are discounted server-side. */
+  directBuyRe: /action=service_checkout&item=(report|article|cluster_sprint)\b/,
+} as const
+
+/** "$1,250" -> 1250; null when the string holds no single dollar amount. */
+export function parseUsd(s: string): number | null {
+  const m = s.match(/\$\s?([\d,]+(?:\.\d+)?)/)
+  return m ? Number(m[1].replace(/,/g, "")) : null
+}
+
+/** 937.5 -> "$937.50", 2625 -> "$2,625" (cents only when there are cents, like Stripe shows). */
+export function fmtUsd(n: number): string {
+  const cents = Math.round(n * 100) % 100 !== 0
+  return "$" + n.toLocaleString("en-US", { minimumFractionDigits: cents ? 2 : 0, maximumFractionDigits: 2 })
+}
+
+export function bfServicePrice(listUsd: number): number {
+  return Math.round(listUsd * (100 - BF_SERVICES.percentOff)) / 100
+}

@@ -7,6 +7,7 @@ import { GrowthCharts } from "./growth-charts"
 import { PRIMARY_AUTHOR } from "@/lib/authors"
 import { proofStats } from "@/lib/proof-stats"
 import styles from "./service-experience.module.css"
+import { BfRetainerNote, BfServiceLabel, BfServicePrice, BfServicesBand } from "./black-friday-services"
 
 type Offer = {
   name: string; price: string; pricePrefix?: string; cadence?: string
@@ -34,7 +35,7 @@ const ext = (href: string) => href.startsWith("http") ? { target: "_blank", rel:
 // The three entry offers map 1:1 onto the delivery steps (report → baseline,
 // sprint/pilot → shipped work, retainer → ongoing log), so each card carries
 // its step's deliverable instead of repeating the steps in a separate band.
-function OfferCard({ offer, step, index, callHref, lead }: { offer: Offer; step?: Step; index: number; callHref: string; lead?: boolean }) {
+function OfferCard({ offer, step, index, callHref, lead, auto }: { offer: Offer; step?: Step; index: number; callHref: string; lead?: boolean; auto?: boolean }) {
   const href = offer.cta?.href ?? callHref
   return <article className={lead ? `${styles.offer} ${styles.lead}` : styles.offer}>
     <div className={styles.offerTop}>
@@ -42,13 +43,14 @@ function OfferCard({ offer, step, index, callHref, lead }: { offer: Offer; step?
       {lead && <span className={styles.badge}>Start here</span>}
     </div>
     <h3>{offer.name}</h3>
-    <p className={styles.price}>{offer.pricePrefix && <small>{offer.pricePrefix} </small>}{offer.price}{offer.cadence && <small>{offer.cadence}</small>}</p>
+    <p className={styles.price}>{offer.pricePrefix && <small>{offer.pricePrefix} </small>}<BfServicePrice price={offer.price} href={offer.cta?.href} size="lg" />{offer.cadence && <small>{offer.cadence}</small>}</p>
+    {!auto && <BfRetainerNote href={href} />}
     <p className={styles.billing}>{offer.billing}</p>
     <p className={styles.offerSummary}>{offer.summary}</p>
     {step && <p className={styles.deliverable}><span aria-hidden="true">→</span> You get: <strong>{step.output}</strong></p>}
     <details className={styles.scope}><summary>What’s included <span aria-hidden="true">+</span></summary><p>{offer.detail}</p></details>
     <a href={href} className={lead ? styles.primary : styles.secondary} {...ext(href)}>
-      {offer.cta?.label ?? "Book a call"}<span aria-hidden="true">{href.startsWith("http") ? "↗" : href.startsWith("#") ? "↓" : "→"}</span>
+      {offer.cta?.label ? <BfServiceLabel label={offer.cta.label} href={offer.cta.href} /> : "Book a call"}<span aria-hidden="true">{href.startsWith("http") ? "↗" : href.startsWith("#") ? "↓" : "→"}</span>
     </a>
   </article>
 }
@@ -58,6 +60,7 @@ export function ServiceExperience(p: Props) {
   const { google, asOf, aiCitations, googleAiFeatures, weeksToResult } = proofStats
   return <div className={styles.page}>
     {p.children}
+    {!auto && <BfServicesBand />}
     <section className={styles.hero}>
       <div className={styles.wrap}>
         <nav className={styles.breadcrumb} aria-label="Breadcrumb"><Link href="/">Home</Link><span>/</span><Link href="/services/ai-seo-agency">Services</Link><span>/</span><span>{p.eyebrow}</span></nav>
@@ -66,7 +69,7 @@ export function ServiceExperience(p: Props) {
           <h1>{p.title}<br /><span>{p.accent}</span></h1>
           <p className={styles.intro}>{p.description}</p>
           <div className={styles.actions}><a href={p.callHref} target="_blank" rel="noopener noreferrer" className={styles.primary}>Book an intro call <span aria-hidden="true">↗</span></a><a href="#pricing" className={styles.secondary}>{auto ? "See engagements" : "See pricing"}<span aria-hidden="true">↓</span></a></div>
-          <p className={styles.micro}>Free 30-min call · {auto ? "Fixed project quotes" : "Report from $1,250"} · You own the work</p>
+          <p className={styles.micro}>Free 30-min call · {auto ? "Fixed project quotes" : <BfServiceLabel label="Report from $1,250" href="/app/?action=service_checkout&item=report" />} · You own the work</p>
         </div>
         <div className={styles.heroFoot}>
           <div className={styles.founder}>{PRIMARY_AUTHOR.avatar && <Image src={PRIMARY_AUTHOR.avatar} width={40} height={40} alt="" />}<p><strong>{PRIMARY_AUTHOR.name}</strong><span>Built GEO Toolbox. Leads your project.</span></p></div>
@@ -133,14 +136,14 @@ export function ServiceExperience(p: Props) {
     <section id="pricing" className={styles.section}>
       <div className={styles.wrap}>
         <div className={styles.sectionHead}><div><p className={styles.eyebrow}>{auto ? "Engagements" : "Services & pricing"}</p><h2>{auto ? "Start with one workflow." : "Start small. Scale what works."}</h2></div><p>{auto ? "Map the opportunity, build a focused pilot, or get ongoing support for a system we built or audited." : "A one-off diagnostic, a 30-day sprint, or a monthly retainer. Each step builds on the last."}</p></div>
-        <div className={styles.offers}>{p.offers.slice(0, 3).map((offer, i) => <OfferCard key={offer.name} offer={offer} step={p.steps[i]} index={i} callHref={p.callHref} lead={i === 0} />)}</div>
+        <div className={styles.offers}>{p.offers.slice(0, 3).map((offer, i) => <OfferCard key={offer.name} offer={offer} step={p.steps[i]} index={i} callHref={p.callHref} lead={i === 0} auto={auto} />)}</div>
         {!auto && <ul className={styles.terms}>
           <li><strong>Report fee credited</strong> to a Sprint or retainer within 14 days.</li>
           <li><strong>Sprint counts as month one</strong> of a retainer within 30 days.</li>
           <li><strong>Growth:</strong> 90-day commitment, then month to month.</li>
         </ul>}
-        {p.offers.length > 3 && <details className={styles.expand}><summary>Need more capacity? Priority Growth & Scale <span aria-hidden="true">+</span></summary><div className={styles.advanced}>{p.offers.slice(3).map((offer, i) => <OfferCard key={offer.name} offer={offer} index={i + 3} callHref={p.callHref} />)}</div></details>}
-        {!!p.addons?.length && <details className={styles.expand}><summary>Content, authority & delivery add-ons <span aria-hidden="true">+</span></summary><div className={styles.addons}>{p.addons.map(a => <article key={a.name}><h3>{a.name}</h3><strong>{a.price} <small>{a.unit}</small></strong><p>{a.detail}</p>{a.cta && <a className={styles.textLink} href={a.cta.href}>{a.cta.label} ↗</a>}</article>)}</div><p className={styles.note}>Content offers exclude GEO, SEO and AI-visibility topics. Add-ons extend the agreed scope; they do not reprice the base engagement.</p></details>}
+        {p.offers.length > 3 && <details className={styles.expand}><summary>Need more capacity? Priority Growth & Scale <span aria-hidden="true">+</span></summary><div className={styles.advanced}>{p.offers.slice(3).map((offer, i) => <OfferCard key={offer.name} offer={offer} index={i + 3} callHref={p.callHref} auto={auto} />)}</div></details>}
+        {!!p.addons?.length && <details className={styles.expand}><summary>Content, authority & delivery add-ons <span aria-hidden="true">+</span></summary><div className={styles.addons}>{p.addons.map(a => <article key={a.name}><h3>{a.name}</h3><strong><BfServicePrice price={a.price} href={a.cta?.href} /> <small>{a.unit}</small></strong><p>{a.detail}</p>{a.cta && <a className={styles.textLink} href={a.cta.href}><BfServiceLabel label={a.cta.label} href={a.cta.href} /> ↗</a>}</article>)}</div><p className={styles.note}>Content offers exclude GEO, SEO and AI-visibility topics. Add-ons extend the agreed scope; they do not reprice the base engagement.</p></details>}
         {!!p.context?.length && <details className={styles.expand}><summary>{auto ? "Skills, agents or a custom tool?" : "What the service covers, and what it doesn’t"} <span aria-hidden="true">+</span></summary><div className={styles.addons}>{p.context.map(c => <article key={c.title}><h3>{c.title}</h3><p>{c.body}</p></article>)}</div></details>}
       </div>
     </section>
