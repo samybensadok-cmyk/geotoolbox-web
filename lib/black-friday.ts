@@ -2,8 +2,8 @@
  * SG_BF2026_V1 (2026-11-16) — Black Friday / Cyber Week 2026.
  *
  * Offer: 40% off the FIRST YEAR of any self-serve annual plan, 30% off the FIRST 3 MONTHS of any
- * self-serve monthly plan. Window: Mon 2026-11-23 00:00 PT -> Wed 2026-12-02 23:59:59 PT.
- * Teaser ("starts Nov 23") from TEASER_START until START.
+ * self-serve monthly plan, new subscriptions. Window: 2026-11-16 00:00 UTC (operator moved the start from Nov 23)
+ * -> Wed 2026-12-02 23:59:59 PT. Final-rush annual bonus from Sat 2026-11-28 00:00 PT.
  *
  * New campaign, new module, new dismiss key (same discipline as lib/sale.ts / lib/annual-bonus.ts):
  * never move a date in place; a re-run is a new campaign.
@@ -24,10 +24,11 @@
 import { formatSaleCountdown, type SaleLocale } from "@/lib/sale"
 
 export const BF = {
-  /** Teaser line ("starts Monday Nov 23") from here. */
-  teaserStartIso: "2026-11-17T00:00:00Z",
-  /** = Mon 2026-11-23 00:00:00 America/Los_Angeles (PST, UTC-8). */
-  startIso: "2026-11-23T08:00:00Z",
+  /** Teaser line ("starts ...") from here. Operator 2026-11-16: the offer starts NOW instead of Nov 23, so the
+   *  teaser window is empty (teaserStartIso === startIso); the teaser copy stays for a future re-use. */
+  teaserStartIso: "2026-11-16T00:00:00Z",
+  /** = 2026-11-16 00:00 UTC (already past at deploy). Mirrors SG_BF2026['start'] (backend applies the code from here). */
+  startIso: "2026-11-16T00:00:00Z",
   /** = Wed 2026-12-02 23:59:59 America/Los_Angeles (PST, UTC-8). Mirrors SG_BF2026['end'] (backend stops applying
    *  the code after it). Stripe redeem_by / expires_at = 2026-12-03T10:00:00Z, a 2 h tail so a session created just
    *  before the end can still be paid. */
