@@ -2,8 +2,8 @@
 title: "GPT-6 Astra: Preise, Benchmarks und die Harness-Falle"
 description: "OpenAI veröffentlichte GPT-6 Astra am 3. September 2026. Geprüfte Preise, wer heute Zugang hat, und warum der 99,9-%-Benchmark-Wert eine Harness-Zahl ist."
 date: "2026-09-05"
-updated: "2026-11-15"
-recheckBy: "2026-11-13"   # 10-14: GPT-6 im Chat (Astra = Pro-Stufe), Bedrock GA 08.09., GPT-6.1 Sol, Ultrafast, Pro 500. 09-25: GPT-6 Sol (2,00 $/10,00 $) + GPT-6 Luna (0,10 $/0,50 $) ergänzt, gestartet 22.09.2026 in Work/Codex für Plus+ (Astra unverändert, bleibt laut eigener Aussage OpenAIs bestes Modell); AA Intelligence Index erneut versioniert auf v4.3.2 (Astra 53, gleichauf mit Fable 5.1; Claude Opus 5.5 führt mit 58) – jeder AA-Wert in diesem Artikel muss mit Indexversion gekennzeichnet bleiben, Werte über Versionen hinweg sind nicht vergleichbar.
+updated: "2026-11-16"
+recheckBy: "2026-12-01"   # 16.11. geprüft: GPT-5.6-Sol-Aktionspreis (4 $/20 $) laut Preisseite nur „bis zum 30. November 2026“ (Stichtag), Astra-Preiszellen unverändert, kein GPT-6.2 angekündigt, Plus weiter nur Work und Codex (ohne Login geprüft), AA Intelligence Index jetzt v5.0.1 (Astra Max 57). NICHT neu geprüft: Zugang mit Login, Foundry-EU-Data-Zone, KI-Verordnung und Datenschutztexte, ARC-AGI-3 über die arcprize-Seite hinaus.
 author: "Samy BEN SADOK"
 tags: ["gpt-6", "astra", "openai", "chatgpt", "ai-visibility", "llm", "guide"]
 draft: false
@@ -25,15 +25,15 @@ Wenn du nur einen Abschnitt liest, dann die Cybersicherheits-Einstufung. Astra i
 
 ## Das Wichtigste in Kürze
 
-- **GPT-6 Astra ist OpenAIs neues Flaggschiff-Modell**, veröffentlicht am 3. September 2026 als Frontier-Modell über der GPT-5.6-Linie, erreichbar in der API als `gpt-6-astra`.
-- Der Preis liegt bei **10,00 $ pro Million Input-Token und 50,00 $ pro Million Output-Token** im Standardtarif bei kurzem Kontext, das 2,5-Fache von GPT-5.6 Sol.
+- **GPT-6 Astra ist OpenAIs Frontier-Modell**, veröffentlicht am 3. September 2026 über der GPT-5.6-Linie, erreichbar in der API als `gpt-6-astra`.
+- Der Preis liegt bei **10,00 $ pro Million Input-Token und 50,00 $ pro Million Output-Token** im Standardtarif bei kurzem Kontext, das 2,5-Fache des Aktionspreises von GPT-5.6 Sol (4 $/20 $, laut OpenAIs Preisseite bis zum 30. November 2026).
 - Für Käufer mit EU-Datenresidenz gilt: Astra selbst ist verfügbar, aber **ohne Fast Mode und mit 10 % Aufschlag** (11,00 $ / 55,00 $). Zum Start führte der Weg dorthin nur über OpenAI direkt; Microsoft nennt seit dem 22. September auch eine EU Data Zone in Foundry (12 $ / 60 $), die du in deiner Subscription prüfen solltest.
 - Der vielzitierte Wert von **99,9 % im ARC-AGI-3-Benchmark ist real, aber ein Harness-Ergebnis**, also ein Ergebnis samt Testgerüst: ARC Prize maß ihn über OpenAIs eigenen Provider-Adapter. Mit dem anbieterneutralen Standard-Harness erreicht dasselbe Modell bei genau demselben Reasoning-Aufwand nur 54,8 %.
 - OpenAI räumt selbst ein, dass sich das schriftliche Reasoning des Modells schwerer überwachen lässt als bei Vorgängermodellen. heise greift das auf; das wörtliche Eingeständnis aus der System Card und der Sicherheitsforscher, der es öffentlich kritisiert, fehlen in der deutschen Berichterstattung bislang.
 
 ## Was ist GPT-6 Astra?
 
-GPT-6 Astra ist OpenAIs neues [großes Sprachmodell](https://geotoolbox.ai/blog/how-does-chatgpt-work), veröffentlicht am 3. September 2026 als Frontier-Modell über der GPT-5.6-Linie (direkter Nachfolger von GPT-5.6 Sol ist GPT-6 Sol, nicht Astra). Entwickler erreichen es in der API unter der Kennung `gpt-6-astra`.
+GPT-6 Astra ist OpenAIs [großes Sprachmodell](https://geotoolbox.ai/blog/how-does-chatgpt-work) der Frontier-Klasse, veröffentlicht am 3. September 2026 über der GPT-5.6-Linie (direkter Nachfolger von GPT-5.6 Sol ist GPT-6 Sol, nicht Astra). Entwickler erreichen es in der API unter der Kennung `gpt-6-astra`.
 
 Die auf OpenAIs eigener Modellseite veröffentlichte Spezifikation nennt ein **Kontextfenster von 1.050.000 Token** mit einer Eingabeobergrenze von 922.000 Token, **maximal 128.000 Ausgabe-Token**, Text und Bild als Eingabe, nur Text als Ausgabe. Dazu wählbarer reasoning effort (der einstellbare Denkaufwand des Modells, im Folgenden: Reasoning-Aufwand) über die Stufen low, medium, high, xhigh und max. Der knowledge cutoff, also der Stichtag, bis zu dem die Trainingsdaten reichen, ist der 30. April 2026, vier Monate vor dem eigentlichen Start. Merke dir dieses Datum, es taucht am Ende des Artikels wieder auf.
 
@@ -105,7 +105,7 @@ Die Plus-Zeile ist die, die Leute überrascht, und war die häufigste Beschwerde
 Innerhalb von ChatGPT zahlst du in keinem Fall den API-Tarif. Astra wird auf dein bestehendes Plan-Kontingent angerechnet, und OpenAI zufolge können Nutzer und Unternehmen zusätzliche Credits kaufen. Unser [Ratgeber zu den ChatGPT-Preisen](https://geotoolbox.ai/blog/chatgpt-pricing) erklärt, was jeder Tarif kostet und was die Kontingente bedeuten.
 
 <Callout type="note">
-OpenAIs Help-Center-Artikel dazu war zum Start bei jedem von uns getesteten Abrufweg per Cloudflare blockiert, deshalb ist die Plus-Zeile oben aus Googles eigenem Crawl dieser Seite vom 5. September zitiert, abgeglichen mit Altmans Posts, den Launch-Diskussionen und den Changelogs von GitHub und Azure. Der Planzugang verschob sich zweimal innerhalb von 48 Stunden. Am 14. Oktober 2026 haben wir den Artikel in einem angemeldeten Browser gelesen: Für Plus nennt er Astra weiterhin nur in Work und Codex. Prüfe also am besten deine eigene Modellauswahl.
+Der Planzugang verschob sich zum Start zweimal innerhalb von 48 Stunden. OpenAIs Help-Center-Artikel (am 16. November 2026 ohne Anmeldung gelesen) nennt für Plus Astra weiterhin nur in Work und Codex. Prüfe also am besten deine eigene Modellauswahl.
 </Callout>
 
 ## Preise für GPT-6 Astra
@@ -132,18 +132,18 @@ Hier lag zum Start der Haken für einen deutschen Käufer: Microsofts Foundry-Be
 
 Eine deutsche B2B-Quelle, ravnmedia.de, hält denselben Punkt fest: „Bei EU-Datenresidenz steht der schnellere Fast mode für Astra nicht zur Verfügung, dort bleibt es bei der Standardverarbeitung.“ Andere deutsche Beiträge sind an dieser Stelle noch auf dem Stand „zur EU-Verfügbarkeit liegt keine Dokumentation vor“; OpenAIs eigener Leitfaden ist da inzwischen weiter.
 
-Eine andere deutsche Quelle rechnet vor, was der Wechsel selbst kostet, unabhängig von der Datenresidenz: 200 Vorgänge im Monat mit je 100.000 Input- und 20.000 Output-Token kosten bei Astra rund 400 $ (343 €), bei GPT-5.6 Sol rund 160 $ (137 €), umgerechnet zum EZB-Referenzkurs von 1,1669 $ je Euro. Der Unterschied sind rund 206 € im Monat, rund 2.470 € im Jahr, allein für den Modellwechsel. Der EU-Aufschlag von 10 % kommt darauf noch obendrauf und liegt bei dieser Nutzung bei rund 40 $.
+Eine andere deutsche Quelle rechnet vor, was der Wechsel selbst kostet, unabhängig von der Datenresidenz: 200 Vorgänge im Monat mit je 100.000 Input- und 20.000 Output-Token kosten bei Astra rund 400 $ (343 €), bei GPT-5.6 Sol zum Aktionspreis (4 $/20 $, laut OpenAIs Preisseite bis zum 30. November 2026) rund 160 $ (137 €), umgerechnet zum EZB-Referenzkurs von 1,1669 $ je Euro. Auf dieser Basis beträgt der Unterschied rund 206 € im Monat, rund 2.470 € im Jahr, allein für den Modellwechsel. Der EU-Aufschlag von 10 % kommt darauf noch obendrauf und liegt bei dieser Nutzung bei rund 40 $.
 
-Der Vergleich, der zählt: GPT-5.6 Sol kostet 4,00 $ Input und 20,00 $ Output. Astra kostet **das 2,5-Fache in jeder einzelnen Zelle der Tabelle**, Input, Output, Cached Input, Cache Writes, kurzer wie langer Kontext. Artificial Analysis formuliert es genauso: „2.5x GPT-5.6 Sol's current prices across the board.“ Sols Satz ist selbst nur ein Aktionspreis, den OpenAIs Preisseite lediglich „bis zum 30. November 2026“ ausweist.
+Der Vergleich, der zählt: GPT-5.6 Sol kostet zum Aktionspreis, den OpenAIs Preisseite „bis zum 30. November 2026“ ausweist, 4,00 $ Input und 20,00 $ Output. Gemessen daran kostet Astra **das 2,5-Fache in jeder einzelnen Zelle der Tabelle**, Input, Output, Cached Input, Cache Writes, kurzer wie langer Kontext. Artificial Analysis formuliert es genauso: „2.5x GPT-5.6 Sol's current prices across the board.“ Sols Satz ist selbst nur ein Aktionspreis, den OpenAIs Preisseite lediglich „bis zum 30. November 2026“ ausweist.
 
 ### Was das bei einer echten Aufgabe kostet
 
 Diese Rechnung fehlt in der englischsprachigen Berichterstattung, hier ist sie. Eine agentische Aufgabe mit 50.000 Input-Token und 8.000 Output-Token, kurzer Kontext, Standardtarif:
 
 - **GPT-6 Astra:** 0,50 $ Input + 0,40 $ Output = **0,90 $**
-- **GPT-5.6 Sol:** 0,20 $ Input + 0,16 $ Output = **0,36 $**
+- **GPT-5.6 Sol (Aktionspreis, gelistet bis 30. November 2026):** 0,20 $ Input + 0,16 $ Output = **0,36 $**
 
-Das 2,5-Fache, wie angekündigt. Aber Preis pro Token und Preis pro Aufgabe sind nicht dieselbe Zahl.
+Das 2,5-Fache, gemessen an Sols Aktionspreis. Aber Preis pro Token und Preis pro Aufgabe sind nicht dieselbe Zahl.
 
 Artificial Analysis stellte fest, dass Astra bei maximalem Reasoning-Aufwand in seinem Intelligence Index rund 10 % weniger Output-Token braucht als Sol, und im Codex-Harness in seinem Coding Agent Index nur etwa ein Drittel von Sols Token-Menge.
 
@@ -155,7 +155,9 @@ OpenAIs Preisseite nennt inzwischen 272.000 Input-Token als Grenze des kurzen Ko
 
 Astra kam am 3. September allein. Drei Wochen später, am 22. September 2026, ergänzte OpenAI zwei weitere GPT-6-Modelle: **GPT-6 Sol** und **GPT-6 Luna**. Anders als Astra ist keines der beiden ein Frontier-Modell – OpenAIs eigene Formulierung ist eindeutig: „GPT-6 Astra continues to be our best model across the board." Sol und Luna ersetzen stattdessen [GPT-5.6 Sol und Luna](https://geotoolbox.ai/blog/gpt-5-6) als Arbeits- und Schnellstufe innerhalb von ChatGPT Work und Codex, für Plus, Pro, Business, Enterprise und Edu; Free und Go bekommen GPT-6 Luna dort nur in der Desktop-App.
 
-Auf der API kostet GPT-6 Sol 2,00 $ Input und 10,00 $ Output pro Million Token, GPT-6 Luna 0,10 $ und 0,50 $ – jeweils etwa die Hälfte des Aktionspreises des jeweiligen GPT-5.6-Pendants (4 $/20 $ für Sol, 0,20 $/1,20 $ für Luna) und ein Bruchteil von Astras 10,00 $/50,00 $. Am 7. Oktober kamen beide auch in den normalen Chat: GPT-6 Sol ab Plus und GPT-6 Luna auf Free und Go ab dem 8. Oktober, laut OpenAIs Release Notes und Preisseite (das Help Center nennt für Free und Go noch GPT-5.6 Luna). Am 29. September ergänzte OpenAI GPT-6.1 Sol, laut eigener Aussage nahe an Astra zu geringeren Kosten: 2,00 $ Input, 0,10 $ gecacht und 10,00 $ Output pro Million Token, in der API, Work und Codex. Am 26. Oktober folgte GPT-6.1 Terra, ein schnelles, effizientes Modell: 1,00 $ Input, 0,05 $ gecacht und 5,00 $ Output pro Million Token, in der API sowie in Work und Codex bei Plus, Pro, Business, Enterprise und Edu, aber nicht im Chat. Die allgemein verfügbare GPT-6-Reihe besteht damit aus einem Frontier-Modell, Astra, und darunter GPT-6.1 Sol, GPT-6.1 Terra, GPT-6 Sol und GPT-6 Luna, bei Preis wie Produktumfang.
+Auf der API kostet GPT-6 Sol 2,00 $ Input und 10,00 $ Output pro Million Token, GPT-6 Luna 0,10 $ und 0,50 $ – jeweils etwa die Hälfte des Preises des jeweiligen GPT-5.6-Pendants (4 $/20 $ für Sol, ein Aktionspreis, den OpenAI bis zum 30. November 2026 ausweist; 0,20 $/1,20 $ für Luna) und ein Bruchteil von Astras 10,00 $/50,00 $. Am 7. Oktober kamen beide auch in den normalen Chat: GPT-6 Sol ab Plus und GPT-6 Luna auf Free und Go ab dem 8. Oktober, laut OpenAIs Release Notes und Preisseite (das Help Center nennt für Free und Go noch GPT-5.6 Luna). Am 29. September ergänzte OpenAI GPT-6.1 Sol, laut eigener Aussage nahe an Astra zu geringeren Kosten: 2,00 $ Input, 0,10 $ gecacht und 10,00 $ Output pro Million Token, in der API, Work und Codex. Am 26. Oktober folgte GPT-6.1 Terra, ein schnelles, effizientes Modell: 1,00 $ Input, 0,05 $ gecacht und 5,00 $ Output pro Million Token, in der API sowie in Work und Codex bei Plus, Pro, Business, Enterprise und Edu, aber nicht im Chat. Die allgemein verfügbare GPT-6-Reihe besteht damit aus einem Frontier-Modell, Astra, und darunter GPT-6.1 Sol, GPT-6.1 Terra, GPT-6 Sol und GPT-6 Luna, bei Preis wie Produktumfang.
+
+Stand 16. November 2026 hat OpenAI kein GPT-6.2 angekündigt.
 
 ## Benchmarks: Was OpenAI berichtet hat und was Unabhängige gemessen haben
 
@@ -234,7 +236,7 @@ Lies die beiden Index-Zeilen zusammen. Am 3. September lautete das ehrliche unab
 
 Am 4. September änderte sich der Index (v4.2 ergänzte eine agentische Wissensarbeits-Auswertung sowie den 4.592-Seiten-Dokumentensatz, strich GPQA Diamond als gesättigt, und verdoppelte das Gewicht privater, zurückgehaltener Testsätze), und das ehrliche Fazit wurde zu „vier Punkte Zugewinn, Platz zwei hinter Fable 5.1“. Wer noch den Gleichstand zitiert, ist einen Tag im Rückstand. Wer den Vier-Punkte-Zugewinn zitiert, ohne zu sagen, welche Indexversion ihn liefert, macht denselben Fehler in die andere Richtung.
 
-**Update, 25. September 2026:** Artificial Analysis hat den Intelligence Index inzwischen erneut versioniert, auf **v4.3.2**. Auf dieser Skala erreicht Astra **53** Punkte, gleichauf mit Claude Fable 5.1, während **Claude Opus 5.5** den Gesamtindex mit **58** Punkten anführt. Die Werte v4.1.1 und v4.2 oben gelten jeweils für den Tag ihrer Skala, nicht für diese: Artificial Analysis ändert zwischen Indexversionen seine Tests und Bewertung (v4.3.2 hat zwei ratingbasierte Tests neu verankert und neu angepasst), Werte aus unterschiedlichen Versionen sind daher nie direkt vergleichbar, nur die relative Rangfolge innerhalb einer Version.
+**Update, 25. September 2026:** Artificial Analysis hat den Intelligence Index inzwischen erneut versioniert, auf **v4.3.2**. Auf dieser Skala erreicht Astra **53** Punkte, gleichauf mit Claude Fable 5.1, während **Claude Opus 5.5** den Gesamtindex mit **58** Punkten anführt. Die Werte v4.1.1 und v4.2 oben gelten jeweils für den Tag ihrer Skala, nicht für diese: Artificial Analysis ändert zwischen Indexversionen seine Tests und Bewertung (v4.3.2 hat zwei ratingbasierte Tests neu verankert und neu angepasst), Werte aus unterschiedlichen Versionen sind daher nie direkt vergleichbar, nur die relative Rangfolge innerhalb einer Version. Stand 16. November 2026 steht der Index bei v5.0.1, wo GPT-6 Astra (Max) 57 Punkte erreicht; dieser Wert ist mit den v4.3.2-Zahlen hier nicht vergleichbar.
 
 Astra lag im Lauf vom 3. September zudem bei mehreren Auswertungen 2 bis 3 Punkte hinter Sol, darunter Kundensupport, wissenschaftliches Programmieren und Langkontext-Reasoning.
 
@@ -273,7 +275,7 @@ Beide Modelle erschienen in derselben Woche und stehen bei exakt demselben Schla
     <tr><td>Langkontext-Band</td><td>Ja, 20 $ / 75 $</td><td>Einzelnes Band</td><td>Anbieter-Preisseiten</td></tr>
     <tr><td>AA Intelligence Index v4.1.1</td><td>61</td><td>66</td><td>Unabhängig</td></tr>
     <tr><td>AA Intelligence Index v4.2</td><td>Zweiter Platz</td><td>Führt den Index an</td><td>Unabhängig</td></tr>
-    <tr><td>AA Intelligence Index v4.3.2</td><td>53</td><td>53 (gleichauf)</td><td>Unabhängig</td></tr>
+    <tr><td>AA Intelligence Index v4.3.2 (Stand 25. Sept.)</td><td>53</td><td>53 (gleichauf)</td><td>Unabhängig</td></tr>
     <tr><td>AA Coding Agent Index</td><td>67 in Codex</td><td>70 in Claude Code</td><td>Unabhängig</td></tr>
     <tr><td>GDP.pdf Dokumenten-Reasoning</td><td>33,2 %</td><td>26,2 %</td><td>Unabhängig</td></tr>
     <tr><td>Terminal-Bench 4.0</td><td>57,9 %</td><td>55,8 %</td><td>OpenAI-Selbstangabe</td></tr>
@@ -392,7 +394,7 @@ Plus hat es in ChatGPT Work und Codex, aber nicht im normalen Chat, und Pro 500 
 
 ### Was kostet GPT-6 Astra?
 
-10 $ pro Million Input-Token und 50 $ pro Million Output-Token im Standardtarif bei kurzem Kontext, Cached Input bei 1,00 $ und Cache Writes bei 12,50 $. Langer Kontext kostet 20 $ und 75 $. Batch ist zum halben Preis, Fast Mode zum doppelten, Ultrafast zum sechsfachen, und Endpunkte mit Datenresidenz kosten 10 % mehr. Das ist das 2,5-Fache des Preises von GPT-5.6 Sol. In ChatGPT selbst zahlst du keine API-Sätze, Astra zehrt von deinem Plan-Kontingent.
+10 $ pro Million Input-Token und 50 $ pro Million Output-Token im Standardtarif bei kurzem Kontext, Cached Input bei 1,00 $ und Cache Writes bei 12,50 $. Langer Kontext kostet 20 $ und 75 $. Batch ist zum halben Preis, Fast Mode zum doppelten, Ultrafast zum sechsfachen, und Endpunkte mit Datenresidenz kosten 10 % mehr. Das ist das 2,5-Fache des Aktionspreises von GPT-5.6 Sol (4 $/20 $, von OpenAI bis zum 30. November 2026 ausgewiesen). In ChatGPT selbst zahlst du keine API-Sätze, Astra zehrt von deinem Plan-Kontingent.
 
 ## Quellen
 
@@ -400,7 +402,7 @@ Plus hat es in ChatGPT Work und Codex, aber nicht im normalen Chat, und Pro 500 
 - GPT-6 Astra System Card - OpenAI Deployment Safety Hub, 3. September 2026 - `deploymentsafety.openai.com/gpt-6-astra`
 - Path to Astra: critical capabilities and frontier safeguards - OpenAI, 1. September 2026 - `openai.com/index/path-to-astra/`
 - Daybreak for Frontline Defenders: $1B to protect essential services - OpenAI, 3. September 2026 - `openai.com/index/daybreak-for-frontline-defenders/`
-- Pricing - OpenAI API documentation, geprüft am 5. September 2026 und erneut am 14. Oktober 2026 (Ultrafast, Daybreak-Cyber-Modelle) - `developers.openai.com/api/docs/pricing`
+- Pricing - OpenAI API documentation, geprüft am 5. September 2026 und erneut am 14. Oktober und 16. November 2026 (Ultrafast, Daybreak-Cyber-Modelle) - `developers.openai.com/api/docs/pricing`
 - GPT-6 Astra model page (Kontextfenster, Ausgabegrenze, knowledge cutoff, 272K-Langkontext-Schwelle), geprüft am 5. September 2026 - `developers.openai.com/api/docs/models/gpt-6-astra.md`
 - Guide zu Datenresidenz und EU-Verarbeitungsregionen - OpenAI, geprüft am 5. September 2026 - `developers.openai.com/api/docs/guides/your-data.md`
 - Fast-Mode-Guide (EU-Datenresidenz-Ausschluss) - OpenAI, geprüft am 5. September 2026 - `developers.openai.com/api/docs/guides/fast-mode.md`
@@ -419,7 +421,7 @@ Plus hat es in ChatGPT Work und Codex, aber nicht im normalen Chat, und Pro 500 
 - GPT-6 Astra, Sol, and Luna for production AI agents in Microsoft Foundry - Microsoft Azure, 22. September 2026 (EU-Data-Zone-Preise) - `azure.microsoft.com/en-us/blog/gpt-6-astra-sol-and-luna-for-production-agents-in-microsoft-foundry/`
 - OpenAI GPT-6 Astra is now generally available on Amazon Bedrock - AWS, 8. September 2026 - `aws.amazon.com/about-aws/whats-new/2026/09/openai-gpt-6-astra-on-amazon-bedrock/`
 - ChatGPT release notes (GPT-6 im Chat, 7. Oktober; Pro 500 und GPT-6.1 Sol, 29. September) - OpenAI Help Center, gelesen am 14. Oktober 2026 - `help.openai.com/en/articles/6825453-chatgpt-release-notes`
-- GPT-6 and other models in ChatGPT - OpenAI Help Center, gelesen am 14. Oktober 2026 - `help.openai.com/en/articles/20001354-gpt-6-and-other-models-in-chatgpt`
+- GPT-6 and other models in ChatGPT - OpenAI Help Center, gelesen am 16. November 2026 - `help.openai.com/en/articles/20001354-gpt-6-and-other-models-in-chatgpt`
 - About ChatGPT Pro tiers - OpenAI Help Center, gelesen am 14. Oktober 2026 - `help.openai.com/en/articles/9793128-about-chatgpt-pro-tiers`
 - API-Changelog (GPT-6.1 Sol und Astra Ultrafast, 29. September 2026) - OpenAI, geprüft am 14. Oktober 2026 - `developers.openai.com/api/docs/changelog`
 - Models (Positionierung von GPT-6.1 Sol, Ultrafast-Berechtigung) - ChatGPT Learn, geprüft am 14. Oktober 2026 - `learn.chatgpt.com/docs/models`
