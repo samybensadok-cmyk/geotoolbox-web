@@ -6,6 +6,7 @@ import { ExitIntentPopup } from "@/components/layout/exit-intent-popup"
 import { SaleBanner } from "@/components/layout/sale-banner"
 import { AnnualBonusBanner } from "@/components/layout/annual-bonus-banner"
 import { BlackFridayBanner } from "@/components/layout/black-friday-banner"
+import { BlackFridayExitPopup } from "@/components/layout/black-friday-exit-popup"
 import { ReportExitPopup } from "@/components/layout/report-exit-popup"
 import { ConsentManager } from "@/components/consent/consent-manager"
 import { ImageLightbox } from "@/components/ui/image-lightbox"
@@ -109,6 +110,8 @@ export function RootShell({
         {/* SG_PROMO_EXIT_V1: last-chance founding-offer popup, desktop-only
             exit-intent trigger. See components/layout/exit-intent-popup.tsx. */}
         <ExitIntentPopup locale={locale} />
+        {/* SG_BF2026_EXIT_V1: Black Friday exit-intent (desktop, once, hidden on /pricing /app /services). */}
+        <BlackFridayExitPopup locale={locale} />
         {/* SG_REPORT_EXIT_V1: EN-only, desktop-only; stands down while a discount campaign is live. */}
         <ReportExitPopup locale={locale} />
       </body>
