@@ -74,7 +74,7 @@ export const TOPICS: Topic[] = [
       "grok", "grok-ai", "grok-5", "grok-5-release-date", "grok-4.5", "grok-4.6", "grok-imagine", "xai", "spacexai",
       "perplexity", "deepseek", "deepseek-r1", "deepseek-v4", "kimi-ai", "kimi-k2", "kimi-k3",
       "inkling", "inkling-ai", "thinking-machines-lab", "mira-murati",
-      "moonshot-ai", "qwen", "qwen3", "qwen3-8-max", "tongyi-qianwen", "alibaba",
+      "moonshot-ai", "qwen", "qwen3", "qwen3-8-max", "qwen4", "qwen4-max", "tongyi-qianwen", "alibaba",
       "glm", "glm-5-2", "zhipu-ai", "z-ai", "openai", "anthropic", "gpt-5-6", "gpt-6", "astra",
       "copilot", "microsoft-copilot", "copilot-ai", "copilot-seo",
       "copilot-studio", "microsoft-copilot-studio", "copilot-agents",
