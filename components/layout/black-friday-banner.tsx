@@ -59,7 +59,7 @@ export function BlackFridayBanner({ locale = "en" }: { locale?: string }) {
   if (!visible) return null
 
   const pricingPath = loc === "en" ? "/pricing" : `/${loc}/pricing`
-  const sub = isBfRush() ? `${t.sub} ${t.rushSub}` : t.sub
+  const sub = isBfRush() ? t.subRush : t.sub
 
   return (
     <div role="region" aria-label={`${t.badge}: ${t.headline}`} className="relative bg-neutral-950 text-white" data-banner-campaign={variant}>

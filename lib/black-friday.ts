@@ -33,9 +33,10 @@ export const BF = {
    *  the code after it). Stripe redeem_by / expires_at = 2026-12-03T10:00:00Z, a 2 h tail so a session created just
    *  before the end can still be paid. */
   endIso: "2026-12-03T07:59:59Z",
-  /** Final-rush bonus: annual plans bought from here to the end also get a free GEO audit + consultation call
-   *  (manual fulfilment, no code). = Sat 2026-11-28 00:00 PT. Mirrors SG_BF2026['rush_start']. */
-  rushStartIso: "2026-11-28T08:00:00Z",
+  /** Annual bonus: annual plans bought from here to the end also get a free GEO audit + strategy call (manual
+   *  fulfilment, no code). Operator 2026-11-17: runs from the start (was Sat Nov 28 = people would wait).
+   *  Mirrors SG_BF2026['rush_start']. */
+  rushStartIso: "2026-11-16T00:00:00Z",
   annualPercentOff: 40,
   monthlyPercentOff: 30,
   monthlyMonths: 3,
@@ -85,6 +86,8 @@ type Copy = {
   headline: string
   sub: string
   rushSub: string
+  /** Banner qualifier while the annual bonus runs (replaces `sub`, keeps the bar on one line). */
+  subRush: string
   bannerCta: string
   /** Mobile (< 640 px): one short line + short CTA. */
   mobileHeadline: string
@@ -108,7 +111,8 @@ export const BF_COPY: Record<SaleLocale, Copy> = {
     badge: "BLACK FRIDAY",
     headline: "Up to 40% off GEO Toolbox",
     sub: "40% off year one (annual) · 30% off 3 months (monthly) · no code needed",
-    rushSub: "+ free GEO audit & strategy call with annual",
+    rushSub: "+ free GEO audit & strategy call with annual plans",
+    subRush: "40% off year one + free GEO audit & strategy call (annual) · 30% off 3 months (monthly)",
     bannerCta: "Claim my discount",
     mobileHeadline: "Black Friday: up to 40% off",
     mobileCta: "Claim",
@@ -117,7 +121,7 @@ export const BF_COPY: Record<SaleLocale, Copy> = {
     teaserBody: (s) => `Starts ${s}, 12:00 AM PT.`,
     liveLead: "Black Friday: 40% off your first year on annual plans, 30% off your first 3 months on monthly.",
     liveBody: (e) => `New subscriptions, applied automatically at checkout. Ends ${e}, 11:59 PM PT.`,
-    rushBonus: "Annual plans bought now also get a free GEO audit + consultation call.",
+    rushBonus: "Annual plans also include a free GEO audit + strategy call.",
     cta: "See plans",
     timeLeft: (cd) => `${cd} left`,
     startsIn: (cd) => `starts in ${cd}`,
@@ -132,6 +136,7 @@ export const BF_COPY: Record<SaleLocale, Copy> = {
     headline: "Jusqu’à −40 % sur GEO Toolbox",
     sub: "−40 % la 1re année (annuel) · −30 % pendant 3 mois (mensuel) · sans code",
     rushSub: "+ audit GEO et appel stratégie offerts en annuel",
+    subRush: "−40 % la 1re année + audit GEO et appel stratégie offerts (annuel) · −30 % pendant 3 mois (mensuel)",
     bannerCta: "J’en profite",
     mobileHeadline: "Black Friday : jusqu’à −40 %",
     mobileCta: "J’en profite",
@@ -140,7 +145,7 @@ export const BF_COPY: Record<SaleLocale, Copy> = {
     teaserBody: (s) => `À partir du ${s}, 0 h (heure du Pacifique).`,
     liveLead: "Black Friday : −40 % sur votre première année en annuel, −30 % sur vos 3 premiers mois en mensuel.",
     liveBody: (e) => `Nouveaux abonnements, appliqué automatiquement au paiement. Fin le ${e} à 23 h 59 (heure du Pacifique).`,
-    rushBonus: "Les formules annuelles souscrites maintenant incluent aussi un audit GEO et un appel conseil offerts.",
+    rushBonus: "Les formules annuelles souscrites maintenant incluent aussi un audit GEO et un appel stratégie offerts.",
     cta: "Voir les formules",
     timeLeft: (cd) => `reste ${cd}`,
     startsIn: (cd) => `début dans ${cd}`,
@@ -155,6 +160,7 @@ export const BF_COPY: Record<SaleLocale, Copy> = {
     headline: "Hasta un 40 % de descuento en GEO Toolbox",
     sub: "−40 % el primer año (anual) · −30 % durante 3 meses (mensual) · sin código",
     rushSub: "+ auditoría GEO y llamada de estrategia gratis en anual",
+    subRush: "−40 % el primer año + auditoría GEO y llamada de estrategia gratis (anual) · −30 % durante 3 meses (mensual)",
     bannerCta: "Quiero mi descuento",
     mobileHeadline: "Black Friday: hasta −40 %",
     mobileCta: "Lo quiero",
@@ -163,7 +169,7 @@ export const BF_COPY: Record<SaleLocale, Copy> = {
     teaserBody: (s) => `Empieza el ${s}, a las 0:00 (hora del Pacífico).`,
     liveLead: "Black Friday: 40 % de descuento en tu primer año con plan anual, 30 % en tus 3 primeros meses con plan mensual.",
     liveBody: (e) => `Nuevas suscripciones, se aplica automáticamente al pagar. Termina el ${e} a las 23:59 (hora del Pacífico).`,
-    rushBonus: "Los planes anuales contratados ahora incluyen además una auditoría GEO y una llamada de consultoría gratis.",
+    rushBonus: "Los planes anuales contratados ahora incluyen además una auditoría GEO y una llamada de estrategia gratis.",
     cta: "Ver planes",
     timeLeft: (cd) => `quedan ${cd}`,
     startsIn: (cd) => `empieza en ${cd}`,
@@ -178,6 +184,7 @@ export const BF_COPY: Record<SaleLocale, Copy> = {
     headline: "Bis zu 40 % Rabatt auf GEO Toolbox",
     sub: "−40 % im ersten Jahr (jährlich) · −30 % für 3 Monate (monatlich) · ohne Code",
     rushSub: "+ kostenloses GEO-Audit und Strategiegespräch beim Jahrestarif",
+    subRush: "−40 % im 1. Jahr + kostenloses GEO-Audit und Strategiegespräch (jährlich) · −30 % für 3 Monate (monatlich)",
     bannerCta: "Rabatt sichern",
     mobileHeadline: "Black Friday: bis zu −40 %",
     mobileCta: "Sichern",
@@ -186,7 +193,7 @@ export const BF_COPY: Record<SaleLocale, Copy> = {
     teaserBody: (s) => `Ab ${s}, 0:00 Uhr (Pazifikzeit).`,
     liveLead: "Black Friday: 40 % Rabatt auf dein erstes Jahr im Jahrestarif, 30 % auf deine ersten 3 Monate im Monatstarif.",
     liveBody: (e) => `Für neue Abos, wird beim Bezahlen automatisch abgezogen. Endet am ${e} um 23:59 Uhr (Pazifikzeit).`,
-    rushBonus: "Jahrestarife, die du jetzt abschließt, enthalten zusätzlich ein kostenloses GEO-Audit und ein Beratungsgespräch.",
+    rushBonus: "Jahrestarife, die du jetzt abschließt, enthalten zusätzlich ein kostenloses GEO-Audit und ein Strategiegespräch.",
     cta: "Tarife ansehen",
     timeLeft: (cd) => `noch ${cd}`,
     startsIn: (cd) => `startet in ${cd}`,
