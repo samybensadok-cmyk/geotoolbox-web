@@ -117,6 +117,9 @@ export const AFFILIATE_LINKS: Record<string, AffiliateLink> = {
   wordlift: { url: "https://wordlift.io/", program: "WordLift", cluster: "c6-entity", pending: true },
   schemaapp: { url: "https://www.schemaapp.com/", program: "Schema App", cluster: "c6-entity", pending: true },
   linkwhisper: { url: "https://linkwhisper.com/ref/4309/", program: "Link Whisper", cluster: "c6-entity" },
+  // Higgsfield (FirstPromoter, ?fpr= works on any page) — AI video/image tool, live 2026-11-17.
+  higgsfield: { url: "https://higgsfield.ai/?fpr=samy-977719", program: "Higgsfield", cluster: "c1-content" },
+  "higgsfield-pricing": { url: "https://higgsfield.ai/pricing?fpr=samy-977719", program: "Higgsfield (pricing)", cluster: "c1-content" },
   marketmuse: { url: "https://www.marketmuse.com/", program: "MarketMuse", cluster: "c6-entity", pending: true },
 }
 
