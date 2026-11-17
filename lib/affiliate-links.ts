@@ -116,7 +116,7 @@ export const AFFILIATE_LINKS: Record<string, AffiliateLink> = {
   inlinks: { url: "https://inlinks.com/", program: "InLinks", cluster: "c6-entity", pending: true },
   wordlift: { url: "https://wordlift.io/", program: "WordLift", cluster: "c6-entity", pending: true },
   schemaapp: { url: "https://www.schemaapp.com/", program: "Schema App", cluster: "c6-entity", pending: true },
-  linkwhisper: { url: "https://linkwhisper.com/", program: "Link Whisper", cluster: "c6-entity", pending: true },
+  linkwhisper: { url: "https://linkwhisper.com/ref/4309/", program: "Link Whisper", cluster: "c6-entity" },
   marketmuse: { url: "https://www.marketmuse.com/", program: "MarketMuse", cluster: "c6-entity", pending: true },
 }
 
