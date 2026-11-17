@@ -1,7 +1,7 @@
 "use client"
 
-import { useSyncExternalStore } from "react"
-import { BF, BF_SERVICES, bfEndLabel, bfPhase, bfServicePrice, fmtUsd, formatBfCountdown, parseUsd } from "@/lib/black-friday"
+import { useBfLive } from "@/components/promo/use-bf-live"
+import { BF, BF_SERVICES, bfEndLabel, bfServicePrice, fmtUsd, formatBfCountdown, parseUsd } from "@/lib/black-friday"
 import { useCountdown } from "@/components/promo/use-countdown"
 
 /**
@@ -10,15 +10,7 @@ import { useCountdown } from "@/components/promo/use-countdown"
  * show it. Client-only (server snapshot = not live) so a statically rendered page never freezes the offer into
  * HTML after the end date; a 30 s tick flips it in an open tab.
  */
-function subscribe(cb: () => void): () => void {
-  const id = window.setInterval(cb, 30_000)
-  return () => window.clearInterval(id)
-}
-const liveSnap = (): boolean => bfPhase() === "live"
-const offSnap = (): boolean => false
-export function useBfLive(): boolean {
-  return useSyncExternalStore(subscribe, liveSnap, offSnap)
-}
+export { useBfLive }
 
 const isDirectBuy = (href?: string) => !!href && BF_SERVICES.directBuyRe.test(href)
 

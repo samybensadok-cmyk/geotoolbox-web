@@ -21,6 +21,8 @@ import {
 } from "@/lib/promo"
 import { useCountdown } from "@/components/promo/use-countdown"
 import { currencyParam } from "@/lib/i18n/currency"
+import { useBfLive } from "@/components/promo/use-bf-live"
+import { BF_CARD_COPY, bfAnnualYear, bfLocale, bfMonthly } from "@/lib/black-friday"
 
 // SG_PROMO_V2 (2026-08-15): offer continuity. When the visitor arrives from the
 // founding banner (?promo=FOUNDING30&bv=<variant>) — or clicked it earlier and
@@ -142,9 +144,36 @@ const ORGANIC_VARIANT = "organic"
 const fill = (tpl: string, vars: Record<string, string>) =>
   tpl.replace(/\{(\w+)\}/g, (m, k) => vars[k] ?? m)
 
-function priceDisplay(plan: Plan, annual: boolean, copy: PricingCardsCopy, locale: string, promo: boolean) {
+type PriceView = { big: string; sub: string | null; save: string | null; strike: string | null; bfPill?: string; bfSave?: string }
+function priceDisplay(plan: Plan, annual: boolean, copy: PricingCardsCopy, locale: string, promo: boolean, bf = false): PriceView {
   const money = (n: number) => fill(copy.money, { amount: fmtPromoAmount(n, locale) })
   if (plan.priceMonthly === null) return { big: copy.custom, sub: null, save: null, strike: null }
+  // SG_BF2026_V1 (redesign 2026-11-17, operator: "prices are not strike through with discount visible on the cards"):
+  // while Black Friday is live every self-serve card shows list price struck through, the BF price, a pill and the
+  // saving. Same numbers the backend applies at checkout (lib/black-friday.ts mirrors SG_BF2026 + the Stripe coupons).
+  if (bf && plan.priceMonthly > 0) {
+    const t = BF_CARD_COPY[bfLocale(locale)]
+    if (annual && plan.priceYearly) {
+      const year = bfAnnualYear(plan.priceYearly)
+      return {
+        big: money(Math.round((year / 12) * 100) / 100),
+        strike: money(Math.round((plan.priceYearly / 12) * 100) / 100),
+        sub: fill(t.subAnnual, { total: money(year), full: money(plan.priceYearly) }),
+        save: null,
+        bfPill: t.pillAnnual,
+        bfSave: fill(t.save, { amount: money(Math.round((plan.priceYearly - year) * 100) / 100) }),
+      }
+    }
+    const mo = bfMonthly(plan.priceMonthly)
+    return {
+      big: money(mo),
+      strike: money(plan.priceMonthly),
+      sub: fill(t.subMonthly, { full: money(plan.priceMonthly) }),
+      save: null,
+      bfPill: t.pillMonthly,
+      bfSave: fill(t.save, { amount: money(Math.round((plan.priceMonthly - mo) * 3 * 100) / 100) }),
+    }
+  }
   if (promo && plan.priceMonthly > 0) {
     // SG_PROMO_V2: the 12-month repeating coupon covers 12 monthly invoices,
     // or the FIRST annual invoice — after that the plan reverts to list price.
@@ -185,7 +214,10 @@ function priceDisplay(plan: Plan, annual: boolean, copy: PricingCardsCopy, local
 export function PricingCards({ copy, locale, creditsLabel = "Monthly credits" }: { copy: PricingCardsCopy; locale: string; creditsLabel?: string }) {
   // Monthly first (operator call 2026-07-31): lead with the real monthly price,
   // let the annual toggle reveal the discount via the strikethrough anchor.
-  const [annual, setAnnual] = useState(false)
+  // SG_BF2026_V1: until the visitor picks an interval, Black Friday opens on annual (the bigger, 40% deal).
+  const bfLive = useBfLive()
+  const [annualChoice, setAnnual] = useState<boolean | null>(null)
+  const annual = annualChoice ?? bfLive
   // Defaults to "brand" because Starter is the advertised entry point.
   const [segment, setSegment] = useState<PlanSegment>("brand")
   const visibleTiers = PLANS.filter((p) => p.segments.includes(segment))
@@ -282,7 +314,8 @@ export function PricingCards({ copy, locale, creditsLabel = "Monthly credits" }:
       setPromo(fallback)
     } else if (resMatches && msLeft !== null && msLeft <= 0) setPromo(fallback)
   }, [isPersonal, resMatches, msLeft])
-  const promoOn = !!promo
+  // During Black Friday the backend applies the BF code itself; legacy promo carriers are ignored here too.
+  const promoOn = !!promo && !bfLive
   const promoUi = PROMO_UI[(locale === "fr" || locale === "es" || locale === "de" ? locale : "en") as PromoLocale]
 
   return (
@@ -339,9 +372,15 @@ export function PricingCards({ copy, locale, creditsLabel = "Monthly credits" }:
             >
               {label}
               {isAnnual && (
-                <span className="ml-1.5 rounded-full bg-accent-100 px-1.5 py-0.5 text-[10px] font-semibold text-accent-800">
-                  {copy.annualBadge}
-                </span>
+                bfLive ? (
+                  <span className="ml-1.5 rounded-full bg-yellow-400 px-1.5 py-0.5 text-[10px] font-extrabold text-neutral-950">
+                    {BF_CARD_COPY[bfLocale(locale)].toggle}
+                  </span>
+                ) : (
+                  <span className="ml-1.5 rounded-full bg-accent-100 px-1.5 py-0.5 text-[10px] font-semibold text-accent-800">
+                    {copy.annualBadge}
+                  </span>
+                )
               )}
             </button>
           ))}
@@ -364,7 +403,8 @@ export function PricingCards({ copy, locale, creditsLabel = "Monthly credits" }:
         {visibleTiers.map((plan) => {
           const trialBrands = ({ starter: 1, consultant: 2, pro: 2, agency: 3 } as Record<string, number>)[plan.id]
           const trialCopy = TRIAL_COPY[locale] ?? TRIAL_COPY.en
-          const p = priceDisplay(plan, annual, copy, locale, promoOn)
+          const p = priceDisplay(plan, annual, copy, locale, promoOn, bfLive)
+          const bfCard = !!p.bfPill
           const c = copy.plans[plan.id]
           const seg = segment === "agency" ? c.agency : undefined
           const tagline = seg?.tagline ?? c.tagline
@@ -407,6 +447,11 @@ export function PricingCards({ copy, locale, creditsLabel = "Monthly credits" }:
                   {copy.badge.mostPopular}
                 </span>
               )}
+              {bfCard && (
+                <span className="absolute -top-3 right-6 inline-flex items-center gap-1 rounded-full bg-neutral-950 px-3 py-1 text-[11px] font-extrabold uppercase tracking-wide text-yellow-300 shadow-sm">
+                  {BF_CARD_COPY[bfLocale(locale)].ribbon}
+                </span>
+              )}
 
               {/* h2, not h3: PricingCards is rendered directly under the /pricing
                   <h1> with no intervening section heading, so an <h3> here was a
@@ -414,14 +459,20 @@ export function PricingCards({ copy, locale, creditsLabel = "Monthly credits" }:
                   size, so this is a semantics-only change. */}
               <h2 className="text-[15px] font-bold tracking-tight text-gray-900">{plan.name}</h2>
 
-              <div className="mt-3 flex items-baseline gap-1">
-                <span className="text-[42px] font-medium tracking-tight text-gray-900">{p.big}</span>
+              {bfCard && p.strike && (
+                <div className="mt-3 flex items-center gap-2">
+                  <s className="text-[22px] font-medium text-gray-400 decoration-red-500 decoration-[3px]">{p.strike}</s>
+                  <span className="rounded-md bg-red-600 px-2 py-0.5 text-[12px] font-extrabold text-white">{p.bfPill}</span>
+                </div>
+              )}
+              <div className={cn("flex items-baseline gap-1", bfCard ? "mt-0.5" : "mt-3")}>
+                <span className={cn("text-[42px] tracking-tight", bfCard ? "font-bold text-red-600" : "font-medium text-gray-900")}>{p.big}</span>
                 {plan.priceMonthly !== null && plan.priceMonthly > 0 && (
                   <span className="text-sm font-medium text-gray-500">{copy.perMo}</span>
                 )}
               </div>
               <div className="mt-1 flex min-h-[20px] flex-wrap items-center gap-x-2 gap-y-1">
-                {p.strike && (annual || promoOn) && (
+                {!bfCard && p.strike && (annual || promoOn) && (
                   <s className="text-xs text-gray-400">{p.strike}</s>
                 )}
                 {promoOn && plan.priceMonthly !== null && plan.priceMonthly > 0 && (
@@ -430,6 +481,9 @@ export function PricingCards({ copy, locale, creditsLabel = "Monthly credits" }:
                   </span>
                 )}
                 {p.sub && <span className="text-xs text-gray-500">{p.sub}</span>}
+                {p.bfSave && (
+                  <span className="rounded bg-yellow-100 px-1.5 py-0.5 text-[11px] font-bold text-yellow-900 ring-1 ring-yellow-300">{p.bfSave}</span>
+                )}
                 {p.save && annual && (
                   <span className="rounded bg-accent-50 px-1.5 py-0.5 text-[11px] font-semibold text-accent-700">
                     {p.save}

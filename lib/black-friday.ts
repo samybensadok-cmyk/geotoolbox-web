@@ -17,7 +17,7 @@
  *     the code for the checkout's billing interval to EVERY eligible checkout inside the window. It does
  *     not depend on a ?promo= carrier from this site (that carrier is what silently failed for OCT30).
  *
- * So this site only DISPLAYS the offer. Plan cards keep list prices; the strip says the discount is
+ * So this site only DISPLAYS the offer. Plan cards show list price struck through + the BF price (pricing-cards.tsx); the discount is
  * applied at checkout, where Stripe shows the exact amount before payment.
  */
 
@@ -125,7 +125,7 @@ export const BF_COPY: Record<SaleLocale, Copy> = {
     stripTeaser: (s, e) =>
       `Black Friday runs ${s}, 12:00 AM PT, to ${e}, 11:59 PM PT: 40% off the first year of any annual plan, 30% off the first 3 months of any monthly plan, for new subscriptions, applied automatically at checkout.`,
     stripLive: (e) =>
-      `Black Friday until ${e}, 11:59 PM PT: 40% off the first year of any annual plan, 30% off the first 3 months of any monthly plan, for new subscriptions. Applied automatically at checkout, where you see the exact amount before you pay. Prices below are list prices.`,
+      `Black Friday until ${e}, 11:59 PM PT: 40% off the first year of any annual plan, 30% off the first 3 months of any monthly plan, for new subscriptions. Applied automatically at checkout, where you see the exact amount before you pay.`,
   },
   fr: {
     badge: "BLACK FRIDAY",
@@ -148,7 +148,7 @@ export const BF_COPY: Record<SaleLocale, Copy> = {
     stripTeaser: (s, e) =>
       `Black Friday du ${s}, 0 h, au ${e}, 23 h 59 (heure du Pacifique) : −40 % sur la première année de toute formule annuelle, −30 % sur les 3 premiers mois de toute formule mensuelle, pour les nouveaux abonnements, appliqué automatiquement au paiement.`,
     stripLive: (e) =>
-      `Black Friday jusqu’au ${e} à 23 h 59 (heure du Pacifique) : −40 % sur la première année de toute formule annuelle, −30 % sur les 3 premiers mois de toute formule mensuelle, pour les nouveaux abonnements. Appliqué automatiquement au paiement, où le montant exact s’affiche avant de payer. Les prix ci-dessous sont les prix catalogue.`,
+      `Black Friday jusqu’au ${e} à 23 h 59 (heure du Pacifique) : −40 % sur la première année de toute formule annuelle, −30 % sur les 3 premiers mois de toute formule mensuelle, pour les nouveaux abonnements. Appliqué automatiquement au paiement, où le montant exact s’affiche avant de payer.`,
   },
   es: {
     badge: "BLACK FRIDAY",
@@ -171,7 +171,7 @@ export const BF_COPY: Record<SaleLocale, Copy> = {
     stripTeaser: (s, e) =>
       `Black Friday del ${s}, 0:00, al ${e}, 23:59 (hora del Pacífico): 40 % de descuento en el primer año de cualquier plan anual y 30 % en los 3 primeros meses de cualquier plan mensual, para nuevas suscripciones, aplicado automáticamente al pagar.`,
     stripLive: (e) =>
-      `Black Friday hasta el ${e} a las 23:59 (hora del Pacífico): 40 % de descuento en el primer año de cualquier plan anual y 30 % en los 3 primeros meses de cualquier plan mensual, para nuevas suscripciones. Se aplica automáticamente al pagar, donde ves el importe exacto antes de confirmar. Los precios de abajo son precios de lista.`,
+      `Black Friday hasta el ${e} a las 23:59 (hora del Pacífico): 40 % de descuento en el primer año de cualquier plan anual y 30 % en los 3 primeros meses de cualquier plan mensual, para nuevas suscripciones. Se aplica automáticamente al pagar, donde ves el importe exacto antes de confirmar.`,
   },
   de: {
     badge: "BLACK FRIDAY",
@@ -194,7 +194,7 @@ export const BF_COPY: Record<SaleLocale, Copy> = {
     stripTeaser: (s, e) =>
       `Black Friday von ${s}, 0:00 Uhr, bis ${e}, 23:59 Uhr (Pazifikzeit): 40 % Rabatt auf das erste Jahr jedes Jahrestarifs, 30 % auf die ersten 3 Monate jedes Monatstarifs, für neue Abos, beim Bezahlen automatisch abgezogen.`,
     stripLive: (e) =>
-      `Black Friday bis ${e}, 23:59 Uhr (Pazifikzeit): 40 % Rabatt auf das erste Jahr jedes Jahrestarifs, 30 % auf die ersten 3 Monate jedes Monatstarifs, für neue Abos. Wird beim Bezahlen automatisch abgezogen; dort siehst du den genauen Betrag vor dem Bezahlen. Die Preise unten sind Listenpreise.`,
+      `Black Friday bis ${e}, 23:59 Uhr (Pazifikzeit): 40 % Rabatt auf das erste Jahr jedes Jahrestarifs, 30 % auf die ersten 3 Monate jedes Monatstarifs, für neue Abos. Wird beim Bezahlen automatisch abgezogen; dort siehst du den genauen Betrag vor dem Bezahlen.`,
   },
 }
 
@@ -226,3 +226,15 @@ export function fmtUsd(n: number): string {
 export function bfServicePrice(listUsd: number): number {
   return Math.round(listUsd * (100 - BF_SERVICES.percentOff)) / 100
 }
+
+/** SG_BF2026_V1 — plan-card copy while the offer is live ({total}/{full}/{amount} are pre-formatted money strings). */
+export const BF_CARD_COPY: Record<SaleLocale, { pillAnnual: string; pillMonthly: string; subAnnual: string; subMonthly: string; save: string; toggle: string; ribbon: string }> = {
+  en: { pillAnnual: "−40% year one", pillMonthly: "−30% for 3 months", subAnnual: "{total} billed for year one, then {full}/yr", subMonthly: "for 3 months, then {full}/mo", save: "You save {amount}", toggle: "−40%", ribbon: "Black Friday" },
+  fr: { pillAnnual: "−40 % la 1re année", pillMonthly: "−30 % pendant 3 mois", subAnnual: "{total} facturés la 1re année, puis {full}/an", subMonthly: "pendant 3 mois, puis {full}/mois", save: "Vous économisez {amount}", toggle: "−40 %", ribbon: "Black Friday" },
+  es: { pillAnnual: "−40 % el primer año", pillMonthly: "−30 % durante 3 meses", subAnnual: "{total} facturados el primer año, luego {full}/año", subMonthly: "durante 3 meses, luego {full}/mes", save: "Ahorras {amount}", toggle: "−40 %", ribbon: "Black Friday" },
+  de: { pillAnnual: "−40 % im 1. Jahr", pillMonthly: "−30 % für 3 Monate", subAnnual: "{total} für das 1. Jahr, danach {full}/Jahr", subMonthly: "für 3 Monate, danach {full}/Monat", save: "Du sparst {amount}", toggle: "−40 %", ribbon: "Black Friday" },
+}
+
+/** Exact-to-the-cent BF prices (Stripe charges the exact percentage). */
+export const bfAnnualYear = (yearly: number) => Math.round(yearly * (100 - BF.annualPercentOff)) / 100
+export const bfMonthly = (monthly: number) => Math.round(monthly * (100 - BF.monthlyPercentOff)) / 100
