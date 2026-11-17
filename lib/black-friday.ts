@@ -3,7 +3,7 @@
  *
  * Offer: 40% off the FIRST YEAR of any self-serve annual plan, 30% off the FIRST 3 MONTHS of any
  * self-serve monthly plan, new subscriptions. Window: 2026-11-16 00:00 UTC (operator moved the start from Nov 23)
- * -> Wed 2026-12-02 23:59:59 PT. Final-rush annual bonus from Sat 2026-11-28 00:00 PT.
+ * -> Wed 2026-12-02 23:59:59 PT. Annual bonus (free GEO audit + strategy call) runs from the start of the window (operator 2026-11-17; was Sat 2026-11-28).
  *
  * New campaign, new module, new dismiss key (same discipline as lib/sale.ts / lib/annual-bonus.ts):
  * never move a date in place; a re-run is a new campaign.
