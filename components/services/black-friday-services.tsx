@@ -1,8 +1,9 @@
 "use client"
 
 import { useBfLive } from "@/components/promo/use-bf-live"
-import { BF, BF_SERVICES, bfEndLabel, bfServicePrice, fmtUsd, formatBfCountdown, parseUsd } from "@/lib/black-friday"
+import { BF, BF_CARD_COPY, BF_SERVICES, bfEndLabel, bfLocale, bfServicePrice, fmtUsd, formatBfCountdown, parseUsd } from "@/lib/black-friday"
 import { useCountdown } from "@/components/promo/use-countdown"
+import { BfCountdown } from "@/components/promo/bf-countdown"
 
 /**
  * SG_BF2026_SVC_V1 — Black Friday display on the services pages (EN only; the services pages are EN-only).
@@ -71,20 +72,36 @@ export function BfServicesBand() {
             ))}
           </p>
           <p className="mt-1 text-[12.5px] text-white/60">
-            Sprints and retainers: {BF_SERVICES.retainerMonth1PercentOff}% off the first month when signed by {bfEndLabel("en")}, 11:59 PM PT. Discount applied automatically at checkout.
+            Sprints and retainers: {BF_SERVICES.retainerMonth1PercentOff}% off month 1. Ends {bfEndLabel("en")}, 11:59 PM PT.
           </p>
         </div>
         <div className="flex shrink-0 flex-col items-center gap-2">
           {msLeft !== null && msLeft > 0 && (
-            <span className="font-mono text-[13px] tabular-nums text-white/80">
-              Ends in <b className="text-white">{formatBfCountdown(msLeft, "en")}</b>
+            <span className="inline-flex items-center gap-2" aria-live="off">
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-white/60">Ends in</span>
+              <BfCountdown msLeft={msLeft} locale="en" size="sm" />
+              <span className="sr-only">{formatBfCountdown(msLeft, "en")}</span>
             </span>
           )}
           <a href="#pricing" className="inline-flex items-center gap-1 rounded-full bg-yellow-400 px-5 py-2 text-[14px] font-bold text-neutral-950 hover:bg-yellow-300">
-            See the deals <span aria-hidden="true">↓</span>
+            See deals <span aria-hidden="true">↓</span>
           </a>
         </div>
       </div>
     </section>
+  )
+}
+
+/**
+ * SG_BF2026_V2 — "Pricing [−40%]" nav pill while live (Rank Math "Pricing SALE", Surfer "Pricing • BF SALE").
+ * Desktop: lg+ only — the md nav has ~30 px headroom in FR/DE at 768 px (see header.tsx), the pill is ~38 px.
+ */
+export function BfNavPill({ locale, className = "" }: { locale?: string; className?: string }) {
+  const live = useBfLive()
+  if (!live) return null
+  return (
+    <span className={`ml-1.5 rounded-full bg-yellow-400 px-1.5 py-px text-[10px] font-extrabold leading-4 text-neutral-950 ${className}`}>
+      {BF_CARD_COPY[bfLocale(locale)].toggle}
+    </span>
   )
 }

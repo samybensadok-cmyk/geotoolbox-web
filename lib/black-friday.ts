@@ -109,11 +109,11 @@ type Copy = {
 export const BF_COPY: Record<SaleLocale, Copy> = {
   en: {
     badge: "BLACK FRIDAY",
-    headline: "Up to 40% off GEO Toolbox",
+    headline: "Up to 40% off every plan",
     sub: "40% off year one (annual) · 30% off 3 months (monthly) · no code needed",
     rushSub: "+ free GEO audit & strategy call with annual plans",
     subRush: "40% off year one + free GEO audit & strategy call (annual) · 30% off 3 months (monthly)",
-    bannerCta: "Claim my discount",
+    bannerCta: "Claim offer",
     mobileHeadline: "Black Friday: up to 40% off",
     mobileCta: "Claim",
     endsIn: "Ends in",
@@ -128,22 +128,21 @@ export const BF_COPY: Record<SaleLocale, Copy> = {
     dismiss: "Dismiss",
     stripTeaser: (s, e) =>
       `Black Friday runs ${s}, 12:00 AM PT, to ${e}, 11:59 PM PT: 40% off the first year of any annual plan, 30% off the first 3 months of any monthly plan, for new subscriptions, applied automatically at checkout.`,
-    stripLive: (e) =>
-      `Black Friday until ${e}, 11:59 PM PT: 40% off the first year of any annual plan, 30% off the first 3 months of any monthly plan, for new subscriptions. Applied automatically at checkout, where you see the exact amount before you pay.`,
+    stripLive: (e) => `New subscriptions. Applied at checkout, no code needed. Ends ${e}, 11:59 PM PT.`,
   },
   fr: {
     badge: "BLACK FRIDAY",
-    headline: "Jusqu’à −40 % sur GEO Toolbox",
-    sub: "−40 % la 1re année (annuel) · −30 % pendant 3 mois (mensuel) · sans code",
+    headline: "Jusqu’à −40 % sur toutes les formules",
+    sub: "−40 % la 1re année (annuel) · −30 % pendant 3 mois (mensuel) · sans code",
     rushSub: "+ audit GEO et appel stratégie offerts en annuel",
-    subRush: "−40 % la 1re année + audit GEO et appel stratégie offerts (annuel) · −30 % pendant 3 mois (mensuel)",
+    subRush: "−40 % la 1re année + audit GEO et appel stratégie offerts (annuel) · −30 % pendant 3 mois (mensuel)",
     bannerCta: "J’en profite",
-    mobileHeadline: "Black Friday : jusqu’à −40 %",
+    mobileHeadline: "Black Friday : jusqu’à −40 %",
     mobileCta: "J’en profite",
     endsIn: "Fin dans",
-    teaserLead: "Black Friday : −40 % sur votre première année en annuel, −30 % sur vos 3 premiers mois en mensuel.",
+    teaserLead: "Black Friday : −40 % sur votre première année en annuel, −30 % sur vos 3 premiers mois en mensuel.",
     teaserBody: (s) => `À partir du ${s}, 0 h (heure du Pacifique).`,
-    liveLead: "Black Friday : −40 % sur votre première année en annuel, −30 % sur vos 3 premiers mois en mensuel.",
+    liveLead: "Black Friday : −40 % sur votre première année en annuel, −30 % sur vos 3 premiers mois en mensuel.",
     liveBody: (e) => `Nouveaux abonnements, appliqué automatiquement au paiement. Fin le ${e} à 23 h 59 (heure du Pacifique).`,
     rushBonus: "Les formules annuelles souscrites maintenant incluent aussi un audit GEO et un appel stratégie offerts.",
     cta: "Voir les formules",
@@ -151,23 +150,22 @@ export const BF_COPY: Record<SaleLocale, Copy> = {
     startsIn: (cd) => `début dans ${cd}`,
     dismiss: "Fermer",
     stripTeaser: (s, e) =>
-      `Black Friday du ${s}, 0 h, au ${e}, 23 h 59 (heure du Pacifique) : −40 % sur la première année de toute formule annuelle, −30 % sur les 3 premiers mois de toute formule mensuelle, pour les nouveaux abonnements, appliqué automatiquement au paiement.`,
-    stripLive: (e) =>
-      `Black Friday jusqu’au ${e} à 23 h 59 (heure du Pacifique) : −40 % sur la première année de toute formule annuelle, −30 % sur les 3 premiers mois de toute formule mensuelle, pour les nouveaux abonnements. Appliqué automatiquement au paiement, où le montant exact s’affiche avant de payer.`,
+      `Black Friday du ${s}, 0 h, au ${e}, 23 h 59 (heure du Pacifique) : −40 % sur la première année de toute formule annuelle, −30 % sur les 3 premiers mois de toute formule mensuelle, pour les nouveaux abonnements, appliqué automatiquement au paiement.`,
+    stripLive: (e) => `Nouveaux abonnements. Remise appliquée au paiement, sans code. Fin le ${e} à 23 h 59 (heure du Pacifique).`,
   },
   es: {
     badge: "BLACK FRIDAY",
-    headline: "Hasta un 40 % de descuento en GEO Toolbox",
-    sub: "−40 % el primer año (anual) · −30 % durante 3 meses (mensual) · sin código",
+    headline: "Hasta un 40 % de descuento en todos los planes",
+    sub: "−40 % el primer año (anual) · −30 % durante 3 meses (mensual) · sin código",
     rushSub: "+ auditoría GEO y llamada de estrategia gratis en anual",
-    subRush: "−40 % el primer año + auditoría GEO y llamada de estrategia gratis (anual) · −30 % durante 3 meses (mensual)",
-    bannerCta: "Quiero mi descuento",
-    mobileHeadline: "Black Friday: hasta −40 %",
+    subRush: "−40 % el primer año + auditoría GEO y llamada de estrategia gratis (anual) · −30 % durante 3 meses (mensual)",
+    bannerCta: "Aprovechar oferta",
+    mobileHeadline: "Black Friday: hasta −40 %",
     mobileCta: "Lo quiero",
     endsIn: "Termina en",
-    teaserLead: "Black Friday: 40 % de descuento en tu primer año con plan anual, 30 % en tus 3 primeros meses con plan mensual.",
+    teaserLead: "Black Friday: 40 % de descuento en tu primer año con plan anual, 30 % en tus 3 primeros meses con plan mensual.",
     teaserBody: (s) => `Empieza el ${s}, a las 0:00 (hora del Pacífico).`,
-    liveLead: "Black Friday: 40 % de descuento en tu primer año con plan anual, 30 % en tus 3 primeros meses con plan mensual.",
+    liveLead: "Black Friday: 40 % de descuento en tu primer año con plan anual, 30 % en tus 3 primeros meses con plan mensual.",
     liveBody: (e) => `Nuevas suscripciones, se aplica automáticamente al pagar. Termina el ${e} a las 23:59 (hora del Pacífico).`,
     rushBonus: "Los planes anuales contratados ahora incluyen además una auditoría GEO y una llamada de estrategia gratis.",
     cta: "Ver planes",
@@ -175,23 +173,22 @@ export const BF_COPY: Record<SaleLocale, Copy> = {
     startsIn: (cd) => `empieza en ${cd}`,
     dismiss: "Cerrar",
     stripTeaser: (s, e) =>
-      `Black Friday del ${s}, 0:00, al ${e}, 23:59 (hora del Pacífico): 40 % de descuento en el primer año de cualquier plan anual y 30 % en los 3 primeros meses de cualquier plan mensual, para nuevas suscripciones, aplicado automáticamente al pagar.`,
-    stripLive: (e) =>
-      `Black Friday hasta el ${e} a las 23:59 (hora del Pacífico): 40 % de descuento en el primer año de cualquier plan anual y 30 % en los 3 primeros meses de cualquier plan mensual, para nuevas suscripciones. Se aplica automáticamente al pagar, donde ves el importe exacto antes de confirmar.`,
+      `Black Friday del ${s}, 0:00, al ${e}, 23:59 (hora del Pacífico): 40 % de descuento en el primer año de cualquier plan anual y 30 % en los 3 primeros meses de cualquier plan mensual, para nuevas suscripciones, aplicado automáticamente al pagar.`,
+    stripLive: (e) => `Nuevas suscripciones. Se aplica al pagar, sin código. Termina el ${e} a las 23:59 (hora del Pacífico).`,
   },
   de: {
     badge: "BLACK FRIDAY",
-    headline: "Bis zu 40 % Rabatt auf GEO Toolbox",
-    sub: "−40 % im ersten Jahr (jährlich) · −30 % für 3 Monate (monatlich) · ohne Code",
+    headline: "Bis zu 40 % Rabatt auf alle Tarife",
+    sub: "−40 % im ersten Jahr (jährlich) · −30 % für 3 Monate (monatlich) · ohne Code",
     rushSub: "+ kostenloses GEO-Audit und Strategiegespräch beim Jahrestarif",
-    subRush: "−40 % im 1. Jahr + kostenloses GEO-Audit und Strategiegespräch (jährlich) · −30 % für 3 Monate (monatlich)",
-    bannerCta: "Rabatt sichern",
-    mobileHeadline: "Black Friday: bis zu −40 %",
+    subRush: "−40 % im 1. Jahr + kostenloses GEO-Audit und Strategiegespräch (jährlich) · −30 % für 3 Monate (monatlich)",
+    bannerCta: "Angebot sichern",
+    mobileHeadline: "Black Friday: bis zu −40 %",
     mobileCta: "Sichern",
     endsIn: "Endet in",
-    teaserLead: "Black Friday: 40 % Rabatt auf dein erstes Jahr im Jahrestarif, 30 % auf deine ersten 3 Monate im Monatstarif.",
+    teaserLead: "Black Friday: 40 % Rabatt auf dein erstes Jahr im Jahrestarif, 30 % auf deine ersten 3 Monate im Monatstarif.",
     teaserBody: (s) => `Ab ${s}, 0:00 Uhr (Pazifikzeit).`,
-    liveLead: "Black Friday: 40 % Rabatt auf dein erstes Jahr im Jahrestarif, 30 % auf deine ersten 3 Monate im Monatstarif.",
+    liveLead: "Black Friday: 40 % Rabatt auf dein erstes Jahr im Jahrestarif, 30 % auf deine ersten 3 Monate im Monatstarif.",
     liveBody: (e) => `Für neue Abos, wird beim Bezahlen automatisch abgezogen. Endet am ${e} um 23:59 Uhr (Pazifikzeit).`,
     rushBonus: "Jahrestarife, die du jetzt abschließt, enthalten zusätzlich ein kostenloses GEO-Audit und ein Strategiegespräch.",
     cta: "Tarife ansehen",
@@ -199,9 +196,8 @@ export const BF_COPY: Record<SaleLocale, Copy> = {
     startsIn: (cd) => `startet in ${cd}`,
     dismiss: "Schließen",
     stripTeaser: (s, e) =>
-      `Black Friday von ${s}, 0:00 Uhr, bis ${e}, 23:59 Uhr (Pazifikzeit): 40 % Rabatt auf das erste Jahr jedes Jahrestarifs, 30 % auf die ersten 3 Monate jedes Monatstarifs, für neue Abos, beim Bezahlen automatisch abgezogen.`,
-    stripLive: (e) =>
-      `Black Friday bis ${e}, 23:59 Uhr (Pazifikzeit): 40 % Rabatt auf das erste Jahr jedes Jahrestarifs, 30 % auf die ersten 3 Monate jedes Monatstarifs, für neue Abos. Wird beim Bezahlen automatisch abgezogen; dort siehst du den genauen Betrag vor dem Bezahlen.`,
+      `Black Friday von ${s}, 0:00 Uhr, bis ${e}, 23:59 Uhr (Pazifikzeit): 40 % Rabatt auf das erste Jahr jedes Jahrestarifs, 30 % auf die ersten 3 Monate jedes Monatstarifs, für neue Abos, beim Bezahlen automatisch abgezogen.`,
+    stripLive: (e) => `Für neue Abos. Wird beim Bezahlen abgezogen, ohne Code. Endet am ${e} um 23:59 Uhr (Pazifikzeit).`,
   },
 }
 
@@ -234,12 +230,16 @@ export function bfServicePrice(listUsd: number): number {
   return Math.round(listUsd * (100 - BF_SERVICES.percentOff)) / 100
 }
 
-/** SG_BF2026_V1 — plan-card copy while the offer is live ({total}/{full}/{amount} are pre-formatted money strings). */
-export const BF_CARD_COPY: Record<SaleLocale, { pillAnnual: string; pillMonthly: string; subAnnual: string; subMonthly: string; save: string; toggle: string; ribbon: string }> = {
-  en: { pillAnnual: "−40% year one", pillMonthly: "−30% for 3 months", subAnnual: "{total} billed for year one, then {full}/yr", subMonthly: "for 3 months, then {full}/mo", save: "You save {amount}", toggle: "−40%", ribbon: "Black Friday" },
-  fr: { pillAnnual: "−40 % la 1re année", pillMonthly: "−30 % pendant 3 mois", subAnnual: "{total} facturés la 1re année, puis {full}/an", subMonthly: "pendant 3 mois, puis {full}/mois", save: "Vous économisez {amount}", toggle: "−40 %", ribbon: "Black Friday" },
-  es: { pillAnnual: "−40 % el primer año", pillMonthly: "−30 % durante 3 meses", subAnnual: "{total} facturados el primer año, luego {full}/año", subMonthly: "durante 3 meses, luego {full}/mes", save: "Ahorras {amount}", toggle: "−40 %", ribbon: "Black Friday" },
-  de: { pillAnnual: "−40 % im 1. Jahr", pillMonthly: "−30 % für 3 Monate", subAnnual: "{total} für das 1. Jahr, danach {full}/Jahr", subMonthly: "für 3 Monate, danach {full}/Monat", save: "Du sparst {amount}", toggle: "−40 %", ribbon: "Black Friday" },
+/**
+ * SG_BF2026_V2 — plan-card copy while the offer is live ({total}/{full} are pre-formatted money strings).
+ * Redesign 2026-11-18 (benchmark: Proton, WP Rocket, Elementor, SE Ranking): one soft pill, price in normal ink,
+ * one line of terms; annual cards carry the bonus as its own pill (WP Rocket "+ Rocket Insights for FREE!" pattern).
+ */
+export const BF_CARD_COPY: Record<SaleLocale, { pillAnnual: string; pillMonthly: string; subAnnual: string; subMonthly: string; bonus: string; toggle: string }> = {
+  en: { pillAnnual: "−40%", pillMonthly: "−30%", subAnnual: "{total} billed for year one, then {full}/yr", subMonthly: "for 3 months, then {full}/mo", bonus: "+ Free GEO audit & strategy call", toggle: "−40%" },
+  fr: { pillAnnual: "−40 %", pillMonthly: "−30 %", subAnnual: "{total} facturés la 1re année, puis {full}/an", subMonthly: "pendant 3 mois, puis {full}/mois", bonus: "+ Audit GEO et appel stratégie offerts", toggle: "−40 %" },
+  es: { pillAnnual: "−40 %", pillMonthly: "−30 %", subAnnual: "{total} facturados el primer año, luego {full}/año", subMonthly: "durante 3 meses, luego {full}/mes", bonus: "+ Auditoría GEO y llamada de estrategia gratis", toggle: "−40 %" },
+  de: { pillAnnual: "−40 %", pillMonthly: "−30 %", subAnnual: "{total} für das 1. Jahr, danach {full}/Jahr", subMonthly: "für 3 Monate, danach {full}/Monat", bonus: "+ Gratis GEO-Audit und Strategiegespräch", toggle: "−40 %" },
 }
 
 /** Exact-to-the-cent BF prices (Stripe charges the exact percentage). */

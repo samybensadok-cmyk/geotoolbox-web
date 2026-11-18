@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils"
 import { localizeNavHref } from "@/lib/i18n/nav"
 import { currencyParam } from "@/lib/i18n/currency"
 import headerStyles from "./header.module.css"
+import { BfNavPill } from "@/components/services/black-friday-services"
 
 export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; locale?: string }) {
   // Keeps chrome links inside the visitor's locale. A no-op on `en`, and a
@@ -167,6 +168,7 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
             className="flex min-h-[40px] items-center rounded-md px-2 lg:px-3 text-[13px] font-medium text-gray-700 transition-colors hover:text-gray-900 hover:bg-gray-50"
           >
             {nav?.pricing ?? "Pricing"}
+            <BfNavPill locale={locale} className="hidden lg:inline" />
           </Link>
 
           <Link
@@ -288,6 +290,7 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
               className="rounded-lg px-2 py-3 text-sm font-medium text-gray-900 hover:bg-gray-50"
             >
               {nav?.pricing ?? "Pricing"}
+              <BfNavPill locale={locale} />
             </Link>
 
             <Link

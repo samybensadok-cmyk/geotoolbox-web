@@ -6,6 +6,7 @@ import { trackEvent } from "@/lib/analytics"
 import { PLANS } from "@/lib/plans"
 import { BF, bfEndLabel, bfLocale, bfPhase, formatBfCountdown, isBfRush } from "@/lib/black-friday"
 import { useCountdown } from "@/components/promo/use-countdown"
+import { BfCountdown } from "@/components/promo/bf-countdown"
 import type { SaleLocale } from "@/lib/sale"
 import { isEuroLocale } from "@/lib/i18n/currency"
 
@@ -27,59 +28,62 @@ const BF_MO = Math.round(((YR * (100 - BF.annualPercentOff)) / 100 / 12) * 100) 
 
 // FR/DE display and bill EUR at the same numeric amounts (lib/i18n/currency.ts); EN/ES are USD.
 const money = (n: number, loc: SaleLocale) => {
-  if (isEuroLocale(loc)) return `${n.toLocaleString(loc === "fr" ? "fr-FR" : "de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}\u00a0€`
-  return `$${n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+  const min = Number.isInteger(n) ? 0 : 2 // "$79" not "$79.00" for the struck list price
+  if (isEuroLocale(loc)) return `${n.toLocaleString(loc === "fr" ? "fr-FR" : "de-DE", { minimumFractionDigits: min, maximumFractionDigits: 2 })}\u00a0€`
+  return `$${n.toLocaleString("en-US", { minimumFractionDigits: min, maximumFractionDigits: 2 })}`
 }
 
-type Copy = { eyebrow: string; headline: string; body: (bf: string, list: string) => string; monthly: string; rush: string; cta: string; secondary: string; endsIn: string; ends: (d: string) => string; close: string }
+/** SG_BF2026_V2 (2026-11-18): one number in the headline, one line of body, bonus as a pill, "No thanks" without the
+ *  guilt line (benchmark BLACK-FRIDAY-DEALS-2026/design-bench/BENCHMARK-2026-11-18.md). */
+type Copy = { eyebrow: string; headline: string; body: string; rush: string; cta: string; secondary: string; endsIn: string; ends: (d: string) => string; close: string; perMo: string }
 const COPY: Record<SaleLocale, Copy> = {
   en: {
     eyebrow: "Black Friday",
-    headline: "Wait — take 40% off your first year",
-    body: (bf, list) => `Starter for ${bf}/mo billed annually instead of ${list}. Every plan, applied automatically at checkout — no code.`,
-    monthly: "Prefer monthly? 30% off your first 3 months.",
-    rush: "Annual plans bought now also get a free GEO audit + strategy call.",
-    cta: "Claim 40% off",
-    secondary: "No thanks, I'll pay full price later",
+    headline: "Up to 40% off GEO Toolbox",
+    body: "Starter, first year billed annually. Applied at checkout, no code needed.",
+    rush: "+ Free GEO audit & strategy call",
+    cta: "Get 40% off",
+    secondary: "No thanks",
     endsIn: "Ends in",
     ends: (d) => `Ends ${d}, 11:59 PM PT · new subscriptions`,
     close: "Close",
+    perMo: "mo",
   },
   fr: {
     eyebrow: "Black Friday",
-    headline: "Attendez : −40 % sur votre première année",
-    body: (bf, list) => `Starter à ${bf}/mois facturé à l’année au lieu de ${list}. Toutes les formules, appliqué automatiquement au paiement, sans code.`,
-    monthly: "Plutôt en mensuel ? −30 % sur vos 3 premiers mois.",
-    rush: "Les formules annuelles souscrites maintenant incluent aussi un audit GEO et un appel stratégie offerts.",
-    cta: "Profiter de −40 %",
-    secondary: "Non merci, je paierai plein tarif",
+    headline: "Jusqu’à −40 % sur GEO Toolbox",
+    body: "Starter, 1re année facturée à l’année. Remise appliquée au paiement, sans code.",
+    rush: "+ Audit GEO et appel stratégie offerts",
+    cta: "Profiter de −40 %",
+    secondary: "Non merci",
     endsIn: "Fin dans",
     ends: (d) => `Fin le ${d} à 23 h 59 (heure du Pacifique) · nouveaux abonnements`,
     close: "Fermer",
+    perMo: "mois",
   },
   es: {
     eyebrow: "Black Friday",
-    headline: "Espera: 40 % de descuento en tu primer año",
-    body: (bf, list) => `Starter por ${bf}/mes facturado anualmente en lugar de ${list}. Todos los planes, aplicado automáticamente al pagar, sin código.`,
-    monthly: "¿Prefieres mensual? 30 % de descuento en tus 3 primeros meses.",
-    rush: "Los planes anuales contratados ahora incluyen además una auditoría GEO y una llamada de estrategia gratis.",
-    cta: "Quiero el 40 %",
-    secondary: "No, gracias, pagaré el precio completo",
+    headline: "Hasta un 40 % de descuento en GEO Toolbox",
+    body: "Starter, primer año facturado anualmente. Se aplica al pagar, sin código.",
+    rush: "+ Auditoría GEO y llamada de estrategia gratis",
+    cta: "Quiero el 40 %",
+    secondary: "No, gracias",
     endsIn: "Termina en",
     ends: (d) => `Termina el ${d} a las 23:59 (hora del Pacífico) · nuevas suscripciones`,
     close: "Cerrar",
+    perMo: "mes",
   },
   de: {
     eyebrow: "Black Friday",
-    headline: "Moment: 40 % Rabatt auf dein erstes Jahr",
-    body: (bf, list) => `Starter für ${bf}/Monat bei jährlicher Zahlung statt ${list}. Jeder Tarif, beim Bezahlen automatisch abgezogen, ohne Code.`,
-    monthly: "Lieber monatlich? 30 % Rabatt auf deine ersten 3 Monate.",
-    rush: "Jahrestarife, die du jetzt abschließt, enthalten zusätzlich ein kostenloses GEO-Audit und ein Strategiegespräch.",
-    cta: "40 % sichern",
-    secondary: "Nein danke, ich zahle später den vollen Preis",
+    headline: "Bis zu 40 % Rabatt auf GEO Toolbox",
+    body: "Starter, 1. Jahr bei jährlicher Zahlung. Wird beim Bezahlen abgezogen, ohne Code.",
+    rush: "+ Gratis GEO-Audit und Strategiegespräch",
+    cta: "40 % sichern",
+    secondary: "Nein danke",
     endsIn: "Endet in",
     ends: (d) => `Endet am ${d} um 23:59 Uhr (Pazifikzeit) · neue Abos`,
     close: "Schließen",
+    perMo: "Monat",
   },
 }
 
@@ -178,15 +182,22 @@ export function BlackFridayExitPopup({ locale = "en" }: { locale?: string }) {
           <span className="rounded-sm bg-yellow-400 px-2 py-0.5 text-[11px] font-extrabold uppercase tracking-[0.12em] text-neutral-950">{t.eyebrow}</span>
           <h2 id="bf-exit-headline" className="mt-4 text-[1.65rem] font-extrabold leading-tight tracking-tight">{t.headline}</h2>
           <p className="mt-4 flex items-baseline gap-2">
-            <span className="text-[2.4rem] font-extrabold leading-none text-yellow-300">{money(BF_MO, loc)}</span>
-            <span className="text-sm text-white/60">/{loc === "en" ? "mo" : loc === "fr" ? "mois" : loc === "es" ? "mes" : "Monat"}</span>
-            <s className="text-lg text-white/40 decoration-red-500 decoration-2">{money(LIST_MO, loc)}</s>
+            <span className="text-[2.6rem] font-extrabold leading-none text-yellow-300">{money(BF_MO, loc)}</span>
+            <span className="text-sm text-white/60">/{t.perMo}</span>
+            <s className="text-lg text-white/40 decoration-white/40">{money(LIST_MO, loc)}</s>
           </p>
-          <p className="mt-3 text-[14.5px] leading-relaxed text-white/80">{t.body(money(BF_MO, loc), money(LIST_MO, loc))}</p>
-          <p className="mt-2 text-[13.5px] text-white/70">{t.monthly}</p>
-          {isBfRush() && <p className="mt-2 text-[13.5px] font-semibold text-yellow-200">{t.rush}</p>}
+          <p className="mt-2 text-[14px] leading-relaxed text-white/70">{t.body}</p>
+          {isBfRush() && (
+            <p className="mt-3">
+              <span className="inline-flex rounded-full bg-yellow-400/15 px-2.5 py-1 text-[12.5px] font-semibold text-yellow-200 ring-1 ring-yellow-400/30">{t.rush}</span>
+            </p>
+          )}
           {msLeft !== null && msLeft > 0 && (
-            <p className="mt-4 font-mono text-[13px] tabular-nums text-white/70">{t.endsIn} <b className="text-white">{formatBfCountdown(msLeft, loc)}</b></p>
+            <div className="mt-5 flex items-center gap-2.5" aria-live="off">
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-white/60">{t.endsIn}</span>
+              <BfCountdown msLeft={msLeft} locale={loc} size="md" />
+              <span className="sr-only">{formatBfCountdown(msLeft, loc)}</span>
+            </div>
           )}
           <a
             ref={ctaRef}
@@ -196,7 +207,7 @@ export function BlackFridayExitPopup({ locale = "en" }: { locale?: string }) {
           >
             {t.cta} <span aria-hidden="true">→</span>
           </a>
-          <button type="button" onClick={dismiss} className="mt-3 w-full text-center text-[12.5px] text-white/50 underline-offset-2 hover:text-white/80 hover:underline">{t.secondary}</button>
+          <button type="button" onClick={dismiss} className="mt-3 min-h-9 w-full text-center text-[12.5px] text-white/50 underline-offset-2 hover:text-white/80 hover:underline">{t.secondary}</button>
           <p className="mt-4 text-center text-[11.5px] text-white/40">{t.ends(bfEndLabel(loc))}</p>
         </div>
       </div>

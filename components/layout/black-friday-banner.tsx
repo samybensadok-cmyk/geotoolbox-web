@@ -3,8 +3,9 @@
 import { useEffect, useState, useSyncExternalStore } from "react"
 import { usePathname } from "next/navigation"
 import { trackEvent } from "@/lib/analytics"
-import { BF, BF_COPY, bfCountdownEpoch, bfLocale, bfPhase, formatBfCountdown, isBfRush } from "@/lib/black-friday"
+import { BF, BF_COPY, bfCountdownEpoch, bfLocale, bfPhase, formatBfCountdown } from "@/lib/black-friday"
 import { useCountdown } from "@/components/promo/use-countdown"
+import { BfCountdown } from "@/components/promo/bf-countdown"
 
 /**
  * SG_BF2026_V1 (2026-11-16, redesigned after operator review: "looks quite bad, copy not conversion oriented") —
@@ -14,6 +15,11 @@ import { useCountdown } from "@/components/promo/use-countdown"
  * Countdown runs to the real end (Wed Dec 2 23:59:59 PT = the instant the backend stops applying the code).
  * Same dismissal mechanics as before (useSyncExternalStore, no hydration flash; per-phase key, closed state
  * keyed by phase). Hidden on /app and on /services (services pages carry their own Black Friday offer).
+ *
+ * SG_BF2026_V2 (2026-11-18, operator: "wording is too long and complicated ... should be 'up to 40%' off"): benchmark of
+ * 19 live Black Friday bars (BLACK-FRIDAY-DEALS-2026/design-bench/BENCHMARK-2026-11-18.md) = one number, 4-12 words,
+ * one line, ticking D/H/M/S tiles. The bar now says only "Up to 40% off every plan"; the annual/monthly terms and the
+ * annual bonus live on the plan cards, where the visitor picks the interval.
  */
 const DISMISS_EVENT = "bf-banner-dismiss"
 const dismissKey = (phase: string) => `bfBannerDismissed:${BF.campaign}:${phase}:v1`
@@ -59,7 +65,6 @@ export function BlackFridayBanner({ locale = "en" }: { locale?: string }) {
   if (!visible) return null
 
   const pricingPath = loc === "en" ? "/pricing" : `/${loc}/pricing`
-  const sub = isBfRush() ? t.subRush : t.sub
 
   return (
     <div role="region" aria-label={`${t.badge}: ${t.headline}`} className="relative bg-neutral-950 text-white" data-banner-campaign={variant}>
@@ -70,11 +75,12 @@ export function BlackFridayBanner({ locale = "en" }: { locale?: string }) {
         <p className="min-w-0 text-center text-[13px] leading-snug sm:text-left sm:text-sm">
           <strong className="font-extrabold text-yellow-300 sm:hidden">{t.mobileHeadline}</strong>
           <strong className="hidden font-extrabold text-white sm:inline">{t.headline}</strong>
-          <span className="hidden text-white/70 lg:inline"> · {sub}</span>
         </p>
         {msLeft !== null && msLeft > 0 && (
-          <span className="hidden shrink-0 font-mono text-[12px] tabular-nums text-white/80 md:inline" aria-live="off">
-            {t.endsIn} <span className="font-semibold text-white">{formatBfCountdown(msLeft, loc)}</span>
+          <span className="hidden shrink-0 items-center gap-2 md:inline-flex" aria-live="off">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-white/60">{t.endsIn}</span>
+            <BfCountdown msLeft={msLeft} locale={loc} size="sm" />
+            <span className="sr-only">{formatBfCountdown(msLeft, loc)}</span>
           </span>
         )}
         <a

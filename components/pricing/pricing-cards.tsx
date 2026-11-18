@@ -22,7 +22,7 @@ import {
 import { useCountdown } from "@/components/promo/use-countdown"
 import { currencyParam } from "@/lib/i18n/currency"
 import { useBfLive } from "@/components/promo/use-bf-live"
-import { BF_CARD_COPY, bfAnnualYear, bfLocale, bfMonthly } from "@/lib/black-friday"
+import { BF_CARD_COPY, bfAnnualYear, bfLocale, bfMonthly, isBfRush } from "@/lib/black-friday"
 
 // SG_PROMO_V2 (2026-08-15): offer continuity. When the visitor arrives from the
 // founding banner (?promo=FOUNDING30&bv=<variant>) — or clicked it earlier and
@@ -144,7 +144,7 @@ const ORGANIC_VARIANT = "organic"
 const fill = (tpl: string, vars: Record<string, string>) =>
   tpl.replace(/\{(\w+)\}/g, (m, k) => vars[k] ?? m)
 
-type PriceView = { big: string; sub: string | null; save: string | null; strike: string | null; bfPill?: string; bfSave?: string }
+type PriceView = { big: string; sub: string | null; save: string | null; strike: string | null; bfPill?: string }
 function priceDisplay(plan: Plan, annual: boolean, copy: PricingCardsCopy, locale: string, promo: boolean, bf = false): PriceView {
   const money = (n: number) => fill(copy.money, { amount: fmtPromoAmount(n, locale) })
   if (plan.priceMonthly === null) return { big: copy.custom, sub: null, save: null, strike: null }
@@ -161,7 +161,6 @@ function priceDisplay(plan: Plan, annual: boolean, copy: PricingCardsCopy, local
         sub: fill(t.subAnnual, { total: money(year), full: money(plan.priceYearly) }),
         save: null,
         bfPill: t.pillAnnual,
-        bfSave: fill(t.save, { amount: money(Math.round((plan.priceYearly - year) * 100) / 100) }),
       }
     }
     const mo = bfMonthly(plan.priceMonthly)
@@ -171,7 +170,6 @@ function priceDisplay(plan: Plan, annual: boolean, copy: PricingCardsCopy, local
       sub: fill(t.subMonthly, { full: money(plan.priceMonthly) }),
       save: null,
       bfPill: t.pillMonthly,
-      bfSave: fill(t.save, { amount: money(Math.round((plan.priceMonthly - mo) * 3 * 100) / 100) }),
     }
   }
   if (promo && plan.priceMonthly > 0) {
@@ -209,6 +207,19 @@ function priceDisplay(plan: Plan, annual: boolean, copy: PricingCardsCopy, local
     }
   }
   return { big: money(plan.priceMonthly), sub: copy.billedMonthly, save: null, strike: null }
+}
+
+/** SG_BF2026_V2 — "$47.40" -> $47 + small ".40"; "47,40 €" -> 47 + small ",40" + " €". Other strings unchanged. */
+function BfPrice({ value }: { value: string }) {
+  const m = value.match(/^(.*?\d)([.,]\d{2})(\D*)$/)
+  if (!m) return <>{value}</>
+  return (
+    <>
+      {m[1]}
+      <span className="align-top text-[0.5em] font-semibold leading-[1.6]">{m[2]}</span>
+      {m[3]}
+    </>
+  )
 }
 
 export function PricingCards({ copy, locale, creditsLabel = "Monthly credits" }: { copy: PricingCardsCopy; locale: string; creditsLabel?: string }) {
@@ -447,11 +458,6 @@ export function PricingCards({ copy, locale, creditsLabel = "Monthly credits" }:
                   {copy.badge.mostPopular}
                 </span>
               )}
-              {bfCard && (
-                <span className="absolute -top-3 right-6 inline-flex items-center gap-1 rounded-full bg-neutral-950 px-3 py-1 text-[11px] font-extrabold uppercase tracking-wide text-yellow-300 shadow-sm">
-                  {BF_CARD_COPY[bfLocale(locale)].ribbon}
-                </span>
-              )}
 
               {/* h2, not h3: PricingCards is rendered directly under the /pricing
                   <h1> with no intervening section heading, so an <h3> here was a
@@ -459,14 +465,16 @@ export function PricingCards({ copy, locale, creditsLabel = "Monthly credits" }:
                   size, so this is a semantics-only change. */}
               <h2 className="text-[15px] font-bold tracking-tight text-gray-900">{plan.name}</h2>
 
+              {/* SG_BF2026_V2 (2026-11-18 benchmark: Proton, WP Rocket, Elementor, SE Ranking): the discount is quiet
+                  (small grey strike + one soft pill), the price is loud in normal ink with small cents. */}
               {bfCard && p.strike && (
                 <div className="mt-3 flex items-center gap-2">
-                  <s className="text-[22px] font-medium text-gray-400 decoration-red-500 decoration-[3px]">{p.strike}</s>
-                  <span className="rounded-md bg-red-600 px-2 py-0.5 text-[12px] font-extrabold text-white">{p.bfPill}</span>
+                  <s className="text-[17px] font-medium text-gray-400 decoration-gray-400">{p.strike}</s>
+                  <span className="rounded-full bg-red-50 px-2 py-0.5 text-[12px] font-bold text-red-700 ring-1 ring-red-200">{p.bfPill}</span>
                 </div>
               )}
-              <div className={cn("flex items-baseline gap-1", bfCard ? "mt-0.5" : "mt-3")}>
-                <span className={cn("text-[42px] tracking-tight", bfCard ? "font-bold text-red-600" : "font-medium text-gray-900")}>{p.big}</span>
+              <div className={cn("flex items-baseline gap-1", bfCard ? "mt-1" : "mt-3")}>
+                <span className={cn("text-[42px] tracking-tight text-gray-900", bfCard ? "font-semibold" : "font-medium")}>{bfCard ? <BfPrice value={p.big} /> : p.big}</span>
                 {plan.priceMonthly !== null && plan.priceMonthly > 0 && (
                   <span className="text-sm font-medium text-gray-500">{copy.perMo}</span>
                 )}
@@ -481,15 +489,21 @@ export function PricingCards({ copy, locale, creditsLabel = "Monthly credits" }:
                   </span>
                 )}
                 {p.sub && <span className="text-xs text-gray-500">{p.sub}</span>}
-                {p.bfSave && (
-                  <span className="rounded bg-yellow-100 px-1.5 py-0.5 text-[11px] font-bold text-yellow-900 ring-1 ring-yellow-300">{p.bfSave}</span>
-                )}
                 {p.save && annual && (
                   <span className="rounded bg-accent-50 px-1.5 py-0.5 text-[11px] font-semibold text-accent-700">
                     {p.save}
                   </span>
                 )}
               </div>
+
+              {bfCard && annual && isBfRush() && (
+                <p className="mt-2.5">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-yellow-100 px-2.5 py-1 text-[12px] font-semibold text-yellow-950 ring-1 ring-yellow-300">
+                    <svg aria-hidden="true" className="h-3.5 w-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="6" width="12" height="8" rx="1" /><path d="M1.5 6h13V4h-13zM8 4v10M8 4c-1-2.5-4-2.5-4-.8C4 4 6 4 8 4zm0 0c1-2.5 4-2.5 4-.8C12 4 10 4 8 4z" /></svg>
+                    {BF_CARD_COPY[bfLocale(locale)].bonus}
+                  </span>
+                </p>
+              )}
 
               <p className="mt-4 min-h-[40px] text-[13px] leading-snug text-gray-600">{tagline}</p>
 
