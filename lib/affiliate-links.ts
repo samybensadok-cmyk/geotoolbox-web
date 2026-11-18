@@ -98,6 +98,9 @@ export const AFFILIATE_LINKS: Record<string, AffiliateLink> = {
   seranking: { url: "https://seranking.com/?ga=5177285&source=link", program: "SE Ranking", cluster: "c3-seo-suite", noUtm: true },
   mangools: { url: "https://mangools.com/plans-and-pricing#a5c67fb19feebf86deb273724", program: "Mangools", cluster: "c3-seo-suite", noUtm: true },
   serpstat: { url: "https://serpstat.com/", program: "Serpstat", cluster: "c3-seo-suite", pending: true },
+  // Rank Math in-house AffiliateWP (approved 2026-11-18); ?ref= works on any rankmath.com URL.
+  rankmath: { url: "https://rankmath.com/?ref=samy%20ben%20sadok", program: "Rank Math", cluster: "c3-seo-suite" },
+  "rankmath-offer": { url: "https://rankmath.com/offer/?ref=samy%20ben%20sadok", program: "Rank Math (pricing / offer page)", cluster: "c3-seo-suite" },
 
   // --- C4 · Rank tracking --------------------------------------------------
   accuranker: { url: "https://www.accuranker.com/", program: "AccuRanker", cluster: "c4-rank-tracking", pending: true },
@@ -106,7 +109,11 @@ export const AFFILIATE_LINKS: Record<string, AffiliateLink> = {
 
   // --- C5 · Hosting / performance ------------------------------------------
   kinsta: { url: "https://kinsta.com/?kaid=NULDDEDMWHUX", program: "Kinsta", cluster: "c5-hosting" },
-  cloudways: { url: "https://www.cloudways.com/", program: "Cloudways", cluster: "c5-hosting", pending: true },
+  // Cloudways via Awin (publisher 3158308, merchant 89935); Awin SubId param = clickref.
+  cloudways: { url: "https://www.awin1.com/cread.php?awinmid=89935&awinaffid=3158308&ued=https%3A%2F%2Fwww.cloudways.com%2Fen%2F", program: "Cloudways", cluster: "c5-hosting", noUtm: true, subIdParam: "clickref" },
+  "cloudways-promo": { url: "https://www.awin1.com/cread.php?awinmid=89935&awinaffid=3158308&ued=https%3A%2F%2Fwww.cloudways.com%2Fen%2Fpromo-code.php", program: "Cloudways (promo code page)", cluster: "c5-hosting", noUtm: true, subIdParam: "clickref" },
+  // Black Friday 2026: signup with BFCM802 pre-applied (code valid to Dec 4, 2026 11:59 PM ET per Cloudways T&Cs).
+  "cloudways-bf": { url: "https://www.awin1.com/cread.php?awinmid=89935&awinaffid=3158308&ued=https%3A%2F%2Funified.cloudways.com%2Fsignup%3Fcoupon%3DBFCM802", program: "Cloudways (Black Friday BFCM802 signup)", cluster: "c5-hosting", noUtm: true, subIdParam: "clickref" },
   wpengine: { url: "https://wpengine.com/", program: "WP Engine", cluster: "c5-hosting", pending: true },
   rocket: { url: "https://rocket.net/", program: "Rocket.net", cluster: "c5-hosting", pending: true },
   hostinger: { url: "https://www.hostinger.com/", program: "Hostinger", cluster: "c5-hosting", pending: true },
