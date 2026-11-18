@@ -2,7 +2,7 @@
 title: "Grok 4.5: Specs, Benchmarks, Pricing & the Honest Verdict (2026)"
 description: "Grok 4.5 is xAI's cheaper, faster 'Opus-class' coding model, out July 8, 2026. An honest look at specs, real benchmarks, true cost, EU access, and AI search."
 date: "2026-07-11"
-updated: "2026-11-16"
+updated: "2026-11-18"
 recheckBy: "2026-12-14"  # 2026-11-16: re-verified long-context billing wording (xAI pricing page), grok-4.5 long-context rates ($4/$0.60/$12 at 200K), release-notes page date, FR EU Premium price on grok.com; NOT re-verified: benchmark tables, AA rank (v4.3.2), EU availability narrative, Cursor/Office add-in claims
 author: "Samy BEN SADOK"
 tags: ["grok-4.5", "grok", "xai", "spacexai", "cursor", "llm", "ai-model", "guide"]
@@ -62,7 +62,7 @@ The coding numbers also deserve extra scrutiny for a specific reason: the model 
 
 ## Grok 4.5 Pricing: The $2/$6 Headline and the Real Cost
 
-Price is where Grok 4.5 makes its actual case, with one catch that the headline rate hides. It costs $2 per million input tokens and $6 per million output tokens, with cached input at $0.30 per million and a 500,000-token context window, per [xAI's model docs](https://docs.x.ai/developers/models/grok-4.5). Against the current frontier, that is half the input price and 70% less on output than Claude Opus 5.5 ($4/$20), and the same $2 input as GPT-6.1 Sol with 40% less on output ($10), on prompts under 200,000 tokens.
+Price is where Grok 4.5 makes its actual case, with one catch that the headline rate hides. It costs $2 per million input tokens and $6 per million output tokens, with cached input at $0.30 per million and a 500,000-token context window, per [xAI's model docs](https://docs.x.ai/developers/models/grok-4.5). Against the current frontier, that is half the input price and 70% less on output than Claude Opus 5.5 ($4/$20), and the same $2 input as GPT-6.2 Sol with 40% less on output ($10), on prompts under 200,000 tokens.
 
 The catch is a price cliff at 200,000 tokens. xAI publishes a tiered table, not a flat rate: past that point input goes to $4, cached input to $0.60, and output to $12. And it is a cliff rather than a marginal tier, because in xAI's own words, "Models with long context pricing bill the long context rates for all tokens in a request once its prompt reaches the model's long context threshold." A 201,000-token request costs roughly double a 199,000-token one. On a model sold on its 500,000-token window, the advertised $2/$6 only holds across the bottom 40% of that window, which is worth knowing before you design a long-context workload around it. One quiet trade-off worth noting: that 500,000-token window is smaller than the multi-million-token windows some earlier Grok variants advertised, so if you were feeding the model very large codebases or documents, 4.5 is a step down on context.
 
@@ -73,14 +73,14 @@ The catch is a price cliff at 200,000 tokens. xAI publishes a tiered table, not 
 <tbody>
 <tr><td><strong>Grok 4.5</strong></td><td><strong>$2</strong> (<strong>$4</strong> ≥200K)</td><td><strong>$6</strong> ($12 ≥200K)</td><td>500K</td></tr>
 <tr><td>Claude Opus 5.5</td><td>$4</td><td>$20</td><td>1M</td></tr>
-<tr><td>GPT-6.1 Sol</td><td>$2 ($4 &gt;272K)</td><td>$10 ($15 &gt;272K)</td><td>1.05M</td></tr>
+<tr><td>GPT-6.2 Sol</td><td>$2 ($4 &gt;272K)</td><td>$10 ($15 &gt;272K)</td><td>1.05M</td></tr>
 <tr><td>GPT-6 Luna (cheap tier)</td><td>$0.10 ($0.20 &gt;272K)</td><td>$0.50 ($0.75 &gt;272K)</td><td>1.05M</td></tr>
 </tbody>
 </table>
 
 The headline is real, but it is not your final bill. xAI's built-in API tools (web search, X search, code execution, document search) carry separate fees (per call, or per result for X search), so a tool-heavy agent run costs more than the token math alone. Budget from a real workload, not just the headline rate.
 
-For most buyers the comparison that matters is against the model they already pay for. Grok 4.5 is confirmed on OpenRouter at the same $2/$6 and 500K context, [routed through the gateway](https://openrouter.ai/x-ai/grok-4.5) if you do not want to sign up for xAI directly. If you are weighing it against the OpenAI side, the current [GPT-6 family](https://geotoolbox.ai/blog/gpt-6-astra) undercuts it clearly only at the Luna tier: GPT-6 Luna is $0.10/$0.50, a twentieth of Grok 4.5's input price and a twelfth of its output price, on a 1.05M window rather than 500K. GPT-6.1 Sol, the tier above, matches Grok's $2 input but charges $10 on output against $6. Against consumer Grok plans, our [Grok pricing breakdown](https://geotoolbox.ai/blog/grok-pricing) covers The X Subscription plans and the free tier.
+For most buyers the comparison that matters is against the model they already pay for. Grok 4.5 is confirmed on OpenRouter at the same $2/$6 and 500K context, [routed through the gateway](https://openrouter.ai/x-ai/grok-4.5) if you do not want to sign up for xAI directly. If you are weighing it against the OpenAI side, the current [GPT-6 family](https://geotoolbox.ai/blog/gpt-6-astra) undercuts it clearly only at the Luna tier: GPT-6 Luna is $0.10/$0.50, a twentieth of Grok 4.5's input price and a twelfth of its output price, on a 1.05M window rather than 500K. GPT-6.2 Sol, the tier above, matches Grok's $2 input but charges $10 on output against $6. Against consumer Grok plans, our [Grok pricing breakdown](https://geotoolbox.ai/blog/grok-pricing) covers The X Subscription plans and the free tier.
 
 ## Speed and Token Efficiency: Where Grok 4.5 Actually Wins
 
@@ -130,7 +130,7 @@ The trade is consistent: give up a little raw capability, get a lot of cost and 
 
 It is the right pick for cost-sensitive, tool-heavy agentic and coding work, especially high-volume implementation where the 4.2x token efficiency compounds across thousands of runs. If you are paying frontier prices to have a model grind through routine engineering tasks, Grok 4.5 does most of that work for a fraction of the bill.
 
-It is the wrong pick when accuracy is non-negotiable. For legal, financial, or client-facing output where a confident wrong answer is expensive, the higher hallucination rate is a real liability, and a top-capability model earns its premium. Anyone who needs the single strongest model on raw reasoning should look at Fable 5.2, Opus 5.5, or GPT-6 Astra instead.
+It is the wrong pick when accuracy is non-negotiable. For legal, financial, or client-facing output where a confident wrong answer is expensive, the higher hallucination rate is a real liability, and a top-capability model earns its premium. Anyone who needs the single strongest model on raw reasoning should look at Fable 5.2, Opus 5.5, or GPT-6.2 Astra instead.
 
 Whichever model you route to, the marketing question is the same: does it mention your brand when someone asks? The models change every few weeks, but AI visibility is now a channel worth measuring. Our free [AI Readiness check](https://geotoolbox.ai/tools/ai-readiness) shows you whether AI engines can actually crawl, read, and cite your site, which is the first thing to fix before you worry about which model won this week.
 

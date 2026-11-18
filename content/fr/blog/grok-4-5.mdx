@@ -2,7 +2,7 @@
 title: "Grok 4.5 : prix, benchmarks et avis honnête (2026)"
 description: "Grok 4.5, le modèle de codage de classe Opus de xAI : prix réels en euros, benchmarks, accès UE (console API ouverte le 17 juillet 2026) et impact sur votre visibilité IA."
 date: "2026-07-11"
-updated: "2026-11-16"
+updated: "2026-11-18"
 recheckBy: "2026-12-14"  # 2026-11-16: re-verified long-context billing wording (xAI pricing page), grok-4.5 long-context rates ($4/$0.60/$12 at 200K), release-notes page date, FR EU Premium price on grok.com; NOT re-verified: benchmark tables, AA rank (v4.3.2), EU availability narrative, Cursor/Office add-in claims
 author: "Samy BEN SADOK"
 tags: ["grok-4.5", "grok", "xai", "spacexai", "cursor", "llm", "ai-model", "guide"]
@@ -74,7 +74,7 @@ Les chiffres de codage méritent une prudence supplémentaire pour une raison bi
 
 ## Prix de Grok 4.5 : le tarif « 2 $ / 6 $ » et le coût réel
 
-C'est sur le prix que Grok 4.5 plaide sa cause. Il coûte 2 $ par million de tokens en entrée et 6 $ par million en sortie, avec l'entrée en cache à 0,30 $ le million et une fenêtre de contexte de 500 000 tokens, selon [la documentation du modèle de xAI](https://docs.x.ai/developers/models/grok-4.5), avec un piège que le tarif d'appel masque. Face à la pointe actuelle du marché, c'est deux fois moins cher en entrée et 70 % moins cher en sortie que Claude Opus 5.5 (4 $/20 $), et le même tarif d'entrée de 2 $ que GPT-6.1 Sol avec 40 % de moins en sortie (10 $), sur les prompts en dessous de 200 000 tokens.
+C'est sur le prix que Grok 4.5 plaide sa cause. Il coûte 2 $ par million de tokens en entrée et 6 $ par million en sortie, avec l'entrée en cache à 0,30 $ le million et une fenêtre de contexte de 500 000 tokens, selon [la documentation du modèle de xAI](https://docs.x.ai/developers/models/grok-4.5), avec un piège que le tarif d'appel masque. Face à la pointe actuelle du marché, c'est deux fois moins cher en entrée et 70 % moins cher en sortie que Claude Opus 5.5 (4 $/20 $), et le même tarif d'entrée de 2 $ que GPT-6.2 Sol avec 40 % de moins en sortie (10 $), sur les prompts en dessous de 200 000 tokens.
 
 Ce piège, c'est une marche de prix à 200 000 tokens. xAI publie un barème par paliers, pas un tarif unique. Au-delà de ce seuil, l'entrée passe à 4 $, l'entrée en cache à 0,60 $ et la sortie à 12 $. Et il s'agit bien d'une marche, pas d'un palier marginal : selon les termes de xAI, les requêtes dont le prompt atteint 200 000 tokens sont facturées au tarif supérieur pour la totalité des tokens de la requête. Une requête de 201 000 tokens coûte donc environ le double d'une requête de 199 000. Sur un modèle vendu pour sa fenêtre de 500 000 tokens, le tarif annoncé de 2 $/6 $ ne vaut que sur les premiers 40 % de cette fenêtre. Un compromis discret mérite d'être noté : cette fenêtre de 500 000 tokens est plus petite que les fenêtres de plusieurs millions de tokens qu'annonçaient certaines variantes antérieures de Grok. Si vous nourrissiez le modèle avec de très grosses bases de code ou de longs documents, la 4.5 marque un recul sur le contexte.
 
@@ -85,14 +85,14 @@ Ce piège, c'est une marche de prix à 200 000 tokens. xAI publie un barème par
 <tbody>
 <tr><td><strong>Grok 4.5</strong></td><td><strong>2 $</strong> (<strong>4 $</strong> ≥200K)</td><td><strong>6 $</strong> (12 $ ≥200K)</td><td>500 000</td></tr>
 <tr><td>Claude Opus 5.5</td><td>4 $</td><td>20 $</td><td>1 million</td></tr>
-<tr><td>GPT-6.1 Sol</td><td>2 $ (4 $ &gt;272K)</td><td>10 $ (15 $ &gt;272K)</td><td>1,05 M</td></tr>
+<tr><td>GPT-6.2 Sol</td><td>2 $ (4 $ &gt;272K)</td><td>10 $ (15 $ &gt;272K)</td><td>1,05 M</td></tr>
 <tr><td>GPT-6 Luna (formule économique)</td><td>0,10 $ (0,20 $ &gt;272K)</td><td>0,50 $ (0,75 $ &gt;272K)</td><td>1,05 million</td></tr>
 </tbody>
 </table>
 
 Le tarif affiché est réel, mais ce n'est pas votre facture finale. Les outils intégrés à l'API de xAI (recherche Web, recherche X, exécution de code, recherche documentaire) sont facturés à part (par appel, ou par résultat pour la recherche X) : un agent gourmand en outils coûte donc plus que le simple calcul des tokens. Budgétez à partir d'une charge de travail réelle, pas du seul tarif affiché.
 
-Attention aussi à la facture en euros. Ces 2 $/6 $ sont des tarifs hors taxes en dollars : un particulier français paie **20 % de TVA en plus**, tandis qu'une entreprise assujettie à la TVA en France l'autoliquide en principe au lieu de la payer sur la facture, et le montant en euros dépend du taux de change du jour. Ce n'est pas « TVA comprise ». Pour la plupart des acheteurs, la vraie comparaison reste celle du modèle qu'ils paient déjà. Grok 4.5 est proposé sur OpenRouter aux mêmes 2 $/6 $ et 500 000 tokens de contexte, [via la passerelle](https://openrouter.ai/x-ai/grok-4.5) si vous ne voulez pas ouvrir un compte xAI. Côté OpenAI, la [gamme GPT-6](https://geotoolbox.ai/blog/gpt-6-astra) actuelle ne passe nettement sous ce tarif qu'au niveau Luna : GPT-6 Luna coûte 0,10 $/0,50 $, soit un vingtième du tarif d'entrée de Grok 4.5 et un douzième de son tarif de sortie, sur une fenêtre de 1,05 million de tokens contre 500 000. GPT-6.1 Sol, le palier au-dessus, égale les 2 $ en entrée de Grok mais facture 10 $ en sortie contre 6 $. Côté forfaits Grok grand public, notre [comparatif des tarifs Grok](https://geotoolbox.ai/blog/grok-pricing) couvre The X Subscription et l'offre gratuite.
+Attention aussi à la facture en euros. Ces 2 $/6 $ sont des tarifs hors taxes en dollars : un particulier français paie **20 % de TVA en plus**, tandis qu'une entreprise assujettie à la TVA en France l'autoliquide en principe au lieu de la payer sur la facture, et le montant en euros dépend du taux de change du jour. Ce n'est pas « TVA comprise ». Pour la plupart des acheteurs, la vraie comparaison reste celle du modèle qu'ils paient déjà. Grok 4.5 est proposé sur OpenRouter aux mêmes 2 $/6 $ et 500 000 tokens de contexte, [via la passerelle](https://openrouter.ai/x-ai/grok-4.5) si vous ne voulez pas ouvrir un compte xAI. Côté OpenAI, la [gamme GPT-6](https://geotoolbox.ai/blog/gpt-6-astra) actuelle ne passe nettement sous ce tarif qu'au niveau Luna : GPT-6 Luna coûte 0,10 $/0,50 $, soit un vingtième du tarif d'entrée de Grok 4.5 et un douzième de son tarif de sortie, sur une fenêtre de 1,05 million de tokens contre 500 000. GPT-6.2 Sol, le palier au-dessus, égale les 2 $ en entrée de Grok mais facture 10 $ en sortie contre 6 $. Côté forfaits Grok grand public, notre [comparatif des tarifs Grok](https://geotoolbox.ai/blog/grok-pricing) couvre The X Subscription et l'offre gratuite.
 
 ## Vitesse et efficacité en tokens : là où Grok 4.5 gagne vraiment
 
@@ -146,7 +146,7 @@ Le compromis est constant : on cède un peu de capacité brute pour payer nettem
 
 C'est le bon choix pour du travail agentique et de codage gourmand en outils où le coût compte, surtout pour de l'implémentation à fort volume, où les 4,2 fois moins de tokens de sortie se cumulent sur des milliers d'exécutions. Si vous payez le prix de la pointe pour qu'un modèle abatte des tâches d'ingénierie routinières, Grok 4.5 en fait l'essentiel pour une fraction de la facture.
 
-C'est le mauvais choix quand la précision n'est pas négociable. Pour une production juridique, financière ou destinée au client, où une réponse fausse énoncée avec assurance coûte cher, le taux d'hallucination plus élevé est un vrai handicap, et un modèle haut de gamme justifie son surcoût. Ceux qui ont besoin du [meilleur modèle en raisonnement brut](https://geotoolbox.ai/blog/best-ai-model) se tourneront plutôt vers Fable 5.2, Opus 5.5 ou GPT-6 Astra.
+C'est le mauvais choix quand la précision n'est pas négociable. Pour une production juridique, financière ou destinée au client, où une réponse fausse énoncée avec assurance coûte cher, le taux d'hallucination plus élevé est un vrai handicap, et un modèle haut de gamme justifie son surcoût. Ceux qui ont besoin du [meilleur modèle en raisonnement brut](https://geotoolbox.ai/blog/best-ai-model) se tourneront plutôt vers Fable 5.2, Opus 5.5 ou GPT-6.2 Astra.
 
 Quel que soit le modèle retenu, la question marketing ne change pas : votre marque est-elle mentionnée quand quelqu'un pose la question ? Les modèles changent à quelques semaines d'intervalle, mais la visibilité dans l'IA est désormais un canal qui mérite d'être mesuré. Notre [score de préparation IA](https://geotoolbox.ai/tools/ai-readiness) gratuit vous dit si les moteurs d'IA peuvent réellement explorer, lire et citer votre site, la première chose à corriger avant de vous soucier du modèle qui a gagné cette semaine.
 
