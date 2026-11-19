@@ -37,7 +37,7 @@ export default async function PrivacyPageFr({ params }: { params: Promise<{ loca
   return (
     <div className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
       <h1 className="text-3xl font-bold tracking-tight text-gray-900">Politique de confidentialité</h1>
-      <p className="mt-2 text-sm text-gray-600">Dernière mise à jour : 15 août 2026</p>
+      <p className="mt-2 text-sm text-gray-600">Dernière mise à jour : 19 novembre 2026</p>
       <p className="mt-2 text-xs text-gray-500">
         Cette traduction est fournie à titre de commodité. En cas de divergence, la{" "}
         <a href="/privacy" className="underline">version anglaise</a> prévaut.
@@ -63,9 +63,13 @@ export default async function PrivacyPageFr({ params }: { params: Promise<{ loca
             <li>Pour vous authentifier et afficher les informations de votre compte</li>
             <li>Pour afficher vos données Google Search Console et Google Analytics 4 dans le tableau de bord GEO Toolbox</li>
             <li>Pour générer des rapports de visibilité IA pour vos domaines</li>
+            <li>Pour vous envoyer de temps en temps des e-mails sur les fonctionnalités et les offres de GEO Toolbox (voir ci-dessous ; désinscription possible à tout moment)</li>
           </ul>
           <p className="mt-3">
             <strong>L&rsquo;utilisation des données utilisateur Google est strictement limitée aux finalités listées ci-dessus.</strong> Nous n&rsquo;utilisons pas les données utilisateur Google pour développer, améliorer ou entraîner des modèles d&rsquo;IA ou d&rsquo;apprentissage automatique généralisés. Nous ne transférons pas les données utilisateur Google à des tiers, sauf lorsque cela est nécessaire pour fournir ou améliorer le Service, ou lorsque la loi l&rsquo;exige. Notre traitement des données utilisateur Google est conforme à la <a href="https://developers.google.com/terms/api-services-user-data-policy" className="text-accent-700 underline hover:text-accent-800">Google API Services User Data Policy</a>, y compris ses exigences d&rsquo;utilisation limitée (Limited Use).
+          </p>
+          <p className="mt-3">
+            <strong>E-mails sur le produit et les offres.</strong> Si vous avez créé un compte ou lancé un scan gratuit, nous pouvons vous écrire de temps en temps au sujet des fonctionnalités et des offres de GEO Toolbox, sur la base de notre intérêt légitime à informer nos utilisateurs d&rsquo;un service similaire. Nous n&rsquo;utilisons pour cela que votre adresse e-mail et votre nom, jamais vos données Search Console ou Analytics. Chacun de ces e-mails contient un lien de désinscription en un clic, et vous pouvez vous y opposer à tout moment en y répondant ou en écrivant à <a href="mailto:samy@geotoolbox.ai" className="text-accent-700 underline hover:text-accent-800">samy@geotoolbox.ai</a>.
           </p>
         </section>
 
@@ -103,7 +107,7 @@ export default async function PrivacyPageFr({ params }: { params: Promise<{ loca
             <li>Google Analytics 4 : statistiques d&rsquo;usage agrégées de notre site</li>
             <li>Microsoft Clarity : statistiques d&rsquo;usage agrégées de notre site (cartes de chaleur et relecture de session avec masquage des textes sensibles et des champs)</li>
             <li>Stripe : traitement des paiements (nous ne stockons jamais les numéros de carte)</li>
-            <li>Resend : envoi d&rsquo;e-mails transactionnels (vérification, liens magiques, récapitulatifs)</li>
+            <li>Resend : envoi d&rsquo;e-mails (vérification, liens magiques, récapitulatifs, et e-mails occasionnels sur le produit et les offres)</li>
             <li>Vercel : hébergement de l&rsquo;application</li>
             <li>Replit : hébergement de l&rsquo;application (backend PHP)</li>
             <li>Neon : hébergement de la base de données PostgreSQL</li>

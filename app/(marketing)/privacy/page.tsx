@@ -18,7 +18,7 @@ export default function PrivacyPage() {
   return (
     <div className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
       <h1 className="text-3xl font-bold tracking-tight text-gray-900">Privacy Policy</h1>
-      <p className="mt-2 text-sm text-gray-600">Last updated: August 15, 2026</p>
+      <p className="mt-2 text-sm text-gray-600">Last updated: November 19, 2026</p>
 
       <div className="mt-10 space-y-8 text-[15px] leading-relaxed text-gray-600">
         <section>
@@ -40,9 +40,13 @@ export default function PrivacyPage() {
             <li>To authenticate you and display your account information</li>
             <li>To show your Google Search Console and Google Analytics 4 data within the GEO Toolbox dashboard</li>
             <li>To generate AI visibility reports for your domains</li>
+            <li>To send you occasional emails about GEO Toolbox features and offers (see below; you can unsubscribe at any time)</li>
           </ul>
           <p className="mt-3">
             <strong>Google user data use is strictly limited to the purposes listed above.</strong> We do not use Google user data to develop, improve, or train generalized AI or machine-learning models. We do not transfer Google user data to third parties except as necessary to provide or improve the Service, or as required by law. Our handling of Google user data conforms to the <a href="https://developers.google.com/terms/api-services-user-data-policy" className="text-accent-700 underline hover:text-accent-800">Google API Services User Data Policy</a>, including the Limited Use requirements.
+          </p>
+          <p className="mt-3">
+            <strong>Product and offer emails.</strong> If you created an account or ran a free scan, we may occasionally email you about GEO Toolbox features and offers, based on our legitimate interest in telling existing users about a similar service. We only use your email address and name for this, never your Search Console or Analytics data. Every one of these emails has a one-click unsubscribe link, and you can object at any time by replying to it or writing to <a href="mailto:samy@geotoolbox.ai" className="text-accent-700 underline hover:text-accent-800">samy@geotoolbox.ai</a>.
           </p>
         </section>
 
@@ -82,7 +86,7 @@ export default function PrivacyPage() {
             <li>Google Analytics 4: aggregated usage analytics for our website</li>
             <li>Microsoft Clarity: aggregated usage analytics for our website (heatmaps and session replay with sensitive text and inputs masked)</li>
             <li>Stripe: payment processing (we never store card numbers ourselves)</li>
-            <li>Resend: transactional email delivery (verification, magic links, digests)</li>
+            <li>Resend: email delivery (verification, magic links, digests, and occasional product and offer emails)</li>
             <li>Vercel: application hosting</li>
             <li>Replit: application hosting (PHP backend)</li>
             <li>Neon: PostgreSQL database hosting</li>
