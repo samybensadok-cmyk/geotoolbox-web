@@ -15,7 +15,7 @@
 //  - Entity facts (SIREN 827472424, RNE, address, franchise TVA) filled 2026-08-15 from public records; médiateur pending designation.
 
 export const TERMS_VERSION = "2.1" // 2.1: §5.4 cancelling a trial ends it at once (PHP twin SG_TERMS_VERSION)
-export const TERMS_UPDATED = "October 27, 2026"
+export const TERMS_UPDATED = "November 19, 2026" // 2026-11-19: §5.1 + §7.2 aligned with §5.4 (cancelling a v2.1+ trial ends it at once); clarification, version unchanged
 export const TERMS_EFFECTIVE_NEW = "October 27, 2026" // new customers: on publication
 export const TERMS_EFFECTIVE_EXISTING = "November 26, 2026" // existing customers: 30 days' notice
 
@@ -159,7 +159,7 @@ export function TermsContent({ localeNote }: { localeNote?: React.ReactNode }) {
         <section>
           <H2 id="free-trial">5. Free trial</H2>
           <P>
-            <strong>5.1 What it is.</strong> Where offered (currently on selected plans, as shown on the pricing page), a free trial gives you access to the plan you selected for the trial period stated at checkout (currently <strong>7 days</strong>), or, for trials started under version 2.1 or later, until you cancel it (§5.4). A valid payment method is required to start a trial. Trial accounts may run with reduced limits (for example a fraction of the plan&apos;s credits, a lower brand cap, no white-label reports); the full plan unlocks when the trial converts.
+            <strong>5.1 What it is.</strong> Where offered (currently on selected plans, as shown on the pricing page), a free trial gives you access to the plan you selected for the trial period stated at checkout (currently <strong>7 days</strong>). For trials started under version 2.1 or later, cancelling the trial ends it and its access immediately (§5.4). A valid payment method is required to start a trial. Trial accounts may run with reduced limits (for example a fraction of the plan&apos;s credits, a lower brand cap, no white-label reports); the full plan unlocks when the trial converts.
           </P>
           <P>
             <strong>5.2 Automatic conversion — read this carefully.</strong> <strong>Unless you cancel before the trial ends, your trial converts automatically into a paid subscription for the plan and billing interval (monthly or annual) you selected, and the payment method on file is charged the amount shown at checkout on the trial end date.</strong> The exact amount, currency and first-charge date are displayed at checkout before you confirm, and are repeated in the confirmation email we send when the trial starts. The subscription then renews automatically under §6.
@@ -211,7 +211,7 @@ export function TermsContent({ localeNote }: { localeNote?: React.ReactNode }) {
             <a href="mailto:samy@geotoolbox.ai" className={link}>samy@geotoolbox.ai</a>{" "}from the account owner&apos;s address. We confirm every cancellation by email, stating the date on which the subscription ends.
           </P>
           <P>
-            <strong>7.2 Effect.</strong> Cancellation stops future renewals. <strong>It takes effect at the end of the current billing period</strong> (or at the end of the trial, if you are trialing) and you keep access until then. <strong>No prorated or partial refund is given for the remainder of a period already paid</strong>, including annual periods, subject to §8.6.
+            <strong>7.2 Effect.</strong> Cancellation stops future renewals. <strong>For a paid subscription, it takes effect at the end of the current billing period</strong> and you keep access until then. <strong>Cancelling a free trial started under version 2.1 or later ends it immediately</strong>: access to the trial plan stops at once and nothing is charged (§5.4); a trial started earlier keeps its access until its end date. <strong>No prorated or partial refund is given for the remainder of a period already paid</strong>, including annual periods, subject to §8.6.
           </P>
           <P>
             <strong>7.3 Cut-off.</strong> To avoid a renewal charge, cancel no later than the day before the renewal date shown in your account and in our emails (charges run at the anniversary time of your original subscription, in UTC). A cancellation made after a charge applies to the following period.
