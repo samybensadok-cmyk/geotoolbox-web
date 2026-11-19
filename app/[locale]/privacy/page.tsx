@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { setRequestLocale } from "next-intl/server"
 import { siteConfig } from "@/lib/config"
+import { PrivacyContent } from "@/components/legal/privacy-content"
 
 // SG_CONSENT_V1 legal closure (2026-07-28) — French privacy policy for the FR
 // funnel (CNIL expects consent/privacy information in the visitor's language).
@@ -12,25 +13,63 @@ import { siteConfig } from "@/lib/config"
 // duplicating the EN page. Content mirrors the EN policy section-for-section;
 // the note at the top states the EN version prevails on any divergence.
 
+// SG_PRIVACY_LOCALES (2026-11-19): /es/privacy and /de/privacy 404'd while the footer of every ES/DE page
+// linked to them (the native-FR route above predates the ES/DE locales; SG_LEGAL_V2 fixed /terms,
+// /refund-policy and /legal but not this route). Until native translations ship they render the EN
+// policy with a locale note, the same pattern as app/[locale]/terms.
+const EN_FALLBACK: Record<"es" | "de", { title: string; body: string }> = {
+  es: {
+    title: "Política de privacidad",
+    body: "Esta política está disponible actualmente en inglés. Se está preparando una versión en español; en caso de divergencia prevalece la versión inglesa. Preguntas o solicitudes de protección de datos: samy@geotoolbox.ai.",
+  },
+  de: {
+    title: "Datenschutzerklärung",
+    body: "Diese Erklärung liegt derzeit auf Englisch vor. Eine deutsche Fassung ist in Arbeit; bei Abweichungen ist die englische Fassung maßgeblich. Fragen oder Datenschutzanfragen: samy@geotoolbox.ai.",
+  },
+}
+const LANGS = {
+  en: `${siteConfig.url}/privacy`,
+  fr: `${siteConfig.url}/fr/privacy`,
+  es: `${siteConfig.url}/es/privacy`,
+  de: `${siteConfig.url}/de/privacy`,
+  "x-default": `${siteConfig.url}/privacy`,
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params
+  if (locale === "es" || locale === "de") {
+    return {
+      title: EN_FALLBACK[locale].title,
+      description: "Privacy Policy for GEO Toolbox (English version).",
+      alternates: { canonical: `${siteConfig.url}/${locale}/privacy`, languages: LANGS },
+    }
+  }
   if (locale !== "fr") return {}
   return {
     title: "Politique de confidentialité",
     description: "Comment GEO Toolbox collecte, utilise et protège vos données.",
     alternates: {
       canonical: `${siteConfig.url}/fr/privacy`,
-      languages: {
-        en: `${siteConfig.url}/privacy`,
-        fr: `${siteConfig.url}/fr/privacy`,
-        "x-default": `${siteConfig.url}/privacy`,
-      },
+      languages: LANGS,
     },
   }
 }
 
 export default async function PrivacyPageFr({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
+  if (locale === "es" || locale === "de") {
+    setRequestLocale(locale)
+    const note = EN_FALLBACK[locale]
+    return (
+      <PrivacyContent
+        localeNote={
+          <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900" lang={locale}>
+            <strong>{note.title}.</strong> {note.body}
+          </div>
+        }
+      />
+    )
+  }
   if (locale !== "fr") notFound()
   setRequestLocale(locale)
 

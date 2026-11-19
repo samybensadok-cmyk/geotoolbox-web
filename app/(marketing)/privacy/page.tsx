@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { siteConfig } from "@/lib/config"
+import { PrivacyContent } from "@/components/legal/privacy-content"
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
@@ -9,134 +10,13 @@ export const metadata: Metadata = {
     languages: {
       en: `${siteConfig.url}/privacy`,
       fr: `${siteConfig.url}/fr/privacy`,
+      es: `${siteConfig.url}/es/privacy`,
+      de: `${siteConfig.url}/de/privacy`,
       "x-default": `${siteConfig.url}/privacy`,
     },
   },
 }
 
 export default function PrivacyPage() {
-  return (
-    <div className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
-      <h1 className="text-3xl font-bold tracking-tight text-gray-900">Privacy Policy</h1>
-      <p className="mt-2 text-sm text-gray-600">Last updated: November 19, 2026</p>
-
-      <div className="mt-10 space-y-8 text-[15px] leading-relaxed text-gray-600">
-        <section>
-          <h2 className="text-lg font-semibold text-gray-900">1. What We Collect</h2>
-          <p className="mt-2">
-            When you sign in with Google, we receive your <strong>name</strong>, <strong>email address</strong>, and <strong>profile picture</strong> from your Google account.
-          </p>
-          <p className="mt-3">
-            If you connect Google Search Console, we access your GSC property list and <strong>search performance data</strong> (queries, clicks, impressions, average position, country, device, page, date) for the sites you authorize, under the <code className="px-1 py-0.5 rounded bg-gray-100 text-[13px]">https://www.googleapis.com/auth/webmasters.readonly</code> scope.
-          </p>
-          <p className="mt-3">
-            If you connect Google Analytics 4, we access your GA4 property list and <strong>traffic metrics</strong> (sessions, users, engagement rate, conversions, landing pages, source dimensions) under the <code className="px-1 py-0.5 rounded bg-gray-100 text-[13px]">https://www.googleapis.com/auth/analytics.readonly</code> scope. We use this to identify traffic from AI search engines (ChatGPT, Gemini, Claude, Perplexity, NotebookLM).
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-lg font-semibold text-gray-900">2. How We Use Your Data</h2>
-          <ul className="mt-2 list-disc pl-5 space-y-1">
-            <li>To authenticate you and display your account information</li>
-            <li>To show your Google Search Console and Google Analytics 4 data within the GEO Toolbox dashboard</li>
-            <li>To generate AI visibility reports for your domains</li>
-            <li>To send you occasional emails about GEO Toolbox features and offers (see below; you can unsubscribe at any time)</li>
-          </ul>
-          <p className="mt-3">
-            <strong>Google user data use is strictly limited to the purposes listed above.</strong> We do not use Google user data to develop, improve, or train generalized AI or machine-learning models. We do not transfer Google user data to third parties except as necessary to provide or improve the Service, or as required by law. Our handling of Google user data conforms to the <a href="https://developers.google.com/terms/api-services-user-data-policy" className="text-accent-700 underline hover:text-accent-800">Google API Services User Data Policy</a>, including the Limited Use requirements.
-          </p>
-          <p className="mt-3">
-            <strong>Product and offer emails.</strong> If you created an account or ran a free scan, we may occasionally email you about GEO Toolbox features and offers, based on our legitimate interest in telling existing users about a similar service. We only use your email address and name for this, never your Search Console or Analytics data. Every one of these emails has a one-click unsubscribe link, and you can object at any time by replying to it or writing to <a href="mailto:samy@geotoolbox.ai" className="text-accent-700 underline hover:text-accent-800">samy@geotoolbox.ai</a>.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-lg font-semibold text-gray-900">3. Data Storage and Retention</h2>
-          <p className="mt-2">
-            <strong>We do not store your raw Google Search Console or Google Analytics 4 data on our servers.</strong>{" "}All GSC and GA4 API responses are cached in your browser&apos;s localStorage for up to 6 hours and then automatically cleared. Clearing browser storage removes them immediately.
-          </p>
-          <p className="mt-3">
-            Server-side storage is limited to:
-          </p>
-          <ul className="mt-2 list-disc pl-5 space-y-1">
-            <li>Your OAuth tokens (access and refresh), encrypted at rest, retained until you disconnect</li>
-            <li>Your connected GSC property and GA4 property identifiers</li>
-            <li>Authentication logs (sign-in attempts, session cookies) — purged automatically within 7 days of inactivity</li>
-            <li>Page-fetch cache (rendered HTML we fetched on your behalf to analyze) — held up to 24 hours, then superseded on the next fetch</li>
-            <li>Analysis outputs you generate (scan reports, domain overviews, agent-readiness checks, content briefs, citability analyses, competitor radar scans, AI-ready export transforms, AI visibility tracking) — <strong>retained indefinitely</strong> so you and your team can compare performance over time. Your plan controls how much of that history is visible in the dashboard: lower tiers show a limited window of scan history (for example 180 days on <strong>Starter</strong>) while higher tiers show your complete history. Older data outside your plan&apos;s window is not displayed, but it is never modified or deleted while your account is active.</li>
-            <li>Internal cost and audit logs for our own infrastructure monitoring, containing no personal data beyond a pseudonymous account ID</li>
-            <li>Error telemetry (anonymized, no PII) for up to 90 days</li>
-            <li>Billing and contract records &mdash; your acceptance of the <a href="/terms" className="text-accent-700 underline hover:text-accent-800">Terms of Service</a> (version, timestamp, IP address, plan and price disclosed at checkout), Stripe customer/subscription identifiers, and copies of billing communications we send you (trial confirmation, reminders, cancellation confirmations). Kept for the life of the account plus 5 years (limitation period for contractual claims); invoices are kept 10 years as required by French commercial law. These records are used to answer billing questions and payment disputes.</li>
-          </ul>
-          <p className="mt-3">
-            <strong>Right to deletion.</strong> You can delete all of your data at any time by deleting your account or emailing{" "}
-            <a href="mailto:samy@geotoolbox.ai" className="text-accent-700 underline hover:text-accent-800">samy@geotoolbox.ai</a>. We action account-wide deletion within 14 days. Removing a tracked brand from your dashboard immediately soft-deletes it and its watchlist.
-          </p>
-        </section>
-
-        <section>
-          <h2 id="subprocessors" className="scroll-mt-24 text-lg font-semibold text-gray-900">4. Data Sharing</h2>
-          <p className="mt-2">
-            We do not sell, rent, or share your personal data with third parties for marketing purposes. We use the following subprocessors to operate the Service:
-          </p>
-          <ul className="mt-2 list-disc pl-5 space-y-1">
-            <li>Google OAuth: authentication</li>
-            <li>Google Search Console API: search performance data</li>
-            <li>Google Analytics Data API: AI traffic data</li>
-            <li>Google Analytics 4: aggregated usage analytics for our website</li>
-            <li>Microsoft Clarity: aggregated usage analytics for our website (heatmaps and session replay with sensitive text and inputs masked)</li>
-            <li>Stripe: payment processing (we never store card numbers ourselves)</li>
-            <li>Resend: email delivery (verification, magic links, digests, and occasional product and offer emails)</li>
-            <li>Vercel: application hosting</li>
-            <li>Replit: application hosting (PHP backend)</li>
-            <li>Neon: PostgreSQL database hosting</li>
-            <li>Sentry: error monitoring (no PII transmitted)</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2 className="text-lg font-semibold text-gray-900">5. Your Rights</h2>
-          <p className="mt-2">You can:</p>
-          <ul className="mt-2 list-disc pl-5 space-y-1">
-            <li>Revoke GEO Toolbox&apos;s access to your Google account at any time at <a href="https://myaccount.google.com/permissions" className="text-accent-700 underline hover:text-accent-800">https://myaccount.google.com/permissions</a></li>
-            <li>Disconnect GSC or GA4 from within the app&apos;s Analytics tab (the &ldquo;disconnect&rdquo; link under the connected-account badge)</li>
-            <li>Request deletion of all server-side data by emailing <a href="mailto:samy@geotoolbox.ai" className="text-accent-700 underline hover:text-accent-800">samy@geotoolbox.ai</a>; we respond within 14 days</li>
-            <li>Clear locally cached data by clearing your browser storage</li>
-          </ul>
-          <p className="mt-3">
-            If you are in the European Economic Area, the United Kingdom, or Switzerland, you additionally have the rights of <strong>access</strong>, <strong>rectification</strong>, <strong>erasure</strong>, <strong>restriction of processing</strong>, <strong>data portability</strong>, and <strong>objection</strong> under the GDPR (Articles 15&ndash;21), and the right to <strong>withdraw consent at any time</strong> without affecting the lawfulness of prior processing. Exercise any of these by emailing{" "}
-            <a href="mailto:samy@geotoolbox.ai" className="text-accent-700 underline hover:text-accent-800">samy@geotoolbox.ai</a>. You also have the right to lodge a complaint with your local supervisory authority &mdash; in France, the CNIL (<a href="https://www.cnil.fr" className="text-accent-700 underline hover:text-accent-800">cnil.fr</a>).
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-lg font-semibold text-gray-900">6. Cookies &amp; Consent</h2>
-          <p className="mt-2">
-            We use <strong>strictly necessary cookies</strong> for session management, security (CSRF protection), and remembering your cookie choice. These are always on and require no consent.
-          </p>
-          <p className="mt-3">
-            We also use analytics cookies as described below; where applicable law requires consent — including for visitors from the EEA, the United Kingdom, and Switzerland — these tools are enabled only after you accept the consent banner. They are set by <strong>Google Analytics 4</strong> (aggregated traffic, pages viewed, device type, approximate location) and <strong>Microsoft Clarity</strong> (aggregated interaction patterns, including heatmaps and session replays that mask sensitive text and form inputs). Neither is used for advertising or cross-site tracking.
-          </p>
-          <p className="mt-3">
-            If you are visiting from the EEA, the United Kingdom, or Switzerland, <strong>no analytics run until you accept</strong> the consent banner. You can refuse with one click (remembered for 6 months / 180 days; acceptance is remembered for 12 months / 365 days), and change your choice at any time via the <strong>Cookie settings</strong> link in the website footer, the <strong>Cookie settings</strong> link on the app&apos;s Account page, or by clearing the <code className="px-1 py-0.5 rounded bg-gray-100 text-[13px]">sg_consent</code> cookie. We also set a short-lived <code className="px-1 py-0.5 rounded bg-gray-100 text-[13px]">sg_cc</code> cookie holding only your country code (or the value <code className="px-1 py-0.5 rounded bg-gray-100 text-[13px]">unknown</code> when it cannot be determined), used to decide whether the banner applies; it contains no identifier.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-lg font-semibold text-gray-900">7. International Data Transfers</h2>
-          <p className="mt-2">
-            We are based in the European Union, and several of the subprocessors listed in Section 4 (including Google, Microsoft, Vercel, Neon, Stripe, and Sentry) process data in the United States. Where personal data of individuals in the EEA, the United Kingdom, or Switzerland is transferred to the United States, we rely on the <strong>EU&ndash;U.S. Data Privacy Framework</strong> (and its UK and Swiss extensions) where the provider holds an active certification, and on the European Commission&apos;s <strong>Standard Contractual Clauses</strong>{" "}incorporated into the provider&apos;s data processing agreement otherwise. Analytics data (Google Analytics, Microsoft Clarity) is only processed at all for EEA/UK/Swiss visitors after explicit consent (see Section 6).
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-lg font-semibold text-gray-900">8. Contact</h2>
-          <p className="mt-2">
-            For privacy questions or data deletion requests, email{" "}
-            <a href="mailto:samy@geotoolbox.ai" className="text-accent-700 underline hover:text-accent-800">samy@geotoolbox.ai</a>.
-          </p>
-        </section>
-      </div>
-    </div>
-  )
+  return <PrivacyContent />
 }
