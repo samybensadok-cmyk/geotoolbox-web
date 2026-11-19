@@ -1,5 +1,7 @@
 "use client"
 
+import { ToolResultCapture } from "./tool-result-capture"
+
 import { useState } from "react"
 import type { LintFinding } from "@/lib/robots-generate"
 import { trackEvent } from "@/lib/analytics"
@@ -328,6 +330,7 @@ export function RobotsTxtTesterWidget() {
           )}
         </div>
       )}
+      {result?.ok && !loading && <ToolResultCapture slug="robots-txt-tester" what="robots.txt report" />}
     </div>
   )
 }

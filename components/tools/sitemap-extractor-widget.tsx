@@ -1,5 +1,7 @@
 "use client"
 
+import { ToolResultCapture } from "./tool-result-capture"
+
 import { useDeferredValue, useMemo, useRef, useState } from "react"
 import type { ExtractResult } from "@/lib/sitemap-extract"
 import type { AuditResult } from "@/lib/sitemap-audit"
@@ -658,6 +660,7 @@ export function SitemapExtractorWidget() {
           ))}
         </ul>
       )}
+      {result?.ok && !loading && <ToolResultCapture slug="sitemap-extractor" what="sitemap report" />}
     </div>
   )
 }
