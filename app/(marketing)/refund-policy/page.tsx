@@ -11,6 +11,7 @@ export const metadata: Metadata = {
       en: `${siteConfig.url}/refund-policy`,
       fr: `${siteConfig.url}/fr/refund-policy`,
       es: `${siteConfig.url}/es/refund-policy`,
+      de: `${siteConfig.url}/de/refund-policy`,
       "x-default": `${siteConfig.url}/refund-policy`,
     },
   },

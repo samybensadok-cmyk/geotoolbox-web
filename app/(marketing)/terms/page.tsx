@@ -11,6 +11,7 @@ export const metadata: Metadata = {
       en: `${siteConfig.url}/terms`,
       fr: `${siteConfig.url}/fr/terms`,
       es: `${siteConfig.url}/es/terms`,
+      de: `${siteConfig.url}/de/terms`,
       "x-default": `${siteConfig.url}/terms`,
     },
   },

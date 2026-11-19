@@ -3,6 +3,8 @@ import { notFound } from "next/navigation"
 import { setRequestLocale } from "next-intl/server"
 import { siteConfig } from "@/lib/config"
 import { TermsContent } from "@/components/legal/terms-content"
+import { TermsEs } from "@/components/legal/terms-es"
+import { TermsDe } from "@/components/legal/terms-de"
 
 // SG_LEGAL_V2 (2026-08-15): /fr/terms and /es/terms previously 404'd while the
 // footer linked to them. Until a native translation ships, both render the EN
@@ -29,7 +31,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   if (!SUPPORTED.includes(locale as (typeof SUPPORTED)[number])) return {}
   return {
     title: NOTE[locale as (typeof SUPPORTED)[number]].title,
-    description: "Terms of Service for GEO Toolbox (English version).",
+    description: locale === "es" ? "Términos del servicio de GEO Toolbox." : locale === "de" ? "Allgemeine Geschäftsbedingungen von GEO Toolbox." : "Terms of Service for GEO Toolbox (English version).",
     alternates: {
       canonical: `${siteConfig.url}/${locale}/terms`,
       languages: {
@@ -47,6 +49,9 @@ export default async function TermsPageLocale({ params }: { params: Promise<{ lo
   const { locale } = await params
   if (!SUPPORTED.includes(locale as (typeof SUPPORTED)[number])) notFound()
   setRequestLocale(locale)
+  // SG_LEGAL_LOCALES (2026-11-19): native ES/DE Terms (EN prevails, §21.6); FR still renders EN + note.
+  if (locale === "es") return <TermsEs />
+  if (locale === "de") return <TermsDe />
   const note = NOTE[locale as (typeof SUPPORTED)[number]]
   return (
     <TermsContent

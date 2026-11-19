@@ -11,6 +11,7 @@ export const metadata: Metadata = {
       en: `${siteConfig.url}/legal`,
       fr: `${siteConfig.url}/fr/legal`,
       es: `${siteConfig.url}/es/legal`,
+      de: `${siteConfig.url}/de/legal`,
       "x-default": `${siteConfig.url}/legal`,
     },
   },

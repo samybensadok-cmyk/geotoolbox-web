@@ -58,7 +58,7 @@ export function LegalNoticeContent() {
         <section lang="en">
           <h2 className="text-lg font-semibold text-gray-900">English summary</h2>
           <p className="mt-2">
-            geotoolbox.ai is published by Samy Ben Sadok, a French sole trader (entrepreneur individuel), SIREN 827 472 424 (RNE), business address 1 esplanade de Chantilly, 93330 Neuilly-sur-Marne, France, VAT not applicable (art. 293 B CGI). Publication director: Samy Ben Sadok. Hosting: Vercel Inc. (website), Replit, Inc. (application), Neon, Inc. (database) — USA. Contact: <a href="mailto:samy@geotoolbox.ai" className={link}>samy@geotoolbox.ai</a>. See our <a href="/terms" className={link}>Terms of Service</a>, <a href="/refund-policy" className={link}>Cancellation &amp; Refund Policy</a> and <a href="/privacy" className={link}>Privacy Policy</a>.
+            geotoolbox.ai is published by Samy Ben Sadok, a French sole trader (entrepreneur individuel), SIREN 827 472 424 (RNE), business address 1 esplanade de Chantilly, 93330 Neuilly-sur-Marne, France, VAT not applicable (art. 293 B CGI). Publication director: Samy Ben Sadok. Hosting: Vercel Inc. (website), Replit, Inc. (application), Neon, LLC (Databricks, Inc.) (database) — USA. Contact: <a href="mailto:samy@geotoolbox.ai" className={link}>samy@geotoolbox.ai</a>. See our <a href="/terms" className={link}>Terms of Service</a>, <a href="/refund-policy" className={link}>Cancellation &amp; Refund Policy</a> and <a href="/privacy" className={link}>Privacy Policy</a>.
           </p>
         </section>
       </div>
