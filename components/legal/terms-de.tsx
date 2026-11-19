@@ -72,7 +72,7 @@ export function TermsDe() {
           <li>GEO Toolbox ist ein Werkzeug für Unternehmen. Mit dem Abschluss eines Abonnements bestätigen Sie, dass Sie zu geschäftlichen Zwecken handeln.</li>
           <li>Kostenpflichtige Tarife sind <strong>Abonnements, die sich automatisch verlängern</strong> (monatlich oder jährlich), bis Sie kündigen.</li>
           <li>Ein kostenloser Testzeitraum setzt eine Karte voraus und <strong>geht an seinem Ende automatisch in ein kostenpflichtiges Abonnement über</strong>, sofern Sie nicht vorher kündigen. Betrag und Datum der ersten Abbuchung (bei einem Jahrestarif die volle Jahresgebühr) werden beim Checkout und in Ihrer Bestätigungs-E-Mail angezeigt, und wir informieren Sie außerdem vor der Abbuchung per E-Mail. Wenn Sie einen ab dem 27. Oktober 2026 begonnenen Testzeitraum kündigen, endet dieser und damit Ihr Zugang sofort.</li>
-          <li>Sie können jederzeit über <strong>Account → Manage subscription</strong> (Konto → Abonnement verwalten) kündigen. Die Kündigung wird zum Ende des laufenden Zeitraums wirksam; bis dahin behalten Sie Ihren Zugang.</li>
+          <li>Sie können jederzeit über <strong>Account → Manage subscription</strong> (Konto → Abonnement verwalten) kündigen. Die Kündigung eines kostenpflichtigen Abonnements wird zum Ende des laufenden Zeitraums wirksam; bis dahin behalten Sie Ihren Zugang.</li>
           <li><strong>Gebühren werden nicht erstattet</strong> — auch dann nicht, wenn ein Testzeitraum in ein Abonnement übergeht, weil Sie nicht rechtzeitig gekündigt haben, und auch nicht für ungenutzte Zeit oder Credits —, es sei denn, das Gesetz räumt Ihnen ein Recht ein, das wir nicht ausschließen können (siehe §8).</li>
         </UL>
       </div>

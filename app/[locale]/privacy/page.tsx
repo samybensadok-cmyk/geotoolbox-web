@@ -121,7 +121,7 @@ export default async function PrivacyPageFr({ params }: { params: Promise<{ loca
         </section>
 
         <section>
-          <h2 className="text-lg font-semibold text-gray-900">4. Partage des données</h2>
+          <h2 id="subprocessors" className="scroll-mt-24 text-lg font-semibold text-gray-900">4. Partage des données</h2>
           <p className="mt-2">
             Nous ne vendons, ne louons ni ne partageons vos données personnelles avec des tiers à des fins marketing. Nous faisons appel aux sous-traitants suivants pour exploiter le Service :
           </p>

@@ -74,7 +74,7 @@ export function TermsEs() {
           <li>GEO Toolbox es una herramienta profesional. Al suscribirse, el Cliente confirma que actúa con fines empresariales o profesionales.</li>
           <li>Los planes de pago son <strong>suscripciones que se renuevan automáticamente</strong> (mensual o anualmente) hasta que el Cliente las cancele.</li>
           <li>El periodo de prueba gratuito requiere una tarjeta y <strong>se convierte automáticamente en una suscripción de pago cuando finaliza</strong>, salvo que el Cliente lo cancele antes. El importe y la fecha del primer cargo (en un plan anual, la tarifa anual completa) se muestran en el momento del pago y en el correo electrónico de confirmación, y además enviamos un correo electrónico antes del cargo. La cancelación de un periodo de prueba iniciado a partir del 27 de octubre de 2026 pone fin a dicho periodo, y al acceso del Cliente, de forma inmediata.</li>
-          <li>El Cliente puede cancelar en cualquier momento desde <strong>Account → Manage subscription</strong>. La cancelación surte efecto al final del periodo en curso; el Cliente conserva el acceso hasta entonces.</li>
+          <li>El Cliente puede cancelar en cualquier momento desde <strong>Account → Manage subscription</strong>. La cancelación de una suscripción de pago surte efecto al final del periodo en curso; el Cliente conserva el acceso hasta entonces.</li>
           <li><strong>Las tarifas no son reembolsables</strong> —incluso cuando un periodo de prueba se convierte porque el Cliente no lo canceló a tiempo, y por el tiempo o los créditos no utilizados—, salvo cuando la ley reconozca al Cliente un derecho que no podamos excluir (véase el §8).</li>
         </UL>
       </div>

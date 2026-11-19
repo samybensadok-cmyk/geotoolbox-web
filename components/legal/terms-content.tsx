@@ -79,7 +79,7 @@ export function TermsContent({ localeNote }: { localeNote?: React.ReactNode }) {
           <li>GEO Toolbox is a business tool. By subscribing you confirm you are acting for business purposes.</li>
           <li>Paid plans are <strong>subscriptions that renew automatically</strong> (monthly or annually) until you cancel.</li>
           <li>A free trial requires a card and <strong>converts automatically to a paid subscription when it ends</strong> unless you cancel first. The amount and date of the first charge (for an annual plan, the full annual fee) are shown at checkout and in your confirmation email, and we also email you before the charge. Cancelling a trial started from October 27, 2026 ends it, and your access, immediately.</li>
-          <li>You can cancel at any time from <strong>Account → Manage subscription</strong>. Cancellation takes effect at the end of the current period; you keep access until then.</li>
+          <li>You can cancel at any time from <strong>Account → Manage subscription</strong>. Cancelling a paid subscription takes effect at the end of the current period; you keep access until then.</li>
           <li><strong>Fees are non-refundable</strong> — including when a trial converts because you did not cancel in time, and for unused time or credits — except where the law gives you a right we cannot exclude (see §8).</li>
         </UL>
       </div>

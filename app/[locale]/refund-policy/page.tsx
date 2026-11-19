@@ -5,12 +5,14 @@ import { siteConfig } from "@/lib/config"
 import { RefundPolicyContent } from "@/components/legal/refund-policy-content"
 import { RefundPolicyEs } from "@/components/legal/refund-policy-es"
 import { RefundPolicyDe } from "@/components/legal/refund-policy-de"
+import { RefundPolicyFr } from "@/components/legal/refund-policy-fr"
 
 // SG_LEGAL_V2 (2026-08-15): locale route so footer links resolve; renders the
 // canonical content (bilingual for the legal notice, EN for the policy).
 const SUPPORTED = ["fr", "es", "de"]
 // SG_LEGAL_LOCALES (2026-11-19): native ES/DE translations (Opus-written, Opus + Codex reviewed); the canonical text prevails.
 const NATIVE: Record<string, { title: string; description: string }> = {
+  fr: { title: "Politique de résiliation et de remboursement", description: "Fonctionnement des abonnements, des essais gratuits, de la résiliation et des remboursements GEO Toolbox." },
   es: { title: "Política de cancelación y reembolso", description: "Cómo funcionan las suscripciones, las pruebas gratuitas, la cancelación y los reembolsos de GEO Toolbox." },
   de: { title: "Kündigungs- und Erstattungsrichtlinie", description: "Wie Abonnements, kostenlose Testphasen, Kündigung und Erstattungen bei GEO Toolbox funktionieren." },
 }
@@ -38,6 +40,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
   const { locale } = await params
   if (!SUPPORTED.includes(locale)) notFound()
   setRequestLocale(locale)
+  if (locale === "fr") return <RefundPolicyFr />
   if (locale === "es") return <RefundPolicyEs />
   if (locale === "de") return <RefundPolicyDe />
   return <RefundPolicyContent />
