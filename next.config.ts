@@ -14,6 +14,14 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        // Non-production hosts (geotoolbox-web.vercel.app + preview deployments) served a full,
+        // indexable copy of the site; Google had the mirror's homepage indexed (forensic 2026-11-20).
+        // Canonicals already point to geotoolbox.ai; this header keeps those hosts out of the index.
+        source: "/:path*",
+        has: [{ type: "host", value: "(?<sub>.+)\\.vercel\\.app" }],
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      },
+      {
         // Agent-readiness surface on the homepage (RFC 8288 Link relations +
         // honest content negotiation): / serves markdown when the client sends
         // Accept: text/markdown (middleware rewrite to /home.md), so caches

@@ -24,7 +24,6 @@ function marketingEntries(
   ])
   return routing.locales.map((locale) => ({
     url: url(locale),
-    lastModified: new Date(),
     changeFrequency: opts.changeFrequency,
     priority: opts.priority,
     alternates: { languages },
@@ -41,7 +40,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       ? (countsByLocale.get(locale)?.[topic] ?? 0) > 0
       : (postsByLocale.get(locale)?.length ?? 0) > 0).map((locale) => ({
       url: `${siteConfig.url}${archivePath(locale, 1, topic)}`,
-      lastModified: new Date(), changeFrequency: "daily" as const, priority: topic ? 0.7 : 0.9,
+      changeFrequency: "daily" as const, priority: topic ? 0.7 : 0.9,
       alternates: { languages },
     }))
   })
@@ -74,43 +73,36 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // marketingEntries(), which would emit /fr/... URLs that 404.
     {
       url: `${siteConfig.url}/services/ai-seo-agency`,
-      lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
       url: `${siteConfig.url}/services/generative-engine-optimization`,
-      lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
       url: `${siteConfig.url}/services/answer-engine-optimization`,
-      lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
       url: `${siteConfig.url}/services/ai-automation-agency`,
-      lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
       url: `${siteConfig.url}/about`,
-      lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.5,
     },
     {
       url: `${siteConfig.url}/contact`,
-      lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.5,
     },
     {
       url: `${siteConfig.url}/tools`,
-      lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.8,
     },
@@ -119,7 +111,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // hardcoded list caused.
     ...tools.map((t) => t.slug).map((slug) => ({
       url: `${siteConfig.url}/tools/${slug}`,
-      lastModified: new Date(),
       changeFrequency: "weekly" as const,
       priority: 0.8,
     })),
