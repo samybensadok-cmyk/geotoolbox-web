@@ -8,18 +8,18 @@ import { BF } from "@/lib/black-friday"
 // sprites + the static layer come from next/og once per instance, frames are composited and LZW-encoded here.
 export const dynamic = "force-dynamic"
 
-const W = 560
-const H = 132
+const W = 840
+const H = 190
 const FRAMES = 60
-const LBL_W = 96
-const TW = 100
-const TH = 104
-const GAP = 10
-const TY = 14
-const CELL_W = 40
-const CELL_H = 64
-const NUM_DX = 10 // digits start 10px inside a tile (2 cells = 80px)
-const NUM_DY = 8
+const LBL_W = 0
+const TW = 195
+const TH = 190
+const GAP = 20
+const TY = 0
+const CELL_W = 70
+const CELL_H = 120
+const NUM_DX = 27 // digits start 27px inside a tile (2 cells = 140px)
+const NUM_DY = 16
 const LABELS = ["DAYS", "HRS", "MIN", "SEC"]
 const FONT = "system-ui, sans-serif"
 
@@ -90,22 +90,22 @@ function getSprites(): Promise<Sprites> {
           width: TW,
           height: TH,
           display: "flex",
-          borderRadius: 12,
+          borderRadius: 18,
           background: "#1c1c1c",
-          border: "1px solid #2e2e2e",
+          border: "2px solid #2e2e2e",
         }}
       >
         <div
           style={{
             position: "absolute",
             left: 0,
-            top: 78,
-            width: TW - 2,
+            top: 146,
+            width: TW - 4,
             display: "flex",
             justifyContent: "center",
-            fontSize: 13,
-            letterSpacing: 1.5,
-            color: "#9a9a94",
+            fontSize: 24,
+            letterSpacing: 3,
+            color: "#b4b4ac",
             fontFamily: FONT,
           }}
         >
@@ -113,32 +113,17 @@ function getSprites(): Promise<Sprites> {
         </div>
       </div>
     ))
-    const base = await renderGray(
+    const baseRaw = await renderGray(
       <div style={{ display: "flex", position: "relative", width: "100%", height: "100%", background: "#0b0b0b" }}>
-        <div
-          style={{
-            position: "absolute",
-            left: 10,
-            top: 54,
-            display: "flex",
-            fontSize: 15,
-            letterSpacing: 2,
-            color: "#9a9a94",
-            fontWeight: 700,
-            fontFamily: FONT,
-          }}
-        >
-          ENDS IN
-        </div>
         {tiles}
       </div>,
       W,
       H,
     )
+    const base: Gray = { w: baseRaw.w, h: baseRaw.h, px: baseRaw.px.map((v) => v >> 1) }
     const digits: Gray[] = []
     for (let d = 0; d < 10; d++) {
-      digits.push(
-        await renderGray(
+      const g = await renderGray(
           <div
             style={{
               display: "flex",
@@ -147,7 +132,7 @@ function getSprites(): Promise<Sprites> {
               alignItems: "center",
               justifyContent: "center",
               background: "#1c1c1c",
-              fontSize: 54,
+              fontSize: 108,
               fontWeight: 700,
               color: "#ffffff",
               fontFamily: FONT,
@@ -157,8 +142,8 @@ function getSprites(): Promise<Sprites> {
           </div>,
           CELL_W,
           CELL_H,
-        ),
-      )
+        )
+      digits.push({ w: g.w, h: g.h, px: g.px.map((v) => 128 + Math.round(Math.max(0, Math.min(1, (v - 28) / 227)) * 127)) })
     }
     return { base, digits }
   })()
@@ -251,7 +236,12 @@ export async function GET() {
   prev.forEach((t, i) => drawTile(img, sp, i, t))
 
   const out: number[] = [0x47, 0x49, 0x46, 0x38, 0x39, 0x61, W & 255, W >> 8, H & 255, H >> 8, 0xf7, 0, 0]
-  for (let i = 0; i < 256; i++) out.push(i, i, i)
+  for (let i = 0; i < 128; i++) out.push(i * 2, i * 2, i * 2) // 0..127: gray ramp (static layer)
+  for (let k = 0; k < 128; k++) {
+    // 128..255: tile background -> brand yellow (anti-aliased digits)
+    const t = k / 127
+    out.push(Math.round(28 + t * 227), Math.round(28 + t * 172), Math.round(28 - t * 28))
+  }
   frameBytes(out, img, 0, 0, W, H)
 
   for (let f = 1; f < FRAMES; f++) {
