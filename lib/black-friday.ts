@@ -29,10 +29,15 @@ export const BF = {
   teaserStartIso: "2026-11-16T00:00:00Z",
   /** = 2026-11-16 00:00 UTC (already past at deploy). Mirrors SG_BF2026['start'] (backend applies the code from here). */
   startIso: "2026-11-16T00:00:00Z",
-  /** = Wed 2026-12-02 23:59:59 America/Los_Angeles (PST, UTC-8). Mirrors SG_BF2026['end'] (backend stops applying
-   *  the code after it). Stripe redeem_by / expires_at = 2026-12-03T10:00:00Z, a 2 h tail so a session created just
-   *  before the end can still be paid. */
-  endIso: "2026-12-03T07:59:59Z",
+  /** SITE DISPLAY end (banner, exit popup, pricing strip, services countdown + "Ends <date>" labels):
+   *  = Sun 2026-11-29 23:59:59 America/Los_Angeles (PST, UTC-8). Operator 2026-11-26: the site timer ends this
+   *  Sunday at midnight PT, copy unchanged; timer + banner get extended and relabelled for Cyber Monday next week.
+   *  The OFFER itself still runs to offerEndIso (backend + Stripe unchanged). */
+  endIso: "2026-11-30T07:59:59Z",
+  /** OFFER end = Wed 2026-12-02 23:59:59 America/Los_Angeles (PST, UTC-8). Mirrors SG_BF2026['end'] (backend stops
+   *  applying the code after it). Stripe redeem_by / expires_at = 2026-12-03T10:00:00Z, a 2 h tail so a session
+   *  created just before the end can still be paid. The email countdown GIF stays on this date (sent emails say Dec 2). */
+  offerEndIso: "2026-12-03T07:59:59Z",
   /** Annual bonus: annual plans bought from here to the end also get a free GEO audit + strategy call (manual
    *  fulfilment, no code). Operator 2026-11-17: runs from the start (was Sat Nov 28 = people would wait).
    *  Mirrors SG_BF2026['rush_start']. */

@@ -4,7 +4,7 @@ import { BF } from "@/lib/black-friday"
 
 // Animated "ends in" countdown for the Black Friday emails: an 8-bit grayscale GIF that plays the next
 // FRAMES seconds from the moment it is fetched, then holds on the last frame (no loop). Rendered per request
-// from BF.endIso and served no-store so a mail proxy never freezes a stale time. No dependencies: digit
+// from BF.offerEndIso (the real offer end, not the site display end) and served no-store so a mail proxy never freezes a stale time. No dependencies: digit
 // sprites + the static layer come from next/og once per instance, frames are composited and LZW-encoded here.
 export const dynamic = "force-dynamic"
 
@@ -230,7 +230,7 @@ function frameBytes(out: number[], data: Uint8Array, x: number, y: number, w: nu
 
 export async function GET() {
   const sp = await getSprites()
-  const left = Math.max(0, Date.parse(BF.endIso) - Date.now())
+  const left = Math.max(0, Date.parse(BF.offerEndIso) - Date.now())
   const img = new Uint8Array(sp.base.px)
   let prev = parts(left)
   prev.forEach((t, i) => drawTile(img, sp, i, t))
