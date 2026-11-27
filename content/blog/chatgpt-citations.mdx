@@ -2,7 +2,7 @@
 title: "How ChatGPT Cites Sources (and Why It Gets Them Wrong)"
 description: "How ChatGPT cites sources: what a citation is, how it decides what to cite, why so many citations are wrong, and how to track which sources it shows you."
 date: "2026-06-09"
-updated: "2026-11-15"
+updated: "2026-11-27"
 author: "Samy BEN SADOK"
 tags: ["chatgpt", "ai-citation", "geo", "ai-visibility", "chatgpt-search"]
 draft: false
@@ -48,7 +48,7 @@ Two more findings cut against common assumptions. Among search-index results, th
 
 ### Why Search-Index Pages Dominate
 
-The 88% figure for search-index pages is doing a lot of work. ChatGPT Search runs on a web index, and the pages it already finds through that index are the ones it trusts enough to cite. News, Reddit, and YouTube get read for context and color, but the citation usually lands on a page that was retrievable and rankable in the first place. Classic discoverability still gates everything: if your page is not in the index ChatGPT searches, it cannot be the one-in-two that gets cited.
+The 88% figure for search-index pages is doing a lot of work. ChatGPT Search runs on a web index, and the pages it already finds through that index are the ones it trusts enough to cite. News, Reddit, and YouTube get pulled for context and color, but the citation usually lands on a page that was retrievable and rankable in the first place. Classic discoverability still gates everything: if your page is not in the index ChatGPT searches, it cannot be the one-in-two that gets cited.
 
 ### Fan-Out: One Question, Many Searches
 
@@ -58,7 +58,7 @@ When you ask one question, ChatGPT does not run one search. It expands your prom
 
 ChatGPT pulls Reddit constantly and almost never credits it. In the same analysis, [67.8% of all non-cited URLs came from Reddit](https://ahrefs.com/blog/why-chatgpt-cites-pages/), even though Reddit's own citation rate was just 1.93%. When Suganthan Mohanadasan [read ChatGPT's own network traffic](https://suganthan.com/blog/how-chatgpt-picks-sources/) across a few dozen searches on one logged-in Pro account in June 2026, Reddit was fetched 278 times and cited just 11, while YouTube was fetched 201 times and cited not once.
 
-His read on YouTube's zero is mechanical: a fetched YouTube page hands back metadata, not the video transcript, so there is little for a citation to bind to; a fetched Reddit thread, by contrast, arrives as full readable text the model can quote. The model mines those Reddit threads for context, opinions, and phrasing, then writes the answer and cites a cleaner-looking source instead.
+His read on YouTube's zero is mechanical: a fetched YouTube page hands back metadata, not the transcript (as [our YouTube fetch](https://geotoolbox.ai/blog/youtube-videos-ai-search) found), leaving little for a citation to bind to; a fetched Reddit thread arrives as full readable text the model can quote. The model mines those Reddit threads for context, opinions, and phrasing, then writes the answer and cites a cleaner-looking source instead.
 
 This is the gap most people miss: retrieval is not citation. Suganthan's traffic analysis splits it into three states worth naming. **Fetched** means ChatGPT's retrieval tool pulled your page into the model's working context. **Cited** means a numbered footnote pins your page to one specific claim, the link you can see. **Mentioned** means your brand name turns up in the answer while a different page gets the citation. That is narrower than a plain brand mention, where you can be both named and cited. The states come apart constantly: a page can be fetched and never cited, so it can shape the wording of an answer while never surfacing in the Sources panel. That hidden layer is exactly what the panel undercounts.
 
