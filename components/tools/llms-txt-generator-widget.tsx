@@ -3,6 +3,7 @@
 import { useState } from "react"
 import type { GenerateResult } from "@/lib/llms-txt-generate"
 import { trackEvent } from "@/lib/analytics"
+import { ToolArrow } from "./tool-arrow"
 
 /**
  * Crawl-based llms.txt generator. Give it a domain and it builds the file for
@@ -94,9 +95,9 @@ export function LlmsTxtGeneratorWidget() {
           <button
             type="submit"
             disabled={loading || !input.trim()}
-            className="shrink-0 rounded-[3px] bg-[color:var(--accent)] px-6 py-2.5 text-[14px] font-semibold text-[color:var(--accent-ink)] transition-colors hover:bg-[color:var(--accent-hover)] disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-[3px] bg-[color:var(--accent)] px-6 py-2.5 text-[14px] font-semibold text-[color:var(--accent-ink)] transition-colors hover:bg-[color:var(--accent-hover)] disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {loading ? "Generating…" : "Generate llms.txt"}
+            {loading ? "Generating…" : <>Generate llms.txt<ToolArrow /></>}
           </button>
         </div>
 

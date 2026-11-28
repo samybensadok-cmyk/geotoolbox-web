@@ -209,7 +209,7 @@ Disallow: /private/`}
         </div>
       </section>
 
-      <FeatureFaq items={faqs} heading="robots.txt, answered properly" />
+      <FeatureFaq compact items={faqs} heading="robots.txt, answered properly" />
 
       <section className={tk.close}>
         <div className={kit.wrap}>
@@ -226,7 +226,7 @@ Disallow: /private/`}
             <Link
               href="/tools/robots-txt-generator?ref=robots-tester"
               prefetch={false}
-              className={kit.btnLime}
+              className={kit.btnOutline}
             >
               Generate a robots.txt
               <Arrow />

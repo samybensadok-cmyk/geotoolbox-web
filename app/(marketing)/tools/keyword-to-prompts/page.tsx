@@ -175,7 +175,7 @@ export default function KeywordToPromptsPage() {
         </div>
       </section>
 
-      <FeatureFaq items={faqs} heading="Keywords, prompts and AI visibility — answered" />
+      <FeatureFaq compact items={faqs} heading="Keywords, prompts and AI visibility — answered" />
 
       {/* Funnel CTA */}
       <section className={tk.close}>
@@ -193,7 +193,7 @@ export default function KeywordToPromptsPage() {
             <Link
               href="/app/?page=signup&interval=monthly&ref=tool-keyword-to-prompts"
               prefetch={false}
-              className={kit.btnLime}
+              className={kit.btnOutline}
             >
               Start tracking your prompts
               <Arrow />

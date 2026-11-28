@@ -39,13 +39,13 @@ export function ScoreLegend({
 }) {
   const data = tiers ?? PRESETS[variant]
   return (
-    <ul className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+    <ul className={`flex flex-col gap-2 sm:flex-row sm:flex-wrap ${s.legend}`}>
       {data.map((t) => (
         <li
           key={t.band}
           className={`flex items-center gap-2 rounded-full border px-3 py-1.5 text-[12px] ${TONE[t.tone]} ${s.legItem} ${DARK_TONE[t.tone]}`}
         >
-          <span className="font-bold tabular-nums">{t.band}</span>
+          <span className={`font-bold tabular-nums ${s.legBand}`}>{t.band}</span>
           <span className="opacity-90">{t.label}</span>
         </li>
       ))}

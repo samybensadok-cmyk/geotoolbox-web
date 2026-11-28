@@ -4,7 +4,7 @@ import { makeLocalizer } from "@/lib/i18n/siblings"
 
 type Faq = { q: string; a: string }
 
-export async function Playbook() {
+export async function Playbook({ index }: { index?: string } = {}) {
   const t = await getTranslations("home.playbook")
   const locale = await getLocale()
   const faqs = t.raw("faqs") as Faq[]
@@ -36,7 +36,7 @@ export async function Playbook() {
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:items-end lg:gap-[70px]">
           <div>
             <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-              {t("eyebrow")}
+              {index ? <><span>{index}</span><span aria-hidden="true" className="mx-2.5 text-gray-400">|</span><span className="text-gray-600">{t("eyebrow")}</span></> : t("eyebrow")}
             </p>
             <h2 className="mt-3 text-[32px] font-medium leading-[1.13] tracking-[-0.045em] text-gray-900 sm:text-[clamp(30px,3.5vw,46px)]">
               {t("h2")}

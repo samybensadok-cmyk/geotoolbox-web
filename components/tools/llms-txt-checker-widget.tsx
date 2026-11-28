@@ -6,6 +6,7 @@ import { trackEvent } from "@/lib/analytics"
 import Link from "next/link"
 import { ToolResultCapture } from "@/components/tools/tool-result-capture"
 import tk from "./tools-dark.module.css"
+import { ToolArrow } from "./tool-arrow"
 
 /**
  * Free llms.txt checker — the interactive widget. POSTs the user's URL to the
@@ -185,7 +186,7 @@ export function LlmsTxtCheckerWidget() {
                 </svg>
                 Checking…
               </>
-            ) : "Check llms.txt"}
+            ) : <>Check llms.txt<ToolArrow /></>}
           </button>
         </div>
         <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -196,7 +197,7 @@ export function LlmsTxtCheckerWidget() {
               type="button"
               disabled={loading}
               onClick={() => { setUrl(ex.url); runCheck(ex.url) }}
-              className="rounded-[3px] border border-[color:var(--line-strong)] px-3 py-1 font-mono text-[12px] text-[color:var(--muted)] transition-colors hover:border-[color:var(--accent)] hover:text-[color:var(--accent)] disabled:opacity-50"
+              className={`rounded-[3px] border border-[color:var(--line-strong)] px-3 py-1 font-mono text-[12px] text-[color:var(--muted)] transition-colors hover:border-[color:var(--accent)] hover:text-[color:var(--accent)] disabled:opacity-50 ${tk.chip}`}
             >
               {ex.label}
             </button>

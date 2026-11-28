@@ -317,7 +317,7 @@ export default function SitemapExtractorPage() {
         </div>
       </section>
 
-      <FeatureFaq items={faqs} heading="Sitemap extraction, answered" />
+      <FeatureFaq compact items={faqs} heading="Sitemap extraction, answered" />
 
       <section className={tk.close}>
         <div className={kit.wrap}>
@@ -334,7 +334,7 @@ export default function SitemapExtractorPage() {
             <Link
               href="/tools/ai-crawler-checker?ref=sitemap-extractor"
               prefetch={false}
-              className={kit.btnLime}
+              className={kit.btnOutline}
             >
               Check your AI crawler access
               <Arrow />

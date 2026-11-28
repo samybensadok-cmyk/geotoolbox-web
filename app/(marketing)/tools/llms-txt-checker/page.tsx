@@ -220,7 +220,7 @@ export default function LlmsTxtCheckerPage() {
         </div>
       </section>
 
-      <FeatureFaq items={faqs} heading="llms.txt, answered honestly" />
+      <FeatureFaq compact items={faqs} heading="llms.txt, answered honestly" />
 
       {/* Funnel CTA → Agent Readiness */}
       <section className={tk.close}>
@@ -238,7 +238,7 @@ export default function LlmsTxtCheckerPage() {
             <Link
               href="/features/agent-readiness?ref=llms-checker"
               prefetch={false}
-              className={kit.btnLime}
+              className={kit.btnOutline}
             >
               Run a free Agent Readiness scan
               <Arrow />

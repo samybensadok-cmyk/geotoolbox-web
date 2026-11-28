@@ -206,7 +206,7 @@ export default function AgentReadinessScannerPage() {
         </div>
       </section>
 
-      <FeatureFaq items={faqs} heading="The scanner, answered honestly" />
+      <FeatureFaq compact items={faqs} heading="The scanner, answered honestly" />
 
       {/* Campaign CTA */}
       <section className={tk.close}>
@@ -226,7 +226,7 @@ export default function AgentReadinessScannerPage() {
               <Link
                 href="/services/ai-seo-agency?ref=agent-readiness-scanner"
                 prefetch={false}
-                className={kit.btnLime}
+                className={kit.btnOutline}
               >
                 Get your AI Visibility Snapshot
                 <Arrow />

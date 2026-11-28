@@ -59,7 +59,7 @@ export default function ToolsIndexPage() {
                     <p className={tk.dirDesc}>{t.desc}</p>
                   </div>
                   <span className={tk.dirOpen}>
-                    Open tool
+                    <span className={tk.dirOpenText}>Open tool</span>
                     <Arrow />
                   </span>
                 </Link>

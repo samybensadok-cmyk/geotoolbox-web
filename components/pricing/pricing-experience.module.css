@@ -6,7 +6,6 @@
 .hero { padding: 84px 0 40px; }
 .hero > div { position: relative; }
 .heroTitle { margin: 20px 0 0; font-family: var(--display); font-size: clamp(2.4rem, 5.4vw, 4.4rem); line-height: 1.02; letter-spacing: -0.05em; font-weight: 700; color: var(--white); max-width: 1000px; text-wrap: balance; }
-.heroTitle span { color: var(--accent); }
 .heroFoot { margin-top: 34px; padding-top: 24px; border-top: 1px solid var(--line-strong); }
 .heroSub { margin: 0; max-width: 680px; font-size: clamp(1.02rem, 1.5vw, 1.2rem); line-height: 1.55; letter-spacing: -0.01em; color: var(--text); text-wrap: pretty; }
 
@@ -32,7 +31,7 @@
 /* Controls: audience tabs (left) + billing toggle (right) */
 .controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
 .seg { display: inline-flex; align-items: stretch; gap: 3px; padding: 3px; background: var(--surface); border: 1px solid var(--line-strong); border-radius: 4px; }
-.segBtn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 42px; padding: 8px 16px; border: 1px solid transparent; border-radius: 2px; background: transparent; color: var(--muted); font-family: var(--display); font-size: 14px; font-weight: 500; line-height: 1.2; cursor: pointer; transition: color 0.18s var(--ease), background-color 0.18s var(--ease), border-color 0.18s var(--ease); }
+.segBtn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 8px 16px; border: 1px solid transparent; border-radius: 2px; background: transparent; color: var(--muted); font-family: var(--display); font-size: 14px; font-weight: 500; line-height: 1.2; white-space: nowrap; cursor: pointer; transition: color 0.18s var(--ease), background-color 0.18s var(--ease), border-color 0.18s var(--ease); }
 .segBtn:hover { color: var(--white); }
 .segBtn[aria-pressed="true"] { background: var(--surface-2); border-color: var(--line-lime); color: var(--white); }
 .saveBadge { font-family: var(--mono); font-size: 11px; font-weight: 600; color: var(--accent); }
@@ -42,8 +41,11 @@
 /* Each card renders the same 10 row slots (empty when a row does not apply) and borrows the grid's rows
    via subgrid, so names, prices, CTAs and quota lists sit on one line across the cards of a row. */
 .grid { margin-top: 28px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 16px; row-gap: 0; }
-.plan { position: relative; display: grid; grid-row: span 10; grid-template-rows: subgrid; row-gap: 0; } /* + kit card / cardLime (featured) */
-.popular { position: absolute; top: -12px; left: 27px; }
+/* 15 shared rows: head, strike, price, meta, bonus, tagline, CTA, trial, the 4 quota lines (comparable, so each is its
+   own row), then "Everything in", the highlight list and "All features". Nested subgrids hand each line to the grid. */
+.plan { position: relative; display: grid; grid-row: span 15; grid-template-rows: subgrid; row-gap: 0; } /* + kit card / cardLime (featured) */
+.planHead { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 26px; }
+.planHead > span { flex-shrink: 0; }
 .planName { margin: 0; font-family: var(--mono); font-size: 12.5px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
 .featured .planName { color: var(--accent); }
 .slotStrike { padding-top: 12px; }
@@ -76,11 +78,12 @@
 .disclose > span { font-size: 15px; font-weight: 400; transition: transform 0.2s var(--ease); }
 details[open] > .disclose > span { transform: rotate(45deg); }
 .disclose:hover { color: var(--accent-hover); }
-.quotas { list-style: none; margin: 20px 0 0; padding: 20px 0 0; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 10px; font-size: 14px; line-height: 1.45; color: var(--text); }
+.quotas { list-style: none; margin: 20px 0 0; padding: 20px 0 0; border-top: 1px solid var(--line); display: grid; grid-row: span 4; grid-template-rows: subgrid; row-gap: 0; font-size: 14px; line-height: 1.45; color: var(--text); }
 .quotas > li { display: flex; align-items: flex-start; gap: 10px; }
+.quotas > li + li { margin-top: 10px; }
 .quotaLead { font-weight: 600; color: var(--white); }
 .check { width: 15px; height: 15px; flex-shrink: 0; margin-top: 2px; color: var(--accent); }
-.features { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); }
+.features { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); display: grid; grid-row: span 3; grid-template-rows: subgrid; row-gap: 0; }
 .inherits { margin: 0 0 10px; font-size: 12.5px; font-weight: 500; color: var(--muted); }
 .hlList { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; font-size: 13.5px; line-height: 1.5; color: var(--text); }
 .hlList > li { display: flex; align-items: flex-start; gap: 10px; }
@@ -89,16 +92,19 @@ details[open] > .disclose > span { transform: rotate(45deg); }
 .more > .hlList { margin-top: 4px; }
 
 /* "Every plan includes" */
-.included { margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; }
-.included > ul { margin: 0; }
-.included li { display: inline-flex; align-items: center; gap: 7px; }
+.included { margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--line); }
+.included > ul { margin: 14px 0 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.included li { display: flex; align-items: center; gap: 8px; line-height: 1.4; }
 .tagCheck { width: 13px; height: 13px; flex-shrink: 0; color: var(--accent); }
 
 /* ---------- Three ways to work ---------- */
-.ways { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
-.way { display: grid; grid-template-columns: 52px minmax(0, 0.95fr) minmax(0, 1.4fr) 232px; gap: 24px 32px; align-items: start; background: var(--surface); border: 1px solid var(--line-strong); border-radius: 12px; padding: 28px 30px; }
-.wayLime { background: radial-gradient(circle at 92% 6%, rgba(var(--accent-rgb), 0.13) 0%, rgba(var(--accent-rgb), 0.03) 46%, transparent 100%), var(--surface); border-color: var(--accent); box-shadow: 0 0 42px -24px rgba(var(--accent-rgb), 0.35); }
+/* One column grid for the three rows (subgrid), so index, text, prices and the action column line up across rows;
+   the action column is as wide as its longest label (one line in every locale). */
+.ways { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 52px minmax(0, 0.95fr) minmax(0, 1.4fr) max-content; column-gap: 32px; row-gap: 12px; }
+.way { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; row-gap: 24px; align-items: start; background: var(--surface); border: 1px solid var(--line-strong); border-radius: 12px; padding: 28px 30px; }
+.wayLime { background: linear-gradient(180deg, rgba(var(--accent-rgb), 0.075) 0%, rgba(var(--accent-rgb), 0.02) 48%, rgba(var(--accent-rgb), 0) 80%), var(--surface); border-color: rgba(var(--accent-rgb), 0.28); }
 .wayIdx { align-self: start; justify-self: start; box-sizing: border-box; height: 30px; display: inline-flex; align-items: center; font-family: var(--mono); font-size: 12px; line-height: 18px; font-weight: 600; color: var(--accent); background: rgba(var(--accent-rgb), 0.05); border: 1px solid var(--line-lime); border-radius: 3px; padding: 0 8px; }
+.wayText { min-width: 0; }
 .wayHead { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; min-height: 30px; } /* = .wayIdx height: kicker and index share a line */
 .wayKicker { margin: 0; font-family: var(--mono); font-size: 12.5px; line-height: 18px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
 .wayLime .wayKicker { color: var(--accent); }
@@ -112,12 +118,21 @@ details[open] > .disclose > span { transform: rotate(45deg); }
 .dwyVal { margin: 0; font-size: clamp(1.7rem, 2.5vw, 2.15rem); line-height: 1.05; letter-spacing: -0.04em; font-weight: 500; color: var(--white); font-variant-numeric: tabular-nums; }
 .dwyVal span, .dfyVal span { display: inline-block; font-size: 14px; letter-spacing: 0; color: var(--muted); font-weight: 400; margin-left: 3px; }
 .dwyWho { margin: 8px 0 0; font-family: var(--mono); font-size: 12px; line-height: 1.45; color: var(--accent); }
-.dfyPrices { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-.dfyFrom { display: block; min-height: 19px; margin-bottom: 2px; font-size: 13px; line-height: 19px; letter-spacing: 0; font-weight: 400; color: var(--muted); }
-.dfyVal { margin: 0; font-size: clamp(1.4rem, 2.1vw, 1.85rem); font-weight: 500; letter-spacing: -0.04em; line-height: 1.06; color: var(--white); font-variant-numeric: tabular-nums; }
-.dfyLbl { margin: 6px 0 0; font-family: var(--mono); font-size: 11.5px; line-height: 1.45; color: var(--muted); }
+/* Done for you: head + actions on the first line, the three prices on a full-width line under a hairline (as on the
+   homepage). Every price column has the same rows (label, price, name, term) so the prices share one baseline. */
+.wayDfy .wayText { grid-column: 2 / 4; grid-row: 1; }
+.wayDfy .wayActions { grid-column: 4; grid-row: 1; }
+.wayDfy .dfyPrices { grid-column: 2 / -1; grid-row: 2; }
+.dfyPrices { list-style: none; margin: 0; padding: 22px 0 0; border-top: 1px solid var(--line); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.dfyPrices > li { display: grid; grid-row: span 4; grid-template-rows: subgrid; row-gap: 0; min-width: 0; padding: 0 24px; }
+.dfyPrices > li:first-child { padding-left: 0; }
+.dfyPrices > li + li { border-left: 1px solid var(--line); }
+.dfyTop { margin: 0 0 8px; font-family: var(--mono); font-size: 11px; font-weight: 600; line-height: 16px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.dfyVal { margin: 0; font-size: clamp(1.6rem, 2.3vw, 2.05rem); font-weight: 500; letter-spacing: -0.04em; line-height: 1; color: var(--white); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.dfyName { margin: 12px 0 0; font-size: 14.5px; font-weight: 500; line-height: 1.4; color: var(--text); }
+.dfyTerm { margin: 4px 0 0; font-family: var(--mono); font-size: 11.5px; line-height: 1.45; color: var(--muted); }
 .wayActions { display: flex; flex-direction: column; align-items: stretch; gap: 12px; }
-.wayActions > a { justify-content: center; white-space: normal; text-align: center; }
+.wayActions > a { justify-content: center; white-space: nowrap; text-align: center; }
 .wayActions > a, .split > div > a { min-height: 40px; } /* tap target for the kit text links */
 .upArrow { display: inline-flex; transform: rotate(-90deg); }
 
@@ -194,26 +209,28 @@ details[open] > .disclose > span { transform: rotate(45deg); }
 .faqNum { flex-shrink: 0; margin-top: 3px; font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); font-variant-numeric: tabular-nums; }
 .faqA { padding-left: 34px; }
 
-/* ---------- Final CTA ---------- */
-.final { position: relative; overflow: hidden; text-align: center; background: radial-gradient(ellipse at 50% 0%, rgba(var(--accent-rgb), 0.12) 0%, rgba(var(--accent-rgb), 0.02) 46%, transparent 70%), var(--surface); border: 1px solid var(--line-strong); border-top: 2px solid var(--accent); border-radius: 12px; padding: 64px 32px 68px; }
-.finalTitle { margin: 0 auto; max-width: 760px; font-family: var(--display); font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1.02; letter-spacing: -0.045em; font-weight: 600; color: var(--white); text-wrap: balance; }
-.finalBody { margin: 16px auto 0; max-width: 560px; font-size: 15.5px; line-height: 1.6; color: var(--muted); text-wrap: pretty; }
-.final .finalCta { margin-top: 30px; min-height: 52px; padding-inline: 30px; }
+/* ---------- Final CTA (same shape as the homepage closing card) ---------- */
+.final { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 28px 48px; align-items: center; background: radial-gradient(circle at 82% 0%, rgba(var(--accent-rgb), 0.11) 0%, rgba(var(--accent-rgb), 0.03) 46%, rgba(var(--accent-rgb), 0) 78%), var(--surface); border: 1px solid rgba(var(--accent-rgb), 0.28); border-radius: 12px; padding: 44px 38px; }
+.finalTitle { margin: 0; font-family: var(--display); font-size: clamp(1.8rem, 3.2vw, 2.6rem); line-height: 1.04; letter-spacing: -0.04em; font-weight: 600; color: var(--white); text-wrap: balance; }
+.finalBody { margin: 12px 0 0; max-width: 620px; font-size: 15px; line-height: 1.55; color: var(--muted); text-wrap: balance; }
+.final .finalCta { justify-self: start; min-height: 52px; padding-inline: 30px; }
 
 @media (prefers-reduced-motion: reduce) {
   .disclose > span, .plus, .toolArrow { transition: none; }
 }
 @media (max-width: 1180px) {
-  .way { grid-template-columns: 52px minmax(0, 1fr) minmax(0, 1.3fr); }
+  .ways { grid-template-columns: 52px minmax(0, 1fr) minmax(0, 1.3fr); }
   .wayActions { grid-column: 2 / -1; flex-direction: row; flex-wrap: wrap; align-items: center; }
+  .wayDfy .wayText { grid-column: 2 / -1; grid-row: 1; }
+  .wayDfy .dfyPrices { grid-column: 2 / -1; grid-row: 2; }
+  .wayDfy .wayActions { grid-column: 2 / -1; grid-row: 3; }
 }
 @media (max-width: 1020px) {
   .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .plan:nth-child(n + 3) { margin-top: 16px; }
-  .credits, .split { grid-template-columns: 1fr; }
-  .way, .wayLime { grid-template-columns: 44px minmax(0, 1fr); align-items: start; }
+  .credits, .split, .final { grid-template-columns: 1fr; }
+  .ways { grid-template-columns: 44px minmax(0, 1fr); }
   .way > :nth-child(n + 3) { grid-column: 2; }
-  .wayActions { flex-direction: row; flex-wrap: wrap; align-items: center; }
   .enterprise { flex-direction: column; align-items: flex-start; }
 }
 @media (max-width: 760px) {
@@ -221,21 +238,26 @@ details[open] > .disclose > span { transform: rotate(45deg); }
   .plan + .plan { margin-top: 16px; }
   .steps { grid-template-columns: 1fr; }
   .steps > li + li { margin-top: 20px; }
-  .controls { flex-direction: column; align-items: stretch; }
-  .seg { display: flex; }
-  .segBtn { flex: 1 1 0; padding-inline: 10px; text-align: center; }
+  /* The two toggles stack as one 2x2 block: equal halves wherever the labels fit on one line (a longer label,
+     e.g. the French audience tab, takes the width it needs instead of wrapping). */
+  .controls { flex-direction: column; align-items: stretch; gap: 10px; }
+  .seg { display: grid; grid-template-columns: minmax(max-content, 1fr) minmax(max-content, 1fr); }
+  .segBtn { height: 44px; padding: 0 9px; font-size: 13px; }
+  .included > ul { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 640px) {
   .hero { padding: 56px 0 28px; }
   .heroFoot { margin-top: 24px; padding-top: 18px; }
   .plans { padding-bottom: 56px; }
   .bf { padding: 18px 16px; }
-  .popular { left: 17px; }
-  .way, .wayLime { grid-template-columns: 1fr; gap: 18px; padding: 22px 18px; }
-  .way > :nth-child(n + 3) { grid-column: auto; }
+  .ways { grid-template-columns: minmax(0, 1fr); }
+  .way { row-gap: 18px; padding: 22px 18px; }
+  .ways .way > * { grid-column: 1 / -1; grid-row: auto; }
   .wayActions { flex-direction: column; align-items: stretch; }
-  .dwyPrices, .dfyPrices { grid-template-columns: 1fr; gap: 12px; }
-  .dfyFromEmpty { display: none; }
+  .dwyPrices { grid-template-columns: 1fr; }
+  .dfyPrices { grid-template-columns: 1fr; }
+  .dfyPrices > li { padding: 0; }
+  .dfyPrices > li + li { border-left: 0; border-top: 1px solid var(--line); margin-top: 16px; padding-top: 16px; }
   .enterprise { padding: 24px 18px; }
   .compareSummary { padding: 24px 0; }
   .ctable { min-width: 640px; }
@@ -243,6 +265,6 @@ details[open] > .disclose > span { transform: rotate(45deg); }
   .rowLabel { padding: 11px 10px; font-size: 13px; }
   .toolRow { grid-template-columns: 30px minmax(0, 1fr) auto; gap: 10px 12px; padding: 16px 8px; }
   .faqA { padding-left: 0; }
-  .final { padding: 44px 18px 48px; }
-  .final .finalCta { width: 100%; }
+  .final { padding: 28px 18px; }
+  .final .finalCta { justify-self: stretch; width: 100%; }
 }

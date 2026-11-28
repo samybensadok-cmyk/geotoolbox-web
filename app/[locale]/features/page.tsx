@@ -82,11 +82,6 @@ type GroupCopy = {
   features: { blurb: string; highlights: string[] }[]
 }
 
-const CTA_PILLS = [
-  "Visibility Tracker", "GEO Scan", "Query Fan-Out", "Domain Overview", "Content Analyzer", "Content Studio",
-  "Competitor Intel", "Citation Interceptor", "Analytics", "Community", "PR Coverage",
-]
-
 export default async function FeaturesPage({
   params,
 }: {
@@ -191,7 +186,7 @@ export default async function FeaturesPage({
                       <div>
                         <h3 className={fx.dirName}>{f.name}</h3>
                         <p className={fx.dirBlurb}>{f.blurb}</p>
-                        <ul className={k.tags}>
+                        <ul className={fx.dirMeta}>
                           {f.highlights.map((h) => (
                             <li key={h}>{h}</li>
                           ))}
@@ -207,17 +202,10 @@ export default async function FeaturesPage({
         </div>
       </section>
 
-      {/* CTA: features-index closing card with capability pills */}
+      {/* CTA: features-index closing card (calm, like the homepage close) */}
       <FeatureCloseCta
         title={t("cta.h2")}
         sub={t("cta.body")}
-        after={
-          <div className={fx.pills}>
-            {CTA_PILLS.map((f) => (
-              <span key={f}>{f}</span>
-            ))}
-          </div>
-        }
         foot={t("cta.foot")}
       >
         <Link

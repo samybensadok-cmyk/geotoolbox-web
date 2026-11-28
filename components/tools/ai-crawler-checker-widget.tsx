@@ -7,6 +7,7 @@ import Link from "next/link"
 import { siteConfig } from "@/lib/config"
 import { ToolResultCapture } from "@/components/tools/tool-result-capture"
 import tk from "./tools-dark.module.css"
+import { ToolArrow } from "./tool-arrow"
 
 /**
  * Free AI Crawler Access Checker — the interactive widget. POSTs the user's URL
@@ -160,7 +161,7 @@ export function AiCrawlerCheckerWidget() {
                 </svg>
                 Checking…
               </>
-            ) : "Check AI crawlers"}
+            ) : <>Check AI crawlers<ToolArrow /></>}
           </button>
         </div>
         <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -171,7 +172,7 @@ export function AiCrawlerCheckerWidget() {
               type="button"
               disabled={loading}
               onClick={() => { setUrl(ex.url); runCheck(ex.url) }}
-              className="rounded-[var(--tool-r-btn,9999px)] border border-[color:var(--tk-line-strong,#e5e7eb)] px-3 py-1 font-mono text-[12px] text-[color:var(--tk-muted,#4b5563)] transition-colors hover:border-[color:var(--tk-accent,#5eead4)] hover:text-[color:var(--tk-accent,#0f766e)] disabled:opacity-50"
+              className={`rounded-[var(--tool-r-btn,9999px)] border border-[color:var(--tk-line-strong,#e5e7eb)] px-3 py-1 font-mono text-[12px] text-[color:var(--tk-muted,#4b5563)] transition-colors hover:border-[color:var(--tk-accent,#5eead4)] hover:text-[color:var(--tk-accent,#0f766e)] disabled:opacity-50 ${tk.chip}`}
             >
               {ex.label}
             </button>

@@ -450,22 +450,24 @@ export function PricingCards({ copy, locale, creditsLabel = "Monthly credits" }:
               key={plan.id}
               className={cn(st.plan, isFeatured ? cn(k.cardLime, st.featured) : k.card)}
             >
-              {isFeatured && (
-                <span className={cn(k.badge, st.popular)}>
-                  {copy.badge.mostPopular}
-                </span>
-              )}
-
-              {/* h2, not h3: PricingCards is rendered directly under the /pricing
-                  <h1> with no intervening section heading, so an <h3> here was a
-                  level skip (h1 → h3) on the page. The classes carry the visual
-                  size, so this is a semantics-only change. */}
-              <h2 className={st.planName}>{plan.name}</h2>
+              {/* Header row: plan name, and the "Most popular" badge right-aligned on the same line. */}
+              <div className={st.planHead}>
+                {/* h2, not h3: PricingCards is rendered directly under the /pricing
+                    <h1> with no intervening section heading, so an <h3> here was a
+                    level skip (h1 → h3) on the page. The classes carry the visual
+                    size, so this is a semantics-only change. */}
+                <h2 className={st.planName}>{plan.name}</h2>
+                {isFeatured && (
+                  <span className={k.badge}>
+                    {copy.badge.mostPopular}
+                  </span>
+                )}
+              </div>
 
               {/* SG_BF2026_V2 (2026-11-18 benchmark: Proton, WP Rocket, Elementor, SE Ranking): the discount is quiet
                   (small grey strike + one soft pill), the price is loud in normal ink with small cents. */}
-              {/* Row slots: every card renders the same 10 grid rows (empty when a row does not apply), so the
-                  cards share one row structure via subgrid and prices, CTAs and quota lists line up. */}
+              {/* Row slots: every card renders the same 15 grid rows (empty when a row does not apply), so the
+                  cards share one row structure via subgrid and every line sits level across the cards. */}
               <div className={st.slotStrike}>
                 {bfCard && p.strike && (
                   <div className={st.bfStrikeRow}>
@@ -541,17 +543,17 @@ export function PricingCards({ copy, locale, creditsLabel = "Monthly credits" }:
 
               {/* Feature highlights */}
               <div className={st.features}>
-                {inheritsFrom && (
+                {inheritsFrom ? (
                   <p className={st.inherits}>
                     {fill(copy.everythingIn, { plan: inheritsFrom })}
                   </p>
-                )}
+                ) : <div />}
                 <ul className={st.hlList}>
                   {highlights.slice(0, VISIBLE_HIGHLIGHTS).map((h) => (
                     <li key={h}>{h}</li>
                   ))}
                 </ul>
-                {highlights.length > VISIBLE_HIGHLIGHTS && (
+                {highlights.length > VISIBLE_HIGHLIGHTS ? (
                   <details className={st.more}>
                     <summary className={st.disclose}>
                       {SHOW_ALL[locale] ?? SHOW_ALL.en} (+{highlights.length - VISIBLE_HIGHLIGHTS})
@@ -563,7 +565,7 @@ export function PricingCards({ copy, locale, creditsLabel = "Monthly credits" }:
                       ))}
                     </ul>
                   </details>
-                )}
+                ) : <div />}
               </div>
             </div>
           )

@@ -17,7 +17,7 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema, howToSchema } from "@/lib/seo-schema"
 import { marketingAlternatesFor } from "@/lib/i18n/siblings"
 import { kit as k, Arrow } from "@/components/brand/dark-kit"
-import { FeaturePage, FxSection, FxHead, FeatureCloseCta } from "@/components/features/fx"
+import { FeaturePage, FxSection, FxHead, FeatureCloseCta, HeroAccent } from "@/components/features/fx"
 
 // Localized PR Coverage Tracker feature page: en at /features/pr-coverage-tracker,
 // fr at /fr/features/pr-coverage-tracker. Relocated from
@@ -97,7 +97,7 @@ export default async function PrCoverageTrackerPage({
         eyebrow={t("hero.eyebrow")}
         title={
           <>
-            {t("hero.h1Lead")} <span className="text-accent-300">{t("hero.h1Accent")}</span>
+            {t("hero.h1Lead")} <HeroAccent text={t("hero.h1Accent")} />
             {t("hero.h1Tail")}
           </>
         }

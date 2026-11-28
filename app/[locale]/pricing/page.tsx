@@ -221,12 +221,14 @@ export default async function PricingPage({
       <section className={k.section}>
         <div className={k.wrap}>
           <div className={styles.final}>
-            <h2 className={styles.finalTitle}>
-              {t("finalCta.h2")}
-            </h2>
-            <p className={styles.finalBody}>
-              {t("finalCta.body")}
-            </p>
+            <div>
+              <h2 className={styles.finalTitle}>
+                {t("finalCta.h2")}
+              </h2>
+              <p className={styles.finalBody}>
+                {t("finalCta.body")}
+              </p>
+            </div>
             <PromoSignupLink
               // FR checkout bills EUR — pass the currency explicitly so
               // js/auth.js's sgCheckoutCurrency() doesn't have to guess.

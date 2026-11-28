@@ -175,7 +175,7 @@ export default function QueryFanoutToolPage() {
         </div>
       </section>
 
-      <FeatureFaq items={faqs} heading="Fan-out, keys and privacy — answered" />
+      <FeatureFaq compact items={faqs} heading="Fan-out, keys and privacy — answered" />
 
       {/* Funnel CTA */}
       <section className={tk.close}>
@@ -192,7 +192,7 @@ export default function QueryFanoutToolPage() {
             </div>
             <Link
               href="/features/query-fanout"
-              className={kit.btnLime}
+              className={kit.btnOutline}
             >
               See the full feature
               <Arrow />

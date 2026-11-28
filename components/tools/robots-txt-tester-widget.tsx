@@ -3,6 +3,7 @@
 import { useState } from "react"
 import type { LintFinding } from "@/lib/robots-generate"
 import { trackEvent } from "@/lib/analytics"
+import { ToolArrow } from "./tool-arrow"
 
 /**
  * robots.txt tester. Google retired the Search Console tester and the demand
@@ -184,9 +185,9 @@ export function RobotsTxtTesterWidget() {
           <button
             type="submit"
             disabled={loading || (pasteMode ? !content.trim() : !site.trim())}
-            className="rounded-[3px] bg-[color:var(--accent)] px-6 py-2.5 text-[14px] font-semibold text-[color:var(--accent-ink)] transition-colors hover:bg-[color:var(--accent-hover)] disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex items-center justify-center gap-2 rounded-[3px] bg-[color:var(--accent)] px-6 py-2.5 text-[14px] font-semibold text-[color:var(--accent-ink)] transition-colors hover:bg-[color:var(--accent-hover)] disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {loading ? "Checking…" : "Test robots.txt"}
+            {loading ? "Checking…" : <>Test robots.txt<ToolArrow /></>}
           </button>
           <button
             type="button"

@@ -5,6 +5,7 @@ import type { ExtractResult } from "@/lib/sitemap-extract"
 import type { AuditResult } from "@/lib/sitemap-audit"
 import { trackEvent } from "@/lib/analytics"
 import tk from "./tools-dark.module.css"
+import { ToolArrow } from "./tool-arrow"
 
 /**
  * Sitemap URL extractor + auditor. Paste a sitemap URL, a bare domain, or the
@@ -244,9 +245,9 @@ export function SitemapExtractorWidget() {
             <button
               type="submit"
               disabled={loading || !input.trim()}
-              className="shrink-0 rounded-[3px] bg-[color:var(--accent)] px-6 py-2.5 text-[14px] font-semibold text-[color:var(--accent-ink)] transition-colors hover:bg-[color:var(--accent-hover)] disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-[3px] bg-[color:var(--accent)] px-6 py-2.5 text-[14px] font-semibold text-[color:var(--accent-ink)] transition-colors hover:bg-[color:var(--accent-hover)] disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {loading ? "Extracting…" : "Extract URLs"}
+              {loading ? "Extracting…" : <>Extract URLs<ToolArrow /></>}
             </button>
           </div>
         ) : (
@@ -267,9 +268,9 @@ export function SitemapExtractorWidget() {
               <button
                 type="submit"
                 disabled={loading || !xml.trim()}
-                className="rounded-[3px] bg-[color:var(--accent)] px-6 py-2.5 text-[14px] font-semibold text-[color:var(--accent-ink)] transition-colors hover:bg-[color:var(--accent-hover)] disabled:cursor-not-allowed disabled:opacity-50"
+                className="inline-flex items-center justify-center gap-2 rounded-[3px] bg-[color:var(--accent)] px-6 py-2.5 text-[14px] font-semibold text-[color:var(--accent-ink)] transition-colors hover:bg-[color:var(--accent-hover)] disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {loading ? "Parsing…" : "Parse sitemap"}
+                {loading ? "Parsing…" : <>Parse sitemap<ToolArrow /></>}
               </button>
               <button
                 type="button"

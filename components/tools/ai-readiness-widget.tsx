@@ -6,6 +6,7 @@ import { siteConfig } from "@/lib/config"
 import { badgeColor, badgeSvg } from "@/lib/ai-readiness-badge"
 import { ToolResultCapture } from "@/components/tools/tool-result-capture"
 import tk from "./tools-dark.module.css"
+import { ToolArrow } from "./tool-arrow"
 
 /**
  * Free AI-Readiness Score widget. POSTs to the hardened Replit endpoint
@@ -159,7 +160,7 @@ export function AiReadinessWidget() {
                 </svg>
                 Scoring…
               </>
-            ) : "Get my score"}
+            ) : <>Get my score<ToolArrow /></>}
           </button>
         </div>
         <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -170,7 +171,7 @@ export function AiReadinessWidget() {
               type="button"
               disabled={loading}
               onClick={() => { setUrl(ex.url); runCheck(ex.url) }}
-              className="rounded-[3px] border border-[color:var(--line-strong)] px-3 py-1 font-mono text-[12px] text-[color:var(--muted)] transition-colors hover:border-[color:var(--accent)] hover:text-[color:var(--accent)] disabled:opacity-50"
+              className={`rounded-[3px] border border-[color:var(--line-strong)] px-3 py-1 font-mono text-[12px] text-[color:var(--muted)] transition-colors hover:border-[color:var(--accent)] hover:text-[color:var(--accent)] disabled:opacity-50 ${tk.chip}`}
             >
               {ex.label}
             </button>

@@ -4,6 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { ToolResultCapture } from "@/components/tools/tool-result-capture"
 import tk from "./tools-dark.module.css"
+import { ToolArrow } from "./tool-arrow"
 
 /**
  * Free "AI Query Fan-Out" demo — BYOK (bring your own key), 100% client-side.
@@ -372,7 +373,7 @@ export function QueryFanoutWidget() {
                 </svg>
                 Running…
               </>
-            ) : "Run fan-out"}
+            ) : <>Run fan-out<ToolArrow /></>}
           </button>
         </div>
 
@@ -384,7 +385,7 @@ export function QueryFanoutWidget() {
               type="button"
               disabled={loading}
               onClick={() => setSeed(ex)}
-              className="rounded-[3px] border border-[color:var(--line-strong)] px-3 py-1 font-mono text-[12px] text-[color:var(--muted)] transition-colors hover:border-[color:var(--accent)] hover:text-[color:var(--accent)] disabled:opacity-50"
+              className={`rounded-[3px] border border-[color:var(--line-strong)] px-3 py-1 font-mono text-[12px] text-[color:var(--muted)] transition-colors hover:border-[color:var(--accent)] hover:text-[color:var(--accent)] disabled:opacity-50 ${tk.chip}`}
             >
               {ex}
             </button>

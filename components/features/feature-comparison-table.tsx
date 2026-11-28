@@ -49,16 +49,18 @@ export function FeatureComparisonTable({
   }
 
   // Dark kit table: mono header, hairline rows, our column lit in lime; scrolls inside its own box.
-  return (
-    <div>
+  // Phones get a second render (CSS-toggled, the other is display:none) with our column first and a
+  // sticky label column, so the column the table is about is never off-screen.
+  const table = (order: number[], cls: string) => (
+    <div className={`${s.cmpBox} ${cls}`}>
       <div className={s.cmpWrap}>
         <table className={s.cmp}>
           <thead>
             <tr>
               <td />
-              {columns.map((col, i) => (
-                <th key={col} scope="col" className={i === highlightCol ? s.cmpOurs : undefined}>
-                  {col}
+              {order.map((i) => (
+                <th key={columns[i]} scope="col" className={i === highlightCol ? s.cmpOurs : undefined}>
+                  {columns[i]}
                 </th>
               ))}
             </tr>
@@ -67,9 +69,9 @@ export function FeatureComparisonTable({
             {rows.map((row, ri) => (
               <tr key={ri}>
                 <th scope="row">{row.label}</th>
-                {row.cells.map((c, ci) => (
+                {order.map((ci) => (
                   <td key={ci} className={ci === highlightCol ? s.cmpOurs : undefined}>
-                    {renderCell(c, ci === highlightCol)}
+                    {renderCell(row.cells[ci], ci === highlightCol)}
                   </td>
                 ))}
               </tr>
@@ -77,6 +79,15 @@ export function FeatureComparisonTable({
           </tbody>
         </table>
       </div>
+    </div>
+  )
+  const desktopOrder = columns.map((_, i) => i)
+  const phoneOrder = [highlightCol, ...desktopOrder.filter((i) => i !== highlightCol)]
+
+  return (
+    <div>
+      {table(desktopOrder, s.cmpDesk)}
+      {table(phoneOrder, s.cmpMob)}
       {caption && <p className={s.cmpCaption}>{caption}</p>}
     </div>
   )

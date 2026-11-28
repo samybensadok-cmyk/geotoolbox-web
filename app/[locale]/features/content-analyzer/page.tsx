@@ -19,7 +19,7 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema, howToSchema } from "@/lib/seo-schema"
 import { marketingAlternatesFor } from "@/lib/i18n/siblings"
 import { kit as k, Arrow } from "@/components/brand/dark-kit"
-import { FeaturePage, FxSection, FxHead, FeatureCloseCta, fx } from "@/components/features/fx"
+import { FeaturePage, FxSection, FxHead, FeatureCloseCta, fx, HeroAccent } from "@/components/features/fx"
 
 // Localized Content Analyzer feature page: en at /features/content-analyzer, fr
 // at /fr/features/content-analyzer. Relocated from app/(marketing). ALL display
@@ -113,7 +113,7 @@ export default async function ContentAnalyzerPage({
         eyebrow={t("hero.eyebrow")}
         title={
           <>
-            {t("hero.h1Lead")} <span className="text-accent-300">{t("hero.h1Accent")}</span>
+            {t("hero.h1Lead")} <HeroAccent text={t("hero.h1Accent")} />
             {t("hero.h1Tail")}
           </>
         }

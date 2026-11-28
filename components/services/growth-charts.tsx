@@ -61,7 +61,7 @@ const theme = {
     rest: TEAL,
   },
   kit: {
-    card: "rounded-lg border border-[#2d332d] bg-[#0d0f0e] p-6 pb-4",
+    card: "rounded-lg border border-[#2d332d] bg-[#0d0f0e] p-4 pb-3 sm:p-6 sm:pb-4",
     title: "text-[15px] font-semibold text-white",
     src: "mt-1 font-mono text-[11px] font-semibold uppercase tracking-[0.06em] text-[#b5bbb0]",
     legend: "font-mono text-[#b5bbb0]",
@@ -96,14 +96,25 @@ function roundedTop(x: number, y: number, w: number, h: number, r: number): stri
 
 type TipState = { x: number; y: number; title: string; rows: Array<[string, string, number]> } | null
 
-// Side-by-side panels share 4 row tracks (title, source, legend, plot) so both plots start on one line.
-const SUBGRID = "md:grid md:row-span-4 md:grid-rows-subgrid"
+// Side-by-side panels (lg and up) share 4 row tracks (title, source, legend, plot) so both plots start on one line.
+const SUBGRID = "lg:grid lg:row-span-4 lg:grid-rows-subgrid"
 
-const W = 520
-const H = 300
-const M = { t: 26, r: 8, b: 34, l: 46 }
-const IW = W - M.l - M.r
-const IH = H - M.t - M.b
+/**
+ * Two drawing geometries for the same data. WIDE renders from 640px up (single column below 1024px, two columns
+ * above); NARROW renders below 640px, with a smaller viewBox so the text stays >= 10px on a phone and compact
+ * values (43k). Only one SVG per panel is displayed (the other is display:none, so screen
+ * readers meet one img). Both use two-line month labels (month / year) so they never collide as months are added.
+ */
+type Geo = {
+  W: number; H: number; M: { t: number; r: number; b: number; l: number }
+  fTick: number; fX: number; fVal: number; fSeg: number; compact: boolean; twoLine: boolean; cls: string
+}
+const WIDE: Geo = { W: 520, H: 312, M: { t: 26, r: 44, b: 46, l: 46 }, fTick: 12.5, fX: 13, fVal: 13.5, fSeg: 12.5, compact: false, twoLine: true, cls: "hidden sm:block" }
+const NARROW: Geo = { W: 320, H: 268, M: { t: 24, r: 30, b: 44, l: 36 }, fTick: 11, fX: 11.5, fVal: 12, fSeg: 11, compact: true, twoLine: true, cls: "block sm:hidden" }
+const MONO = "var(--font-mono, ui-monospace)"
+
+/** 43014 → "43k", 8664 → "8.7k", 3014 → "3k", 27 → "27" (narrow plot labels only; exact values stay in the tooltip, aria-label and table). */
+const cFmt = (n: number) => (n >= 1000 ? `${(n / 1000).toFixed(n >= 10000 ? 0 : 1).replace(/\.0$/, "")}k` : String(n))
 
 export function GrowthCharts({
   variant = "dark",
@@ -138,39 +149,7 @@ export function GrowthCharts({
     setTip({ x: e.clientX - box.left + 14, y: e.clientY - box.top + 14, title, rows })
   }, [])
 
-  const step = IW / months.length
-  const bw = Math.min(86, step * 0.55)
-  const bx = (i: number) => M.l + step * i + (step - bw) / 2
   const xLabel = (m: (typeof months)[number]) => m.label + (m.partial ? "*" : "")
-
-  const frame = (yMax: number, ticks: number[]) => (
-    <>
-      {ticks.map((v) => {
-        const y = M.t + IH - (v / yMax) * IH
-        return (
-          <g key={v}>
-            <line x1={M.l} x2={W - M.r} y1={y} y2={y} stroke={v === 0 ? t.axis : t.grid} />
-            <text x={M.l - 8} y={y + 4} textAnchor="end" fontSize={11} fill={t.tick} fontFamily="var(--font-mono, ui-monospace)">
-              {kFmt(v)}
-            </text>
-          </g>
-        )
-      })}
-      {months.map((m, i) => (
-        <text
-          key={m.month}
-          x={M.l + step * i + step / 2}
-          y={H - 10}
-          textAnchor="middle"
-          fontSize={12}
-          fill={t.xlab}
-          fontFamily="var(--font-mono, ui-monospace)"
-        >
-          {xLabel(m)}
-        </text>
-      ))}
-    </>
-  )
 
   const queriesMax = niceMax(Math.max(...months.map((m) => m.queries)))
   const top10Max = niceMax(Math.max(...months.map((m) => m.top10)))
@@ -180,27 +159,53 @@ export function GrowthCharts({
 
   const partialNote = months.some((m) => m.partial) ? " · *month to date" : ""
 
-  return (
-    <div ref={wrapRef} className="relative" onMouseLeave={() => setTip(null)}>
-      <div className={panels === "both" ? "grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-y-0" : ""}>
-        {/* Panel 1 — total unique queries */}
-        <div className={panels === "both" ? `${t.card} ${SUBGRID}` : t.card}>
-          <PanelTitle className={t.title}>Queries ranked in Google</PanelTitle>
-          <p className={t.src}>Search Console API · unique queries / month{partialNote}</p>
-          {/* Empty legend slot: keeps this plot on the same row track as panel 2's (which has a legend). */}
-          {panels === "both" && <div aria-hidden="true" />}
-          <svg
-            viewBox={`0 0 ${W} ${H}`}
-            className={`${panels === "both" ? "mt-1" : "mt-3"} block w-full overflow-visible`}
-            role="img"
-            aria-label={`Unique queries geotoolbox.ai ranks for in Google, by month: ${months
-              .map((m) => `${m.label} ${fmt(m.queries)}`)
-              .join(", ")}.`}
-          >
-            {frame(queriesMax, ticksFor(queriesMax))}
-            {months.map((m, i) => {
+  const plot = (g: Geo, kind: "queries" | "split", margin: string) => {
+    const IW = g.W - g.M.l - g.M.r
+    const IH = g.H - g.M.t - g.M.b
+    const step = IW / months.length
+    const bw = Math.min(86, step * 0.55)
+    const bx = (i: number) => g.M.l + step * i + (step - bw) / 2
+    const val = (n: number) => (g.compact ? cFmt(n) : fmt(n))
+    const yMax = kind === "queries" ? queriesMax : top10Max
+    const ariaLabel = kind === "queries"
+      ? `Unique queries geotoolbox.ai ranks for in Google, by month: ${months.map((m) => `${m.label} ${fmt(m.queries)}`).join(", ")}.`
+      : `First-page queries by month, split by position: ${months.map((m) => `${m.label} ${fmt(m.top10)} (${fmt(m.top3)} in the top 3)`).join(", ")}.`
+    return (
+      <svg
+        viewBox={`0 0 ${g.W} ${g.H}`}
+        className={`${margin} ${g.cls} w-full overflow-visible`}
+        role="img"
+        aria-label={ariaLabel}
+      >
+        {ticksFor(yMax).map((v) => {
+          const y = g.M.t + IH - (v / yMax) * IH
+          return (
+            <g key={v}>
+              <line x1={g.M.l} x2={g.W - g.M.r} y1={y} y2={y} stroke={v === 0 ? t.axis : t.grid} />
+              <text x={g.M.l - 7} y={y + 4} textAnchor="end" fontSize={g.fTick} fill={t.tick} fontFamily={MONO}>
+                {kFmt(v)}
+              </text>
+            </g>
+          )
+        })}
+        {months.map((m, i) => {
+          const cx = g.M.l + step * i + step / 2
+          const sp = m.label.lastIndexOf(" ")
+          return g.twoLine && sp > 0 ? (
+            <text key={m.month} x={cx} y={g.H - 24} textAnchor="middle" fontSize={g.fX} fill={t.xlab} fontFamily={MONO}>
+              <tspan x={cx}>{m.label.slice(0, sp) + (m.partial ? "*" : "")}</tspan>
+              <tspan x={cx} dy={g.fX + 3}>{m.label.slice(sp + 1)}</tspan>
+            </text>
+          ) : (
+            <text key={m.month} x={cx} y={g.H - 10} textAnchor="middle" fontSize={g.fX} fill={t.xlab} fontFamily={MONO}>
+              {xLabel(m)}
+            </text>
+          )
+        })}
+        {kind === "queries"
+          ? months.map((m, i) => {
               const h = Math.max((m.queries / queriesMax) * IH, 2)
-              const y = M.t + IH - h
+              const y = g.M.t + IH - h
               return (
                 <g
                   key={m.month}
@@ -208,21 +213,63 @@ export function GrowthCharts({
                   onMouseMove={(e) => show(e, xLabel(m), [[t.bar, "Queries", m.queries]])}
                 >
                   <path d={roundedTop(bx(i), y, bw, h, 4)} style={{ fill: t.bar }} />
-                  <text
-                    x={bx(i) + bw / 2}
-                    y={y - 8}
-                    textAnchor="middle"
-                    fontSize={13}
-                    fontWeight={700}
-                    fill={t.val}
-                    fontFamily="var(--font-mono, ui-monospace)"
-                  >
-                    {fmt(m.queries)}
+                  <text x={bx(i) + bw / 2} y={y - 8} textAnchor="middle" fontSize={g.fVal} fontWeight={700} fill={t.val} fontFamily={MONO}>
+                    {val(m.queries)}
                   </text>
                 </g>
               )
+            })
+          : months.map((m, i) => {
+              const h410 = (m.top4to10 / top10Max) * IH
+              const h13 = (m.top3 / top10Max) * IH
+              const y410 = g.M.t + IH - h410
+              const y13 = y410 - 2 - h13 // 2px surface gap between segments
+              const last = i === months.length - 1
+              return (
+                <g
+                  key={m.month}
+                  className="cursor-pointer transition hover:brightness-125"
+                  onMouseMove={(e) =>
+                    show(e, xLabel(m), [
+                      [t.top3, "Pos 1–3", m.top3],
+                      [t.rest, "Pos 4–10", m.top4to10],
+                      ["", "Total", m.top10],
+                    ])
+                  }
+                >
+                  <rect x={bx(i)} y={y410} width={bw} height={Math.max(h410, 1.5)} style={{ fill: t.rest }} />
+                  <path d={roundedTop(bx(i), y13, bw, Math.max(h13, 1.5), 4)} style={{ fill: t.top3 }} />
+                  <text x={bx(i) + bw / 2} y={y13 - 8} textAnchor="middle" fontSize={g.fVal} fontWeight={700} fill={t.val} fontFamily={MONO}>
+                    {val(m.top10)}
+                  </text>
+                  {last && (
+                    <>
+                      <text x={bx(i) + bw + 6} y={y13 + h13 / 2 + 4} fontSize={g.fSeg} fontWeight={600} fill={t.segval} fontFamily={MONO}>
+                        {val(m.top3)}
+                      </text>
+                      <text x={bx(i) + bw + 6} y={y410 + h410 / 2 + 4} fontSize={g.fSeg} fontWeight={600} fill={t.segval} fontFamily={MONO}>
+                        {val(m.top4to10)}
+                      </text>
+                    </>
+                  )}
+                </g>
+              )
             })}
-          </svg>
+      </svg>
+    )
+  }
+
+  return (
+    <div ref={wrapRef} className="relative" onMouseLeave={() => setTip(null)}>
+      <div className={panels === "both" ? "grid grid-cols-1 gap-5 lg:grid-cols-2 lg:gap-y-0" : ""}>
+        {/* Panel 1 — total unique queries */}
+        <div className={panels === "both" ? `${t.card} ${SUBGRID}` : t.card}>
+          <PanelTitle className={t.title}>Queries ranked in Google</PanelTitle>
+          <p className={t.src}>Search Console API · unique queries / month{partialNote}</p>
+          {/* Empty legend slot: keeps this plot on the same row track as panel 2's (which has a legend). */}
+          {panels === "both" && <div aria-hidden="true" />}
+          {plot(WIDE, "queries", panels === "both" ? "mt-1" : "mt-3")}
+          {plot(NARROW, "queries", "mt-3")}
         </div>
 
         {/* Panel 2 — first-page split */}
@@ -240,60 +287,8 @@ export function GrowthCharts({
                 Position 4–10
               </span>
             </div>
-            <svg
-              viewBox={`0 0 ${W} ${H}`}
-              className="mt-1 block w-full overflow-visible"
-              role="img"
-              aria-label={`First-page queries by month, split by position: ${months
-                .map((m) => `${m.label} ${fmt(m.top10)} (${fmt(m.top3)} in the top 3)`)
-                .join(", ")}.`}
-            >
-              {frame(top10Max, ticksFor(top10Max))}
-              {months.map((m, i) => {
-                const h410 = (m.top4to10 / top10Max) * IH
-                const h13 = (m.top3 / top10Max) * IH
-                const y410 = M.t + IH - h410
-                const y13 = y410 - 2 - h13 // 2px surface gap between segments
-                const last = i === months.length - 1
-                return (
-                  <g
-                    key={m.month}
-                    className="cursor-pointer transition hover:brightness-125"
-                    onMouseMove={(e) =>
-                      show(e, xLabel(m), [
-                        [t.top3, "Pos 1–3", m.top3],
-                        [t.rest, "Pos 4–10", m.top4to10],
-                        ["", "Total", m.top10],
-                      ])
-                    }
-                  >
-                    <rect x={bx(i)} y={y410} width={bw} height={Math.max(h410, 1.5)} style={{ fill: t.rest }} />
-                    <path d={roundedTop(bx(i), y13, bw, Math.max(h13, 1.5), 4)} style={{ fill: t.top3 }} />
-                    <text
-                      x={bx(i) + bw / 2}
-                      y={y13 - 8}
-                      textAnchor="middle"
-                      fontSize={13}
-                      fontWeight={700}
-                      fill={t.val}
-                      fontFamily="var(--font-mono, ui-monospace)"
-                    >
-                      {fmt(m.top10)}
-                    </text>
-                    {last && (
-                      <>
-                        <text x={bx(i) + bw + 8} y={y13 + h13 / 2 + 4} fontSize={11} fontWeight={600} fill={t.segval} fontFamily="var(--font-mono, ui-monospace)">
-                          {fmt(m.top3)}
-                        </text>
-                        <text x={bx(i) + bw + 8} y={y410 + h410 / 2 + 4} fontSize={11} fontWeight={600} fill={t.segval} fontFamily="var(--font-mono, ui-monospace)">
-                          {fmt(m.top4to10)}
-                        </text>
-                      </>
-                    )}
-                  </g>
-                )
-              })}
-            </svg>
+            {plot(WIDE, "split", "mt-1")}
+            {plot(NARROW, "split", "mt-1")}
           </div>
         )}
       </div>

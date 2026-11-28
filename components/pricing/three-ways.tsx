@@ -40,7 +40,7 @@ export async function ThreeWays({ locale, plansAnchor }: { locale: string; plans
           {/* 01 Do it yourself = the plans on this page */}
           <li className={`${st.way} ${k.sweep}`}>
             <span className={st.wayIdx} aria-hidden="true">01</span>
-            <div>
+            <div className={st.wayText}>
               <div className={st.wayHead}>
                 <h3 className={st.wayKicker}>{t("pricing.diyKicker")}</h3>
               </div>
@@ -58,7 +58,7 @@ export async function ThreeWays({ locale, plansAnchor }: { locale: string; plans
           {/* 02 Done with you */}
           <li className={`${st.way} ${st.wayLime} ${k.sweep}`}>
             <span className={st.wayIdx} aria-hidden="true">02</span>
-            <div>
+            <div className={st.wayText}>
               <div className={st.wayHead}>
                 <h3 className={st.wayKicker}>{t("pricing.dwyKicker")}</h3>
                 <span className={k.badge}>{t("pricing.dwyBadge")}</span>
@@ -86,27 +86,32 @@ export async function ThreeWays({ locale, plansAnchor }: { locale: string; plans
           </li>
 
           {/* 03 Done for you (services are English-only and priced in USD) */}
-          <li className={`${st.way} ${k.sweep}`}>
+          <li className={`${st.way} ${st.wayDfy} ${k.sweep}`}>
             <span className={st.wayIdx} aria-hidden="true">03</span>
-            <div>
+            <div className={st.wayText}>
               <div className={st.wayHead}>
                 <h3 className={st.wayKicker}>{t("pricing.dfyKicker")}</h3>
               </div>
               <p className={st.wayTitle}>{t("pricing.dfyTitle")}</p>
               <p className={st.wayDesc}>{t("pricing.dfyNote")}</p>
             </div>
+            {/* Same rows in every column (label, price, name, term) so the prices share one baseline. */}
             <ul className={st.dfyPrices}>
               <li>
-                <p className={st.dfyVal}><small className={`${st.dfyFrom} ${st.dfyFromEmpty}`} aria-hidden="true">{"\u00a0"}</small>{usd(GSP.report)}</p>
-                <p className={st.dfyLbl}>{t("pricing.dfyReport")}</p>
+                <p className={st.dfyTop}>{t("pricing.dfyOneOff")}</p>
+                <p className={st.dfyVal}>{usd(GSP.report)}</p>
+                <p className={st.dfyName}>{t("pricing.dfyReportName")}</p>
               </li>
               <li>
-                <p className={st.dfyVal}><small className={st.dfyFrom}>{t("pricing.from")}</small> {usd(GSP.sprintFrom)}</p>
-                <p className={st.dfyLbl}>{t("pricing.dfySprint")}</p>
+                <p className={st.dfyTop}>{t("pricing.from")}</p>
+                <p className={st.dfyVal}>{usd(GSP.sprintFrom)}</p>
+                <p className={st.dfyName}>{t("pricing.dfySprint")}</p>
               </li>
               <li>
-                <p className={st.dfyVal}><small className={st.dfyFrom}>{t("pricing.from")}</small> {usd(GSP.retainerFromMonthly)}<span>{t("pricing.perMonth")}</span></p>
-                <p className={st.dfyLbl}>{t("pricing.dfyRetainer")}</p>
+                <p className={st.dfyTop}>{t("pricing.from")}</p>
+                <p className={st.dfyVal}>{usd(GSP.retainerFromMonthly)}<span>{t("pricing.perMonth")}</span></p>
+                <p className={st.dfyName}>{t("pricing.dfyRetainerName")}</p>
+                <p className={st.dfyTerm}>{t("pricing.dfyRetainerTerm")}</p>
               </li>
             </ul>
             <div className={st.wayActions}>

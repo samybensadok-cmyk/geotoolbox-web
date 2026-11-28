@@ -217,7 +217,7 @@ export default function LlmsTxtGeneratorPage() {
         </div>
       </section>
 
-      <FeatureFaq items={faqs} heading="llms.txt, answered honestly" />
+      <FeatureFaq compact items={faqs} heading="llms.txt, answered honestly" />
 
       <section className={tk.close}>
         <div className={kit.wrap}>
@@ -234,7 +234,7 @@ export default function LlmsTxtGeneratorPage() {
             <Link
               href="/tools/ai-crawler-checker?ref=llms-generator"
               prefetch={false}
-              className={kit.btnLime}
+              className={kit.btnOutline}
             >
               Check your AI crawler access
               <Arrow />

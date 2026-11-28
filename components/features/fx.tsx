@@ -12,13 +12,65 @@ export function FeaturePage({ children }: { children: ReactNode }) {
   return <DarkPage className={`${s.root} ${s.skin}`}>{children}</DarkPage>
 }
 
-/** "03 | LABEL" (auto-numbered). Without a label: "03 ——". */
+/** "03 | LABEL" (auto-numbered). Without a label: the number alone. */
 export function FxIndex({ label }: { label?: ReactNode }) {
   return (
     <p className={s.index}>
       <span className={label ? s.indexNum : `${s.indexNum} ${s.indexSolo}`} aria-hidden="true" />
-      {label ? label : <span className={s.indexRule} aria-hidden="true" />}
+      {label ? label : null}
     </p>
+  )
+}
+
+const TRAILING_PUNCT = /([\s.,;:!?…»"”’)]+)$/
+
+/** Splits trailing punctuation off a phrase so a lime mark never swallows (or butts against) it. */
+function splitTrail(text: string) {
+  const m = text.match(TRAILING_PUNCT)
+  return m ? [text.slice(0, -m[1].length), m[1]] as const : [text, ""] as const
+}
+
+/**
+ * The one lime phrase an H1 may carry: lime text (no block), trailing punctuation kept white. A phrase
+ * longer than `maxWords` stays white, so a heading never carries more than a short lime phrase.
+ */
+export function HeroAccent({ text, maxWords = 3 }: { text: string; maxWords?: number }) {
+  const [core, trail] = splitTrail(text)
+  if (core.trim().split(/\s+/).length > maxWords) return <>{text}</>
+  return (
+    <>
+      <span className={s.accentText}>{core}</span>
+      {trail}
+    </>
+  )
+}
+
+/** Renders `text` with only its last `words` words in lime (trailing punctuation kept white). */
+export function LimeTail({ text, words = 3 }: { text: string; words?: number }) {
+  const [core, trail] = splitTrail(text)
+  const parts = core.split(/(\s+)/)
+  const tokens = parts.filter((x) => x.trim())
+  if (tokens.length <= words) {
+    return (
+      <>
+        <span className={s.accentText}>{core}</span>
+        {trail}
+      </>
+    )
+  }
+  // index in `parts` where the lime tail starts (count `words` non-space tokens from the end)
+  let seen = 0
+  let cut = parts.length
+  for (let i = parts.length - 1; i >= 0; i--) {
+    if (parts[i].trim()) seen++
+    if (seen === words) { cut = i; break }
+  }
+  return (
+    <>
+      {parts.slice(0, cut).join("")}
+      <span className={s.accentText}>{parts.slice(cut).join("")}</span>
+      {trail}
+    </>
   )
 }
 

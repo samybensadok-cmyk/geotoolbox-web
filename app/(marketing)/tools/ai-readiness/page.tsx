@@ -184,7 +184,7 @@ export default function AiReadinessPage() {
         </div>
       </section>
 
-      <FeatureFaq items={faqs} heading="AI-readiness, answered honestly" />
+      <FeatureFaq compact items={faqs} heading="AI-readiness, answered honestly" />
 
       {/* Funnel CTA */}
       <section className={tk.close}>
@@ -203,7 +203,7 @@ export default function AiReadinessPage() {
               <Link
                 href="/tools/agent-readiness-scanner?ref=ai-readiness"
                 prefetch={false}
-                className={kit.btnLime}
+                className={kit.btnOutline}
               >
                 Run the full scan now
                 <Arrow />

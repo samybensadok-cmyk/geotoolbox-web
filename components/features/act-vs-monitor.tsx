@@ -1,12 +1,12 @@
 import Link from "next/link"
 import { Arrow, kit as k } from "@/components/brand/dark-kit"
-import { FxIndex } from "./fx"
+import { FxIndex, LimeTail } from "./fx"
 import s from "./fx.module.css"
 
 /**
  * ActVsMonitorWedge — the category differentiator: most AI-visibility tools show the gap and stop;
- * GEO Toolbox routes the gap to a page-level fix. Dark kit: a lifted band, headline left (emphasis
- * in lime), body + worked example + contextual link right.
+ * GEO Toolbox routes the gap to a page-level fix. Dark kit: a lifted band, headline left (only the
+ * last words of the emphasis in lime), body + worked example + contextual link right.
  */
 
 export function ActVsMonitorWedge({
@@ -31,7 +31,7 @@ export function ActVsMonitorWedge({
         <div>
           <FxIndex label={eyebrow ?? <>Act, don&apos;t just monitor</>} />
           <h2 className={s.title}>
-            {headline} <span className={s.wedgeEm}>{emphasis}</span>
+            {headline} <LimeTail text={emphasis} words={3} />
           </h2>
         </div>
         <div>

@@ -13,10 +13,12 @@
 /* ---------------- Hero ---------------- */
 .hero { padding: 34px 0 72px; }
 .hero > div { position: relative; }
-.breadcrumb { display: flex; flex-wrap: wrap; align-items: center; gap: 0 10px; font-family: var(--mono); font-size: 12px; color: var(--muted); }
-.breadcrumb a { display: inline-flex; align-items: center; min-height: 40px; color: var(--muted); text-decoration: none; }
-.breadcrumb a:hover { color: var(--accent); }
-.breadcrumb span:last-child { color: var(--text); }
+/* Same look as the features/tools breadcrumb trail (components/features/crumbs.module.css), without its JSON-LD. */
+.breadcrumb { display: flex; flex-wrap: wrap; align-items: center; gap: 0 10px; font-family: var(--mono); font-size: 12px; line-height: 1.4; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text); }
+.breadcrumb a { display: inline-flex; align-items: center; min-height: 40px; color: inherit; opacity: 0.72; text-decoration: none; transition: opacity 0.18s ease; }
+.breadcrumb a:hover { opacity: 1; text-decoration: underline; text-underline-offset: 3px; }
+.crumbSep { opacity: 0.4; }
+.crumbHere { display: inline-flex; align-items: center; min-height: 40px; font-weight: 600; }
 .heroCopy { margin-top: 44px; }
 .hero .h1 { font-size: clamp(2.5rem, 5.8vw, 4.9rem); max-width: 1060px; }
 .heroSplit { margin-top: 40px; padding-top: 30px; border-top: 1px solid var(--line-strong); display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); gap: 32px 56px; align-items: start; }
@@ -113,9 +115,9 @@
 .addon { display: grid; grid-row: span 4; grid-template-rows: subgrid; row-gap: 0; align-content: start; padding: 24px 22px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); min-width: 0; background: rgba(13, 15, 14, 0.6); }
 .addonName { margin: 0; font-size: 1.05rem; line-height: 1.3; letter-spacing: -0.015em; font-weight: 600; color: var(--white); }
 .addonPrice { display: block; margin-top: 10px; font-size: 1.35rem; line-height: 1.2; letter-spacing: -0.03em; font-weight: 500; color: var(--white); font-variant-numeric: tabular-nums; }
-.addonPrice small { font-family: var(--mono); font-size: 12px; letter-spacing: 0; font-weight: 400; color: var(--muted); }
+.addonPrice small { display: inline-block; white-space: nowrap; font-family: var(--mono); font-size: 12px; letter-spacing: 0; font-weight: 400; color: var(--muted); }
 .addonBody { margin: 10px 0 0; font-size: 13.5px; line-height: 1.65; color: var(--muted); }
-.addonLink { margin-top: 14px; min-height: 40px; justify-self: start; }
+.addonLink { margin-top: auto; padding-top: 14px; min-height: 54px; justify-self: start; align-self: end; }
 .note { margin: 16px 0 0; font-size: 13px; line-height: 1.6; color: var(--muted); }
 .context { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 40px; padding: 4px 0 24px; }
 .context article { display: grid; grid-row: span 2; grid-template-rows: subgrid; row-gap: 0; align-content: start; padding: 18px 0; border-top: 1px solid var(--line); min-width: 0; }
@@ -134,14 +136,17 @@
 
 /* ---------------- 04 Close ---------------- */
 .closing { padding: 76px 0 104px; border-top: 1px solid var(--line); }
-.closeCard { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 32px 56px; align-items: center; background: radial-gradient(circle at 82% 0%, rgba(var(--accent-rgb), 0.12) 0%, #0e110f 46%, #0b0d0c 100%); border: 1px solid var(--line-strong); border-top: 2px solid var(--accent); border-radius: 12px; padding: 44px 40px; }
+.closeCard { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 32px 56px; align-items: center; background: radial-gradient(circle at 82% 0%, rgba(var(--accent-rgb), 0.06) 0%, #0d100e 46%, #0b0d0c 100%); border: 1px solid rgba(var(--accent-rgb), 0.25); border-radius: 12px; padding: 44px 40px; }
+.closeCard > * { align-self: center; }
 .closeTitle { margin: 16px 0 0; font-size: clamp(2rem, 4vw, 3.1rem); line-height: 1.02; letter-spacing: -0.045em; font-weight: 600; color: var(--white); text-wrap: balance; }
 .closeBody { margin: 16px 0 0; max-width: 560px; font-size: 16px; line-height: 1.6; color: var(--muted); }
 .promises > li { display: flex; align-items: flex-start; gap: 10px; font-size: 15px; line-height: 1.5; color: var(--text); }
-.related { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; margin-top: 36px; padding-top: 20px; border-top: 1px solid var(--line); font-family: var(--mono); font-size: 13px; }
-.related span { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-right: 4px; }
-.related a { display: inline-flex; align-items: center; min-height: 40px; font-weight: 600; color: var(--accent); text-decoration: none; }
-.related a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.related { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 28px; margin-top: 36px; padding-top: 20px; border-top: 1px solid var(--line); font-family: var(--mono); font-size: 13px; }
+.relatedLabel { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.relatedLinks { display: flex; flex-wrap: wrap; align-items: center; gap: 0 24px; min-width: 0; }
+.relatedLinks a { display: inline-flex; align-items: center; min-height: 40px; font-weight: 600; color: var(--accent); text-decoration: none; }
+.relatedLinks a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.relatedHere { display: inline-flex; align-items: center; min-height: 40px; font-weight: 600; color: var(--muted); cursor: default; }
 
 @media (prefers-reduced-motion: reduce) {
   .disclosure > summary span, .expand > summary span, .heroProof, .offer { transition: none; }
@@ -175,4 +180,12 @@
   .closeCard { padding: 30px 20px; }
   .closeCard .closeCta { grid-template-columns: 1fr; }
   .faqList details > div { padding-left: 0; }
+}
+@media (max-width: 480px) {
+  /* Phone: one stat per row, label beside its number; numbers share one column so the labels line up. */
+  .heroProof { grid-template-columns: 1fr; }
+  .heroProof > span { flex-direction: row; align-items: baseline; gap: 14px; padding: 14px 16px; border-right: 0; border-bottom: 1px solid var(--line); font-size: 11px; }
+  .heroProof > span:nth-child(3) { border-bottom: 0; }
+  .heroProof strong { flex: 0 0 92px; font-size: 1.6rem; }
+  .heroProof em { padding: 11px 16px; }
 }

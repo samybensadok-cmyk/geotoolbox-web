@@ -9,7 +9,7 @@ import { formatDate } from "@/lib/utils"
 import { routing, bcp47, type Locale } from "@/i18n/routing"
 import { alternatesFor, urlFor } from "@/lib/i18n/siblings"
 import { rehypeLocalizeLinks } from "@/lib/i18n/rehype-localize-links"
-import { setRequestLocale, getTranslations, getMessages } from "next-intl/server"
+import { setRequestLocale, getTranslations } from "next-intl/server"
 import { frenchTypography, rehypeFrenchTypography } from "@/lib/french-typography"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
 import { JsonLd } from "@/components/seo/json-ld"
@@ -20,8 +20,6 @@ import { RelatedPosts } from "@/components/blog/related-posts"
 import { InlineCta } from "@/components/blog/inline-cta"
 import { ArticleEndCta } from "@/components/blog/article-end-cta"
 import { injectInlineCta, isCommercialIntentPost } from "@/lib/inline-cta"
-import { NewsletterSignup } from "@/components/newsletter/newsletter-signup"
-import { newsletterCopyFrom } from "@/components/newsletter/copy"
 import { Avatar } from "@/components/ui/avatar"
 import { ReportCta } from "@/components/services/report-cta"
 import { geist } from "@/components/landing/v3/geist"
@@ -217,7 +215,6 @@ export default async function BlogPost({
 
   const t = await getTranslations("blog")
   const tc = await getTranslations("common")
-  const allMessages = await getMessages()
   const isFr = locale === "fr"
   const typo = (s: string) => (isFr ? frenchTypography(s) : s)
   const author = getAuthorByName(post.author)
@@ -410,13 +407,8 @@ export default async function BlogPost({
 
           {author && <AuthorBio author={author} locale={locale} />}
 
-          {/* Email capture — double opt-in; source tag = per-article attribution. */}
-          <div className="mt-12">
-            <NewsletterSignup
-              source={`article:${slug}`}
-              copy={newsletterCopyFrom(allMessages.footer as Record<string, string>)}
-            />
-          </div>
+          {/* 2026-11-28: the in-article newsletter card was removed; the same sign-up sits in the
+              site footer right below (two identical forms within one screen). */}
 
           <RelatedPosts posts={relatedPosts} locale={locale} />
         </div>
@@ -427,17 +419,17 @@ export default async function BlogPost({
       {locale === routing.defaultLocale && isCommercialIntentPost(post) && <ReportCta placement="article" />}
 
       {/* What's next — product pitch + related features */}
-      <section className="border-t border-gray-200 bg-gray-50 px-6 py-20 sm:py-24">
+      <section className={`${hero.next} ${geist.variable} px-6 py-20 sm:py-24`}>
         <div className="mx-auto max-w-5xl">
           <div className="mb-10 flex flex-col items-start gap-4 sm:flex-row sm:items-end sm:justify-between sm:gap-8">
             <div>
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-[#cdff00]">
                 {t("whatsNext")}
               </p>
-              <h2 className="mt-2 text-[clamp(1.5rem,3vw,2rem)] font-bold tracking-tight text-gray-900">
+              <h2 className={`mt-2 ${hero.nextTitle}`}>
                 {t("putIntoPractice")}
               </h2>
-              <p className="mt-2 max-w-xl text-[15px] text-gray-600">
+              <p className="mt-2 max-w-xl text-[15px] text-[#b5bbb0]">
                 {t("whatsNextCopy")}
               </p>
             </div>
@@ -446,7 +438,7 @@ export default async function BlogPost({
                 label={tc("tryForFree")}
                 slug={slug}
                 locale={locale}
-                className="inline-flex shrink-0 items-center gap-2 rounded-full bg-accent-900 px-6 py-3 text-[14.5px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 hover:shadow-xl hover:shadow-accent-900/25 active:translate-y-[1px] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
+                className="inline-flex shrink-0 items-center gap-2 rounded-[3px] bg-[#cdff00] px-6 py-3 text-[14.5px] font-semibold text-[#070808] transition-all duration-200 hover:bg-[#dbff4d] active:translate-y-[1px] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#cdff00] focus-visible:ring-offset-2 focus-visible:ring-offset-[#070808]"
               />
               {/* Commercial-intent articles: the reader is tool-shopping — give
                   them the pricing page, and (EN) the done-for-you route too.
@@ -455,10 +447,10 @@ export default async function BlogPost({
                   localized commercial-intent articles rendered no pricing
                   link at all. */}
               {isCommercialIntentPost(post) && (
-                <p className="text-[13px] text-gray-600">
+                <p className="text-[13px] text-[#b5bbb0]">
                   <Link
                     href={locale === routing.defaultLocale ? "/pricing" : `/${locale}/pricing`}
-                    className="font-semibold text-accent-700 hover:text-accent-800"
+                    className="font-semibold text-[#cdff00] hover:text-[#dbff4d]"
                   >
                     {t("seePricing")}
                   </Link>
@@ -469,7 +461,7 @@ export default async function BlogPost({
                   {locale === routing.defaultLocale && (
                     <>
                       {" · "}
-                      <Link href="/services/ai-seo-agency" className="font-semibold text-accent-700 hover:text-accent-800">
+                      <Link href="/services/ai-seo-agency" className="font-semibold text-[#cdff00] hover:text-[#dbff4d]">
                         {t("dfyLink")}
                       </Link>
                     </>
@@ -484,15 +476,15 @@ export default async function BlogPost({
               <Link
                 key={f.slug}
                 href={locale === routing.defaultLocale ? `/features/${f.slug}` : `/${locale}/features/${f.slug}`}
-                className={`group/card block rounded-2xl border ${f.border} ${f.bg} p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_16px_32px_-16px_rgba(15,23,42,0.16)] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2`}
+                className="group/card block rounded-[8px] border border-[#2d332d] bg-[#0d0f0e] p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#cdff00] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#cdff00] focus-visible:ring-offset-2 focus-visible:ring-offset-[#070808]"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-2">
-                    <span className={`h-1.5 w-1.5 rounded-full ${f.dot}`} aria-hidden="true" />
-                    <h3 className="text-[15px] font-semibold tracking-tight text-gray-900">{f.name}</h3>
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#cdff00]" aria-hidden="true" />
+                    <h3 className="text-[15px] font-semibold tracking-tight text-white">{f.name}</h3>
                   </div>
                   <svg
-                    className="h-3.5 w-3.5 shrink-0 text-gray-400 transition-transform group-hover/card:translate-x-0.5 group-hover/card:text-gray-700"
+                    className="h-3.5 w-3.5 shrink-0 text-[#959c91] transition-transform group-hover/card:translate-x-0.5 group-hover/card:text-[#cdff00]"
                     viewBox="0 0 14 14"
                     fill="none"
                     stroke="currentColor"
@@ -502,7 +494,7 @@ export default async function BlogPost({
                     <path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </div>
-                <p className="mt-2 text-[13.5px] leading-relaxed text-gray-700">{f.blurb}</p>
+                <p className="mt-2 text-[13.5px] leading-relaxed text-[#b5bbb0]">{f.blurb}</p>
               </Link>
             ))}
           </div>
@@ -510,7 +502,7 @@ export default async function BlogPost({
           <div className="mt-10 flex items-center justify-center">
             <Link
               href={locale === routing.defaultLocale ? "/blog" : `/${locale}/blog`}
-              className="inline-flex items-center gap-1.5 rounded-sm text-[13px] font-semibold text-gray-600 transition-colors duration-200 hover:text-accent-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
+              className="inline-flex items-center gap-1.5 rounded-sm text-[13px] font-semibold text-[#b5bbb0] transition-colors duration-200 hover:text-[#cdff00] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
             >
               <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M10 7H4m0 0l3-3m-3 3l3 3" strokeLinecap="round" strokeLinejoin="round" />

@@ -195,7 +195,7 @@ export default function AiCrawlerCheckerPage() {
         </div>
       </section>
 
-      <FeatureFaq items={faqs} heading="AI crawlers, answered honestly" />
+      <FeatureFaq compact items={faqs} heading="AI crawlers, answered honestly" />
 
       {/* Funnel CTA → Agent Readiness */}
       <section className={tk.close}>
@@ -213,7 +213,7 @@ export default function AiCrawlerCheckerPage() {
             <Link
               href="/features/agent-readiness?ref=ai-crawler-checker"
               prefetch={false}
-              className={kit.btnLime}
+              className={kit.btnOutline}
             >
               Run a free Agent Readiness scan
               <Arrow />

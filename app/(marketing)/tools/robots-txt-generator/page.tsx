@@ -357,7 +357,7 @@ Disallow: /`}
         </div>
       </section>
 
-      <FeatureFaq items={faqs} heading="robots.txt, answered properly" />
+      <FeatureFaq compact items={faqs} heading="robots.txt, answered properly" />
 
       <section className={tk.close}>
         <div className={kit.wrap}>
@@ -374,7 +374,7 @@ Disallow: /`}
             <Link
               href="/tools/ai-crawler-checker?ref=robots-generator"
               prefetch={false}
-              className={kit.btnLime}
+              className={kit.btnOutline}
             >
               Check your AI crawler access
               <Arrow />

@@ -20,6 +20,7 @@ import {
 import { trackEvent } from "@/lib/analytics"
 import { ToolResultCapture } from "@/components/tools/tool-result-capture"
 import tk from "./tools-dark.module.css"
+import { ToolArrow } from "./tool-arrow"
 
 /**
  * Agent Readiness Scanner — the public widget for the FULL v2 scan.
@@ -317,7 +318,7 @@ export function AgentReadinessScannerWidget() {
             ) : cooldownLeft > 0 ? (
               `Try again in ${cooldownLeft}s`
             ) : (
-              "Run the full scan"
+              <>Run the full scan<ToolArrow /></>
             )}
           </button>
         </div>
@@ -333,7 +334,7 @@ export function AgentReadinessScannerWidget() {
                 setUrl(ex.url)
                 void runScan(ex.url)
               }}
-              className="rounded-[3px] border border-[color:var(--line-strong)] px-3 py-1 font-mono text-[12px] text-[color:var(--muted)] transition-colors hover:border-[color:var(--accent)] hover:text-[color:var(--accent)] disabled:opacity-50"
+              className={`rounded-[3px] border border-[color:var(--line-strong)] px-3 py-1 font-mono text-[12px] text-[color:var(--muted)] transition-colors hover:border-[color:var(--accent)] hover:text-[color:var(--accent)] disabled:opacity-50 ${tk.chip}`}
             >
               {ex.label}
             </button>

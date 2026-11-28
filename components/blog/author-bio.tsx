@@ -11,8 +11,8 @@ import type { Author } from "@/lib/authors"
 export async function AuthorBio({ author, locale }: { author: Author; locale: string }) {
   const t = await getTranslations({ locale, namespace: "blog" })
   return (
-    <aside className="mt-14 rounded-2xl border border-[var(--surface-warm-border)] bg-[var(--surface-warm)] p-6 sm:p-8">
-      <p className="mb-5 font-mono text-[11px] font-semibold uppercase tracking-widest text-amber-800">
+    <aside className="mt-14 rounded-[6px] border border-[#e4e6e3] bg-[#f7f8f6] p-6 sm:p-8">
+      <p className="mb-5 font-mono text-[11px] font-semibold uppercase tracking-widest text-[#5a6056]">
         {t("writtenBy")}
       </p>
       <div className="flex flex-col gap-5 sm:flex-row sm:gap-6">
@@ -23,7 +23,7 @@ export async function AuthorBio({ author, locale }: { author: Author; locale: st
           <div className="flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
             <Link
               href={`/author/${author.slug}`}
-              className="text-[17px] font-bold tracking-tight text-gray-900 hover:text-accent-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
+              className="text-[17px] font-bold tracking-tight text-gray-900 underline-offset-4 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
             >
               {author.name}
             </Link>
@@ -35,7 +35,7 @@ export async function AuthorBio({ author, locale }: { author: Author; locale: st
           <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-[13px]">
             <Link
               href={`/author/${author.slug}`}
-              className="inline-flex items-center gap-1.5 font-semibold text-accent-700 hover:text-accent-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
+              className="inline-flex items-center gap-1.5 font-semibold text-[#111311] underline decoration-[#9aa196] underline-offset-4 hover:decoration-[#111311] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
             >
               {t("moreArticlesByAuthor")}
               <svg className="h-3 w-3" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">

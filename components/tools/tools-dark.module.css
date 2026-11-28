@@ -38,8 +38,7 @@
 .hero { position: relative; padding: 44px 0 80px; }
 .hero > div { position: relative; }
 .heroHead { margin-top: 36px; max-width: 980px; }
-.heroLabel { display: inline-flex; align-items: center; gap: 10px; margin: 0; font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
-.heroLabel::before { content: ""; width: 7px; height: 7px; border-radius: 99px; background: var(--accent); box-shadow: 0 0 12px rgba(var(--accent-rgb), 0.7); flex-shrink: 0; }
+.heroLabel { margin: 0; font-family: var(--mono); font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
 .heroTitle { margin: 20px 0 0; font-family: var(--display); font-size: clamp(2.35rem, 5.6vw, 4.6rem); line-height: 1; letter-spacing: -0.05em; font-weight: 700; color: var(--white); text-wrap: balance; }
 .heroRule { margin: 34px 0 0; height: 1px; border: 0; background: var(--line-strong); }
 .heroLead { margin: 26px 0 0; font-size: clamp(1.02rem, 1.5vw, 1.18rem); line-height: 1.6; letter-spacing: -0.01em; color: var(--muted); max-width: 760px; text-wrap: pretty; }
@@ -48,21 +47,23 @@
 .heroLead code { font-family: var(--mono); font-size: 0.9em; background: var(--code-bg); border: 1px solid var(--line-strong); border-radius: 3px; padding: 1px 5px; color: var(--text); }
 .heroTool { margin-top: 40px; }
 .mountSection { margin-top: 44px; }
-.legendBlock { margin-top: 36px; max-width: 1000px; }
+.legendBlock { margin-top: 36px; }
 .miniLabel { margin: 0; font-family: var(--mono); font-size: 11.5px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
-/* A mounted widget: full width of its column (widgets center themselves at max-w-3xl elsewhere),
-   and every button a 40 px tap target. */
-.mount { max-width: 1000px; }
+/* A mounted widget: full width of the page column (widgets center themselves at max-w-3xl
+   elsewhere), every button a 40 px tap target, "Try:" chips 36 px. */
 .mount > div { max-width: none; margin-left: 0; margin-right: 0; }
 .mount button { min-height: 40px; }
+.mount .chip { display: inline-flex; align-items: center; min-height: 36px; }
 .mount .inlineBtn { min-height: 0; } /* a link-style button inside a sentence */
 /* Fields carry their own lime border + ring on focus; drop the kit's extra outline on them. */
 .mount input:not([type="checkbox"]):not([type="radio"]):focus-visible, .mount textarea:focus-visible, .mount select:focus-visible { outline: none; }
+.arrow { display: none; width: 16px; height: 16px; flex-shrink: 0; }
+.tools .arrow { display: block; }
 /* The in-widget bridge to a paid feature (scoped: no effect where the widget renders outside /tools) */
 .tools .bridgeIn { border-top: 2px solid var(--accent); background: radial-gradient(circle at 92% 0%, rgba(var(--accent-rgb), 0.1) 0%, #0e110f 50%, #0b0d0c 100%); }
 
 /* ---------- Content sections ---------- */
-.split { display: grid; grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr); gap: 28px 64px; align-items: start; }
+.split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 32px 64px; align-items: start; }
 .splitHead { position: sticky; top: 104px; }
 .title2 { margin: 14px 0 0; font-family: var(--display); font-size: clamp(1.85rem, 3.6vw, 2.9rem); line-height: 1.05; letter-spacing: -0.04em; font-weight: 600; color: var(--white); text-wrap: balance; }
 .title3 { margin: 0; font-family: var(--display); font-size: 18px; line-height: 1.3; letter-spacing: -0.02em; font-weight: 600; color: var(--white); }
@@ -75,8 +76,8 @@
 .prose em { color: var(--text); }
 .prose a { color: var(--accent); font-weight: 600; text-decoration: none; }
 .prose a:hover { text-decoration: underline; text-underline-offset: 3px; }
-.prose code { font-family: var(--mono); font-size: 0.86em; background: var(--code-bg); border: 1px solid var(--line-strong); border-radius: 3px; padding: 1px 5px; color: var(--text); overflow-wrap: anywhere; }
-.prose pre code { background: none; border: 0; padding: 0; overflow-wrap: normal; }
+.prose code { font-family: var(--mono); font-size: 0.86em; background: var(--code-bg); border: 1px solid var(--line-strong); border-radius: 3px; padding: 1px 5px; color: var(--text); white-space: nowrap; }
+.prose pre code { background: none; border: 0; padding: 0; white-space: inherit; }
 .prose ul, .prose ol { padding-left: 1.2em; display: flex; flex-direction: column; gap: 8px; }
 .prose ul { list-style: square; }
 .prose ul ::marker { color: var(--accent); }
@@ -90,32 +91,33 @@
 /* Code block (robots.txt samples): #0a0c0b, scrolls inside itself on a phone */
 .codeBlock { margin: 0; background: var(--code-bg); border: 1px solid var(--line-strong); border-radius: 6px; padding: 14px 16px; overflow-x: auto; font-family: var(--mono); font-size: 12.5px; line-height: 1.65; color: var(--text); white-space: pre; }
 
-/* ---------- Closing CTA ---------- */
-.close { padding: 76px 0 24px; border-top: 1px solid var(--line); }
-.closeCard { background: radial-gradient(circle at 82% 0%, rgba(var(--accent-rgb), 0.12) 0%, #0e110f 46%, #0b0d0c 100%); border: 1px solid var(--line-strong); border-top: 2px solid var(--accent); border-radius: 12px; padding: 44px 40px; display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.65fr); gap: 28px 48px; align-items: center; }
-.closeTitle { margin: 0; font-family: var(--display); font-size: clamp(1.6rem, 2.8vw, 2.3rem); line-height: 1.08; letter-spacing: -0.035em; font-weight: 600; color: var(--white); text-wrap: balance; }
-.closeTitle a { color: var(--white); text-decoration: underline; text-decoration-color: var(--line-lime); text-underline-offset: 4px; }
-.closeTitle a:hover { color: var(--accent); }
-.closeBody { margin: 12px 0 0; font-size: 15.5px; line-height: 1.6; color: var(--muted); max-width: 640px; }
-.closeActions { display: flex; flex-direction: column; align-items: stretch; gap: 12px; }
+/* ---------- Closing cross-link: a calm hairline strip (the Report card below is the lime CTA) ---------- */
+.close { padding: 0 0 24px; }
+.closeCard { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 20px 56px; align-items: center; padding: 34px 0; border-top: 1px solid var(--line-strong); border-bottom: 1px solid var(--line-strong); }
+.closeTitle { margin: 0; font-family: var(--display); font-size: clamp(1.3rem, 2vw, 1.65rem); line-height: 1.2; letter-spacing: -0.03em; font-weight: 600; color: var(--white); text-wrap: balance; max-width: 760px; }
+.closeTitle a { color: var(--white); text-decoration: underline; text-decoration-color: var(--line-strong); text-underline-offset: 4px; }
+.closeTitle a:hover { text-decoration-color: var(--white); }
+.closeBody { margin: 10px 0 0; font-size: 15px; line-height: 1.6; color: var(--muted); max-width: 680px; }
+.closeActions { display: flex; flex-direction: column; align-items: stretch; gap: 10px; min-width: 260px; }
 .closeNote { margin: 2px 0 0; font-size: 12.5px; line-height: 1.5; color: var(--muted); text-align: center; flex-basis: 100%; }
 .closeActions > a, .closeCard > a { white-space: normal; text-align: center; }
-.closeCard > a { justify-self: start; }
+.closeCard > a { justify-self: end; }
 
 /* ---------- /tools directory ---------- */
 .dirHero { padding-bottom: 56px; }
 .dirSection { padding: 8px 0 28px; }
 .dir { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line-strong); }
 .dirItem { border-bottom: 1px solid var(--line); }
-.dirRow { display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; gap: 8px 24px; align-items: center; padding: 26px 18px; border-left: 2px solid transparent; text-decoration: none; color: var(--muted); transition: background-color 0.18s var(--ease), border-left-color 0.18s var(--ease); }
+.dirRow { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: 8px 16px; align-items: center; padding: 26px 18px; border-left: 2px solid transparent; text-decoration: none; color: var(--muted); transition: background-color 0.18s var(--ease), border-left-color 0.18s var(--ease); }
 .dirRow:hover { background: rgba(var(--accent-rgb), 0.05); border-left-color: var(--accent); }
 .dirNum { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); align-self: baseline; }
 .dirText { align-self: baseline; min-width: 0; }
 .dirName { margin: 0; font-family: var(--display); font-size: clamp(1.2rem, 2vw, 1.5rem); line-height: 1.2; letter-spacing: -0.025em; font-weight: 600; color: var(--white); }
 .dirRow:hover .dirName { color: var(--accent); }
-.dirDesc { margin: 8px 0 0; font-size: 15px; line-height: 1.55; color: var(--muted); max-width: 760px; }
+.dirDesc { margin: 8px 0 0; font-size: 15px; line-height: 1.55; color: var(--muted); max-width: 68ch; }
 .dirOpen { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
 .dirRow:hover .dirOpen { color: var(--accent); }
+.dirOpen { align-self: center; padding-left: 24px; }
 
 /* ---------- Shared components rendered inside the tools, restyled from a wrapper ---------- */
 /* NewsletterSignup (after a result): ToolResultCapture puts .capture on the direct parent */
@@ -135,11 +137,12 @@
 .report { --report-max: 1152px; }
 
 /* ---------- Responsive ---------- */
-@media (max-width: 1020px) {
+@media (max-width: 1023px) {
   .split { grid-template-columns: 1fr; }
   .splitHead { position: static; }
   .closeCard { grid-template-columns: 1fr; }
-  .closeActions { flex-direction: row; flex-wrap: wrap; align-items: center; }
+  .closeCard > a { justify-self: start; }
+  .closeActions { flex-direction: row; flex-wrap: wrap; align-items: center; min-width: 0; }
   .closeNote { text-align: left; }
 }
 @media (max-width: 640px) {
@@ -147,12 +150,13 @@
   .heroHead { margin-top: 30px; }
   .heroRule { margin-top: 26px; }
   .heroTool { margin-top: 30px; }
-  .close { padding: 56px 0 16px; }
+  .close { padding: 0 0 16px; }
   .report > section { padding-inline: 16px; }
-  .closeCard { padding: 26px 18px; }
+  .closeCard { padding: 26px 0; }
   .closeActions { flex-direction: column; align-items: stretch; }
   .dirHero { padding-bottom: 40px; }
   .dirSection { padding: 0 0 16px; }
-  .dirRow { grid-template-columns: 30px minmax(0, 1fr); gap: 6px 12px; padding: 20px 6px; }
-  .dirOpen { grid-column: 2; }
+  .dirRow { grid-template-columns: 28px minmax(0, 1fr) 20px; gap: 6px 12px; padding: 20px 6px; }
+  .dirOpen { align-self: start; padding-left: 0; padding-top: 4px; } /* arrow centred on the title line */
+  .dirOpenText { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 }

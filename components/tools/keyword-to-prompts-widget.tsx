@@ -6,6 +6,7 @@ import { trackEvent } from "@/lib/analytics"
 import Link from "next/link"
 import { ToolResultCapture } from "@/components/tools/tool-result-capture"
 import tk from "./tools-dark.module.css"
+import { ToolArrow } from "./tool-arrow"
 
 /**
  * Free "Keyword → AI Prompts" generator widget. POSTs to the hardened Replit endpoint
@@ -168,7 +169,7 @@ export function KeywordToPromptsWidget() {
                 </svg>
                 Generating…
               </>
-            ) : "Generate prompts"}
+            ) : <>Generate prompts<ToolArrow /></>}
           </button>
         </div>
 
@@ -209,7 +210,7 @@ export function KeywordToPromptsWidget() {
               type="button"
               disabled={loading}
               onClick={() => { setKeyword(ex); generate(ex) }}
-              className="rounded-[3px] border border-[color:var(--line-strong)] px-3 py-1 font-mono text-[12px] text-[color:var(--muted)] transition-colors hover:border-[color:var(--accent)] hover:text-[color:var(--accent)] disabled:opacity-50"
+              className={`rounded-[3px] border border-[color:var(--line-strong)] px-3 py-1 font-mono text-[12px] text-[color:var(--muted)] transition-colors hover:border-[color:var(--accent)] hover:text-[color:var(--accent)] disabled:opacity-50 ${tk.chip}`}
             >
               {ex}
             </button>

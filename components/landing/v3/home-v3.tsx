@@ -415,8 +415,8 @@ export async function HomeV3() {
       </section>
 
       <div className={s.darkTw}>
-        <Playbook />
-        <LatestPosts />
+        <Playbook index="07" />
+        <LatestPosts index="08" />
       </div>
 
       {/* ---------------- Close ---------------- */}
@@ -424,7 +424,7 @@ export async function HomeV3() {
         <div className={s.wrap}>
           <div className={`${s.closeCard} ${s.sweep}`} data-reveal="">
             <div>
-              <Index n="07" label={t("close.index")} />
+              <Index n="09" label={t("close.index")} />
               <h2 id="close-title" className={s.closeTitle}>{t("close.title")}</h2>
               <p className={s.closeBody}>{t("close.body")}</p>
             </div>

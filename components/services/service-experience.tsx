@@ -3,6 +3,7 @@ import Link from "next/link"
 import type { ReactNode } from "react"
 import { DarkPage, Index, SectionHead, Check, kit } from "@/components/brand/dark-kit"
 import { StickyServiceCta } from "./sticky-cta"
+import { RelatedServices } from "./related-services"
 import { GrowthCharts } from "./growth-charts"
 import { PRIMARY_AUTHOR } from "@/lib/authors"
 import { proofStats } from "@/lib/proof-stats"
@@ -126,7 +127,7 @@ export function ServiceExperience(p: Props) {
     {!auto && <BfServicesBand />}
     <section className={`${s.hero} ${kit.heroGlow}`}>
       <div className={kit.wrap}>
-        <nav className={s.breadcrumb} aria-label="Breadcrumb"><Link href="/">Home</Link><span>/</span><Link href="/services/ai-seo-agency">Services</Link><span>/</span><span>{p.eyebrow}</span></nav>
+        <nav className={s.breadcrumb} aria-label="Breadcrumb"><Link href="/">Home</Link><span className={s.crumbSep} aria-hidden="true">/</span><Link href="/services/ai-seo-agency">Services</Link><span className={s.crumbSep} aria-hidden="true">/</span><span className={s.crumbHere} aria-current="page">{p.eyebrow}</span></nav>
         <div className={s.heroCopy}>
           <Index label={`${p.eyebrow} · Founder-led delivery`} />
           <h1 className={`${kit.heroTitle} ${s.h1}`}>{p.title}<br /><span><Accent text={p.accent} /></span></h1>
@@ -142,9 +143,9 @@ export function ServiceExperience(p: Props) {
             <div className={s.founder}>{PRIMARY_AUTHOR.avatar && <Image src={PRIMARY_AUTHOR.avatar} width={40} height={40} alt="" />}<p><strong>{PRIMARY_AUTHOR.name}</strong><span>Built GEO Toolbox. Leads your project.</span></p></div>
             {auto
               ? <a href="#results" className={`${kit.textLink} ${s.proofLink}`}>See shipped client systems <span aria-hidden="true">↓</span></a>
-              : <a href="#results" className={s.heroProof} aria-label={`Our own site: ${compact(aiCitations.total)} Bing AI appearances and ${compact(googleAiFeatures.impressions)} Google AI-answer impressions in 3 months, ${compact(google.rankedKeywords)} Google queries ranked in ${google.windowDays} days. See the evidence.`}>
-                  <span><strong>{compact(aiCitations.total)}</strong>Bing AI appearances · 3 mo</span>
+              : <a href="#results" className={s.heroProof} aria-label={`Our own site: ${compact(googleAiFeatures.impressions)} Google AI-answer impressions and ${compact(aiCitations.total)} Bing AI appearances in 3 months, ${compact(google.rankedKeywords)} Google queries ranked in ${google.windowDays} days. See the evidence.`}>
                   <span><strong>{compact(googleAiFeatures.impressions)}</strong>Google AI-answer impressions · 3 mo</span>
+                  <span><strong>{compact(aiCitations.total)}</strong>Bing AI appearances · 3 mo</span>
                   <span><strong>{compact(google.rankedKeywords)}</strong>Google queries ranked · {google.windowDays} days</span>
                   <em>Our own site · see the evidence ↓</em>
                 </a>}
@@ -166,14 +167,14 @@ export function ServiceExperience(p: Props) {
           />
           <dl className={s.ledger}>
             <div className={`${s.cell} ${s.cellAi}`}>
-              <dt className={s.cellTag}>Appearances in Copilot & partner AI answers</dt><dd className={s.cellNum}>~{fmt(aiCitations.total)}</dd>
-              <dd className={s.cellSrc}>Bing Webmaster Tools · AI Performance · {aiCitations.windowLabel}</dd>
-              <dd className={s.cellNote}>Sampled appearances, not unique citations.</dd>
-            </div>
-            <div className={`${s.cell} ${s.cellAi}`}>
               <dt className={s.cellTag}>Appearances in Google’s AI answers</dt><dd className={s.cellNum}>~{fmt(googleAiFeatures.impressions)}</dd>
               <dd className={s.cellSrc}>Search Console · {googleAiFeatures.surfaces} · {googleAiFeatures.windowLabel}</dd>
               <dd className={s.cellNote}>Link impressions, not clicks or unique citations.</dd>
+            </div>
+            <div className={`${s.cell} ${s.cellAi}`}>
+              <dt className={s.cellTag}>Appearances in Copilot & partner AI answers</dt><dd className={s.cellNum}>~{fmt(aiCitations.total)}</dd>
+              <dd className={s.cellSrc}>Bing Webmaster Tools · AI Performance · {aiCitations.windowLabel}</dd>
+              <dd className={s.cellNote}>Sampled appearances, not unique citations.</dd>
             </div>
             <div className={s.cell}>
               <dt className={s.cellTag}>Queries ranked in Google</dt><dd className={s.cellNum}>{fmt(google.rankedKeywords)}</dd>
@@ -239,7 +240,7 @@ export function ServiceExperience(p: Props) {
           ).map(t => <li key={t}><Check />{t}</li>)}
         </ul>
       </div>
-      <nav aria-label="Related services" className={s.related}><span>Other services</span><Link href="/services/ai-seo-agency">AI SEO</Link><Link href="/services/generative-engine-optimization">GEO</Link><Link href="/services/answer-engine-optimization">AEO</Link><Link href="/services/ai-automation-agency">AI automation</Link></nav>
+      <RelatedServices />
     </div></section>
     <StickyServiceCta callHref={p.callHref} pricingHref="#pricing" pricingLabel={auto ? "Engagements" : "See pricing"} message={auto ? "Founder-led AI systems. Built for your workflow." : undefined} />
   </DarkPage>

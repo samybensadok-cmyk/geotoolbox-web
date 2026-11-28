@@ -3,7 +3,7 @@ import { formatDate } from "@/lib/utils"
 import Link from "next/link"
 import { getTranslations, getLocale } from "next-intl/server"
 
-export async function LatestPosts() {
+export async function LatestPosts({ index }: { index?: string } = {}) {
   const locale = await getLocale()
   const t = await getTranslations("home.latestPosts")
   const blogBase = locale === "en" ? "" : `/${locale}`
@@ -20,7 +20,7 @@ export async function LatestPosts() {
         <div className="flex items-end justify-between gap-8">
           <div>
             <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-              {t("eyebrow")}
+              {index ? <><span>{index}</span><span aria-hidden="true" className="mx-2.5 text-gray-400">|</span><span className="text-gray-600">{t("eyebrow")}</span></> : t("eyebrow")}
             </p>
             <h2 className="mt-3 text-[32px] font-medium leading-[1.13] tracking-[-0.045em] text-gray-900 sm:text-[clamp(30px,3.5vw,46px)]">
               {t("heading")}

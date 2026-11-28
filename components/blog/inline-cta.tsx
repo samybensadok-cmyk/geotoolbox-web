@@ -239,13 +239,13 @@ export function InlineCta({
       ? { ...raw, href: signupHref(locale, slug) }
       : { ...raw, href: `${raw.href}?${refParam(slug)}` }
   return (
-    <aside className="not-prose my-10 flex flex-col items-start gap-4 rounded-2xl border border-[var(--surface-mint-border)] bg-[var(--surface-mint)] p-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+    <aside className="not-prose my-10 flex flex-col items-start gap-4 rounded-[6px] border border-[#e4e6e3] bg-[#f7f8f6] p-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
       <p className="text-[14.5px] leading-relaxed text-gray-800">{v.text}</p>
       <Link
         href={v.href}
         prefetch={false}
         onClick={() => trackEvent("blog_cta_click", { placement: "inline", cta_target: target, article: slug ?? "", locale })}
-        className="inline-flex shrink-0 items-center gap-2 rounded-full bg-accent-900 px-5 py-2.5 text-[13.5px] font-semibold text-white no-underline transition-all duration-200 hover:bg-accent-800 hover:shadow-lg hover:shadow-accent-900/20 active:translate-y-[1px] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
+        className="inline-flex shrink-0 items-center gap-2 rounded-[3px] bg-[#0a0b0a] px-5 py-2.5 text-[13.5px] font-semibold text-[#cdff00] no-underline transition-all duration-200 hover:bg-black active:translate-y-[1px] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#111311] focus-visible:ring-offset-2"
       >
         {v.button}
         <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">

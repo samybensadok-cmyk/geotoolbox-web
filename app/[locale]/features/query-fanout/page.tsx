@@ -11,7 +11,7 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema, howToSchema } from "@/lib/seo-schema"
 import { marketingAlternatesFor } from "@/lib/i18n/siblings"
 import { kit as k, Arrow } from "@/components/brand/dark-kit"
-import { FeaturePage, FxSection, FxHead, FeatureCloseCta, fx } from "@/components/features/fx"
+import { FeaturePage, FxSection, FxHead, FeatureCloseCta, fx, HeroAccent } from "@/components/features/fx"
 import { PainScenarioSection } from "@/components/features/pain-scenario"
 import sd from "@/components/features/shared-dark.module.css"
 
@@ -116,7 +116,7 @@ export default async function QueryFanoutPage({
           <>
             {t("hero.h1Line1")}
             <span className="block">
-              {t("hero.h1Line2Lead")}<span className="text-accent-300">{t("hero.h1Accent")}</span>{t("hero.h1Line2Tail")}
+              {t("hero.h1Line2Lead")}<HeroAccent text={t("hero.h1Accent")} />{t("hero.h1Line2Tail")}
             </span>
           </>
         }
