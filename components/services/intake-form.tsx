@@ -58,7 +58,7 @@ export function IntakeForm() {
 
   useEffect(() => {
     if (!sessionId.startsWith("cs_")) {
-      setVerify({ state: "nosession" })
+      setVerify(sessionId === "" ? { state: "nosession" } : { state: "error", message: "This link is missing a valid order reference." })
       return
     }
     let active = true
@@ -152,9 +152,9 @@ export function IntakeForm() {
       <Shell>
         <h1 className="text-2xl font-bold tracking-tight text-gray-900">This page opens after checkout</h1>
         <p className="mt-3 text-[15px] text-gray-600">
-          If you just bought a report or a sprint, use the link in your confirmation email. Looking for done-for-you help?{" "}
-          <a href="/services/ai-seo-agency" className="font-medium text-accent-700 underline">See the services</a>{" "}
-          or <a href="/contact" className="font-medium text-accent-700 underline">contact us</a>.
+          It opens automatically right after you pay. If you paid and closed the page before filling it in,{" "}
+          <a href="/contact" className="font-medium text-accent-700 underline">contact us</a> and we&apos;ll send you the form. Looking for done-for-you help?{" "}
+          <a href="/services/ai-seo-agency" className="font-medium text-accent-700 underline">See the services</a>.
         </p>
       </Shell>
     )
