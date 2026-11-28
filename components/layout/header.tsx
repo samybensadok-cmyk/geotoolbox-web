@@ -119,26 +119,22 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
             </button>
 
             {featuresOpen && (
-              <div className="absolute left-1/2 top-full z-50 mt-2 -translate-x-1/2 animate-fade-up" style={{ animationDuration: "0.18s" }}>
-                <div className="w-[640px] rounded-2xl border border-gray-200 bg-white p-6 shadow-[0_20px_60px_-20px_rgba(15,23,42,0.18)]">
-                  <div className="grid grid-cols-2 gap-x-6 gap-y-5">
-                    {siteConfig.featureGroups.map((group) => (
-                      <div key={group.group}>
-                        <p className="font-mono text-[10px] font-semibold uppercase tracking-widest text-gray-500">
-                          {group.group}
-                        </p>
-                        <ul className="mt-2 space-y-0.5">
-                          {group.features.map((f) => (
-                            <li key={f.slug}>
+              <div className={headerStyles.menu}>
+                <div className={headerStyles.menuPanel}>
+                  <div className={headerStyles.menuCols}>
+                    {siteConfig.featureGroups.map((group, gi) => (
+                      <div key={group.group} className={headerStyles.menuGroup}>
+                        <p className={headerStyles.menuLabel}><span>0{gi + 1}</span>{group.group}</p>
+                        <ul>
+                          {group.features.map((f, fi) => (
+                            <li key={f.slug} style={{ ["--mi" as string]: gi * 3 + fi }}>
                               <Link
                                 href={L(`/features/${f.slug}`)}
                                 onClick={() => setFeaturesOpen(false)}
-                                className="group -mx-2 flex flex-col rounded-lg px-2 py-1.5 hover:bg-gray-50"
+                                className={headerStyles.menuItem}
                               >
-                                <span className="text-sm font-semibold text-gray-900 group-hover:text-accent-700">
-                                  {f.name}
-                                </span>
-                                <span className="text-[12px] text-gray-600">{f.desc}</span>
+                                <span className={headerStyles.menuName}>{f.name}<svg aria-hidden="true" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" /></svg></span>
+                                <span className={headerStyles.menuDesc}>{f.desc}</span>
                               </Link>
                             </li>
                           ))}
@@ -146,16 +142,14 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
                       </div>
                     ))}
                   </div>
-                  <div className="mt-5 border-t border-gray-100 pt-4">
-                    <Link
-                      href={L("/features")}
-                      onClick={() => setFeaturesOpen(false)}
-                      className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-accent-700 hover:text-accent-800"
-                    >
+                  <div className={headerStyles.menuFoot}>
+                    <Link href={L("/features")} onClick={() => setFeaturesOpen(false)}>
                       {nav?.seeAllFeatures ?? "See all features"}
-                      <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
+                      <svg aria-hidden="true" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                    </Link>
+                    <Link href={L("/tools")} onClick={() => setFeaturesOpen(false)}>
+                      {nav?.freeTools ?? "Free tools"}
+                      <svg aria-hidden="true" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" /></svg>
                     </Link>
                   </div>
                 </div>
@@ -169,13 +163,6 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
           >
             {nav?.pricing ?? "Pricing"}
             <BfNavPill locale={locale} className="hidden lg:inline" />
-          </Link>
-
-          <Link
-            href={L("/services/ai-seo-agency")}
-            className="flex min-h-[40px] items-center rounded-md px-2 lg:px-3 text-[13px] font-medium text-gray-700 transition-colors hover:text-gray-900 hover:bg-gray-50"
-          >
-            {nav?.services ?? "Services"}
           </Link>
 
           <Link
@@ -200,10 +187,21 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
             <Link
               href={siteConfig.appLoginUrl}
               prefetch={false}
-              className="flex min-h-[40px] items-center rounded-full border border-gray-200 px-3 lg:px-3.5 text-[13px] font-medium text-gray-700 transition-colors hover:border-gray-400 hover:text-gray-900"
+              className="flex min-h-[40px] items-center rounded-md px-2 lg:px-3 text-[13px] font-medium text-gray-700 transition-colors hover:text-gray-900"
             >
               {nav?.login ?? "Log in"}
             </Link>
+            {/* 2026-11-28 menu: "Services" left the menu (Pricing shows all three ways to work);
+                done-with-you / done-for-you are promoted by this call button instead. */}
+            <a
+              href={siteConfig.bookCallUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-cta-placement="header"
+              className="hidden lg:flex min-h-[40px] items-center rounded-full border border-gray-200 px-3 lg:px-3.5 text-[13px] font-medium text-gray-700 transition-colors hover:border-gray-400 hover:text-gray-900"
+            >
+              {nav?.bookCall ?? "Book a call"}
+            </a>
             {/* Primary CTA: "Start free trial" → the one-screen trial signup (card required,
                 $0 today). The no-card free score is reachable from the scan banner. */}
             <Link
@@ -294,14 +292,6 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
             </Link>
 
             <Link
-              href={L("/services/ai-seo-agency")}
-              onClick={() => setMobileOpen(false)}
-              className="rounded-lg px-2 py-3 text-sm font-medium text-gray-900 hover:bg-gray-50"
-            >
-              {nav?.services ?? "Services"}
-            </Link>
-
-            <Link
               href={L("/blog")}
               onClick={() => setMobileOpen(false)}
               className="rounded-lg px-2 py-3 text-sm font-medium text-gray-900 hover:bg-gray-50"
@@ -326,6 +316,16 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
               >
                 {nav?.login ?? "Log in"}
               </Link>
+              <a
+                href={siteConfig.bookCallUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-cta-placement="header_mobile"
+                onClick={() => setMobileOpen(false)}
+                className="rounded-full border border-gray-200 py-3 text-center text-sm font-medium text-gray-700"
+              >
+                {nav?.bookCall ?? "Book a call"}
+              </a>
               <Link
                 href={startHref}
                 prefetch={false}

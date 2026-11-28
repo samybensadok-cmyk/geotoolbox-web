@@ -13,6 +13,8 @@ export const siteConfig = {
   // free account, then the scan). Every "free" CTA points here, never at appSignupUrl — that page
   // is the trial-checkout form (tier picker, card step).
   appFreeScanUrl: "/app/?page=free-scan",
+  // Calendly intro call (same link as BOOK_CALL in lib/plans.ts); the header "Book a call" uses it.
+  bookCallUrl: "https://calendly.com/samy-bensadok/30min-call",
   author: "Samy Ben Sadok",
   // Machine-readable contact + postal identity for the homepage Organization
   // JSON-LD. Agent-readiness scanners (Ora / Is Agentic `org-schema-completeness`)
