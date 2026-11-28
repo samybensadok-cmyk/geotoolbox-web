@@ -66,7 +66,7 @@
 .proofDot { width: 7px; height: 7px; border-radius: 99px; background: var(--accent); box-shadow: 0 0 8px rgba(205, 255, 0, 0.9); margin-left: 4px; }
 .proofTag { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--accent); }
 .heroTitle { margin: 26px 0 0; font-family: var(--display); font-size: clamp(2.7rem, 7.6vw, 6.2rem); line-height: 0.96; letter-spacing: -0.055em; font-weight: 700; color: var(--white); max-width: 1080px; text-wrap: balance; }
-.hl { position: relative; display: inline-block; color: var(--accent-ink); padding: 0 0.08em; margin-right: 0.55em; border-radius: 3px; background: linear-gradient(transparent 8%, var(--accent) 8%, var(--accent) 94%, transparent 94%) no-repeat; }
+.hl { position: relative; display: inline-block; color: var(--accent-ink); padding: 0 0.08em; margin-right: 0.82em; border-radius: 3px; background: linear-gradient(transparent 8%, var(--accent) 8%, var(--accent) 94%, transparent 94%) no-repeat; }
 /* The [1] footnote mark is decoration: drawn in CSS with empty alt text ("/ \"\"") so neither the
    H1 text nor its accessible name contains it. Browsers without the alt syntax keep the first rule. */
 .hl::after { content: "[1]"; content: "[1]" / ""; position: absolute; left: calc(100% + 0.12em); top: 0.12em; font-family: var(--mono); font-size: 0.28em; font-weight: 600; letter-spacing: 0; line-height: 1; color: var(--accent); background: #10130f; border: 1.5px solid var(--accent); padding: 0.32em 0.44em; border-radius: 3px; box-shadow: 0 0 18px -4px rgba(205, 255, 0, 0.45); }
@@ -228,8 +228,9 @@
 .proofStamp div { display: flex; gap: 8px; }
 .proofStamp dt::after { content: ":"; }
 .proofStamp dd { margin: 0; color: var(--white); font-weight: 600; }
-.ledger { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--line-strong); border-bottom: 1px solid var(--line-strong); }
-.cell { padding: 36px 28px; border-right: 1px solid var(--line); display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.ledger { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: auto; border-top: 1px solid var(--line-strong); border-bottom: 1px solid var(--line-strong); }
+/* Each cell spans the same 3 rows (tag, number, label) so numbers align even when a tag wraps. */
+.cell { padding: 36px 28px; border-right: 1px solid var(--line); display: grid; grid-row: span 3; grid-template-rows: subgrid; row-gap: 14px; align-items: start; min-width: 0; }
 .cell:first-child { padding-left: 0; }
 .cell:last-child { border-right: 0; padding-right: 0; }
 .cellTag { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 0; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--subtle); }
@@ -396,7 +397,6 @@
   .hero { padding: 36px 0 52px; }
   .proofPill { border-radius: 8px; padding: 8px 12px; gap: 6px 8px; font-size: 12.5px; }
   .proofPill > .arrow { display: none; }
-  .hl { margin-right: 0.62em; }
   .ctaRow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .ctaRow > * { width: 100%; padding: 12px 10px; font-size: 14px; }
   .section, .proof, .tools { padding: 64px 0; }
