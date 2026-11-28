@@ -369,10 +369,11 @@ export async function HomeV3() {
               <p className={s.dfyTitle}>{t("pricing.dfyTitle")}</p>
               <p className={s.tierDesc}>{t("pricing.dfyNote")}</p>
             </div>
+            {/* Same four rows in every column (label, price, name, terms) so the prices share one baseline. */}
             <ul className={s.dfyPrices}>
-              <li><p className={s.dfyVal}>{usd(GSP.report)}</p><p className={s.dfyLbl}>{t("pricing.dfyReport")}</p></li>
-              <li><p className={s.dfyVal}><small>{t("pricing.from")}</small> {usd(GSP.sprintFrom)}</p><p className={s.dfyLbl}>{t("pricing.dfySprint")}</p></li>
-              <li><p className={s.dfyVal}><small>{t("pricing.from")}</small> {usd(GSP.retainerFromMonthly)}<span>{t("pricing.perMonth")}</span></p><p className={s.dfyLbl}>{t("pricing.dfyRetainer")}</p></li>
+              <li><p className={s.dfyTop}>{t("pricing.dfyOneOff")}</p><p className={s.dfyVal}>{usd(GSP.report)}</p><p className={s.dfyName}>{t("pricing.dfyReportName")}</p></li>
+              <li><p className={s.dfyTop}>{t("pricing.from")}</p><p className={s.dfyVal}>{usd(GSP.sprintFrom)}</p><p className={s.dfyName}>{t("pricing.dfySprint")}</p></li>
+              <li><p className={s.dfyTop}>{t("pricing.from")}</p><p className={s.dfyVal}>{usd(GSP.retainerFromMonthly)}<span>{t("pricing.perMonth")}</span></p><p className={s.dfyName}>{t("pricing.dfyRetainerName")}</p><p className={s.dfyLbl}>{t("pricing.dfyRetainerTerm")}</p></li>
             </ul>
             <div className={s.dfyActions}>
               <Link href={L("/services/generative-engine-optimization")} className={s.btnOutline}>{t("pricing.dfyCta")}<Arrow /></Link>
