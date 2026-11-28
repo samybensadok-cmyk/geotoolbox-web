@@ -60,7 +60,7 @@ export async function HomeExperience() {
   const startTrial = (ref: string) => `${siteConfig.appSignupUrl}&ref=${ref}${currencyParam(locale)}`   // no plan=: server default (Plus), keeps plan_explicit meaningful
   const trialHref = (id: PlanId) => `${siteConfig.appSignupUrl}&plan=${id}${currencyParam(locale)}`
   const trialPlans = new Intl.ListFormat(locale, { style: "long", type: "conjunction" })
-    .format(PLANS.filter(p => p.trialDays).map(p => p.name))
+    .format(PLANS.filter(p => p.trialDays && planIds.includes(p.id)).map(p => p.name))
   const freeMicro = (placement: string, ref: string) => <p className={s.micro}>{t("redesign.freeTerms")} · <HomeAction href={freeScan(ref)} placement={placement} locale={locale} className={s.microLink}>{t("redesign.trialLink")}</HomeAction></p>
   return <div className={s.home}>
     <section className={s.hero} aria-labelledby="home-title">
