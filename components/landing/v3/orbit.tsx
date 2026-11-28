@@ -87,8 +87,8 @@ export function Orbit({ copy }: { copy: Copy }) {
         <svg className={s.orbitSvg} viewBox={`0 0 ${W} ${H}`} aria-hidden="true" focusable="false">
           <defs>
             <radialGradient id="orbit-glow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#d9f24e" stopOpacity="0.16" />
-              <stop offset="100%" stopColor="#d9f24e" stopOpacity="0" />
+              <stop offset="0%" stopColor="#cdff00" stopOpacity="0.16" />
+              <stop offset="100%" stopColor="#cdff00" stopOpacity="0" />
             </radialGradient>
           </defs>
           <ellipse cx={CX} cy={CY} rx={RX + 40} ry={RY + 30} fill="url(#orbit-glow)" />

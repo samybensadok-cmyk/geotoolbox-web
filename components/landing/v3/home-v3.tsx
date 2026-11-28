@@ -183,7 +183,7 @@ export async function HomeV3() {
                     <li key={e.id} data-e={e.id} className={s.engineRow}>
                       <div className={s.engineCol}>
                         <strong>{e.name}</strong>
-                        <span>{engineCount[e.id]}</span>
+                        <span>{engineCount[e.id].split(" · ").map(part => <span key={part} className={s.countLine}>{part}</span>)}</span>
                       </div>
                       <div>
                         <p className={s.pickRow}>
@@ -335,13 +335,13 @@ export async function HomeV3() {
           <div className={s.sectionHead}>
             <div>
               <Index n="05" label={t("pricing.index")} />
-              <h2 id="pricing-title" className={s.sectionTitle}>{t("pricing.title")}</h2>
+              <h2 id="pricing-title" className={s.sectionTitle}>{t("pricing.title").split(/(?<=\.)\s+/).map((part, i) => <span key={i} className={s.keep}>{i ? " " : ""}{part}</span>)}</h2>
             </div>
             <p className={s.sectionLead}>{t("pricing.lead")}</p>
           </div>
           <div className={s.tiers}>
             <article className={`${s.tier} ${s.tierDiy}`}>
-              <h3 className={s.tierKicker}>{t("pricing.diyKicker")}</h3>
+              <div className={s.tierHead}><h3 className={s.tierKicker}>{t("pricing.diyKicker")}</h3></div>
               <p className={s.tierPrice}><small>{t("pricing.from")}</small> {money(Math.round(starter.priceYearly! / 12), locale)}<span>{t("pricing.billedYearly")}</span></p>
               <p className={s.tierAlt}>{t("pricing.diyAlt", { price: money(starter.priceMonthly!, locale) })}</p>
               <ul className={s.tierList}>{(t.raw("pricing.diyItems") as string[]).map(x => <li key={x}><Check />{x.replace("{plans}", trialPlans)}</li>)}</ul>
@@ -364,21 +364,21 @@ export async function HomeV3() {
             </article>
           </div>
           <article className={s.dfy}>
-            <div>
+            <div className={s.dfyHead}>
               <h3 className={s.tierKicker}>{t("pricing.dfyKicker")}</h3>
               <p className={s.dfyTitle}>{t("pricing.dfyTitle")}</p>
               <p className={s.tierDesc}>{t("pricing.dfyNote")}</p>
             </div>
-            {/* Same four rows in every column (label, price, name, terms) so the prices share one baseline. */}
+            <div className={s.dfyActions}>
+              <Link href={L("/services/generative-engine-optimization")} className={s.btnOutline}>{t("pricing.dfyCta")}<Arrow /></Link>
+              <a href={BOOK_CALL} data-cta-placement="home_pricing_dfy" className={s.textLink} {...ext}>{t("bookCall")}<Arrow /></a>
+            </div>
+            {/* Same rows in every column (label, price, name, terms) so the prices share one baseline. */}
             <ul className={s.dfyPrices}>
               <li><p className={s.dfyTop}>{t("pricing.dfyOneOff")}</p><p className={s.dfyVal}>{usd(GSP.report)}</p><p className={s.dfyName}>{t("pricing.dfyReportName")}</p></li>
               <li><p className={s.dfyTop}>{t("pricing.from")}</p><p className={s.dfyVal}>{usd(GSP.sprintFrom)}</p><p className={s.dfyName}>{t("pricing.dfySprint")}</p></li>
               <li><p className={s.dfyTop}>{t("pricing.from")}</p><p className={s.dfyVal}>{usd(GSP.retainerFromMonthly)}<span>{t("pricing.perMonth")}</span></p><p className={s.dfyName}>{t("pricing.dfyRetainerName")}</p><p className={s.dfyLbl}>{t("pricing.dfyRetainerTerm")}</p></li>
             </ul>
-            <div className={s.dfyActions}>
-              <Link href={L("/services/generative-engine-optimization")} className={s.btnOutline}>{t("pricing.dfyCta")}<Arrow /></Link>
-              <a href={BOOK_CALL} data-cta-placement="home_pricing_dfy" className={s.textLink} {...ext}>{t("bookCall")}<Arrow /></a>
-            </div>
           </article>
         </div>
       </section>
