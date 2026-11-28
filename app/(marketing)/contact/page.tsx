@@ -86,7 +86,7 @@ export default function ContactPage() {
           {/* Aside */}
           <aside className={s.aside}>
             <div className={`${k.card} ${s.founder}`}>
-              <Image src="/authors/samy-ben-sadok-portrait.jpg" alt="" width={112} height={112} className={s.founderPhoto} />
+              <Image src="/authors/samy-ben-sadok-linkedin.jpg" alt="" width={112} height={112} className={s.founderPhoto} />
               <div>
                 <p className={s.founderName}>Samy Ben Sadok</p>
                 <p className={s.founderRole}>Founder · messages sent here come to me</p>

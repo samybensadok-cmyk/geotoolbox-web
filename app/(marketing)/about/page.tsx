@@ -18,7 +18,7 @@ import s from "./about.module.css"
 // (roles, dates and the results he lists there, worded as he words them); product numbers are read
 // from their sources at render time (plans, feature and tool registries, proof stats).
 
-const PHOTO = "/authors/samy-ben-sadok-portrait.jpg"
+const PHOTO = "/authors/samy-ben-sadok-linkedin.jpg"
 const LINKEDIN = PRIMARY_AUTHOR.links.find((l) => l.label === "LinkedIn")!.href
 
 export const metadata: Metadata = {
