@@ -65,7 +65,7 @@ export default function ContactPage() {
         <div className={k.wrap}>
           <Breadcrumbs tone="dark" trail={[{ name: "Home", href: "/" }, { name: "Contact", href: "" }]} />
           <div className={s.heroText}>
-            <Index label="Contact" />
+            <Index label="Get in touch" />
             <h1 id="contact-title" className={s.heroTitle}>Talk to us.</h1>
             <p className={k.heroLead}>
               Questions about AI visibility, the right plan, a partnership, or something that&apos;s not behaving? Send a

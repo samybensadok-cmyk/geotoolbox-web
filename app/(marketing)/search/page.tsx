@@ -105,7 +105,7 @@ export default async function SearchPage({
                       className={s.row}
                     >
                       <span className={s.text}>
-                        <span className={s.type}>
+                        <span className={s.type} data-type={r.type}>
                           {r.type}
                         </span>
                         <span className={s.name}>
