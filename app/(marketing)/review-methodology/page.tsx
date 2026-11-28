@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { siteConfig } from "@/lib/config"
+import { LegalFrame } from "@/components/legal/legal-frame"
 
 export const metadata: Metadata = {
   title: "Review Methodology",
@@ -10,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function ReviewMethodologyPage() {
   return (
-    <div className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
+    <LegalFrame><div className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
       <h1 className="text-3xl font-bold tracking-tight text-gray-900">Review Methodology</h1>
       <p className="mt-2 text-sm text-gray-600">Last updated: June 26, 2026</p>
 
@@ -74,6 +75,6 @@ export default function ReviewMethodologyPage() {
           </p>
         </section>
       </div>
-    </div>
+    </div></LegalFrame>
   )
 }

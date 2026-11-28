@@ -1,10 +1,14 @@
 import type { Metadata } from "next"
+import Image from "next/image"
 import Link from "next/link"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
 import { ContactForm } from "@/components/contact/contact-form"
 import { JsonLd } from "@/components/seo/json-ld"
+import { DarkPage, Index, Arrow, kit as k } from "@/components/brand/dark-kit"
 import { contactPageSchema, organizationSchema } from "@/lib/seo-schema"
+import { BOOK_CALL } from "@/lib/plans"
 import { siteConfig } from "@/lib/config"
+import s from "./contact.module.css"
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -26,7 +30,7 @@ const CHANNELS = [
     body: (
       <>
         Which plan fits, custom limits, Enterprise (SSO, dedicated CSM). See{" "}
-        <Link href="/pricing" className="font-semibold text-accent-700 hover:text-accent-800">
+        <Link href="/pricing" className={s.inlineLink}>
           pricing
         </Link>{" "}
         first if you want the quick version.
@@ -38,7 +42,7 @@ const CHANNELS = [
     body: (
       <>
         Something not working, a scan looks off, or a billing question. Already a user? You can also reach us from inside the{" "}
-        <Link href="/app" prefetch={false} className="font-semibold text-accent-700 hover:text-accent-800">
+        <Link href="/app" prefetch={false} className={s.inlineLink}>
           app
         </Link>
         .
@@ -53,76 +57,84 @@ const CHANNELS = [
 
 export default function ContactPage() {
   return (
-    <>
+    <DarkPage>
       <JsonLd data={[contactPageSchema(), organizationSchema()]} />
 
       {/* Hero */}
-      <section className="relative overflow-hidden bg-[var(--surface-warm,theme(colors.amber.50))] px-6 pt-14 pb-16 sm:pt-20 sm:pb-20">
-        <div className="mx-auto max-w-5xl">
-          <Breadcrumbs trail={[{ name: "Home", href: "/" }, { name: "Contact", href: "" }]} />
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">Contact</p>
-          <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.25rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-            Talk to us.
-          </h1>
-          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-gray-700">
-            Questions about AI visibility, the right plan, a partnership, or something that&apos;s not behaving? Send a
-            message and a real person replies, usually within one business day.
-          </p>
+      <section className={`${k.heroGlow} ${s.hero}`} aria-labelledby="contact-title">
+        <div className={k.wrap}>
+          <Breadcrumbs tone="dark" trail={[{ name: "Home", href: "/" }, { name: "Contact", href: "" }]} />
+          <div className={s.heroText}>
+            <Index label="Contact" />
+            <h1 id="contact-title" className={s.heroTitle}>Talk to us.</h1>
+            <p className={k.heroLead}>
+              Questions about AI visibility, the right plan, a partnership, or something that&apos;s not behaving? Send a
+              message and a real person replies, usually within one business day.
+            </p>
+          </div>
         </div>
       </section>
 
       {/* Body */}
-      <section className="bg-white px-6 py-16 sm:py-20">
-        <div className="mx-auto grid max-w-5xl gap-10 lg:grid-cols-5">
+      <section className={s.body}>
+        <div className={`${k.wrap} ${s.grid}`}>
           {/* Form */}
-          <div className="lg:col-span-3">
+          <div className={s.formCol}>
             <ContactForm />
           </div>
 
           {/* Aside */}
-          <aside className="lg:col-span-2">
-            <div className="rounded-2xl border border-gray-200 bg-gray-50 p-6">
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-900">Prefer email?</h2>
-              <a
-                href="mailto:samy@geotoolbox.ai"
-                className="mt-2 inline-block text-[15px] font-semibold text-accent-700 underline underline-offset-2 hover:text-accent-800"
-              >
+          <aside className={s.aside}>
+            <div className={`${k.card} ${s.founder}`}>
+              <Image src="/authors/samy-ben-sadok-portrait.jpg" alt="" width={112} height={112} className={s.founderPhoto} />
+              <div>
+                <p className={s.founderName}>Samy Ben Sadok</p>
+                <p className={s.founderRole}>Founder · messages sent here come to me</p>
+                <Link href="/about" className={k.textLink}>About me<Arrow /></Link>
+              </div>
+            </div>
+
+            <div className={`${k.card} ${s.box}`}>
+              <h2 className={s.boxLabel}>Prefer email?</h2>
+              <a href="mailto:samy@geotoolbox.ai" className={s.email}>
                 samy@geotoolbox.ai
               </a>
-              <p className="mt-1.5 text-[13px] leading-relaxed text-gray-600">
-                Goes to the same place as the form. We reply within one business day.
-              </p>
+              <p className={s.boxText}>Goes to the same place as the form. We reply within one business day.</p>
             </div>
 
-            <div className="mt-5 space-y-5 rounded-2xl border border-gray-200 bg-white p-6">
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-900">What we can help with</h2>
-              {CHANNELS.map((c) => (
-                <div key={c.title}>
-                  <p className="text-[14px] font-semibold text-gray-900">{c.title}</p>
-                  <p className="mt-1 text-[13px] leading-relaxed text-gray-600">{c.body}</p>
-                </div>
-              ))}
+            <div className={`${k.card} ${s.box}`}>
+              <h2 className={s.boxLabel}>Prefer to talk?</h2>
+              <p className={s.boxText}>Book a 30-minute call with me.</p>
+              <a href={BOOK_CALL} data-cta-placement="contact_aside" className={`${k.btnOutline} ${s.boxBtn}`} target="_blank" rel="noopener noreferrer">
+                Book a call<Arrow />
+              </a>
             </div>
 
-            <div className="mt-5 rounded-2xl border border-gray-200 bg-white p-6">
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-900">Just exploring?</h2>
-              <p className="mt-2 text-[13px] leading-relaxed text-gray-600">
+            <div className={`${k.card} ${s.box}`}>
+              <h2 className={s.boxLabel}>What we can help with</h2>
+              <ul className={s.channels}>
+                {CHANNELS.map((c) => (
+                  <li key={c.title}>
+                    <p className={s.channelTitle}>{c.title}</p>
+                    <p className={s.boxText}>{c.body}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className={`${k.card} ${s.box}`}>
+              <h2 className={s.boxLabel}>Just exploring?</h2>
+              <p className={s.boxText}>
                 You don&apos;t need to email us to try it. Run a free scan and see how AI engines describe your brand.
               </p>
-              <Link
-                href="/app"
-                prefetch={false}
-                className="mt-3 inline-flex items-center gap-1.5 text-[13px] font-semibold text-accent-700 hover:text-accent-800"
-              >
+              <Link href="/app" prefetch={false} className={`${k.textLink} ${s.boxLink}`}>
                 Run your first scan
-                <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
+                <Arrow />
               </Link>
             </div>
           </aside>
         </div>
       </section>
-    </>
+    </DarkPage>
   )
 }

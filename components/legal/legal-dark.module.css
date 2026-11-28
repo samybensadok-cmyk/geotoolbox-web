@@ -1,0 +1,93 @@
+/* Dark document frame for the legal and policy pages (2026-11-28 redesign). <LegalFrame> puts the
+   class .doc on <DarkPage>; every rule below restyles the documents' existing markup (Tailwind
+   classes included) so the text components stay untouched. Rules are unlayered, so they beat the
+   layered Tailwind utilities; where the kit's own recolor rules (0,2,0) set the same property, the
+   selector here is at least (0,2,1). Tokens come from the kit (.page). */
+.doc { color-scheme: dark; }
+.doc ::selection { background: rgba(var(--accent-rgb), 0.28); color: var(--white); }
+
+/* Soft lime glow at the top of the page (inside the box: nothing paints over the header). */
+.doc::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 560px; background: radial-gradient(ellipse 52% 100% at 50% 0%, rgba(var(--accent-rgb), 0.075) 0%, rgba(var(--accent-rgb), 0.02) 45%, transparent 75%); pointer-events: none; }
+
+/* The reading column (every document's outer div carries mx-auto max-w-3xl). */
+.doc > :global(.max-w-3xl) { position: relative; max-width: 848px; margin-inline: auto; padding: 76px 24px 120px; }
+
+/* Title block */
+.doc h1 { margin: 0; font-family: var(--display); font-size: clamp(2rem, 4vw, 3rem); line-height: 1.04; letter-spacing: -0.045em; font-weight: 700; color: var(--white); text-wrap: balance; }
+.doc h1::before { content: ""; display: block; width: 36px; height: 3px; margin-bottom: 28px; background: var(--accent); border-radius: 1px; }
+.doc.doc h1 + p { margin-top: 20px; font-family: var(--mono); font-size: 12.5px; line-height: 1.65; letter-spacing: 0.01em; color: var(--muted); }
+/* "This translation is for convenience" line under the date */
+.doc.doc :global(.text-xs.text-gray-500) { margin-top: 10px; max-width: 680px; font-size: 13.5px; line-height: 1.6; color: var(--muted); }
+/* Locale banner (amber in the light design) */
+.doc :global(.bg-amber-50) { margin-top: 20px; background: rgba(var(--accent-rgb), 0.05); border: 1px solid var(--line-lime); border-radius: 4px; padding: 14px 16px; font-size: 14px; line-height: 1.6; }
+.doc :global(.text-amber-900) { color: var(--text); }
+
+/* Terms: plain-language summary box */
+.doc > :global(.max-w-3xl) > :global(.bg-gray-50) { margin-top: 40px; background: var(--surface); border: 1px solid var(--line-strong); border-top: 2px solid var(--accent); border-radius: 6px; padding: 24px 26px 26px; font-size: 15px; line-height: 1.65; color: var(--text); }
+.doc > :global(.max-w-3xl) > :global(.bg-gray-50) > p:first-child { margin: 0; font-family: var(--mono); font-size: 12px; font-weight: 600; line-height: 1.5; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+.doc > :global(.max-w-3xl) > :global(.bg-gray-50) > ul { margin-top: 14px; }
+
+/* Terms: table of contents (hairline rows, 42 px tap targets) */
+.doc > :global(.max-w-3xl) > nav { margin-top: 44px; }
+.doc > :global(.max-w-3xl) > nav > p { margin: 0; font-family: var(--mono); font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.doc > :global(.max-w-3xl) > nav > ol { margin-top: 14px; column-gap: 32px; row-gap: 0; border-top: 1px solid var(--line-strong); }
+.doc > :global(.max-w-3xl) > nav li { border-bottom: 1px solid var(--line); }
+.doc.doc > :global(.max-w-3xl) > nav a { display: flex; align-items: center; min-height: 42px; padding: 9px 0; font-size: 14.5px; line-height: 1.4; color: var(--muted); text-decoration: none; transition: color 0.18s var(--ease); }
+.doc.doc > :global(.max-w-3xl) > nav a:hover { color: var(--accent); text-decoration: none; }
+
+/* Document body (the wrapper that carries leading-relaxed) */
+.doc.doc :global(.leading-relaxed) { margin-top: 52px; font-size: 16px; line-height: 1.72; color: var(--muted); overflow-wrap: break-word; }
+.doc :global(.leading-relaxed) > section { border-top: 1px solid var(--line-strong); padding-top: 32px; }
+/* A section that ends on definition rows already closes with a hairline: no second rule right after it. */
+.doc :global(.leading-relaxed) > section:has(> dl:last-child) + section { border-top-color: transparent; }
+.doc h2 { font-family: var(--display); font-size: clamp(1.25rem, 2.1vw, 1.5rem); line-height: 1.22; letter-spacing: -0.025em; font-weight: 600; color: var(--white); text-wrap: balance; }
+.doc [id] { scroll-margin-top: 120px; }
+.doc :global(.leading-relaxed) :global(.mt-2) { margin-top: 12px; }
+.doc :global(.leading-relaxed) :global(.mt-3) { margin-top: 16px; }
+.doc strong, .doc b { color: var(--white); font-weight: 600; }
+.doc em, .doc i { color: var(--text); }
+/* Review methodology opens with an intro paragraph and no heading: read it as a lead. */
+.doc :global(.leading-relaxed) > section:first-child:not(:has(h2)) > p { font-size: clamp(1.06rem, 1.5vw, 1.2rem); line-height: 1.62; letter-spacing: -0.01em; color: var(--text); }
+
+/* Links: lime and underlined everywhere in the document */
+.doc a { color: var(--accent); text-decoration: underline; text-decoration-color: rgba(var(--accent-rgb), 0.45); text-decoration-thickness: 1px; text-underline-offset: 3px; overflow-wrap: anywhere; transition: color 0.18s var(--ease), text-decoration-color 0.18s var(--ease); }
+.doc a:hover { color: var(--accent-hover); text-decoration-color: var(--accent-hover); }
+
+/* Lists: square lime bullets, mono lime numbers */
+.doc :global(.list-disc) { list-style: square; padding-left: 1.25em; }
+.doc :global(.list-decimal) { list-style: decimal; padding-left: 1.4em; }
+.doc :global(.list-disc) > li::marker { color: var(--accent); }
+.doc :global(.list-decimal) > li::marker { color: var(--accent); font-family: var(--mono); font-size: 0.86em; font-weight: 600; }
+.doc :global(.list-disc) > li + li, .doc :global(.list-decimal) > li + li { margin-top: 8px; }
+.doc :global(.list-disc) > li, .doc :global(.list-decimal) > li { padding-left: 4px; }
+
+/* Inline code (OAuth scopes, cookie names): wraps on a phone instead of being cut off */
+.doc.doc code { font-family: var(--mono); font-size: 0.84em; background: #0a0c0b; border: 1px solid var(--line-strong); border-radius: 3px; padding: 1px 5px; color: var(--text); overflow-wrap: anywhere; }
+
+/* Legal notice / Impressum: definition rows with hairlines and mono labels */
+.doc dl { border-top: 1px solid var(--line-strong); border-bottom: 1px solid var(--line-strong); }
+.doc.doc dl > div { padding: 15px 0; gap: 4px 24px; border-color: var(--line); }
+.doc.doc dt { padding-top: 3px; font-family: var(--mono); font-size: 11.5px; font-weight: 500; line-height: 1.55; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); }
+.doc dd { margin: 0; color: var(--text); }
+
+/* Boxed statutory texts and the model withdrawal form (Terms annexes) */
+.doc :global(.leading-relaxed) :global(.bg-gray-50) { background: #0a0c0b; border: 1px solid var(--line-strong); border-radius: 6px; padding: 20px 22px; font-size: 14.5px; line-height: 1.68; color: var(--muted); }
+/* Terms §20.2: the conspicuous upper-case jurisdiction clause stays boxed and bright */
+.doc :global(.leading-relaxed) :global(.uppercase.bg-white) { background: var(--surface); border: 1px solid var(--line-strong); border-left: 2px solid var(--accent); border-radius: 4px; padding: 16px 18px; font-size: 14px; line-height: 1.62; letter-spacing: 0.025em; color: var(--white); }
+
+@media (max-width: 640px) {
+  .doc > :global(.max-w-3xl) { padding: 52px 16px 88px; }
+  .doc h1::before { margin-bottom: 22px; }
+  .doc.doc :global(.leading-relaxed) { margin-top: 40px; font-size: 15.5px; }
+  .doc :global(.leading-relaxed) > section { padding-top: 26px; }
+  .doc > :global(.max-w-3xl) > :global(.bg-gray-50) { padding: 20px 18px 22px; }
+  .doc :global(.leading-relaxed) :global(.bg-gray-50) { padding: 16px 16px; }
+}
+
+/* Print (the Annex B form is meant to be printed): dark ink on white paper */
+@media print {
+  .doc { background: #fff !important; color: #000 !important; }
+  .doc::before, .doc h1::before { display: none; }
+  .doc *, .doc *::marker { color: #000 !important; background: transparent !important; border-color: #888 !important; box-shadow: none !important; }
+  .doc > :global(.max-w-3xl) { padding: 0; }
+}

@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { siteConfig } from "@/lib/config"
 import { TermsContent } from "@/components/legal/terms-content"
+import { LegalFrame } from "@/components/legal/legal-frame"
 
 export const metadata: Metadata = {
   title: "Terms of Service",
@@ -18,5 +19,5 @@ export const metadata: Metadata = {
 }
 
 export default function TermsPage() {
-  return <TermsContent />
+  return <LegalFrame><TermsContent /></LegalFrame>
 }

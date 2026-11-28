@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { siteConfig } from "@/lib/config"
 import { LegalNoticeContent } from "@/components/legal/legal-notice-content"
+import { LegalFrame } from "@/components/legal/legal-frame"
 
 export const metadata: Metadata = {
   title: "Legal notice (Mentions légales)",
@@ -18,5 +19,5 @@ export const metadata: Metadata = {
 }
 
 export default function Page() {
-  return <LegalNoticeContent />
+  return <LegalFrame><LegalNoticeContent /></LegalFrame>
 }

@@ -4,6 +4,7 @@ import { setRequestLocale } from "next-intl/server"
 import { siteConfig } from "@/lib/config"
 import { PrivacyEs } from "@/components/legal/privacy-es"
 import { PrivacyDe } from "@/components/legal/privacy-de"
+import { LegalFrame } from "@/components/legal/legal-frame"
 
 // SG_CONSENT_V1 legal closure (2026-07-28) — French privacy policy for the FR
 // funnel (CNIL expects consent/privacy information in the visitor's language).
@@ -54,13 +55,13 @@ export default async function PrivacyPageFr({ params }: { params: Promise<{ loca
   const { locale } = await params
   if (locale === "es" || locale === "de") {
     setRequestLocale(locale)
-    return locale === "es" ? <PrivacyEs /> : <PrivacyDe />
+    return <LegalFrame>{locale === "es" ? <PrivacyEs /> : <PrivacyDe />}</LegalFrame>
   }
   if (locale !== "fr") notFound()
   setRequestLocale(locale)
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
+    <LegalFrame><div className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
       <h1 className="text-3xl font-bold tracking-tight text-gray-900">Politique de confidentialité</h1>
       <p className="mt-2 text-sm text-gray-600">Dernière mise à jour : 19 novembre 2026</p>
       <p className="mt-2 text-xs text-gray-500">
@@ -183,6 +184,6 @@ export default async function PrivacyPageFr({ params }: { params: Promise<{ loca
           </p>
         </section>
       </div>
-    </div>
+    </div></LegalFrame>
   )
 }

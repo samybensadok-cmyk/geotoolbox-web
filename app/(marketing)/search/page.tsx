@@ -3,6 +3,8 @@ import Link from "next/link"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
 import { getAllPosts } from "@/lib/content"
 import { siteConfig } from "@/lib/config"
+import { DarkPage, kit, Arrow } from "@/components/brand/dark-kit"
+import s from "./search.module.css"
 
 export const metadata: Metadata = {
   title: "Search",
@@ -46,19 +48,21 @@ export default async function SearchPage({
     : []
 
   return (
-    <>
-      <section className="bg-[var(--surface-steel,theme(colors.slate.50))] px-6 pt-14 pb-12 sm:pt-16">
-        <div className="mx-auto max-w-3xl">
-          <Breadcrumbs trail={[{ name: "Home", href: "/" }, { name: "Search", href: "" }]} />
-          <h1 className="mt-3 text-[clamp(1.75rem,4vw,2.75rem)] font-bold leading-tight tracking-tight text-gray-900">
+    <DarkPage className={s.page}>
+      <section className={`${s.head} ${kit.heroGlow}`}>
+        <div className={kit.wrap}>
+          <div className={s.crumbs}>
+            <Breadcrumbs tone="dark" trail={[{ name: "Home", href: "/" }, { name: "Search", href: "" }]} />
+          </div>
+          <h1 className={s.title}>
             Search GEO Toolbox
           </h1>
-          <form action="/search" method="get" role="search" className="mt-6">
+          <form action="/search" method="get" role="search" className={s.form}>
             <label htmlFor="q" className="sr-only">
               Search guides and tools
             </label>
-            <div className="flex items-center gap-3 rounded-full border border-gray-300 bg-white px-5 py-3 transition-colors focus-within:border-accent-500">
-              <svg className="h-5 w-5 shrink-0 text-gray-400" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
+            <div className={s.field}>
+              <svg className={s.icon} aria-hidden="true" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
                 <circle cx="9" cy="9" r="6" />
                 <path d="m14 14 3 3" strokeLinecap="round" />
               </svg>
@@ -69,46 +73,49 @@ export default async function SearchPage({
                 defaultValue={query}
                 placeholder="Guides, tools…"
                 autoFocus
-                className="w-full bg-transparent text-[15px] text-gray-900 placeholder:text-gray-400 focus:outline-none"
+                className={s.input}
               />
             </div>
           </form>
         </div>
       </section>
 
-      <section className="bg-white px-6 py-12 sm:py-16">
-        <div className="mx-auto max-w-3xl">
+      <section className={s.results}>
+        <div className={kit.wrap}>
           {query === "" ? (
-            <p className="text-[15px] text-gray-600">
+            <p className={s.note}>
               Type a query above to search across guides and tools.
             </p>
           ) : results.length === 0 ? (
-            <p className="text-[15px] text-gray-600">
-              No results for <span className="font-semibold text-gray-900">&ldquo;{query}&rdquo;</span>. Try a
+            <p className={s.note}>
+              No results for <span className={s.query}>&ldquo;{query}&rdquo;</span>. Try a
               broader term, or browse the{" "}
-              <Link href="/blog" className="font-semibold text-accent-700 underline">blog</Link>.
+              <Link href="/blog" className={s.link}>blog</Link>.
             </p>
           ) : (
             <>
-              <p className="mb-6 text-[13px] text-gray-500">
+              <p className={s.count}>
                 {results.length} result{results.length === 1 ? "" : "s"} for &ldquo;{query}&rdquo;
               </p>
-              <ul className="space-y-3">
+              <ul className={s.list}>
                 {results.map((r) => (
-                  <li key={r.url}>
+                  <li key={r.url} className={s.item}>
                     <Link
                       href={r.url}
-                      className="group block rounded-2xl border border-gray-200 bg-white p-5 transition-colors hover:border-gray-300 hover:bg-gray-50"
+                      className={s.row}
                     >
-                      <span className="font-mono text-[10px] font-semibold uppercase tracking-widest text-accent-700">
-                        {r.type}
+                      <span className={s.text}>
+                        <span className={s.type}>
+                          {r.type}
+                        </span>
+                        <span className={s.name}>
+                          {r.title}
+                        </span>
+                        <span className={s.desc}>
+                          {r.description}
+                        </span>
                       </span>
-                      <span className="mt-1 block text-[16px] font-semibold leading-snug tracking-tight text-gray-900 group-hover:text-accent-700">
-                        {r.title}
-                      </span>
-                      <span className="mt-1 block text-[14px] leading-relaxed text-gray-600">
-                        {r.description}
-                      </span>
+                      <span className={s.go}><Arrow /></span>
                     </Link>
                   </li>
                 ))}
@@ -117,6 +124,6 @@ export default async function SearchPage({
           )}
         </div>
       </section>
-    </>
+    </DarkPage>
   )
 }

@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { siteConfig } from "@/lib/config"
 import { RefundPolicyContent } from "@/components/legal/refund-policy-content"
+import { LegalFrame } from "@/components/legal/legal-frame"
 
 export const metadata: Metadata = {
   title: "Cancellation & Refund Policy",
@@ -18,5 +19,5 @@ export const metadata: Metadata = {
 }
 
 export default function Page() {
-  return <RefundPolicyContent />
+  return <LegalFrame><RefundPolicyContent /></LegalFrame>
 }

@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { siteConfig } from "@/lib/config"
 import { PrivacyContent } from "@/components/legal/privacy-content"
+import { LegalFrame } from "@/components/legal/legal-frame"
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
@@ -18,5 +19,5 @@ export const metadata: Metadata = {
 }
 
 export default function PrivacyPage() {
-  return <PrivacyContent />
+  return <LegalFrame><PrivacyContent /></LegalFrame>
 }

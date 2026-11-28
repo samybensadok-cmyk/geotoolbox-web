@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 
 import { trackEvent } from "@/lib/analytics"
+import f from "./contact-form.module.css"
 
 /**
  * Contact form. POSTs to the hardened Replit endpoint (api/contact.php,
@@ -34,10 +35,9 @@ const ERROR_COPY: Record<string, string> = {
 
 const MAX_MESSAGE = 4000
 
-const inputClass =
-  "w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-[15px] text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-accent-500 focus:ring-2 focus:ring-accent-200 disabled:opacity-60"
-
-const labelClass = "block text-[13px] font-semibold text-gray-700"
+// Dark design (2026-11-28): styles live in contact-form.module.css (the page sits inside <DarkPage>).
+const inputClass = f.input
+const labelClass = f.label
 
 export function ContactForm() {
   const [name, setName] = useState("")
@@ -113,14 +113,14 @@ export function ContactForm() {
 
   if (done) {
     return (
-      <div className="rounded-2xl border border-accent-200 bg-accent-50 p-7 sm:p-8">
-        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-accent-600">
-          <svg className="h-5 w-5 text-white" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2.5">
+      <div className={f.done}>
+        <div className={f.doneMark}>
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
             <path d="m5 10 3.5 3.5L15 6" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </div>
-        <h2 className="mt-4 text-xl font-bold tracking-tight text-gray-900">Message sent.</h2>
-        <p className="mt-2 text-[15px] leading-relaxed text-gray-700">
+        <h2 className={f.doneTitle}>Message sent.</h2>
+        <p className={f.doneBody}>
           Thanks, {name.split(" ")[0] || "there"}{" "}— we&apos;ve got it and typically reply within one business day. A copy
           of your message is on its way to {email}.
         </p>
@@ -134,7 +134,7 @@ export function ContactForm() {
         e.preventDefault()
         if (!loading) submit()
       }}
-      className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-7"
+      className={f.form}
       noValidate
     >
       {/* Honeypot — visually hidden, off the tab order. Real users never fill it. */}
@@ -150,10 +150,10 @@ export function ContactForm() {
         />
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-2">
+      <div className={f.row2}>
         <div>
           <label htmlFor="contact-name" className={labelClass}>
-            Name <span className="text-accent-600">*</span>
+            Name <span className={f.req}>*</span>
           </label>
           <input
             id="contact-name"
@@ -165,12 +165,12 @@ export function ContactForm() {
             disabled={loading}
             maxLength={120}
             required
-            className={`mt-1.5 ${inputClass}`}
+            className={inputClass}
           />
         </div>
         <div>
           <label htmlFor="contact-email" className={labelClass}>
-            Email <span className="text-accent-600">*</span>
+            Email <span className={f.req}>*</span>
           </label>
           <input
             id="contact-email"
@@ -183,14 +183,14 @@ export function ContactForm() {
             disabled={loading}
             maxLength={200}
             required
-            className={`mt-1.5 ${inputClass}`}
+            className={inputClass}
           />
         </div>
       </div>
 
-      <div className="mt-5">
+      <div className={f.field}>
         <label htmlFor="contact-company" className={labelClass}>
-          Company or website <span className="font-normal text-gray-400">(optional)</span>
+          Company or website <span className={f.optional}>(optional)</span>
         </label>
         <input
           id="contact-company"
@@ -201,14 +201,14 @@ export function ContactForm() {
           onChange={(e) => setCompany(e.target.value)}
           disabled={loading}
           maxLength={200}
-          className={`mt-1.5 ${inputClass}`}
+          className={inputClass}
         />
       </div>
 
       {/* Topic selector */}
-      <fieldset className="mt-5" disabled={loading}>
+      <fieldset className={f.fieldset} disabled={loading}>
         <legend className={labelClass}>What&apos;s this about?</legend>
-        <div className="mt-2 flex flex-wrap gap-2" role="radiogroup" aria-label="Topic">
+        <div className={f.topics} role="radiogroup" aria-label="Topic">
           {TOPICS.map((t) => {
             const active = topic === t.value
             return (
@@ -218,12 +218,7 @@ export function ContactForm() {
                 role="radio"
                 aria-checked={active}
                 onClick={() => setTopic(t.value)}
-                className={
-                  "rounded-full border px-4 py-2 text-[13px] font-medium transition-colors " +
-                  (active
-                    ? "border-accent-600 bg-accent-600 text-white"
-                    : "border-gray-300 bg-white text-gray-700 hover:border-accent-300 hover:text-accent-700")
-                }
+                className={active ? `${f.topic} ${f.topicOn}` : f.topic}
               >
                 {t.label}
               </button>
@@ -232,12 +227,12 @@ export function ContactForm() {
         </div>
       </fieldset>
 
-      <div className="mt-5">
-        <div className="flex items-baseline justify-between">
+      <div className={f.field}>
+        <div className={f.labelRow}>
           <label htmlFor="contact-message" className={labelClass}>
-            Message <span className="text-accent-600">*</span>
+            Message <span className={f.req}>*</span>
           </label>
-          <span className="font-mono text-[11px] tabular-nums text-gray-400">
+          <span className={f.counter}>
             {message.length}/{MAX_MESSAGE}
           </span>
         </div>
@@ -249,25 +244,25 @@ export function ContactForm() {
           onChange={(e) => setMessage(e.target.value.slice(0, MAX_MESSAGE))}
           disabled={loading}
           required
-          className={`mt-1.5 resize-y ${inputClass}`}
+          className={`${inputClass} ${f.textarea}`}
         />
       </div>
 
       {errorMsg && (
-        <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-[14px] text-red-700" role="alert">
+        <div className={f.error} role="alert">
           {errorMsg}
         </div>
       )}
 
-      <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className={f.actions}>
         <button
           type="submit"
           disabled={loading}
-          className="inline-flex items-center justify-center gap-2 rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all hover:bg-accent-800 active:translate-y-[1px] disabled:cursor-not-allowed disabled:opacity-60"
+          className={f.submit}
         >
           {loading ? (
             <>
-              <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <svg className={f.spin} viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 0 1 8-8v4a4 4 0 0 0-4 4H4z" />
               </svg>
@@ -277,7 +272,7 @@ export function ContactForm() {
             "Send message"
           )}
         </button>
-        <p className="text-[12px] leading-relaxed text-gray-400">
+        <p className={f.note}>
           We reply within one business day. No newsletter signup, no spam.
         </p>
       </div>

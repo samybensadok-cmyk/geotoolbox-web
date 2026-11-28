@@ -6,6 +6,7 @@ import { RefundPolicyContent } from "@/components/legal/refund-policy-content"
 import { RefundPolicyEs } from "@/components/legal/refund-policy-es"
 import { RefundPolicyDe } from "@/components/legal/refund-policy-de"
 import { RefundPolicyFr } from "@/components/legal/refund-policy-fr"
+import { LegalFrame } from "@/components/legal/legal-frame"
 
 // SG_LEGAL_V2 (2026-08-15): locale route so footer links resolve; renders the
 // canonical content (bilingual for the legal notice, EN for the policy).
@@ -40,8 +41,8 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
   const { locale } = await params
   if (!SUPPORTED.includes(locale)) notFound()
   setRequestLocale(locale)
-  if (locale === "fr") return <RefundPolicyFr />
-  if (locale === "es") return <RefundPolicyEs />
-  if (locale === "de") return <RefundPolicyDe />
-  return <RefundPolicyContent />
+  if (locale === "fr") return <LegalFrame><RefundPolicyFr /></LegalFrame>
+  if (locale === "es") return <LegalFrame><RefundPolicyEs /></LegalFrame>
+  if (locale === "de") return <LegalFrame><RefundPolicyDe /></LegalFrame>
+  return <LegalFrame><RefundPolicyContent /></LegalFrame>
 }

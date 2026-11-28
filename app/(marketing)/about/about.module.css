@@ -1,0 +1,162 @@
+/* About page (2026-11-28). Built on the dark kit (components/brand/dark-kit.module.css): only the
+   page-specific layout lives here, colors come from the kit's CSS variables. */
+
+/* ---------------- Hero ---------------- */
+.hero { padding: 34px 0 88px; }
+.hero > div { position: relative; }
+.heroGrid { margin-top: 26px; display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr); gap: 40px 64px; align-items: center; }
+.heroText { min-width: 0; }
+.heroTitle { margin: 22px 0 0; font-family: var(--display); font-size: clamp(2.5rem, 5.4vw, 4.7rem); line-height: 0.98; letter-spacing: -0.055em; font-weight: 700; color: var(--white); text-wrap: balance; }
+.heroMeta { margin: 22px 0 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; font-family: var(--mono); font-size: 12.5px; }
+.metaLink { display: inline-flex; align-items: center; gap: 4px; min-height: 32px; color: var(--muted); text-decoration: underline; text-decoration-color: #3a4139; text-underline-offset: 4px; transition: color 0.18s var(--ease), text-decoration-color 0.18s var(--ease); }
+.metaLink:hover { color: var(--accent); text-decoration-color: var(--accent); }
+.metaDot { width: 3px; height: 3px; border-radius: 50%; background: #4a5248; }
+
+/* Portrait: the photo sits inside two orbit rings (the homepage's citation-orbit motif). */
+.portrait { position: relative; margin: 0; width: min(100%, 420px); justify-self: center; }
+.disc { position: relative; aspect-ratio: 1; display: grid; place-items: center; }
+.orbit { position: absolute; inset: 0; }
+.orbitSvg { width: 100%; height: 100%; overflow: visible; }
+.ringOuter { fill: none; stroke: #3a4139; stroke-width: 1; stroke-dasharray: 0.004 0.009; }
+.ringInner { fill: none; stroke: rgba(205, 255, 0, 0.42); stroke-width: 1; }
+.photo { position: relative; width: 74%; height: auto; aspect-ratio: 1; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 1px var(--line-strong), 0 30px 90px -36px rgba(205, 255, 0, 0.32); }
+.chips { list-style: none; margin: 0; padding: 0; }
+.chip { position: absolute; display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; font-family: var(--mono); font-size: 12px; font-weight: 500; letter-spacing: 0.02em; color: var(--text); background: rgba(13, 15, 14, 0.94); border: 1px solid var(--line-strong); border-radius: 3px; padding: 6px 10px; box-shadow: 0 10px 30px -16px rgba(0, 0, 0, 0.9); }
+.chipDot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px rgba(205, 255, 0, 0.7); flex-shrink: 0; }
+.chipA { top: 9%; left: -2%; }
+.chipB { top: 47%; right: -4%; }
+.chipC { bottom: 6%; left: 10%; }
+.mark { display: inline-block; }
+.keep { white-space: nowrap; }
+.caption { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---------------- 01 Background ---------------- */
+.bgGrid { display: grid; grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr); gap: 40px 72px; align-items: start; }
+.bgAside { position: sticky; top: 104px; }
+.asideLead { margin: 16px 0 0; font-size: 16px; line-height: 1.56; color: var(--muted); max-width: 420px; text-wrap: pretty; }
+.glance { margin: 32px 0 0; border-top: 1px solid var(--line-strong); }
+.glance > div { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 4px 16px; padding: 13px 0; border-bottom: 1px solid var(--line); }
+.glance dt { font-family: var(--mono); font-size: 11.5px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--subtle); padding-top: 2px; }
+.glance dd { margin: 0; font-size: 14.5px; line-height: 1.5; color: var(--white); }
+
+.timelineCol { min-width: 0; }
+.timeline { position: relative; list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line-strong); }
+.timeline::before { content: ""; position: absolute; left: 4px; top: 30px; bottom: 30px; width: 1px; background: linear-gradient(180deg, rgba(205, 255, 0, 0.5) 0%, var(--line-strong) 18%, var(--line) 100%); }
+.step { position: relative; display: grid; grid-template-columns: 104px minmax(0, 1fr); gap: 6px 24px; padding: 24px 0 24px 32px; border-bottom: 1px solid var(--line); }
+.node { position: absolute; left: 0; top: 30px; width: 9px; height: 9px; border-radius: 50%; background: var(--bg); border: 1.5px solid #4a5248; }
+.stepNow .node { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 0 4px rgba(205, 255, 0, 0.12), 0 0 16px rgba(205, 255, 0, 0.55); }
+.years { margin: 0; padding-top: 4px; font-family: var(--mono); font-size: 12.5px; font-weight: 600; letter-spacing: 0.02em; color: var(--subtle); font-variant-numeric: tabular-nums; }
+.stepNow .years { color: var(--accent); }
+.stepBody { min-width: 0; }
+.role { margin: 0; font-size: 18px; line-height: 1.35; font-weight: 600; letter-spacing: -0.015em; color: var(--white); }
+.at { color: #4a5248; font-weight: 400; }
+.org { color: var(--text); font-weight: 500; }
+.where { margin: 5px 0 0; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--subtle); }
+.detail { margin: 10px 0 0; font-size: 15px; line-height: 1.6; color: var(--muted); max-width: 640px; text-wrap: pretty; }
+
+.edu { margin-top: 36px; }
+.eduLabel { margin: 0 0 12px; font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.eduList { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line-strong); }
+.eduList > li { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.3fr) 92px; gap: 4px 20px; align-items: baseline; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.eduSchool { font-size: 15px; font-weight: 600; color: var(--white); }
+.eduWhat { font-size: 14.5px; line-height: 1.5; color: var(--muted); }
+.eduYears { font-family: var(--mono); font-size: 12.5px; color: var(--subtle); text-align: right; font-variant-numeric: tabular-nums; }
+
+/* ---------------- 02 Why ---------------- */
+.whyGrid { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr); gap: 40px 64px; align-items: start; }
+.story p { margin: 22px 0 0; font-size: 17px; line-height: 1.65; color: var(--muted); max-width: 620px; text-wrap: pretty; }
+.story p:first-child { margin-top: 26px; color: var(--text); }
+.loop { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.loopCard { padding: 22px 24px; }
+.loopStep { display: flex; align-items: center; gap: 10px; margin: 0; font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
+.loopNum { color: var(--subtle); }
+.loopTitle { margin: 10px 0 0; font-size: 19px; line-height: 1.32; font-weight: 500; letter-spacing: -0.02em; color: var(--white); }
+.loopFoot { padding: 8px 2px 0; }
+
+/* ---------------- 03 Rules + own numbers ---------------- */
+.rules { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: auto; gap: 0 16px; }
+/* Each card spans the same 3 rows (number, title, body) so titles and bodies start on one line. */
+.rules > li { display: grid; grid-row: span 3; grid-template-rows: subgrid; row-gap: 0; align-content: start; margin-bottom: 16px; }
+.ruleNum { margin: 0 0 18px; font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); }
+.inlineLink { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
+
+.ledgerHead { margin-top: 56px; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 24px; padding-bottom: 14px; }
+.ledgerTitle { margin: 0; font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.ledgerStamp { margin: 0; font-family: var(--mono); font-size: 12px; color: var(--subtle); }
+.ledger { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: auto; border-top: 1px solid var(--line-strong); border-bottom: 1px solid var(--line-strong); }
+.cell { padding: 32px 28px; border-right: 1px solid var(--line); display: grid; grid-row: span 3; grid-template-rows: subgrid; row-gap: 14px; align-items: start; min-width: 0; }
+.cell:first-child { padding-left: 0; }
+.cell:last-child { border-right: 0; padding-right: 0; }
+.cellTag { margin: 0; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--subtle); }
+.cellNum { margin: 0; font-size: clamp(2.6rem, 4.6vw, 4rem); line-height: 0.96; letter-spacing: -0.055em; font-weight: 300; font-variant-numeric: tabular-nums; color: var(--white); }
+.cellLabel { margin: 0; font-size: 14.5px; line-height: 1.5; color: var(--muted); }
+
+/* ---------------- Close ---------------- */
+.closeSection { padding: 0 0 112px; }
+.close { display: grid; grid-template-columns: minmax(0, 1fr) minmax(240px, 300px); gap: 28px 56px; align-items: end; padding: 46px 48px; }
+.closeTitle { margin: 14px 0 0; font-family: var(--display); font-size: clamp(2rem, 4vw, 3.3rem); line-height: 1; letter-spacing: -0.045em; font-weight: 600; color: var(--white); text-wrap: balance; }
+.closeBody { margin: 14px 0 0; font-size: 16px; line-height: 1.56; color: var(--muted); max-width: 540px; }
+.closeActions { display: flex; flex-direction: column; gap: 10px; }
+.closeActions > a { width: 100%; }
+.closeLink { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 40px; font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--accent); text-decoration: none; }
+.closeLink:hover { text-decoration: underline; text-underline-offset: 3px; }
+.closeLink svg { width: 16px; height: 16px; }
+
+/* ---------------- Motion (off under reduced motion; the kit also kills it there) ---------------- */
+@media (prefers-reduced-motion: no-preference) {
+  .heroText > * { animation: aboutRise 0.75s var(--ease) both; }
+  .heroText > :nth-child(1) { animation-delay: 0.04s; }
+  .heroText > :nth-child(2) { animation-delay: 0.1s; }
+  .heroText > :nth-child(3) { animation-delay: 0.2s; }
+  .heroText > :nth-child(4) { animation-delay: 0.3s; }
+  .heroText > :nth-child(5) { animation-delay: 0.38s; }
+  .photo { animation: aboutPhoto 0.9s var(--ease) 0.12s both; }
+  .ringInner { stroke-dasharray: 1; animation: aboutDraw 1.4s var(--ease) 0.3s both; }
+  .ringOuter { animation: aboutFade 1s var(--ease) 0.5s both; }
+  .chip { animation: aboutRise 0.6s var(--ease) both; }
+  .chipA { animation-delay: 0.9s; }
+  .chipB { animation-delay: 1.02s; }
+  .chipC { animation-delay: 1.14s; }
+}
+@keyframes aboutRise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes aboutPhoto { from { opacity: 0; transform: scale(0.96); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+@keyframes aboutDraw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes aboutFade { from { opacity: 0; } to { opacity: 1; } }
+
+/* ---------------- Responsive ---------------- */
+@media (max-width: 1100px) {
+  .rules { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .chipB { right: 0; }
+}
+@media (max-width: 1020px) {
+  .heroGrid, .bgGrid, .whyGrid { grid-template-columns: minmax(0, 1fr); }
+  .portrait { width: min(100%, 380px); }
+  .bgAside { position: static; }
+  .close { grid-template-columns: minmax(0, 1fr); align-items: start; }
+  .closeActions { flex-direction: row; flex-wrap: wrap; align-items: center; }
+  .closeActions > a { width: auto; }
+}
+@media (max-width: 760px) {
+  .ledger { grid-template-columns: minmax(0, 1fr); }
+  .cell { display: block; grid-row: auto; padding: 26px 0; border-right: 0; border-bottom: 1px solid var(--line); }
+  .cell:last-child { border-bottom: 0; }
+  .cellTag, .cellNum { margin-bottom: 12px; }
+  .eduList > li { grid-template-columns: minmax(0, 1fr) auto; }
+  .eduWhat { grid-column: 1 / -1; grid-row: 2; }
+}
+@media (max-width: 640px) {
+  .hero { padding: 26px 0 64px; }
+  .heroGrid { gap: 36px; }
+  .portrait { width: 100%; }
+  .disc { width: min(100%, 300px); margin: 0 auto; }
+  .chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 18px; }
+  .chip { position: static; }
+  .rules { grid-template-columns: minmax(0, 1fr); }
+  .step { grid-template-columns: minmax(0, 1fr); padding-left: 28px; }
+  .years { padding-top: 0; }
+  .node { top: 28px; }
+  .close { padding: 28px 20px; }
+  .closeActions { flex-direction: column; align-items: stretch; }
+  .closeActions > a { width: 100%; }
+  .closeSection { padding-bottom: 72px; }
+}

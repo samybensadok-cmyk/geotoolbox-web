@@ -5,6 +5,7 @@ import { siteConfig } from "@/lib/config"
 import { LegalNoticeContent } from "@/components/legal/legal-notice-content"
 import { LegalNoticeEs } from "@/components/legal/legal-notice-es"
 import { LegalNoticeDe } from "@/components/legal/legal-notice-de"
+import { LegalFrame } from "@/components/legal/legal-frame"
 
 // SG_LEGAL_V2 (2026-08-15): locale route so footer links resolve; renders the
 // canonical content (bilingual for the legal notice, EN for the policy).
@@ -38,7 +39,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
   const { locale } = await params
   if (!SUPPORTED.includes(locale)) notFound()
   setRequestLocale(locale)
-  if (locale === "es") return <LegalNoticeEs />
-  if (locale === "de") return <LegalNoticeDe />
-  return <LegalNoticeContent />
+  if (locale === "es") return <LegalFrame><LegalNoticeEs /></LegalFrame>
+  if (locale === "de") return <LegalFrame><LegalNoticeDe /></LegalFrame>
+  return <LegalFrame><LegalNoticeContent /></LegalFrame>
 }

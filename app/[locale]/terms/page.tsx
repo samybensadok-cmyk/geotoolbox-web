@@ -6,6 +6,7 @@ import { TermsContent } from "@/components/legal/terms-content"
 import { TermsEs } from "@/components/legal/terms-es"
 import { TermsDe } from "@/components/legal/terms-de"
 import { TermsFr } from "@/components/legal/terms-fr"
+import { LegalFrame } from "@/components/legal/legal-frame"
 
 // SG_LEGAL_V2 (2026-08-15): /fr/terms and /es/terms previously 404'd while the
 // footer linked to them. Until a native translation ships, both render the EN
@@ -51,17 +52,17 @@ export default async function TermsPageLocale({ params }: { params: Promise<{ lo
   if (!SUPPORTED.includes(locale as (typeof SUPPORTED)[number])) notFound()
   setRequestLocale(locale)
   // SG_LEGAL_LOCALES (2026-11-19): native FR/ES/DE Terms (EN prevails per §21.6).
-  if (locale === "fr") return <TermsFr />
-  if (locale === "es") return <TermsEs />
-  if (locale === "de") return <TermsDe />
+  if (locale === "fr") return <LegalFrame><TermsFr /></LegalFrame>
+  if (locale === "es") return <LegalFrame><TermsEs /></LegalFrame>
+  if (locale === "de") return <LegalFrame><TermsDe /></LegalFrame>
   const note = NOTE[locale as (typeof SUPPORTED)[number]]
   return (
-    <TermsContent
+    <LegalFrame><TermsContent
       localeNote={
         <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900" lang={locale}>
           <strong>{note.title}.</strong> {note.body}
         </div>
       }
-    />
+    /></LegalFrame>
   )
 }
