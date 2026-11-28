@@ -215,7 +215,7 @@ export default function LlmsTxtCheckerPage() {
               llms.txt is one optional file. Can AI agents reach the rest of your site?
             </h2>
             <p className="mt-2 max-w-xl text-base text-gray-300">
-              Agent Readiness live-fetches any URL as the 8 major AI crawlers, renders the page like a headless agent, and shows what&apos;s
+              Agent Readiness live-fetches any URL as six AI crawlers, renders the page like a headless agent, and shows what&apos;s
               actually blocking you. Free.
             </p>
           </div>

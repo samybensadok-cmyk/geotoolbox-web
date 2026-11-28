@@ -370,7 +370,7 @@ function ResultCard({
         </h3>
         <p className="mt-2 text-[14px] leading-relaxed text-gray-300">
           A robots.txt &ldquo;allow&rdquo; is only permission. A WAF, Cloudflare rule, bot-fight mode, or a 403 can still block a
-          crawler that robots.txt permits. Agent Readiness live-fetches your site as the 8 major AI crawlers and shows what they
+          crawler that robots.txt permits. Agent Readiness live-fetches your site as six AI crawlers and shows what they
           really receive.
         </p>
         <div className="mt-5">
