@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { setRequestLocale, getTranslations } from "next-intl/server"
 import { routing } from "@/i18n/routing"
-import { HomeExperience } from "@/components/landing/home-experience"
+import { HomeV3 } from "@/components/landing/v3/home-v3"
 import { JsonLd } from "@/components/seo/json-ld"
 import { organizationSchema, websiteSchema } from "@/lib/seo-schema"
 import { marketingAlternatesFor } from "@/lib/i18n/siblings"
@@ -63,7 +63,7 @@ export default async function Home({
   return (
     <>
       <JsonLd data={[organizationSchema(), websiteSchema()]} />
-      <HomeExperience />
+      <HomeV3 />
     </>
   )
 }

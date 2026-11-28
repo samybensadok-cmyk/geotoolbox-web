@@ -28,7 +28,7 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
   // (signup provenance `plan_explicit`). Pricing cards still pass their own plan.
   const startHref = `${siteConfig.appSignupUrl}&ref=${isHomepage ? "home-header" : "nav-header"}${currencyParam(locale)}`
   const startLabel = nav?.startFree ?? "Start free trial"
-  const trackStart = () => { if (isHomepage) trackEvent("app_cta_click", { placement: "home_header", cta_target: startHref, locale, design_version: "home_v3" }) }
+  const trackStart = () => { if (isHomepage) trackEvent("app_cta_click", { placement: "home_header", cta_target: startHref, locale, design_version: "home_v4" }) }
 
   const [mobileOpen, setMobileOpen] = useState(false)
   const [featuresOpen, setFeaturesOpen] = useState(false)
@@ -67,7 +67,7 @@ export function Header({ nav, locale = "en" }: { nav?: Record<string, string>; l
   }
 
   return (
-    <header data-homepage={isHomepage || undefined} className={cn("sticky top-0 z-50 w-full border-b border-gray-100 bg-white/90 backdrop-blur-md", isHomepage && headerStyles.homepage)}>
+    <header data-homepage={isHomepage || undefined} className={cn("sticky top-0 z-50 w-full border-b border-gray-100 bg-white/90 backdrop-blur-md", headerStyles.homepage)}>
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-6">
         {/* Logo */}
         <Link href={L("/")} className="flex items-center gap-2 -mx-2 px-2 py-2 rounded-md">

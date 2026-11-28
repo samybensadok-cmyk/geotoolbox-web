@@ -89,7 +89,7 @@ export type Plan = {
 }
 
 const SIGNUP = "/app/?page=signup"
-const BOOK_CALL = "https://calendly.com/samy-bensadok/30min-call"
+export const BOOK_CALL = "https://calendly.com/samy-bensadok/30min-call"
 
 export const PLANS: Plan[] = [
   {
@@ -315,7 +315,7 @@ export const COMPARE_GROUPS: CompareGroup[] = [
       { label: "Agent Readiness scan", values: [Y, Y, Y, Y, Y, Y] },
       { label: "Content Analyzer", values: [Y, Y, Y, Y, Y, Y] },
       { label: "Competitor Intel", values: [Y, Y, Y, Y, Y, Y] },
-      { label: "Analytics (GSC + GA4 + AI traffic)", values: [Y, Y, Y, Y, Y, Y] },
+      { label: "Analytics (GSC + GA4 + AI traffic), beta", values: [Y, Y, Y, Y, Y, Y] },
       { label: "Domain Overview + Opportunities", values: [N, N, Y, Y, Y, Y] },
       { label: "Citation Interceptor", values: [N, N, Y, Y, Y, Y] },
       { label: "Community (Reddit & forum citations)", values: [N, N, Y, Y, Y, Y] },
@@ -352,3 +352,20 @@ export const COMPARE_GROUPS: CompareGroup[] = [
     ],
   },
 ]
+
+// ---- Done with you ----------------------------------------------------------
+// 2026-11-28 operator decision: the plan at list price + a 60-minute founder session each month
+// and a one-page worklist. All-in monthly price = the plan's list monthly price + the session fee
+// (brands: Plus + 600 = 799; agencies: Growth + 800 = 1,299, up to 3 client brands reviewed).
+// Sold on a call (no self-serve checkout), shown on the homepage "three ways" pricing block.
+export const DONE_WITH_YOU = {
+  brand: { planId: "consultant" as PlanId, sessionFee: 600 },
+  agency: { planId: "agency" as PlanId, sessionFee: 800, clientBrands: 3 },
+} as const
+
+export function doneWithYouMonthly(segment: keyof typeof DONE_WITH_YOU): number {
+  const d = DONE_WITH_YOU[segment]
+  const plan = PLANS.find((p) => p.id === d.planId)
+  if (!plan?.priceMonthly) throw new Error(`DONE_WITH_YOU: no monthly price for ${d.planId}`)
+  return plan.priceMonthly + d.sessionFee
+}

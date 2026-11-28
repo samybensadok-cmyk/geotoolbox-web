@@ -1,4 +1,6 @@
 import { siteConfig } from "@/lib/config"
+import { PLANS, BOOK_CALL, doneWithYouMonthly } from "@/lib/plans"
+import { GEO_SERVICE_PRICES as GSP, usd } from "@/lib/service-offers"
 
 // Markdown twin of the homepage, for AI agents and crawlers. Reached directly
 // at /home.md or via `Accept: text/markdown` on / (middleware rewrite) — the
@@ -13,6 +15,7 @@ export function GET() {
     "",
   ])
 
+  const starter = PLANS.find((p) => p.id === "starter")!
   const body = [
     `# ${siteConfig.name}`,
     "",
@@ -25,6 +28,12 @@ export function GET() {
     "## Features",
     "",
     ...features,
+    "## Ways to work with us",
+    "",
+    `- Do it yourself: plans from ${usd(Math.round(starter.priceYearly! / 12))}/mo billed yearly (${usd(starter.priceMonthly!)}/mo billed monthly). [Pricing](${base}/pricing)`,
+    `- Done with you: your plan plus a 60-minute monthly session with the founder and a one-page worklist, ${usd(doneWithYouMonthly("brand"))}/mo for brands (Plus plan included) or ${usd(doneWithYouMonthly("agency"))}/mo for agencies (Growth plan included, up to 3 client brands). [Book a call](${BOOK_CALL})`,
+    `- Done for you: AI + SEO Visibility Report ${usd(GSP.report)} one-off, 30-Day AI Visibility Sprint from ${usd(GSP.sprintFrom)}, ongoing GEO + SEO work from ${usd(GSP.retainerFromMonthly)}/mo. [Services](${base}/services/generative-engine-optimization)`,
+    "",
     "## Free tools",
     "",
     `- [AI Crawler Checker](${base}/tools/ai-crawler-checker)`,

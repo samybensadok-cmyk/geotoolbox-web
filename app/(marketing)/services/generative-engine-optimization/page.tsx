@@ -4,6 +4,7 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { siteConfig } from "@/lib/config"
 import { PRIMARY_AUTHOR } from "@/lib/authors"
 import { proofStats } from "@/lib/proof-stats"
+import { GEO_SERVICE_PRICES as GSP, usd } from "@/lib/service-offers"
 
 const PAGE_URL = `${siteConfig.url}/services/generative-engine-optimization`
 const CALL_HREF = "https://calendly.com/samy-bensadok/30min-call"
@@ -66,19 +67,19 @@ type Tier = {
 const tiers: Tier[] = [
   {
     name: "AI + SEO Visibility Report",
-    price: "$1,250",
+    price: usd(GSP.report),
     billing: "One-off",
     summary: "The full AI + SEO baseline: prompts, engines, competitors, and the pages worth building.",
     deliverables: ["A map of the buying-intent prompts in your market", "Who gets cited today across the AI engines", "The specific pages to build"],
     detail: "",
-    cta: { label: "Buy the Report — $1,250", href: CHECKOUT_REPORT },
+    cta: { label: `Buy the Report — ${usd(GSP.report)}`, href: CHECKOUT_REPORT },
     kind: "buy",
     chip: "One-off",
   },
   {
     name: "30-Day AI Visibility Sprint",
     pricePrefix: "From",
-    price: "$6,500",
+    price: usd(GSP.sprintFrom),
     billing: "One-off · scoped to project size",
     summary: "Thirty days of building: fixes shipped, priority pages rebuilt to be cited.",
     deliverables: ["Technical fixes", "Your priority pages rebuilt to be citable", "The citation and source work that gets an engine to quote you"],
@@ -92,7 +93,7 @@ const tiers: Tier[] = [
   {
     name: "Ongoing GEO + SEO Growth",
     pricePrefix: "From",
-    price: "$5,000",
+    price: usd(GSP.retainerFromMonthly),
     cadence: "/mo",
     billing: "90-day initial commitment",
     summary: "The compounding version: new citable pages, new prompts, tracked every month.",
@@ -238,7 +239,7 @@ const serviceSchema = {
     {
       "@type": "Offer",
       name: "30-Day AI Visibility Sprint",
-      description: "Thirty days of technical fixes and priority pages rebuilt to be citable. From $6,500, scoped to project size.",
+      description: `Thirty days of technical fixes and priority pages rebuilt to be citable. From ${usd(GSP.sprintFrom)}, scoped to project size.`,
       priceSpecification: {
         "@type": "PriceSpecification",
         minPrice: "6500",
@@ -248,7 +249,7 @@ const serviceSchema = {
     {
       "@type": "Offer",
       name: "Ongoing GEO + SEO Growth",
-      description: "Continuous GEO and SEO work with a monthly citation report. From $5,000/mo, 90-day initial commitment.",
+      description: `Continuous GEO and SEO work with a monthly citation report. From ${usd(GSP.retainerFromMonthly)}/mo, 90-day initial commitment.`,
       priceSpecification: {
         "@type": "UnitPriceSpecification",
         minPrice: "5000",
