@@ -1,5 +1,7 @@
 "use client"
 
+import { ToolResultCapture } from "./tool-result-capture"
+
 import { useMemo, useState } from "react"
 import { generateRobotsTxt, lintRobotsTxt, PRESETS, AI_CRAWLERS } from "@/lib/robots-generate"
 import { trackEvent } from "@/lib/analytics"
@@ -41,6 +43,7 @@ export function RobotsTxtGeneratorWidget() {
   const [crawlDelay, setCrawlDelay] = useState("")
   const [blocked, setBlocked] = useState<string[]>([])
   const [copied, setCopied] = useState(false)
+  const [exported, setExported] = useState(false)
 
   const output = useMemo(
     () =>
@@ -65,6 +68,7 @@ export function RobotsTxtGeneratorWidget() {
   function copyOut() {
     navigator.clipboard?.writeText(output).then(() => {
       setCopied(true)
+      setExported(true)
       trackEvent("free_tool_used", { tool: "robots_txt_generator" })
       setTimeout(() => setCopied(false), 1600)
     })
@@ -199,6 +203,7 @@ export function RobotsTxtGeneratorWidget() {
                 type="button"
                 onClick={() => {
                   download("robots.txt", output)
+                  setExported(true)
                   trackEvent("free_tool_used", { tool: "robots_txt_generator" })
                 }}
                 className="rounded-lg bg-accent-600 px-3 py-1.5 text-[12px] font-semibold text-white transition-colors hover:bg-accent-500"
@@ -249,6 +254,7 @@ export function RobotsTxtGeneratorWidget() {
           )}
         </div>
       </div>
+      {exported && <div className="lg:col-span-2"><ToolResultCapture slug="robots-txt-generator" what="robots.txt file" /></div>}
     </div>
   )
 }

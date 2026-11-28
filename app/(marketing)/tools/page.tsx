@@ -1,3 +1,5 @@
+import styles from "@/components/tools/tool-experience.module.css"
+import { toolPageCopy } from "@/lib/tool-page-copy"
 import type { Metadata } from "next"
 import Link from "next/link"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
@@ -29,37 +31,42 @@ export default function ToolsIndexPage() {
           { name: "GEO Toolbox free tools" },
         )}
       />
-      <section className="bg-[var(--surface-steel)] px-6 pt-16 pb-12 sm:pt-20">
+      <section className={styles.hero}>
         <div className="mx-auto max-w-5xl">
-          <Breadcrumbs trail={[{ name: "Home", href: "/" }, { name: "Tools", href: "" }]} />
-          <div className="max-w-2xl">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">Free AI SEO tools</p>
-            <h1 className="mt-3 text-[clamp(2rem,4vw,3rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
-              Free AI SEO tools for the agentic web
-            </h1>
-            <p className="mt-4 text-lg leading-relaxed text-gray-600">
-              {TOOL_COUNT}{" "}free tools, no sign-up, nothing metered. Check whether AI can reach your site, validate the files everyone argues about, pull every URL out of a sitemap, and see the real sub-queries engines fire. Honest readings of what matters and what doesn&apos;t.
-            </p>
+          <Breadcrumbs tone="dark" trail={[{ name: "Home", href: "/" }, { name: "Free tools", href: "" }]} />
+          <div className={styles.intro}>
+            <div>
+              <p className={styles.eyebrow}>{TOOL_COUNT} free AI SEO tools</p>
+              <h1>Find the gaps.<br />Make your next move.</h1>
+              <p className={styles.description}>Check AI access, explore buyer questions or build the files your site needs. Pick a tool and get straight to the result.</p>
+              <p className={styles.reassurance}>No account needed · No email gate</p>
+            </div>
+            <aside className={styles.outputs} aria-label="Where to start">
+              <p>NOT SURE WHERE TO START?</p>
+              <Link href="/tools/agent-readiness-scanner" className="text-lg font-semibold hover:underline">Can AI agents use your site? ↗</Link>
+              <p className="mt-3 !normal-case !tracking-normal">Start with the Agent Readiness Scanner.</p>
+            </aside>
           </div>
+          <nav className={styles.categories} aria-label="Tool categories">
+            <a href="#check">Check your site ↓</a><a href="#research">Research AI questions ↓</a><a href="#build">Build & validate files ↓</a>
+          </nav>
         </div>
       </section>
-
-      <section className="bg-white px-6 py-14">
-        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-2">
-          {tools.map((t) => (
-            <Link
-              key={t.slug}
-              href={`/tools/${t.slug}`}
-              className="group rounded-2xl border border-gray-200 bg-white p-6 transition-colors hover:border-accent-300"
-            >
-              <h2 className="text-lg font-bold tracking-tight text-gray-900 group-hover:text-accent-700">{t.name}</h2>
-              <p className="mt-2 text-[14px] leading-relaxed text-gray-600">{t.desc}</p>
-              <span className="mt-4 inline-flex items-center gap-1.5 text-[13px] font-semibold text-accent-700">
-                Open tool
-                <svg className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" /></svg>
-              </span>
-            </Link>
-          ))}
+      <section className={styles.hub} aria-label="Free tool directory">
+        <div className={styles.hubInner}>
+          {[
+            { id: "check", title: "Check your site", desc: "Find access problems before you work on visibility.", slugs: ["agent-readiness-scanner", "ai-readiness", "ai-crawler-checker", "robots-txt-tester"] },
+            { id: "research", title: "Research AI questions", desc: "Explore what to ask and which prompts to track.", slugs: ["keyword-to-prompts", "query-fanout"] },
+            { id: "build", title: "Build & validate files", desc: "Create, inspect and export your technical SEO files.", slugs: ["robots-txt-generator", "sitemap-extractor", "llms-txt-generator", "llms-txt-checker"] },
+          ].map(group => <div key={group.id} id={group.id} className={styles.group}>
+            <h2>{group.title}</h2><p>{group.desc}</p>
+            <div className={styles.cards}>{group.slugs.map(slug => {
+              const tool = toolPageCopy[slug]
+              return <Link key={slug} href={`/tools/${slug}`} className={styles.card}>
+                <h3>{tool.name}</h3><p>{tool.description}</p><span>Open free tool ↗</span>
+              </Link>
+            })}</div>
+          </div>)}
         </div>
       </section>
     </>
