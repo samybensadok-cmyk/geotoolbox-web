@@ -1,6 +1,7 @@
 "use client"
 
 import { NewsletterSignup } from "@/components/newsletter/newsletter-signup"
+import tk from "./tools-dark.module.css"
 
 /**
  * SG_TOOL_CAPTURE_V1 (2026-09-01) — the free tools stop being a dead end.
@@ -41,7 +42,7 @@ export function ToolResultCapture({
   what: string
 }) {
   return (
-    <div className="mt-8">
+    <div className={`mt-8 ${tk.capture}`}>
       <NewsletterSignup
         source={`tool:${slug}`}
         title="AI search moves fast. This will look different in a month."

@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { siteConfig } from "@/lib/config"
+import s from "./crumbs.module.css"
 
 type Crumb = { name: string; href: string }
 
@@ -12,7 +13,7 @@ export function Breadcrumbs({
 }: {
   featureName?: string
   trail?: Crumb[]
-  /** "dark" renders the trail for a gray-950 ground (dark feature heroes) */
+  /** "dark" = no bottom gap (the dark feature hero spaces the trail itself); colors inherit either way */
   tone?: "light" | "dark"
   /** locale path prefix for the default trail's hrefs ("" for en, "/fr" for fr) */
   base?: string
@@ -39,39 +40,32 @@ export function Breadcrumbs({
     })),
   }
 
+  // One trail for both grounds: colors come from the inherited text color (crumbs.module.css), so it
+  // reads on light pages and inside <DarkPage>. `tone` only sets the spacing: the dark feature hero
+  // spaces the trail itself, the default keeps the 32px gap below it.
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <nav aria-label="Breadcrumb" className="mb-8">
-        <ol className="flex items-center gap-2 text-[13px]">
+      <nav aria-label="Breadcrumb" className={tone === "dark" ? s.crumbs : `${s.crumbs} ${s.crumbsSpaced}`}>
+        <ol className={s.crumbList}>
           {crumbs.map((c, i) => {
             const isLast = i === crumbs.length - 1
             return (
-              <li key={`${c.name}-${i}`} className="flex items-center gap-2">
+              <li key={`${c.name}-${i}`} className={s.crumbItem}>
                 {i > 0 && (
-                  <span aria-hidden="true" className={tone === "dark" ? "text-gray-600" : "text-gray-300"}>
+                  <span aria-hidden="true" className={s.crumbSep}>
                     /
                   </span>
                 )}
                 {isLast || !c.href ? (
-                  <span
-                    aria-current={isLast ? "page" : undefined}
-                    className={tone === "dark" ? "font-semibold text-white" : "font-semibold text-gray-900"}
-                  >
+                  <span aria-current={isLast ? "page" : undefined} className={s.crumbHere}>
                     {c.name}
                   </span>
                 ) : (
-                  <Link
-                    href={c.href}
-                    className={
-                      tone === "dark"
-                        ? "font-medium text-gray-400 hover:text-white"
-                        : "font-medium text-gray-600 hover:text-accent-700"
-                    }
-                  >
+                  <Link href={c.href} className={s.crumbLink}>
                     {c.name}
                   </Link>
                 )}

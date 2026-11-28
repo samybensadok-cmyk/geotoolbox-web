@@ -10,15 +10,22 @@ import { proofStats } from "@/lib/proof-stats"
  * so bars and numbers can never disagree). Months append automatically as the
  * series grows; the current month is flagged "to date" while partial.
  *
- * Colors are the validated chart pair (teal-600 #0d9488 / amber-600 #d97706 —
- * passes the six palette checks on both the gray-950 band and white). Text
- * never wears series colors; identity comes from the legend + swatches.
+ * Colors: the "dark"/"light" variants use the validated categorical pair
+ * (teal-600 #0d9488 / amber-600 #d97706, passes the six palette checks on the
+ * gray-950 band and on white). The "kit" variant (dark design kit) uses a
+ * one-hue ordinal ramp read from the kit tokens: var(--accent) for positions
+ * 1–3 and a 55% oklab mix of the accent into var(--surface) for 4–10 (for the
+ * #cdff00 accent that is #6e8825: monotone lightness, single hue, 4.77:1
+ * against the #0d0f0e chart surface). Fills are set through `style` so the
+ * CSS variables resolve. The two panels share row tracks (subgrid from md up),
+ * so their plot areas and x-axes sit on one baseline.
+ * Text never wears series colors; identity comes from the legend + swatches.
  */
 
 const TEAL = "#0d9488"
 const AMBER = "#d97706"
 
-type Variant = "dark" | "light"
+type Variant = "dark" | "light" | "kit"
 
 const theme = {
   dark: {
@@ -33,6 +40,9 @@ const theme = {
     grid: "rgba(255,255,255,.07)",
     axis: "rgba(255,255,255,.25)",
     tip: "border-white/10 bg-gray-900 text-gray-200",
+    bar: TEAL,
+    top3: AMBER,
+    rest: TEAL,
   },
   light: {
     card: "rounded-xl border border-gray-200 bg-white p-6 pb-4",
@@ -46,6 +56,25 @@ const theme = {
     grid: "rgba(17,24,39,.08)",
     axis: "rgba(17,24,39,.3)",
     tip: "border-gray-200 bg-white text-gray-700 shadow-lg",
+    bar: TEAL,
+    top3: AMBER,
+    rest: TEAL,
+  },
+  kit: {
+    card: "rounded-lg border border-[#2d332d] bg-[#0d0f0e] p-6 pb-4",
+    title: "text-[15px] font-semibold text-white",
+    src: "mt-1 font-mono text-[11px] font-semibold uppercase tracking-[0.06em] text-[#b5bbb0]",
+    legend: "font-mono text-[#b5bbb0]",
+    tick: "#b5bbb0",
+    xlab: "#b5bbb0",
+    val: "#ffffff",
+    segval: "#f4f6f2",
+    grid: "rgba(255,255,255,.07)",
+    axis: "rgba(255,255,255,.28)",
+    tip: "border-[#2d332d] bg-[#131614] text-[#f4f6f2]",
+    bar: "var(--accent)",
+    top3: "var(--accent)",
+    rest: "color-mix(in oklab, var(--accent) 55%, var(--surface))",
   },
 } as const
 
@@ -66,6 +95,9 @@ function roundedTop(x: number, y: number, w: number, h: number, r: number): stri
 }
 
 type TipState = { x: number; y: number; title: string; rows: Array<[string, string, number]> } | null
+
+// Side-by-side panels share 4 row tracks (title, source, legend, plot) so both plots start on one line.
+const SUBGRID = "md:grid md:row-span-4 md:grid-rows-subgrid"
 
 const W = 520
 const H = 300
@@ -150,14 +182,16 @@ export function GrowthCharts({
 
   return (
     <div ref={wrapRef} className="relative" onMouseLeave={() => setTip(null)}>
-      <div className={panels === "both" ? "grid grid-cols-1 gap-5 md:grid-cols-2" : ""}>
+      <div className={panels === "both" ? "grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-y-0" : ""}>
         {/* Panel 1 — total unique queries */}
-        <div className={t.card}>
+        <div className={panels === "both" ? `${t.card} ${SUBGRID}` : t.card}>
           <PanelTitle className={t.title}>Queries ranked in Google</PanelTitle>
           <p className={t.src}>Search Console API · unique queries / month{partialNote}</p>
+          {/* Empty legend slot: keeps this plot on the same row track as panel 2's (which has a legend). */}
+          {panels === "both" && <div aria-hidden="true" />}
           <svg
             viewBox={`0 0 ${W} ${H}`}
-            className="mt-3 block w-full overflow-visible"
+            className={`${panels === "both" ? "mt-1" : "mt-3"} block w-full overflow-visible`}
             role="img"
             aria-label={`Unique queries geotoolbox.ai ranks for in Google, by month: ${months
               .map((m) => `${m.label} ${fmt(m.queries)}`)
@@ -171,9 +205,9 @@ export function GrowthCharts({
                 <g
                   key={m.month}
                   className="cursor-pointer transition hover:brightness-125"
-                  onMouseMove={(e) => show(e, xLabel(m), [[TEAL, "Queries", m.queries]])}
+                  onMouseMove={(e) => show(e, xLabel(m), [[t.bar, "Queries", m.queries]])}
                 >
-                  <path d={roundedTop(bx(i), y, bw, h, 4)} fill={TEAL} />
+                  <path d={roundedTop(bx(i), y, bw, h, 4)} style={{ fill: t.bar }} />
                   <text
                     x={bx(i) + bw / 2}
                     y={y - 8}
@@ -193,16 +227,16 @@ export function GrowthCharts({
 
         {/* Panel 2 — first-page split */}
         {panels === "both" && (
-          <div className={t.card}>
+          <div className={`${t.card} ${SUBGRID}`}>
             <PanelTitle className={t.title}>Queries on Google&apos;s first page</PanelTitle>
             <p className={t.src}>Search Console API · avg. position ≤ 10{partialNote}</p>
             <div className={`mt-2 flex gap-4 text-xs ${t.legend}`}>
               <span className="flex items-center gap-1.5">
-                <span className="h-2.5 w-2.5 rounded-[3px]" style={{ background: AMBER }} />
+                <span className="h-2.5 w-2.5 rounded-[3px]" style={{ background: t.top3 }} />
                 Position 1–3
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="h-2.5 w-2.5 rounded-[3px]" style={{ background: TEAL }} />
+                <span className="h-2.5 w-2.5 rounded-[3px]" style={{ background: t.rest }} />
                 Position 4–10
               </span>
             </div>
@@ -227,14 +261,14 @@ export function GrowthCharts({
                     className="cursor-pointer transition hover:brightness-125"
                     onMouseMove={(e) =>
                       show(e, xLabel(m), [
-                        [AMBER, "Pos 1–3", m.top3],
-                        [TEAL, "Pos 4–10", m.top4to10],
+                        [t.top3, "Pos 1–3", m.top3],
+                        [t.rest, "Pos 4–10", m.top4to10],
                         ["", "Total", m.top10],
                       ])
                     }
                   >
-                    <rect x={bx(i)} y={y410} width={bw} height={Math.max(h410, 1.5)} fill={TEAL} />
-                    <path d={roundedTop(bx(i), y13, bw, Math.max(h13, 1.5), 4)} fill={AMBER} />
+                    <rect x={bx(i)} y={y410} width={bw} height={Math.max(h410, 1.5)} style={{ fill: t.rest }} />
+                    <path d={roundedTop(bx(i), y13, bw, Math.max(h13, 1.5), 4)} style={{ fill: t.top3 }} />
                     <text
                       x={bx(i) + bw / 2}
                       y={y13 - 8}

@@ -24,6 +24,8 @@ import { NewsletterSignup } from "@/components/newsletter/newsletter-signup"
 import { newsletterCopyFrom } from "@/components/newsletter/copy"
 import { Avatar } from "@/components/ui/avatar"
 import { ReportCta } from "@/components/services/report-cta"
+import { geist } from "@/components/landing/v3/geist"
+import hero from "@/components/blog/article-hero.module.css"
 
 // Daily ISR. The blog is otherwise fully static, which would freeze the
 // $MONTH/$YEAR title tokens (lib/seo-tokens.ts) at whatever month the site was
@@ -227,8 +229,8 @@ export default async function BlogPost({
 
   return (
     <>
-      {/* Article hero — warm atmosphere, full-width surface */}
-      <section className="bg-[var(--surface-warm)] px-6 pt-16 pb-10 sm:pt-20 sm:pb-14">
+      {/* Article hero: dark frame (2026-11-28 redesign); the body below keeps the light reading column */}
+      <section className={`${hero.hero} ${geist.variable}`}>
         <JsonLd
           data={[
             articleSchema({
@@ -259,8 +261,9 @@ export default async function BlogPost({
               : []),
           ]}
         />
-        <div className="mx-auto max-w-5xl">
-          <Breadcrumbs
+        <div className={hero.inner}>
+          <div className={hero.crumbs}><Breadcrumbs
+            tone="dark"
             trail={[
               { name: t("home"), href: "/" },
               {
@@ -271,47 +274,45 @@ export default async function BlogPost({
               },
               { name: post.title, href: "" },
             ]}
-          />
-          <header className="mt-2">
+          /></div>
+          <header>
             {post.tags.length > 0 && (
-              <div className="mb-4 flex flex-wrap items-center gap-2">
+              <div className={hero.tags}>
                 {post.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="rounded-full border border-[var(--surface-warm-border)] bg-white px-2.5 py-0.5 font-mono text-[11px] font-semibold uppercase tracking-widest text-amber-800"
+                    className={hero.tag}
                   >
                     {tag}
                   </span>
                 ))}
               </div>
             )}
-            <h1 className="text-[clamp(1.75rem,4vw,2.75rem)] font-bold leading-[1.15] tracking-tight text-gray-900">
+            <h1 className={hero.title}>
               {typo(post.title)}
             </h1>
-            <p className="speakable-summary mt-5 max-w-3xl text-[17px] leading-relaxed text-gray-700">
+            <p className={`speakable-summary ${hero.lead}`}>
               {typo(post.description)}
             </p>
-            <div className="mt-6 flex items-center gap-3 text-sm text-gray-600">
+            <div className={hero.byline}>
               {author ? (
                 <Link
                   href={`/author/${author.slug}`}
-                  className="group/byline flex items-center gap-2.5 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
+                  className={hero.author}
                 >
                   <Avatar name={author.name} src={author.avatar} size={28} />
-                  <span className="font-semibold text-gray-900 group-hover/byline:text-accent-700">
-                    {author.name}
-                  </span>
+                  <span>{author.name}</span>
                 </Link>
               ) : (
-                <span className="font-semibold text-gray-900">{post.author}</span>
+                <span className={hero.author}>{post.author}</span>
               )}
-              <span aria-hidden="true" className="text-gray-400">&middot;</span>
+              <span aria-hidden="true" className={hero.dot}>&middot;</span>
               <time dateTime={post.updated ?? post.date}>
                 {post.updated
                   ? t("updated", { date: formatDate(post.updated, locale) })
                   : formatDate(post.date, locale)}
               </time>
-              <span aria-hidden="true" className="text-gray-400">&middot;</span>
+              <span aria-hidden="true" className={hero.dot}>&middot;</span>
               <span>{t("minRead", { count: post.readingTime })}</span>
             </div>
           </header>

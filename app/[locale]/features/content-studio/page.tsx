@@ -16,6 +16,8 @@ import { siteConfig } from "@/lib/config"
 import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema, howToSchema } from "@/lib/seo-schema"
 import { marketingAlternatesFor } from "@/lib/i18n/siblings"
+import { kit as k, Arrow } from "@/components/brand/dark-kit"
+import { FeaturePage, FxSection, FxHead, FeatureCloseCta, fx } from "@/components/features/fx"
 
 // Localized Content Studio feature page: en at /features/content-studio, fr at
 // /fr/features/content-studio. Relocated from
@@ -76,7 +78,7 @@ export default async function ContentStudioPage({
   const breadcrumbLabels = { home: c("breadcrumbHome"), features: c("breadcrumbFeatures") }
 
   return (
-    <>
+    <FeaturePage>
       <JsonLd
         data={[
           softwareApplicationSchema({
@@ -132,49 +134,45 @@ export default async function ContentStudioPage({
       <HowItWorks3Step heading={t("how.heading")} steps={steps} />
 
       {/* What's in a brief — the real modules */}
-      <section id="brief" className="border-t border-[var(--surface-warm-border)] bg-[var(--surface-warm)] px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-5xl">
-          <div className="max-w-2xl">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-              {t("brief.eyebrow")}
-            </p>
-            <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-              {t("brief.h2")}
-            </h2>
-            <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-gray-600">
+      <FxSection id="brief" band>
+        <FxHead
+          eyebrow={t("brief.eyebrow")}
+          title={t("brief.h2")}
+          lead={
+            <>
               {t("brief.intro.pre")}
               <Link href={`${base}/features/content-analyzer`} className="font-semibold text-accent-700 hover:text-accent-800">
                 {t("brief.intro.linkLabel")}
               </Link>
               {t("brief.intro.post")}
-            </p>
-          </div>
+            </>
+          }
+        />
 
-          <div className="mt-12 grid grid-cols-1 gap-x-10 gap-y-5 md:grid-cols-2">
-            {briefModules.map((m) => (
-              <div key={m.name} className="flex items-start gap-2.5">
-                <svg className="mt-1 h-3.5 w-3.5 shrink-0 text-accent-600" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                  <path d="M3 7.5l2.5 2.5L11 4.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                <span className="text-[14px] leading-snug text-gray-700">
-                  <span className="font-semibold text-gray-900">{m.name}</span>
-                  <span className="text-gray-500"> &mdash; {m.gloss}</span>
-                </span>
-              </div>
-            ))}
-          </div>
-
-          <div className="mx-auto mt-12 max-w-3xl">
-            <ScreenshotFrame
-              src="/screenshots/content-studio/extractability-checklist.png"
-              alt={t("brief.screenshotAlt")}
-              width={2136}
-              height={1660}
-              caption={t("brief.screenshotCaption")}
-            />
-          </div>
+        <div className="grid grid-cols-1 gap-x-10 gap-y-5 md:grid-cols-2">
+          {briefModules.map((m) => (
+            <div key={m.name} className="flex items-start gap-2.5">
+              <svg className="mt-1 h-3.5 w-3.5 shrink-0 text-accent-600" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                <path d="M3 7.5l2.5 2.5L11 4.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              <span className="text-[14px] leading-snug text-gray-700">
+                <span className="font-semibold text-gray-900">{m.name}</span>
+                <span className="text-gray-500"> &mdash; {m.gloss}</span>
+              </span>
+            </div>
+          ))}
         </div>
-      </section>
+
+        <div className="mx-auto mt-12 max-w-3xl">
+          <ScreenshotFrame
+            src="/screenshots/content-studio/extractability-checklist.png"
+            alt={t("brief.screenshotAlt")}
+            width={2136}
+            height={1660}
+            caption={t("brief.screenshotCaption")}
+          />
+        </div>
+      </FxSection>
 
       {/* Act, don't just monitor */}
       <ActVsMonitorWedge
@@ -187,69 +185,50 @@ export default async function ContentStudioPage({
       />
 
       {/* Outcomes */}
-      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-5xl">
-          <div className="max-w-2xl">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">{t("outcomes.eyebrow")}</p>
-            <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-              {t("outcomes.h2")}
-            </h2>
-          </div>
-          <div className="mt-12 grid grid-cols-1 gap-x-10 gap-y-12 md:grid-cols-2 lg:gap-x-16">
-            {outcomes.map((o, i) => (
-              <div key={o.tag} className="relative pl-12">
-                <span
-                  aria-hidden="true"
-                  className="absolute left-0 top-0 font-mono text-[22px] font-bold leading-none tabular-nums text-accent-500"
-                >
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">{o.tag}</p>
-                <h3 className="mt-2 text-lg font-semibold tracking-tight text-gray-900">{o.title}</h3>
-                <p className="mt-2 text-[15px] leading-relaxed text-gray-600">{o.body}</p>
-              </div>
-            ))}
-          </div>
+      <FxSection>
+        <FxHead eyebrow={t("outcomes.eyebrow")} title={t("outcomes.h2")} />
+        <div className="grid grid-cols-1 gap-x-10 gap-y-12 md:grid-cols-2 lg:gap-x-16">
+          {outcomes.map((o, i) => (
+            <div key={o.tag} className="relative pl-12">
+              <span
+                aria-hidden="true"
+                className="absolute left-0 top-0 font-mono text-[22px] font-bold leading-none tabular-nums text-accent-500"
+              >
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">{o.tag}</p>
+              <h3 className="mt-2 text-lg font-semibold tracking-tight text-gray-900">{o.title}</h3>
+              <p className="mt-2 text-[15px] leading-relaxed text-gray-600">{o.body}</p>
+            </div>
+          ))}
         </div>
-      </section>
+      </FxSection>
 
       {/* CTA repeat at the section break */}
-      <section className="border-t border-gray-100 bg-white px-6 py-10">
-        <div className="mx-auto max-w-3xl">
+      <FxSection className={fx.secTight} narrow>
+        <div className={fx.dualBand}>
           <DualCTA
             primaryLabel={t("dualCta.primaryLabel")}
             primaryHref="/app"
             microcopy={t("dualCta.microcopy")}
           />
         </div>
-      </section>
+      </FxSection>
 
       {/* Comparison */}
-      <section className="border-t border-[var(--surface-warm-border)] bg-[var(--surface-warm)] px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-4xl">
-          <div className="max-w-2xl">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">{t("comparison.eyebrow")}</p>
-            <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-              {t("comparison.h2")}
-            </h2>
-            <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-gray-600">
-              {t("comparison.intro")}
-            </p>
-          </div>
-          <div className="mt-10">
-            <FeatureComparisonTable
-              columns={comparisonColumns}
-              rows={comparisonRows}
-              caption={t("comparison.caption")}
-              yesLabel={c("comparison.yes")}
-              noLabel={c("comparison.no")}
-            />
-          </div>
-        </div>
-      </section>
+      <FxSection band narrow>
+        <FxHead eyebrow={t("comparison.eyebrow")} title={t("comparison.h2")} lead={t("comparison.intro")} />
+        <FeatureComparisonTable
+          columns={comparisonColumns}
+          rows={comparisonRows}
+          caption={t("comparison.caption")}
+          yesLabel={c("comparison.yes")}
+          noLabel={c("comparison.no")}
+        />
+      </FxSection>
 
       {/* Light proof — real run, real provenance, no fabricated counters */}
-      <section className="border-t border-gray-100 bg-white px-6 py-12">
+      <FxSection className={fx.secTight}>
         <SocialProofBlock
           miniCase={{
             result: t("proof.miniResult"),
@@ -259,7 +238,7 @@ export default async function ContentStudioPage({
           engineGridLabel={c("engineGridLabel")}
           provenanceLine={t("proof.provenance")}
         />
-      </section>
+      </FxSection>
 
       <FeatureFaq items={faqs} heading={c("faqHeading")} />
 
@@ -271,23 +250,13 @@ export default async function ContentStudioPage({
         descriptions={cardDescriptions}
       />
 
-      {/* CTA */}
-      <section className="bg-gray-950 px-6 py-20 sm:py-24">
-        <div className="mx-auto flex max-w-5xl flex-col items-start gap-6 md:flex-row md:items-center md:justify-between md:gap-12">
-          <div>
-            <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
-              {t("finalCta.h2")}
-            </h2>
-            <p className="mt-2 text-base text-gray-300">{t("finalCta.sub")}</p>
-          </div>
-          <Link href="/app" prefetch={false} className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]">
-            {t("finalCta.button")}
-            <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </Link>
-        </div>
-      </section>
-    </>
+      {/* Final CTA */}
+      <FeatureCloseCta title={t("finalCta.h2")} sub={t("finalCta.sub")}>
+        <Link href="/app" prefetch={false} className={k.btnLime}>
+          {t("finalCta.button")}
+          <Arrow />
+        </Link>
+      </FeatureCloseCta>
+    </FeaturePage>
   )
 }

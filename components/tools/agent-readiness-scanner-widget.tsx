@@ -19,6 +19,7 @@ import {
 } from "@/lib/agent-readiness-scan"
 import { trackEvent } from "@/lib/analytics"
 import { ToolResultCapture } from "@/components/tools/tool-result-capture"
+import tk from "./tools-dark.module.css"
 
 /**
  * Agent Readiness Scanner — the public widget for the FULL v2 scan.
@@ -63,17 +64,17 @@ const ERROR_COPY: Record<string, string> = {
 }
 
 const STATE_META: Record<CheckState, { label: string; dot: string; chip: string }> = {
-  pass: { label: "Pass", dot: "bg-accent-500", chip: "bg-accent-50 text-accent-700 border-accent-200" },
-  warn: { label: "Warn", dot: "bg-amber-500", chip: "bg-amber-50 text-amber-800 border-amber-200" },
-  fail: { label: "Fix", dot: "bg-red-500", chip: "bg-red-50 text-red-700 border-red-200" },
-  info: { label: "Info", dot: "bg-slate-400", chip: "bg-slate-50 text-slate-600 border-slate-200" },
-  not_applicable: { label: "N/A", dot: "bg-slate-300", chip: "bg-slate-50 text-slate-500 border-slate-200" },
+  pass: { label: "Pass", dot: "bg-[color:var(--accent)]", chip: "bg-[color:var(--pass-bg)] text-[color:var(--accent)] border-[color:var(--line-lime)]" },
+  warn: { label: "Warn", dot: "bg-[color:var(--warn)]", chip: "bg-[color:var(--warn-bg)] text-[color:var(--warn)] border-[color:var(--warn-line)]" },
+  fail: { label: "Fix", dot: "bg-[color:var(--fail)]", chip: "bg-[color:var(--fail-bg)] text-[color:var(--fail)] border-[color:var(--fail-line)]" },
+  info: { label: "Info", dot: "bg-[color:var(--subtle)]", chip: "bg-[color:var(--surface-2)] text-[color:var(--muted)] border-[color:var(--line-strong)]" },
+  not_applicable: { label: "N/A", dot: "bg-[color:var(--subtle)]", chip: "bg-[color:var(--surface-2)] text-[color:var(--muted)] border-[color:var(--line-strong)]" },
   // Deliberately distinct from N/A: the check applies here, we just could not
   // confirm it on this run. Gray-amber reads as "unresolved", not "excused".
   unverifiable: {
     label: "Couldn't verify",
-    dot: "bg-stone-400",
-    chip: "bg-stone-100 text-stone-700 border-stone-300",
+    dot: "bg-[color:var(--subtle)]",
+    chip: "bg-[color:var(--surface-2)] text-[color:var(--text)] border-[color:var(--line-strong)]",
   },
 }
 
@@ -87,21 +88,21 @@ const TYPE_LABELS: Record<BotType, string> = {
 const TYPE_ORDER: BotType[] = ["search", "userQuery", "training", "other"]
 
 const TONE_TEXT: Record<Tone, string> = {
-  bad: "text-rose-700",
-  mid: "text-amber-700",
-  good: "text-accent-700",
+  bad: "text-[color:var(--fail)]",
+  mid: "text-[color:var(--warn)]",
+  good: "text-[color:var(--accent)]",
 }
 
 const TONE_BAR: Record<Tone, string> = {
-  bad: "bg-rose-500",
-  mid: "bg-amber-500",
-  good: "bg-accent-500",
+  bad: "bg-[color:var(--fail)]",
+  mid: "bg-[color:var(--warn)]",
+  good: "bg-[color:var(--accent)]",
 }
 
 const TONE_PANEL: Record<Tone, string> = {
-  bad: "border-rose-200 bg-rose-50",
-  mid: "border-amber-200 bg-amber-50",
-  good: "border-accent-200 bg-accent-50",
+  bad: "border-[color:var(--fail-line)] bg-[color:var(--fail-bg)]",
+  mid: "border-[color:var(--warn-line)] bg-[color:var(--warn-bg)]",
+  good: "border-[color:var(--line-lime)] bg-[color:var(--pass-bg)]",
 }
 
 const LEVEL_STEPS = [0, 1, 2, 3, 4]
@@ -283,7 +284,7 @@ export function AgentReadinessScannerWidget() {
           e.preventDefault()
           void runScan(url)
         }}
-        className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm sm:p-5"
+        className="rounded-[8px] border border-[color:var(--line-strong)] bg-[color:var(--surface)] p-4 shadow-sm sm:p-5"
       >
         <label htmlFor="ars-url" className="sr-only">
           Site URL
@@ -298,12 +299,12 @@ export function AgentReadinessScannerWidget() {
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             disabled={running}
-            className="min-w-0 flex-1 rounded-xl border border-gray-300 bg-white px-4 py-3 text-[15px] text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-accent-500 focus:ring-2 focus:ring-accent-200 disabled:opacity-60"
+            className="min-w-0 flex-1 rounded-[4px] border border-[color:var(--line-strong)] bg-[color:var(--bg)] px-4 py-3 text-[15px] text-[color:var(--white)] outline-none transition-colors placeholder:text-[color:var(--subtle)] focus:border-[color:var(--accent)] focus:ring-2 focus:ring-[color:var(--focus-ring)] disabled:opacity-60"
           />
           <button
             type="submit"
             disabled={submitDisabled}
-            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-accent-900 px-6 py-3 text-[15px] font-semibold text-white transition-all hover:bg-accent-800 active:translate-y-[1px] disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-[3px] bg-[color:var(--accent)] px-6 py-3 text-[15px] font-semibold text-[color:var(--accent-ink)] transition-all hover:bg-[color:var(--accent-hover)] active:translate-y-[1px] disabled:cursor-not-allowed disabled:opacity-60"
           >
             {running ? (
               <>
@@ -322,7 +323,7 @@ export function AgentReadinessScannerWidget() {
         </div>
 
         <div className="mt-3 flex flex-wrap items-center gap-2">
-          <span className="text-[12px] text-gray-400">Try:</span>
+          <span className="text-[12px] text-[color:var(--muted)]">Try:</span>
           {EXAMPLES.map((ex) => (
             <button
               key={ex.url}
@@ -332,25 +333,25 @@ export function AgentReadinessScannerWidget() {
                 setUrl(ex.url)
                 void runScan(ex.url)
               }}
-              className="rounded-full border border-gray-200 px-3 py-1 font-mono text-[12px] text-gray-600 transition-colors hover:border-accent-300 hover:text-accent-700 disabled:opacity-50"
+              className="rounded-[3px] border border-[color:var(--line-strong)] px-3 py-1 font-mono text-[12px] text-[color:var(--muted)] transition-colors hover:border-[color:var(--accent)] hover:text-[color:var(--accent)] disabled:opacity-50"
             >
               {ex.label}
             </button>
           ))}
         </div>
 
-        <p className="mt-3 text-[12px] leading-relaxed text-gray-400">
+        <p className="mt-3 text-[12px] leading-relaxed text-[color:var(--muted)]">
           The full scan runs server-side and takes 30 to 90 seconds: it fetches your site as six AI crawlers, renders it in a
           real browser, and checks robots against 34 known AI bots. Free, no sign-up.
         </p>
       </form>
 
       {formError && (
-        <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-[14px] text-red-700">{formError}</div>
+        <div className="mt-4 rounded-[4px] border border-[color:var(--fail-line)] bg-[color:var(--fail-bg)] px-4 py-3 text-[14px] text-[color:var(--fail)]">{formError}</div>
       )}
 
       {cooldownLeft > 0 && (
-        <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-[14px] text-amber-900">
+        <div className="mt-4 rounded-[4px] border border-[color:var(--warn-line)] bg-[color:var(--warn-bg)] px-4 py-3 text-[14px] text-[color:var(--warn)]">
           <span className="font-semibold">You have hit the free scan limit.</span> The scanner allows a burst of scans per IP so
           one visitor cannot monopolise it. Your URL is still in the box. Try again in {cooldownLeft} seconds.
         </div>
@@ -358,19 +359,19 @@ export function AgentReadinessScannerWidget() {
 
       {/* Progress: staged copy while the long scan runs. */}
       {running && (
-        <div className="mt-4 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3">
+        <div className="mt-4 rounded-[4px] border border-[color:var(--line-strong)] bg-[color:var(--surface-2)] px-4 py-3">
           <div className="flex items-center justify-between gap-4">
-            <p className="text-[13px] text-gray-600">{stagedCopy(elapsed)}</p>
-            <span className="shrink-0 font-mono text-[12px] tabular-nums text-gray-400">{elapsed}s</span>
+            <p className="text-[13px] text-[color:var(--muted)]">{stagedCopy(elapsed)}</p>
+            <span className="shrink-0 font-mono text-[12px] tabular-nums text-[color:var(--muted)]">{elapsed}s</span>
           </div>
-          <div className="mt-2 h-1 overflow-hidden rounded-full bg-gray-200">
+          <div className="mt-2 h-1 overflow-hidden rounded-full bg-[color:var(--line-strong)]">
             <div
-              className="h-full rounded-full bg-accent-500 transition-[width] duration-1000 ease-linear"
+              className="h-full rounded-[3px] bg-[color:var(--accent)] transition-[width] duration-1000 ease-linear"
               style={{ width: `${clampPct((elapsed / 90) * 100)}%` }}
             />
           </div>
           {crawlers.status === "ok" && scan.status === "pending" && (
-            <p className="mt-2 text-[12px] text-gray-500">
+            <p className="mt-2 text-[12px] text-[color:var(--muted)]">
               Crawler access is below already. The scored report follows when the deep scan finishes.
             </p>
           )}
@@ -381,7 +382,7 @@ export function AgentReadinessScannerWidget() {
       {crawlerData && <CrawlerCard data={crawlerData} />}
 
       {crawlers.status === "error" && (
-        <div className="mt-4 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-[13px] text-gray-600">
+        <div className="mt-4 rounded-[4px] border border-[color:var(--line-strong)] bg-[color:var(--surface-2)] px-4 py-3 text-[13px] text-[color:var(--muted)]">
           Crawler access could not be checked: {ERROR_COPY[crawlers.error ?? "internal_error"] ?? ERROR_COPY.internal_error}
         </div>
       )}
@@ -391,14 +392,14 @@ export function AgentReadinessScannerWidget() {
       {scanData && <ToolResultCapture slug="agent-readiness-scanner" what="agent readiness report" />}
 
       {scan.status === "timeout" && (
-        <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-[14px] leading-relaxed text-amber-900">
+        <div className="mt-4 rounded-[4px] border border-[color:var(--warn-line)] bg-[color:var(--warn-bg)] px-4 py-3 text-[14px] leading-relaxed text-[color:var(--warn)]">
           <span className="font-semibold">We stopped waiting after 100 seconds.</span> The scan may still be completing on our
           side. Give it a minute before you run it again, so you are not queueing a second scan on top of the first.
         </div>
       )}
 
       {scan.status === "error" && scan.error !== "rate_limited" && (
-        <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-[14px] text-red-700">
+        <div className="mt-4 rounded-[4px] border border-[color:var(--fail-line)] bg-[color:var(--fail-bg)] px-4 py-3 text-[14px] text-[color:var(--fail)]">
           {ERROR_COPY[scan.error ?? "internal_error"] ?? ERROR_COPY.internal_error}
         </div>
       )}
@@ -418,16 +419,16 @@ function CrawlerCard({ data }: { data: CrawlerData }) {
 
   return (
     <div className="mt-6 space-y-4">
-      <div className="rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
+      <div className="rounded-[8px] border border-[color:var(--line-strong)] bg-[color:var(--surface)] p-5 sm:p-6">
         <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-400">Crawler access</p>
-          <span className="font-mono text-[11px] text-gray-400">robots.txt {data.robotsPresent === false ? "not found" : "checked"}</span>
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-[color:var(--muted)]">Crawler access</p>
+          <span className="font-mono text-[11px] text-[color:var(--muted)]">robots.txt {data.robotsPresent === false ? "not found" : "checked"}</span>
         </div>
         <p className={`mt-2 text-3xl font-bold tracking-tight tabular-nums ${TONE_TEXT[tone]}`}>
           {data.allowed}
-          <span className="text-lg font-semibold text-gray-400">/{data.total}</span>
+          <span className="text-lg font-semibold text-[color:var(--muted)]">/{data.total}</span>
         </p>
-        <p className="mt-1 text-[13px] text-gray-600">
+        <p className="mt-1 text-[13px] text-[color:var(--muted)]">
           {clean
             ? "AI crawlers allowed by robots.txt. Nothing is blocked at the robots layer."
             : `AI crawlers allowed by robots.txt. ${data.blocked} are disallowed for your homepage.`}
@@ -438,19 +439,19 @@ function CrawlerCard({ data }: { data: CrawlerData }) {
             {blocked.map((b) => (
               <li
                 key={b.ua}
-                className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-xl border border-red-100 bg-red-50/60 px-4 py-2.5"
+                className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-[4px] border border-[color:var(--fail-line)] bg-[color:var(--fail-bg)] px-4 py-2.5"
               >
-                <span className="h-2 w-2 shrink-0 rounded-full bg-red-500" aria-hidden="true" />
-                <span className="text-[14px] font-semibold text-gray-900">{b.label}</span>
-                <span className="text-[12px] text-gray-500">
+                <span className="h-2 w-2 shrink-0 rounded-full bg-[color:var(--fail)]" aria-hidden="true" />
+                <span className="text-[14px] font-semibold text-[color:var(--white)]">{b.label}</span>
+                <span className="text-[12px] text-[color:var(--muted)]">
                   {b.platform} · {TYPE_LABELS[b.botType]}
                 </span>
                 {b.blockedBy && (
-                  <code className="rounded bg-white px-2 py-0.5 font-mono text-[11px] text-red-700 ring-1 ring-red-200">
+                  <code className="rounded bg-[color:var(--surface)] px-2 py-0.5 font-mono text-[11px] text-[color:var(--fail)] ring-1 ring-[color:var(--fail-line)]">
                     {b.blockedBy}
                   </code>
                 )}
-                {b.note && <span className="text-[11px] italic text-amber-700">{b.note}</span>}
+                {b.note && <span className="text-[11px] italic text-[color:var(--warn)]">{b.note}</span>}
               </li>
             ))}
           </ul>
@@ -461,11 +462,11 @@ function CrawlerCard({ data }: { data: CrawlerData }) {
             const row = data.byType[t]
             if (!row || row.allowed + row.blocked === 0) return null
             return (
-              <div key={t} className="rounded-xl border border-gray-100 bg-gray-50/60 p-3">
-                <p className="text-[12px] font-semibold text-gray-700">{TYPE_LABELS[t]}</p>
-                <p className="mt-1 font-mono text-[13px] tabular-nums text-gray-500">
-                  <span className="text-accent-700">{row.allowed} allowed</span>
-                  {row.blocked > 0 && <span className="text-red-600"> · {row.blocked} blocked</span>}
+              <div key={t} className="rounded-[4px] border border-[color:var(--line)] bg-[color:var(--surface-2)] p-3">
+                <p className="text-[12px] font-semibold text-[color:var(--text)]">{TYPE_LABELS[t]}</p>
+                <p className="mt-1 font-mono text-[13px] tabular-nums text-[color:var(--muted)]">
+                  <span className="text-[color:var(--accent)]">{row.allowed} allowed</span>
+                  {row.blocked > 0 && <span className="text-[color:var(--fail)]"> · {row.blocked} blocked</span>}
                 </p>
               </div>
             )
@@ -473,27 +474,27 @@ function CrawlerCard({ data }: { data: CrawlerData }) {
         </div>
 
         {allowed.length > 0 && (
-          <details className="mt-4 rounded-xl border border-gray-100 bg-gray-50/60 p-4">
-            <summary className="cursor-pointer font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-400">
+          <details className="mt-4 rounded-[4px] border border-[color:var(--line)] bg-[color:var(--surface-2)] p-4">
+            <summary className="cursor-pointer font-mono text-[11px] font-semibold uppercase tracking-widest text-[color:var(--muted)]">
               {allowed.length} allowed by robots.txt, show all
             </summary>
             <div className="mt-3 grid grid-cols-1 gap-1.5 sm:grid-cols-2">
               {allowed.map((b) => (
                 <div key={b.ua} className="flex items-center gap-2.5 text-[13px]">
-                  <span className="font-mono text-[11px] font-semibold text-accent-700">OK</span>
-                  <span className="text-gray-700">{b.label}</span>
-                  <span className="text-[11px] text-gray-400">{b.platform}</span>
-                  {b.note && <span className="text-[11px] italic text-amber-700">· may ignore robots</span>}
+                  <span className="font-mono text-[11px] font-semibold text-[color:var(--accent)]">OK</span>
+                  <span className="text-[color:var(--text)]">{b.label}</span>
+                  <span className="text-[11px] text-[color:var(--muted)]">{b.platform}</span>
+                  {b.note && <span className="text-[11px] italic text-[color:var(--warn)]">· may ignore robots</span>}
                 </div>
               ))}
             </div>
           </details>
         )}
 
-        <p className="mt-4 text-[12px] leading-relaxed text-gray-500">
+        <p className="mt-4 text-[12px] leading-relaxed text-[color:var(--muted)]">
           robots.txt is permission, not proof. A crawler it allows can still be stopped by a WAF or a 403, which is why the
           scored report below fetches your page as each crawler for real.{" "}
-          <Link href="/tools/ai-crawler-checker" className="font-semibold text-accent-700 underline-offset-2 hover:underline">
+          <Link href="/tools/ai-crawler-checker" className="font-semibold text-[color:var(--accent)] underline-offset-2 hover:underline">
             See the full 34-bot breakdown
           </Link>
           .
@@ -518,12 +519,12 @@ function ScanReport({ data }: { data: ScanData }) {
   return (
     <div className="mt-6 space-y-5">
       {data.reportState === "access_blocked" && (
-        <div className="rounded-2xl border border-rose-200 bg-rose-50 p-5 sm:p-6">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-rose-700">Access blocked</p>
-          <h3 className="mt-2 text-lg font-bold tracking-tight text-rose-900">
+        <div className="rounded-[8px] border border-[color:var(--fail-line)] bg-[color:var(--fail-bg)] p-5 sm:p-6">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-[color:var(--fail)]">Access blocked</p>
+          <h3 className="mt-2 text-lg font-bold tracking-tight text-[color:var(--white)]">
             Your site blocked our scanner, so it very likely blocks AI crawlers too.
           </h3>
-          <p className="mt-2 text-[14px] leading-relaxed text-rose-900/90">
+          <p className="mt-2 text-[14px] leading-relaxed text-[color:var(--text)]">
             We could not fetch enough of the site to score it honestly, so we are not going to invent a number. A bot-protection
             rule, a WAF, or a 403 on non-browser user agents is the usual cause. Fix the access layer first, then re-run this
             scan.
@@ -532,11 +533,11 @@ function ScanReport({ data }: { data: ScanData }) {
       )}
 
       {/* Hero: the readiness level is the headline, the score supports it. */}
-      <div className="rounded-2xl border border-gray-200 bg-white p-6 sm:p-7">
+      <div className="rounded-[8px] border border-[color:var(--line-strong)] bg-[color:var(--surface)] p-6 sm:p-7">
         {data.readinessLevel !== null && data.readinessLevelName && (
           <>
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">Agent readiness level</p>
-            <h3 className="mt-2 text-[clamp(1.4rem,3vw,2rem)] font-bold leading-tight tracking-tight text-gray-900">
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-[color:var(--accent)]">Agent readiness level</p>
+            <h3 className="mt-2 text-[clamp(1.4rem,3vw,2rem)] font-bold leading-tight tracking-tight text-[color:var(--white)]">
               Level {data.readinessLevel} of 4 · {data.readinessLevelName}
             </h3>
             <ol className="mt-4 flex items-center gap-1.5" aria-label={`Readiness level ${data.readinessLevel} of 4`}>
@@ -545,12 +546,12 @@ function ScanReport({ data }: { data: ScanData }) {
                 return (
                   <li key={step} className="flex flex-1 flex-col items-center gap-1.5">
                     <span
-                      className={`h-1.5 w-full rounded-full ${reached ? "bg-accent-500" : "bg-gray-200"}`}
+                      className={`h-1.5 w-full rounded-full ${reached ? "bg-[color:var(--accent)]" : "bg-[color:var(--line-strong)]"}`}
                       aria-hidden="true"
                     />
                     <span
                       className={`font-mono text-[11px] tabular-nums ${
-                        step === data.readinessLevel ? "font-bold text-accent-700" : "text-gray-400"
+                        step === data.readinessLevel ? "font-bold text-[color:var(--accent)]" : "text-[color:var(--muted)]"
                       }`}
                     >
                       {step}
@@ -560,46 +561,46 @@ function ScanReport({ data }: { data: ScanData }) {
               })}
             </ol>
             {(data.readinessLevelCapped || !data.readinessLevelReliable) && (
-              <p className="mt-3 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-[12.5px] leading-relaxed text-amber-900">
+              <p className="mt-3 rounded-[4px] border border-[color:var(--warn-line)] bg-[color:var(--warn-bg)] px-3 py-2 text-[12.5px] leading-relaxed text-[color:var(--warn)]">
                 {data.readinessLevelCapped
                   ? "This level is capped: a failing prerequisite holds it below what the rest of your signals would earn."
                   : "Treat this level as provisional. Part of the scan could not be verified on this run."}
               </p>
             )}
             {data.nextLevelLines.length > 0 && (
-              <div className="mt-4 rounded-xl border border-gray-100 bg-gray-50 px-4 py-3">
-                <p className="font-mono text-[10px] font-semibold uppercase tracking-widest text-gray-500">Next level</p>
+              <div className="mt-4 rounded-[4px] border border-[color:var(--line)] bg-[color:var(--surface-2)] px-4 py-3">
+                <p className="font-mono text-[10px] font-semibold uppercase tracking-widest text-[color:var(--muted)]">Next level</p>
                 <ul className="mt-2 space-y-1.5">
                   {data.nextLevelLines.map((line, i) => (
-                    <li key={i} className="text-[13px] leading-relaxed text-gray-700">
+                    <li key={i} className="text-[13px] leading-relaxed text-[color:var(--text)]">
                       {line}
                     </li>
                   ))}
                 </ul>
               </div>
             )}
-            <div className="my-6 h-px bg-gray-100" />
+            <div className="my-6 h-px bg-[color:var(--line-strong)]" />
           </>
         )}
 
         <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-400">Readiness score</p>
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-[color:var(--muted)]">Readiness score</p>
             {rateable ? (
               <>
                 <p className={`mt-2 text-5xl font-bold tracking-tight tabular-nums ${TONE_TEXT[band.tone]}`}>
                   {data.overallScore}
-                  <span className="text-2xl text-gray-400">/100</span>
+                  <span className="text-2xl text-[color:var(--muted)]">/100</span>
                 </p>
-                <p className="mt-1 text-[13px] text-gray-500">
+                <p className="mt-1 text-[13px] text-[color:var(--muted)]">
                   Grade {data.grade} · {band.label}
                   {data.scoredCheckCount > 0 && <> · {data.scoredCheckCount} scored checks</>}
                 </p>
               </>
             ) : (
               <>
-                <p className="mt-2 text-3xl font-bold tracking-tight text-slate-500">Not rateable</p>
-                <p className="mt-1 max-w-md text-[13px] leading-relaxed text-gray-500">
+                <p className="mt-2 text-3xl font-bold tracking-tight text-[color:var(--muted)]">Not rateable</p>
+                <p className="mt-1 max-w-md text-[13px] leading-relaxed text-[color:var(--muted)]">
                   Too little of the site could be verified to publish a score. That is a real finding, not a zero: an unscoreable
                   site is usually one AI crawlers cannot read either.
                 </p>
@@ -607,7 +608,7 @@ function ScanReport({ data }: { data: ScanData }) {
             )}
           </div>
           {rateable && (
-            <div className={`rounded-xl border px-4 py-3 text-[13px] sm:max-w-[16rem] ${TONE_PANEL[band.tone]}`}>
+            <div className={`rounded-[4px] border px-4 py-3 text-[13px] sm:max-w-[16rem] ${TONE_PANEL[band.tone]}`}>
               <span className="font-semibold">{band.label}.</span> Bands are the same ones the paid tracker uses, so this number
               is comparable to your scans there.
             </div>
@@ -615,7 +616,7 @@ function ScanReport({ data }: { data: ScanData }) {
         </div>
 
         {rateable && lowConfidence && (
-          <p className="mt-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-[12.5px] leading-relaxed text-amber-900">
+          <p className="mt-4 rounded-[4px] border border-[color:var(--warn-line)] bg-[color:var(--warn-bg)] px-3 py-2 text-[12.5px] leading-relaxed text-[color:var(--warn)]">
             Low confidence: only {clampPct(data.coverageRatio * 100)}% of the applicable checks could be verified on this run, so
             read the score as indicative and re-run it later.
           </p>
@@ -624,8 +625,8 @@ function ScanReport({ data }: { data: ScanData }) {
 
       {/* Pillars */}
       {data.pillars.length > 0 && (
-        <div className="rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-400">Where the points came from</p>
+        <div className="rounded-[8px] border border-[color:var(--line-strong)] bg-[color:var(--surface)] p-5 sm:p-6">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-[color:var(--muted)]">Where the points came from</p>
           <ul className="mt-4 space-y-3.5">
             {data.pillars.map((p) => {
               const pct = p.max > 0 ? clampPct((p.score / p.max) * 100) : 0
@@ -633,13 +634,13 @@ function ScanReport({ data }: { data: ScanData }) {
               return (
                 <li key={p.id}>
                   <div className="flex items-baseline justify-between gap-4">
-                    <span className="text-[14px] font-semibold text-gray-900">{p.label}</span>
-                    <span className="font-mono text-[12px] tabular-nums text-gray-500">
+                    <span className="text-[14px] font-semibold text-[color:var(--white)]">{p.label}</span>
+                    <span className="font-mono text-[12px] tabular-nums text-[color:var(--muted)]">
                       {p.score}/{p.max}
                     </span>
                   </div>
-                  <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-gray-100">
-                    <div className={`h-full rounded-full ${TONE_BAR[tone]}`} style={{ width: `${pct}%` }} />
+                  <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-[color:var(--surface-2)]">
+                    <div className={`h-full rounded-[3px] ${TONE_BAR[tone]}`} style={{ width: `${pct}%` }} />
                   </div>
                 </li>
               )
@@ -650,21 +651,21 @@ function ScanReport({ data }: { data: ScanData }) {
 
       {/* Live-probe evidence */}
       {crawlerCheck && (
-        <div className="rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
+        <div className="rounded-[8px] border border-[color:var(--line-strong)] bg-[color:var(--surface)] p-5 sm:p-6">
           <div className="flex flex-wrap items-center gap-2">
             <span
-              className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
+              className={`rounded-[3px] border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
                 STATE_META[crawlerCheck.state].chip
               }`}
             >
               {STATE_META[crawlerCheck.state].label}
             </span>
-            <span className="text-[15px] font-semibold text-gray-900">{crawlerCheck.label}</span>
-            <span className="font-mono text-[11px] text-gray-400">live probe</span>
+            <span className="text-[15px] font-semibold text-[color:var(--white)]">{crawlerCheck.label}</span>
+            <span className="font-mono text-[11px] text-[color:var(--muted)]">live probe</span>
           </div>
-          <p className="mt-2 text-[13px] leading-relaxed text-gray-600">{crawlerCheck.evidence}</p>
-          {crawlerCheck.why && <p className="mt-1 text-[13px] leading-relaxed text-gray-500">{crawlerCheck.why}</p>}
-          <p className="mt-2 text-[12px] leading-relaxed text-gray-400">
+          <p className="mt-2 text-[13px] leading-relaxed text-[color:var(--muted)]">{crawlerCheck.evidence}</p>
+          {crawlerCheck.why && <p className="mt-1 text-[13px] leading-relaxed text-[color:var(--muted)]">{crawlerCheck.why}</p>}
+          <p className="mt-2 text-[12px] leading-relaxed text-[color:var(--muted)]">
             This is an actual request sent from our server with each bot user agent, so it catches WAF and 403 blocks that a
             robots.txt reading cannot see.
           </p>
@@ -673,26 +674,26 @@ function ScanReport({ data }: { data: ScanData }) {
 
       {/* Top fixes */}
       {fixes.length > 0 ? (
-        <div className="rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-400">
+        <div className="rounded-[8px] border border-[color:var(--line-strong)] bg-[color:var(--surface)] p-5 sm:p-6">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-[color:var(--muted)]">
             Fix these first
           </p>
           <ul className="mt-4 space-y-3">
             {fixes.map((c) => (
-              <li key={c.id} className="rounded-xl border border-gray-100 bg-gray-50/60 p-4">
+              <li key={c.id} className="rounded-[4px] border border-[color:var(--line)] bg-[color:var(--surface-2)] p-4">
                 <div className="flex flex-wrap items-center gap-2">
                   <span
-                    className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
+                    className={`rounded-[3px] border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
                       STATE_META[c.state].chip
                     }`}
                   >
                     {STATE_META[c.state].label}
                   </span>
-                  <span className="text-[15px] font-semibold text-gray-900">{c.label}</span>
-                  <span className="font-mono text-[11px] tabular-nums text-gray-400">{c.weight} pts</span>
+                  <span className="text-[15px] font-semibold text-[color:var(--white)]">{c.label}</span>
+                  <span className="font-mono text-[11px] tabular-nums text-[color:var(--muted)]">{c.weight} pts</span>
                 </div>
-                {c.evidence && <p className="mt-1.5 text-[13px] leading-relaxed text-gray-600">{c.evidence}</p>}
-                <p className="mt-1.5 text-[13px] leading-relaxed text-gray-900">
+                {c.evidence && <p className="mt-1.5 text-[13px] leading-relaxed text-[color:var(--muted)]">{c.evidence}</p>}
+                <p className="mt-1.5 text-[13px] leading-relaxed text-[color:var(--white)]">
                   <span className="font-semibold">Fix:</span> {c.fix}
                 </p>
               </li>
@@ -701,7 +702,7 @@ function ScanReport({ data }: { data: ScanData }) {
         </div>
       ) : (
         rateable && (
-          <div className="rounded-2xl border border-accent-200 bg-accent-50 p-5 text-[13px] leading-relaxed text-accent-900 sm:p-6">
+          <div className="rounded-[8px] border border-[color:var(--line-lime)] bg-[color:var(--pass-bg)] p-5 text-[13px] leading-relaxed text-[color:var(--accent)] sm:p-6">
             Nothing failed or warned with a fix attached. The plumbing is not what is holding this site back, which means any
             visibility gap is a content and authority problem.
           </div>
@@ -710,11 +711,11 @@ function ScanReport({ data }: { data: ScanData }) {
 
       {/* Advanced, unscored */}
       {advancedChips.length > 0 && (
-        <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50/60 p-5 sm:p-6">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-slate-500">
-            Agent surfaces <span className="text-slate-400">· detected, not scored</span>
+        <div className="rounded-[8px] border border-dashed border-[color:var(--line-strong)] bg-[color:var(--surface-2)] p-5 sm:p-6">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-[color:var(--muted)]">
+            Agent surfaces <span className="text-[color:var(--muted)]">· detected, not scored</span>
           </p>
-          <p className="mt-2 text-[12.5px] leading-relaxed text-slate-600">
+          <p className="mt-2 text-[12.5px] leading-relaxed text-[color:var(--muted)]">
             Emerging conventions that let agents call you rather than just read you. Almost no site implements them yet, so they
             never move your score.
           </p>
@@ -722,7 +723,7 @@ function ScanReport({ data }: { data: ScanData }) {
             {advancedChips.map((a) => (
               <li
                 key={a.id}
-                className={`rounded-full border px-3 py-1 text-[12px] ${STATE_META[a.state].chip}`}
+                className={`rounded-[3px] border px-3 py-1 text-[12px] ${STATE_META[a.state].chip}`}
                 title={a.evidence}
               >
                 <span className="font-semibold">{a.label}</span>
@@ -734,21 +735,21 @@ function ScanReport({ data }: { data: ScanData }) {
       )}
 
       {/* Honesty panel */}
-      <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 text-[13px] leading-relaxed text-slate-700">
-        <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-slate-500">
+      <div className="rounded-[8px] border border-[color:var(--line-strong)] bg-[color:var(--surface-2)] p-5 text-[13px] leading-relaxed text-[color:var(--text)]">
+        <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-[color:var(--muted)]">
           What this proves, and what it does not
         </p>
         <ul className="mt-3 space-y-1.5">
           <li>
-            · <strong className="text-slate-900">It measures readability, not citations.</strong> A perfect score says agents can
+            · <strong className="text-[color:var(--white)]">It measures readability, not citations.</strong> A perfect score says agents can
             read you. Whether they quote you is a content and authority question.
           </li>
           <li>
-            · <strong className="text-slate-900">It is a point-in-time result.</strong> Robots rules, WAF rules and rendering all
+            · <strong className="text-[color:var(--white)]">It is a point-in-time result.</strong> Robots rules, WAF rules and rendering all
             change. Re-run it after any infrastructure change.
           </li>
           <li>
-            · <strong className="text-slate-900">The probe comes from our IP.</strong> Sites that allowlist crawlers by IP rather
+            · <strong className="text-[color:var(--white)]">The probe comes from our IP.</strong> Sites that allowlist crawlers by IP rather
             than user agent may behave differently for the real bots.
           </li>
         </ul>
@@ -761,13 +762,13 @@ function ScanReport({ data }: { data: ScanData }) {
 
 function MidCta({ blocked }: { blocked: number }) {
   return (
-    <div className="mt-5 rounded-2xl border border-gray-900 bg-gray-950 p-6 sm:p-7">
+    <div className={`mt-5 rounded-[8px] border border-[color:var(--line-strong)] bg-[color:var(--code-bg)] p-6 sm:p-7 ${tk.bridgeIn}`}>
       <h3 className="text-lg font-bold tracking-tight text-white">
         {blocked > 0
           ? `${blocked} AI crawlers cannot read your site. See what AI actually says about you.`
           : "You have gaps agents can feel. See what AI actually says about you."}
       </h3>
-      <p className="mt-2 text-[14px] leading-relaxed text-gray-300">
+      <p className="mt-2 text-[14px] leading-relaxed text-[color:var(--muted)]">
         This scan tells you whether AI can read your site. It cannot tell you whether ChatGPT, Perplexity, Gemini, Claude, AI
         Overviews or Bing mention you when a buyer asks. That takes running the prompts.
       </p>
@@ -775,7 +776,7 @@ function MidCta({ blocked }: { blocked: number }) {
         <Link
           href="/services/ai-seo-agency?utm_source=agent-readiness-scanner"
           prefetch={false}
-          className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-[15px] font-semibold text-gray-950 transition-colors hover:bg-gray-100"
+          className="inline-flex items-center gap-2 rounded-[3px] bg-[color:var(--accent)] px-6 py-3 text-[15px] font-semibold text-[color:var(--accent-ink)] transition-colors hover:bg-[color:var(--accent-hover)]"
         >
           Get your AI Visibility Snapshot
           <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">

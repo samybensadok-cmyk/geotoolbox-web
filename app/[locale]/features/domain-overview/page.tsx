@@ -9,6 +9,8 @@ import { siteConfig } from "@/lib/config"
 import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema } from "@/lib/seo-schema"
 import { marketingAlternatesFor } from "@/lib/i18n/siblings"
+import { kit as k, Arrow } from "@/components/brand/dark-kit"
+import { FeaturePage, FxSection, FxHead, FeatureCloseCta, fx } from "@/components/features/fx"
 
 // Localized Domain Overview feature page: en at /features/domain-overview,
 // fr at /fr/features/domain-overview. Relocated from
@@ -80,7 +82,7 @@ export default async function DomainOverviewPage({
   const breadcrumbLabels = { home: c("breadcrumbHome"), features: c("breadcrumbFeatures") }
 
   return (
-    <>
+    <FeaturePage>
       <JsonLd data={[
         softwareApplicationSchema({
           name: "Domain Overview",
@@ -163,100 +165,74 @@ export default async function DomainOverviewPage({
       </FeatureHero>
 
       {/* What's inside */}
-      <section id="whats-inside" className="border-t border-gray-100 bg-white px-6 py-24 sm:py-28">
-        <div className="mx-auto max-w-7xl">
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-[5fr_7fr] lg:items-end lg:gap-16">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">{t("whatsInside.eyebrow")}</p>
-              <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.5rem)] font-bold leading-tight tracking-tight text-gray-900">
-                {t("whatsInside.h2")}
-              </h2>
-            </div>
-            <p className="max-w-xl text-base leading-relaxed text-gray-600">
-              {t("whatsInside.intro")}
-            </p>
-          </div>
+      <FxSection id="whats-inside">
+        <FxHead eyebrow={t("whatsInside.eyebrow")} title={t("whatsInside.h2")} lead={t("whatsInside.intro")} leadSide />
 
-          <div className="mt-14 grid grid-cols-1 gap-x-8 gap-y-12 md:grid-cols-2 lg:grid-cols-3 lg:gap-x-10">
-            {sections.map((s) => (
-              <div key={s.tag} className="relative pl-12">
-                <span
-                  aria-hidden="true"
-                  className="absolute left-0 top-0 font-mono text-[22px] font-bold tabular-nums leading-none text-accent-500"
-                >
-                  {s.num}
-                </span>
-                <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-                  {s.tag}
-                </p>
-                <h3 className="mt-2 text-lg font-semibold tracking-tight text-gray-900">{s.title}</h3>
-                <p className="mt-2 text-[15px] leading-relaxed text-gray-600">{s.body}</p>
-              </div>
-            ))}
-          </div>
+        <div className="grid grid-cols-1 gap-x-8 gap-y-12 md:grid-cols-2 lg:grid-cols-3 lg:gap-x-10">
+          {sections.map((s) => (
+            <div key={s.tag} className="relative pl-12">
+              <span
+                aria-hidden="true"
+                className="absolute left-0 top-0 font-mono text-[22px] font-bold tabular-nums leading-none text-accent-500"
+              >
+                {s.num}
+              </span>
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+                {s.tag}
+              </p>
+              <h3 className="mt-2 text-lg font-semibold tracking-tight text-gray-900">{s.title}</h3>
+              <p className="mt-2 text-[15px] leading-relaxed text-gray-600">{s.body}</p>
+            </div>
+          ))}
         </div>
-      </section>
+      </FxSection>
 
       {/* AI competitors visual */}
-      <section className="border-t border-[var(--surface-steel-border)] bg-[var(--surface-steel)] px-6 py-24 sm:py-28">
-        <div className="mx-auto max-w-7xl">
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
-            <div className="lg:col-span-5">
-              <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">{t("sov.eyebrow")}</p>
-              <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.5rem)] font-bold leading-tight tracking-tight text-gray-900">
-                {t("sov.h2")}
-              </h2>
-              <p className="mt-5 text-base leading-relaxed text-gray-600">
-                {t("sov.body")}
-              </p>
-            </div>
+      <FxSection band>
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
+          <div className="lg:col-span-5">
+            <FxHead eyebrow={t("sov.eyebrow")} title={t("sov.h2")} lead={t("sov.body")} />
+          </div>
 
-            <div className="lg:col-span-7">
-              <figure aria-label={t("sov.figureAria")} className="m-0 rounded-[2rem] border border-gray-200 bg-white p-6 sm:p-8 shadow-[0_20px_40px_-20px_rgba(15,23,42,0.08)]">
-                <span className="sr-only">{t("sov.figureSrOnly")}</span>
-                <div className="flex items-center justify-between border-b border-gray-100 pb-3">
-                  <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-600">
-                    Top 4 of 12 · share of voice
-                  </span>
-                  <span className="font-mono text-[11px] text-gray-500">30 days</span>
-                </div>
-                <div className="mt-4 divide-y divide-gray-100">
-                  {aiCompetitors.map((comp) => {
-                    const positive = comp.delta.startsWith("+")
-                    return (
-                      <div key={comp.domain} className="py-4">
-                        <div className="flex items-center justify-between">
-                          <span className="font-mono text-[13px] font-medium text-gray-900">{comp.domain}</span>
-                          <div className="flex items-center gap-3">
-                            <span className="font-mono text-sm font-semibold tabular-nums text-accent-700">{comp.share}%</span>
-                            <span className={`font-mono text-[11px] font-semibold ${positive ? "text-accent-700" : "text-red-600"}`}>{comp.delta}</span>
-                          </div>
-                        </div>
-                        <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-gray-100">
-                          <div className="h-full rounded-full bg-accent-700" style={{ width: `${comp.share}%` }} />
+          <div className="lg:col-span-7">
+            <figure aria-label={t("sov.figureAria")} className="m-0 rounded-[2rem] border border-gray-200 bg-white p-6 sm:p-8 shadow-[0_20px_40px_-20px_rgba(15,23,42,0.08)]">
+              <span className="sr-only">{t("sov.figureSrOnly")}</span>
+              <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+                <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-600">
+                  Top 4 of 12 · share of voice
+                </span>
+                <span className="font-mono text-[11px] text-gray-500">30 days</span>
+              </div>
+              <div className="mt-4 divide-y divide-gray-100">
+                {aiCompetitors.map((comp) => {
+                  const positive = comp.delta.startsWith("+")
+                  return (
+                    <div key={comp.domain} className="py-4">
+                      <div className="flex items-center justify-between">
+                        <span className="font-mono text-[13px] font-medium text-gray-900">{comp.domain}</span>
+                        <div className="flex items-center gap-3">
+                          <span className="font-mono text-sm font-semibold tabular-nums text-accent-700">{comp.share}%</span>
+                          <span className={`font-mono text-[11px] font-semibold ${positive ? "text-accent-700" : "text-red-600"}`}>{comp.delta}</span>
                         </div>
                       </div>
-                    )
-                  })}
-                </div>
-                <div className="mt-5 flex items-center justify-between border-t border-gray-100 pt-4">
-                  <span className="text-[13px] text-gray-500">{t("sov.figureCaption")}</span>
-                  <Link
-                    href="/app"
-                    prefetch={false}
-                    className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-accent-700 hover:text-accent-900"
-                  >
-                    {t("sov.figureCta")}
-                    <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </Link>
-                </div>
-              </figure>
-            </div>
+                      <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-gray-100">
+                        <div className="h-full rounded-full bg-accent-700" style={{ width: `${comp.share}%` }} />
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+              <div className="mt-5 flex items-center justify-between border-t border-gray-100 pt-4">
+                <span className="text-[13px] text-gray-500">{t("sov.figureCaption")}</span>
+                <Link href="/app" prefetch={false} className={`${k.textLink} ${fx.tap}`}>
+                  {t("sov.figureCta")}
+                  <Arrow />
+                </Link>
+              </div>
+            </figure>
           </div>
         </div>
-      </section>
+      </FxSection>
 
       <FeatureFaq items={faqs} heading={c("faqHeading")} />
 
@@ -268,23 +244,13 @@ export default async function DomainOverviewPage({
         descriptions={cardDescriptions}
       />
 
-      {/* CTA */}
-      <section className="bg-gray-950 px-6 py-20 sm:py-24">
-        <div className="mx-auto max-w-7xl flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between md:gap-12">
-          <div>
-            <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
-              {t("finalCta.h2")}
-            </h2>
-            <p className="mt-2 text-base text-gray-300">{t("finalCta.sub")}</p>
-          </div>
-          <Link href="/app" prefetch={false} className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]">
-            {t("finalCta.button")}
-            <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </Link>
-        </div>
-      </section>
-    </>
+      {/* Final CTA */}
+      <FeatureCloseCta title={t("finalCta.h2")} sub={t("finalCta.sub")}>
+        <Link href="/app" prefetch={false} className={k.btnLime}>
+          {t("finalCta.button")}
+          <Arrow />
+        </Link>
+      </FeatureCloseCta>
+    </FeaturePage>
   )
 }

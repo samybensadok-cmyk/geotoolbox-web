@@ -4,6 +4,7 @@ import { useDeferredValue, useMemo, useRef, useState } from "react"
 import type { ExtractResult } from "@/lib/sitemap-extract"
 import type { AuditResult } from "@/lib/sitemap-audit"
 import { trackEvent } from "@/lib/analytics"
+import tk from "./tools-dark.module.css"
 
 /**
  * Sitemap URL extractor + auditor. Paste a sitemap URL, a bare domain, or the
@@ -74,15 +75,15 @@ function hostOf(u: string): string {
 }
 
 function statusTone(s: UrlStatus | undefined): string {
-  if (!s) return "text-gray-400"
-  if (s.status === null) return "text-red-600"
-  if (s.status >= 200 && s.status < 300) return "text-emerald-600"
-  if (s.status >= 300 && s.status < 400) return "text-amber-600"
-  return "text-red-600"
+  if (!s) return "text-[color:var(--muted)]"
+  if (s.status === null) return "text-[color:var(--fail)]"
+  if (s.status >= 200 && s.status < 300) return "text-[color:var(--accent)]"
+  if (s.status >= 300 && s.status < 400) return "text-[color:var(--warn)]"
+  return "text-[color:var(--fail)]"
 }
 
 const inputCls =
-  "w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-[14px] text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-accent-500 focus:ring-2 focus:ring-accent-200 disabled:bg-gray-50 disabled:text-gray-400"
+  "w-full rounded-[4px] border border-[color:var(--line-strong)] bg-[color:var(--bg)] px-3 py-2 text-[14px] text-[color:var(--white)] outline-none transition-colors placeholder:text-[color:var(--subtle)] focus:border-[color:var(--accent)] focus:ring-2 focus:ring-[color:var(--focus-ring)] disabled:bg-[color:var(--surface-2)] disabled:text-[color:var(--subtle)]"
 
 export function SitemapExtractorWidget() {
   const [input, setInput] = useState("")
@@ -221,7 +222,7 @@ export function SitemapExtractorWidget() {
   }, [statuses])
 
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
+    <div className="rounded-[8px] border border-[color:var(--line-strong)] bg-[color:var(--surface)] p-5 sm:p-6">
       <form onSubmit={run} className="flex flex-col gap-3" aria-busy={loading}>
         {!pasteMode ? (
           <div className="flex flex-col gap-3 sm:flex-row">
@@ -243,7 +244,7 @@ export function SitemapExtractorWidget() {
             <button
               type="submit"
               disabled={loading || !input.trim()}
-              className="shrink-0 rounded-lg bg-accent-600 px-6 py-2.5 text-[14px] font-semibold text-white transition-colors hover:bg-accent-500 disabled:cursor-not-allowed disabled:opacity-50"
+              className="shrink-0 rounded-[3px] bg-[color:var(--accent)] px-6 py-2.5 text-[14px] font-semibold text-[color:var(--accent-ink)] transition-colors hover:bg-[color:var(--accent-hover)] disabled:cursor-not-allowed disabled:opacity-50"
             >
               {loading ? "Extracting…" : "Extract URLs"}
             </button>
@@ -266,14 +267,14 @@ export function SitemapExtractorWidget() {
               <button
                 type="submit"
                 disabled={loading || !xml.trim()}
-                className="rounded-lg bg-accent-600 px-6 py-2.5 text-[14px] font-semibold text-white transition-colors hover:bg-accent-500 disabled:cursor-not-allowed disabled:opacity-50"
+                className="rounded-[3px] bg-[color:var(--accent)] px-6 py-2.5 text-[14px] font-semibold text-[color:var(--accent-ink)] transition-colors hover:bg-[color:var(--accent-hover)] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {loading ? "Parsing…" : "Parse sitemap"}
               </button>
               <button
                 type="button"
                 onClick={() => fileRef.current?.click()}
-                className="rounded-lg border border-gray-300 px-4 py-2.5 text-[13px] font-medium text-gray-700 transition-colors hover:border-gray-400"
+                className="rounded-[4px] border border-[color:var(--line-strong)] px-4 py-2.5 text-[13px] font-medium text-[color:var(--text)] transition-colors hover:border-[color:var(--line-lime)]"
               >
                 Upload a file
               </button>
@@ -282,18 +283,18 @@ export function SitemapExtractorWidget() {
           </>
         )}
 
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[12.5px] leading-relaxed text-gray-500">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[12.5px] leading-relaxed text-[color:var(--muted)]">
           {!pasteMode ? (
             <>
               <span>
                 Bare domain works — we read robots.txt, then probe the common paths (including{" "}
-                <code className="rounded bg-gray-100 px-1 text-gray-600">wp-sitemap.xml</code>). Index files are
-                walked and <code className="rounded bg-gray-100 px-1 text-gray-600">.xml.gz</code> is decompressed.
+                <code className="rounded bg-[color:var(--surface-2)] px-1 text-[color:var(--muted)]">wp-sitemap.xml</code>). Index files are
+                walked and <code className="rounded bg-[color:var(--surface-2)] px-1 text-[color:var(--muted)]">.xml.gz</code> is decompressed.
               </span>
               <button
                 type="button"
                 onClick={() => setPasteMode(true)}
-                className="font-medium text-accent-700 underline-offset-2 hover:underline"
+                className="font-medium text-[color:var(--accent)] underline-offset-2 hover:underline"
               >
                 Or paste / upload the file
               </button>
@@ -304,7 +305,7 @@ export function SitemapExtractorWidget() {
               <button
                 type="button"
                 onClick={() => setPasteMode(false)}
-                className="font-medium text-accent-700 underline-offset-2 hover:underline"
+                className="font-medium text-[color:var(--accent)] underline-offset-2 hover:underline"
               >
                 Back to fetching by URL
               </button>
@@ -322,7 +323,7 @@ export function SitemapExtractorWidget() {
       </p>
 
       {err && (
-        <div role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-[14px] leading-relaxed text-red-800">
+        <div role="alert" className="mt-5 rounded-[4px] border border-[color:var(--fail-line)] bg-[color:var(--fail-bg)] p-4 text-[14px] leading-relaxed text-[color:var(--fail)]">
           {err}
           {!pasteMode && /blocked our request|403/.test(err) && (
             <>
@@ -330,7 +331,7 @@ export function SitemapExtractorWidget() {
               <button
                 type="button"
                 onClick={() => setPasteMode(true)}
-                className="font-semibold underline underline-offset-2"
+                className={`font-semibold underline underline-offset-2 ${tk.inlineBtn}`}
               >
                 Paste the file instead
               </button>
@@ -341,7 +342,7 @@ export function SitemapExtractorWidget() {
       )}
 
       {loading && (
-        <p className="mt-5 text-[13px] leading-relaxed text-gray-500">
+        <p className="mt-5 text-[13px] leading-relaxed text-[color:var(--muted)]">
           Walking the sitemap. A large index with many child files can take up to a minute.
         </p>
       )}
@@ -360,21 +361,21 @@ export function SitemapExtractorWidget() {
               },
               { label: "Health", value: audit ? (audit.complete ? `${audit.score}/100` : `${audit.score}/100*`) : "—" },
             ].map((s) => (
-              <div key={s.label} className="rounded-xl border border-gray-100 bg-gray-50/60 p-3">
-                <div className="font-mono text-[10.5px] font-semibold uppercase tracking-widest text-gray-500">{s.label}</div>
-                <div className="mt-1 text-[18px] font-bold tracking-tight text-gray-900">{s.value}</div>
+              <div key={s.label} className="rounded-[4px] border border-[color:var(--line)] bg-[color:var(--surface-2)] p-3">
+                <div className="font-mono text-[10.5px] font-semibold uppercase tracking-widest text-[color:var(--muted)]">{s.label}</div>
+                <div className="mt-1 text-[18px] font-bold tracking-tight text-[color:var(--white)]">{s.value}</div>
               </div>
             ))}
           </div>
 
-          <p className="mt-3 break-all text-[12.5px] text-gray-500">
-            Read from <span className="font-mono text-gray-700">{result.resolvedFrom}</span>
+          <p className="mt-3 break-all text-[12.5px] text-[color:var(--muted)]">
+            Read from <span className="font-mono text-[color:var(--text)]">{result.resolvedFrom}</span>
           </p>
 
           {result.warnings.length > 0 && (
-            <ul className="mt-4 space-y-1.5 rounded-xl border border-amber-200 bg-amber-50 p-4">
+            <ul className="mt-4 space-y-1.5 rounded-[4px] border border-[color:var(--warn-line)] bg-[color:var(--warn-bg)] p-4">
               {result.warnings.map((w, i) => (
-                <li key={i} className="text-[13px] leading-relaxed text-amber-900">
+                <li key={i} className="text-[13px] leading-relaxed text-[color:var(--warn)]">
                   {w}
                 </li>
               ))}
@@ -383,7 +384,7 @@ export function SitemapExtractorWidget() {
 
           {/* Tabs */}
           <div
-            className="mt-5 flex gap-1 border-b border-gray-200"
+            className="mt-5 flex gap-1 border-b border-[color:var(--line-strong)]"
             role="tablist"
             aria-label="Extraction results"
             onKeyDown={(e) => {
@@ -419,13 +420,13 @@ export function SitemapExtractorWidget() {
                 onClick={() => setTab(id)}
                 className={`-mb-px border-b-2 px-3.5 py-2 text-[13px] font-semibold transition-colors ${
                   tab === id
-                    ? "border-accent-600 text-accent-700"
-                    : "border-transparent text-gray-500 hover:text-gray-800"
+                    ? "border-[color:var(--accent)] text-[color:var(--accent)]"
+                    : "border-transparent text-[color:var(--muted)] hover:text-[color:var(--white)]"
                 }`}
               >
                 {label}
                 {id === "issues" && errorCount > 0 && (
-                  <span className="ml-1.5 rounded-full bg-red-100 px-1.5 py-0.5 text-[10.5px] font-bold text-red-700">
+                  <span className="ml-1.5 rounded-[3px] bg-[color:var(--fail-bg-strong)] px-1.5 py-0.5 text-[10.5px] font-bold text-[color:var(--fail)]">
                     {errorCount}
                   </span>
                 )}
@@ -437,19 +438,19 @@ export function SitemapExtractorWidget() {
             <div id="panel-urls" role="tabpanel" aria-labelledby="tab-urls">
               <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
                 <div>
-                  <label htmlFor="f-include" className="mb-1 block font-mono text-[10.5px] font-semibold uppercase tracking-widest text-gray-500">
+                  <label htmlFor="f-include" className="mb-1 block font-mono text-[10.5px] font-semibold uppercase tracking-widest text-[color:var(--muted)]">
                     Include
                   </label>
                   <input id="f-include" className={inputCls} value={include} onChange={(e) => setInclude(e.target.value)} placeholder="/blog/" />
                 </div>
                 <div>
-                  <label htmlFor="f-exclude" className="mb-1 block font-mono text-[10.5px] font-semibold uppercase tracking-widest text-gray-500">
+                  <label htmlFor="f-exclude" className="mb-1 block font-mono text-[10.5px] font-semibold uppercase tracking-widest text-[color:var(--muted)]">
                     Exclude
                   </label>
                   <input id="f-exclude" className={inputCls} value={exclude} onChange={(e) => setExclude(e.target.value)} placeholder="/tag/" />
                 </div>
                 <div>
-                  <label htmlFor="f-sort" className="mb-1 block font-mono text-[10.5px] font-semibold uppercase tracking-widest text-gray-500">
+                  <label htmlFor="f-sort" className="mb-1 block font-mono text-[10.5px] font-semibold uppercase tracking-widest text-[color:var(--muted)]">
                     Sort
                   </label>
                   <select id="f-sort" className={inputCls} value={sort} onChange={(e) => setSort(e.target.value as Sort)}>
@@ -461,23 +462,23 @@ export function SitemapExtractorWidget() {
               </div>
 
               <div className="mt-3 flex flex-wrap items-center gap-2">
-                <button type="button" onClick={copyUrls} className="rounded-lg border border-gray-300 px-3.5 py-2 text-[13px] font-medium text-gray-700 transition-colors hover:border-gray-400">
+                <button type="button" onClick={copyUrls} className="rounded-[4px] border border-[color:var(--line-strong)] px-3.5 py-2 text-[13px] font-medium text-[color:var(--text)] transition-colors hover:border-[color:var(--line-lime)]">
                   {copied ? "Copied" : `Copy ${rows.length.toLocaleString()}`}
                 </button>
-                <button type="button" onClick={() => download(`${stem}-sitemap-urls.csv`, toCsv(rows, statuses), "text/csv;charset=utf-8")} className="rounded-lg border border-gray-300 px-3.5 py-2 text-[13px] font-medium text-gray-700 transition-colors hover:border-gray-400">
+                <button type="button" onClick={() => download(`${stem}-sitemap-urls.csv`, toCsv(rows, statuses), "text/csv;charset=utf-8")} className="rounded-[4px] border border-[color:var(--line-strong)] px-3.5 py-2 text-[13px] font-medium text-[color:var(--text)] transition-colors hover:border-[color:var(--line-lime)]">
                   CSV
                 </button>
-                <button type="button" onClick={() => download(`${stem}-sitemap-urls.txt`, rows.map((r) => r.loc).join("\n"), "text/plain;charset=utf-8")} className="rounded-lg border border-gray-300 px-3.5 py-2 text-[13px] font-medium text-gray-700 transition-colors hover:border-gray-400">
+                <button type="button" onClick={() => download(`${stem}-sitemap-urls.txt`, rows.map((r) => r.loc).join("\n"), "text/plain;charset=utf-8")} className="rounded-[4px] border border-[color:var(--line-strong)] px-3.5 py-2 text-[13px] font-medium text-[color:var(--text)] transition-colors hover:border-[color:var(--line-lime)]">
                   TXT
                 </button>
-                <button type="button" onClick={() => download(`${stem}-sitemap-urls.json`, JSON.stringify(rows.map((r) => ({ ...r, status: statuses.get(r.loc)?.status ?? null })), null, 2), "application/json")} className="rounded-lg border border-gray-300 px-3.5 py-2 text-[13px] font-medium text-gray-700 transition-colors hover:border-gray-400">
+                <button type="button" onClick={() => download(`${stem}-sitemap-urls.json`, JSON.stringify(rows.map((r) => ({ ...r, status: statuses.get(r.loc)?.status ?? null })), null, 2), "application/json")} className="rounded-[4px] border border-[color:var(--line-strong)] px-3.5 py-2 text-[13px] font-medium text-[color:var(--text)] transition-colors hover:border-[color:var(--line-lime)]">
                   JSON
                 </button>
                 <button
                   type="button"
                   onClick={checkStatuses}
                   disabled={checking || unchecked.length === 0}
-                  className="rounded-lg bg-gray-900 px-3.5 py-2 text-[13px] font-semibold text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-40"
+                  className="rounded-[3px] bg-[color:var(--accent)] px-3.5 py-2 text-[13px] font-semibold text-[color:var(--accent-ink)] transition-colors hover:bg-[color:var(--accent-hover)] disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   {checking
                     ? "Checking…"
@@ -490,54 +491,54 @@ export function SitemapExtractorWidget() {
               </div>
 
               {filtered && (
-                <p className="mt-2 text-[12.5px] text-gray-500">
+                <p className="mt-2 text-[12.5px] text-[color:var(--muted)]">
                   Filters are active — exports contain the {rows.length.toLocaleString()} matching URLs, not all{" "}
                   {result.urls.length.toLocaleString()}.
                 </p>
               )}
 
               {statusErr && (
-                <p role="alert" className="mt-2 text-[12.5px] font-medium text-red-700">
+                <p role="alert" className="mt-2 text-[12.5px] font-medium text-[color:var(--fail)]">
                   {statusErr}
                 </p>
               )}
 
               {statuses.size > 0 && (
-                <div className="mt-3 flex flex-wrap gap-4 rounded-xl border border-gray-200 bg-gray-50 p-3 text-[13px]">
-                  <span className="font-semibold text-gray-700">{statuses.size.toLocaleString()} checked:</span>
-                  <span className="text-emerald-700">{statusSummary.ok} OK</span>
-                  <span className="text-amber-700">{statusSummary.redirect} redirect</span>
-                  <span className="text-red-700">{statusSummary.broken} broken</span>
+                <div className="mt-3 flex flex-wrap gap-4 rounded-[4px] border border-[color:var(--line-strong)] bg-[color:var(--surface-2)] p-3 text-[13px]">
+                  <span className="font-semibold text-[color:var(--text)]">{statuses.size.toLocaleString()} checked:</span>
+                  <span className="text-[color:var(--accent)]">{statusSummary.ok} OK</span>
+                  <span className="text-[color:var(--warn)]">{statusSummary.redirect} redirect</span>
+                  <span className="text-[color:var(--fail)]">{statusSummary.broken} broken</span>
                 </div>
               )}
 
-              <div className="mt-4 overflow-hidden rounded-xl border border-gray-200">
+              <div className="mt-4 overflow-hidden rounded-[4px] border border-[color:var(--line-strong)]">
                 <div className="max-h-[32rem] overflow-auto">
                   <table className="w-full border-collapse text-left">
-                    <thead className="sticky top-0 bg-gray-50">
+                    <thead className="sticky top-0 bg-[color:var(--surface-2)]">
                       <tr>
-                        <th className="border-b border-gray-200 px-3 py-2 font-mono text-[10.5px] font-semibold uppercase tracking-widest text-gray-500">URL</th>
-                        <th className="w-16 border-b border-gray-200 px-3 py-2 font-mono text-[10.5px] font-semibold uppercase tracking-widest text-gray-500">Status</th>
-                        <th className="hidden border-b border-gray-200 px-3 py-2 font-mono text-[10.5px] font-semibold uppercase tracking-widest text-gray-500 sm:table-cell">Last modified</th>
+                        <th className="border-b border-[color:var(--line-strong)] px-3 py-2 font-mono text-[10.5px] font-semibold uppercase tracking-widest text-[color:var(--muted)]">URL</th>
+                        <th className="w-16 border-b border-[color:var(--line-strong)] px-3 py-2 font-mono text-[10.5px] font-semibold uppercase tracking-widest text-[color:var(--muted)]">Status</th>
+                        <th className="hidden border-b border-[color:var(--line-strong)] px-3 py-2 font-mono text-[10.5px] font-semibold uppercase tracking-widest text-[color:var(--muted)] sm:table-cell">Last modified</th>
                       </tr>
                     </thead>
                     <tbody>
                       {rows.slice(0, 1000).map((r) => {
                         const s = statuses.get(r.loc)
                         return (
-                          <tr key={r.loc} className="odd:bg-white even:bg-gray-50/50">
-                            <td className="border-b border-gray-100 px-3 py-1.5">
-                              <a href={r.loc} target="_blank" rel="noopener noreferrer nofollow" className="break-all font-mono text-[12.5px] text-gray-700 hover:text-accent-700 hover:underline">
+                          <tr key={r.loc} className="odd:bg-[color:var(--surface)] even:bg-[color:var(--surface-2)]">
+                            <td className="border-b border-[color:var(--line)] px-3 py-1.5">
+                              <a href={r.loc} target="_blank" rel="noopener noreferrer nofollow" className="break-all font-mono text-[12.5px] text-[color:var(--text)] hover:text-[color:var(--accent)] hover:underline">
                                 {r.loc}
                               </a>
                               {s?.redirectedTo && (
-                                <div className="break-all font-mono text-[11.5px] text-amber-700">→ {s.redirectedTo}</div>
+                                <div className="break-all font-mono text-[11.5px] text-[color:var(--warn)]">→ {s.redirectedTo}</div>
                               )}
                             </td>
-                            <td className={`whitespace-nowrap border-b border-gray-100 px-3 py-1.5 font-mono text-[12px] font-semibold ${statusTone(s)}`}>
+                            <td className={`whitespace-nowrap border-b border-[color:var(--line)] px-3 py-1.5 font-mono text-[12px] font-semibold ${statusTone(s)}`}>
                               {s ? (s.status ?? "ERR") : "—"}
                             </td>
-                            <td className="hidden whitespace-nowrap border-b border-gray-100 px-3 py-1.5 font-mono text-[12px] text-gray-500 sm:table-cell">
+                            <td className="hidden whitespace-nowrap border-b border-[color:var(--line)] px-3 py-1.5 font-mono text-[12px] text-[color:var(--muted)] sm:table-cell">
                               {r.lastmod?.slice(0, 10) ?? "—"}
                             </td>
                           </tr>
@@ -547,11 +548,11 @@ export function SitemapExtractorWidget() {
                   </table>
                 </div>
                 {rows.length > 1000 && (
-                  <p className="border-t border-gray-200 bg-gray-50 px-3 py-2 text-[12.5px] text-gray-600">
+                  <p className="border-t border-[color:var(--line-strong)] bg-[color:var(--surface-2)] px-3 py-2 text-[12.5px] text-[color:var(--muted)]">
                     Showing the first 1,000 of {rows.length.toLocaleString()}. Every one is in the exports.
                   </p>
                 )}
-                {rows.length === 0 && <p className="px-3 py-6 text-center text-[13px] text-gray-500">No URLs match those filters.</p>}
+                {rows.length === 0 && <p className="px-3 py-6 text-center text-[13px] text-[color:var(--muted)]">No URLs match those filters.</p>}
               </div>
             </div>
           )}
@@ -559,36 +560,36 @@ export function SitemapExtractorWidget() {
           {tab === "issues" && (
             <div id="panel-issues" role="tabpanel" aria-labelledby="tab-issues" className="mt-5">
               {!audit ? (
-                <p className="text-[14px] text-gray-600">The audit didn&apos;t run for this sitemap.</p>
+                <p className="text-[14px] text-[color:var(--muted)]">The audit didn&apos;t run for this sitemap.</p>
               ) : audit.issues.length === 0 ? (
-                <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-[14px] leading-relaxed text-emerald-900">
+                <div className="rounded-[4px] border border-[color:var(--line-lime)] bg-[color:var(--pass-bg)] p-4 text-[14px] leading-relaxed text-[color:var(--accent)]">
                   No issues found. Every URL is on-host, the lastmod values parse, and nothing in the sitemap is blocked by
                   robots.txt.
                 </div>
               ) : (
                 <ul className="space-y-3">
                   {audit.issues.map((iss) => (
-                    <li key={iss.id} className="rounded-xl border border-gray-200 bg-white p-4">
+                    <li key={iss.id} className="rounded-[4px] border border-[color:var(--line-strong)] bg-[color:var(--surface)] p-4">
                       <div className="flex flex-wrap items-center gap-2">
                         <span
-                          className={`rounded-full px-2 py-0.5 font-mono text-[10.5px] font-bold uppercase tracking-widest ${
+                          className={`rounded-[3px] px-2 py-0.5 font-mono text-[10.5px] font-bold uppercase tracking-widest ${
                             iss.severity === "error"
-                              ? "bg-red-100 text-red-700"
+                              ? "bg-[color:var(--fail-bg-strong)] text-[color:var(--fail)]"
                               : iss.severity === "warning"
-                                ? "bg-amber-100 text-amber-800"
-                                : "bg-gray-100 text-gray-600"
+                                ? "bg-[color:var(--warn-bg-strong)] text-[color:var(--warn)]"
+                                : "bg-[color:var(--surface-2)] text-[color:var(--muted)]"
                           }`}
                         >
                           {iss.severity}
                         </span>
-                        <span className="text-[14px] font-bold tracking-tight text-gray-900">{iss.title}</span>
-                        <span className="text-[12.5px] text-gray-500">{iss.count.toLocaleString()} affected</span>
+                        <span className="text-[14px] font-bold tracking-tight text-[color:var(--white)]">{iss.title}</span>
+                        <span className="text-[12.5px] text-[color:var(--muted)]">{iss.count.toLocaleString()} affected</span>
                       </div>
-                      <p className="mt-2 text-[13.5px] leading-relaxed text-gray-700">{iss.detail}</p>
+                      <p className="mt-2 text-[13.5px] leading-relaxed text-[color:var(--text)]">{iss.detail}</p>
                       {iss.samples.length > 0 && (
                         <ul className="mt-2 space-y-0.5">
                           {iss.samples.map((s, i) => (
-                            <li key={i} className="break-all font-mono text-[11.5px] text-gray-500">
+                            <li key={i} className="break-all font-mono text-[11.5px] text-[color:var(--muted)]">
                               {s}
                             </li>
                           ))}
@@ -600,7 +601,7 @@ export function SitemapExtractorWidget() {
               )}
 
               {audit && !audit.complete && (
-                <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-[13px] leading-relaxed text-amber-900">
+                <div className="mt-4 rounded-[4px] border border-[color:var(--warn-line)] bg-[color:var(--warn-bg)] p-4 text-[13px] leading-relaxed text-[color:var(--warn)]">
                   <span className="font-semibold">The score is marked with an asterisk because this audit is incomplete:</span>{" "}
                   {audit.incompleteReasons.join("; ")}. Treat it as a floor, not a verdict — a check that couldn&apos;t run
                   can&apos;t find anything wrong.
@@ -608,8 +609,8 @@ export function SitemapExtractorWidget() {
               )}
 
               {audit?.robots && (
-                <div className="mt-4 rounded-xl border border-gray-200 bg-gray-50 p-4 text-[13px] leading-relaxed text-gray-700">
-                  <span className="font-semibold text-gray-900">robots.txt: </span>
+                <div className="mt-4 rounded-[4px] border border-[color:var(--line-strong)] bg-[color:var(--surface-2)] p-4 text-[13px] leading-relaxed text-[color:var(--text)]">
+                  <span className="font-semibold text-[color:var(--white)]">robots.txt: </span>
                   {audit.robots.checked ? (
                     <>
                       read, {audit.robots.declaredSitemaps.length} sitemap
@@ -625,19 +626,19 @@ export function SitemapExtractorWidget() {
           )}
 
           {tab === "structure" && (
-            <div id="panel-structure" role="tabpanel" aria-labelledby="tab-structure" className="mt-5 overflow-hidden rounded-xl border border-gray-200">
-              <ul className="divide-y divide-gray-100">
+            <div id="panel-structure" role="tabpanel" aria-labelledby="tab-structure" className="mt-5 overflow-hidden rounded-[4px] border border-[color:var(--line-strong)]">
+              <ul className="divide-y divide-[color:var(--line)]">
                 {result.sitemaps.map((s, i) => (
-                  <li key={i} className={`flex flex-wrap items-baseline justify-between gap-2 px-4 py-2.5 ${s.kind === "index" ? "bg-gray-50" : ""}`}>
+                  <li key={i} className={`flex flex-wrap items-baseline justify-between gap-2 px-4 py-2.5 ${s.kind === "index" ? "bg-[color:var(--surface-2)]" : ""}`}>
                     <span className="flex min-w-0 items-baseline gap-2">
-                      <span className="shrink-0 font-mono text-[10px] font-bold uppercase tracking-widest text-gray-400">
+                      <span className="shrink-0 font-mono text-[10px] font-bold uppercase tracking-widest text-[color:var(--muted)]">
                         {s.kind === "index" ? "index" : s.kind === "text" ? "text" : "urls"}
                       </span>
-                      <span className={`break-all font-mono text-[12.5px] ${s.kind === "index" ? "text-gray-800" : "text-gray-600"}`}>
+                      <span className={`break-all font-mono text-[12.5px] ${s.kind === "index" ? "text-[color:var(--white)]" : "text-[color:var(--muted)]"}`}>
                         {s.kind === "index" ? s.url : <>&nbsp;&nbsp;└─ {s.url}</>}
                       </span>
                     </span>
-                    <span className={s.error ? "shrink-0 text-[12.5px] font-medium text-red-600" : "shrink-0 text-[12.5px] text-gray-500"}>
+                    <span className={s.error ? "shrink-0 text-[12.5px] font-medium text-[color:var(--fail)]" : "shrink-0 text-[12.5px] text-[color:var(--muted)]"}>
                       {s.error ? s.error : `${s.count.toLocaleString()} ${s.kind === "index" ? "children" : "URLs"}`}
                     </span>
                   </li>
@@ -649,11 +650,11 @@ export function SitemapExtractorWidget() {
       )}
 
       {result && !result.ok && result.sitemaps.length > 0 && (
-        <ul className="mt-4 space-y-1.5 rounded-xl border border-gray-200 bg-gray-50 p-4">
+        <ul className="mt-4 space-y-1.5 rounded-[4px] border border-[color:var(--line-strong)] bg-[color:var(--surface-2)] p-4">
           {result.sitemaps.map((s, i) => (
             <li key={i} className="flex flex-wrap items-baseline justify-between gap-2 text-[12.5px]">
-              <span className="break-all font-mono text-gray-600">{s.url}</span>
-              <span className="shrink-0 font-medium text-red-600">{s.error}</span>
+              <span className="break-all font-mono text-[color:var(--muted)]">{s.url}</span>
+              <span className="shrink-0 font-medium text-[color:var(--fail)]">{s.error}</span>
             </li>
           ))}
         </ul>

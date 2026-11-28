@@ -2,12 +2,15 @@
 
 import { useEffect, useState, type FormEvent, type ReactNode } from "react"
 import { useSearchParams } from "next/navigation"
+import k from "@/components/brand/dark-kit.module.css"
+import f from "./intake-form.module.css"
 
 /**
  * IntakeForm — post-payment intake for /services purchases. Reads the Stripe
  * session_id from the query, verifies via the app handler that it maps to a
  * paid order, then collects everything needed to start the audit. Posts JSON to
  * /app/?action=service_intake (same-origin via the Vercel → Replit rewrite).
+ * Dark-kit look (2026-11-28): the intake page wraps this in <DarkPage>.
  */
 
 const ENDPOINT = "/app/?action=service_intake"
@@ -145,16 +148,16 @@ export function IntakeForm() {
 
   // ---- states ----
   if (verify.state === "loading") {
-    return <Shell><p className="text-gray-500">Loading your order…</p></Shell>
+    return <Shell><p className={f.muted}>Loading your order…</p></Shell>
   }
   if (verify.state === "nosession") {
     return (
       <Shell>
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900">This page opens after checkout</h1>
-        <p className="mt-3 text-[15px] text-gray-600">
+        <h1 className={f.titleSm}>This page opens after checkout</h1>
+        <p className={f.body}>
           It opens automatically right after you pay. If you paid and closed the page before filling it in,{" "}
-          <a href="/contact" className="font-medium text-accent-700 underline">contact us</a> and we&apos;ll send you the form. Looking for done-for-you help?{" "}
-          <a href="/services/ai-seo-agency" className="font-medium text-accent-700 underline">See the services</a>.
+          <a href="/contact" className={f.link}>contact us</a> and we&apos;ll send you the form. Looking for done-for-you help?{" "}
+          <a href="/services/ai-seo-agency" className={f.link}>See the services</a>.
         </p>
       </Shell>
     )
@@ -162,14 +165,14 @@ export function IntakeForm() {
   if (verify.state === "error") {
     return (
       <Shell>
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900">We hit a snag</h1>
-        <p className="mt-3 text-gray-600">{verify.message}</p>
-        <p className="mt-4 text-[15px] text-gray-600">
+        <h1 className={f.titleSm}>We hit a snag</h1>
+        <p className={f.body}>{verify.message}</p>
+        <p className={f.body}>
           Your payment is safe. Email me at{" "}
-          <a href="mailto:samy.bensadok@gmail.com" className="font-medium text-accent-700 underline">
+          <a href="mailto:samy.bensadok@gmail.com" className={f.link}>
             samy.bensadok@gmail.com
           </a>{" "}
-          or via <a href="/contact" className="font-medium text-accent-700 underline">the contact page</a>{" "}and I&apos;ll get you started.
+          or via <a href="/contact" className={f.link}>the contact page</a>{" "}and I&apos;ll get you started.
         </p>
       </Shell>
     )
@@ -177,20 +180,20 @@ export function IntakeForm() {
   if (verify.state === "done" || submitted) {
     return (
       <Shell>
-        <div className="inline-flex items-center gap-2 rounded-full bg-accent-50 px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+        <div className={`${k.stampChip} ${f.chip}`}>
           All set
         </div>
-        <h1 className="mt-4 text-[clamp(1.6rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
+        <h1 className={f.title}>
           Thank you — I have everything I need.
         </h1>
-        <p className="mt-4 text-[15px] leading-relaxed text-gray-600">
+        <p className={f.body}>
           Your details are in. I&apos;ll review them and email you within 1 business day from{" "}
-          <span className="font-medium text-gray-800">samy.bensadok@gmail.com</span> to kick things off — no
+          <span className={f.em}>samy.bensadok@gmail.com</span> to kick things off — no
           more back-and-forth needed to start. — Samy
         </p>
         <a
           href="/blog"
-          className="mt-8 inline-flex items-center gap-2 rounded-full border border-gray-300 px-5 py-3 text-[14px] font-semibold text-gray-800 transition-colors hover:border-gray-400"
+          className={`${k.btnOutline} ${f.after}`}
         >
           Read the GEO playbook while you wait
         </a>
@@ -201,19 +204,19 @@ export function IntakeForm() {
   // ---- form ----
   return (
     <Shell wide>
-      <div className="inline-flex items-center gap-2 rounded-full bg-accent-50 px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+      <div className={`${k.stampChip} ${f.chip}`}>
         Payment received
       </div>
-      <h1 className="mt-4 text-[clamp(1.6rem,3vw,2.4rem)] font-bold leading-tight tracking-tight text-gray-900">
+      <h1 className={f.title}>
         Let&apos;s get your {itemLabel(verify.item)} started.
       </h1>
-      <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-gray-600">
+      <p className={`${f.body} ${f.lead}`}>
         Fill this in and I have everything to begin — no back-and-forth. Only your website is required; the
         prompts and competitors are optional (I research these anyway, but if you already know them, that
         sharpens the work).
       </p>
 
-      <form onSubmit={submit} className="mt-10 space-y-8">
+      <form onSubmit={submit} className={f.form}>
         {/* Website + brand */}
         <Section title="Your business">
           <Field label="Website domain" required>
@@ -222,7 +225,7 @@ export function IntakeForm() {
               maxLength={255} placeholder="example.com" className={inputCls}
             />
           </Field>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className={f.pair}>
             <Field label="Brand / company name">
               <input type="text" value={brandName} onChange={(e) => setBrandName(e.target.value)} maxLength={200} placeholder="How you're known" className={inputCls} />
             </Field>
@@ -240,10 +243,10 @@ export function IntakeForm() {
 
         {/* Prompts */}
         <Section title="Prompts to analyze" hint={`the buyer-intent questions your customers ask AI — up to ${MAX_PROMPTS}, optional`}>
-          <div className="space-y-2">
+          <div className={f.list}>
             {prompts.map((p, i) => (
-              <div key={i} className="flex items-center gap-2">
-                <span className="w-6 shrink-0 font-mono text-[12px] text-gray-400">{i + 1}.</span>
+              <div key={i} className={f.row}>
+                <span className={f.rowNum}>{i + 1}.</span>
                 <input
                   type="text" value={p} onChange={(e) => setPromptAt(i, e.target.value)}
                   maxLength={300} aria-label={`Prompt ${i + 1}`}
@@ -263,9 +266,9 @@ export function IntakeForm() {
 
         {/* Competitors */}
         <Section title="Competitors" hint={`who you're up against in AI answers — up to ${MAX_COMPETITORS}, optional`}>
-          <div className="space-y-2">
+          <div className={f.list}>
             {competitors.map((c, i) => (
-              <div key={i} className="flex items-center gap-2">
+              <div key={i} className={f.row}>
                 <input type="text" value={c.name} onChange={(e) => setCompAt(i, "name", e.target.value)} maxLength={200} aria-label={`Competitor ${i + 1} name`} placeholder="Competitor name" className={inputCls} />
                 <input type="text" value={c.domain} onChange={(e) => setCompAt(i, "domain", e.target.value)} maxLength={255} aria-label={`Competitor ${i + 1} domain`} placeholder="domain.com" className={inputCls} />
                 {competitors.length > 1 && (
@@ -284,20 +287,20 @@ export function IntakeForm() {
           <Field label="What does success look like?" hint="e.g. get cited in ChatGPT for our category; beat a specific competitor in AI Overviews">
             <input type="text" value={goal} onChange={(e) => setGoal(e.target.value)} maxLength={1000} placeholder="your primary goal" className={inputCls} />
           </Field>
-          <label className="flex items-start gap-3 rounded-xl border border-gray-200 bg-gray-50 p-4">
-            <input type="checkbox" checked={gscAccess} onChange={(e) => setGscAccess(e.target.checked)} className="mt-0.5 h-4 w-4 rounded border-gray-300 text-accent-700 focus:ring-accent-600" />
-            <span className="text-[14px] leading-snug text-gray-700">
+          <label className={f.check}>
+            <input type="checkbox" checked={gscAccess} onChange={(e) => setGscAccess(e.target.checked)} className={f.checkbox} />
+            <span className={f.checkText}>
               I can grant read access to Google Search Console for my domain (sharpens the baseline — I&apos;ll send instructions).
             </span>
           </label>
           <Field label="Anything else I should know?" hint="deadlines, existing content, constraints">
-            <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={4} maxLength={4000} placeholder="optional" className={inputCls} />
+            <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={4} maxLength={4000} placeholder="optional" className={`${inputCls} ${f.textarea}`} />
           </Field>
         </Section>
 
         {/* Contact */}
         <Section title="Best contact">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className={f.pair}>
             <Field label="Your name">
               <input type="text" value={contactName} onChange={(e) => setContactName(e.target.value)} maxLength={200} placeholder="who I'll be working with" className={inputCls} />
             </Field>
@@ -308,56 +311,53 @@ export function IntakeForm() {
         </Section>
 
         {submitError && (
-          <div role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-[14px] leading-snug text-red-800">
+          <div role="alert" className={f.alert}>
             {submitError}
           </div>
         )}
 
-        <div className="flex flex-wrap items-center gap-4 pt-2">
+        <div className={f.submitRow}>
           <button
             type="submit" disabled={submitting || domain.trim() === ""}
-            className="inline-flex items-center gap-2 rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 disabled:cursor-not-allowed disabled:opacity-50"
+            className={`${k.btnLime} ${f.submit}`}
           >
             {submitting ? "Saving…" : "Submit and start my audit"}
           </button>
-          <span className="text-[13px] text-gray-500">Only the website is required — you can leave the rest for me to research.</span>
+          <span className={f.submitNote}>Only the website is required — you can leave the rest for me to research.</span>
         </div>
       </form>
     </Shell>
   )
 }
 
-const inputCls =
-  "w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-[14px] text-gray-900 placeholder:text-gray-400 focus:border-accent-500 focus:outline-none focus:ring-2 focus:ring-accent-500/30"
-const addBtnCls =
-  "mt-3 inline-flex items-center rounded-full border border-gray-300 px-4 py-2 font-mono text-[12px] font-semibold text-gray-700 transition-colors hover:border-gray-400 hover:text-gray-900"
-const removeBtnCls =
-  "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700"
+const inputCls = `${k.input} ${f.input}`
+const addBtnCls = f.addBtn
+const removeBtnCls = f.removeBtn
 
 function Shell({ children, wide }: { children: ReactNode; wide?: boolean }) {
   return (
-    <section className="bg-white px-6 py-16 sm:py-20">
-      <div className={wide ? "mx-auto max-w-3xl" : "mx-auto max-w-2xl"}>{children}</div>
+    <section className={f.shell}>
+      <div className={wide ? `${f.inner} ${f.wide}` : f.inner}>{children}</div>
     </section>
   )
 }
 
 function Section({ title, hint, children }: { title: string; hint?: string; children: ReactNode }) {
   return (
-    <fieldset className="rounded-2xl border border-gray-200 p-6">
-      <legend className="px-2 text-[13px] font-bold uppercase tracking-widest text-accent-700">{title}</legend>
-      {hint && <p className="mb-4 text-[13px] text-gray-500">{hint}</p>}
-      <div className="space-y-4">{children}</div>
+    <fieldset className={f.fieldset}>
+      <legend className={f.legend}>{title}</legend>
+      {hint && <p className={f.hint}>{hint}</p>}
+      <div className={f.stack}>{children}</div>
     </fieldset>
   )
 }
 
 function Field({ label, hint, required, children }: { label: string; hint?: string; required?: boolean; children: ReactNode }) {
   return (
-    <label className="block">
-      <span className="mb-1.5 block text-[13px] font-medium text-gray-800">
-        {label}{required && <span className="text-accent-700"> *</span>}
-        {hint && <span className="ml-2 font-normal text-gray-400">{hint}</span>}
+    <label className={f.field}>
+      <span className={f.label}>
+        {label}{required && <span className={f.req}> *</span>}
+        {hint && <span className={f.labelHint}>{hint}</span>}
       </span>
       {children}
     </label>

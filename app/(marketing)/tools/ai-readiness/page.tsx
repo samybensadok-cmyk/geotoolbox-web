@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
+import { kit, Arrow } from "@/components/brand/dark-kit"
+import { ToolsPage, ToolIndex, toolsKit as tk } from "@/components/tools/tool-page"
 import { HowItWorks3Step, type Step } from "@/components/features/how-it-works"
 import { FeatureFaq } from "@/components/features/feature-faq"
 import { siteConfig } from "@/lib/config"
@@ -78,9 +80,9 @@ const faqs = [
 
 export default function AiReadinessPage() {
   return (
-    <>
+    <ToolsPage>
       {/* Hero + the tool */}
-      <section className="relative overflow-hidden bg-[var(--surface-steel)] px-6 pt-16 pb-16 sm:pt-20 sm:pb-20">
+      <section className={`${tk.hero} ${kit.heroGlow}`}>
         <JsonLd
           data={[
             softwareApplicationSchema({
@@ -97,53 +99,59 @@ export default function AiReadinessPage() {
           ]}
         />
 
-        <div className="mx-auto max-w-5xl">
+        <div className={kit.wrap}>
           <Breadcrumbs
+            tone="dark"
             trail={[
               { name: "Home", href: "/" },
               { name: "Tools", href: "/tools" },
               { name: "AI-Readiness Score", href: "" },
             ]}
           />
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">Free AI-readiness tool</p>
-            <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
+          <div className={tk.heroHead}>
+            <p className={tk.heroLabel}>Free AI-readiness tool</p>
+            <h1 className={tk.heroTitle}>
               Free AI Readiness Checker: Is Your Site Ready for AI Agents?
             </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
+            <div className={tk.heroRule} aria-hidden="true" />
+            <p className={tk.heroLead}>
               Before AI can mention you, it has to reach you. This free AI readiness checker scores any domain on the five
               foundations AI agents need first: robots.txt validity, AI-crawler access, content signals, sitemap, markdown
               negotiation. Scored exactly the way our full Agent Readiness scan scores them. Server-side, no sign-up.
             </p>
           </div>
 
-          <div className="mt-10">
+          <div className={`${tk.heroTool} ${tk.mount}`}>
             <AiReadinessWidget />
           </div>
         </div>
       </section>
 
       {/* Honest evidence panel */}
-      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">Straight answer</p>
-          <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-            What this score measures, and what it doesn&apos;t.
-          </h2>
-          <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-gray-700">
-            <p>
-              <strong className="text-gray-900">It measures infrastructure, not visibility.</strong>{" "}Whether AI agents can
-              reach, crawl, and parse your site. Fail these and you can be invisible to AI by accident, but passing them is
-              the floor, not a guarantee of citations. Anyone selling a &quot;readiness score&quot; as a ranking shortcut is overstating it.
-            </p>
-            <p>
-              <strong className="text-gray-900">It&apos;s an honest partial.</strong> 5 checks out of the full rubric. We show you exactly
-              which 5, score them the same way the full scan does, and never dress the number up as the complete picture.
-            </p>
-            <p>
-              <strong className="text-gray-900">It&apos;s the plumbing.</strong> Get these foundations right first; they gate
-              the remaining checks (rendering, structured data, MCP, commerce, visual) that the full Agent Readiness scan covers.
-            </p>
+      <section className={`${kit.section} ${kit.sectionBorder}`}>
+        <div className={`${kit.wrap} ${tk.split}`}>
+          <div className={tk.splitHead}>
+            <ToolIndex>Straight answer</ToolIndex>
+            <h2 className={tk.title2}>
+              What this score measures, and what it doesn&apos;t.
+            </h2>
+          </div>
+          <div className={tk.prose}>
+            <div className={tk.stack}>
+              <p>
+                <strong>It measures infrastructure, not visibility.</strong>{" "}Whether AI agents can
+                reach, crawl, and parse your site. Fail these and you can be invisible to AI by accident, but passing them is
+                the floor, not a guarantee of citations. Anyone selling a &quot;readiness score&quot; as a ranking shortcut is overstating it.
+              </p>
+              <p>
+                <strong>It&apos;s an honest partial.</strong> 5 checks out of the full rubric. We show you exactly
+                which 5, score them the same way the full scan does, and never dress the number up as the complete picture.
+              </p>
+              <p>
+                <strong>It&apos;s the plumbing.</strong> Get these foundations right first; they gate
+                the remaining checks (rendering, structured data, MCP, commerce, visual) that the full Agent Readiness scan covers.
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -152,62 +160,66 @@ export default function AiReadinessPage() {
       <HowItWorks3Step heading="From a domain to a readiness score in three steps" steps={steps} />
 
       {/* Related free tools */}
-      <section className="border-t border-gray-100 bg-gray-50 px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">Go deeper for free</p>
-          <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-            The rest of this score has its own free tools
-          </h2>
-          <p className="mt-4 text-[15px] leading-relaxed text-gray-700">
-            Want the whole picture? The{" "}
-            <Link href="/tools/agent-readiness-scanner" className="font-semibold text-accent-700 underline-offset-2 hover:underline">Agent Readiness Scanner</Link>{" "}
-            runs every scored check in the rubric free, no sign-up, including the live crawler probes and the browser render
-            this page cannot do from a single request. Want the detail behind one layer instead? The{" "}
-            <Link href="/tools/ai-crawler-checker" className="font-semibold text-accent-700 underline-offset-2 hover:underline">AI Crawler Checker</Link>{" "}
-            shows which of 34 AI crawlers your robots.txt blocks, line by line. The{" "}
-            <Link href="/tools/llms-txt-checker" className="font-semibold text-accent-700 underline-offset-2 hover:underline">llms.txt Checker</Link>{" "}
-            validates and scores your llms.txt. All free and server-side. New to the idea? Read{" "}
-            <Link href="/blog/what-is-ai-visibility" className="font-semibold text-accent-700 underline-offset-2 hover:underline">what AI visibility is</Link>.
-          </p>
+      <section className={`${kit.section} ${kit.sectionBorder} ${kit.band}`}>
+        <div className={`${kit.wrap} ${tk.split}`}>
+          <div className={tk.splitHead}>
+            <ToolIndex>Go deeper for free</ToolIndex>
+            <h2 className={tk.title2}>
+              The rest of this score has its own free tools
+            </h2>
+          </div>
+          <div className={tk.prose}>
+            <p>
+              Want the whole picture? The{" "}
+              <Link href="/tools/agent-readiness-scanner">Agent Readiness Scanner</Link>{" "}
+              runs every scored check in the rubric free, no sign-up, including the live crawler probes and the browser render
+              this page cannot do from a single request. Want the detail behind one layer instead? The{" "}
+              <Link href="/tools/ai-crawler-checker">AI Crawler Checker</Link>{" "}
+              shows which of 34 AI crawlers your robots.txt blocks, line by line. The{" "}
+              <Link href="/tools/llms-txt-checker">llms.txt Checker</Link>{" "}
+              validates and scores your llms.txt. All free and server-side. New to the idea? Read{" "}
+              <Link href="/blog/what-is-ai-visibility">what AI visibility is</Link>.
+            </p>
+          </div>
         </div>
       </section>
 
       <FeatureFaq items={faqs} heading="AI-readiness, answered honestly" />
 
       {/* Funnel CTA */}
-      <section className="bg-gray-950 px-6 py-20 sm:py-24">
-        <div className="mx-auto flex max-w-5xl flex-col items-start gap-6 md:flex-row md:items-center md:justify-between md:gap-12">
-          <div>
-            <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
-              5 checks is the foundation. The full scan runs every check in the rubric.
-            </h2>
-            <p className="mt-2 max-w-xl text-base text-gray-300">
-              Agent Readiness live-fetches your site as six AI crawlers, renders it like a headless agent, and adds structured
-              data, MCP, commerce and visual checks. Free.
-            </p>
-          </div>
-          <div className="flex shrink-0 flex-col gap-3">
-            <Link
-              href="/tools/agent-readiness-scanner?ref=ai-readiness"
-              prefetch={false}
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]"
-            >
-              Run the full scan now
-              <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </Link>
-            <Link
-              href="/features/agent-readiness?ref=ai-readiness"
-              prefetch={false}
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-gray-700 px-7 py-3.5 text-[15px] font-semibold text-white transition-colors hover:border-gray-500"
-            >
-              See how Agent Readiness works
-            </Link>
-            <p className="text-center text-[12px] text-gray-400">Free, no sign-up, takes 30 to 90 seconds</p>
+      <section className={tk.close}>
+        <div className={kit.wrap}>
+          <div className={tk.closeCard}>
+            <div>
+              <h2 className={tk.closeTitle}>
+                5 checks is the foundation. The full scan runs every check in the rubric.
+              </h2>
+              <p className={tk.closeBody}>
+                Agent Readiness live-fetches your site as six AI crawlers, renders it like a headless agent, and adds structured
+                data, MCP, commerce and visual checks. Free.
+              </p>
+            </div>
+            <div className={tk.closeActions}>
+              <Link
+                href="/tools/agent-readiness-scanner?ref=ai-readiness"
+                prefetch={false}
+                className={kit.btnLime}
+              >
+                Run the full scan now
+                <Arrow />
+              </Link>
+              <Link
+                href="/features/agent-readiness?ref=ai-readiness"
+                prefetch={false}
+                className={kit.btnOutline}
+              >
+                See how Agent Readiness works
+              </Link>
+              <p className={tk.closeNote}>Free, no sign-up, takes 30 to 90 seconds</p>
+            </div>
           </div>
         </div>
       </section>
-    </>
+    </ToolsPage>
   )
 }

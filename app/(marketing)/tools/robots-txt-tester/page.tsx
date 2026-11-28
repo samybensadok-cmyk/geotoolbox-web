@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
+import { kit, Arrow } from "@/components/brand/dark-kit"
+import { ToolsPage, ToolIndex, toolsKit as tk } from "@/components/tools/tool-page"
 import { HowItWorks3Step, type Step } from "@/components/features/how-it-works"
 import { FeatureFaq } from "@/components/features/feature-faq"
 import { siteConfig } from "@/lib/config"
@@ -84,8 +86,8 @@ const faqs = [
 
 export default function RobotsTxtTesterPage() {
   return (
-    <>
-      <section className="relative overflow-hidden bg-[var(--surface-steel)] px-6 pt-16 pb-16 sm:pt-20 sm:pb-20">
+    <ToolsPage>
+      <section className={`${tk.hero} ${kit.heroGlow}`}>
         <JsonLd
           data={[
             softwareApplicationSchema({
@@ -102,126 +104,136 @@ export default function RobotsTxtTesterPage() {
           ]}
         />
 
-        <div className="mx-auto max-w-5xl">
+        <div className={kit.wrap}>
           <Breadcrumbs
+            tone="dark"
             trail={[
               { name: "Home", href: "/" },
               { name: "Tools", href: "/tools" },
               { name: "robots.txt Tester & Checker", href: "" },
             ]}
           />
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+          <div className={tk.heroHead}>
+            <p className={tk.heroLabel}>
               Free robots.txt tool
             </p>
-            <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
+            <h1 className={tk.heroTitle}>
               Free robots.txt Tester &amp; Checker
             </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
+            <div className={tk.heroRule} aria-hidden="true" />
+            <p className={tk.heroLead}>
               Google retired the robots.txt tester in Search Console. This does the same job: check any URL against a
               live or draft robots.txt, per crawler, with Google&apos;s real precedence rules — and see the exact line
               that decided each verdict. Free, no sign-up.
             </p>
           </div>
 
-          <div className="mt-10">
+          <div className={`${tk.heroTool} ${tk.mount}`}>
             <RobotsTxtTesterWidget />
           </div>
         </div>
       </section>
 
-      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-            The rule everyone gets wrong
-          </p>
-          <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-            A named group replaces the <code className="text-[0.85em]">*</code> group
-          </h2>
-          <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-gray-700">
-            <p>
-              A crawler follows <strong className="text-gray-900">exactly one group</strong>{" "}— the most specific one
-              that names it. The rules aren&apos;t combined. So this file does not do what it looks like it does:
-            </p>
-            <pre className="overflow-x-auto rounded-xl border border-gray-200 bg-gray-950 p-5 font-mono text-[12.5px] leading-relaxed text-gray-200">
-{`User-agent: *
+      <section className={`${kit.section} ${kit.sectionBorder}`}>
+        <div className={`${kit.wrap} ${tk.split}`}>
+          <div className={tk.splitHead}>
+            <ToolIndex>
+              The rule everyone gets wrong
+            </ToolIndex>
+            <h2 className={tk.title2}>
+              A named group replaces the <code className="text-[0.85em]">*</code> group
+            </h2>
+          </div>
+          <div className={tk.prose}>
+            <div className={tk.stack}>
+              <p>
+                A crawler follows <strong>exactly one group</strong>{" "}— the most specific one
+                that names it. The rules aren&apos;t combined. So this file does not do what it looks like it does:
+              </p>
+              <pre className={tk.codeBlock}>
+  {`User-agent: *
 Disallow: /admin/
 
 User-agent: Googlebot
 Disallow: /private/`}
-            </pre>
-            <p>
-              Googlebot follows the second group only, so <code className="rounded bg-gray-100 px-1 text-gray-700">/admin/</code>{" "}
-              is now <em>crawlable by Google</em> — the exact opposite of the intent. Every other crawler still respects
-              it. To block both, the Googlebot group has to repeat the <code className="rounded bg-gray-100 px-1 text-gray-700">/admin/</code>{" "}
-              rule.
-            </p>
-            <p>
-              There&apos;s a second half to this that trips up plugin-heavy sites: if the same user-agent appears in{" "}
-              <em>several</em> groups, those groups <strong className="text-gray-900">are</strong> merged. WordPress
-              sites often end up with two separate <code className="rounded bg-gray-100 px-1 text-gray-700">User-agent: *</code>{" "}
-              blocks because a plugin appended its own, and both sets of rules apply. Tools that read only the first
-              block silently under-report what&apos;s blocked.
-            </p>
-            <p>
-              This tester shows you which group each crawler resolves to, and the exact rule behind every verdict, so
-              neither case has to be taken on faith.
-            </p>
+              </pre>
+              <p>
+                Googlebot follows the second group only, so <code>/admin/</code>{" "}
+                is now <em>crawlable by Google</em> — the exact opposite of the intent. Every other crawler still respects
+                it. To block both, the Googlebot group has to repeat the <code>/admin/</code>{" "}
+                rule.
+              </p>
+              <p>
+                There&apos;s a second half to this that trips up plugin-heavy sites: if the same user-agent appears in{" "}
+                <em>several</em> groups, those groups <strong>are</strong> merged. WordPress
+                sites often end up with two separate <code>User-agent: *</code>{" "}
+                blocks because a plugin appended its own, and both sets of rules apply. Tools that read only the first
+                block silently under-report what&apos;s blocked.
+              </p>
+              <p>
+                This tester shows you which group each crawler resolves to, and the exact rule behind every verdict, so
+                neither case has to be taken on faith.
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
       <HowItWorks3Step heading="From a domain to a per-crawler verdict" steps={steps} />
 
-      <section className="border-t border-gray-100 bg-gray-50 px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">Worth knowing</p>
-          <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-            robots.txt controls crawling, not indexing
-          </h2>
-          <p className="mt-4 text-[15px] leading-relaxed text-gray-700">
-            Blocking a URL asks crawlers not to <em>fetch</em>{" "}it. It does not remove it from search results. A blocked
-            page that&apos;s linked from elsewhere can still be listed — typically as a bare URL with no description,
-            because the crawler was never allowed to read the page it&apos;s describing.
-          </p>
-          <p className="mt-4 text-[15px] leading-relaxed text-gray-700">
-            The trap: to deindex a page you need{" "}
-            <code className="rounded bg-gray-200 px-1 text-gray-700">noindex</code>, and Google has to{" "}
-            <em>crawl the page</em>{" "}to see it. Blocking the page in robots.txt prevents that. If you want something gone
-            from the index, allow crawling and add noindex — then block it later if you like, once it&apos;s dropped.
-          </p>
-          <p className="mt-4 text-[15px] leading-relaxed text-gray-700">
-            And robots.txt is never a security control. It is a public file listing the paths you&apos;d rather people
-            didn&apos;t visit, which is closer to a map than a lock.
-          </p>
+      <section className={`${kit.section} ${kit.sectionBorder} ${kit.band}`}>
+        <div className={`${kit.wrap} ${tk.split}`}>
+          <div className={tk.splitHead}>
+            <ToolIndex>Worth knowing</ToolIndex>
+            <h2 className={tk.title2}>
+              robots.txt controls crawling, not indexing
+            </h2>
+          </div>
+          <div className={tk.prose}>
+            <p>
+              Blocking a URL asks crawlers not to <em>fetch</em>{" "}it. It does not remove it from search results. A blocked
+              page that&apos;s linked from elsewhere can still be listed — typically as a bare URL with no description,
+              because the crawler was never allowed to read the page it&apos;s describing.
+            </p>
+            <p>
+              The trap: to deindex a page you need{" "}
+              <code>noindex</code>, and Google has to{" "}
+              <em>crawl the page</em>{" "}to see it. Blocking the page in robots.txt prevents that. If you want something gone
+              from the index, allow crawling and add noindex — then block it later if you like, once it&apos;s dropped.
+            </p>
+            <p>
+              And robots.txt is never a security control. It is a public file listing the paths you&apos;d rather people
+              didn&apos;t visit, which is closer to a map than a lock.
+            </p>
+          </div>
         </div>
       </section>
 
       <FeatureFaq items={faqs} heading="robots.txt, answered properly" />
 
-      <section className="bg-gray-950 px-6 py-20 sm:py-24">
-        <div className="mx-auto flex max-w-5xl flex-col items-start gap-6 md:flex-row md:items-center md:justify-between md:gap-12">
-          <div>
-            <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
-              Need to write the file, not just test it?
-            </h2>
-            <p className="mt-2 max-w-xl text-base text-gray-300">
-              The robots.txt generator builds one from presets — WordPress, Shopify, block-admin — with per-crawler AI
-              directives labelled by what blocking each one actually costs you. Free.
-            </p>
+      <section className={tk.close}>
+        <div className={kit.wrap}>
+          <div className={tk.closeCard}>
+            <div>
+              <h2 className={tk.closeTitle}>
+                Need to write the file, not just test it?
+              </h2>
+              <p className={tk.closeBody}>
+                The robots.txt generator builds one from presets — WordPress, Shopify, block-admin — with per-crawler AI
+                directives labelled by what blocking each one actually costs you. Free.
+              </p>
+            </div>
+            <Link
+              href="/tools/robots-txt-generator?ref=robots-tester"
+              prefetch={false}
+              className={kit.btnLime}
+            >
+              Generate a robots.txt
+              <Arrow />
+            </Link>
           </div>
-          <Link
-            href="/tools/robots-txt-generator?ref=robots-tester"
-            prefetch={false}
-            className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]"
-          >
-            Generate a robots.txt
-            <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </Link>
         </div>
       </section>
-    </>
+    </ToolsPage>
   )
 }

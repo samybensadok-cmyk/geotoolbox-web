@@ -9,6 +9,8 @@ import { siteConfig } from "@/lib/config"
 import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema } from "@/lib/seo-schema"
 import { marketingAlternatesFor } from "@/lib/i18n/siblings"
+import { kit as k, Arrow } from "@/components/brand/dark-kit"
+import { FeaturePage, FxSection, FxHead, FeatureCloseCta, fx } from "@/components/features/fx"
 
 // Localized Competitor Intel feature page: en at /features/competitor-intel, fr
 // at /fr/features/competitor-intel. Relocated from
@@ -76,7 +78,7 @@ export default async function CompetitorIntelPage({
   const breadcrumbLabels = { home: c("breadcrumbHome"), features: c("breadcrumbFeatures") }
 
   return (
-    <>
+    <FeaturePage>
       {/* Hero — blush glow (vigilance / threat-feed feel), dark ground */}
       <JsonLd data={[
         softwareApplicationSchema({
@@ -187,117 +189,92 @@ export default async function CompetitorIntelPage({
       </FeatureHero>
 
       {/* Gap matrix section */}
-      <section className="border-y border-[var(--surface-blush-border)] bg-[var(--surface-blush)] px-6 py-24 sm:py-28">
-        <div className="mx-auto max-w-7xl">
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-[5fr_7fr] lg:items-end lg:gap-16">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">{t("gap.eyebrow")}</p>
-              <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.5rem)] font-bold leading-tight tracking-tight text-gray-900">
-                {t("gap.h2")}
-              </h2>
-            </div>
-            <p className="max-w-xl text-base leading-relaxed text-gray-600">
-              {t("gap.intro")}
-            </p>
-          </div>
+      <FxSection band>
+        <FxHead eyebrow={t("gap.eyebrow")} title={t("gap.h2")} lead={t("gap.intro")} leadSide />
 
-          {/* Legend — explains the symbols before the reader has to guess */}
-          <div className="mt-8 flex flex-wrap items-center gap-5 text-[13px] text-gray-600">
-            <span className="inline-flex items-center gap-2">
-              <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-accent-700">
-                <svg className="h-3 w-3 text-white" viewBox="0 0 14 14" fill="none">
-                  <path d="M3 7l3 3 5-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </span>
-              {t("gap.legendCited")}
-            </span>
-            <span className="inline-flex items-center gap-2">
-              <span className="inline-flex h-5 w-5 items-center justify-center rounded-full border border-gray-300 bg-gray-100">
-                <svg className="h-2.5 w-2.5 text-gray-500" viewBox="0 0 12 12" fill="none">
-                  <path d="M3 3l6 6M9 3l-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                </svg>
-              </span>
-              {t("gap.legendAbsent")}
-            </span>
-          </div>
-
-          <figure aria-label={t("gap.figureAria")} className="mt-6 overflow-hidden rounded-[2rem] border border-gray-200 bg-white">
-            <span className="sr-only">{t("gap.srPrefix")}</span>
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[600px] text-sm">
-                <thead>
-                  <tr className="border-b border-gray-200 text-left">
-                    <th scope="col" className="px-6 py-4 font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-600">Topic</th>
-                    <th scope="col" className="px-4 py-4 text-center font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-600">You</th>
-                    <th scope="col" className="px-4 py-4 text-center font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-600">ahrefs.com</th>
-                    <th scope="col" className="px-4 py-4 text-center font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-600">semrush.com</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  {gapMatrix.map((row) => (
-                    <tr key={row.topic}>
-                      <td className="px-6 py-4 font-mono text-[13px] text-gray-900">{row.topic}</td>
-                      <td className="px-4 py-4 text-center">
-                        <Cell present={row.you} />
-                      </td>
-                      <td className="px-4 py-4 text-center">
-                        <Cell present={row.ahrefs} />
-                      </td>
-                      <td className="px-4 py-4 text-center">
-                        <Cell present={row.semrush} />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </figure>
-
-          {/* Inline CTA at point of peak intent */}
-          <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
-            <p className="text-[13px] text-gray-500">{t("gap.exampleNote")}</p>
-            <Link
-              href="/app"
-              prefetch={false}
-              className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-accent-700 hover:text-accent-900"
-            >
-              {t("gap.scanCta")}
-              <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
+        {/* Legend — explains the symbols before the reader has to guess */}
+        <div className="flex flex-wrap items-center gap-5 text-[13px] text-gray-600">
+          <span className="inline-flex items-center gap-2">
+            <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-accent-700">
+              <svg className="h-3 w-3 text-white" viewBox="0 0 14 14" fill="none">
+                <path d="M3 7l3 3 5-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-            </Link>
-          </div>
+            </span>
+            {t("gap.legendCited")}
+          </span>
+          <span className="inline-flex items-center gap-2">
+            <span className="inline-flex h-5 w-5 items-center justify-center rounded-full border border-gray-300 bg-gray-100">
+              <svg className="h-2.5 w-2.5 text-gray-500" viewBox="0 0 12 12" fill="none">
+                <path d="M3 3l6 6M9 3l-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              </svg>
+            </span>
+            {t("gap.legendAbsent")}
+          </span>
         </div>
-      </section>
+
+        <figure aria-label={t("gap.figureAria")} className="mt-6 overflow-hidden rounded-[2rem] border border-gray-200 bg-white">
+          <span className="sr-only">{t("gap.srPrefix")}</span>
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[600px] text-sm">
+              <thead>
+                <tr className="border-b border-gray-200 text-left">
+                  <th scope="col" className="px-6 py-4 font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-600">Topic</th>
+                  <th scope="col" className="px-4 py-4 text-center font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-600">You</th>
+                  <th scope="col" className="px-4 py-4 text-center font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-600">ahrefs.com</th>
+                  <th scope="col" className="px-4 py-4 text-center font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-600">semrush.com</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {gapMatrix.map((row) => (
+                  <tr key={row.topic}>
+                    <td className="px-6 py-4 font-mono text-[13px] text-gray-900">{row.topic}</td>
+                    <td className="px-4 py-4 text-center">
+                      <Cell present={row.you} />
+                    </td>
+                    <td className="px-4 py-4 text-center">
+                      <Cell present={row.ahrefs} />
+                    </td>
+                    <td className="px-4 py-4 text-center">
+                      <Cell present={row.semrush} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </figure>
+
+        {/* Inline CTA at point of peak intent */}
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
+          <p className="text-[13px] text-gray-500">{t("gap.exampleNote")}</p>
+          <Link href="/app" prefetch={false} className={`${k.textLink} ${fx.tap}`}>
+            {t("gap.scanCta")}
+            <Arrow />
+          </Link>
+        </div>
+      </FxSection>
 
       {/* What's inside */}
-      <section id="inside" className="bg-white px-6 py-24 sm:py-28">
-        <div className="mx-auto max-w-7xl">
-          <div className="max-w-2xl">
-            <p className="text-xs font-semibold uppercase tracking-widest text-accent-700">{t("inside.eyebrow")}</p>
-            <h2 className="mt-3 text-[clamp(1.75rem,3.5vw,2.5rem)] font-bold leading-tight tracking-tight text-gray-900">
-              {t("inside.h2")}
-            </h2>
-          </div>
-          <div className="mt-14 grid grid-cols-1 gap-x-8 gap-y-12 md:grid-cols-2 lg:grid-cols-3 lg:gap-x-10">
-            {insideItems.map((s) => (
-              <div key={s.tag} className="relative pl-12">
-                <span
-                  aria-hidden="true"
-                  className="absolute left-0 top-0 font-mono text-[22px] font-bold tabular-nums leading-none text-accent-500"
-                >
-                  {s.num}
-                </span>
-                <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-                  {s.tag}
-                </p>
-                <h3 className="mt-2 text-lg font-semibold tracking-tight text-gray-900">{s.title}</h3>
-                <p className="mt-2 text-[15px] leading-relaxed text-gray-600">{s.body}</p>
-              </div>
-            ))}
-          </div>
+      <FxSection id="inside">
+        <FxHead eyebrow={t("inside.eyebrow")} title={t("inside.h2")} />
+        <div className="grid grid-cols-1 gap-x-8 gap-y-12 md:grid-cols-2 lg:grid-cols-3 lg:gap-x-10">
+          {insideItems.map((s) => (
+            <div key={s.tag} className="relative pl-12">
+              <span
+                aria-hidden="true"
+                className="absolute left-0 top-0 font-mono text-[22px] font-bold tabular-nums leading-none text-accent-500"
+              >
+                {s.num}
+              </span>
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+                {s.tag}
+              </p>
+              <h3 className="mt-2 text-lg font-semibold tracking-tight text-gray-900">{s.title}</h3>
+              <p className="mt-2 text-[15px] leading-relaxed text-gray-600">{s.body}</p>
+            </div>
+          ))}
         </div>
-      </section>
+      </FxSection>
 
       <FeatureFaq items={faqs} heading={c("faqHeading")} />
 
@@ -309,24 +286,14 @@ export default async function CompetitorIntelPage({
         descriptions={cardDescriptions}
       />
 
-      {/* CTA */}
-      <section className="bg-gray-950 px-6 py-20 sm:py-24">
-        <div className="mx-auto max-w-7xl flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between md:gap-12">
-          <div>
-            <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
-              {t("finalCta.h2")}
-            </h2>
-            <p className="mt-2 text-base text-gray-300">{t("finalCta.sub")}</p>
-          </div>
-          <Link href="/app" prefetch={false} className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]">
-            {t("finalCta.button")}
-            <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </Link>
-        </div>
-      </section>
-    </>
+      {/* Final CTA */}
+      <FeatureCloseCta title={t("finalCta.h2")} sub={t("finalCta.sub")}>
+        <Link href="/app" prefetch={false} className={k.btnLime}>
+          {t("finalCta.button")}
+          <Arrow />
+        </Link>
+      </FeatureCloseCta>
+    </FeaturePage>
   )
 }
 

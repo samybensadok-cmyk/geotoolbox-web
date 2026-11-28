@@ -2,8 +2,10 @@ import type { Metadata } from "next"
 import Link from "next/link"
 
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
-import { FeatureFaq } from "@/components/features/feature-faq"
+import { kit, Arrow } from "@/components/brand/dark-kit"
+import { ToolsPage, ToolIndex, toolsKit as tk } from "@/components/tools/tool-page"
 import { HowItWorks3Step, type Step } from "@/components/features/how-it-works"
+import { FeatureFaq } from "@/components/features/feature-faq"
 import { ScoreLegend } from "@/components/features/score-legend"
 import { JsonLd } from "@/components/seo/json-ld"
 import { AgentReadinessScannerWidget } from "@/components/tools/agent-readiness-scanner-widget"
@@ -84,9 +86,9 @@ const faqs = [
 
 export default function AgentReadinessScannerPage() {
   return (
-    <>
+    <ToolsPage>
       {/* Hero + the tool */}
-      <section className="relative overflow-hidden bg-[var(--surface-steel)] px-6 pt-16 pb-16 sm:pt-20 sm:pb-20">
+      <section className={`${tk.hero} ${kit.heroGlow}`}>
         <JsonLd
           data={[
             softwareApplicationSchema({
@@ -103,34 +105,36 @@ export default function AgentReadinessScannerPage() {
           ]}
         />
 
-        <div className="mx-auto max-w-5xl">
+        <div className={kit.wrap}>
           <Breadcrumbs
+            tone="dark"
             trail={[
               { name: "Home", href: "/" },
               { name: "Tools", href: "/tools" },
               { name: "Agent Readiness Scanner", href: "" },
             ]}
           />
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+          <div className={tk.heroHead}>
+            <p className={tk.heroLabel}>
               Free full scan · no sign-up
             </p>
-            <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
+            <h1 className={tk.heroTitle}>
               Agent Readiness Scanner
             </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
+            <div className={tk.heroRule} aria-hidden="true" />
+            <p className={tk.heroLead}>
               The full scan, not a teaser. We fetch your site as six AI crawlers, render it in a real browser, check robots
               against 34 known AI bots, and score every scored check in our Agent Readiness rubric. You get a 0-100 score, the
               five pillar breakdown, and where you sit on the Level 0 to 4 agent readiness ladder.
             </p>
           </div>
 
-          <div className="mt-10">
+          <div className={`${tk.heroTool} ${tk.mount}`}>
             <AgentReadinessScannerWidget />
           </div>
 
-          <div className="mx-auto mt-10 max-w-3xl">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-400">How to read the score</p>
+          <div className={tk.legendBlock}>
+            <p className={tk.miniLabel}>How to read the score</p>
             <div className="mt-3">
               <ScoreLegend variant="0-100" />
             </div>
@@ -139,28 +143,32 @@ export default function AgentReadinessScannerPage() {
       </section>
 
       {/* Honest evidence panel */}
-      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">Straight answer</p>
-          <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-            What the scan proves, and what it cannot.
-          </h2>
-          <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-gray-700">
-            <p>
-              <strong className="text-gray-900">It proves readability, not popularity.</strong> Every check answers one
-              question: can an AI agent reach, load, parse and quote this page. Pass them all and you have removed the
-              self-inflicted failures. You have not bought a mention.
-            </p>
-            <p>
-              <strong className="text-gray-900">The probes are real requests.</strong> We do not infer crawler access from your
-              robots file alone. We send live fetches with each bot user agent, which is how a WAF rule or a 403 that robots.txt
-              knows nothing about gets caught.
-            </p>
-            <p>
-              <strong className="text-gray-900">It is the same engine we sell.</strong> There is no cut-down public rubric. When
-              the scan cannot verify enough of a site it says so and refuses to publish a score, rather than printing a zero and
-              calling it a grade.
-            </p>
+      <section className={`${kit.section} ${kit.sectionBorder}`}>
+        <div className={`${kit.wrap} ${tk.split}`}>
+          <div className={tk.splitHead}>
+            <ToolIndex>Straight answer</ToolIndex>
+            <h2 className={tk.title2}>
+              What the scan proves, and what it cannot.
+            </h2>
+          </div>
+          <div className={tk.prose}>
+            <div className={tk.stack}>
+              <p>
+                <strong>It proves readability, not popularity.</strong> Every check answers one
+                question: can an AI agent reach, load, parse and quote this page. Pass them all and you have removed the
+                self-inflicted failures. You have not bought a mention.
+              </p>
+              <p>
+                <strong>The probes are real requests.</strong> We do not infer crawler access from your
+                robots file alone. We send live fetches with each bot user agent, which is how a WAF rule or a 403 that robots.txt
+                knows nothing about gets caught.
+              </p>
+              <p>
+                <strong>It is the same engine we sell.</strong> There is no cut-down public rubric. When
+                the scan cannot verify enough of a site it says so and refuses to publish a score, rather than printing a zero and
+                calling it a grade.
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -169,70 +177,74 @@ export default function AgentReadinessScannerPage() {
       <HowItWorks3Step heading="From a domain to an agent readiness verdict" steps={steps} />
 
       {/* Related free tools */}
-      <section className="border-t border-gray-100 bg-gray-50 px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">Narrower free tools</p>
-          <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-            Want one layer instead of the whole report?
-          </h2>
-          <p className="mt-4 text-[15px] leading-relaxed text-gray-700">
-            The{" "}
-            <Link href="/tools/ai-crawler-checker" className="font-semibold text-accent-700 underline-offset-2 hover:underline">
-              AI Crawler Checker
-            </Link>{" "}
-            shows which of 34 AI crawlers your robots.txt blocks, line by line, in seconds. The{" "}
-            <Link href="/tools/llms-txt-checker" className="font-semibold text-accent-700 underline-offset-2 hover:underline">
-              llms.txt Checker
-            </Link>{" "}
-            validates and scores an existing llms.txt against the spec. The{" "}
-            <Link href="/tools/ai-readiness" className="font-semibold text-accent-700 underline-offset-2 hover:underline">
-              AI-Readiness Score
-            </Link>{" "}
-            is the instant five-check version of this page, useful when you want a number in a couple of seconds rather than a
-            minute. All free, all server-side.
-          </p>
+      <section className={`${kit.section} ${kit.sectionBorder} ${kit.band}`}>
+        <div className={`${kit.wrap} ${tk.split}`}>
+          <div className={tk.splitHead}>
+            <ToolIndex>Narrower free tools</ToolIndex>
+            <h2 className={tk.title2}>
+              Want one layer instead of the whole report?
+            </h2>
+          </div>
+          <div className={tk.prose}>
+            <p>
+              The{" "}
+              <Link href="/tools/ai-crawler-checker">
+                AI Crawler Checker
+              </Link>{" "}
+              shows which of 34 AI crawlers your robots.txt blocks, line by line, in seconds. The{" "}
+              <Link href="/tools/llms-txt-checker">
+                llms.txt Checker
+              </Link>{" "}
+              validates and scores an existing llms.txt against the spec. The{" "}
+              <Link href="/tools/ai-readiness">
+                AI-Readiness Score
+              </Link>{" "}
+              is the instant five-check version of this page, useful when you want a number in a couple of seconds rather than a
+              minute. All free, all server-side.
+            </p>
+          </div>
         </div>
       </section>
 
       <FeatureFaq items={faqs} heading="The scanner, answered honestly" />
 
       {/* Campaign CTA */}
-      <section className="bg-gray-950 px-6 py-20 sm:py-24">
-        <div className="mx-auto flex max-w-5xl flex-col items-start gap-8 md:flex-row md:items-center md:justify-between md:gap-12">
-          <div>
-            <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
-              Readable is the floor. Cited is the goal.
-            </h2>
-            <p className="mt-3 max-w-xl text-base leading-relaxed text-gray-300">
-              This scan tells you whether AI can read you. It cannot tell you what ChatGPT, Perplexity, Gemini, Claude, AI
-              Overviews and Bing say when a buyer asks about your category. That takes running the prompts and reading the
-              answers.
-            </p>
-          </div>
-          <div className="flex shrink-0 flex-col gap-3">
-            <Link
-              href="/services/ai-seo-agency?ref=agent-readiness-scanner"
-              prefetch={false}
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]"
-            >
-              Get your AI Visibility Snapshot
-              <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </Link>
-            <Link
-              href="/app/"
-              prefetch={false}
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-gray-700 px-7 py-3.5 text-[15px] font-semibold text-white transition-colors hover:border-gray-500"
-            >
-              Try the tracker free
-            </Link>
-            <p className="text-center text-[12px] text-gray-400">
-              Your prompts, tracked across the major AI engines · 7-day free trial on Starter, Plus, Pro and Growth
-            </p>
+      <section className={tk.close}>
+        <div className={kit.wrap}>
+          <div className={tk.closeCard}>
+            <div>
+              <h2 className={tk.closeTitle}>
+                Readable is the floor. Cited is the goal.
+              </h2>
+              <p className={tk.closeBody}>
+                This scan tells you whether AI can read you. It cannot tell you what ChatGPT, Perplexity, Gemini, Claude, AI
+                Overviews and Bing say when a buyer asks about your category. That takes running the prompts and reading the
+                answers.
+              </p>
+            </div>
+            <div className={tk.closeActions}>
+              <Link
+                href="/services/ai-seo-agency?ref=agent-readiness-scanner"
+                prefetch={false}
+                className={kit.btnLime}
+              >
+                Get your AI Visibility Snapshot
+                <Arrow />
+              </Link>
+              <Link
+                href="/app/"
+                prefetch={false}
+                className={kit.btnOutline}
+              >
+                Try the tracker free
+              </Link>
+              <p className={tk.closeNote}>
+                Your prompts, tracked across the major AI engines · 7-day free trial on Starter, Plus, Pro and Growth
+              </p>
+            </div>
           </div>
         </div>
       </section>
-    </>
+    </ToolsPage>
   )
 }

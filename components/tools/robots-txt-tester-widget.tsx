@@ -50,7 +50,7 @@ const AGENT_CHOICES = [
 ]
 
 const inputCls =
-  "w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-[14px] text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-accent-500 focus:ring-2 focus:ring-accent-200 disabled:bg-gray-50 disabled:text-gray-400"
+  "w-full rounded-[4px] border border-[color:var(--line-strong)] bg-[color:var(--bg)] px-3 py-2 text-[14px] text-[color:var(--white)] outline-none transition-colors placeholder:text-[color:var(--subtle)] focus:border-[color:var(--accent)] focus:ring-2 focus:ring-[color:var(--focus-ring)] disabled:bg-[color:var(--surface-2)] disabled:text-[color:var(--subtle)]"
 
 export function RobotsTxtTesterWidget() {
   const [site, setSite] = useState("")
@@ -104,11 +104,11 @@ export function RobotsTxtTesterWidget() {
   }
 
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
+    <div className="rounded-[8px] border border-[color:var(--line-strong)] bg-[color:var(--surface)] p-5 sm:p-6">
       <form onSubmit={run} className="space-y-4" aria-busy={loading}>
         {!pasteMode ? (
           <div>
-            <label htmlFor="robots-site" className="mb-1 block font-mono text-[10.5px] font-semibold uppercase tracking-widest text-gray-500">
+            <label htmlFor="robots-site" className="mb-1 block font-mono text-[10.5px] font-semibold uppercase tracking-widest text-[color:var(--muted)]">
               Site
             </label>
             <input
@@ -126,7 +126,7 @@ export function RobotsTxtTesterWidget() {
           </div>
         ) : (
           <div>
-            <label htmlFor="robots-content" className="mb-1 block font-mono text-[10.5px] font-semibold uppercase tracking-widest text-gray-500">
+            <label htmlFor="robots-content" className="mb-1 block font-mono text-[10.5px] font-semibold uppercase tracking-widest text-[color:var(--muted)]">
               robots.txt content
             </label>
             <textarea
@@ -143,7 +143,7 @@ export function RobotsTxtTesterWidget() {
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label htmlFor="robots-urls" className="mb-1 block font-mono text-[10.5px] font-semibold uppercase tracking-widest text-gray-500">
+            <label htmlFor="robots-urls" className="mb-1 block font-mono text-[10.5px] font-semibold uppercase tracking-widest text-[color:var(--muted)]">
               URLs to test (one per line)
             </label>
             <textarea
@@ -154,10 +154,10 @@ export function RobotsTxtTesterWidget() {
               disabled={loading}
               spellCheck={false}
             />
-            <p className="mt-1 text-[12px] text-gray-500">Paths or full URLs both work.</p>
+            <p className="mt-1 text-[12px] text-[color:var(--muted)]">Paths or full URLs both work.</p>
           </div>
           <div>
-            <span className="mb-1 block font-mono text-[10.5px] font-semibold uppercase tracking-widest text-gray-500">
+            <span className="mb-1 block font-mono text-[10.5px] font-semibold uppercase tracking-widest text-[color:var(--muted)]">
               Crawlers
             </span>
             <div className="flex flex-wrap gap-1.5">
@@ -167,10 +167,10 @@ export function RobotsTxtTesterWidget() {
                   type="button"
                   onClick={() => toggleAgent(a)}
                   aria-pressed={agents.includes(a)}
-                  className={`rounded-full border px-2.5 py-1 font-mono text-[11.5px] transition-colors ${
+                  className={`rounded-[3px] border px-2.5 py-1 font-mono text-[11.5px] transition-colors ${
                     agents.includes(a)
-                      ? "border-accent-500 bg-accent-50 text-accent-800"
-                      : "border-gray-300 text-gray-600 hover:border-gray-400"
+                      ? "border-[color:var(--accent)] bg-[color:var(--pass-bg)] text-[color:var(--accent)]"
+                      : "border-[color:var(--line-strong)] text-[color:var(--muted)] hover:border-[color:var(--line-lime)]"
                   }`}
                 >
                   {a}
@@ -184,14 +184,14 @@ export function RobotsTxtTesterWidget() {
           <button
             type="submit"
             disabled={loading || (pasteMode ? !content.trim() : !site.trim())}
-            className="rounded-lg bg-accent-600 px-6 py-2.5 text-[14px] font-semibold text-white transition-colors hover:bg-accent-500 disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-[3px] bg-[color:var(--accent)] px-6 py-2.5 text-[14px] font-semibold text-[color:var(--accent-ink)] transition-colors hover:bg-[color:var(--accent-hover)] disabled:cursor-not-allowed disabled:opacity-50"
           >
             {loading ? "Checking…" : "Test robots.txt"}
           </button>
           <button
             type="button"
             onClick={() => setPasteMode((p) => !p)}
-            className="text-[13px] font-medium text-accent-700 underline-offset-2 hover:underline"
+            className="text-[13px] font-medium text-[color:var(--accent)] underline-offset-2 hover:underline"
           >
             {pasteMode ? "Fetch from a domain instead" : "Or paste a robots.txt"}
           </button>
@@ -203,7 +203,7 @@ export function RobotsTxtTesterWidget() {
       </p>
 
       {err && (
-        <div role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-[14px] leading-relaxed text-red-800">
+        <div role="alert" className="mt-5 rounded-[4px] border border-[color:var(--fail-line)] bg-[color:var(--fail-bg)] p-4 text-[14px] leading-relaxed text-[color:var(--fail)]">
           {err}
         </div>
       )}
@@ -211,7 +211,7 @@ export function RobotsTxtTesterWidget() {
       {result?.ok && (
         <div className="mt-6 space-y-5">
           {!result.exists && (
-            <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 text-[14px] leading-relaxed text-gray-700">
+            <div className="rounded-[4px] border border-[color:var(--line-strong)] bg-[color:var(--surface-2)] p-4 text-[14px] leading-relaxed text-[color:var(--text)]">
               No robots.txt at <span className="font-mono">{result.origin}</span> — which is valid. Crawlers treat a
               missing file as permission to crawl everything.
             </div>
@@ -219,28 +219,28 @@ export function RobotsTxtTesterWidget() {
 
           {/* Verdicts — the reason people come here */}
           {byUrl.size > 0 && (
-            <div className="overflow-hidden rounded-xl border border-gray-200">
+            <div className="overflow-x-auto rounded-[4px] border border-[color:var(--line-strong)]">
               <table className="w-full border-collapse text-left">
-                <thead className="bg-gray-50">
+                <thead className="bg-[color:var(--surface-2)]">
                   <tr>
-                    <th className="border-b border-gray-200 px-3 py-2 font-mono text-[10.5px] font-semibold uppercase tracking-widest text-gray-500">URL</th>
-                    <th className="border-b border-gray-200 px-3 py-2 font-mono text-[10.5px] font-semibold uppercase tracking-widest text-gray-500">Crawler</th>
-                    <th className="border-b border-gray-200 px-3 py-2 font-mono text-[10.5px] font-semibold uppercase tracking-widest text-gray-500">Verdict</th>
-                    <th className="hidden border-b border-gray-200 px-3 py-2 font-mono text-[10.5px] font-semibold uppercase tracking-widest text-gray-500 sm:table-cell">Matched rule</th>
+                    <th className="border-b border-[color:var(--line-strong)] px-3 py-2 font-mono text-[10.5px] font-semibold uppercase tracking-widest text-[color:var(--muted)]">URL</th>
+                    <th className="border-b border-[color:var(--line-strong)] px-3 py-2 font-mono text-[10.5px] font-semibold uppercase tracking-widest text-[color:var(--muted)]">Crawler</th>
+                    <th className="border-b border-[color:var(--line-strong)] px-3 py-2 font-mono text-[10.5px] font-semibold uppercase tracking-widest text-[color:var(--muted)]">Verdict</th>
+                    <th className="hidden border-b border-[color:var(--line-strong)] px-3 py-2 font-mono text-[10.5px] font-semibold uppercase tracking-widest text-[color:var(--muted)] sm:table-cell">Matched rule</th>
                   </tr>
                 </thead>
                 <tbody>
                   {[...byUrl.entries()].flatMap(([url, vs]) =>
                     vs.map((v, i) => (
-                      <tr key={`${url}-${v.agent}`} className="odd:bg-white even:bg-gray-50/50">
-                        <td className="border-b border-gray-100 px-3 py-1.5">
-                          {i === 0 && <span className="break-all font-mono text-[12.5px] text-gray-700">{url}</span>}
+                      <tr key={`${url}-${v.agent}`} className="odd:bg-[color:var(--surface)] even:bg-[color:var(--surface-2)]">
+                        <td className="border-b border-[color:var(--line)] px-3 py-1.5">
+                          {i === 0 && <span className="break-all font-mono text-[12.5px] text-[color:var(--text)]">{url}</span>}
                         </td>
-                        <td className="whitespace-nowrap border-b border-gray-100 px-3 py-1.5 font-mono text-[12px] text-gray-600">{v.agent}</td>
-                        <td className={`whitespace-nowrap border-b border-gray-100 px-3 py-1.5 text-[12.5px] font-semibold ${v.allowed ? "text-emerald-700" : "text-red-700"}`}>
+                        <td className="whitespace-nowrap border-b border-[color:var(--line)] px-3 py-1.5 font-mono text-[12px] text-[color:var(--muted)]">{v.agent}</td>
+                        <td className={`whitespace-nowrap border-b border-[color:var(--line)] px-3 py-1.5 text-[12.5px] font-semibold ${v.allowed ? "text-[color:var(--accent)]" : "text-[color:var(--fail)]"}`}>
                           {v.allowed ? "Allowed" : "Blocked"}
                         </td>
-                        <td className="hidden border-b border-gray-100 px-3 py-1.5 font-mono text-[11.5px] text-gray-500 sm:table-cell">
+                        <td className="hidden border-b border-[color:var(--line)] px-3 py-1.5 font-mono text-[11.5px] text-[color:var(--muted)] sm:table-cell">
                           {v.rule ? `${v.rule.type}: ${v.rule.path}` : "no rule matched"}
                         </td>
                       </tr>
@@ -253,12 +253,12 @@ export function RobotsTxtTesterWidget() {
 
           {/* Which group applies — the most misunderstood part of the format */}
           {result.effective && result.effective.length > 0 && (
-            <div className="rounded-xl border border-gray-200 bg-gray-50 p-4">
-              <p className="font-mono text-[10.5px] font-semibold uppercase tracking-widest text-gray-500">Which rules apply</p>
+            <div className="rounded-[4px] border border-[color:var(--line-strong)] bg-[color:var(--surface-2)] p-4">
+              <p className="font-mono text-[10.5px] font-semibold uppercase tracking-widest text-[color:var(--muted)]">Which rules apply</p>
               <ul className="mt-2 space-y-1">
                 {result.effective.map((e) => (
-                  <li key={e.agent} className="text-[13px] leading-relaxed text-gray-700">
-                    <span className="font-mono text-gray-900">{e.agent}</span>{" "}
+                  <li key={e.agent} className="text-[13px] leading-relaxed text-[color:var(--text)]">
+                    <span className="font-mono text-[color:var(--white)]">{e.agent}</span>{" "}
                     {e.matchedAgents.length > 0 ? (
                       <>
                         follows the <span className="font-mono">{e.matchedAgents.join(", ")}</span> group ({e.ruleCount} rule
@@ -271,8 +271,8 @@ export function RobotsTxtTesterWidget() {
                   </li>
                 ))}
               </ul>
-              <p className="mt-2 text-[12.5px] leading-relaxed text-gray-500">
-                A named group <strong>replaces</strong> the <code className="rounded bg-gray-200 px-1">*</code>{" "}group for
+              <p className="mt-2 text-[12.5px] leading-relaxed text-[color:var(--muted)]">
+                A named group <strong>replaces</strong> the <code className="rounded bg-[color:var(--line-strong)] px-1">*</code>{" "}group for
                 that crawler — the rules aren&apos;t combined. That&apos;s the mistake we see most often.
               </p>
             </div>
@@ -282,31 +282,31 @@ export function RobotsTxtTesterWidget() {
           {result.findings.length > 0 && (
             <ul className="space-y-2">
               {result.findings.map((f, i) => (
-                <li key={i} className="rounded-xl border border-gray-200 bg-white p-4">
+                <li key={i} className="rounded-[4px] border border-[color:var(--line-strong)] bg-[color:var(--surface)] p-4">
                   <div className="flex flex-wrap items-center gap-2">
                     <span
-                      className={`rounded-full px-2 py-0.5 font-mono text-[10.5px] font-bold uppercase tracking-widest ${
+                      className={`rounded-[3px] px-2 py-0.5 font-mono text-[10.5px] font-bold uppercase tracking-widest ${
                         f.severity === "error"
-                          ? "bg-red-100 text-red-700"
+                          ? "bg-[color:var(--fail-bg-strong)] text-[color:var(--fail)]"
                           : f.severity === "warning"
-                            ? "bg-amber-100 text-amber-800"
-                            : "bg-gray-100 text-gray-600"
+                            ? "bg-[color:var(--warn-bg-strong)] text-[color:var(--warn)]"
+                            : "bg-[color:var(--surface-2)] text-[color:var(--muted)]"
                       }`}
                     >
                       {f.severity}
                     </span>
-                    <span className="text-[14px] font-bold tracking-tight text-gray-900">{f.title}</span>
-                    {f.line !== undefined && <span className="font-mono text-[12px] text-gray-500">line {f.line}</span>}
+                    <span className="text-[14px] font-bold tracking-tight text-[color:var(--white)]">{f.title}</span>
+                    {f.line !== undefined && <span className="font-mono text-[12px] text-[color:var(--muted)]">line {f.line}</span>}
                   </div>
-                  <p className="mt-1.5 text-[13.5px] leading-relaxed text-gray-700">{f.detail}</p>
+                  <p className="mt-1.5 text-[13.5px] leading-relaxed text-[color:var(--text)]">{f.detail}</p>
                 </li>
               ))}
             </ul>
           )}
 
           {result.sitemaps.length > 0 && (
-            <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 text-[13px] leading-relaxed text-gray-700">
-              <span className="font-semibold text-gray-900">Sitemaps declared: </span>
+            <div className="rounded-[4px] border border-[color:var(--line-strong)] bg-[color:var(--surface-2)] p-4 text-[13px] leading-relaxed text-[color:var(--text)]">
+              <span className="font-semibold text-[color:var(--white)]">Sitemaps declared: </span>
               {result.sitemaps.map((s, i) => (
                 <span key={s} className="break-all font-mono">
                   {i > 0 && ", "}
@@ -317,11 +317,11 @@ export function RobotsTxtTesterWidget() {
           )}
 
           {result.content && (
-            <details className="rounded-xl border border-gray-200 bg-white p-4">
-              <summary className="cursor-pointer text-[13px] font-semibold text-gray-800">
+            <details className="rounded-[4px] border border-[color:var(--line-strong)] bg-[color:var(--surface)] p-4">
+              <summary className="cursor-pointer text-[13px] font-semibold text-[color:var(--white)]">
                 The file we tested ({result.content.length.toLocaleString()} bytes)
               </summary>
-              <pre className="mt-3 max-h-[24rem] overflow-auto whitespace-pre-wrap break-words rounded-lg bg-gray-950 p-4 font-mono text-[12px] leading-relaxed text-gray-200">
+              <pre className="mt-3 max-h-[24rem] overflow-auto whitespace-pre-wrap break-words rounded-[4px] bg-[color:var(--code-bg)] p-4 font-mono text-[12px] leading-relaxed text-[color:var(--text)]">
                 {result.content}
               </pre>
             </details>

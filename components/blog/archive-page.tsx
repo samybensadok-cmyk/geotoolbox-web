@@ -12,6 +12,7 @@ import { JsonLd } from "@/components/seo/json-ld"
 import { ArchiveGrid } from "./archive-cards"
 import { ArchivePager, TopicPills } from "./archive-navigation"
 import { BlogResults, type SearchLabels } from "./blog-results"
+import { geist } from "@/components/landing/v3/geist"
 import styles from "./archive.module.css"
 
 export type ArchiveParams = { locale: string; topic?: string; pageNumber?: string }
@@ -61,15 +62,18 @@ export async function ArchivePage({ params }: ArchiveProps) {
   const allPosts = archivePosts(locale)
   const counts = topicCounts(allPosts)
   const searchLabels = Object.fromEntries(["searchLabel", "searchPlaceholder", "loading", "error", "retry", "clear", "empty", "results"].map((key) => [key, ui(key)])) as SearchLabels
-  return <div className={styles.archive}>
-    <JsonLd data={breadcrumbsSchema(crumbs)} />
-    <header className={styles.header}>
+  return <>
+  <header className={`${styles.band} ${geist.variable}`}>
+    <div className={styles.bandInner}>
       <p className={styles.eyebrow}>{t("eyebrow")}</p>
       <h1>{topic ? topics(topic) : t("heading")}</h1>
       {!topic && <p>{t("intro")}</p>}
       <p className={styles.count}>{topic ? ui("topicCount", { count }) : t("count", { count })}</p>
       {page > 1 && <p>{ui("pageOf", { page, total })}</p>}
-    </header>
+    </div>
+  </header>
+  <div className={styles.archive}>
+    <JsonLd data={breadcrumbsSchema(crumbs)} />
     <BlogResults key={`${locale}:${topic ?? "all"}:${page}`} locale={locale} topic={topic} labels={searchLabels}
       filters={<TopicPills locale={locale} active={topic} label={ui("filterLabel")} topics={[
         { label: t("all"), count: allPosts.length },
@@ -88,4 +92,5 @@ export async function ArchivePage({ params }: ArchiveProps) {
       }} />
     </BlogResults>
   </div>
+  </>
 }

@@ -4,6 +4,7 @@ import { useSyncExternalStore } from "react"
 import { BF, BF_COPY, bfEndLabel, bfLocale, bfPhase, bfStartLabel, formatBfCountdown, type BfPhase } from "@/lib/black-friday"
 import { useCountdown } from "@/components/promo/use-countdown"
 import { BfCountdown } from "@/components/promo/bf-countdown"
+import st from "./pricing-experience.module.css"
 
 /**
  * SG_BF2026_V1 — Black Friday block above the plan cards (redesign 2026-11-17 after operator review: "not great in
@@ -33,7 +34,7 @@ export function BlackFridayStrip({ locale = "en" }: { locale?: string }) {
   const endLabel = bfEndLabel(loc)
   if (phase === "teaser") {
     return (
-      <p className="mx-auto mb-6 max-w-3xl rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-2.5 text-center text-[13px] font-medium text-neutral-800" data-bf-campaign={`${BF.campaign}-${phase}`}>
+      <p className={st.notice} data-bf-campaign={`${BF.campaign}-${phase}`}>
         {t.stripTeaser(bfStartLabel(loc), endLabel)}
       </p>
     )
@@ -41,24 +42,23 @@ export function BlackFridayStrip({ locale = "en" }: { locale?: string }) {
   return (
     <section
       aria-label={`${t.badge}: ${t.headline}`}
-      className="relative mx-auto mb-8 max-w-5xl overflow-hidden rounded-2xl bg-neutral-950 px-5 py-5 text-white shadow-[0_24px_60px_-30px_rgba(0,0,0,0.55)] sm:px-8"
+      className={st.bf}
       data-bf-campaign={`${BF.campaign}-${phase}`}
     >
-      <div aria-hidden="true" className="pointer-events-none absolute -right-20 -top-24 h-56 w-56 rounded-full bg-yellow-400/15 blur-3xl" />
-      <div className="relative flex flex-col items-center gap-4 text-center md:flex-row md:justify-between md:text-left">
-        <div className="flex flex-col items-center gap-2 md:flex-row md:gap-3">
-          <span className="shrink-0 rounded-sm bg-yellow-400 px-2.5 py-1 text-[11px] font-extrabold tracking-[0.14em] text-neutral-950">{t.badge}</span>
-          <h2 className="text-[22px] font-extrabold leading-tight tracking-tight sm:text-[26px]">{t.headline}</h2>
+      <div className={st.bfRow}>
+        <div className={st.bfLead}>
+          <span className={st.bfBadge}>{t.badge}</span>
+          <h2 className={st.bfHeadline}>{t.headline}</h2>
         </div>
         {msLeft !== null && msLeft > 0 && (
-          <div className="flex shrink-0 items-center gap-2.5" aria-live="off">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-white/60">{t.endsIn}</span>
+          <div className={st.bfCount} aria-live="off">
+            <span className={st.bfEnds}>{t.endsIn}</span>
             <BfCountdown msLeft={msLeft} locale={loc} size="md" />
             <span className="sr-only">{formatBfCountdown(msLeft, loc)}</span>
           </div>
         )}
       </div>
-      <p className="relative mt-3 text-center text-[12px] leading-snug text-white/55 md:text-left">{t.stripLive(endLabel)}</p>
+      <p className={st.bfTerms}>{t.stripLive(endLabel)}</p>
     </section>
   )
 }

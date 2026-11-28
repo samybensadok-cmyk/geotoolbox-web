@@ -3,6 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { ToolResultCapture } from "@/components/tools/tool-result-capture"
+import tk from "./tools-dark.module.css"
 
 /**
  * Free "AI Query Fan-Out" demo — BYOK (bring your own key), 100% client-side.
@@ -280,17 +281,17 @@ export function QueryFanoutWidget() {
   }
 
   const inputCls =
-    "min-w-0 flex-1 rounded-xl border border-gray-300 bg-white px-4 py-3 text-[15px] text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-accent-500 focus:ring-2 focus:ring-accent-200 disabled:opacity-60"
+    "min-w-0 flex-1 rounded-[4px] border border-[color:var(--line-strong)] bg-[color:var(--bg)] px-4 py-3 text-[15px] text-[color:var(--white)] outline-none transition-colors placeholder:text-[color:var(--subtle)] focus:border-[color:var(--accent)] focus:ring-2 focus:ring-[color:var(--focus-ring)] disabled:opacity-60"
 
   return (
     <div className="mx-auto max-w-3xl">
       <form
         onSubmit={(e) => { e.preventDefault(); run(seed) }}
-        className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm sm:p-5"
+        className="rounded-[8px] border border-[color:var(--line-strong)] bg-[color:var(--surface)] p-4 shadow-sm sm:p-5"
       >
         {/* Keys */}
-        <label htmlFor="qf-gemini" className="mb-1 block text-[12px] font-medium text-gray-600">
-          Google AI Studio (Gemini) API key <span className="font-normal text-gray-400">— required, from aistudio.google.com (Search grounding on current models needs billing; keys that already used Gemini 2.5 can still run free)</span>
+        <label htmlFor="qf-gemini" className="mb-1 block text-[12px] font-medium text-[color:var(--muted)]">
+          Google AI Studio (Gemini) API key <span className="font-normal text-[color:var(--muted)]">— required, from aistudio.google.com (Search grounding on current models needs billing; keys that already used Gemini 2.5 can still run free)</span>
         </label>
         <div className="flex items-stretch gap-2">
           <input
@@ -307,7 +308,7 @@ export function QueryFanoutWidget() {
           <button
             type="button"
             onClick={() => setShowKeys((s) => !s)}
-            className="shrink-0 rounded-xl border border-gray-200 px-3 text-[12px] font-medium text-gray-500 transition-colors hover:border-gray-300 hover:text-gray-700"
+            className="shrink-0 rounded-[4px] border border-[color:var(--line-strong)] px-3 text-[12px] font-medium text-[color:var(--muted)] transition-colors hover:border-[color:var(--line-lime)] hover:text-[color:var(--white)]"
             aria-pressed={showKeys}
           >
             {showKeys ? "Hide" : "Show"}
@@ -316,8 +317,8 @@ export function QueryFanoutWidget() {
 
         {showPplx ? (
           <div className="mt-3">
-            <label htmlFor="qf-pplx" className="mb-1 block text-[12px] font-medium text-gray-600">
-              Perplexity API key <span className="font-normal text-gray-400">— optional, adds a 2nd engine for the divergence map</span>
+            <label htmlFor="qf-pplx" className="mb-1 block text-[12px] font-medium text-[color:var(--muted)]">
+              Perplexity API key <span className="font-normal text-[color:var(--muted)]">— optional, adds a 2nd engine for the divergence map</span>
             </label>
             <input
               id="qf-pplx"
@@ -336,14 +337,14 @@ export function QueryFanoutWidget() {
             type="button"
             onClick={() => setShowPplx(true)}
             disabled={loading}
-            className="mt-2 text-[12.5px] font-medium text-accent-700 underline-offset-2 hover:underline disabled:opacity-50"
+            className="mt-2 text-[12.5px] font-medium text-[color:var(--accent)] underline-offset-2 hover:underline disabled:opacity-50"
           >
             + Add a Perplexity key for a cross-engine divergence map
           </button>
         )}
 
         {/* Seed */}
-        <label htmlFor="qf-seed" className="mb-1 mt-4 block text-[12px] font-medium text-gray-600">
+        <label htmlFor="qf-seed" className="mb-1 mt-4 block text-[12px] font-medium text-[color:var(--muted)]">
           Topic or keyword to fan out
         </label>
         <div className="flex flex-col gap-3 sm:flex-row">
@@ -361,7 +362,7 @@ export function QueryFanoutWidget() {
           <button
             type="submit"
             disabled={loading}
-            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-accent-900 px-6 py-3 text-[15px] font-semibold text-white transition-all hover:bg-accent-800 active:translate-y-[1px] disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-[3px] bg-[color:var(--accent)] px-6 py-3 text-[15px] font-semibold text-[color:var(--accent-ink)] transition-all hover:bg-[color:var(--accent-hover)] active:translate-y-[1px] disabled:cursor-not-allowed disabled:opacity-60"
           >
             {loading ? (
               <>
@@ -376,14 +377,14 @@ export function QueryFanoutWidget() {
         </div>
 
         <div className="mt-3 flex flex-wrap items-center gap-2">
-          <span className="text-[12px] text-gray-400">Try:</span>
+          <span className="text-[12px] text-[color:var(--muted)]">Try:</span>
           {["best CRM for startups", "enterprise password manager", "ai seo tools"].map((ex) => (
             <button
               key={ex}
               type="button"
               disabled={loading}
               onClick={() => setSeed(ex)}
-              className="rounded-full border border-gray-200 px-3 py-1 font-mono text-[12px] text-gray-600 transition-colors hover:border-accent-300 hover:text-accent-700 disabled:opacity-50"
+              className="rounded-[3px] border border-[color:var(--line-strong)] px-3 py-1 font-mono text-[12px] text-[color:var(--muted)] transition-colors hover:border-[color:var(--accent)] hover:text-[color:var(--accent)] disabled:opacity-50"
             >
               {ex}
             </button>
@@ -391,30 +392,30 @@ export function QueryFanoutWidget() {
         </div>
 
         {/* Key-safety notice */}
-        <div className="mt-4 flex items-start gap-2.5 rounded-xl border border-accent-100 bg-accent-50/50 px-3.5 py-3">
-          <svg className="mt-0.5 h-4 w-4 shrink-0 text-accent-700" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6">
+        <div className="mt-4 flex items-start gap-2.5 rounded-[4px] border border-[color:var(--line-lime)] bg-[color:var(--pass-bg)] px-3.5 py-3">
+          <svg className="mt-0.5 h-4 w-4 shrink-0 text-[color:var(--accent)]" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6">
             <path d="M8 1.5 2.5 4v3.5c0 3 2.3 5.6 5.5 7 3.2-1.4 5.5-4 5.5-7V4L8 1.5Z" strokeLinejoin="round" />
             <path d="M5.5 8 7.2 9.7 10.5 6.4" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
-          <p className="text-[12px] leading-relaxed text-gray-600">
-            <span className="font-semibold text-gray-800">Your keys stay in your browser.</span> Requests go straight to Google
+          <p className="text-[12px] leading-relaxed text-[color:var(--muted)]">
+            <span className="font-semibold text-[color:var(--white)]">Your keys stay in your browser.</span> Requests go straight to Google
             and Perplexity — never to a GEO Toolbox server. Nothing is logged, proxied, or stored; reload the page and the keys are gone.
           </p>
         </div>
       </form>
 
       {loading && (
-        <p className="mt-4 text-center text-[13px] text-gray-500" aria-live="polite">
+        <p className="mt-4 text-center text-[13px] text-[color:var(--muted)]" aria-live="polite">
           {stage || "Working…"}
         </p>
       )}
       {error && !loading && (
-        <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-[14px] text-red-700" role="alert">
+        <div className="mt-4 rounded-[4px] border border-[color:var(--fail-line)] bg-[color:var(--fail-bg)] px-4 py-3 text-[14px] text-[color:var(--fail)]" role="alert">
           {error}
         </div>
       )}
       {notice && !loading && (
-        <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-[13px] text-amber-800">
+        <div className="mt-4 rounded-[4px] border border-[color:var(--warn-line)] bg-[color:var(--warn-bg)] px-4 py-3 text-[13px] text-[color:var(--warn)]">
           {notice}
         </div>
       )}
@@ -436,23 +437,23 @@ function FanResultView({ result }: { result: FanResult }) {
   return (
     <div className="mt-6 space-y-5">
       {/* Stat strip */}
-      <div className="rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
-        <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-500">
+      <div className="rounded-[8px] border border-[color:var(--line-strong)] bg-[color:var(--surface)] p-5 sm:p-6">
+        <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-[color:var(--muted)]">
           Fan-out for &ldquo;{seed}&rdquo;
         </p>
-        <div className="mt-4 grid grid-cols-3 divide-x divide-gray-100 text-center">
+        <div className="mt-4 grid grid-cols-3 divide-x divide-[color:var(--line)] text-center">
           {[
             { v: String(queries.length), l: "queries" },
             { v: clusters ? String(clusters.length) : "—", l: "clusters" },
             { v: String(engines.length), l: engines.length === 1 ? "engine" : "engines" },
           ].map((s) => (
             <div key={s.l} className="px-2">
-              <div className="font-mono text-2xl font-bold tabular-nums text-accent-700">{s.v}</div>
-              <div className="mt-0.5 font-mono text-[10px] uppercase tracking-widest text-gray-500">{s.l}</div>
+              <div className="font-mono text-2xl font-bold tabular-nums text-[color:var(--accent)]">{s.v}</div>
+              <div className="mt-0.5 font-mono text-[10px] uppercase tracking-widest text-[color:var(--muted)]">{s.l}</div>
             </div>
           ))}
         </div>
-        <p className="mt-4 text-[12px] leading-relaxed text-gray-500">
+        <p className="mt-4 text-[12px] leading-relaxed text-[color:var(--muted)]">
           {fired} real fired {fired === 1 ? "query" : "queries"} from {engines.join(" + ")}
           {whitespace > 0 && <> · {shared} shared intents · {whitespace} single-engine whitespace</>}.
           Live engine output — your keys, your data.
@@ -466,40 +467,40 @@ function FanResultView({ result }: { result: FanResult }) {
 
       {/* Clusters as a list when single-engine (no divergence to show) */}
       {clusters && clusters.length > 0 && engines.length < 2 && (
-        <div className="rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">Intents found</p>
-          <ul className="mt-4 divide-y divide-gray-100">
+        <div className="rounded-[8px] border border-[color:var(--line-strong)] bg-[color:var(--surface)] p-5 sm:p-6">
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-[color:var(--accent)]">Intents found</p>
+          <ul className="mt-4 divide-y divide-[color:var(--line)]">
             {clusters.map((c) => (
               <li key={c.intent} className="flex items-center justify-between gap-3 py-2.5">
-                <span className="text-[14px] font-medium text-gray-900">{c.intent}</span>
+                <span className="text-[14px] font-medium text-[color:var(--white)]">{c.intent}</span>
                 {c.format && (
-                  <span className="shrink-0 rounded-full bg-gray-100 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-gray-600">
+                  <span className="shrink-0 rounded-[3px] bg-[color:var(--surface-2)] px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-[color:var(--muted)]">
                     {c.format}
                   </span>
                 )}
               </li>
             ))}
           </ul>
-          <p className="mt-4 text-[12px] text-gray-500">
+          <p className="mt-4 text-[12px] text-[color:var(--muted)]">
             Add a Perplexity key above to compare engines and get the cross-engine divergence map.
           </p>
         </div>
       )}
 
       {/* The raw fan-out */}
-      <div className="rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
-        <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+      <div className="rounded-[8px] border border-[color:var(--line-strong)] bg-[color:var(--surface)] p-5 sm:p-6">
+        <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-[color:var(--accent)]">
           Real fan-out queries · {queries.length}
         </p>
-        <ul className="mt-4 divide-y divide-gray-100">
+        <ul className="mt-4 divide-y divide-[color:var(--line)]">
           {queries.map((q, i) => (
             <li key={`${q.engine}-${i}`} className="flex items-center justify-between gap-3 py-2.5">
-              <span className="min-w-0 truncate font-mono text-[13px] text-gray-800">{q.q}</span>
+              <span className="min-w-0 truncate font-mono text-[13px] text-[color:var(--white)]">{q.q}</span>
               <div className="flex shrink-0 items-center gap-2">
-                <span className="font-mono text-[10px] text-gray-500">{q.engine}</span>
+                <span className="font-mono text-[10px] text-[color:var(--muted)]">{q.engine}</span>
                 <span
-                  className={`rounded-full px-1.5 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wider ${
-                    q.kind === "fired" ? "bg-accent-50 text-accent-700" : "bg-gray-100 text-gray-600"
+                  className={`rounded-[3px] px-1.5 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wider ${
+                    q.kind === "fired" ? "bg-[color:var(--pass-bg)] text-[color:var(--accent)]" : "bg-[color:var(--surface-2)] text-[color:var(--muted)]"
                   }`}
                 >
                   {q.kind === "fired" ? "Fired" : "Related"}
@@ -509,23 +510,23 @@ function FanResultView({ result }: { result: FanResult }) {
           ))}
         </ul>
         {!clusters && (
-          <p className="mt-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-[12px] text-amber-800">
+          <p className="mt-4 rounded-[4px] border border-[color:var(--warn-line)] bg-[color:var(--warn-bg)] px-3 py-2 text-[12px] text-[color:var(--warn)]">
             Clustering didn&apos;t return clean JSON this time — the raw fan-out above is still real. Re-run to try the divergence map again.
           </p>
         )}
       </div>
 
       {/* Funnel CTA */}
-      <div className="rounded-2xl border border-gray-900 bg-gray-950 p-6 sm:p-7">
+      <div className={`rounded-[8px] border border-[color:var(--line-strong)] bg-[color:var(--code-bg)] p-6 sm:p-7 ${tk.bridgeIn}`}>
         <h3 className="text-lg font-bold tracking-tight text-white">That&apos;s the browser-runnable slice.</h3>
-        <p className="mt-2 text-[14px] leading-relaxed text-gray-300">
+        <p className="mt-2 text-[14px] leading-relaxed text-[color:var(--muted)]">
           The in-app version adds the engines a browser can&apos;t reach (ChatGPT, Grok), real search volume, your page&apos;s
           coverage of each intent, the citation landscape, and a ranked content worklist — on our keys, metered per scan.
         </p>
         <div className="mt-5">
           <Link
             href="/features/query-fanout"
-            className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-[15px] font-semibold text-gray-950 transition-colors hover:bg-gray-100"
+            className="inline-flex items-center gap-2 rounded-[3px] bg-[color:var(--accent)] px-6 py-3 text-[15px] font-semibold text-[color:var(--accent-ink)] transition-colors hover:bg-[color:var(--accent-hover)]"
           >
             See the full feature
             <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
@@ -540,12 +541,12 @@ function FanResultView({ result }: { result: FanResult }) {
 
 function DivergenceMatrix({ clusters, engines }: { clusters: Cluster[]; engines: string[] }) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white">
-      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b border-gray-100 bg-gray-50 px-5 py-3">
-        <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-600">Intents × engines</span>
-        <div className="flex items-center gap-3 font-mono text-[10px] text-gray-500">
-          <span className="inline-flex items-center gap-1"><span className="inline-block h-2.5 w-2.5 rounded-full bg-accent-700" /> shared</span>
-          <span className="inline-flex items-center gap-1"><span className="inline-block h-2.5 w-2.5 rounded-full bg-amber-600" /> whitespace</span>
+    <div className="overflow-hidden rounded-[8px] border border-[color:var(--line-strong)] bg-[color:var(--surface)]">
+      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b border-[color:var(--line)] bg-[color:var(--surface-2)] px-5 py-3">
+        <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-[color:var(--muted)]">Intents × engines</span>
+        <div className="flex items-center gap-3 font-mono text-[10px] text-[color:var(--muted)]">
+          <span className="inline-flex items-center gap-1"><span className="inline-block h-2.5 w-2.5 rounded-full bg-[color:var(--accent)]" /> shared</span>
+          <span className="inline-flex items-center gap-1"><span className="inline-block h-2.5 w-2.5 rounded-full bg-[color:var(--warn)]" /> whitespace</span>
         </div>
       </div>
       <div className="overflow-x-auto">
@@ -554,22 +555,22 @@ function DivergenceMatrix({ clusters, engines }: { clusters: Cluster[]; engines:
             Which AI engines fanned out a query for each intent. A filled dot means that engine fired a query for it.
           </caption>
           <thead>
-            <tr className="border-b border-gray-100">
-              <th scope="col" className="px-5 py-3 font-mono text-[10px] font-semibold uppercase tracking-widest text-gray-500">Intent</th>
+            <tr className="border-b border-[color:var(--line)]">
+              <th scope="col" className="px-5 py-3 font-mono text-[10px] font-semibold uppercase tracking-widest text-[color:var(--muted)]">Intent</th>
               {engines.map((e) => (
-                <th key={e} scope="col" className="px-2 py-3 text-center font-mono text-[10px] font-semibold uppercase tracking-widest text-gray-500">{e}</th>
+                <th key={e} scope="col" className="px-2 py-3 text-center font-mono text-[10px] font-semibold uppercase tracking-widest text-[color:var(--muted)]">{e}</th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-50">
+          <tbody className="divide-y divide-[color:var(--line)]">
             {clusters.map((c) => {
               const isWhitespace = c.engines.length === 1
               return (
-                <tr key={c.intent} className={isWhitespace ? "bg-amber-50/50" : ""}>
+                <tr key={c.intent} className={isWhitespace ? "bg-[color:var(--warn-bg)]" : ""}>
                   <th scope="row" className="px-5 py-3.5 text-left font-normal">
-                    <span className="text-[13px] font-medium text-gray-900">{c.intent}</span>
+                    <span className="text-[13px] font-medium text-[color:var(--white)]">{c.intent}</span>
                     {isWhitespace && (
-                      <span className="ml-2 rounded-full border border-dashed border-amber-400 px-1.5 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wider text-amber-700">
+                      <span className="ml-2 rounded-[3px] border border-dashed border-[color:var(--warn-line)] px-1.5 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wider text-[color:var(--warn)]">
                         Whitespace
                       </span>
                     )}
@@ -580,15 +581,15 @@ function DivergenceMatrix({ clusters, engines }: { clusters: Cluster[]; engines:
                       <td key={e} className="px-2 py-3.5 text-center">
                         {on ? (
                           <span
-                            className={`inline-flex h-5 w-5 items-center justify-center rounded-full ${isWhitespace ? "bg-amber-600" : "bg-accent-700"}`}
+                            className={`inline-flex h-5 w-5 items-center justify-center rounded-full ${isWhitespace ? "bg-[color:var(--warn)]" : "bg-[color:var(--accent)]"}`}
                             aria-label={`${c.intent} — ${e}: fired`}
                           >
-                            <svg className="h-2.5 w-2.5 text-white" viewBox="0 0 12 12" fill="none">
+                            <svg className="h-2.5 w-2.5 text-[color:var(--accent-ink)]" viewBox="0 0 12 12" fill="none">
                               <path d="M2.5 6.2 5 8.5 9.5 3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                           </span>
                         ) : (
-                          <span className="inline-block h-2.5 w-2.5 rounded-full border border-gray-300 bg-white" aria-label={`${c.intent} — ${e}: not fired`} />
+                          <span className="inline-block h-2.5 w-2.5 rounded-full border border-[color:var(--line-strong)] bg-[color:var(--surface)]" aria-label={`${c.intent} — ${e}: not fired`} />
                         )}
                       </td>
                     )

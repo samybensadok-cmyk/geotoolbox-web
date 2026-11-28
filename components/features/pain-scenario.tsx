@@ -1,8 +1,11 @@
+import { Arrow, kit as k } from "@/components/brand/dark-kit"
+import { FxIndex } from "./fx"
+import s from "./fx.module.css"
+
 /**
- * PainScenarioSection — the "cost of being invisible" move every strong
- * competitor page makes and our pages skip: name the visitor's blind spot as a
- * concrete scenario with a business cost, then bridge to the fix. Use once near
- * the top; keep restating the gap→fix rhythm at later section breaks.
+ * PainScenarioSection — the "cost of being invisible" move: name the visitor's blind spot as a
+ * concrete scenario with a business cost, then bridge to the fix. Dark kit: auto-numbered index on
+ * the left, the scenario as large display type, the bridge as a lime-arrowed line.
  */
 
 export function PainScenarioSection({
@@ -17,15 +20,16 @@ export function PainScenarioSection({
   bridge: string
 }) {
   return (
-    <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
-      <div className="mx-auto max-w-3xl">
-        <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-          {eyebrow}
-        </p>
-        <p className="mt-4 text-[clamp(1.15rem,2vw,1.4rem)] font-medium leading-relaxed tracking-tight text-gray-900">
-          {scenario}
-        </p>
-        <p className="mt-5 text-[15px] leading-relaxed text-gray-600">{bridge}</p>
+    <section className={s.sec}>
+      <div className={`${k.wrap} ${s.painGrid}`}>
+        <FxIndex label={eyebrow} />
+        <div>
+          <p className={s.painText}>{scenario}</p>
+          <p className={s.painBridge}>
+            <Arrow />
+            <span>{bridge}</span>
+          </p>
+        </div>
       </div>
     </section>
   )

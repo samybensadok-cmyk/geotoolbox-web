@@ -1,4 +1,6 @@
 import Link from "next/link"
+import k from "@/components/brand/dark-kit.module.css"
+import st from "./pricing-experience.module.css"
 
 /**
  * SG_PRICING_TRYFREE_V1 (2026-09-01) — the no-card way in.
@@ -43,40 +45,41 @@ const REF = "ref=pricing-tryfree"
 
 export function TryFreeBand({ copy }: { copy: TryFreeCopy }) {
   return (
-    <section className="bg-white px-5 py-14 sm:px-7">
-      <div className="mx-auto grid max-w-[1104px] gap-8 lg:grid-cols-[1fr_2fr] lg:gap-16">
+    <section className={`${k.section} ${st.tryFree}`}>
+      <div className={`${k.wrap} ${st.split}`}>
         <div>
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+          <p className={k.index}>
             {copy.eyebrow}
           </p>
-          <h2 className="mt-2 text-[clamp(1.4rem,2.4vw,1.9rem)] font-semibold tracking-tight text-gray-900">
+          <h2 className={st.splitTitle}>
             {copy.h2}
           </h2>
-          <p className="mt-3 text-[14px] leading-relaxed text-gray-600">{copy.sub}</p>
+          <p className={st.splitLead}>{copy.sub}</p>
           <Link
             href={`/tools?${REF}-all`}
             prefetch={false}
-            className="mt-4 inline-block text-[14px] font-semibold text-accent-700 underline-offset-4 hover:text-accent-800 hover:underline"
+            className={k.textLink}
           >
             {copy.all} →
           </Link>
         </div>
 
-        <ul className="border-t border-gray-200">
-          {copy.tools.map((tool) => (
-            <li key={tool.slug} className="border-b border-gray-200">
+        <ul className={st.toolIndex}>
+          {copy.tools.map((tool, i) => (
+            <li key={tool.slug}>
               <Link
                 href={`/tools/${tool.slug}?${REF}-${tool.slug}`}
                 prefetch={false}
-                className="group flex items-center justify-between gap-6 py-4 no-underline focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2"
+                className={st.toolRow}
               >
-                <span className="min-w-0">
-                  <span className="block text-[15px] font-semibold text-gray-900 group-hover:text-accent-800">
+                <span aria-hidden="true" className={st.toolNum}>{String(i + 1).padStart(2, "0")}</span>
+                <span className={st.toolText}>
+                  <span className={st.toolName}>
                     {tool.name}
                   </span>
-                  <span className="mt-1 block text-[13px] leading-relaxed text-gray-600">{tool.desc}</span>
+                  <span className={st.toolDesc}>{tool.desc}</span>
                 </span>
-                <span aria-hidden="true" className="shrink-0 text-[18px] text-accent-700 transition-transform group-hover:translate-x-1">→</span>
+                <span aria-hidden="true" className={st.toolArrow}>→</span>
               </Link>
             </li>
           ))}

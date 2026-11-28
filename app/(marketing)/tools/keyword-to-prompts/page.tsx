@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
+import { kit, Arrow } from "@/components/brand/dark-kit"
+import { ToolsPage, ToolIndex, toolsKit as tk } from "@/components/tools/tool-page"
 import { HowItWorks3Step, type Step } from "@/components/features/how-it-works"
 import { FeatureFaq } from "@/components/features/feature-faq"
 import { siteConfig } from "@/lib/config"
@@ -68,9 +70,9 @@ const faqs = [
 
 export default function KeywordToPromptsPage() {
   return (
-    <>
+    <ToolsPage>
       {/* Hero + the tool */}
-      <section className="relative overflow-hidden bg-[var(--surface-steel)] px-6 pt-16 pb-16 sm:pt-20 sm:pb-20">
+      <section className={`${tk.hero} ${kit.heroGlow}`}>
         <JsonLd
           data={[
             softwareApplicationSchema({
@@ -87,55 +89,61 @@ export default function KeywordToPromptsPage() {
           ]}
         />
 
-        <div className="mx-auto max-w-5xl">
+        <div className={kit.wrap}>
           <Breadcrumbs
+            tone="dark"
             trail={[
               { name: "Home", href: "/" },
               { name: "Tools", href: "/tools" },
               { name: "Keyword → AI Prompts", href: "" },
             ]}
           />
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">Free AI visibility tool</p>
-            <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
+          <div className={tk.heroHead}>
+            <p className={tk.heroLabel}>Free AI visibility tool</p>
+            <h1 className={tk.heroTitle}>
               Turn a keyword into the prompts your customers ask AI
             </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
+            <div className={tk.heroRule} aria-hidden="true" />
+            <p className={tk.heroLead}>
               SEO gave you keywords. AI visibility runs on prompts, the full conversational questions people actually type
               into ChatGPT, Claude and Perplexity. Paste one keyword, get ~15 prompts across 6 intents, with the
               brand-surfacing ones flagged so you know which to track. Free, no sign-up.
             </p>
           </div>
 
-          <div className="mt-10">
+          <div className={`${tk.heroTool} ${tk.mount}`}>
             <KeywordToPromptsWidget />
           </div>
         </div>
       </section>
 
       {/* Straight answer */}
-      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">Straight answer</p>
-          <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-            Keywords aren&apos;t prompts, and that gap is why brands go missing in AI.
-          </h2>
-          <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-gray-700">
-            <p>
-              <strong className="text-gray-900">A keyword is a fragment; a prompt is a question.</strong>{" "}Nobody types
-              &quot;standing desk&quot; into ChatGPT. They ask &quot;what&apos;s the best standing desk for a small home office under $300?&quot;
-              Longer, conversational, with context baked in. If you only know your keywords, you don&apos;t know what to track.
-            </p>
-            <p>
-              <strong className="text-gray-900">Not every prompt is worth tracking.</strong>{" "}Only some make an AI answer
-              by recommending brands, and those are where you can win or lose visibility. We flag them deterministically, so you
-              spend your tracking on the prompts that actually define your brand&apos;s presence.
-            </p>
-            <p>
-              <strong className="text-gray-900">It&apos;s a bridge, not a black box.</strong> Intent labels are model-inferred and
-              we say so; the brand-surfacing flag is a transparent rule. The honest path from the SEO keywords you have to the
-              AI prompts you can monitor.
-            </p>
+      <section className={`${kit.section} ${kit.sectionBorder}`}>
+        <div className={`${kit.wrap} ${tk.split}`}>
+          <div className={tk.splitHead}>
+            <ToolIndex>Straight answer</ToolIndex>
+            <h2 className={tk.title2}>
+              Keywords aren&apos;t prompts, and that gap is why brands go missing in AI.
+            </h2>
+          </div>
+          <div className={tk.prose}>
+            <div className={tk.stack}>
+              <p>
+                <strong>A keyword is a fragment; a prompt is a question.</strong>{" "}Nobody types
+                &quot;standing desk&quot; into ChatGPT. They ask &quot;what&apos;s the best standing desk for a small home office under $300?&quot;
+                Longer, conversational, with context baked in. If you only know your keywords, you don&apos;t know what to track.
+              </p>
+              <p>
+                <strong>Not every prompt is worth tracking.</strong>{" "}Only some make an AI answer
+                by recommending brands, and those are where you can win or lose visibility. We flag them deterministically, so you
+                spend your tracking on the prompts that actually define your brand&apos;s presence.
+              </p>
+              <p>
+                <strong>It&apos;s a bridge, not a black box.</strong> Intent labels are model-inferred and
+                we say so; the brand-surfacing flag is a transparent rule. The honest path from the SEO keywords you have to the
+                AI prompts you can monitor.
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -144,51 +152,55 @@ export default function KeywordToPromptsPage() {
       <HowItWorks3Step heading="From a keyword to trackable prompts in three steps" steps={steps} />
 
       {/* Related free tools */}
-      <section className="border-t border-gray-100 bg-gray-50 px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">More free tools</p>
-          <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-            Got the prompts? Make sure AI can actually read you.
-          </h2>
-          <p className="mt-4 text-[15px] leading-relaxed text-gray-700">
-            Once you know what to track, check the foundations. The{" "}
-            <Link href="/tools/ai-readiness" className="font-semibold text-accent-700 underline-offset-2 hover:underline">AI-Readiness Score</Link>{" "}
-            grades whether AI agents can reach and parse your site, the{" "}
-            <Link href="/tools/ai-crawler-checker" className="font-semibold text-accent-700 underline-offset-2 hover:underline">AI Crawler Checker</Link>{" "}
-            shows which of 34 AI crawlers your robots.txt blocks, and the{" "}
-            <Link href="/tools/llms-txt-checker" className="font-semibold text-accent-700 underline-offset-2 hover:underline">llms.txt Checker</Link>{" "}
-            validates your llms.txt. All free and server-side. New to the idea? Read{" "}
-            <Link href="/blog/what-is-ai-visibility" className="font-semibold text-accent-700 underline-offset-2 hover:underline">what AI visibility is</Link>.
-          </p>
+      <section className={`${kit.section} ${kit.sectionBorder} ${kit.band}`}>
+        <div className={`${kit.wrap} ${tk.split}`}>
+          <div className={tk.splitHead}>
+            <ToolIndex>More free tools</ToolIndex>
+            <h2 className={tk.title2}>
+              Got the prompts? Make sure AI can actually read you.
+            </h2>
+          </div>
+          <div className={tk.prose}>
+            <p>
+              Once you know what to track, check the foundations. The{" "}
+              <Link href="/tools/ai-readiness">AI-Readiness Score</Link>{" "}
+              grades whether AI agents can reach and parse your site, the{" "}
+              <Link href="/tools/ai-crawler-checker">AI Crawler Checker</Link>{" "}
+              shows which of 34 AI crawlers your robots.txt blocks, and the{" "}
+              <Link href="/tools/llms-txt-checker">llms.txt Checker</Link>{" "}
+              validates your llms.txt. All free and server-side. New to the idea? Read{" "}
+              <Link href="/blog/what-is-ai-visibility">what AI visibility is</Link>.
+            </p>
+          </div>
         </div>
       </section>
 
       <FeatureFaq items={faqs} heading="Keywords, prompts and AI visibility — answered" />
 
       {/* Funnel CTA */}
-      <section className="bg-gray-950 px-6 py-20 sm:py-24">
-        <div className="mx-auto flex max-w-5xl flex-col items-start gap-6 md:flex-row md:items-center md:justify-between md:gap-12">
-          <div>
-            <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
-              These are the prompts. Now see if you&apos;re in the answers.
-            </h2>
-            <p className="mt-2 max-w-xl text-base text-gray-300">
-              The <Link href="/features/ai-visibility-tracker" className="underline decoration-gray-500 underline-offset-2 hover:text-white">AI Visibility Tracker</Link> runs your flagged prompts through 8 AI engines on a schedule, one of 14 features on
-              the paid platform, and shows whether your brand is mentioned, cited, or beaten by a competitor.
-            </p>
+      <section className={tk.close}>
+        <div className={kit.wrap}>
+          <div className={tk.closeCard}>
+            <div>
+              <h2 className={tk.closeTitle}>
+                These are the prompts. Now see if you&apos;re in the answers.
+              </h2>
+              <p className={tk.closeBody}>
+                The <Link href="/features/ai-visibility-tracker">AI Visibility Tracker</Link> runs your flagged prompts through 8 AI engines on a schedule, one of 14 features on
+                the paid platform, and shows whether your brand is mentioned, cited, or beaten by a competitor.
+              </p>
+            </div>
+            <Link
+              href="/app/?page=signup&interval=monthly&ref=tool-keyword-to-prompts"
+              prefetch={false}
+              className={kit.btnLime}
+            >
+              Start tracking your prompts
+              <Arrow />
+            </Link>
           </div>
-          <Link
-            href="/app/?page=signup&interval=monthly&ref=tool-keyword-to-prompts"
-            prefetch={false}
-            className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]"
-          >
-            Start tracking your prompts
-            <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </Link>
         </div>
       </section>
-    </>
+    </ToolsPage>
   )
 }

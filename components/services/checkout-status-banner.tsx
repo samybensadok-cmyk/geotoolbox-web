@@ -1,6 +1,7 @@
 "use client"
 
 import { useSearchParams } from "next/navigation"
+import c from "./checkout-status-banner.module.css"
 
 /**
  * CheckoutStatusBanner — renders a cancel notice at the top of
@@ -8,6 +9,8 @@ import { useSearchParams } from "next/navigation"
  * ?status=cancel. Renders nothing otherwise, so the static page is unaffected
  * for normal visitors. Must be mounted inside a <Suspense> boundary
  * (useSearchParams requirement for static pages).
+ *
+ * Dark-kit look (2026-11-28): rendered inside the services page's <DarkPage>.
  *
  * NOTE: there is no "success" branch. A successful checkout redirects to
  * /services/intake (see inc/actions/service_checkout.php success_url), where the
@@ -21,9 +24,9 @@ export function CheckoutStatusBanner() {
   if (status !== "cancel") return null
 
   return (
-    <div role="status" className="border-b border-gray-200 bg-gray-50 px-6 py-4">
-      <p className="mx-auto max-w-7xl text-[14px] leading-relaxed text-gray-700">
-        <span className="font-semibold">Checkout cancelled — nothing was charged.</span>{" "}If something
+    <div role="status" className={c.banner}>
+      <p className={c.text}>
+        <span className={c.lead}>Checkout cancelled — nothing was charged.</span>{" "}If something
         didn&apos;t look right or you have a question first, book a free call and ask me directly.
       </p>
     </div>

@@ -23,6 +23,18 @@ import { useCountdown } from "@/components/promo/use-countdown"
 import { currencyParam } from "@/lib/i18n/currency"
 import { useBfLive } from "@/components/promo/use-bf-live"
 import { BF_CARD_COPY, bfAnnualYear, bfLocale, bfMonthly, isBfRush } from "@/lib/black-friday"
+import k from "@/components/brand/dark-kit.module.css"
+import st from "./pricing-experience.module.css"
+
+// Dark kit (2026-11-28): presentation only. The colours, spacing and card treatments live in
+// pricing-experience.module.css + the shared kit; every number, label and href below is unchanged.
+function CheckIcon() {
+  return (
+    <svg className={st.check} aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.2">
+      <path d="M3 8.5 6.5 12 13 4.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
 
 // SG_PROMO_V2 (2026-08-15): offer continuity. When the visitor arrives from the
 // founding banner (?promo=FOUNDING30&bv=<variant>) — or clicked it earlier and
@@ -216,7 +228,7 @@ function BfPrice({ value }: { value: string }) {
   return (
     <>
       {m[1]}
-      <span className="align-top text-[0.5em] font-semibold leading-[1.6]">{m[2]}</span>
+      <span className={st.cents}>{m[2]}</span>
       {m[3]}
     </>
   )
@@ -331,12 +343,12 @@ export function PricingCards({ copy, locale, creditsLabel = "Monthly credits" }:
 
   return (
     <div>
-      {/* Audience tabs + billing toggle share one row (wrap on narrow screens) */}
-      <div className="flex flex-wrap items-center justify-center gap-3">
+      {/* Audience tabs (left) + billing toggle (right); stacked full width on phones */}
+      <div className={st.controls}>
         <div
           role="group"
           aria-label={copy.segmentLabel ?? "Choose audience"}
-          className="inline-flex items-center gap-1 rounded-full border border-gray-200 bg-gray-50 p-1"
+          className={st.seg}
         >
           {([
             [copy.segments?.brands ?? "For brands & consultants", "brand"],
@@ -347,12 +359,7 @@ export function PricingCards({ copy, locale, creditsLabel = "Monthly credits" }:
               type="button"
               aria-pressed={segment === value}
               onClick={() => setSegment(value)}
-              className={cn(
-                "min-h-11 rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors",
-                segment === value
-                  ? "bg-white text-gray-900 shadow-sm"
-                  : "text-gray-600 hover:text-gray-900"
-              )}
+              className={st.segBtn}
             >
               {label}
             </button>
@@ -363,7 +370,7 @@ export function PricingCards({ copy, locale, creditsLabel = "Monthly credits" }:
         <div
           role="group"
           aria-label={copy.billingLabel}
-          className="inline-flex items-center gap-1 rounded-full border border-gray-200 bg-gray-50 p-1"
+          className={st.seg}
         >
           {([
             [copy.monthly, false],
@@ -374,21 +381,16 @@ export function PricingCards({ copy, locale, creditsLabel = "Monthly credits" }:
               type="button"
               aria-pressed={annual === isAnnual}
               onClick={() => setAnnual(isAnnual)}
-              className={cn(
-                "relative min-h-11 rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors",
-                annual === isAnnual
-                  ? "bg-white text-gray-900 shadow-sm"
-                  : "text-gray-600 hover:text-gray-900"
-              )}
+              className={st.segBtn}
             >
               {label}
               {isAnnual && (
                 bfLive ? (
-                  <span className="ml-1.5 rounded-full bg-yellow-400 px-1.5 py-0.5 text-[10px] font-extrabold text-neutral-950">
+                  <span className={st.bfToggle}>
                     {BF_CARD_COPY[bfLocale(locale)].toggle}
                   </span>
                 ) : (
-                  <span className="ml-1.5 rounded-full bg-accent-100 px-1.5 py-0.5 text-[10px] font-semibold text-accent-800">
+                  <span className={st.saveBadge}>
                     {copy.annualBadge}
                   </span>
                 )
@@ -400,7 +402,7 @@ export function PricingCards({ copy, locale, creditsLabel = "Monthly credits" }:
 
       {promoOn && (
         <p
-          className="mx-auto mt-5 max-w-3xl rounded-xl border border-accent-200 bg-accent-50 px-4 py-2.5 text-center text-[13px] font-medium text-accent-900"
+          className={cn(st.notice, st.noticeLime, st.noticeTop)}
           data-promo-strip={promo?.variant || "direct"}
         >
           {resMatches && msLeft !== null
@@ -410,7 +412,7 @@ export function PricingCards({ copy, locale, creditsLabel = "Monthly credits" }:
       )}
 
       {/* Cards — both tabs render exactly three */}
-      <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:mx-auto lg:max-w-5xl">
+      <div className={st.grid}>
         {visibleTiers.map((plan) => {
           const trialBrands = ({ starter: 1, consultant: 2, pro: 2, agency: 3 } as Record<string, number>)[plan.id]
           const trialCopy = TRIAL_COPY[locale] ?? TRIAL_COPY.en
@@ -446,15 +448,10 @@ export function PricingCards({ copy, locale, creditsLabel = "Monthly credits" }:
           return (
             <div
               key={plan.id}
-              className={cn(
-                "relative flex flex-col rounded-2xl border bg-white p-6 sm:p-7",
-                isFeatured
-                  ? "border-accent-300 shadow-[0_20px_60px_-24px_rgba(13,148,136,0.45)]"
-                  : "border-gray-200"
-              )}
+              className={cn(st.plan, isFeatured ? cn(k.cardLime, st.featured) : k.card)}
             >
               {isFeatured && (
-                <span className="absolute -top-3 left-6 inline-flex items-center rounded-full bg-accent-600 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white">
+                <span className={cn(k.badge, st.popular)}>
                   {copy.badge.mostPopular}
                 </span>
               )}
@@ -463,111 +460,106 @@ export function PricingCards({ copy, locale, creditsLabel = "Monthly credits" }:
                   <h1> with no intervening section heading, so an <h3> here was a
                   level skip (h1 → h3) on the page. The classes carry the visual
                   size, so this is a semantics-only change. */}
-              <h2 className="text-[15px] font-bold tracking-tight text-gray-900">{plan.name}</h2>
+              <h2 className={st.planName}>{plan.name}</h2>
 
               {/* SG_BF2026_V2 (2026-11-18 benchmark: Proton, WP Rocket, Elementor, SE Ranking): the discount is quiet
                   (small grey strike + one soft pill), the price is loud in normal ink with small cents. */}
-              {bfCard && p.strike && (
-                <div className="mt-3 flex items-center gap-2">
-                  <s className="text-[17px] font-medium text-gray-400 decoration-gray-400">{p.strike}</s>
-                  <span className="rounded-full bg-red-50 px-2 py-0.5 text-[12px] font-bold text-red-700 ring-1 ring-red-200">{p.bfPill}</span>
-                </div>
-              )}
-              <div className={cn("flex items-baseline gap-1", bfCard ? "mt-1" : "mt-3")}>
-                <span className={cn("text-[42px] tracking-tight text-gray-900", bfCard ? "font-semibold" : "font-medium")}>{bfCard ? <BfPrice value={p.big} /> : p.big}</span>
-                {plan.priceMonthly !== null && plan.priceMonthly > 0 && (
-                  <span className="text-sm font-medium text-gray-500">{copy.perMo}</span>
+              {/* Row slots: every card renders the same 10 grid rows (empty when a row does not apply), so the
+                  cards share one row structure via subgrid and prices, CTAs and quota lists line up. */}
+              <div className={st.slotStrike}>
+                {bfCard && p.strike && (
+                  <div className={st.bfStrikeRow}>
+                    <s className={st.bfStrike}>{p.strike}</s>
+                    <span className={st.bfPill}>{p.bfPill}</span>
+                  </div>
                 )}
               </div>
-              <div className="mt-1 flex min-h-[20px] flex-wrap items-center gap-x-2 gap-y-1">
+              <div className={st.priceRow}>
+                <span className={cn(st.big, bfCard && st.bigBf, plan.priceMonthly === null && st.bigWord)}>{bfCard ? <BfPrice value={p.big} /> : p.big}</span>
+                {plan.priceMonthly !== null && plan.priceMonthly > 0 && (
+                  <span className={st.per}>{copy.perMo}</span>
+                )}
+              </div>
+              <div className={st.meta}>
                 {!bfCard && p.strike && (annual || promoOn) && (
-                  <s className="text-xs text-gray-400">{p.strike}</s>
+                  <s className={st.strike}>{p.strike}</s>
                 )}
                 {promoOn && plan.priceMonthly !== null && plan.priceMonthly > 0 && (
-                  <span className="rounded bg-accent-600 px-1.5 py-0.5 text-[11px] font-semibold text-white">
+                  <span className={st.promoPill}>
                     {promoUi.pill}
                   </span>
                 )}
-                {p.sub && <span className="text-xs text-gray-500">{p.sub}</span>}
+                {p.sub && <span>{p.sub}</span>}
                 {p.save && annual && (
-                  <span className="rounded bg-accent-50 px-1.5 py-0.5 text-[11px] font-semibold text-accent-700">
+                  <span className={st.saveChip}>
                     {p.save}
                   </span>
                 )}
               </div>
 
+              <div>
               {bfCard && annual && isBfRush() && (
-                <p className="mt-2.5">
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-yellow-100 px-2.5 py-1 text-[12px] font-semibold text-yellow-950 ring-1 ring-yellow-300">
-                    <svg aria-hidden="true" className="h-3.5 w-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="6" width="12" height="8" rx="1" /><path d="M1.5 6h13V4h-13zM8 4v10M8 4c-1-2.5-4-2.5-4-.8C4 4 6 4 8 4zm0 0c1-2.5 4-2.5 4-.8C12 4 10 4 8 4z" /></svg>
+                <p className={st.bonus}>
+                  <span>
+                    <svg aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="6" width="12" height="8" rx="1" /><path d="M1.5 6h13V4h-13zM8 4v10M8 4c-1-2.5-4-2.5-4-.8C4 4 6 4 8 4zm0 0c1-2.5 4-2.5 4-.8C12 4 10 4 8 4z" /></svg>
                     {BF_CARD_COPY[bfLocale(locale)].bonus}
                   </span>
                 </p>
               )}
+              </div>
 
-              <p className="mt-4 min-h-[40px] text-[13px] leading-snug text-gray-600">{tagline}</p>
+              <p className={st.tagline}>{tagline}</p>
 
               <Link
                 href={ctaHref}
                 prefetch={false}
                 {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                className={cn(
-                  "mt-5 inline-flex items-center justify-center min-h-12 rounded-lg px-5 py-2.5 text-[14px] font-semibold transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2",
-                  isFeatured
-                    ? "bg-accent-900 text-white hover:bg-accent-800 hover:shadow-lg hover:shadow-accent-900/25"
-                    : "border border-gray-300 text-gray-900 hover:border-gray-400 hover:bg-gray-50"
-                )}
+                className={cn(isFeatured ? k.btnLime : k.btnOutline, st.cta)}
               >
                 {ctaLabel}
               </Link>
+              <div className={st.slotTrial}>
               {hasTrial && copy.trialNote && (
-                <p className="mt-2 text-center text-[11px] leading-snug text-gray-500">{copy.trialNote}</p>
+                <p className={st.trialNote}>{copy.trialNote}</p>
               )}
 
-              {hasTrial && <details className="mt-1 text-center text-[11px] leading-relaxed text-gray-600">
-                <summary className="flex min-h-8 cursor-pointer list-none items-center justify-center gap-1.5 font-semibold text-accent-800 [&::-webkit-details-marker]:hidden">{trialCopy.label} <span aria-hidden="true" className="text-[13px] font-normal">+</span></summary>
-                <p className="mt-2">{fill(trialCopy.body, { brands: String(trialBrands) })}</p>
+              {hasTrial && <details className={st.trial}>
+                <summary className={st.disclose}>{trialCopy.label} <span aria-hidden="true">+</span></summary>
+                <p>{fill(trialCopy.body, { brands: String(trialBrands) })}</p>
               </details>}
+              </div>
 
               {/* Quota block — same 4 rows, same order, every card */}
-              <ul className="mt-5 space-y-2 border-t border-gray-100 pt-5 text-[13px]">
+              <ul className={st.quotas}>
                 {Object.values(c.quotas).map((q, i) => (
-                  <li key={i} className="flex items-center gap-2 text-gray-700">
-                    <svg className="h-3.5 w-3.5 shrink-0 text-accent-600" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.2">
-                      <path d="M3 8.5 6.5 12 13 4.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                    <span className={i === 0 ? "font-semibold text-gray-900" : ""}>{q}</span>
+                  <li key={i}>
+                    <CheckIcon />
+                    <span className={i === 0 ? st.quotaLead : undefined}>{q}</span>
                   </li>
                 ))}
               </ul>
 
               {/* Feature highlights */}
-              <div className="mt-4 border-t border-gray-100 pt-4">
+              <div className={st.features}>
                 {inheritsFrom && (
-                  <p className="mb-2 text-[12px] font-medium text-gray-500">
+                  <p className={st.inherits}>
                     {fill(copy.everythingIn, { plan: inheritsFrom })}
                   </p>
                 )}
-                <ul className="space-y-1.5 text-[13px] text-gray-700">
+                <ul className={st.hlList}>
                   {highlights.slice(0, VISIBLE_HIGHLIGHTS).map((h) => (
-                    <li key={h} className="flex items-start gap-2">
-                      <span aria-hidden="true" className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-accent-500" />
-                      {h}
-                    </li>
+                    <li key={h}>{h}</li>
                   ))}
                 </ul>
                 {highlights.length > VISIBLE_HIGHLIGHTS && (
-                  <details className="group mt-2 text-[13px] text-gray-700">
-                    <summary className="flex min-h-9 cursor-pointer list-none items-center gap-1.5 font-semibold text-accent-800 [&::-webkit-details-marker]:hidden">
+                  <details className={st.more}>
+                    <summary className={st.disclose}>
                       {SHOW_ALL[locale] ?? SHOW_ALL.en} (+{highlights.length - VISIBLE_HIGHLIGHTS})
-                      <span aria-hidden="true" className="text-[15px] font-normal transition-transform group-open:rotate-45">+</span>
+                      <span aria-hidden="true">+</span>
                     </summary>
-                    <ul className="mt-1 space-y-1.5">
+                    <ul className={st.hlList}>
                       {highlights.slice(VISIBLE_HIGHLIGHTS).map((h) => (
-                        <li key={h} className="flex items-start gap-2">
-                          <span aria-hidden="true" className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-accent-500" />
-                          {h}
-                        </li>
+                        <li key={h}>{h}</li>
                       ))}
                     </ul>
                   </details>

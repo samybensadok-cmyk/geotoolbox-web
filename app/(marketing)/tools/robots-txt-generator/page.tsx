@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
+import { kit, Arrow } from "@/components/brand/dark-kit"
+import { ToolsPage, ToolIndex, toolsKit as tk } from "@/components/tools/tool-page"
 import { HowItWorks3Step, type Step } from "@/components/features/how-it-works"
 import { FeatureFaq } from "@/components/features/feature-faq"
 import { siteConfig } from "@/lib/config"
@@ -79,8 +81,8 @@ const faqs = [
 
 export default function RobotsTxtGeneratorPage() {
   return (
-    <>
-      <section className="relative overflow-hidden bg-[var(--surface-steel)] px-6 pt-16 pb-16 sm:pt-20 sm:pb-20">
+    <ToolsPage>
+      <section className={`${tk.hero} ${kit.heroGlow}`}>
         <JsonLd
           data={[
             softwareApplicationSchema({
@@ -97,94 +99,103 @@ export default function RobotsTxtGeneratorPage() {
           ]}
         />
 
-        <div className="mx-auto max-w-5xl">
+        <div className={kit.wrap}>
           <Breadcrumbs
+            tone="dark"
             trail={[
               { name: "Home", href: "/" },
               { name: "Tools", href: "/tools" },
               { name: "robots.txt Generator", href: "" },
             ]}
           />
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+          <div className={tk.heroHead}>
+            <p className={tk.heroLabel}>
               Free robots.txt tool
             </p>
-            <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
+            <h1 className={tk.heroTitle}>
               Free robots.txt Generator
             </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
+            <div className={tk.heroRule} aria-hidden="true" />
+            <p className={tk.heroLead}>
               Start from a preset, add your paths, declare your sitemap — and decide about the AI crawlers with each one
               labelled by what blocking it actually costs you. Validated as you type against the same checks our tester
               runs. Free, no sign-up, nothing metered.
             </p>
           </div>
 
-          <div className="mt-10">
+          <div className={`${tk.heroTool} ${tk.mount}`}>
             <RobotsTxtGeneratorWidget />
           </div>
         </div>
       </section>
 
-      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-            The decision this page exists for
-          </p>
-          <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-            &ldquo;Should I block the AI bots?&rdquo; is two different questions
-          </h2>
-          <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-gray-700">
-            <p>
-              Most robots.txt generators were written before this mattered and still offer a list of search engines from
-              2015. The live question in 2026 is about AI crawlers — and the reason it goes wrong so often is that
-              people treat them as one category when they&apos;re two.
-            </p>
-            <p>
-              <strong className="text-gray-900">Training crawlers</strong>{" "}— GPTBot, ClaudeBot, CCBot —
-              collect content to train models. Blocking them keeps you out of training data and costs you nothing in
-              any answer given today, because they aren&apos;t what answers a user&apos;s question — the trade is that
-              future models know less about you natively, which surfaces when an assistant replies without browsing.
-              Google-Extended is the awkward
-              middle case: it governs Gemini training <em>and</em> grounding in Gemini Apps, so blocking it can cost
-              you grounded Gemini answers even though it never touches Google Search ranking.
-            </p>
-            <p>
-              <strong className="text-gray-900">Search crawlers</strong> — OAI-SearchBot, Claude-SearchBot,
-              PerplexityBot — build the indexes those assistants actually search when someone asks a question. Block
-              these and you disappear from the answers.
-            </p>
-            <p>
-              The costly version of this mistake is copying a &ldquo;block AI bots&rdquo; snippet that lumps both
-              together, and quietly removing yourself from ChatGPT and Perplexity results while believing you only opted
-              out of training. Two specifics worth remembering:{" "}
-              <strong className="text-gray-900">blocking GPTBot does not remove you from ChatGPT search</strong>, and{" "}
-              <strong className="text-gray-900">blocking Google-Extended does not affect Google Search or AI Overviews</strong>.
-            </p>
-            <p>
-              That&apos;s why every crawler in the picker is labelled by purpose. You may well want to block training
-              and keep search — that&apos;s a perfectly coherent position, and it&apos;s hard to express if your tool
-              won&apos;t tell you which is which.
-            </p>
+      <section className={`${kit.section} ${kit.sectionBorder}`}>
+        <div className={`${kit.wrap} ${tk.split}`}>
+          <div className={tk.splitHead}>
+            <ToolIndex>
+              The decision this page exists for
+            </ToolIndex>
+            <h2 className={tk.title2}>
+              &ldquo;Should I block the AI bots?&rdquo; is two different questions
+            </h2>
+          </div>
+          <div className={tk.prose}>
+            <div className={tk.stack}>
+              <p>
+                Most robots.txt generators were written before this mattered and still offer a list of search engines from
+                2015. The live question in 2026 is about AI crawlers — and the reason it goes wrong so often is that
+                people treat them as one category when they&apos;re two.
+              </p>
+              <p>
+                <strong>Training crawlers</strong>{" "}— GPTBot, ClaudeBot, CCBot —
+                collect content to train models. Blocking them keeps you out of training data and costs you nothing in
+                any answer given today, because they aren&apos;t what answers a user&apos;s question — the trade is that
+                future models know less about you natively, which surfaces when an assistant replies without browsing.
+                Google-Extended is the awkward
+                middle case: it governs Gemini training <em>and</em> grounding in Gemini Apps, so blocking it can cost
+                you grounded Gemini answers even though it never touches Google Search ranking.
+              </p>
+              <p>
+                <strong>Search crawlers</strong> — OAI-SearchBot, Claude-SearchBot,
+                PerplexityBot — build the indexes those assistants actually search when someone asks a question. Block
+                these and you disappear from the answers.
+              </p>
+              <p>
+                The costly version of this mistake is copying a &ldquo;block AI bots&rdquo; snippet that lumps both
+                together, and quietly removing yourself from ChatGPT and Perplexity results while believing you only opted
+                out of training. Two specifics worth remembering:{" "}
+                <strong>blocking GPTBot does not remove you from ChatGPT search</strong>, and{" "}
+                <strong>blocking Google-Extended does not affect Google Search or AI Overviews</strong>.
+              </p>
+              <p>
+                That&apos;s why every crawler in the picker is labelled by purpose. You may well want to block training
+                and keep search — that&apos;s a perfectly coherent position, and it&apos;s hard to express if your tool
+                won&apos;t tell you which is which.
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
       <HowItWorks3Step heading="From a preset to a publishable file" steps={steps} />
 
-      <section className="border-t border-gray-100 bg-gray-50 px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">The format</p>
-          <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-            What the directives actually mean
-          </h2>
-          <p className="mt-4 text-[15px] leading-relaxed text-gray-700">
-            A robots.txt is groups of rules. Each group starts with one or more{" "}
-            <code className="rounded bg-gray-200 px-1 text-gray-700">User-agent:</code> lines naming the crawlers it
-            applies to, followed by <code className="rounded bg-gray-200 px-1 text-gray-700">Allow:</code> and{" "}
-            <code className="rounded bg-gray-200 px-1 text-gray-700">Disallow:</code> paths.
-          </p>
-          <pre className="mt-5 overflow-x-auto rounded-xl border border-gray-200 bg-gray-950 p-5 font-mono text-[12.5px] leading-relaxed text-gray-200">
-{`User-agent: *
+      <section className={`${kit.section} ${kit.sectionBorder} ${kit.band}`}>
+        <div className={`${kit.wrap} ${tk.split}`}>
+          <div className={tk.splitHead}>
+            <ToolIndex>The format</ToolIndex>
+            <h2 className={tk.title2}>
+              What the directives actually mean
+            </h2>
+          </div>
+          <div className={tk.prose}>
+            <p>
+              A robots.txt is groups of rules. Each group starts with one or more{" "}
+              <code>User-agent:</code> lines naming the crawlers it
+              applies to, followed by <code>Allow:</code> and{" "}
+              <code>Disallow:</code> paths.
+            </p>
+            <pre className={tk.codeBlock}>
+  {`User-agent: *
 Allow: /wp-admin/admin-ajax.php
 Disallow: /wp-admin/
 
@@ -192,117 +203,121 @@ User-agent: GPTBot
 Disallow: /
 
 Sitemap: https://example.com/sitemap.xml`}
-          </pre>
-          <p className="mt-4 text-[15px] leading-relaxed text-gray-700">
-            Three things that surprise people. <strong className="text-gray-900">Order doesn&apos;t matter</strong> —
-            the longest matching path wins, with Allow breaking an exact-length tie, which is why the admin-ajax Allow
-            above beats the broader Disallow. <strong className="text-gray-900">An empty Disallow means allow
-            everything</strong>, not block everything. And a{" "}
-            <strong className="text-gray-900">named group replaces the <code className="text-[0.9em]">*</code> group</strong>{" "}
-            for that crawler rather than adding to it — so GPTBot above follows only its own rule.
-          </p>
-          <p className="mt-4 text-[15px] leading-relaxed text-gray-700">
-            Once you&apos;ve published,{" "}
-            <Link href="/tools/robots-txt-tester" className="font-semibold text-accent-700 underline-offset-2 hover:underline">
-              test it against real URLs
-            </Link>{" "}
-            — and if you need the sitemap URL for that last line, the{" "}
-            <Link href="/tools/sitemap-extractor" className="font-semibold text-accent-700 underline-offset-2 hover:underline">
-              sitemap extractor
-            </Link>{" "}
-            finds it from a bare domain.
-          </p>
+            </pre>
+            <p>
+              Three things that surprise people. <strong>Order doesn&apos;t matter</strong> —
+              the longest matching path wins, with Allow breaking an exact-length tie, which is why the admin-ajax Allow
+              above beats the broader Disallow. <strong>An empty Disallow means allow
+              everything</strong>, not block everything. And a{" "}
+              <strong>named group replaces the <code className="text-[0.9em]">*</code> group</strong>{" "}
+              for that crawler rather than adding to it — so GPTBot above follows only its own rule.
+            </p>
+            <p>
+              Once you&apos;ve published,{" "}
+              <Link href="/tools/robots-txt-tester">
+                test it against real URLs
+              </Link>{" "}
+              — and if you need the sitemap URL for that last line, the{" "}
+              <Link href="/tools/sitemap-extractor">
+                sitemap extractor
+              </Link>{" "}
+              finds it from a bare domain.
+            </p>
+          </div>
         </div>
       </section>
 
       {/* Copy-paste examples: the largest informational block around this term, and the
           thing people actually came for. Each one carries the caveat that matters. */}
-      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">Templates</p>
-          <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-            robots.txt examples you can copy
-          </h2>
-          <p className="mt-4 text-[15px] leading-relaxed text-gray-700">
-            The generator above builds these for you and validates the result, but if you just want the file, here it
-            is. The caveat under each one is the part that usually gets left out.
-          </p>
+      <section className={`${kit.section} ${kit.sectionBorder}`}>
+        <div className={`${kit.wrap} ${tk.split}`}>
+          <div className={tk.splitHead}>
+            <ToolIndex>Templates</ToolIndex>
+            <h2 className={tk.title2}>
+              robots.txt examples you can copy
+            </h2>
+          </div>
+          <div className={tk.prose}>
+            <p>
+              The generator above builds these for you and validates the result, but if you just want the file, here it
+              is. The caveat under each one is the part that usually gets left out.
+            </p>
 
-          <div className="mt-8 space-y-8">
-            <div>
-              <h3 className="text-[17px] font-semibold tracking-tight text-gray-900">Allow everything</h3>
-              <pre className="mt-3 overflow-x-auto rounded-xl border border-gray-200 bg-gray-950 p-5 font-mono text-[12.5px] leading-relaxed text-gray-200">
-{`User-agent: *
+            <div className={tk.examples}>
+              <div>
+                <h3 className={tk.title3}>Allow everything</h3>
+                <pre className={tk.codeBlock}>
+  {`User-agent: *
 Disallow:
 
 Sitemap: https://example.com/sitemap.xml`}
-              </pre>
-              <p className="mt-3 text-[14px] leading-relaxed text-gray-600">
-                An <em>empty</em> <code className="rounded bg-gray-100 px-1 text-gray-700">Disallow:</code> means allow
-                everything — the opposite of{" "}
-                <code className="rounded bg-gray-100 px-1 text-gray-700">Disallow: /</code>, which blocks everything.
-                One character between the two. If you have nothing to block, no file at all does the same job; the only
-                reason to publish this one is the Sitemap line.
-              </p>
-            </div>
+                </pre>
+                <p className={tk.note}>
+                  An <em>empty</em> <code>Disallow:</code> means allow
+                  everything — the opposite of{" "}
+                  <code>Disallow: /</code>, which blocks everything.
+                  One character between the two. If you have nothing to block, no file at all does the same job; the only
+                  reason to publish this one is the Sitemap line.
+                </p>
+              </div>
 
-            <div>
-              <h3 className="text-[17px] font-semibold tracking-tight text-gray-900">Block everything</h3>
-              <pre className="mt-3 overflow-x-auto rounded-xl border border-gray-200 bg-gray-950 p-5 font-mono text-[12.5px] leading-relaxed text-gray-200">
-{`User-agent: *
+              <div>
+                <h3 className={tk.title3}>Block everything</h3>
+                <pre className={tk.codeBlock}>
+  {`User-agent: *
 Disallow: /`}
-              </pre>
-              <p className="mt-3 text-[14px] leading-relaxed text-gray-600">
-                Correct for a staging site, and dangerous anywhere else — this is the single most expensive line in SEO,
-                usually because it survived a launch. It also does <strong>not</strong> deindex anything: blocked URLs
-                already in the index tend to stay there as bare links, because Google can no longer fetch the page to
-                see a noindex. If the goal is removal, keep the pages crawlable and serve{" "}
-                <code className="rounded bg-gray-100 px-1 text-gray-700">noindex</code> instead. For staging, HTTP auth
-                is the real answer; robots.txt is a request, not a lock.
-              </p>
-            </div>
+                </pre>
+                <p className={tk.note}>
+                  Correct for a staging site, and dangerous anywhere else — this is the single most expensive line in SEO,
+                  usually because it survived a launch. It also does <strong>not</strong> deindex anything: blocked URLs
+                  already in the index tend to stay there as bare links, because Google can no longer fetch the page to
+                  see a noindex. If the goal is removal, keep the pages crawlable and serve{" "}
+                  <code>noindex</code> instead. For staging, HTTP auth
+                  is the real answer; robots.txt is a request, not a lock.
+                </p>
+              </div>
 
-            <div>
-              <h3 className="text-[17px] font-semibold tracking-tight text-gray-900">WordPress</h3>
-              <pre className="mt-3 overflow-x-auto rounded-xl border border-gray-200 bg-gray-950 p-5 font-mono text-[12.5px] leading-relaxed text-gray-200">
-{`User-agent: *
+              <div>
+                <h3 className={tk.title3}>WordPress</h3>
+                <pre className={tk.codeBlock}>
+  {`User-agent: *
 Allow: /wp-admin/admin-ajax.php
 Disallow: /wp-admin/
 
 Sitemap: https://example.com/wp-sitemap.xml`}
-              </pre>
-              <p className="mt-3 text-[14px] leading-relaxed text-gray-600">
-                That Allow line is not optional decoration — plenty of themes and plugins route front-end functionality
-                through <code className="rounded bg-gray-100 px-1 text-gray-700">admin-ajax.php</code>, and blocking it
-                can stop Google rendering parts of your pages. Note the sitemap path: WordPress core has published{" "}
-                <code className="rounded bg-gray-100 px-1 text-gray-700">/wp-sitemap.xml</code> since 5.5, but Yoast and
-                Rank Math replace it with{" "}
-                <code className="rounded bg-gray-100 px-1 text-gray-700">/sitemap_index.xml</code> — check which one
-                your site actually serves before pasting.
-              </p>
-            </div>
+                </pre>
+                <p className={tk.note}>
+                  That Allow line is not optional decoration — plenty of themes and plugins route front-end functionality
+                  through <code>admin-ajax.php</code>, and blocking it
+                  can stop Google rendering parts of your pages. Note the sitemap path: WordPress core has published{" "}
+                  <code>/wp-sitemap.xml</code> since 5.5, but Yoast and
+                  Rank Math replace it with{" "}
+                  <code>/sitemap_index.xml</code> — check which one
+                  your site actually serves before pasting.
+                </p>
+              </div>
 
-            <div>
-              <h3 className="text-[17px] font-semibold tracking-tight text-gray-900">Block a single folder</h3>
-              <pre className="mt-3 overflow-x-auto rounded-xl border border-gray-200 bg-gray-950 p-5 font-mono text-[12.5px] leading-relaxed text-gray-200">
-{`User-agent: *
+              <div>
+                <h3 className={tk.title3}>Block a single folder</h3>
+                <pre className={tk.codeBlock}>
+  {`User-agent: *
 Disallow: /private/
 Allow: /private/public-page`}
-              </pre>
-              <p className="mt-3 text-[14px] leading-relaxed text-gray-600">
-                Paths are prefixes, so{" "}
-                <code className="rounded bg-gray-100 px-1 text-gray-700">Disallow: /private</code> without the trailing
-                slash would also catch <code className="rounded bg-gray-100 px-1 text-gray-700">/private-beta/</code>.
-                The exception works because the longer path wins regardless of ordering.
-              </p>
-            </div>
+                </pre>
+                <p className={tk.note}>
+                  Paths are prefixes, so{" "}
+                  <code>Disallow: /private</code> without the trailing
+                  slash would also catch <code>/private-beta/</code>.
+                  The exception works because the longer path wins regardless of ordering.
+                </p>
+              </div>
 
-            <div>
-              <h3 className="text-[17px] font-semibold tracking-tight text-gray-900">
-                Block AI training, keep AI search
-              </h3>
-              <pre className="mt-3 overflow-x-auto rounded-xl border border-gray-200 bg-gray-950 p-5 font-mono text-[12.5px] leading-relaxed text-gray-200">
-{`User-agent: GPTBot
+              <div>
+                <h3 className={tk.title3}>
+                  Block AI training, keep AI search
+                </h3>
+                <pre className={tk.codeBlock}>
+  {`User-agent: GPTBot
 Disallow: /
 
 User-agent: ClaudeBot
@@ -310,63 +325,63 @@ Disallow: /
 
 User-agent: CCBot
 Disallow: /`}
-              </pre>
-              <p className="mt-3 text-[14px] leading-relaxed text-gray-600">
-                This is the distinction almost every &ldquo;block AI bots&rdquo; snippet in circulation gets wrong.
-                These three feed model <em>training</em>. The search crawlers —{" "}
-                <code className="rounded bg-gray-100 px-1 text-gray-700">OAI-SearchBot</code>,{" "}
-                <code className="rounded bg-gray-100 px-1 text-gray-700">Claude-SearchBot</code>,{" "}
-                <code className="rounded bg-gray-100 px-1 text-gray-700">PerplexityBot</code> — are deliberately absent,
-                because blocking those removes you from the answers those assistants give. Copy-paste lists that lump
-                all of them together quietly cost you AI visibility.{" "}
-                <Link
-                  href="/tools/ai-crawler-checker?ref=robots-generator"
-                  className="font-semibold text-accent-700 underline-offset-2 hover:underline"
-                >
-                  Check what your current file does
-                </Link>{" "}
-                across 34 of them.
-              </p>
+                </pre>
+                <p className={tk.note}>
+                  This is the distinction almost every &ldquo;block AI bots&rdquo; snippet in circulation gets wrong.
+                  These three feed model <em>training</em>. The search crawlers —{" "}
+                  <code>OAI-SearchBot</code>,{" "}
+                  <code>Claude-SearchBot</code>,{" "}
+                  <code>PerplexityBot</code> — are deliberately absent,
+                  because blocking those removes you from the answers those assistants give. Copy-paste lists that lump
+                  all of them together quietly cost you AI visibility.{" "}
+                  <Link
+                    href="/tools/ai-crawler-checker?ref=robots-generator"
+                  >
+                    Check what your current file does
+                  </Link>{" "}
+                  across 34 of them.
+                </p>
+              </div>
             </div>
-          </div>
 
-          <p className="mt-8 text-[15px] leading-relaxed text-gray-700">
-            Removing a file is a different question from writing one. On a hosted platform like Shopify or Wix you
-            can&apos;t delete <code className="rounded bg-gray-100 px-1 text-gray-700">/robots.txt</code>{" "}— every store
-            gets a generated default. Shopify&apos;s official mechanism for changing it is the{" "}
-            <code className="rounded bg-gray-100 px-1 text-gray-700">robots.txt.liquid</code>{" "}theme template, though
-            worth knowing before you start: Shopify classes edits to that file as an unsupported customization, so
-            their support team won&apos;t help you with them. Serving a 404 there wouldn&apos;t be an improvement
-            anyway — a missing robots.txt and one that allows everything mean the same thing to a crawler.
-          </p>
+            <p>
+              Removing a file is a different question from writing one. On a hosted platform like Shopify or Wix you
+              can&apos;t delete <code>/robots.txt</code>{" "}— every store
+              gets a generated default. Shopify&apos;s official mechanism for changing it is the{" "}
+              <code>robots.txt.liquid</code>{" "}theme template, though
+              worth knowing before you start: Shopify classes edits to that file as an unsupported customization, so
+              their support team won&apos;t help you with them. Serving a 404 there wouldn&apos;t be an improvement
+              anyway — a missing robots.txt and one that allows everything mean the same thing to a crawler.
+            </p>
+          </div>
         </div>
       </section>
 
       <FeatureFaq items={faqs} heading="robots.txt, answered properly" />
 
-      <section className="bg-gray-950 px-6 py-20 sm:py-24">
-        <div className="mx-auto flex max-w-5xl flex-col items-start gap-6 md:flex-row md:items-center md:justify-between md:gap-12">
-          <div>
-            <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
-              Which AI crawlers does your current file already block?
-            </h2>
-            <p className="mt-2 max-w-xl text-base text-gray-300">
-              The AI Crawler Checker reads your live robots.txt and reports across 34 AI crawlers — including the ones
-              you didn&apos;t mean to block. Free.
-            </p>
+      <section className={tk.close}>
+        <div className={kit.wrap}>
+          <div className={tk.closeCard}>
+            <div>
+              <h2 className={tk.closeTitle}>
+                Which AI crawlers does your current file already block?
+              </h2>
+              <p className={tk.closeBody}>
+                The AI Crawler Checker reads your live robots.txt and reports across 34 AI crawlers — including the ones
+                you didn&apos;t mean to block. Free.
+              </p>
+            </div>
+            <Link
+              href="/tools/ai-crawler-checker?ref=robots-generator"
+              prefetch={false}
+              className={kit.btnLime}
+            >
+              Check your AI crawler access
+              <Arrow />
+            </Link>
           </div>
-          <Link
-            href="/tools/ai-crawler-checker?ref=robots-generator"
-            prefetch={false}
-            className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]"
-          >
-            Check your AI crawler access
-            <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </Link>
         </div>
       </section>
-    </>
+    </ToolsPage>
   )
 }

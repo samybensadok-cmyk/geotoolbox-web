@@ -1,4 +1,5 @@
 import { EngineMark, type EngineId } from "@/components/landing/engine-marks"
+import s from "./fx.module.css"
 
 /**
  * AiEngineLogoGrid — a row of AI-engine marks framed as the DATA SOURCES we
@@ -28,18 +29,15 @@ export function AiEngineLogoGrid({
   label?: string
   showNames?: boolean
 }) {
+  // Dark kit: mono uppercase roster like the homepage engine strip, marks in lime.
   return (
-    <div className="text-center">
-      {label && (
-        <p className="font-mono text-[10px] font-semibold uppercase tracking-widest text-gray-500">
-          {label}
-        </p>
-      )}
-      <ul className="mt-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
+    <div className={s.engines}>
+      {label && <p className={s.enginesLabel}>{label}</p>}
+      <ul className={s.engineList}>
         {engines.map((e) => (
-          <li key={e} className="flex items-center gap-2 text-gray-700">
-            <EngineMark engine={e} className="h-4 w-4" />
-            {showNames && <span className="text-[13px] font-semibold">{LABELS[e]}</span>}
+          <li key={e} className={s.engineItem}>
+            <EngineMark engine={e} className={s.engineMark} />
+            {showNames && <span>{LABELS[e]}</span>}
           </li>
         ))}
       </ul>

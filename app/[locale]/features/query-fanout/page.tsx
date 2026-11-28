@@ -10,6 +10,10 @@ import { siteConfig } from "@/lib/config"
 import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema, howToSchema } from "@/lib/seo-schema"
 import { marketingAlternatesFor } from "@/lib/i18n/siblings"
+import { kit as k, Arrow } from "@/components/brand/dark-kit"
+import { FeaturePage, FxSection, FxHead, FeatureCloseCta, fx } from "@/components/features/fx"
+import { PainScenarioSection } from "@/components/features/pain-scenario"
+import sd from "@/components/features/shared-dark.module.css"
 
 // Localized Query Fan-Out feature page: en at /features/query-fanout, fr at
 // /fr/features/query-fanout. Relocated from app/(marketing)/features/query-fanout.
@@ -86,7 +90,7 @@ export default async function QueryFanoutPage({
   const breadcrumbLabels = { home: c("breadcrumbHome"), features: c("breadcrumbFeatures") }
 
   return (
-    <>
+    <FeaturePage>
       {/* ——— Hero: iris glow, dark ground, custom fan-out instrument ——— */}
       <JsonLd
         data={[
@@ -127,199 +131,116 @@ export default async function QueryFanoutPage({
       </FeatureHero>
 
       {/* ——— Pain scenario ——— */}
-      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-            {t("pain.eyebrow")}
-          </p>
-          <p className="mt-4 text-[clamp(1.15rem,2vw,1.4rem)] font-medium leading-relaxed tracking-tight text-gray-900">
-            {t("pain.p1")}
-          </p>
-          <p className="mt-5 text-[15px] leading-relaxed text-gray-600">
-            {t("pain.p2")}
-          </p>
-        </div>
-      </section>
+      <PainScenarioSection eyebrow={t("pain.eyebrow")} scenario={t("pain.p1")} bridge={t("pain.p2")} />
 
       {/* ——— How it works: numbered rail (not cards) ——— */}
-      <section id="how" className="scroll-mt-20 border-t border-[var(--surface-iris-border)] bg-[var(--surface-iris)] px-6 py-20 sm:py-24">
-        <div className="mx-auto max-w-7xl">
-          <div className="max-w-2xl">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">{t("how.eyebrow")}</p>
-            <h2 className="mt-3 text-[clamp(1.6rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-              {t("how.h2")}
-            </h2>
-          </div>
-
-          <ol className="mt-14 grid grid-cols-1 gap-x-10 gap-y-12 md:grid-cols-3">
-            {steps.map((s, i) => (
-              <li key={s.verb} className="relative">
-                {/* connector line on desktop */}
-                {i < steps.length - 1 && (
-                  <span
-                    aria-hidden="true"
-                    className="absolute left-12 right-0 top-[18px] hidden h-px bg-gradient-to-r from-gray-300 to-transparent md:block"
-                  />
-                )}
-                <div className="flex items-center gap-4">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-accent-200 bg-white font-mono text-[13px] font-bold tabular-nums text-accent-700">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-                    {s.verb}
-                  </span>
-                </div>
-                <h3 className="mt-5 text-[17px] font-bold leading-snug tracking-tight text-gray-900">{s.title}</h3>
-                <p className="mt-2 text-[14px] leading-relaxed text-gray-600">{s.body}</p>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
+      <FxSection id="how" band>
+        <FxHead eyebrow={t("how.eyebrow")} title={t("how.h2")} />
+        <ol className={`grid grid-cols-1 md:grid-cols-3 ${sd.howList}`}>
+          {steps.map((s, i) => (
+            <li key={s.verb} className={sd.howItem}>
+              <div className="flex items-center gap-4">
+                <span className={sd.howNum}>{String(i + 1).padStart(2, "0")}</span>
+                <span className={`uppercase ${sd.howVerb}`}>{s.verb}</span>
+              </div>
+              <h3 className={sd.howStep}>{s.title}</h3>
+              <p className={sd.howBody}>{s.body}</p>
+            </li>
+          ))}
+        </ol>
+      </FxSection>
 
       {/* ——— The divergence map: the signature artifact ——— */}
-      <section className="border-t border-gray-100 bg-white px-6 py-20 sm:py-28">
-        <div className="mx-auto max-w-7xl">
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-16">
-            <div className="lg:col-span-5">
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-                {t("divergence.eyebrow")}
-              </p>
-              <h2 className="mt-3 text-[clamp(1.6rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-                {t("divergence.h2")}
-              </h2>
-              <p className="mt-5 text-[15px] leading-relaxed text-gray-600">
-                {t("divergence.intro")}
-              </p>
-              <dl className="mt-8 space-y-5">
-                <div className="flex gap-4">
-                  <dt className="mt-1 shrink-0">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-accent-700">
-                      <span className="h-2 w-2 rounded-full bg-white" />
-                    </span>
-                  </dt>
-                  <dd className="text-[14px] leading-relaxed text-gray-600">
-                    <span className="font-semibold text-gray-900">{t("divergence.sharedLabel")}</span>{t("divergence.sharedRest")}
-                  </dd>
-                </div>
-                <div className="flex gap-4">
-                  <dt className="mt-1 shrink-0">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full border border-dashed border-amber-400 bg-amber-50">
-                      <span className="h-2 w-2 rounded-full bg-amber-500" />
-                    </span>
-                  </dt>
-                  <dd className="text-[14px] leading-relaxed text-gray-600">
-                    <span className="font-semibold text-gray-900">{t("divergence.whitespaceLabel")}</span>{t("divergence.whitespaceRest")}
-                  </dd>
-                </div>
-              </dl>
-            </div>
+      <FxSection>
+        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-16">
+          <div className="lg:col-span-5">
+            <FxHead eyebrow={t("divergence.eyebrow")} title={t("divergence.h2")} lead={t("divergence.intro")} />
+            <dl className="space-y-5">
+              <div className="flex gap-4">
+                <dt className="mt-1 shrink-0">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-accent-700">
+                    <span className="h-2 w-2 rounded-full bg-white" />
+                  </span>
+                </dt>
+                <dd className="text-[14px] leading-relaxed text-gray-600">
+                  <span className="font-semibold text-gray-900">{t("divergence.sharedLabel")}</span>{t("divergence.sharedRest")}
+                </dd>
+              </div>
+              <div className="flex gap-4">
+                <dt className="mt-1 shrink-0">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full border border-dashed border-amber-400 bg-amber-50">
+                    <span className="h-2 w-2 rounded-full bg-amber-500" />
+                  </span>
+                </dt>
+                <dd className="text-[14px] leading-relaxed text-gray-600">
+                  <span className="font-semibold text-gray-900">{t("divergence.whitespaceLabel")}</span>{t("divergence.whitespaceRest")}
+                </dd>
+              </div>
+            </dl>
+          </div>
 
-            <div className="lg:col-span-7">
-              <DivergenceMatrix
-                ariaLabel={t("divergence.matrixAria")}
-                caption={t("divergence.matrixCaption")}
-                runYourOwn={t("divergence.matrixRunYourOwn")}
-              />
-            </div>
+          <div className="lg:col-span-7">
+            <DivergenceMatrix
+              ariaLabel={t("divergence.matrixAria")}
+              caption={t("divergence.matrixCaption")}
+              runYourOwn={t("divergence.matrixRunYourOwn")}
+            />
           </div>
         </div>
-      </section>
+      </FxSection>
 
       {/* ——— What's inside: numbered editorial grid (anti-card) ——— */}
-      <section className="border-t border-[var(--surface-iris-border)] bg-[var(--surface-iris)] px-6 py-20 sm:py-28">
-        <div className="mx-auto max-w-7xl">
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-[5fr_7fr] lg:items-end lg:gap-16">
-            <div>
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-                {t("inside.eyebrow")}
-              </p>
-              <h2 className="mt-3 text-[clamp(1.6rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-                {t("inside.h2")}
-              </h2>
-            </div>
-            <p className="max-w-xl text-base leading-relaxed text-gray-600">
-              {t("inside.intro")}
-            </p>
-          </div>
+      <FxSection band>
+        <FxHead eyebrow={t("inside.eyebrow")} title={t("inside.h2")} lead={t("inside.intro")} leadSide />
 
-          <div className="mt-14 grid grid-cols-1 gap-x-10 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
-            {inside.map((s) => (
-              <div key={s.num} className="relative pl-12">
-                <span
-                  aria-hidden="true"
-                  className="absolute left-0 top-0 font-mono text-[22px] font-bold leading-none tabular-nums text-accent-500"
-                >
-                  {s.num}
-                </span>
-                <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">{s.tag}</p>
-                <h3 className="mt-2 text-lg font-semibold tracking-tight text-gray-900">{s.title}</h3>
-                <p className="mt-2 text-[15px] leading-relaxed text-gray-600">{s.body}</p>
-              </div>
-            ))}
-          </div>
+        <div className="grid grid-cols-1 gap-x-10 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
+          {inside.map((s) => (
+            <div key={s.num} className="relative pl-12">
+              <span
+                aria-hidden="true"
+                className="absolute left-0 top-0 font-mono text-[22px] font-bold leading-none tabular-nums text-accent-500"
+              >
+                {s.num}
+              </span>
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">{s.tag}</p>
+              <h3 className="mt-2 text-lg font-semibold tracking-tight text-gray-900">{s.title}</h3>
+              <p className="mt-2 text-[15px] leading-relaxed text-gray-600">{s.body}</p>
+            </div>
+          ))}
         </div>
-      </section>
+      </FxSection>
 
       {/* ——— Comparison ——— */}
-      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-7xl">
-          <div className="max-w-3xl">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">{t("comparison.eyebrow")}</p>
-            <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-              {t("comparison.h2")}
-            </h2>
-            <div className="mt-8 rounded-[2rem] border border-gray-200 bg-white p-6 shadow-[0_24px_60px_-30px_rgba(15,23,42,0.16)] sm:p-8">
-              <FeatureComparisonTable
-                columns={comparisonColumns}
-                rows={comparisonRows}
-                yesLabel={c("comparison.yes")}
-                noLabel={c("comparison.no")}
-              />
-            </div>
-          </div>
-        </div>
-      </section>
+      <FxSection narrow>
+        <FxHead eyebrow={t("comparison.eyebrow")} title={t("comparison.h2")} />
+        <FeatureComparisonTable
+          columns={comparisonColumns}
+          rows={comparisonRows}
+          yesLabel={c("comparison.yes")}
+          noLabel={c("comparison.no")}
+        />
+      </FxSection>
 
       {/* ——— Honest data + BYOK demo teaser ——— */}
-      <section className="border-t border-gray-100 bg-accent-50/40 px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-7xl">
-          <div className="max-w-3xl">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-            {t("byok.eyebrow")}
-          </p>
-          <h2 className="mt-3 text-[clamp(1.4rem,2.6vw,2rem)] font-bold leading-tight tracking-tight text-gray-900">
-            {t("byok.h2")}
-          </h2>
-          <p className="mt-4 text-[15px] leading-relaxed text-gray-700">
-            {t("byok.p1")}
-          </p>
-          <p className="mt-4 rounded-xl border border-accent-200 bg-white p-4 text-[14px] leading-relaxed text-gray-700">
-            {t("byok.p2")}
-          </p>
-          <div className="mt-6 flex flex-wrap items-center gap-3">
-            <Link
-              href="/tools/query-fanout"
-              className="inline-flex items-center gap-2 rounded-full bg-accent-900 px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-accent-800 active:translate-y-[1px]"
-            >
-              {t("byok.demoCta")}
-              <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </Link>
-            <Link
-              href={`${base}/pricing`}
-              className="inline-flex items-center gap-1.5 text-[14px] font-semibold text-accent-700 hover:text-accent-800"
-            >
-              {t("byok.plansCta")}
-              <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M4 7h6m0 0L7 4m3 3-3 3" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </Link>
-          </div>
-          </div>
+      <FxSection band narrow>
+        <FxHead eyebrow={t("byok.eyebrow")} title={t("byok.h2")} />
+        <p className="text-[16px] leading-relaxed text-gray-700">
+          {t("byok.p1")}
+        </p>
+        <p className="mt-4 rounded-xl border border-accent-200 bg-white p-4 text-[15px] leading-relaxed text-gray-700">
+          {t("byok.p2")}
+        </p>
+        <div className={fx.ctas}>
+          <Link href="/tools/query-fanout" className={k.btnLime}>
+            {t("byok.demoCta")}
+            <Arrow />
+          </Link>
+          <Link href={`${base}/pricing`} className={`${k.textLink} ${fx.tap}`}>
+            {t("byok.plansCta")}
+            <Arrow />
+          </Link>
         </div>
-      </section>
+      </FxSection>
 
       <FeatureFaq items={faqs} heading={c("faqHeading")} />
 
@@ -332,36 +253,16 @@ export default async function QueryFanoutPage({
       />
 
       {/* ——— Final CTA ——— */}
-      <section className="bg-gray-950 px-6 py-20 sm:py-24">
-        <div className="mx-auto flex max-w-7xl flex-col items-start gap-6 md:flex-row md:items-center md:justify-between md:gap-12">
-          <div>
-            <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
-              {t("finalCta.h2")}
-            </h2>
-            <p className="mt-2 text-base text-gray-300">
-              {t("finalCta.sub")}
-            </p>
-          </div>
-          <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
-            <Link
-              href="/tools/query-fanout"
-              className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]"
-            >
-              {t("finalCta.demoCta")}
-              <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </Link>
-            <Link
-              href={`${base}/pricing`}
-              className="text-[14px] font-semibold text-gray-300 transition-colors hover:text-white"
-            >
-              {t("finalCta.pricingCta")}
-            </Link>
-          </div>
-        </div>
-      </section>
-    </>
+      <FeatureCloseCta title={t("finalCta.h2")} sub={t("finalCta.sub")}>
+        <Link href="/tools/query-fanout" className={k.btnLime}>
+          {t("finalCta.demoCta")}
+          <Arrow />
+        </Link>
+        <Link href={`${base}/pricing`} className={k.btnOutline}>
+          {t("finalCta.pricingCta")}
+        </Link>
+      </FeatureCloseCta>
+    </FeaturePage>
   )
 }
 

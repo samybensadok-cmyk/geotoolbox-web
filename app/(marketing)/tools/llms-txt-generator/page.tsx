@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
+import { kit, Arrow } from "@/components/brand/dark-kit"
+import { ToolsPage, ToolIndex, toolsKit as tk } from "@/components/tools/tool-page"
 import { HowItWorks3Step, type Step } from "@/components/features/how-it-works"
 import { FeatureFaq } from "@/components/features/feature-faq"
 import { siteConfig } from "@/lib/config"
@@ -79,8 +81,8 @@ const faqs = [
 
 export default function LlmsTxtGeneratorPage() {
   return (
-    <>
-      <section className="relative overflow-hidden bg-[var(--surface-steel)] px-6 pt-16 pb-16 sm:pt-20 sm:pb-20">
+    <ToolsPage>
+      <section className={`${tk.hero} ${kit.heroGlow}`}>
         <JsonLd
           data={[
             softwareApplicationSchema({
@@ -97,84 +99,93 @@ export default function LlmsTxtGeneratorPage() {
           ]}
         />
 
-        <div className="mx-auto max-w-5xl">
+        <div className={kit.wrap}>
           <Breadcrumbs
+            tone="dark"
             trail={[
               { name: "Home", href: "/" },
               { name: "Tools", href: "/tools" },
               { name: "llms.txt Generator", href: "" },
             ]}
           />
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+          <div className={tk.heroHead}>
+            <p className={tk.heroLabel}>
               Free llms.txt tool
             </p>
-            <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
+            <h1 className={tk.heroTitle}>
               Free llms.txt Generator
             </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
+            <div className={tk.heroRule} aria-hidden="true" />
+            <p className={tk.heroLead}>
               Paste your domain and get a spec-correct llms.txt built from your own sitemap — real titles, real
               descriptions, grouped into sections, with the pages that don&apos;t belong in an AI index left out. Free, no
               sign-up, and honest about what llms.txt does and doesn&apos;t do.
             </p>
           </div>
 
-          <div className="mt-10">
+          <div className={`${tk.heroTool} ${tk.mount}`}>
             <LlmsTxtGeneratorWidget />
           </div>
         </div>
       </section>
 
       {/* The honesty panel — the credibility wedge, and the thing competitors won't say */}
-      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">Straight answer</p>
-          <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-            Read this before you spend an afternoon on llms.txt
-          </h2>
-          <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-gray-700">
-            <p>
-              <strong className="text-gray-900">It is not a ranking or citation signal.</strong>{" "}Google&apos;s Search
-              Central docs say you don&apos;t need to create any AI-specific file or markup to appear in AI features, and
-              Googlers have said llms.txt specifically isn&apos;t used — John Mueller, June 2025:{" "}
-              <em>&quot;FWIW no AI system currently uses llms.txt.&quot;</em>{" "}Worth being precise: that&apos;s an informal
-              comment, not a documented policy, and Google&apos;s official pages never name the file. Either way, anyone
-              selling it as a shortcut to getting cited is guessing.
-            </p>
-            <p>
-              <strong className="text-gray-900">It is a real convention with real readers.</strong>{" "}Chrome&apos;s
-              Lighthouse 13.3 added an agentic-browsing audit that validates your llms.txt&apos;s format — it wants an H1
-              and at least one markdown link, and fails the audit outright if the file returns a 5xx. Not having one at
-              all is marked not-applicable rather than failed. Some IDE assistants and custom agents read it too.
-            </p>
-            <p>
-              There&apos;s a genuine tension there worth noticing: Search says you don&apos;t need the file, while
-              Chrome ships an audit that grades it.
-            </p>
-            <p>
-              <strong className="text-gray-900">So: cheap hygiene, not a growth lever.</strong>{" "}A clean, curated file
-              with working links costs you ten minutes and can&apos;t hurt. That&apos;s the honest case for it, and it&apos;s
-              why this tool is free and takes one input — spending an afternoon hand-writing one would be the actual
-              mistake.
-            </p>
+      <section className={`${kit.section} ${kit.sectionBorder}`}>
+        <div className={`${kit.wrap} ${tk.split}`}>
+          <div className={tk.splitHead}>
+            <ToolIndex>Straight answer</ToolIndex>
+            <h2 className={tk.title2}>
+              Read this before you spend an afternoon on llms.txt
+            </h2>
+          </div>
+          <div className={tk.prose}>
+            <div className={tk.stack}>
+              <p>
+                <strong>It is not a ranking or citation signal.</strong>{" "}Google&apos;s Search
+                Central docs say you don&apos;t need to create any AI-specific file or markup to appear in AI features, and
+                Googlers have said llms.txt specifically isn&apos;t used — John Mueller, June 2025:{" "}
+                <em>&quot;FWIW no AI system currently uses llms.txt.&quot;</em>{" "}Worth being precise: that&apos;s an informal
+                comment, not a documented policy, and Google&apos;s official pages never name the file. Either way, anyone
+                selling it as a shortcut to getting cited is guessing.
+              </p>
+              <p>
+                <strong>It is a real convention with real readers.</strong>{" "}Chrome&apos;s
+                Lighthouse 13.3 added an agentic-browsing audit that validates your llms.txt&apos;s format — it wants an H1
+                and at least one markdown link, and fails the audit outright if the file returns a 5xx. Not having one at
+                all is marked not-applicable rather than failed. Some IDE assistants and custom agents read it too.
+              </p>
+              <p>
+                There&apos;s a genuine tension there worth noticing: Search says you don&apos;t need the file, while
+                Chrome ships an audit that grades it.
+              </p>
+              <p>
+                <strong>So: cheap hygiene, not a growth lever.</strong>{" "}A clean, curated file
+                with working links costs you ten minutes and can&apos;t hurt. That&apos;s the honest case for it, and it&apos;s
+                why this tool is free and takes one input — spending an afternoon hand-writing one would be the actual
+                mistake.
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
       <HowItWorks3Step heading="From a domain to a publishable file in three steps" steps={steps} />
 
-      <section className="border-t border-gray-100 bg-gray-50 px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">The format</p>
-          <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-            What a good llms.txt looks like
-          </h2>
-          <p className="mt-4 text-[15px] leading-relaxed text-gray-700">
-            One H1 with your site name (the only part the spec requires), an optional one-line summary as a blockquote,
-            then section headers with curated links:
-          </p>
-          <pre className="mt-5 overflow-x-auto rounded-xl border border-gray-200 bg-gray-950 p-5 font-mono text-[12.5px] leading-relaxed text-gray-200">
-{`# Acme Docs
+      <section className={`${kit.section} ${kit.sectionBorder} ${kit.band}`}>
+        <div className={`${kit.wrap} ${tk.split}`}>
+          <div className={tk.splitHead}>
+            <ToolIndex>The format</ToolIndex>
+            <h2 className={tk.title2}>
+              What a good llms.txt looks like
+            </h2>
+          </div>
+          <div className={tk.prose}>
+            <p>
+              One H1 with your site name (the only part the spec requires), an optional one-line summary as a blockquote,
+              then section headers with curated links:
+            </p>
+            <pre className={tk.codeBlock}>
+  {`# Acme Docs
 
 > Everything you need to build on Acme.
 
@@ -186,50 +197,51 @@ export default function LlmsTxtGeneratorPage() {
 ## Reference
 
 - [API reference](https://acme.com/docs/api): Every endpoint, with examples.`}
-          </pre>
-          <p className="mt-4 text-[15px] leading-relaxed text-gray-700">
-            The most common mistake is treating it as a second sitemap. It isn&apos;t one — a 4,000-link llms.txt is
-            worse than a 30-link one, because the whole value is in having chosen. That&apos;s why this generator caps
-            what it indexes and hands you editable text rather than publishing for you.
-          </p>
-          <p className="mt-4 text-[15px] leading-relaxed text-gray-700">
-            For the full background, adoption data and whether it&apos;s worth your time, read{" "}
-            <Link href="/blog/llms-txt" className="font-semibold text-accent-700 underline-offset-2 hover:underline">
-              llms.txt: what it is and whether it&apos;s actually worth it
-            </Link>. When you&apos;ve published,{" "}
-            <Link href="/tools/llms-txt-checker" className="font-semibold text-accent-700 underline-offset-2 hover:underline">
-              validate it with the llms.txt checker
-            </Link>{" "}
-            — it resolves every link and scores the result.
-          </p>
+            </pre>
+            <p>
+              The most common mistake is treating it as a second sitemap. It isn&apos;t one — a 4,000-link llms.txt is
+              worse than a 30-link one, because the whole value is in having chosen. That&apos;s why this generator caps
+              what it indexes and hands you editable text rather than publishing for you.
+            </p>
+            <p>
+              For the full background, adoption data and whether it&apos;s worth your time, read{" "}
+              <Link href="/blog/llms-txt">
+                llms.txt: what it is and whether it&apos;s actually worth it
+              </Link>. When you&apos;ve published,{" "}
+              <Link href="/tools/llms-txt-checker">
+                validate it with the llms.txt checker
+              </Link>{" "}
+              — it resolves every link and scores the result.
+            </p>
+          </div>
         </div>
       </section>
 
       <FeatureFaq items={faqs} heading="llms.txt, answered honestly" />
 
-      <section className="bg-gray-950 px-6 py-20 sm:py-24">
-        <div className="mx-auto flex max-w-5xl flex-col items-start gap-6 md:flex-row md:items-center md:justify-between md:gap-12">
-          <div>
-            <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
-              llms.txt is one optional file. Can AI agents reach the rest of your site?
-            </h2>
-            <p className="mt-2 max-w-xl text-base text-gray-300">
-              The AI Crawler Checker shows which of 34 AI crawlers — GPTBot, ClaudeBot, PerplexityBot — your robots.txt
-              allows or blocks, with the exact line to fix. That one actually moves the needle. Free.
-            </p>
+      <section className={tk.close}>
+        <div className={kit.wrap}>
+          <div className={tk.closeCard}>
+            <div>
+              <h2 className={tk.closeTitle}>
+                llms.txt is one optional file. Can AI agents reach the rest of your site?
+              </h2>
+              <p className={tk.closeBody}>
+                The AI Crawler Checker shows which of 34 AI crawlers — GPTBot, ClaudeBot, PerplexityBot — your robots.txt
+                allows or blocks, with the exact line to fix. That one actually moves the needle. Free.
+              </p>
+            </div>
+            <Link
+              href="/tools/ai-crawler-checker?ref=llms-generator"
+              prefetch={false}
+              className={kit.btnLime}
+            >
+              Check your AI crawler access
+              <Arrow />
+            </Link>
           </div>
-          <Link
-            href="/tools/ai-crawler-checker?ref=llms-generator"
-            prefetch={false}
-            className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]"
-          >
-            Check your AI crawler access
-            <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </Link>
         </div>
       </section>
-    </>
+    </ToolsPage>
   )
 }

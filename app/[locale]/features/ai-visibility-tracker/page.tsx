@@ -15,6 +15,8 @@ import { siteConfig } from "@/lib/config"
 import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema, howToSchema } from "@/lib/seo-schema"
 import { marketingAlternatesFor } from "@/lib/i18n/siblings"
+import { kit as k, Arrow } from "@/components/brand/dark-kit"
+import { FeaturePage, FxSection, FxHead, FeatureCloseCta, fx } from "@/components/features/fx"
 
 // Localized AI Visibility Tracker feature page: en at
 // /features/ai-visibility-tracker, fr at /fr/features/ai-visibility-tracker.
@@ -75,9 +77,9 @@ const MARKET_CODES = [
 ]
 
 const statusStyle: Record<string, string> = {
-  cited: "bg-accent-400/15 text-accent-300 border-accent-400/30",
-  mentioned: "bg-sky-400/15 text-sky-300 border-sky-400/30",
-  absent: "bg-red-400/10 text-red-300 border-red-400/25",
+  cited: fx.stLime,
+  mentioned: fx.stRival,
+  absent: fx.stNeutral,
 }
 
 export default async function AiVisibilityTrackerPage({
@@ -103,7 +105,7 @@ export default async function AiVisibilityTrackerPage({
   const breadcrumbLabels = { home: c("breadcrumbHome"), features: c("breadcrumbFeatures") }
 
   return (
-    <>
+    <FeaturePage>
       <JsonLd
         data={[
           softwareApplicationSchema({
@@ -217,30 +219,20 @@ export default async function AiVisibilityTrackerPage({
       </div>
 
       {/* Markets — the Wave 1 story */}
-      <section className="border-t border-[var(--surface-cool-border)] bg-[var(--surface-cool)] px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-5xl">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-sky-700">
-            {t("markets.eyebrow")}
-          </p>
-          <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-            {t("markets.h2")}
-          </h2>
-          <p className="mt-4 max-w-3xl text-base leading-relaxed text-gray-700">
-            {t("markets.body")}
-          </p>
-          <ul className="mt-8 flex flex-wrap gap-2">
-            {MARKET_CODES.map((code, i) => (
-              <li
-                key={code}
-                className="inline-flex items-center gap-2 rounded-full border border-sky-200 bg-white px-3 py-1.5 text-[13px] font-medium text-gray-800"
-              >
-                <span className="font-mono text-[10px] font-semibold text-sky-700">{code}</span>
-                {marketNames[i]}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
+      <FxSection band>
+        <FxHead eyebrow={t("markets.eyebrow")} title={t("markets.h2")} lead={t("markets.body")} />
+        <ul className="flex flex-wrap gap-2">
+          {MARKET_CODES.map((code, i) => (
+            <li
+              key={code}
+              className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-1.5 text-[13px] font-medium text-gray-800"
+            >
+              <span className="font-mono text-[10px] font-semibold text-accent-700">{code}</span>
+              {marketNames[i]}
+            </li>
+          ))}
+        </ul>
+      </FxSection>
 
       {/* Honest measurement */}
       <TrustSecurityBlock
@@ -260,42 +252,24 @@ export default async function AiVisibilityTrackerPage({
       />
 
       {/* Comparison */}
-      <section className="border-t border-[var(--surface-warm-border)] bg-[var(--surface-warm)] px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-            {t("comparison.eyebrow")}
-          </p>
-          <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-            {t("comparison.h2")}
-          </h2>
-          <div className="mt-8">
-            <FeatureComparisonTable
-              columns={comparisonColumns}
-              rows={comparisonRows}
-              yesLabel={c("comparison.yes")}
-              noLabel={c("comparison.no")}
-            />
-          </div>
-        </div>
-      </section>
+      <FxSection band narrow>
+        <FxHead eyebrow={t("comparison.eyebrow")} title={t("comparison.h2")} />
+        <FeatureComparisonTable
+          columns={comparisonColumns}
+          rows={comparisonRows}
+          yesLabel={c("comparison.yes")}
+          noLabel={c("comparison.no")}
+        />
+      </FxSection>
 
       {/* Light proof — provenance (no fabricated numbers) */}
-      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl text-center">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-            {t("proofSec.eyebrow")}
-          </p>
-          <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-            {t("proofSec.h2")}
-          </h2>
-        </div>
-        <div className="mt-10">
-          <SocialProofBlock
-            provenanceLine={t("proofSec.provenance")}
-            engineGridLabel={c("engineGridLabel")}
-          />
-        </div>
-      </section>
+      <FxSection>
+        <FxHead eyebrow={t("proofSec.eyebrow")} title={t("proofSec.h2")} />
+        <SocialProofBlock
+          provenanceLine={t("proofSec.provenance")}
+          engineGridLabel={c("engineGridLabel")}
+        />
+      </FxSection>
 
       <FeatureFaq items={faqs} heading={c("faqHeading")} />
 
@@ -308,26 +282,12 @@ export default async function AiVisibilityTrackerPage({
       />
 
       {/* Final CTA */}
-      <section className="bg-gray-950 px-6 py-20 sm:py-24">
-        <div className="mx-auto flex max-w-5xl flex-col items-start gap-6 md:flex-row md:items-center md:justify-between md:gap-12">
-          <div>
-            <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
-              {t("finalCta.h2")}
-            </h2>
-            <p className="mt-2 text-base text-gray-300">{t("finalCta.sub")}</p>
-          </div>
-          <Link
-            href={siteConfig.appSignupUrl}
-            prefetch={false}
-            className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]"
-          >
-            {t("finalCta.button")}
-            <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </Link>
-        </div>
-      </section>
-    </>
+      <FeatureCloseCta title={t("finalCta.h2")} sub={t("finalCta.sub")}>
+        <Link href={siteConfig.appSignupUrl} prefetch={false} className={k.btnLime}>
+          {t("finalCta.button")}
+          <Arrow />
+        </Link>
+      </FeatureCloseCta>
+    </FeaturePage>
   )
 }

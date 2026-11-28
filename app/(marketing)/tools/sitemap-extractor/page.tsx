@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
+import { kit, Arrow } from "@/components/brand/dark-kit"
+import { ToolsPage, ToolIndex, toolsKit as tk } from "@/components/tools/tool-page"
 import { HowItWorks3Step, type Step } from "@/components/features/how-it-works"
 import { FeatureFaq } from "@/components/features/feature-faq"
 import { siteConfig } from "@/lib/config"
@@ -109,8 +111,8 @@ const faqs = [
 
 export default function SitemapExtractorPage() {
   return (
-    <>
-      <section className="relative overflow-hidden bg-[var(--surface-steel)] px-6 pt-16 pb-16 sm:pt-20 sm:pb-20">
+    <ToolsPage>
+      <section className={`${tk.hero} ${kit.heroGlow}`}>
         <JsonLd
           data={[
             softwareApplicationSchema({
@@ -127,74 +129,80 @@ export default function SitemapExtractorPage() {
           ]}
         />
 
-        <div className="mx-auto max-w-5xl">
+        <div className={kit.wrap}>
           <Breadcrumbs
+            tone="dark"
             trail={[
               { name: "Home", href: "/" },
               { name: "Tools", href: "/tools" },
               { name: "Sitemap URL Extractor & Validator", href: "" },
             ]}
           />
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+          <div className={tk.heroHead}>
+            <p className={tk.heroLabel}>
               Free sitemap tool
             </p>
-            <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
+            <h1 className={tk.heroTitle}>
               Free Sitemap URL Extractor &amp; Validator
             </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
+            <div className={tk.heroRule} aria-hidden="true" />
+            <p className={tk.heroLead}>
               Paste an XML sitemap URL — or just a domain — and get every page URL out. Index files are walked to their
-              children, <code className="rounded bg-gray-200/70 px-1 text-[0.9em] text-gray-700">.xml.gz</code>{" "}is
+              children, <code>.xml.gz</code>{" "}is
               decompressed, and then it does what the others don&apos;t: it doubles as a sitemap checker, validating the
               file against the spec, flagging URLs your own robots.txt blocks, and testing whether the URLs still
               resolve. Free, no sign-up.
             </p>
           </div>
 
-          <div className="mt-10">
+          <div className={`${tk.heroTool} ${tk.mount}`}>
             <SitemapExtractorWidget />
           </div>
         </div>
       </section>
 
       {/* The differentiator, stated plainly — this is why the tool exists */}
-      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-            Why most extractors fail
-          </p>
-          <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-            The sitemap index problem
-          </h2>
-          <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-gray-700">
-            <p>
-              Any site past a few hundred pages doesn&apos;t publish one sitemap. It publishes a{" "}
-              <strong className="text-gray-900">sitemap index</strong> — a file whose entries are other sitemap files.
-              WordPress, Shopify, Yoast and Rank Math all do this by default.
-            </p>
-            <p>
-              Paste that index into most free extractors and you get back a tidy list of{" "}
-              <em>five sitemap URLs</em>{" "}instead of your five thousand pages. The tool did what it was told; it just
-              didn&apos;t do the job you wanted. You then extract each child by hand and paste the results together.
-            </p>
-            <p>
-              <strong className="text-gray-900">This one recurses.</strong> It detects an index, fetches every child
-              sitemap it points at, follows nesting up to three levels, and merges everything into one list — while
-              showing you a per-file breakdown so you can see exactly which sitemap each URL came from and which files
-              errored.
-            </p>
-            <p>
-              The same applies to <code className="rounded bg-gray-100 px-1 text-gray-700">.xml.gz</code>. A gzipped
-              sitemap is a compressed <em>file</em>, not a gzip-encoded HTTP response, so browsers and many tools hand
-              you binary garbage. We check for the gzip signature and inflate it before parsing.
-            </p>
-            <p>
-              <strong className="text-gray-900">And then it keeps going.</strong>{" "}Extraction answers &ldquo;what URLs are
-              in here.&rdquo; The more useful question is what&apos;s wrong with them — so the same run audits the file
-              against the spec, cross-checks robots.txt for URLs you&apos;re submitting and blocking simultaneously, and
-              will fire live status checks at the URLs on request. We tested the free extractors ranking for this term in
-              July 2026: all of them stop at extraction.
-            </p>
+      <section className={`${kit.section} ${kit.sectionBorder}`}>
+        <div className={`${kit.wrap} ${tk.split}`}>
+          <div className={tk.splitHead}>
+            <ToolIndex>
+              Why most extractors fail
+            </ToolIndex>
+            <h2 className={tk.title2}>
+              The sitemap index problem
+            </h2>
+          </div>
+          <div className={tk.prose}>
+            <div className={tk.stack}>
+              <p>
+                Any site past a few hundred pages doesn&apos;t publish one sitemap. It publishes a{" "}
+                <strong>sitemap index</strong> — a file whose entries are other sitemap files.
+                WordPress, Shopify, Yoast and Rank Math all do this by default.
+              </p>
+              <p>
+                Paste that index into most free extractors and you get back a tidy list of{" "}
+                <em>five sitemap URLs</em>{" "}instead of your five thousand pages. The tool did what it was told; it just
+                didn&apos;t do the job you wanted. You then extract each child by hand and paste the results together.
+              </p>
+              <p>
+                <strong>This one recurses.</strong> It detects an index, fetches every child
+                sitemap it points at, follows nesting up to three levels, and merges everything into one list — while
+                showing you a per-file breakdown so you can see exactly which sitemap each URL came from and which files
+                errored.
+              </p>
+              <p>
+                The same applies to <code>.xml.gz</code>. A gzipped
+                sitemap is a compressed <em>file</em>, not a gzip-encoded HTTP response, so browsers and many tools hand
+                you binary garbage. We check for the gzip signature and inflate it before parsing.
+              </p>
+              <p>
+                <strong>And then it keeps going.</strong>{" "}Extraction answers &ldquo;what URLs are
+                in here.&rdquo; The more useful question is what&apos;s wrong with them — so the same run audits the file
+                against the spec, cross-checks robots.txt for URLs you&apos;re submitting and blocking simultaneously, and
+                will fire live status checks at the URLs on request. We tested the free extractors ranking for this term in
+                July 2026: all of them stop at extraction.
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -203,131 +211,137 @@ export default function SitemapExtractorPage() {
 
       {/* Serves the "how do I find a site's sitemap" long-tail — the tool's bare-domain
           auto-detect literally is the answer, so the page should say so. */}
-      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-            Finding the file
-          </p>
-          <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-            How to find the sitemap of a website
-          </h2>
-          <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-gray-700">
-            <p>
-              You don&apos;t need to guess — and you shouldn&apos;t start by trying{" "}
-              <code className="rounded bg-gray-100 px-1 text-gray-700">/sitemap.xml</code>. The authoritative answer is
-              in the site&apos;s own <code className="rounded bg-gray-100 px-1 text-gray-700">robots.txt</code>, which
-              can declare any number of <code className="rounded bg-gray-100 px-1 text-gray-700">Sitemap:</code> lines
-              pointing anywhere, including another domain.
-            </p>
-            <p>The order that actually works, and the order this tool uses:</p>
-            <ol className="ml-5 list-decimal space-y-2">
-              <li>
-                Read <code className="rounded bg-gray-100 px-1 text-gray-700">example.com/robots.txt</code> and take
-                every <code className="rounded bg-gray-100 px-1 text-gray-700">Sitemap:</code> directive it declares.
-                This is the site telling you directly.
-              </li>
-              <li>
-                If robots.txt is silent, probe the conventional paths:{" "}
-                <code className="rounded bg-gray-100 px-1 text-gray-700">/sitemap.xml</code>,{" "}
-                <code className="rounded bg-gray-100 px-1 text-gray-700">/sitemap_index.xml</code>,{" "}
-                <code className="rounded bg-gray-100 px-1 text-gray-700">/sitemap-index.xml</code> and{" "}
-                <code className="rounded bg-gray-100 px-1 text-gray-700">/wp-sitemap.xml</code> — the last one is
-                WordPress core since 5.5 and is the single most commonly missed location.
-              </li>
-              <li>
-                If you own the site, Search Console&apos;s Sitemaps report lists what you&apos;ve actually submitted,
-                which is often not the same set as what robots.txt advertises.
-              </li>
-            </ol>
-            <p>
-              Don&apos;t bother with a <code className="rounded bg-gray-100 px-1 text-gray-700">site:</code>{" "}search.
-              Sitemaps are XML files rather than pages, and they&apos;re rarely surfaced that way, so an empty result
-              tells you nothing about whether one exists. Paste the bare domain above and the tool runs steps 1 and 2
-              for you, then tells you which method found the file.
-            </p>
+      <section className={`${kit.section} ${kit.sectionBorder}`}>
+        <div className={`${kit.wrap} ${tk.split}`}>
+          <div className={tk.splitHead}>
+            <ToolIndex>
+              Finding the file
+            </ToolIndex>
+            <h2 className={tk.title2}>
+              How to find the sitemap of a website
+            </h2>
+          </div>
+          <div className={tk.prose}>
+            <div className={tk.stack}>
+              <p>
+                You don&apos;t need to guess — and you shouldn&apos;t start by trying{" "}
+                <code>/sitemap.xml</code>. The authoritative answer is
+                in the site&apos;s own <code>robots.txt</code>, which
+                can declare any number of <code>Sitemap:</code> lines
+                pointing anywhere, including another domain.
+              </p>
+              <p>The order that actually works, and the order this tool uses:</p>
+              <ol>
+                <li>
+                  Read <code>example.com/robots.txt</code> and take
+                  every <code>Sitemap:</code> directive it declares.
+                  This is the site telling you directly.
+                </li>
+                <li>
+                  If robots.txt is silent, probe the conventional paths:{" "}
+                  <code>/sitemap.xml</code>,{" "}
+                  <code>/sitemap_index.xml</code>,{" "}
+                  <code>/sitemap-index.xml</code> and{" "}
+                  <code>/wp-sitemap.xml</code> — the last one is
+                  WordPress core since 5.5 and is the single most commonly missed location.
+                </li>
+                <li>
+                  If you own the site, Search Console&apos;s Sitemaps report lists what you&apos;ve actually submitted,
+                  which is often not the same set as what robots.txt advertises.
+                </li>
+              </ol>
+              <p>
+                Don&apos;t bother with a <code>site:</code>{" "}search.
+                Sitemaps are XML files rather than pages, and they&apos;re rarely surfaced that way, so an empty result
+                tells you nothing about whether one exists. Paste the bare domain above and the tool runs steps 1 and 2
+                for you, then tells you which method found the file.
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Format explainer — serves the informational long-tail around the tool */}
-      <section className="border-t border-gray-100 bg-gray-50 px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-            The format, briefly
-          </p>
-          <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-            What&apos;s actually inside an XML sitemap
-          </h2>
-          <p className="mt-4 text-[15px] leading-relaxed text-gray-700">
-            A sitemap is an XML file listing the pages a site wants crawlers to know about. Each entry is a{" "}
-            <code className="rounded bg-gray-200 px-1 text-gray-700">&lt;url&gt;</code> block with a required{" "}
-            <code className="rounded bg-gray-200 px-1 text-gray-700">&lt;loc&gt;</code> (the address) and three optional
-            hints: <code className="rounded bg-gray-200 px-1 text-gray-700">&lt;lastmod&gt;</code>,{" "}
-            <code className="rounded bg-gray-200 px-1 text-gray-700">&lt;changefreq&gt;</code> and{" "}
-            <code className="rounded bg-gray-200 px-1 text-gray-700">&lt;priority&gt;</code>. This extractor pulls all
-            four into the CSV.
-          </p>
-          <p className="mt-4 text-[15px] leading-relaxed text-gray-700">
-            Worth knowing: Google has said it ignores{" "}
-            <code className="rounded bg-gray-200 px-1 text-gray-700">changefreq</code> and{" "}
-            <code className="rounded bg-gray-200 px-1 text-gray-700">priority</code> entirely, and treats{" "}
-            <code className="rounded bg-gray-200 px-1 text-gray-700">lastmod</code>{" "}as a signal only when it&apos;s
-            demonstrably accurate. If every URL in a sitemap carries today&apos;s date, that&apos;s a CMS writing
-            timestamps rather than a site reporting real changes — and it&apos;s a useful thing to spot in the export.
-          </p>
-          <p className="mt-4 text-[15px] leading-relaxed text-gray-700">
-            A single sitemap file is capped at 50,000 URLs and 50MB uncompressed. Past that, sites split into multiple
-            files behind an index. A 200,000-page site is therefore at least five files, and reading only the first one
-            gets you a quarter of it.
-          </p>
-          <p className="mt-4 text-[15px] leading-relaxed text-gray-700">
-            The sitemap and <code className="rounded bg-gray-200 px-1 text-gray-700">robots.txt</code> are really one
-            job: the sitemap says what exists, robots.txt says what may be fetched, and the damage happens where they
-            disagree. If this audit flags a conflict, the{" "}
-            <Link
-              href="/tools/robots-txt-tester?ref=sitemap-extractor"
-              className="font-semibold text-accent-700 underline-offset-2 hover:underline"
-            >
-              robots.txt tester
-            </Link>{" "}
-            shows which rule is responsible, and the{" "}
-            <Link
-              href="/tools/robots-txt-generator?ref=sitemap-extractor"
-              className="font-semibold text-accent-700 underline-offset-2 hover:underline"
-            >
-              robots.txt generator
-            </Link>{" "}
-            will write a corrected file with the{" "}
-            <code className="rounded bg-gray-200 px-1 text-gray-700">Sitemap:</code> line declared properly.
-          </p>
+      <section className={`${kit.section} ${kit.sectionBorder} ${kit.band}`}>
+        <div className={`${kit.wrap} ${tk.split}`}>
+          <div className={tk.splitHead}>
+            <ToolIndex>
+              The format, briefly
+            </ToolIndex>
+            <h2 className={tk.title2}>
+              What&apos;s actually inside an XML sitemap
+            </h2>
+          </div>
+          <div className={tk.prose}>
+            <p>
+              A sitemap is an XML file listing the pages a site wants crawlers to know about. Each entry is a{" "}
+              <code>&lt;url&gt;</code> block with a required{" "}
+              <code>&lt;loc&gt;</code> (the address) and three optional
+              hints: <code>&lt;lastmod&gt;</code>,{" "}
+              <code>&lt;changefreq&gt;</code> and{" "}
+              <code>&lt;priority&gt;</code>. This extractor pulls all
+              four into the CSV.
+            </p>
+            <p>
+              Worth knowing: Google has said it ignores{" "}
+              <code>changefreq</code> and{" "}
+              <code>priority</code> entirely, and treats{" "}
+              <code>lastmod</code>{" "}as a signal only when it&apos;s
+              demonstrably accurate. If every URL in a sitemap carries today&apos;s date, that&apos;s a CMS writing
+              timestamps rather than a site reporting real changes — and it&apos;s a useful thing to spot in the export.
+            </p>
+            <p>
+              A single sitemap file is capped at 50,000 URLs and 50MB uncompressed. Past that, sites split into multiple
+              files behind an index. A 200,000-page site is therefore at least five files, and reading only the first one
+              gets you a quarter of it.
+            </p>
+            <p>
+              The sitemap and <code>robots.txt</code> are really one
+              job: the sitemap says what exists, robots.txt says what may be fetched, and the damage happens where they
+              disagree. If this audit flags a conflict, the{" "}
+              <Link
+                href="/tools/robots-txt-tester?ref=sitemap-extractor"
+              >
+                robots.txt tester
+              </Link>{" "}
+              shows which rule is responsible, and the{" "}
+              <Link
+                href="/tools/robots-txt-generator?ref=sitemap-extractor"
+              >
+                robots.txt generator
+              </Link>{" "}
+              will write a corrected file with the{" "}
+              <code>Sitemap:</code> line declared properly.
+            </p>
+          </div>
         </div>
       </section>
 
       <FeatureFaq items={faqs} heading="Sitemap extraction, answered" />
 
-      <section className="bg-gray-950 px-6 py-20 sm:py-24">
-        <div className="mx-auto flex max-w-5xl flex-col items-start gap-6 md:flex-row md:items-center md:justify-between md:gap-12">
-          <div>
-            <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
-              You have the URL list. Can AI crawlers actually reach those pages?
-            </h2>
-            <p className="mt-2 max-w-xl text-base text-gray-300">
-              A sitemap only declares what exists. The AI Crawler Checker shows which of 34 AI crawlers — GPTBot,
-              ClaudeBot, PerplexityBot — your robots.txt allows or blocks, with the exact line to fix. Free.
-            </p>
+      <section className={tk.close}>
+        <div className={kit.wrap}>
+          <div className={tk.closeCard}>
+            <div>
+              <h2 className={tk.closeTitle}>
+                You have the URL list. Can AI crawlers actually reach those pages?
+              </h2>
+              <p className={tk.closeBody}>
+                A sitemap only declares what exists. The AI Crawler Checker shows which of 34 AI crawlers — GPTBot,
+                ClaudeBot, PerplexityBot — your robots.txt allows or blocks, with the exact line to fix. Free.
+              </p>
+            </div>
+            <Link
+              href="/tools/ai-crawler-checker?ref=sitemap-extractor"
+              prefetch={false}
+              className={kit.btnLime}
+            >
+              Check your AI crawler access
+              <Arrow />
+            </Link>
           </div>
-          <Link
-            href="/tools/ai-crawler-checker?ref=sitemap-extractor"
-            prefetch={false}
-            className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]"
-          >
-            Check your AI crawler access
-            <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </Link>
         </div>
       </section>
-    </>
+    </ToolsPage>
   )
 }

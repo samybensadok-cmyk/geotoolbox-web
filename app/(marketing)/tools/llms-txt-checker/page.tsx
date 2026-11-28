@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
+import { kit, Arrow } from "@/components/brand/dark-kit"
+import { ToolsPage, ToolIndex, toolsKit as tk } from "@/components/tools/tool-page"
 import { HowItWorks3Step, type Step } from "@/components/features/how-it-works"
 import { FeatureFaq } from "@/components/features/feature-faq"
 import { siteConfig } from "@/lib/config"
@@ -74,9 +76,9 @@ const faqs = [
 
 export default function LlmsTxtCheckerPage() {
   return (
-    <>
+    <ToolsPage>
       {/* Hero + the tool */}
-      <section className="relative overflow-hidden bg-[var(--surface-steel)] px-6 pt-16 pb-16 sm:pt-20 sm:pb-20">
+      <section className={`${tk.hero} ${kit.heroGlow}`}>
         <JsonLd
           data={[
             softwareApplicationSchema({
@@ -93,22 +95,24 @@ export default function LlmsTxtCheckerPage() {
           ]}
         />
 
-        <div className="mx-auto max-w-5xl">
+        <div className={kit.wrap}>
           <Breadcrumbs
+            tone="dark"
             trail={[
               { name: "Home", href: "/" },
               { name: "Tools", href: "/tools" },
               { name: "llms.txt Checker", href: "" },
             ]}
           />
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+          <div className={tk.heroHead}>
+            <p className={tk.heroLabel}>
               Free llms.txt tool
             </p>
-            <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
+            <h1 className={tk.heroTitle}>
               Free llms.txt Checker
             </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
+            <div className={tk.heroRule} aria-hidden="true" />
+            <p className={tk.heroLead}>
               Build a spec-correct llms.txt from your site name, summary and links, then check it properly: we fetch any
               /llms.txt server-side, validate it against the spec, resolve every linked URL to confirm it loads, and score it
               0-100 on a published rubric with a copy-paste fix for every issue. Free, no sign-up, and honest about what
@@ -116,35 +120,39 @@ export default function LlmsTxtCheckerPage() {
             </p>
           </div>
 
-          <div className="mt-10">
+          <div className={`${tk.heroTool} ${tk.mount}`}>
             <LlmsTxtCheckerWidget />
           </div>
         </div>
       </section>
 
       {/* Honest evidence panel — the credibility wedge */}
-      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">Straight answer</p>
-          <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-            What llms.txt actually does, and what it doesn&apos;t.
-          </h2>
-          <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-gray-700">
-            <p>
-              <strong className="text-gray-900">It is not a ranking or citation signal.</strong>{" "}Google has stated llms.txt
-              is not used for Search or AI Overviews, and no major AI provider confirms using it. Google&apos;s John Mueller:
-              <em> &quot;no AI system currently uses llms.txt.&quot;</em> Anyone selling it as a ranking or citation shortcut is guessing.
-            </p>
-            <p>
-              <strong className="text-gray-900">It is a recognized convention.</strong>{" "}Google&apos;s Chrome Lighthouse (v13.3)
-              added an &quot;Agentic browsing&quot; audit that checks your llms.txt loads without a server error. Some IDE
-              assistants and custom agents read it when pointed at your docs.
-            </p>
-            <p>
-              <strong className="text-gray-900">So treat it as cheap hygiene, not a growth lever.</strong>{" "}A clean, curated
-              llms.txt with working links costs little and can&apos;t hurt. This checker grades exactly that, technical hygiene,
-              and is built to never overstate the payoff.
-            </p>
+      <section className={`${kit.section} ${kit.sectionBorder}`}>
+        <div className={`${kit.wrap} ${tk.split}`}>
+          <div className={tk.splitHead}>
+            <ToolIndex>Straight answer</ToolIndex>
+            <h2 className={tk.title2}>
+              What llms.txt actually does, and what it doesn&apos;t.
+            </h2>
+          </div>
+          <div className={tk.prose}>
+            <div className={tk.stack}>
+              <p>
+                <strong>It is not a ranking or citation signal.</strong>{" "}Google has stated llms.txt
+                is not used for Search or AI Overviews, and no major AI provider confirms using it. Google&apos;s John Mueller:
+                <em> &quot;no AI system currently uses llms.txt.&quot;</em> Anyone selling it as a ranking or citation shortcut is guessing.
+              </p>
+              <p>
+                <strong>It is a recognized convention.</strong>{" "}Google&apos;s Chrome Lighthouse (v13.3)
+                added an &quot;Agentic browsing&quot; audit that checks your llms.txt loads without a server error. Some IDE
+                assistants and custom agents read it when pointed at your docs.
+              </p>
+              <p>
+                <strong>So treat it as cheap hygiene, not a growth lever.</strong>{" "}A clean, curated
+                llms.txt with working links costs little and can&apos;t hurt. This checker grades exactly that, technical hygiene,
+                and is built to never overstate the payoff.
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -153,53 +161,60 @@ export default function LlmsTxtCheckerPage() {
       <HowItWorks3Step heading="From a URL to a scored report in three steps" steps={steps} />
 
       {/* What goes in an llms.txt — short explainer, links out to the article */}
-      <section className="border-t border-gray-100 bg-gray-50 px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">The format, briefly</p>
-          <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-            What goes in an llms.txt file
-          </h2>
-          <p className="mt-4 text-[15px] leading-relaxed text-gray-700">
-            It&apos;s a plain-markdown file at your site root. The spec is small: <strong>one H1</strong> with your site name
-            (the only required part), an optional <code className="rounded bg-gray-200 px-1 text-gray-700">&gt; summary</code> line,
-            then <code className="rounded bg-gray-200 px-1 text-gray-700">## Section</code> headers listing curated links as
-            <code className="rounded bg-gray-200 px-1 text-gray-700"> - [Page](https://url): note</code>, pointing to the pages
-            most useful to an LLM. A companion <code className="rounded bg-gray-200 px-1 text-gray-700">/llms-full.txt</code> can
-            hold the full text. Keep it a lean index, not a sitemap dump.
-          </p>
-          <p className="mt-4 text-[15px] leading-relaxed text-gray-700">
-            For the full background, adoption data, real examples, and whether it&apos;s worth your time, read our guide:{" "}
-            <Link href="/blog/llms-txt" className="font-semibold text-accent-700 underline-offset-2 hover:underline">
-              llms.txt: what it is and whether it&apos;s actually worth it
-            </Link>.
-          </p>
+      <section className={`${kit.section} ${kit.sectionBorder} ${kit.band}`}>
+        <div className={`${kit.wrap} ${tk.split}`}>
+          <div className={tk.splitHead}>
+            <ToolIndex>The format, briefly</ToolIndex>
+            <h2 className={tk.title2}>
+              What goes in an llms.txt file
+            </h2>
+          </div>
+          <div className={tk.prose}>
+            <p>
+              It&apos;s a plain-markdown file at your site root. The spec is small: <strong>one H1</strong> with your site name
+              (the only required part), an optional <code>&gt; summary</code> line,
+              then <code>## Section</code> headers listing curated links as
+              <code> - [Page](https://url): note</code>, pointing to the pages
+              most useful to an LLM. A companion <code>/llms-full.txt</code> can
+              hold the full text. Keep it a lean index, not a sitemap dump.
+            </p>
+            <p>
+              For the full background, adoption data, real examples, and whether it&apos;s worth your time, read our guide:{" "}
+              <Link href="/blog/llms-txt">
+                llms.txt: what it is and whether it&apos;s actually worth it
+              </Link>.
+            </p>
+          </div>
         </div>
       </section>
 
       {/* Generator */}
-      <section id="generator" className="scroll-mt-20 border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-5xl">
-          <div className="mx-auto max-w-2xl text-center">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">Generator</p>
-            <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-              Generate a spec-correct llms.txt
-            </h2>
-            <p className="mt-4 text-[15px] leading-relaxed text-gray-600">
-              Name your site, add a summary, and list your key sections and links. It builds a valid file you can copy or
-              download, then check it above. No crawl, no AI, nothing metered.
-            </p>
-            <p className="mt-3 text-[15px] leading-relaxed text-gray-600">
-              Don&apos;t want to type every link?{" "}
-              <Link
-                href="/tools/llms-txt-generator"
-                className="font-semibold text-accent-700 underline-offset-2 hover:underline"
-              >
-                The llms.txt generator builds one from your domain
-              </Link>{" "}
-              — it reads your sitemap and pulls real titles and descriptions automatically.
-            </p>
+      <section id="generator" className={`${kit.section} ${kit.sectionBorder} scroll-mt-20`}>
+        <div className={kit.wrap}>
+          <div className={tk.split}>
+            <div className={tk.splitHead}>
+              <ToolIndex>Generator</ToolIndex>
+              <h2 className={tk.title2}>
+                Generate a spec-correct llms.txt
+              </h2>
+            </div>
+            <div className={tk.prose}>
+              <p>
+                Name your site, add a summary, and list your key sections and links. It builds a valid file you can copy or
+                download, then check it above. No crawl, no AI, nothing metered.
+              </p>
+              <p>
+                Don&apos;t want to type every link?{" "}
+                <Link
+                  href="/tools/llms-txt-generator"
+                >
+                  The llms.txt generator builds one from your domain
+                </Link>{" "}
+                — it reads your sitemap and pulls real titles and descriptions automatically.
+              </p>
+            </div>
           </div>
-          <div className="mt-10">
+          <div className={`${tk.mount} ${tk.mountSection}`}>
             <LlmsTxtGenerator />
           </div>
         </div>
@@ -208,29 +223,29 @@ export default function LlmsTxtCheckerPage() {
       <FeatureFaq items={faqs} heading="llms.txt, answered honestly" />
 
       {/* Funnel CTA → Agent Readiness */}
-      <section className="bg-gray-950 px-6 py-20 sm:py-24">
-        <div className="mx-auto flex max-w-5xl flex-col items-start gap-6 md:flex-row md:items-center md:justify-between md:gap-12">
-          <div>
-            <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
-              llms.txt is one optional file. Can AI agents reach the rest of your site?
-            </h2>
-            <p className="mt-2 max-w-xl text-base text-gray-300">
-              Agent Readiness live-fetches any URL as six AI crawlers, renders the page like a headless agent, and shows what&apos;s
-              actually blocking you. Free.
-            </p>
+      <section className={tk.close}>
+        <div className={kit.wrap}>
+          <div className={tk.closeCard}>
+            <div>
+              <h2 className={tk.closeTitle}>
+                llms.txt is one optional file. Can AI agents reach the rest of your site?
+              </h2>
+              <p className={tk.closeBody}>
+                Agent Readiness live-fetches any URL as six AI crawlers, renders the page like a headless agent, and shows what&apos;s
+                actually blocking you. Free.
+              </p>
+            </div>
+            <Link
+              href="/features/agent-readiness?ref=llms-checker"
+              prefetch={false}
+              className={kit.btnLime}
+            >
+              Run a free Agent Readiness scan
+              <Arrow />
+            </Link>
           </div>
-          <Link
-            href="/features/agent-readiness?ref=llms-checker"
-            prefetch={false}
-            className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]"
-          >
-            Run a free Agent Readiness scan
-            <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </Link>
         </div>
       </section>
-    </>
+    </ToolsPage>
   )
 }

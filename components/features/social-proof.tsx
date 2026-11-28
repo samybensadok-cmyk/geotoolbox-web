@@ -1,5 +1,6 @@
 import { AiEngineLogoGrid } from "@/components/features/ai-engine-logo-grid"
 import type { EngineId } from "@/components/landing/engine-marks"
+import s from "./fx.module.css"
 
 /**
  * Social-proof primitives with a strict REAL-OR-OMIT contract: every value is
@@ -11,9 +12,9 @@ import type { EngineId } from "@/components/landing/engine-marks"
 export function StatCounter({ value, label }: { value?: string | null; label: string }) {
   if (!value) return null
   return (
-    <div className="text-center">
-      <div className="text-2xl font-bold tracking-tight text-gray-900 tabular-nums">{value}</div>
-      <div className="mt-1 text-[12px] font-medium uppercase tracking-wide text-gray-500">{label}</div>
+    <div className={s.statItem}>
+      <div className={s.statValue}>{value}</div>
+      <div className={s.statLabel}>{label}</div>
     </div>
   )
 }
@@ -46,39 +47,29 @@ export function SocialProofBlock({
   /** localized label for the internal engine grid; EN default preserved when omitted */
   engineGridLabel?: string
 }) {
-  const realStats = stats.filter((s) => !!s.value)
+  const realStats = stats.filter((st) => !!st.value)
   const hasContent = realStats.length > 0 || !!miniCase || showEngineGrid || !!provenanceLine
   if (!hasContent) return null
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div className={s.proofWrap}>
       {realStats.length > 0 && (
-        <div className="flex flex-wrap items-start justify-center gap-x-12 gap-y-6">
-          {realStats.map((s, i) => (
-            <StatCounter key={i} value={s.value} label={s.label} />
+        <div className={s.stats}>
+          {realStats.map((st, i) => (
+            <StatCounter key={i} value={st.value} label={st.label} />
           ))}
         </div>
       )}
       {miniCase && (
-        <figure className="mx-auto mt-8 max-w-2xl rounded-2xl border border-gray-200 bg-gray-50 p-6 text-center">
-          <blockquote className="text-[17px] font-semibold leading-snug tracking-tight text-gray-900">
-            {miniCase.result}
-          </blockquote>
-          {miniCase.attribution && (
-            <figcaption className="mt-2 text-[13px] text-gray-500">{miniCase.attribution}</figcaption>
-          )}
+        <figure className={s.mini}>
+          <blockquote className={s.miniQuote}>{miniCase.result}</blockquote>
+          {miniCase.attribution && <figcaption className={s.miniBy}>{miniCase.attribution}</figcaption>}
         </figure>
       )}
       {showEngineGrid && (
-        <div className="mt-10">
-          <AiEngineLogoGrid engines={engines} {...(engineGridLabel ? { label: engineGridLabel } : {})} />
-        </div>
+        <AiEngineLogoGrid engines={engines} {...(engineGridLabel ? { label: engineGridLabel } : {})} />
       )}
-      {provenanceLine && (
-        <p className="mx-auto mt-6 max-w-2xl text-center text-[13px] leading-relaxed text-gray-500">
-          {provenanceLine}
-        </p>
-      )}
+      {provenanceLine && <p className={s.provenance}>{provenanceLine}</p>}
     </div>
   )
 }

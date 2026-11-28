@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { useEffect, useState } from "react"
+import c from "./sticky-cta.module.css"
 
 /**
  * StickyServiceCta — a slim bottom bar that fades in once the visitor has
@@ -13,6 +14,8 @@ import { useEffect, useState } from "react"
  * book-a-call target. While hidden the wrapper is `inert`, so the two links are
  * out of the tab order (no focus trap on an off-screen control). Under
  * prefers-reduced-motion the transition is disabled (it snaps, no slide).
+ * Dark-kit look (2026-11-28); the colors fall back to literal values so the bar
+ * still renders correctly outside a <DarkPage>.
  */
 export function StickyServiceCta({
   callHref = "/contact",
@@ -44,29 +47,26 @@ export function StickyServiceCta({
       aria-hidden={!shown}
       inert={!shown}
     >
-      <div className="mx-auto mb-3 flex max-w-2xl items-center justify-between gap-3 rounded-full border border-gray-200 bg-white/95 px-4 py-2.5 shadow-[0_10px_40px_-12px_rgba(15,23,42,0.28)] backdrop-blur sm:px-5">
-        <p className="hidden text-[13px] font-medium text-gray-700 sm:block">
+      <div className={c.bar}>
+        <p className={c.message}>
           {message ?? (
             <>
-              <span className="font-semibold text-gray-900">Founder-led</span> AI-visibility work — book an intro call.
+              <span className={c.strong}>Founder-led</span> AI-visibility work — book an intro call.
             </>
           )}
         </p>
-        <div className="flex w-full items-center justify-between gap-2 sm:w-auto sm:justify-end">
-          <Link
-            href={pricingHref}
-            className="rounded-full px-3.5 py-2 text-[13px] font-semibold text-gray-700 transition-colors hover:text-gray-900"
-          >
+        <div className={c.actions}>
+          <Link href={pricingHref} className={c.pricing}>
             {pricingLabel}
           </Link>
           <Link
             href={callHref}
             data-cta-placement="sticky_bar"
             {...(callHref.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-            className="inline-flex items-center gap-1.5 rounded-full bg-accent-900 px-5 py-2 text-[13px] font-semibold text-white transition-colors hover:bg-accent-800"
+            className={c.call}
           >
             Book a call
-            <svg className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg className={c.arrow} viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </Link>

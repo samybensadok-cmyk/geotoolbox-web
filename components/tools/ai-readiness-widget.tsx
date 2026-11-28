@@ -5,6 +5,7 @@ import Link from "next/link"
 import { siteConfig } from "@/lib/config"
 import { badgeColor, badgeSvg } from "@/lib/ai-readiness-badge"
 import { ToolResultCapture } from "@/components/tools/tool-result-capture"
+import tk from "./tools-dark.module.css"
 
 /**
  * Free AI-Readiness Score widget. POSTs to the hardened Replit endpoint
@@ -61,35 +62,35 @@ const ERROR_COPY: Record<string, string> = {
 }
 
 const STATUS_META: Record<Status, { label: string; dot: string; chip: string }> = {
-  pass: { label: "Pass", dot: "bg-accent-500", chip: "bg-accent-50 text-accent-700 border-accent-200" },
-  warn: { label: "Warn", dot: "bg-amber-500", chip: "bg-amber-50 text-amber-800 border-amber-200" },
-  fail: { label: "Fix", dot: "bg-red-500", chip: "bg-red-50 text-red-700 border-red-200" },
-  na: { label: "N/A", dot: "bg-slate-400", chip: "bg-slate-50 text-slate-600 border-slate-200" },
+  pass: { label: "Pass", dot: "bg-[color:var(--accent)]", chip: "bg-[color:var(--pass-bg)] text-[color:var(--accent)] border-[color:var(--line-lime)]" },
+  warn: { label: "Warn", dot: "bg-[color:var(--warn)]", chip: "bg-[color:var(--warn-bg)] text-[color:var(--warn)] border-[color:var(--warn-line)]" },
+  fail: { label: "Fix", dot: "bg-[color:var(--fail)]", chip: "bg-[color:var(--fail-bg)] text-[color:var(--fail)] border-[color:var(--fail-line)]" },
+  na: { label: "N/A", dot: "bg-[color:var(--subtle)]", chip: "bg-[color:var(--surface-2)] text-[color:var(--muted)] border-[color:var(--line-strong)]" },
 }
 
 function gradeColor(grade?: string): string {
   switch (grade) {
-    case "A": return "text-accent-700"
-    case "B": return "text-accent-600"
-    case "C": return "text-amber-700"
-    case "D": return "text-orange-700"
-    default: return "text-red-700"
+    case "A": return "text-[color:var(--accent)]"
+    case "B": return "text-[color:var(--accent)]"
+    case "C": return "text-[color:var(--warn)]"
+    case "D": return "text-[color:var(--warn-strong)]"
+    default: return "text-[color:var(--fail)]"
   }
 }
 
 function CheckLi({ ck }: { ck: Check }) {
   const meta = STATUS_META[ck.status]
   return (
-    <li className="rounded-xl border border-gray-100 bg-gray-50/60 p-4">
+    <li className="rounded-[4px] border border-[color:var(--line)] bg-[color:var(--surface-2)] p-4">
       <div className="flex items-start gap-3">
         <span className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${meta.dot}`} aria-hidden="true" />
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
-            <span className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${meta.chip}`}>{meta.label}</span>
-            <span className="text-[15px] font-semibold text-gray-900">{ck.label}</span>
-            <span className="font-mono text-[11px] tabular-nums text-gray-400">{ck.points}/{ck.max_points}</span>
+            <span className={`rounded-[3px] border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${meta.chip}`}>{meta.label}</span>
+            <span className="text-[15px] font-semibold text-[color:var(--white)]">{ck.label}</span>
+            <span className="font-mono text-[11px] tabular-nums text-[color:var(--muted)]">{ck.points}/{ck.max_points}</span>
           </div>
-          <p className="mt-1 text-[13px] leading-relaxed text-gray-600">{ck.evidence}</p>
+          <p className="mt-1 text-[13px] leading-relaxed text-[color:var(--muted)]">{ck.evidence}</p>
         </div>
       </div>
     </li>
@@ -130,7 +131,7 @@ export function AiReadinessWidget() {
     <div className="mx-auto max-w-3xl">
       <form
         onSubmit={(e) => { e.preventDefault(); runCheck(url) }}
-        className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm sm:p-5"
+        className="rounded-[8px] border border-[color:var(--line-strong)] bg-[color:var(--surface)] p-4 shadow-sm sm:p-5"
       >
         <label htmlFor="air-url" className="sr-only">Site URL</label>
         <div className="flex flex-col gap-3 sm:flex-row">
@@ -143,12 +144,12 @@ export function AiReadinessWidget() {
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             disabled={loading}
-            className="min-w-0 flex-1 rounded-xl border border-gray-300 bg-white px-4 py-3 text-[15px] text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-accent-500 focus:ring-2 focus:ring-accent-200 disabled:opacity-60"
+            className="min-w-0 flex-1 rounded-[4px] border border-[color:var(--line-strong)] bg-[color:var(--bg)] px-4 py-3 text-[15px] text-[color:var(--white)] outline-none transition-colors placeholder:text-[color:var(--subtle)] focus:border-[color:var(--accent)] focus:ring-2 focus:ring-[color:var(--focus-ring)] disabled:opacity-60"
           />
           <button
             type="submit"
             disabled={loading}
-            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-accent-900 px-6 py-3 text-[15px] font-semibold text-white transition-all hover:bg-accent-800 active:translate-y-[1px] disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-[3px] bg-[color:var(--accent)] px-6 py-3 text-[15px] font-semibold text-[color:var(--accent-ink)] transition-all hover:bg-[color:var(--accent-hover)] active:translate-y-[1px] disabled:cursor-not-allowed disabled:opacity-60"
           >
             {loading ? (
               <>
@@ -162,28 +163,28 @@ export function AiReadinessWidget() {
           </button>
         </div>
         <div className="mt-3 flex flex-wrap items-center gap-2">
-          <span className="text-[12px] text-gray-400">Try:</span>
+          <span className="text-[12px] text-[color:var(--muted)]">Try:</span>
           {EXAMPLES.map((ex) => (
             <button
               key={ex.url}
               type="button"
               disabled={loading}
               onClick={() => { setUrl(ex.url); runCheck(ex.url) }}
-              className="rounded-full border border-gray-200 px-3 py-1 font-mono text-[12px] text-gray-600 transition-colors hover:border-accent-300 hover:text-accent-700 disabled:opacity-50"
+              className="rounded-[3px] border border-[color:var(--line-strong)] px-3 py-1 font-mono text-[12px] text-[color:var(--muted)] transition-colors hover:border-[color:var(--accent)] hover:text-[color:var(--accent)] disabled:opacity-50"
             >
               {ex.label}
             </button>
           ))}
         </div>
-        <p className="mt-3 text-[12px] leading-relaxed text-gray-400">
+        <p className="mt-3 text-[12px] leading-relaxed text-[color:var(--muted)]">
           We run 5 foundational checks server-side (robots, AI-crawler access, content signals, sitemap, markdown). Free, no sign-up.
         </p>
       </form>
 
-      {loading && <p className="mt-4 text-center text-[13px] text-gray-500">Fetching robots.txt + sitemap and scoring 5 checks…</p>}
+      {loading && <p className="mt-4 text-center text-[13px] text-[color:var(--muted)]">Fetching robots.txt + sitemap and scoring 5 checks…</p>}
 
       {errorMsg && !loading && (
-        <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-[14px] text-red-700">{errorMsg}</div>
+        <div className="mt-4 rounded-[4px] border border-[color:var(--fail-line)] bg-[color:var(--fail-bg)] px-4 py-3 text-[14px] text-[color:var(--fail)]">{errorMsg}</div>
       )}
 
       {result && !loading && <ResultCard result={result} copied={copied} setCopied={setCopied} />}
@@ -216,24 +217,24 @@ function ResultCard({ result, copied, setCopied }: { result: ReadinessResult; co
   return (
     <div className="mt-6 space-y-5">
       {/* Verdict header */}
-      <div className="rounded-2xl border border-gray-200 bg-white p-6 sm:p-7">
-        <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-400">AI-Readiness for {host}</p>
+      <div className="rounded-[8px] border border-[color:var(--line-strong)] bg-[color:var(--surface)] p-6 sm:p-7">
+        <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-[color:var(--muted)]">AI-Readiness for {host}</p>
         <div className="mt-4 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-end gap-4">
             <div>
               <p className={`text-5xl font-bold tracking-tight tabular-nums ${gradeColor(c.grade)}`}>
-                {c.pct}<span className="text-2xl text-gray-400">%</span>
+                {c.pct}<span className="text-2xl text-[color:var(--muted)]">%</span>
               </p>
-              <p className="mt-1 text-[13px] text-gray-500">{c.points_awarded} of {c.points_possible} core points · grade {c.grade}</p>
+              <p className="mt-1 text-[13px] text-[color:var(--muted)]">{c.points_awarded} of {c.points_possible} core points · grade {c.grade}</p>
               {result.percentile && (
-                <p className="mt-1 text-[12px] text-gray-500">
-                  Better than <span className="font-semibold text-gray-700">{result.percentile.better_than_pct}%</span> of {result.percentile.sample_size.toLocaleString()} sites scanned
+                <p className="mt-1 text-[12px] text-[color:var(--muted)]">
+                  Better than <span className="font-semibold text-[color:var(--text)]">{result.percentile.better_than_pct}%</span> of {result.percentile.sample_size.toLocaleString()} sites scanned
                 </p>
               )}
             </div>
           </div>
           {/* Honest partial framing */}
-          <div className="rounded-xl border border-accent-200 bg-accent-50 px-4 py-3 text-[13px] text-accent-900 sm:max-w-[16rem]">
+          <div className="rounded-[4px] border border-[color:var(--line-lime)] bg-[color:var(--pass-bg)] px-4 py-3 text-[13px] text-[color:var(--accent)] sm:max-w-[16rem]">
             <span className="font-semibold">Free score · {cov.free_checks} of {cov.total_checks} checks.</span>{" "}
             This covers the foundations. The full Agent Readiness scan runs all {cov.total_checks}.
           </div>
@@ -241,20 +242,20 @@ function ResultCard({ result, copied, setCopied }: { result: ReadinessResult; co
 
         {/* Coverage bar */}
         <div className="mt-5">
-          <div className="flex items-center justify-between text-[12px] text-gray-500">
+          <div className="flex items-center justify-between text-[12px] text-[color:var(--muted)]">
             <span>{cov.free_checks} of {cov.total_checks} readiness checks run</span>
             <span>{cov.total_checks - cov.free_checks} more in the full scan</span>
           </div>
-          <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-gray-100">
-            <div className="h-full rounded-full bg-accent-500" style={{ width: `${Math.round((cov.free_checks / cov.total_checks) * 100)}%` }} />
+          <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-[color:var(--surface-2)]">
+            <div className="h-full rounded-[3px] bg-[color:var(--accent)]" style={{ width: `${Math.round((cov.free_checks / cov.total_checks) * 100)}%` }} />
           </div>
         </div>
       </div>
 
       {/* Core checks — these make up the score */}
-      <div className="rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
-        <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-400">
-          Core checks <span className="text-gray-300">· your score</span>
+      <div className="rounded-[8px] border border-[color:var(--line-strong)] bg-[color:var(--surface)] p-5 sm:p-6">
+        <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-[color:var(--muted)]">
+          Core checks <span className="text-[color:var(--muted)]">· your score</span>
         </p>
         <ul className="mt-4 space-y-3">
           {coreChecks.map((ck) => <CheckLi key={ck.id} ck={ck} />)}
@@ -263,16 +264,16 @@ function ResultCard({ result, copied, setCopied }: { result: ReadinessResult; co
 
       {/* Emerging signals — bonus / upside, NOT counted in the score */}
       {emergingChecks.length > 0 && (
-        <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50/60 p-5 sm:p-6">
+        <div className="rounded-[8px] border border-dashed border-[color:var(--line-strong)] bg-[color:var(--surface-2)] p-5 sm:p-6">
           <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-slate-500">
-              Emerging signals <span className="text-slate-400">· bonus, not in your score</span>
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-[color:var(--muted)]">
+              Emerging signals <span className="text-[color:var(--muted)]">· bonus, not in your score</span>
             </p>
             {em && (
-              <span className="font-mono text-[11px] tabular-nums text-slate-500">{em.points_awarded} of {em.points_possible || 20} bonus earned</span>
+              <span className="font-mono text-[11px] tabular-nums text-[color:var(--muted)]">{em.points_awarded} of {em.points_possible || 20} bonus earned</span>
             )}
           </div>
-          <p className="mt-2 text-[12.5px] leading-relaxed text-slate-600">
+          <p className="mt-2 text-[12.5px] leading-relaxed text-[color:var(--muted)]">
             Almost no site implements these yet, so they don&apos;t count against your score — but adopting them is cheap future-proofing as more AI clients start to use them.
           </p>
           <ul className="mt-4 space-y-3">
@@ -282,12 +283,12 @@ function ResultCard({ result, copied, setCopied }: { result: ReadinessResult; co
       )}
 
       {/* Honest evidence panel */}
-      <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 text-[13px] leading-relaxed text-slate-700">
-        <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-slate-500">What this score is — and isn&apos;t</p>
+      <div className="rounded-[8px] border border-[color:var(--line-strong)] bg-[color:var(--surface-2)] p-5 text-[13px] leading-relaxed text-[color:var(--text)]">
+        <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-[color:var(--muted)]">What this score is — and isn&apos;t</p>
         <ul className="mt-3 space-y-1.5">
-          <li>· <strong className="text-slate-900">These are infrastructure signals</strong> — whether AI agents can reach, crawl, and parse your site. They&apos;re table stakes, not a guarantee of citations.</li>
-          <li>· <strong className="text-slate-900">It&apos;s a partial.</strong> 5 checks out of the full rubric. A high free score doesn&apos;t mean the remaining checks (rendering, structured data, MCP, commerce, visual) pass.</li>
-          <li>· <strong className="text-slate-900">No score buys visibility.</strong> Getting cited depends on your content and authority. This fixes the plumbing so you&apos;re not invisible by accident.</li>
+          <li>· <strong className="text-[color:var(--white)]">These are infrastructure signals</strong> — whether AI agents can reach, crawl, and parse your site. They&apos;re table stakes, not a guarantee of citations.</li>
+          <li>· <strong className="text-[color:var(--white)]">It&apos;s a partial.</strong> 5 checks out of the full rubric. A high free score doesn&apos;t mean the remaining checks (rendering, structured data, MCP, commerce, visual) pass.</li>
+          <li>· <strong className="text-[color:var(--white)]">No score buys visibility.</strong> Getting cited depends on your content and authority. This fixes the plumbing so you&apos;re not invisible by accident.</li>
         </ul>
       </div>
 
@@ -295,12 +296,12 @@ function ResultCard({ result, copied, setCopied }: { result: ReadinessResult; co
       <ShareCard origin={result.input?.origin ?? ""} />
 
       {/* Embeddable badge */}
-      <div className="rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
-        <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-400">Embed your score</p>
-        <p className="mt-2 text-[13px] leading-relaxed text-gray-600">It re-checks live, so it always reflects your current score.</p>
+      <div className="rounded-[8px] border border-[color:var(--line-strong)] bg-[color:var(--surface)] p-5 sm:p-6">
+        <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-[color:var(--muted)]">Embed your score</p>
+        <p className="mt-2 text-[13px] leading-relaxed text-[color:var(--muted)]">It re-checks live, so it always reflects your current score.</p>
         <div className="mt-3 flex items-start gap-2">
-          <code className="min-w-0 flex-1 overflow-x-auto whitespace-pre rounded-lg bg-gray-50 px-3 py-2 font-mono text-[11px] leading-relaxed text-gray-700 ring-1 ring-gray-200">{badgeSnippet}</code>
-          <button type="button" onClick={copy} className="shrink-0 rounded-lg border border-gray-200 px-2.5 py-2 text-[11px] font-medium text-gray-600 transition-colors hover:border-accent-300 hover:text-accent-700">
+          <code className="min-w-0 flex-1 overflow-x-auto whitespace-pre rounded-[4px] bg-[color:var(--code-bg)] px-3 py-2 font-mono text-[11px] leading-relaxed text-[color:var(--text)] ring-1 ring-[color:var(--line-strong)]">{badgeSnippet}</code>
+          <button type="button" onClick={copy} className="shrink-0 rounded-[4px] border border-[color:var(--line-strong)] px-2.5 py-2 text-[11px] font-medium text-[color:var(--muted)] transition-colors hover:border-[color:var(--accent)] hover:text-[color:var(--accent)]">
             {copied ? "Copied" : "Copy"}
           </button>
         </div>
@@ -309,18 +310,18 @@ function ResultCard({ result, copied, setCopied }: { result: ReadinessResult; co
       </div>
 
       {/* Funnel CTA */}
-      <div className="rounded-2xl border border-gray-900 bg-gray-950 p-6 sm:p-7">
+      <div className={`rounded-[8px] border border-[color:var(--line-strong)] bg-[color:var(--code-bg)] p-6 sm:p-7 ${tk.bridgeIn}`}>
         <h3 className="text-lg font-bold tracking-tight text-white">
           You&apos;ve scored {cov.free_checks} of {cov.total_checks} checks. See the other {cov.total_checks - cov.free_checks}.
         </h3>
-        <p className="mt-2 text-[14px] leading-relaxed text-gray-300">
+        <p className="mt-2 text-[14px] leading-relaxed text-[color:var(--muted)]">
           The full Agent Readiness scan live-fetches your site as six AI crawlers, checks robots.txt for 34, and adds rendering, structured-data, MCP,
           commerce and visual checks — the parts a robots.txt can&apos;t tell you.
         </p>
         <div className="mt-5">
           <Link
             href="/features/agent-readiness?utm_source=ai-readiness"
-            className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-[15px] font-semibold text-gray-950 transition-colors hover:bg-gray-100"
+            className="inline-flex items-center gap-2 rounded-[3px] bg-[color:var(--accent)] px-6 py-3 text-[15px] font-semibold text-[color:var(--accent-ink)] transition-colors hover:bg-[color:var(--accent-hover)]"
           >
             Run the full Agent Readiness scan
             <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" /></svg>
@@ -370,9 +371,9 @@ function ShareCard({ origin }: { origin: string }) {
   }
 
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
-      <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-gray-400">Share this result</p>
-      <p className="mt-2 text-[13px] leading-relaxed text-gray-600">
+    <div className="rounded-[8px] border border-[color:var(--line-strong)] bg-[color:var(--surface)] p-5 sm:p-6">
+      <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-[color:var(--muted)]">Share this result</p>
+      <p className="mt-2 text-[13px] leading-relaxed text-[color:var(--muted)]">
         Creates a public report page anyone can open. It re-checks live on save, so the score it shows is always real — not a number you can edit.
       </p>
 
@@ -382,7 +383,7 @@ function ShareCard({ origin }: { origin: string }) {
             type="button"
             onClick={createShare}
             disabled={state === "loading" || !origin}
-            className="inline-flex items-center gap-2 rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-[14px] font-semibold text-gray-800 transition-colors hover:border-accent-300 hover:text-accent-700 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex items-center gap-2 rounded-[4px] border border-[color:var(--line-strong)] bg-[color:var(--surface)] px-4 py-2.5 text-[14px] font-semibold text-[color:var(--white)] transition-colors hover:border-[color:var(--accent)] hover:text-[color:var(--accent)] disabled:cursor-not-allowed disabled:opacity-60"
           >
             {state === "loading" ? (
               <>
@@ -395,18 +396,18 @@ function ShareCard({ origin }: { origin: string }) {
             ) : "Create a share link"}
           </button>
           {state === "error" && (
-            <p className="mt-2 text-[13px] text-red-600">Couldn&apos;t create the link. Try again in a moment.</p>
+            <p className="mt-2 text-[13px] text-[color:var(--fail)]">Couldn&apos;t create the link. Try again in a moment.</p>
           )}
         </div>
       )}
 
       {state === "done" && id && (
         <div className="mt-3 flex items-start gap-2">
-          <code className="min-w-0 flex-1 overflow-x-auto whitespace-pre rounded-lg bg-gray-50 px-3 py-2 font-mono text-[12px] leading-relaxed text-gray-700 ring-1 ring-gray-200">{shareUrl}</code>
-          <button type="button" onClick={copy} className="shrink-0 rounded-lg border border-gray-200 px-2.5 py-2 text-[11px] font-medium text-gray-600 transition-colors hover:border-accent-300 hover:text-accent-700">
+          <code className="min-w-0 flex-1 overflow-x-auto whitespace-pre rounded-[4px] bg-[color:var(--code-bg)] px-3 py-2 font-mono text-[12px] leading-relaxed text-[color:var(--text)] ring-1 ring-[color:var(--line-strong)]">{shareUrl}</code>
+          <button type="button" onClick={copy} className="shrink-0 rounded-[4px] border border-[color:var(--line-strong)] px-2.5 py-2 text-[11px] font-medium text-[color:var(--muted)] transition-colors hover:border-[color:var(--accent)] hover:text-[color:var(--accent)]">
             {copied ? "Copied" : "Copy"}
           </button>
-          <a href={shareUrl} target="_blank" rel="noreferrer" className="shrink-0 rounded-lg border border-gray-200 px-2.5 py-2 text-[11px] font-medium text-gray-600 transition-colors hover:border-accent-300 hover:text-accent-700">
+          <a href={shareUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-[40px] shrink-0 items-center rounded-[4px] border border-[color:var(--line-strong)] px-2.5 py-2 text-[11px] font-medium text-[color:var(--muted)] transition-colors hover:border-[color:var(--accent)] hover:text-[color:var(--accent)]">
             Open
           </a>
         </div>

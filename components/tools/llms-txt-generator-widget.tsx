@@ -26,7 +26,7 @@ function download(name: string, content: string, type = "text/plain;charset=utf-
 }
 
 const inputCls =
-  "w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-[14px] text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-accent-500 focus:ring-2 focus:ring-accent-200 disabled:bg-gray-50 disabled:text-gray-400"
+  "w-full rounded-[4px] border border-[color:var(--line-strong)] bg-[color:var(--bg)] px-3 py-2 text-[14px] text-[color:var(--white)] outline-none transition-colors placeholder:text-[color:var(--subtle)] focus:border-[color:var(--accent)] focus:ring-2 focus:ring-[color:var(--focus-ring)] disabled:bg-[color:var(--surface-2)] disabled:text-[color:var(--subtle)]"
 
 export function LlmsTxtGeneratorWidget() {
   const [input, setInput] = useState("")
@@ -73,7 +73,7 @@ export function LlmsTxtGeneratorWidget() {
   }
 
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
+    <div className="rounded-[8px] border border-[color:var(--line-strong)] bg-[color:var(--surface)] p-5 sm:p-6">
       <form onSubmit={run} className="flex flex-col gap-3" aria-busy={loading}>
         <div className="flex flex-col gap-3 sm:flex-row">
           <label htmlFor="llms-domain" className="sr-only">
@@ -94,27 +94,27 @@ export function LlmsTxtGeneratorWidget() {
           <button
             type="submit"
             disabled={loading || !input.trim()}
-            className="shrink-0 rounded-lg bg-accent-600 px-6 py-2.5 text-[14px] font-semibold text-white transition-colors hover:bg-accent-500 disabled:cursor-not-allowed disabled:opacity-50"
+            className="shrink-0 rounded-[3px] bg-[color:var(--accent)] px-6 py-2.5 text-[14px] font-semibold text-[color:var(--accent-ink)] transition-colors hover:bg-[color:var(--accent-hover)] disabled:cursor-not-allowed disabled:opacity-50"
           >
             {loading ? "Generating…" : "Generate llms.txt"}
           </button>
         </div>
 
-        <label className="flex items-start gap-2.5 text-[13px] leading-relaxed text-gray-600">
+        <label className="flex items-start gap-2.5 text-[13px] leading-relaxed text-[color:var(--muted)]">
           <input
             type="checkbox"
             checked={full}
             onChange={(e) => setFull(e.target.checked)}
             disabled={loading}
-            className="mt-0.5 h-4 w-4 rounded border-gray-300 text-accent-600 focus:ring-accent-500"
+            className="mt-0.5 h-4 w-4 rounded border-[color:var(--line-strong)] text-[color:var(--accent)] focus:ring-[color:var(--accent)]"
           />
           <span>
-            Also build <code className="rounded bg-gray-100 px-1 text-gray-700">llms-full.txt</code> with page text.
+            Also build <code className="rounded bg-[color:var(--surface-2)] px-1 text-[color:var(--text)]">llms-full.txt</code> with page text.
             Heavier, so it covers fewer pages.
           </span>
         </label>
 
-        <p className="text-[12.5px] leading-relaxed text-gray-500">
+        <p className="text-[12.5px] leading-relaxed text-[color:var(--muted)]">
           We read your sitemap, respect your robots.txt, and fetch up to 50 pages for titles and descriptions. Free, no
           sign-up.
         </p>
@@ -129,13 +129,13 @@ export function LlmsTxtGeneratorWidget() {
       </p>
 
       {err && (
-        <div role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-[14px] leading-relaxed text-red-800">
+        <div role="alert" className="mt-5 rounded-[4px] border border-[color:var(--fail-line)] bg-[color:var(--fail-bg)] p-4 text-[14px] leading-relaxed text-[color:var(--fail)]">
           {err}
         </div>
       )}
 
       {loading && (
-        <p className="mt-5 text-[13px] leading-relaxed text-gray-500">
+        <p className="mt-5 text-[13px] leading-relaxed text-[color:var(--muted)]">
           Reading your sitemap and fetching pages. A large site can take up to a minute.
         </p>
       )}
@@ -149,24 +149,24 @@ export function LlmsTxtGeneratorWidget() {
               { label: "Found via", value: result.discovery === "sitemap" ? "sitemap" : "homepage links" },
               { label: "Took", value: `${(result.elapsedMs / 1000).toFixed(1)}s` },
             ].map((s) => (
-              <div key={s.label} className="rounded-xl border border-gray-100 bg-gray-50/60 p-3">
-                <div className="font-mono text-[10.5px] font-semibold uppercase tracking-widest text-gray-500">{s.label}</div>
-                <div className="mt-1 text-[18px] font-bold tracking-tight text-gray-900">{s.value}</div>
+              <div key={s.label} className="rounded-[4px] border border-[color:var(--line)] bg-[color:var(--surface-2)] p-3">
+                <div className="font-mono text-[10.5px] font-semibold uppercase tracking-widest text-[color:var(--muted)]">{s.label}</div>
+                <div className="mt-1 text-[18px] font-bold tracking-tight text-[color:var(--white)]">{s.value}</div>
               </div>
             ))}
           </div>
 
           {result.warnings.length > 0 && (
-            <ul className="mt-4 space-y-1.5 rounded-xl border border-amber-200 bg-amber-50 p-4">
+            <ul className="mt-4 space-y-1.5 rounded-[4px] border border-[color:var(--warn-line)] bg-[color:var(--warn-bg)] p-4">
               {result.warnings.map((w, i) => (
-                <li key={i} className="text-[13px] leading-relaxed text-amber-900">
+                <li key={i} className="text-[13px] leading-relaxed text-[color:var(--warn)]">
                   {w}
                 </li>
               ))}
             </ul>
           )}
 
-          <div className="mt-5 flex gap-1 border-b border-gray-200" role="tablist" aria-label="Generated output">
+          <div className="mt-5 flex gap-1 border-b border-[color:var(--line-strong)]" role="tablist" aria-label="Generated output">
             {(
               [
                 ["file", "The file"],
@@ -182,7 +182,7 @@ export function LlmsTxtGeneratorWidget() {
                 tabIndex={tab === id ? 0 : -1}
                 onClick={() => setTab(id)}
                 className={`-mb-px border-b-2 px-3.5 py-2 text-[13px] font-semibold transition-colors ${
-                  tab === id ? "border-accent-600 text-accent-700" : "border-transparent text-gray-500 hover:text-gray-800"
+                  tab === id ? "border-[color:var(--accent)] text-[color:var(--accent)]" : "border-transparent text-[color:var(--muted)] hover:text-[color:var(--white)]"
                 }`}
               >
                 {label}
@@ -193,42 +193,42 @@ export function LlmsTxtGeneratorWidget() {
           {tab === "file" && (
             <div id="gen-panel-file" role="tabpanel" aria-labelledby="gen-tab-file">
               <div className="mt-4 flex flex-wrap gap-2">
-                <button type="button" onClick={copyOut} className="rounded-lg border border-gray-300 px-3.5 py-2 text-[13px] font-medium text-gray-700 transition-colors hover:border-gray-400">
+                <button type="button" onClick={copyOut} className="rounded-[4px] border border-[color:var(--line-strong)] px-3.5 py-2 text-[13px] font-medium text-[color:var(--text)] transition-colors hover:border-[color:var(--line-lime)]">
                   {copied ? "Copied" : "Copy"}
                 </button>
-                <button type="button" onClick={() => download("llms.txt", result.llmsTxt)} className="rounded-lg bg-accent-600 px-3.5 py-2 text-[13px] font-semibold text-white transition-colors hover:bg-accent-500">
+                <button type="button" onClick={() => download("llms.txt", result.llmsTxt)} className="rounded-[3px] bg-[color:var(--accent)] px-3.5 py-2 text-[13px] font-semibold text-[color:var(--accent-ink)] transition-colors hover:bg-[color:var(--accent-hover)]">
                   Download llms.txt
                 </button>
                 {result.llmsFullTxt && (
-                  <button type="button" onClick={() => download("llms-full.txt", result.llmsFullTxt!)} className="rounded-lg border border-gray-300 px-3.5 py-2 text-[13px] font-medium text-gray-700 transition-colors hover:border-gray-400">
+                  <button type="button" onClick={() => download("llms-full.txt", result.llmsFullTxt!)} className="rounded-[4px] border border-[color:var(--line-strong)] px-3.5 py-2 text-[13px] font-medium text-[color:var(--text)] transition-colors hover:border-[color:var(--line-lime)]">
                     Download llms-full.txt
                   </button>
                 )}
               </div>
 
-              <div className="mt-4 rounded-xl border border-gray-200 bg-gray-950 p-5">
-                <pre className="max-h-[32rem] overflow-auto whitespace-pre-wrap break-words font-mono text-[12.5px] leading-relaxed text-gray-200">
+              <div className="mt-4 rounded-[4px] border border-[color:var(--line-strong)] bg-[color:var(--code-bg)] p-5">
+                <pre className="max-h-[32rem] overflow-auto whitespace-pre-wrap break-words font-mono text-[12.5px] leading-relaxed text-[color:var(--text)]">
                   {result.llmsTxt}
                 </pre>
               </div>
-              <p className="mt-3 text-[12.5px] leading-relaxed text-gray-500">
-                Save this as <code className="rounded bg-gray-100 px-1 text-gray-600">llms.txt</code> at your site root
-                (<code className="rounded bg-gray-100 px-1 text-gray-600">/llms.txt</code>). Edit it down first — a
+              <p className="mt-3 text-[12.5px] leading-relaxed text-[color:var(--muted)]">
+                Save this as <code className="rounded bg-[color:var(--surface-2)] px-1 text-[color:var(--muted)]">llms.txt</code> at your site root
+                (<code className="rounded bg-[color:var(--surface-2)] px-1 text-[color:var(--muted)]">/llms.txt</code>). Edit it down first — a
                 shorter, sharper index beats a complete one.
               </p>
             </div>
           )}
 
           {tab === "pages" && (
-            <div id="gen-panel-pages" role="tabpanel" aria-labelledby="gen-tab-pages" className="mt-4 overflow-hidden rounded-xl border border-gray-200">
-              <ul className="max-h-[32rem] divide-y divide-gray-100 overflow-auto">
+            <div id="gen-panel-pages" role="tabpanel" aria-labelledby="gen-tab-pages" className="mt-4 overflow-hidden rounded-[4px] border border-[color:var(--line-strong)]">
+              <ul className="max-h-[32rem] divide-y divide-[color:var(--line)] overflow-auto">
                 {result.pages.map((p) => (
                   <li key={p.url} className="px-4 py-2.5">
                     <div className="flex flex-wrap items-baseline gap-2">
-                      <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-gray-400">{p.section}</span>
-                      <span className="text-[13.5px] font-semibold text-gray-900">{p.title}</span>
+                      <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-[color:var(--muted)]">{p.section}</span>
+                      <span className="text-[13.5px] font-semibold text-[color:var(--white)]">{p.title}</span>
                     </div>
-                    <a href={p.url} target="_blank" rel="noopener noreferrer nofollow" className="break-all font-mono text-[11.5px] text-gray-500 hover:text-accent-700 hover:underline">
+                    <a href={p.url} target="_blank" rel="noopener noreferrer nofollow" className="break-all font-mono text-[11.5px] text-[color:var(--muted)] hover:text-[color:var(--accent)] hover:underline">
                       {p.url}
                     </a>
                   </li>

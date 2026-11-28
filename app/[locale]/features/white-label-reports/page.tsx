@@ -14,6 +14,8 @@ import { siteConfig } from "@/lib/config"
 import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema, howToSchema } from "@/lib/seo-schema"
 import { marketingAlternatesFor } from "@/lib/i18n/siblings"
+import { kit as k, Arrow } from "@/components/brand/dark-kit"
+import { FeaturePage, FxSection, FxHead, FeatureCloseCta } from "@/components/features/fx"
 
 // Localized White-Label Reports feature page: en at /features/white-label-reports,
 // fr at /fr/features/white-label-reports. Relocated from
@@ -67,7 +69,7 @@ export default async function WhiteLabelReportsPage({
   const breadcrumbLabels = { home: c("breadcrumbHome"), features: c("breadcrumbFeatures") }
 
   return (
-    <>
+    <FeaturePage>
       <JsonLd
         data={[
           softwareApplicationSchema({
@@ -197,24 +199,16 @@ export default async function WhiteLabelReportsPage({
         link={{ label: t("wedge.linkLabel"), href: `${base}/features/pr-coverage-tracker` }}
       />
 
-      <section className="border-t border-[var(--surface-warm-border)] bg-[var(--surface-warm)] px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-            {t("comparison.eyebrow")}
-          </p>
-          <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-            {t("comparison.h2")}
-          </h2>
-          <div className="mt-8">
-            <FeatureComparisonTable
-              columns={comparisonColumns}
-              rows={comparisonRows}
-              yesLabel={c("comparison.yes")}
-              noLabel={c("comparison.no")}
-            />
-          </div>
-        </div>
-      </section>
+      {/* Comparison */}
+      <FxSection band narrow>
+        <FxHead eyebrow={t("comparison.eyebrow")} title={t("comparison.h2")} />
+        <FeatureComparisonTable
+          columns={comparisonColumns}
+          rows={comparisonRows}
+          yesLabel={c("comparison.yes")}
+          noLabel={c("comparison.no")}
+        />
+      </FxSection>
 
       <FeatureFaq items={faqs} heading={c("faqHeading")} />
 
@@ -226,26 +220,13 @@ export default async function WhiteLabelReportsPage({
         descriptions={cardDescriptions}
       />
 
-      <section className="bg-gray-950 px-6 py-20 sm:py-24">
-        <div className="mx-auto flex max-w-5xl flex-col items-start gap-6 md:flex-row md:items-center md:justify-between md:gap-12">
-          <div>
-            <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
-              {t("finalCta.h2")}
-            </h2>
-            <p className="mt-2 text-base text-gray-300">{t("finalCta.sub")}</p>
-          </div>
-          <Link
-            href={`${base}/pricing`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]"
-          >
-            {t("finalCta.button")}
-            <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </Link>
-        </div>
-      </section>
-    </>
+      {/* Final CTA */}
+      <FeatureCloseCta title={t("finalCta.h2")} sub={t("finalCta.sub")}>
+        <Link href={`${base}/pricing`} prefetch={false} className={k.btnLime}>
+          {t("finalCta.button")}
+          <Arrow />
+        </Link>
+      </FeatureCloseCta>
+    </FeaturePage>
   )
 }

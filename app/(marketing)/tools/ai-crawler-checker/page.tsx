@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
+import { kit, Arrow } from "@/components/brand/dark-kit"
+import { ToolsPage, ToolIndex, toolsKit as tk } from "@/components/tools/tool-page"
 import { HowItWorks3Step, type Step } from "@/components/features/how-it-works"
 import { FeatureFaq } from "@/components/features/feature-faq"
 import { siteConfig } from "@/lib/config"
@@ -73,9 +75,9 @@ const faqs = [
 
 export default function AiCrawlerCheckerPage() {
   return (
-    <>
+    <ToolsPage>
       {/* Hero + the tool */}
-      <section className="relative overflow-hidden bg-[var(--surface-steel)] px-6 pt-16 pb-16 sm:pt-20 sm:pb-20">
+      <section className={`${tk.hero} ${kit.heroGlow}`}>
         <JsonLd
           data={[
             softwareApplicationSchema({
@@ -100,58 +102,64 @@ export default function AiCrawlerCheckerPage() {
           ]}
         />
 
-        <div className="mx-auto max-w-5xl">
+        <div className={kit.wrap}>
           <Breadcrumbs
+            tone="dark"
             trail={[
               { name: "Home", href: "/" },
               { name: "Tools", href: "/tools" },
               { name: "AI Crawler Checker", href: "" },
             ]}
           />
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+          <div className={tk.heroHead}>
+            <p className={tk.heroLabel}>
               Free AI crawler tool
             </p>
-            <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
+            <h1 className={tk.heroTitle}>
               Can AI crawlers reach your site?
             </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
+            <div className={tk.heroRule} aria-hidden="true" />
+            <p className={tk.heroLead}>
               Paste a domain and see which of 34 AI crawlers your robots.txt allows or blocks. GPTBot, ClaudeBot,
               PerplexityBot, Google-Extended and the rest, each with the exact Disallow line doing the blocking.
               Server-side, so it works where browser checkers fail. Free, no sign-up.
             </p>
           </div>
 
-          <div className="mt-10">
+          <div className={`${tk.heroTool} ${tk.mount}`}>
             <AiCrawlerCheckerWidget />
           </div>
         </div>
       </section>
 
       {/* Honest evidence panel — the credibility wedge */}
-      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">Straight answer</p>
-          <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-            What this checks, and what it can&apos;t.
-          </h2>
-          <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-gray-700">
-            <p>
-              <strong className="text-gray-900">It checks permission, not visibility.</strong>{" "}robots.txt tells crawlers what
-              they may fetch. Allowing GPTBot or ClaudeBot does not mean ChatGPT or Claude will cite you; that depends on
-              your content and each engine&apos;s own ranking, which no robots file controls. Anyone selling &quot;unblock
-              the bots and get cited&quot; is overstating it.
-            </p>
-            <p>
-              <strong className="text-gray-900">But the opposite failure is real and common.</strong> Plenty of sites block the
-              exact AI crawlers they want to reach them, often by an old <code className="rounded bg-gray-200 px-1 text-gray-700">Disallow: /</code> rule
-              or a CMS default. This catches that in one paste, and shows the precise line to change.
-            </p>
-            <p>
-              <strong className="text-gray-900">And robots.txt isn&apos;t the whole story.</strong> A bot that robots.txt allows
-              can still be blocked by a WAF or Cloudflare, and some bots ignore robots.txt entirely. We flag those caveats
-              honestly, and our Agent Readiness scan verifies what crawlers actually receive.
-            </p>
+      <section className={`${kit.section} ${kit.sectionBorder}`}>
+        <div className={`${kit.wrap} ${tk.split}`}>
+          <div className={tk.splitHead}>
+            <ToolIndex>Straight answer</ToolIndex>
+            <h2 className={tk.title2}>
+              What this checks, and what it can&apos;t.
+            </h2>
+          </div>
+          <div className={tk.prose}>
+            <div className={tk.stack}>
+              <p>
+                <strong>It checks permission, not visibility.</strong>{" "}robots.txt tells crawlers what
+                they may fetch. Allowing GPTBot or ClaudeBot does not mean ChatGPT or Claude will cite you; that depends on
+                your content and each engine&apos;s own ranking, which no robots file controls. Anyone selling &quot;unblock
+                the bots and get cited&quot; is overstating it.
+              </p>
+              <p>
+                <strong>But the opposite failure is real and common.</strong> Plenty of sites block the
+                exact AI crawlers they want to reach them, often by an old <code>Disallow: /</code> rule
+                or a CMS default. This catches that in one paste, and shows the precise line to change.
+              </p>
+              <p>
+                <strong>And robots.txt isn&apos;t the whole story.</strong> A bot that robots.txt allows
+                can still be blocked by a WAF or Cloudflare, and some bots ignore robots.txt entirely. We flag those caveats
+                honestly, and our Agent Readiness scan verifies what crawlers actually receive.
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -160,55 +168,59 @@ export default function AiCrawlerCheckerPage() {
       <HowItWorks3Step heading="From a domain to a crawler-access report in three steps" steps={steps} />
 
       {/* Short explainer */}
-      <section className="border-t border-gray-100 bg-gray-50 px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">The crawlers, briefly</p>
-          <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-            Not all AI crawlers do the same job
-          </h2>
-          <p className="mt-4 text-[15px] leading-relaxed text-gray-700">
-            We group the 34 crawlers by purpose so a block is a deliberate choice, not an accident.
-            <strong> AI-search bots</strong> (like OAI-SearchBot and PerplexityBot) feed live AI answers and citations.
-            <strong> Training bots</strong> (like GPTBot and Google-Extended) collect data to train models, and some sites block
-            these on purpose. <strong>User-prompted fetchers</strong> (like ChatGPT-User and Claude-User) retrieve a page only
-            when a person asks about it. Blocking the wrong group can quietly remove you from AI answers while doing nothing for
-            the privacy goal you actually had.
-          </p>
-          <p className="mt-4 text-[15px] leading-relaxed text-gray-700">
-            For the bigger picture on getting found by AI, read our guide:{" "}
-            <Link href="/blog/what-is-geo" className="font-semibold text-accent-700 underline-offset-2 hover:underline">
-              what generative engine optimization actually is
-            </Link>.
-          </p>
+      <section className={`${kit.section} ${kit.sectionBorder} ${kit.band}`}>
+        <div className={`${kit.wrap} ${tk.split}`}>
+          <div className={tk.splitHead}>
+            <ToolIndex>The crawlers, briefly</ToolIndex>
+            <h2 className={tk.title2}>
+              Not all AI crawlers do the same job
+            </h2>
+          </div>
+          <div className={tk.prose}>
+            <p>
+              We group the 34 crawlers by purpose so a block is a deliberate choice, not an accident.
+              <strong> AI-search bots</strong> (like OAI-SearchBot and PerplexityBot) feed live AI answers and citations.
+              <strong> Training bots</strong> (like GPTBot and Google-Extended) collect data to train models, and some sites block
+              these on purpose. <strong>User-prompted fetchers</strong> (like ChatGPT-User and Claude-User) retrieve a page only
+              when a person asks about it. Blocking the wrong group can quietly remove you from AI answers while doing nothing for
+              the privacy goal you actually had.
+            </p>
+            <p>
+              For the bigger picture on getting found by AI, read our guide:{" "}
+              <Link href="/blog/what-is-geo">
+                what generative engine optimization actually is
+              </Link>.
+            </p>
+          </div>
         </div>
       </section>
 
       <FeatureFaq items={faqs} heading="AI crawlers, answered honestly" />
 
       {/* Funnel CTA → Agent Readiness */}
-      <section className="bg-gray-950 px-6 py-20 sm:py-24">
-        <div className="mx-auto flex max-w-5xl flex-col items-start gap-6 md:flex-row md:items-center md:justify-between md:gap-12">
-          <div>
-            <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
-              robots.txt is permission. Agent Readiness checks what crawlers actually receive.
-            </h2>
-            <p className="mt-2 max-w-xl text-base text-gray-300">
-              Live-fetch your site as six AI crawlers, render it like a headless agent, and see what&apos;s really
-              blocking you: WAF rules, 403s, JavaScript walls. Free.
-            </p>
+      <section className={tk.close}>
+        <div className={kit.wrap}>
+          <div className={tk.closeCard}>
+            <div>
+              <h2 className={tk.closeTitle}>
+                robots.txt is permission. Agent Readiness checks what crawlers actually receive.
+              </h2>
+              <p className={tk.closeBody}>
+                Live-fetch your site as six AI crawlers, render it like a headless agent, and see what&apos;s really
+                blocking you: WAF rules, 403s, JavaScript walls. Free.
+              </p>
+            </div>
+            <Link
+              href="/features/agent-readiness?ref=ai-crawler-checker"
+              prefetch={false}
+              className={kit.btnLime}
+            >
+              Run a free Agent Readiness scan
+              <Arrow />
+            </Link>
           </div>
-          <Link
-            href="/features/agent-readiness?ref=ai-crawler-checker"
-            prefetch={false}
-            className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]"
-          >
-            Run a free Agent Readiness scan
-            <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </Link>
         </div>
       </section>
-    </>
+    </ToolsPage>
   )
 }

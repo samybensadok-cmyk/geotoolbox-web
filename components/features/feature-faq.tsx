@@ -1,3 +1,5 @@
+import s from "./shared-dark.module.css"
+
 type FAQItem = { question: string; answer: string }
 
 export function FeatureFaq({
@@ -37,43 +39,43 @@ export function FeatureFaq({
   }
 
   return (
-    <section className={compact ? "border-t border-gray-100 bg-white px-5 py-16 sm:px-7 sm:py-20" : "border-t border-gray-100 bg-white px-6 py-20 sm:py-24"}>
-      <div className={compact ? "mx-auto grid max-w-[1104px] gap-8 lg:grid-cols-[1fr_2fr] lg:gap-16" : "mx-auto max-w-3xl"}>
-        <div className={compact ? "" : "mb-10 text-center"}>
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+    <section className={`${compact ? "border-t border-gray-100 bg-white px-5 py-16 sm:px-7 sm:py-20" : "border-t border-gray-100 bg-white px-6 py-20 sm:py-24"} ${s.faqSec}`}>
+      <div className={compact ? `mx-auto grid max-w-[1104px] gap-8 lg:grid-cols-[1fr_2fr] lg:gap-16 ${s.faqWrapCompact}` : `mx-auto max-w-3xl ${s.faqWrap}`}>
+        <div className={`${compact ? "" : "mb-10 text-center"} ${s.faqHead}`}>
+          <p className={`font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700 fx-faq-eyebrow ${s.faqEyebrow}`}>
             FAQ
           </p>
-          <h2 className="mt-2 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
+          <h2 className={`mt-2 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900 ${s.faqTitle}`}>
             {heading}
           </h2>
         </div>
 
-        <ul className={compact ? "border-t border-gray-200" : "space-y-3"}>
+        <ul className={`${compact ? "border-t border-gray-200" : "space-y-3"} ${s.faqList}`}>
           {items.map((item, i) => (
-            <li key={i}>
+            <li key={i} className={s.faqItem}>
               <details
                 open={i === defaultOpenIndex}
-                className={compact ? "group border-b border-gray-200 py-5" : "group rounded-2xl border border-gray-200 bg-white p-6 transition-colors open:border-gray-300"}
+                className={`${compact ? "group border-b border-gray-200 py-5" : "group rounded-2xl border border-gray-200 bg-white p-6 transition-colors open:border-gray-300"} ${s.faqDetails}`}
               >
-                <summary className="flex cursor-pointer list-none items-start justify-between gap-6 [&::-webkit-details-marker]:hidden">
+                <summary className={`flex cursor-pointer list-none items-start justify-between gap-6 [&::-webkit-details-marker]:hidden ${s.faqSummary}`}>
                   <div className="flex items-start gap-4 min-w-0 flex-1">
-                    <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700 mt-1 tabular-nums shrink-0">
+                    <span className={`font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700 mt-1 tabular-nums shrink-0 ${s.faqNum}`}>
                       {String(i + 1).padStart(2, "0")}
                     </span>
-                    <span className={compact ? "text-[16px] font-medium leading-snug tracking-tight text-gray-900" : "text-[17px] font-semibold leading-snug tracking-tight text-gray-900"}>
+                    <span className={`${compact ? "text-[16px] font-medium leading-snug tracking-tight text-gray-900" : "text-[17px] font-semibold leading-snug tracking-tight text-gray-900"} ${s.faqQ}`}>
                       {item.question}
                     </span>
                   </div>
                   <span
                     aria-hidden="true"
-                    className="mt-1 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-gray-200 text-gray-600 transition-transform group-open:rotate-45"
+                    className={`mt-1 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-gray-200 text-gray-600 transition-transform group-open:rotate-45 ${s.faqIcon}`}
                   >
                     <svg className="h-3 w-3" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M6 2v8M2 6h8" strokeLinecap="round" />
                     </svg>
                   </span>
                 </summary>
-                <div className={compact ? "mt-3 pl-10 text-[14px] leading-relaxed text-gray-600" : "mt-4 pl-10 text-[15px] leading-relaxed text-gray-700"}>
+                <div className={`${compact ? "mt-3 pl-10 text-[14px] leading-relaxed text-gray-600" : "mt-4 pl-10 text-[15px] leading-relaxed text-gray-700"} ${s.faqA}`}>
                   {item.answer}
                 </div>
               </details>

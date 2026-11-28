@@ -4,6 +4,8 @@
  * like" legend so the hero metric reads as meaningful, not random.
  */
 
+import s from "./shared-dark.module.css"
+
 type Tier = { band: string; label: string; tone: "bad" | "mid" | "good" }
 
 const TONE: Record<Tier["tone"], string> = {
@@ -11,6 +13,9 @@ const TONE: Record<Tier["tone"], string> = {
   mid: "bg-amber-50 text-amber-800 border-amber-200",
   good: "bg-accent-50 text-accent-800 border-accent-200",
 }
+
+// Dark look inside a <DarkPage> (shared-dark.module.css); the light classes above stay the fallback.
+const DARK_TONE: Record<Tier["tone"], string> = { bad: s.legBad, mid: s.legMid, good: s.legGood }
 
 const PRESETS: Record<string, Tier[]> = {
   "0-100": [
@@ -38,7 +43,7 @@ export function ScoreLegend({
       {data.map((t) => (
         <li
           key={t.band}
-          className={`flex items-center gap-2 rounded-full border px-3 py-1.5 text-[12px] ${TONE[t.tone]}`}
+          className={`flex items-center gap-2 rounded-full border px-3 py-1.5 text-[12px] ${TONE[t.tone]} ${s.legItem} ${DARK_TONE[t.tone]}`}
         >
           <span className="font-bold tabular-nums">{t.band}</span>
           <span className="opacity-90">{t.label}</span>

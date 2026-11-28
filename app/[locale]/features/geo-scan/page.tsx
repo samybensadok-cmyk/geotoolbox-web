@@ -16,6 +16,8 @@ import { siteConfig } from "@/lib/config"
 import { JsonLd } from "@/components/seo/json-ld"
 import { softwareApplicationSchema, howToSchema } from "@/lib/seo-schema"
 import { marketingAlternatesFor } from "@/lib/i18n/siblings"
+import { kit as k, Arrow } from "@/components/brand/dark-kit"
+import { FeaturePage, FxSection, FxHead, FeatureCloseCta, fx } from "@/components/features/fx"
 
 // Localized GEO Scan feature page: en at /features/geo-scan, fr at
 // /fr/features/geo-scan. Relocated from app/(marketing)/features/geo-scan.
@@ -77,7 +79,7 @@ export default async function GeoScanPage({
   const breadcrumbLabels = { home: c("breadcrumbHome"), features: c("breadcrumbFeatures") }
 
   return (
-    <>
+    <FeaturePage>
       <JsonLd
         data={[
           softwareApplicationSchema({
@@ -131,35 +133,25 @@ export default async function GeoScanPage({
       />
 
       {/* What a scan gives you back — anchor the score + cited vs mentioned */}
-      <section className="border-t border-[var(--surface-mint-border)] bg-[var(--surface-mint)] px-6 py-16 sm:py-24">
-        <div className="mx-auto max-w-3xl">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-            {t("score.eyebrow")}
-          </p>
-          <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-            {t("score.h2")}
-          </h2>
-          <p className="mt-4 text-[15px] leading-relaxed text-gray-600">{t("score.intro")}</p>
-          <div className="mt-6">
-            <ScoreLegend tiers={legendTiers} />
-          </div>
-          <dl className="mt-8 divide-y divide-gray-200/70 border-y border-gray-200/70">
-            {scoreItems.map(({ num, term, def }) => (
-              <div key={term} className="flex items-baseline gap-4 py-4 sm:gap-6">
-                <span
-                  aria-hidden="true"
-                  className="shrink-0 font-mono text-[15px] font-bold tabular-nums text-accent-500"
-                >
-                  {num}
-                </span>
-                <dt className="w-32 shrink-0 text-[14px] font-bold text-gray-900 sm:w-40">{term}</dt>
-                <dd className="text-[13px] leading-relaxed text-gray-600">{def}</dd>
-              </div>
-            ))}
-          </dl>
-          <p className="mt-6 text-[13px] leading-relaxed text-gray-500">{t("score.note")}</p>
-        </div>
-      </section>
+      <FxSection narrow>
+        <FxHead eyebrow={t("score.eyebrow")} title={t("score.h2")} lead={t("score.intro")} />
+        <ScoreLegend tiers={legendTiers} />
+        <dl className="mt-8 divide-y divide-gray-200/70 border-y border-gray-200/70">
+          {scoreItems.map(({ num, term, def }) => (
+            <div key={term} className="flex items-baseline gap-4 py-4 sm:gap-6">
+              <span
+                aria-hidden="true"
+                className="shrink-0 font-mono text-[15px] font-bold tabular-nums text-accent-500"
+              >
+                {num}
+              </span>
+              <dt className="w-32 shrink-0 text-[14px] font-bold text-gray-900 sm:w-40">{term}</dt>
+              <dd className="text-[14px] leading-relaxed text-gray-600">{def}</dd>
+            </div>
+          ))}
+        </dl>
+        <p className={fx.note}>{t("score.note")}</p>
+      </FxSection>
 
       {/* How it works (HowTo schema source) */}
       <div id="how">
@@ -177,69 +169,42 @@ export default async function GeoScanPage({
       />
 
       {/* Proof — anonymized real-world case (a brand we run GEO for, kept unnamed) */}
-      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl text-center">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-            {t("proofSec.eyebrow")}
-          </p>
-          <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-            {t("proofSec.h2")}
-          </h2>
-        </div>
-        <div className="mt-10">
-          <SocialProofBlock
-            miniCase={{
-              result: t("proofSec.miniResult"),
-              attribution: t("proofSec.miniAttribution"),
-            }}
-            provenanceLine={t("proofSec.provenance")}
-            engineGridLabel={c("engineGridLabel")}
-          />
-        </div>
-      </section>
+      <FxSection>
+        <FxHead eyebrow={t("proofSec.eyebrow")} title={t("proofSec.h2")} />
+        <SocialProofBlock
+          miniCase={{
+            result: t("proofSec.miniResult"),
+            attribution: t("proofSec.miniAttribution"),
+          }}
+          provenanceLine={t("proofSec.provenance")}
+          engineGridLabel={c("engineGridLabel")}
+        />
+      </FxSection>
 
       {/* Comparison */}
-      <section className="border-t border-[var(--surface-mint-border)] bg-[var(--surface-mint)] px-6 py-16 sm:py-24">
-        <div className="mx-auto max-w-3xl">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-            {t("comparison.eyebrow")}
-          </p>
-          <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-            {t("comparison.h2")}
-          </h2>
-          <div className="mt-8">
-            <FeatureComparisonTable
-              columns={comparisonColumns}
-              rows={comparisonRows}
-              yesLabel={c("comparison.yes")}
-              noLabel={c("comparison.no")}
-            />
-          </div>
-        </div>
-      </section>
+      <FxSection band narrow>
+        <FxHead eyebrow={t("comparison.eyebrow")} title={t("comparison.h2")} />
+        <FeatureComparisonTable
+          columns={comparisonColumns}
+          rows={comparisonRows}
+          yesLabel={c("comparison.yes")}
+          noLabel={c("comparison.no")}
+        />
+      </FxSection>
 
       {/* Outcomes */}
-      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-5xl">
-          <div className="max-w-2xl">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
-              {t("outcomes.eyebrow")}
-            </p>
-            <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-              {t("outcomes.h2")}
-            </h2>
-          </div>
-          <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:gap-12">
-            {outcomes.map((o) => (
-              <div key={o.tag}>
-                <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">{o.tag}</p>
-                <h3 className="mt-2 text-lg font-semibold tracking-tight text-gray-900">{o.title}</h3>
-                <p className="mt-2 text-[15px] leading-relaxed text-gray-600">{o.body}</p>
-              </div>
-            ))}
-          </div>
+      <FxSection>
+        <FxHead eyebrow={t("outcomes.eyebrow")} title={t("outcomes.h2")} />
+        <div className={fx.outcomes}>
+          {outcomes.map((o) => (
+            <div key={o.tag} className={fx.outcome}>
+              <p className={k.kicker}>{o.tag}</p>
+              <h3 className={fx.itemTitle}>{o.title}</h3>
+              <p className={fx.itemBody}>{o.body}</p>
+            </div>
+          ))}
         </div>
-      </section>
+      </FxSection>
 
       <FeatureFaq items={faqs} heading={c("faqHeading")} />
 
@@ -252,26 +217,12 @@ export default async function GeoScanPage({
       />
 
       {/* Final CTA */}
-      <section className="bg-gray-950 px-6 py-20 sm:py-24">
-        <div className="mx-auto flex max-w-5xl flex-col items-start gap-6 md:flex-row md:items-center md:justify-between md:gap-12">
-          <div>
-            <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
-              {t("finalCta.h2")}
-            </h2>
-            <p className="mt-2 text-base text-gray-300">{t("finalCta.sub")}</p>
-          </div>
-          <Link
-            href={siteConfig.appSignupUrl}
-            prefetch={false}
-            className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]"
-          >
-            {t("finalCta.button")}
-            <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </Link>
-        </div>
-      </section>
-    </>
+      <FeatureCloseCta title={t("finalCta.h2")} sub={t("finalCta.sub")}>
+        <Link href={siteConfig.appSignupUrl} prefetch={false} className={k.btnLime}>
+          {t("finalCta.button")}
+          <Arrow />
+        </Link>
+      </FeatureCloseCta>
+    </FeaturePage>
   )
 }

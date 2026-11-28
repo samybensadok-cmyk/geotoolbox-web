@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { Breadcrumbs } from "@/components/features/breadcrumbs"
+import { kit, Arrow } from "@/components/brand/dark-kit"
+import { ToolsPage, ToolIndex, toolsKit as tk } from "@/components/tools/tool-page"
 import { HowItWorks3Step, type Step } from "@/components/features/how-it-works"
 import { FeatureFaq } from "@/components/features/feature-faq"
 import { siteConfig } from "@/lib/config"
@@ -68,9 +70,9 @@ const faqs = [
 
 export default function QueryFanoutToolPage() {
   return (
-    <>
+    <ToolsPage>
       {/* Hero + the tool */}
-      <section className="relative overflow-hidden bg-[var(--surface-iris)] px-6 pt-16 pb-16 sm:pt-20 sm:pb-20">
+      <section className={`${tk.hero} ${kit.heroGlow}`}>
         <JsonLd
           data={[
             softwareApplicationSchema({
@@ -87,56 +89,62 @@ export default function QueryFanoutToolPage() {
           ]}
         />
 
-        <div className="mx-auto max-w-5xl">
+        <div className={kit.wrap}>
           <Breadcrumbs
+            tone="dark"
             trail={[
               { name: "Home", href: "/" },
               { name: "Tools", href: "/tools" },
               { name: "AI Query Fan-Out", href: "" },
             ]}
           />
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">
+          <div className={tk.heroHead}>
+            <p className={tk.heroLabel}>
               Free BYOK demo
             </p>
-            <h1 className="mt-3 text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-gray-900">
+            <h1 className={tk.heroTitle}>
               Watch AI fan your topic into its real questions.
             </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
+            <div className={tk.heroRule} aria-hidden="true" />
+            <p className={tk.heroLead}>
               AI engines don&apos;t search your keyword. They explode it into a spray of sharper sub-queries, search those,
               and synthesize the answer. This free query fan-out tool shows you the actual sub-queries, live, on your own
               Gemini key. Your key never touches our servers.
             </p>
           </div>
 
-          <div className="mt-10">
+          <div className={`${tk.heroTool} ${tk.mount}`}>
             <QueryFanoutWidget />
           </div>
         </div>
       </section>
 
       {/* Straight answer */}
-      <section className="border-t border-gray-100 bg-white px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">Straight answer</p>
-          <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-            The hidden sub-queries decide whether you get cited.
-          </h2>
-          <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-gray-700">
-            <p>
-              <strong className="text-gray-900">An engine rarely searches your exact words.</strong> Ask it a question and it
-              quietly expands that into a set of sharper sub-questions, searches those, and synthesizes the answer. Those
-              hidden sub-questions, the fan-out, are what actually decide which pages get cited.
-            </p>
-            <p>
-              <strong className="text-gray-900">This shows you the real ones.</strong>{" "}Not an LLM imagining what people might
-              ask, but the genuine queries Gemini grounded its answer in, pulled live from its own grounding metadata, plus
-              Perplexity&apos;s related questions if you add a key.
-            </p>
-            <p>
-              <strong className="text-gray-900">It runs on your keys, in your browser.</strong> No account, no server round-trip,
-              nothing stored. The honest way to see the layer every keyword tool is blind to.
-            </p>
+      <section className={`${kit.section} ${kit.sectionBorder}`}>
+        <div className={`${kit.wrap} ${tk.split}`}>
+          <div className={tk.splitHead}>
+            <ToolIndex>Straight answer</ToolIndex>
+            <h2 className={tk.title2}>
+              The hidden sub-queries decide whether you get cited.
+            </h2>
+          </div>
+          <div className={tk.prose}>
+            <div className={tk.stack}>
+              <p>
+                <strong>An engine rarely searches your exact words.</strong> Ask it a question and it
+                quietly expands that into a set of sharper sub-questions, searches those, and synthesizes the answer. Those
+                hidden sub-questions, the fan-out, are what actually decide which pages get cited.
+              </p>
+              <p>
+                <strong>This shows you the real ones.</strong>{" "}Not an LLM imagining what people might
+                ask, but the genuine queries Gemini grounded its answer in, pulled live from its own grounding metadata, plus
+                Perplexity&apos;s related questions if you add a key.
+              </p>
+              <p>
+                <strong>It runs on your keys, in your browser.</strong> No account, no server round-trip,
+                nothing stored. The honest way to see the layer every keyword tool is blind to.
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -145,49 +153,53 @@ export default function QueryFanoutToolPage() {
       <HowItWorks3Step heading="A real fan-out in three steps" steps={steps} />
 
       {/* Related free tools */}
-      <section className="border-t border-[var(--surface-iris-border)] bg-[var(--surface-iris)] px-6 py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl">
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-700">More free tools</p>
-          <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-gray-900">
-            Got the questions? Make sure AI can read your answers.
-          </h2>
-          <p className="mt-4 text-[15px] leading-relaxed text-gray-700">
-            Turn the fan-out into trackable prompts with{" "}
-            <Link href="/tools/keyword-to-prompts" className="font-semibold text-accent-700 underline-offset-2 hover:underline">Keyword → AI Prompts</Link>, then check the foundations: the{" "}
-            <Link href="/tools/ai-readiness" className="font-semibold text-accent-700 underline-offset-2 hover:underline">AI-Readiness Score</Link>{" "}
-            grades whether AI agents can reach and parse your site, and the{" "}
-            <Link href="/tools/ai-crawler-checker" className="font-semibold text-accent-700 underline-offset-2 hover:underline">AI Crawler Checker</Link>{" "}
-            shows which of 34 AI crawlers your robots.txt blocks. New to the idea? Read{" "}
-            <Link href="/blog/what-is-ai-visibility" className="font-semibold text-accent-700 underline-offset-2 hover:underline">what AI visibility is</Link>.
-          </p>
+      <section className={`${kit.section} ${kit.sectionBorder} ${kit.band}`}>
+        <div className={`${kit.wrap} ${tk.split}`}>
+          <div className={tk.splitHead}>
+            <ToolIndex>More free tools</ToolIndex>
+            <h2 className={tk.title2}>
+              Got the questions? Make sure AI can read your answers.
+            </h2>
+          </div>
+          <div className={tk.prose}>
+            <p>
+              Turn the fan-out into trackable prompts with{" "}
+              <Link href="/tools/keyword-to-prompts">Keyword → AI Prompts</Link>, then check the foundations: the{" "}
+              <Link href="/tools/ai-readiness">AI-Readiness Score</Link>{" "}
+              grades whether AI agents can reach and parse your site, and the{" "}
+              <Link href="/tools/ai-crawler-checker">AI Crawler Checker</Link>{" "}
+              shows which of 34 AI crawlers your robots.txt blocks. New to the idea? Read{" "}
+              <Link href="/blog/what-is-ai-visibility">what AI visibility is</Link>.
+            </p>
+          </div>
         </div>
       </section>
 
       <FeatureFaq items={faqs} heading="Fan-out, keys and privacy — answered" />
 
       {/* Funnel CTA */}
-      <section className="bg-gray-950 px-6 py-20 sm:py-24">
-        <div className="mx-auto flex max-w-5xl flex-col items-start gap-6 md:flex-row md:items-center md:justify-between md:gap-12">
-          <div>
-            <h2 className="text-[clamp(1.5rem,3vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
-              The full fan-out: four engines, volume, coverage, citations.
-            </h2>
-            <p className="mt-2 max-w-xl text-base text-gray-300">
-              The in-app AI Query Fan-Out adds ChatGPT and Grok, real search volume, your page&apos;s coverage of each intent,
-              the citation landscape, and a ranked content worklist, on our keys.
-            </p>
+      <section className={tk.close}>
+        <div className={kit.wrap}>
+          <div className={tk.closeCard}>
+            <div>
+              <h2 className={tk.closeTitle}>
+                The full fan-out: four engines, volume, coverage, citations.
+              </h2>
+              <p className={tk.closeBody}>
+                The in-app AI Query Fan-Out adds ChatGPT and Grok, real search volume, your page&apos;s coverage of each intent,
+                the citation landscape, and a ranked content worklist, on our keys.
+              </p>
+            </div>
+            <Link
+              href="/features/query-fanout"
+              className={kit.btnLime}
+            >
+              See the full feature
+              <Arrow />
+            </Link>
           </div>
-          <Link
-            href="/features/query-fanout"
-            className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-semibold text-gray-950 transition-all duration-200 hover:bg-gray-100 active:translate-y-[1px]"
-          >
-            See the full feature
-            <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M4 10h12m0 0-4-4m4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </Link>
         </div>
       </section>
-    </>
+    </ToolsPage>
   )
 }
