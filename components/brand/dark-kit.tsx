@@ -1,5 +1,6 @@
 import type { ReactNode } from "react"
 import { geist } from "@/components/landing/v3/geist"
+import { RevealOnScroll } from "./reveal"
 import k from "./dark-kit.module.css"
 
 // Dark design kit (2026-11-28). Every marketing page family (pricing, services, features, tools,
@@ -8,7 +9,7 @@ import k from "./dark-kit.module.css"
 export { k as kit }
 
 export function DarkPage({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={`${k.page} ${geist.variable}${className ? ` ${className}` : ""}`} data-dark-page="">{children}</div>
+  return <div className={`${k.page} ${geist.variable}${className ? ` ${className}` : ""}`} data-dark-page="">{children}<RevealOnScroll /></div>
 }
 
 /** "01 | LABEL" section index. Pass n="" to drop the number. */
@@ -25,7 +26,7 @@ export function SectionHead({ n, label, title, lead, id, as: As = "h2" }: {
   n?: string; label: string; title: ReactNode; lead?: ReactNode; id?: string; as?: "h1" | "h2"
 }) {
   return (
-    <div className={k.sectionHead}>
+    <div className={k.sectionHead} data-reveal="">
       <div>
         <Index n={n} label={label} />
         <As id={id} className={As === "h1" ? k.heroTitle : k.sectionTitle}>{title}</As>

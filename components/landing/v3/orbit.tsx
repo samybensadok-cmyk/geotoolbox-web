@@ -68,7 +68,7 @@ export function Orbit({ copy }: { copy: Copy }) {
   const engines = realQuery.engines
   const q = wrap(`“${realQuery.prompt}”`, 27)
   return (
-    <div className={s.orbitShell}>
+    <div className={s.orbitShell} data-reveal="">
       <div className={s.orbitBar}>
         <span className={s.stampChip}><span className={s.stampDot} aria-hidden="true" />{copy.stamp}</span>
         <fieldset className={s.pills}>
@@ -96,8 +96,9 @@ export function Orbit({ copy }: { copy: Copy }) {
           <ellipse cx={CX} cy={CY} rx={RX * 0.66} ry={RY * 0.66} className={s.ringInner} />
           <ellipse cx={CX} cy={CY} rx={RX * 0.36} ry={RY * 0.36} className={s.ringInner} />
 
-          {NODES.flatMap(n => n.engines.map(id => (
+          {NODES.flatMap((n, ni) => n.engines.map(id => (
             <line key={`${id}-${n.d}`} data-e={id} className={n.d === WINNER ? `${s.spoke} ${s.spokeWin}` : s.spoke}
+              pathLength={1} style={{ ["--si" as string]: ni }}
               x1={ENGINE_POS[id].x} y1={ENGINE_POS[id].y} x2={n.x} y2={n.y} />
           )))}
           <line className={s.spokeDash} x1={CX} y1={CY + 52} x2={CX} y2={ENGINE_POS.gemini.y - 24} />
@@ -105,13 +106,13 @@ export function Orbit({ copy }: { copy: Copy }) {
           <line className={s.spokeAxis} x1={CX - 115} y1={CY} x2={ENGINE_POS.claude.x + 75} y2={CY} />
           <line className={s.spokeAxis} x1={CX + 115} y1={CY} x2={ENGINE_POS.chatgpt.x - 75} y2={CY} />
 
-          {NODES.map(n => {
+          {NODES.map((n, ni) => {
             const win = n.d === WINNER, shared = n.engines.length > 1
             const anchor = n.side === "right" ? "start" : n.side === "left" ? "end" : "middle"
             const tx = n.side === "right" ? n.x + 14 : n.side === "left" ? n.x - 14 : n.x
             const ty = n.side === "top" ? n.y - 16 : n.y + 4
             return (
-              <g key={n.d} data-e={n.engines.join(" ")} className={s.domainNode}>
+              <g key={n.d} data-e={n.engines.join(" ")} className={s.domainNode} style={{ ["--si" as string]: ni }}>
                 {win && <circle cx={n.x} cy={n.y} r={16} className={s.winHalo} />}
                 <circle cx={n.x} cy={n.y} r={win ? 7 : 5} className={win ? s.nodeWin : shared ? s.nodeShared : s.node} />
                 <text x={tx} y={ty} textAnchor={anchor} className={win ? s.labelWin : s.label}>{n.d}</text>

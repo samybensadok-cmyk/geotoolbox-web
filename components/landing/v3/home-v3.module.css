@@ -66,7 +66,7 @@
 .proofDot { width: 7px; height: 7px; border-radius: 99px; background: var(--accent); box-shadow: 0 0 8px rgba(205, 255, 0, 0.9); margin-left: 4px; }
 .proofTag { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--accent); }
 .heroTitle { margin: 26px 0 0; font-family: var(--display); font-size: clamp(2.7rem, 7.6vw, 6.2rem); line-height: 0.96; letter-spacing: -0.055em; font-weight: 700; color: var(--white); max-width: 1080px; text-wrap: balance; }
-.hl { position: relative; display: inline-block; color: var(--accent-ink); padding: 0 0.08em; margin-right: 0.55em; border-radius: 3px; background: linear-gradient(transparent 8%, var(--accent) 8%, var(--accent) 94%, transparent 94%) no-repeat; animation: markIn 0.8s var(--ease) 0.15s both; }
+.hl { position: relative; display: inline-block; color: var(--accent-ink); padding: 0 0.08em; margin-right: 0.55em; border-radius: 3px; background: linear-gradient(transparent 8%, var(--accent) 8%, var(--accent) 94%, transparent 94%) no-repeat; }
 /* The [1] footnote mark is decoration: drawn in CSS with empty alt text ("/ \"\"") so neither the
    H1 text nor its accessible name contains it. Browsers without the alt syntax keep the first rule. */
 .hl::after { content: "[1]"; content: "[1]" / ""; position: absolute; left: calc(100% + 0.12em); top: 0.12em; font-family: var(--mono); font-size: 0.28em; font-weight: 600; letter-spacing: 0; line-height: 1; color: var(--accent); background: #10130f; border: 1.5px solid var(--accent); padding: 0.32em 0.44em; border-radius: 3px; box-shadow: 0 0 18px -4px rgba(205, 255, 0, 0.45); }
@@ -334,12 +334,45 @@
 .closeBody { margin: 12px 0 0; font-size: 15px; line-height: 1.5; color: var(--muted); }
 .closeActions .ctaRow { margin-top: 14px; }
 
-/* Motion */
+/* Motion (2026-11-28): discreet, modelled on usereach.ai's measured timings. Every piece is off under
+   prefers-reduced-motion. Headline words: blur + fade + rise, 70 ms apart; the lime mark draws after. */
+.w { display: inline-block; }
+@media (prefers-reduced-motion: no-preference) {
+  .heroTitle .w { animation: wordIn 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both; animation-delay: calc(var(--wi, 0) * 70ms + 60ms); }
+  .heroTitle .hl.w { animation: wordIn 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both, markIn 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both; animation-delay: calc(var(--wi, 0) * 70ms + 60ms), calc(var(--wi, 0) * 70ms + 300ms); }
+  .heroTitle .hl::after { animation: badgeIn 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both; animation-delay: 0.9s; }
+  .proofPill { animation: riseIn 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+  .heroSplit { animation: lineIn 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 0.35s both; }
+  .heroSplit > * { animation: riseIn 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+  .heroSplit > :nth-child(1) { animation-delay: 0.45s; }
+  .heroSplit > :nth-child(2) { animation-delay: 0.58s; }
+  .marquee { animation: fadeIn 0.8s ease 0.7s both; }
+  /* Orbit: spokes draw from each engine, then the domains light up one after another. */
+  .orbitShell[data-reveal="wait"] .spoke { stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .orbitShell[data-reveal="wait"] .domainNode { opacity: 0; }
+  .orbitShell[data-reveal="in"] .spoke { stroke-dasharray: 1; animation: draw 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) backwards; animation-delay: calc(var(--si, 0) * 28ms + 200ms); }
+  .orbitShell[data-reveal="in"] .domainNode { animation: fadeIn 0.45s ease backwards; animation-delay: calc(var(--si, 0) * 34ms + 520ms); }
+  /* Hover: a thin lime light runs once around the card border. */
+  .sweep::after { content: ""; position: absolute; inset: -1px; padding: 1px; border-radius: inherit; pointer-events: none; background: linear-gradient(90deg, transparent 33%, rgba(205, 255, 0, 0) 38%, rgba(205, 255, 0, 0.9) 46%, #ffffff 50%, rgba(205, 255, 0, 0.9) 54%, rgba(205, 255, 0, 0) 62%, transparent 67%); background-size: 300% 100%; background-position: 100% 0; -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); opacity: 0; }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .sweep:hover::after { opacity: 1; animation: sweep 1.3s linear both; }
+}
+.sweep { position: relative; }
+.arrow { transition: transform 0.2s var(--ease); }
+.btnLime:hover .arrow, .btnOutline:hover .arrow, .textLink:hover .arrow, .toolRow:hover .arrow, .proofPill:hover .arrow { transform: translateX(3px); }
+@keyframes wordIn { from { opacity: 0; filter: blur(8px); transform: translateY(0.16em); } to { opacity: 1; filter: blur(0); transform: none; } }
+@keyframes riseIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes badgeIn { from { opacity: 0; transform: translateY(4px) scale(0.92); } to { opacity: 1; transform: none; } }
+@keyframes lineIn { from { border-top-color: transparent; } to { border-top-color: var(--line-strong); } }
+@keyframes draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes sweep { from { background-position: 100% 0; } to { background-position: 0% 0; } }
 @keyframes markIn { from { background-size: 0% 100%; } to { background-size: 100% 100%; } }
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 @keyframes pulse { 0%, 100% { transform: scale(0.8); opacity: 0.9; } 50% { transform: scale(1.25); opacity: 0.35; } }
 @media (prefers-reduced-motion: reduce) {
-  .hl, .winHalo { animation: none; }
+  .winHalo { animation: none; }
   .marqueeViewport { -webkit-mask-image: none; mask-image: none; }
   .marqueeTrack { animation: none; width: 100%; justify-content: center; }
   .marqueeGroup { flex-wrap: wrap; justify-content: center; gap: 10px 20px; padding-inline: 16px; }

@@ -1,3 +1,4 @@
+import { Fragment } from "react"
 import Link from "next/link"
 import { getLocale, getTranslations } from "next-intl/server"
 import { PLANS, BOOK_CALL, doneWithYouMonthly } from "@/lib/plans"
@@ -13,6 +14,7 @@ import { LatestPosts } from "../latest-posts"
 import { realQuery } from "./query-data"
 import { Orbit } from "./orbit"
 import { geist } from "./geist"
+import { RevealOnScroll } from "@/components/brand/reveal"
 import s from "./home-v3.module.css"
 
 // Homepage v4 (2026-11-28): dark "citation orbit" design. Every number on this page is read from
@@ -36,6 +38,15 @@ function Check() {
 function Index({ n, label }: { n: string; label: string }) {
   return <p className={s.index}><span className={s.indexNum}>{n}</span><span className={s.indexPipe} aria-hidden="true">|</span>{label}</p>
 }
+
+/** Headline words, each its own span with a stagger index (the reveal is CSS-only; spaces stay real
+ *  text nodes so wrapping, copy-paste and the accessible name are unchanged). */
+function Words({ text, start = 0, className }: { text: string; start?: number; className?: string }) {
+  const parts = text.split(/(\s+)/)
+  let i = start
+  return <>{parts.map((p, k) => /^\s+$/.test(p) || p === "" ? p : <span key={k} className={`${s.w}${className ? ` ${className}` : ""}`} style={{ ["--wi" as string]: i++ }}>{p}</span>)}</>
+}
+function wordCount(text: string) { return text.split(/\s+/).filter(Boolean).length }
 
 /** Grouped money in the visitor's billing currency (same rule as lib/i18n/currency.formatPrice). */
 function money(n: number, locale: string) {
@@ -96,7 +107,9 @@ export async function HomeV3() {
             <Arrow />
           </a>
           <h1 id="home-title" className={s.heroTitle}>
-            {t("h1Before")}<span className={s.hl}>{t("h1Mark")}</span>{t("h1After")}
+            <Words text={t("h1Before")} />
+            <span className={`${s.hl} ${s.w}`} style={{ ["--wi" as string]: wordCount(t("h1Before")) }}>{t("h1Mark")}</span>
+            <Words text={t("h1After")} start={wordCount(t("h1Before")) + 1} />
           </h1>
           <div className={s.heroSplit}>
             <div>
@@ -135,7 +148,7 @@ export async function HomeV3() {
       {/* ---------------- 01 Orbit ---------------- */}
       <section id="query" className={s.section} aria-labelledby="query-title">
         <div className={s.wrap}>
-          <div className={s.sectionHead}>
+          <div className={s.sectionHead} data-reveal="">
             <div>
               <Index n="01" label={t("orbit.index")} />
               <h2 id="query-title" className={s.sectionTitle}>{t("orbit.title", { engines: engines.length, domains: realQuery.totals.domains })}</h2>
@@ -154,7 +167,7 @@ export async function HomeV3() {
       {/* ---------------- 02 Sources ---------------- */}
       <section id="sources" className={`${s.section} ${s.sectionBorder}`} aria-labelledby="sources-title">
         <div className={s.wrap}>
-          <div className={s.sectionHead}>
+          <div className={s.sectionHead} data-reveal="">
             <div>
               <Index n="02" label={t("sources.index")} />
               <h2 id="sources-title" className={s.sectionTitle}>{t("sources.title")}</h2>
@@ -162,7 +175,7 @@ export async function HomeV3() {
             <p className={s.sectionLead}>{t("sources.lead", { roundups: realQuery.totals.roundups, entries: realQuery.totals.entries, homepages: realQuery.totals.homepages })}</p>
           </div>
 
-          <div className={s.workbench}>
+          <div className={s.workbench} data-reveal="">
             <div className={s.wbTop}>
               <span className={s.stampChip}><span className={s.stampDot} aria-hidden="true" />{t("orbit.stamp", { date: queryDate })}</span>
               <fieldset className={s.tabs}>
@@ -199,14 +212,14 @@ export async function HomeV3() {
               <div className={s.wbSources}>
                 <h3 className={`${s.paneTitle} ${s.paneLime}`}>{t("sources.behind")}</h3>
                 <div className={s.sourceStack}>
-                  <article className={s.sourceItem} data-e={[...new Set(roundups.map(r => r.e))].join(" ")}>
+                  <article className={`${s.sourceItem} ${s.sweep}`} data-e={[...new Set(roundups.map(r => r.e))].join(" ")}>
                     <header className={s.sourceHead}><h4>{t("sources.roundupsTitle")}</h4><span>{t("sources.entries", { count: roundups.length })}</span></header>
                     <p className={s.sourceMeta}>{perEngine(roundups).map(([e, n]) => `${e.name} ${n}`).join(" · ")}</p>
                     <ul className={s.chips}>{roundupDomains.map(([d, es]) => <li key={d} data-e={es.join(" ")} className={s.chip}>{d}</li>)}</ul>
                     <p className={s.sourceNote}>{t("sources.roundupsNote")}</p>
                     <p className={s.move}><span>{t("sources.move")}</span>{t("sources.roundupsMove")}</p>
                   </article>
-                  <article className={`${s.sourceItem} ${s.sourceSpot}`} data-e={[...new Set(homepages.map(r => r.e))].join(" ")}>
+                  <article className={`${s.sourceItem} ${s.sourceSpot} ${s.sweep}`} data-e={[...new Set(homepages.map(r => r.e))].join(" ")}>
                     <header className={s.sourceHead}><h4>{t("sources.homepagesTitle")}</h4><span>{t("sources.entries", { count: homepages.length })}</span></header>
                     <p className={s.sourceMeta}>{perEngine(homepages).map(([e, n]) => `${e.name} ${n}`).join(" · ")}</p>
                     <ul className={s.chips}>{homepages.map(x => <li key={x.domain} data-e={x.e} className={x.domain === WINNER ? s.chipWin : s.chip}>{x.domain}{x.domain === WINNER ? ` · ${t("orbit.winner")}` : ""}</li>)}</ul>
@@ -234,7 +247,7 @@ export async function HomeV3() {
       {/* ---------------- 03 Our own results ---------------- */}
       <section id="results" className={s.proof} aria-labelledby="results-title">
         <div className={s.wrap}>
-          <div className={s.sectionHead}>
+          <div className={s.sectionHead} data-reveal="">
             <div>
               <Index n="03" label={t("results.index")} />
               <h2 id="results-title" className={s.sectionTitle}>{t("results.title")}</h2>
@@ -247,17 +260,17 @@ export async function HomeV3() {
             </dl>
           </div>
           <div className={s.ledger}>
-            <div className={s.cell}>
+            <div className={s.cell} data-reveal="" style={{ ["--rd" as string]: 0 }}>
               <p className={s.cellTag}><span>{t("results.googleAiTag")}</span><i aria-hidden="true" /></p>
               <p className={s.cellNum}>{compact(g.impressions, locale)}</p>
               <p className={s.cellLabel}>{t("results.googleAiLabel")}</p>
             </div>
-            <div className={s.cell}>
+            <div className={s.cell} data-reveal="" style={{ ["--rd" as string]: 1 }}>
               <p className={s.cellTag}><span>{t("results.bingTag")}</span><i aria-hidden="true" /></p>
               <p className={s.cellNum}>{compact(b.total, locale)}</p>
               <p className={s.cellLabel}>{t("results.bingLabel")}</p>
             </div>
-            <div className={s.cell}>
+            <div className={s.cell} data-reveal="" style={{ ["--rd" as string]: 2 }}>
               <p className={s.cellTag}><span>{t("results.queriesTag", { days: q.windowDays })}</span><i aria-hidden="true" /></p>
               <p className={s.cellNum}>{compact(q.rankedKeywords, locale)}</p>
               <p className={s.cellLabel}>{t("results.queriesLabel", { days: q.windowDays })}</p>
@@ -269,7 +282,7 @@ export async function HomeV3() {
       {/* ---------------- 04 How it works ---------------- */}
       <section id="how-it-works" className={s.section} aria-labelledby="how-title">
         <div className={s.wrap}>
-          <div className={s.sectionHead}>
+          <div className={s.sectionHead} data-reveal="">
             <div>
               <Index n="04" label={t("how.index")} />
               <h2 id="how-title" className={s.sectionTitle}>{t("how.title")}</h2>
@@ -277,7 +290,7 @@ export async function HomeV3() {
             <p className={s.sectionLead}>{t("how.lead")}</p>
           </div>
           <div className={s.stages}>
-            <div className={s.stage}>
+            <div className={s.stage} data-reveal="">
               <div>
                 <p className={s.stageNum}>01 · {t("how.trackStep")}</p>
                 <h3 className={s.stageTitle}>{t("how.trackTitle")}</h3>
@@ -293,7 +306,7 @@ export async function HomeV3() {
                 </ul>
               </figure>
             </div>
-            <div className={s.stage}>
+            <div className={s.stage} data-reveal="">
               <div>
                 <p className={s.stageNum}>02 · {t("how.traceStep")}</p>
                 <h3 className={s.stageTitle}>{t("how.traceTitle")}</h3>
@@ -309,7 +322,7 @@ export async function HomeV3() {
                 </ul>
               </figure>
             </div>
-            <div className={s.fixBand}>
+            <div className={`${s.fixBand} ${s.sweep}`} data-reveal="">
               <div>
                 <p className={s.stageNum}>03 · {t("how.fixStep")}</p>
                 <h3 className={s.stageTitle}>{t("how.fixTitle")}</h3>
@@ -321,7 +334,7 @@ export async function HomeV3() {
               </div>
               <ol className={s.fixSteps}>
                 {(t.raw("how.fixSteps") as { title: string; body: string; tag: string }[]).map((x, i) => (
-                  <li key={x.title}><span className={s.fixIdx}>0{i + 1}</span><span><strong>{x.title}</strong><small>{x.body}</small></span><span className={s.fixTag}>{x.tag}</span></li>
+                  <li key={x.title} className={s.sweep}><span className={s.fixIdx}>0{i + 1}</span><span><strong>{x.title}</strong><small>{x.body}</small></span><span className={s.fixTag}>{x.tag}</span></li>
                 ))}
               </ol>
             </div>
@@ -332,15 +345,15 @@ export async function HomeV3() {
       {/* ---------------- 05 Pricing ---------------- */}
       <section id="pricing" className={`${s.section} ${s.sectionBorder}`} aria-labelledby="pricing-title">
         <div className={s.wrap}>
-          <div className={s.sectionHead}>
+          <div className={s.sectionHead} data-reveal="">
             <div>
               <Index n="05" label={t("pricing.index")} />
-              <h2 id="pricing-title" className={s.sectionTitle}>{t("pricing.title").split(/(?<=\.)\s+/).map((part, i) => <span key={i} className={s.keep}>{i ? " " : ""}{part}</span>)}</h2>
+              <h2 id="pricing-title" className={s.sectionTitle}>{t("pricing.title").split(/(?<=\.)\s+/).map((part, i) => <Fragment key={i}>{i ? " " : ""}<span className={s.keep}>{part}</span></Fragment>)}</h2>
             </div>
             <p className={s.sectionLead}>{t("pricing.lead")}</p>
           </div>
           <div className={s.tiers}>
-            <article className={`${s.tier} ${s.tierDiy}`}>
+            <article className={`${s.tier} ${s.tierDiy} ${s.sweep}`} data-reveal="" style={{ ["--rd" as string]: 0 }}>
               <div className={s.tierHead}><h3 className={s.tierKicker}>{t("pricing.diyKicker")}</h3></div>
               <p className={s.tierPrice}><small>{t("pricing.from")}</small> {money(Math.round(starter.priceYearly! / 12), locale)}<span>{t("pricing.billedYearly")}</span></p>
               <p className={s.tierAlt}>{t("pricing.diyAlt", { price: money(starter.priceMonthly!, locale) })}</p>
@@ -350,7 +363,7 @@ export async function HomeV3() {
                 <Link href={L("/pricing")} className={s.btnOutline}>{t("pricing.compare")}</Link>
               </div>
             </article>
-            <article className={`${s.tier} ${s.tierDwy}`}>
+            <article className={`${s.tier} ${s.tierDwy} ${s.sweep}`} data-reveal="" style={{ ["--rd" as string]: 1 }}>
               <div className={s.tierHead}><h3 className={s.tierKicker}>{t("pricing.dwyKicker")}</h3><span className={s.badge}>{t("pricing.dwyBadge")}</span></div>
               <div className={s.dwyPrices}>
                 <div><p className={s.dwyVal}>{money(dwyBrand, locale)}<span>{t("pricing.perMonth")}</span></p><p className={s.dwyWho}>{t("pricing.dwyBrands")}</p></div>
@@ -363,7 +376,7 @@ export async function HomeV3() {
               </div>
             </article>
           </div>
-          <article className={s.dfy}>
+          <article className={`${s.dfy} ${s.sweep}`} data-reveal="">
             <div className={s.dfyHead}>
               <h3 className={s.tierKicker}>{t("pricing.dfyKicker")}</h3>
               <p className={s.dfyTitle}>{t("pricing.dfyTitle")}</p>
@@ -395,7 +408,7 @@ export async function HomeV3() {
           <ol className={s.toolIndex}>
             {FEATURED_TOOLS.map((slug, i) => {
               const tool = tools.find(x => x.slug === slug)!
-              return <li key={slug}><Link href={L(`/tools/${slug}`)} className={s.toolRow}><span className={s.toolNum}>0{i + 1}</span><span><strong>{tool.name}</strong><small>{tFree(`descs.${slug}`)}</small></span><Arrow /></Link></li>
+              return <li key={slug} data-reveal="" style={{ ["--rd" as string]: i }}><Link href={L(`/tools/${slug}`)} className={s.toolRow}><span className={s.toolNum}>0{i + 1}</span><span><strong>{tool.name}</strong><small>{tFree(`descs.${slug}`)}</small></span><Arrow /></Link></li>
             })}
           </ol>
         </div>
@@ -409,7 +422,7 @@ export async function HomeV3() {
       {/* ---------------- Close ---------------- */}
       <section className={s.close} aria-labelledby="close-title">
         <div className={s.wrap}>
-          <div className={s.closeCard}>
+          <div className={`${s.closeCard} ${s.sweep}`} data-reveal="">
             <div>
               <Index n="07" label={t("close.index")} />
               <h2 id="close-title" className={s.closeTitle}>{t("close.title")}</h2>
@@ -427,6 +440,7 @@ export async function HomeV3() {
           </div>
         </div>
       </section>
+      <RevealOnScroll />
     </div>
   )
 }
