@@ -22,7 +22,7 @@ export function RevealOnScroll() {
       },
       { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
     )
-    const limit = window.innerHeight * 0.92
+    const limit = window.innerHeight // anything whose top is on screen stays visible
     document.querySelectorAll<HTMLElement>("[data-reveal]").forEach((el) => {
       if (el.dataset.reveal === "in") return
       if (el.getBoundingClientRect().top < limit) return
