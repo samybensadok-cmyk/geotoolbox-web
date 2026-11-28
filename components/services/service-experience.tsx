@@ -168,7 +168,7 @@ export function ServiceExperience(p: Props) {
         <ul className={styles.promises}>
           {(auto
             ? ["You own the code, prompts, documentation and data.", "Fixed fee for the blueprint, fixed quote for the build.", "The blueprint is yours, even if it says don’t build."]
-            : ["You own every page and dataset.", "A missed milestone is refunded when access and feedback arrive on time.", "Rankings and AI citations are not guaranteed."]
+            : ["You own every page and dataset.", "Rankings and AI citations are not guaranteed."]
           ).map(t => <li key={t}>{t}</li>)}
         </ul>
       </div>
