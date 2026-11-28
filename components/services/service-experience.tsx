@@ -119,7 +119,7 @@ export function ServiceExperience(p: Props) {
           <p className={styles.source}>Charts: unique Google queries per calendar month (Search Console API, as of {asOf}). The two AI figures come from different reports and windows and are never added together.</p>
           <details className={styles.evidence}><summary>Client results & measurement notes <span aria-hidden="true">+</span></summary><div className={styles.clientProof}>
             <h3>Client work before GEO Toolbox</h3>
-            <p>Two guides on one unnamed client’s site, led by Samy before GEO Toolbox. Historical public scans from an earlier seven-engine tracker; these are citation results for the specific prompts shown.</p>
+            <p>Two guides on one unnamed client’s site, led by Samy before GEO Toolbox. Historical public scans from an earlier seven-engine version of GEO Scan; these are citation results for the specific prompts shown.</p>
             <div className={styles.advanced}>
               <figure><Image src="/services/track-record/legal-ai-scan-v2.png" width={1999} height={1602} alt="Historical scan for how to run Google Ads for lawyers: the client guide was cited by 7 of 7 engines." sizes="(max-width: 640px) 100vw, 500px" /><figcaption>Legal guide · cited by 7 of 7 engines in this scan.</figcaption></figure>
               <figure><Image src="/services/track-record/crypto-ai-scan-v2.png" width={2208} height={1742} alt="Historical scan for how to run crypto Google Ads without getting disapproved: the client guide was cited by 6 of 7 engines." sizes="(max-width: 640px) 100vw, 500px" /><figcaption>Crypto guide · cited by 6 of 7 engines in this scan.</figcaption></figure>
