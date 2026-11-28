@@ -26,6 +26,9 @@
 .hero .secondary { background: #ffffff05; border-color: #ffffff30; color: #f8fafc }
 .hero .secondary:hover { background: #ffffff12; border-color: #ffffff50 }
 .micro { color: #8f9bab; font-size: 12px; margin-top: 14px; line-height: 1.6 }
+.trust { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 22px; max-width: 100%; margin: 14px auto 0; font-size: 12px; line-height: 1.5; color: #b6c1cd; text-align: left }
+.trust li { position: relative; min-width: 0; max-width: 100%; padding-left: 16px }
+.trust li::before { content: "✓"; position: absolute; left: 0; color: var(--color-accent-300); font-weight: 700 }
 .heroFoot { display: flex; justify-content: space-between; align-items: center; gap: 24px; border-top: 1px solid #ffffff1c; padding: 22px 0 }
 .founder { display: flex; gap: 12px; align-items: center; flex-shrink: 0 }
 .founder img { border-radius: 50%; object-fit: cover }
@@ -51,7 +54,7 @@
 .resultMetrics dd.metricNote { margin-top: auto; padding-top: 8px; color: #6b7280 }
 .growthCharts { margin-top: 18px }
 .source { font-size: 11px; line-height: 1.6; color: var(--muted); margin-top: 16px; max-width: 900px }
-.evidence { margin-top: 22px; border-top: 1px solid var(--line) }
+.evidence { margin-top: 22px; border-top: 1px solid var(--line); min-width: 0 }
 .measurementNotes { border-top: 1px solid var(--line); padding: 18px 0 8px; font-size: 12px; line-height: 1.8; color: var(--muted); max-width: 900px }
 .measurementNotes p + p { margin-top: 10px }
 .clientProof { padding: 18px 0 30px }
@@ -66,12 +69,12 @@
 .builds summary { cursor: pointer; font-size: 12px; font-weight: 600; margin-top: 12px; list-style: none; display: flex; gap: 8px; align-items: center }
 
 /* Disclosures — one + marker everywhere, no native triangles */
-.evidence > summary, .expand > summary, .scope summary, .builds summary { list-style: none }
-.evidence > summary::-webkit-details-marker, .expand > summary::-webkit-details-marker, .scope summary::-webkit-details-marker, .builds summary::-webkit-details-marker { display: none }
-.evidence > summary, .expand > summary { display: flex; align-items: center; justify-content: space-between; gap: 15px; cursor: pointer; min-height: 56px; padding: 16px 0; font-size: 14px; font-weight: 600 }
-.evidence > summary span, .expand > summary span, .scope summary span, .builds summary span { font-size: 18px; font-weight: 400; line-height: 1; color: var(--color-accent-700); transition: transform .2s }
-.evidence[open] > summary span, .expand[open] > summary span, .scope[open] summary span, .builds details[open] summary span { transform: rotate(45deg) }
-.evidence > summary:hover, .expand > summary:hover { color: var(--color-accent-800) }
+.expand > summary, .scope summary, .builds summary { list-style: none }
+.expand > summary::-webkit-details-marker, .scope summary::-webkit-details-marker, .builds summary::-webkit-details-marker { display: none }
+.expand > summary { display: flex; align-items: center; justify-content: space-between; gap: 15px; cursor: pointer; min-height: 56px; padding: 16px 0; font-size: 14px; font-weight: 600 }
+.expand > summary span, .scope summary span, .builds summary span { font-size: 18px; font-weight: 400; line-height: 1; color: var(--color-accent-700); transition: transform .2s }
+.expand[open] > summary span, .scope[open] summary span, .builds details[open] summary span { transform: rotate(45deg) }
+.expand > summary:hover { color: var(--color-accent-800) }
 
 /* Pricing */
 .section { padding: 76px 0 56px; scroll-margin-top: 85px }
@@ -89,6 +92,9 @@
 .deliverable { font-size: 12px; line-height: 1.5; color: var(--muted); margin: -4px 0 16px }
 .deliverable span { color: var(--color-accent-700); margin-right: 4px }
 .deliverable strong { color: #111827; font-weight: 600 }
+.includes { display: grid; gap: 7px; margin: 0 0 16px; font-size: 13px; line-height: 1.55; color: #374151 }
+.includes li { position: relative; min-width: 0; padding-left: 18px; overflow-wrap: break-word }
+.includes li::before { content: "✓"; position: absolute; left: 0; color: var(--color-accent-700); font-weight: 700 }
 .scope { font-size: 12px; margin: auto 0 20px; border-top: 1px solid var(--line); padding-top: 4px }
 .scope summary { cursor: pointer; min-height: 40px; display: flex; align-items: center; justify-content: space-between; font-weight: 600; color: #374151 }
 .scope p { line-height: 1.75; margin: 4px 0 4px; color: var(--muted) }
@@ -106,6 +112,11 @@
 .addons strong { font-size: 14px; display: block; margin-top: 6px }
 .addons small { font-weight: 400; color: var(--muted) }
 .addons p { font-size: 13px; line-height: 1.75; color: var(--muted); margin-top: 6px }
+.addonsBlock { margin-top: 0; padding-top: 28px; border-top: 1px solid var(--line); min-width: 0 }
+.terms + .addonsBlock, .offers + .addonsBlock { margin-top: 28px }
+.blockHead { font-size: 20px; font-weight: 500; letter-spacing: -.02em; line-height: 1.3 }
+.addonGrid { gap: 16px; padding: 18px 0 8px }
+.addonGrid article { min-width: 0; border: 1px solid var(--line); border-radius: 12px; background: #fff; padding: 20px }
 .textLink { display: inline-block; margin-top: 10px; font-size: 13px; font-weight: 600; color: var(--color-accent-700) }
 .textLink:hover { text-decoration: underline }
 .note { font-size: 12px; line-height: 1.7; color: var(--muted); padding-bottom: 20px }
@@ -169,5 +180,5 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .offer, .primary, .secondary, .evidence > summary span, .expand > summary span, .scope summary span { transition: none }
+  .offer, .primary, .secondary, .expand > summary span, .scope summary span { transition: none }
 }

@@ -11,7 +11,10 @@ import { BfRetainerNote, BfServiceLabel, BfServicePrice, BfServicesBand } from "
 
 type Offer = {
   name: string; price: string; pricePrefix?: string; cadence?: string
-  billing: string; summary: string; detail: string; chip: string
+  billing: string; summary: string; chip: string
+  // `deliverables` is the visible list; `detail` is whatever scope/terms text is left once the list is split out
+  // of it (an empty string means nothing is left and no disclosure is rendered).
+  detail: string; deliverables?: string[]
   cta?: { href: string; label: string }; kind?: string; featured?: boolean
 }
 type Addon = { name: string; price: string; unit: string; detail: string; cta?: { href: string; label: string } }
@@ -37,6 +40,7 @@ const ext = (href: string) => href.startsWith("http") ? { target: "_blank", rel:
 // its step's deliverable instead of repeating the steps in a separate band.
 function OfferCard({ offer, step, index, callHref, lead, auto }: { offer: Offer; step?: Step; index: number; callHref: string; lead?: boolean; auto?: boolean }) {
   const href = offer.cta?.href ?? callHref
+  const hasList = !!offer.deliverables?.length
   return <article className={lead ? `${styles.offer} ${styles.lead}` : styles.offer}>
     <div className={styles.offerTop}>
       <p className={styles.eyebrow}>{step ? `${String(index + 1).padStart(2, "0")} · ${step.title}` : offer.chip}</p>
@@ -48,8 +52,9 @@ function OfferCard({ offer, step, index, callHref, lead, auto }: { offer: Offer;
     <p className={styles.billing}>{offer.billing}</p>
     <p className={styles.offerSummary}>{offer.summary}</p>
     {step && <p className={styles.deliverable}><span aria-hidden="true">→</span> You get: <strong>{step.output}</strong></p>}
-    <details className={styles.scope}><summary>What’s included <span aria-hidden="true">+</span></summary><p>{offer.detail}</p></details>
-    <a href={href} className={lead ? styles.primary : styles.secondary} {...ext(href)}>
+    {hasList && <ul className={styles.includes} aria-label="What’s included">{offer.deliverables!.map(d => <li key={d}>{d}</li>)}</ul>}
+    {offer.detail && <details className={styles.scope}><summary>{hasList ? "Scope & terms" : "What’s included"} <span aria-hidden="true">+</span></summary><p>{offer.detail}</p></details>}
+    <a href={href} data-cta-placement={`offer_card_${index + 1}`} className={lead ? styles.primary : styles.secondary} {...ext(href)}>
       {offer.cta?.label ? <BfServiceLabel label={offer.cta.label} href={offer.cta.href} /> : "Book a call"}<span aria-hidden="true">{href.startsWith("http") ? "↗" : href.startsWith("#") ? "↓" : "→"}</span>
     </a>
   </article>
@@ -68,8 +73,9 @@ export function ServiceExperience(p: Props) {
           <p className={styles.eyebrow}>{p.eyebrow} · Founder-led delivery</p>
           <h1>{p.title}<br /><span>{p.accent}</span></h1>
           <p className={styles.intro}>{p.description}</p>
-          <div className={styles.actions}><a href={p.callHref} target="_blank" rel="noopener noreferrer" className={styles.primary}>Book an intro call <span aria-hidden="true">↗</span></a><a href="#pricing" className={styles.secondary}>{auto ? "See engagements" : "See pricing"}<span aria-hidden="true">↓</span></a></div>
-          <p className={styles.micro}>Free 30-min call · {auto ? "Fixed project quotes" : <BfServiceLabel label="Report from $1,250" href="/app/?action=service_checkout&item=report" />} · You own the work</p>
+          <div className={styles.actions}><a href={p.callHref} data-cta-placement="hero" target="_blank" rel="noopener noreferrer" className={styles.primary}>Book an intro call <span aria-hidden="true">↗</span></a><a href="#pricing" className={styles.secondary}>{auto ? "See engagements" : "See pricing"}<span aria-hidden="true">↓</span></a></div>
+          <p className={styles.micro}>Free 30-min call · {auto ? "Fixed project quotes" : <BfServiceLabel label="Report from $1,250" href="/app/?action=service_checkout&item=report" />}{auto ? " · You own the work" : ""}</p>
+          {!auto && <ul className={styles.trust} aria-label="Terms in short"><li>Report fee credited to a Sprint or retainer within 14 days</li><li>You own every page and dataset</li></ul>}
         </div>
         <div className={styles.heroFoot}>
           <div className={styles.founder}>{PRIMARY_AUTHOR.avatar && <Image src={PRIMARY_AUTHOR.avatar} width={40} height={40} alt="" />}<p><strong>{PRIMARY_AUTHOR.name}</strong><span>Built GEO Toolbox. Leads your project.</span></p></div>
@@ -117,7 +123,7 @@ export function ServiceExperience(p: Props) {
           </dl>
           <div className={styles.growthCharts}><GrowthCharts variant="light" /></div>
           <p className={styles.source}>Charts: unique Google queries per calendar month (Search Console API, as of {asOf}). The two AI figures come from different reports and windows and are never added together.</p>
-          <details className={styles.evidence}><summary>Client results & measurement notes <span aria-hidden="true">+</span></summary><div className={styles.clientProof}>
+          <section className={styles.evidence} aria-label="Client results and measurement notes"><div className={styles.clientProof}>
             <h3>Client work before GEO Toolbox</h3>
             <p>Two guides on one unnamed client’s site, led by Samy before GEO Toolbox. Historical public scans from an earlier seven-engine version of GEO Scan; these are citation results for the specific prompts shown.</p>
             <div className={styles.advanced}>
@@ -125,10 +131,11 @@ export function ServiceExperience(p: Props) {
               <figure><Image src="/services/track-record/crypto-ai-scan-v2.png" width={2208} height={1742} alt="Historical scan for how to run crypto Google Ads without getting disapproved: the client guide was cited by 6 of 7 engines." sizes="(max-width: 640px) 100vw, 500px" /><figcaption>Crypto guide · cited by 6 of 7 engines in this scan.</figcaption></figure>
             </div>
           </div><div className={styles.measurementNotes}>
+            <p className={styles.eyebrow}>Measurement notes</p>
             <p>The Copilot figure is the total in Bing Webmaster Tools’ AI Performance report (Microsoft Copilot and partners), {aiCitations.windowLabel}, read {aiCitations.asOf}. It is not attributed to ChatGPT, Perplexity or Google.</p>
             <p>Google’s figure comes from the Search Console “Generative AI features” report and counts appearances of a geotoolbox.ai link in AI Overviews and AI Mode, {googleAiFeatures.windowLabel}, read {googleAiFeatures.asOf}. Both AI figures are recorded by hand; neither report has an API.</p>
             <p>Google ranking totals use a trailing {google.windowDays}-day window. The charts use calendar months, so their totals can differ from the tiles. They show Google ranking growth, not an AI citation time series.</p>
-          </div></details>
+          </div></section>
         </>}
       </div>
     </section>
@@ -138,12 +145,11 @@ export function ServiceExperience(p: Props) {
         <div className={styles.sectionHead}><div><p className={styles.eyebrow}>{auto ? "Engagements" : "Services & pricing"}</p><h2>{auto ? "Start with one workflow." : "Start small. Scale what works."}</h2></div><p>{auto ? "Map the opportunity, build a focused pilot, or get ongoing support for a system we built or audited." : "A one-off diagnostic, a 30-day sprint, or a monthly retainer. Each step builds on the last."}</p></div>
         <div className={styles.offers}>{p.offers.slice(0, 3).map((offer, i) => <OfferCard key={offer.name} offer={offer} step={p.steps[i]} index={i} callHref={p.callHref} lead={i === 0} auto={auto} />)}</div>
         {!auto && <ul className={styles.terms}>
-          <li><strong>Report fee credited</strong> to a Sprint or retainer within 14 days.</li>
           <li><strong>Sprint counts as month one</strong> of a retainer within 30 days.</li>
           <li><strong>Growth:</strong> 90-day commitment, then month to month.</li>
         </ul>}
         {p.offers.length > 3 && <details className={styles.expand}><summary>Need more capacity? Priority Growth & Scale <span aria-hidden="true">+</span></summary><div className={styles.advanced}>{p.offers.slice(3).map((offer, i) => <OfferCard key={offer.name} offer={offer} index={i + 3} callHref={p.callHref} auto={auto} />)}</div></details>}
-        {!!p.addons?.length && <details className={styles.expand}><summary>Content, authority & delivery add-ons <span aria-hidden="true">+</span></summary><div className={styles.addons}>{p.addons.map(a => <article key={a.name}><h3>{a.name}</h3><strong><BfServicePrice price={a.price} href={a.cta?.href} /> <small>{a.unit}</small></strong><p>{a.detail}</p>{a.cta && <a className={styles.textLink} href={a.cta.href}><BfServiceLabel label={a.cta.label} href={a.cta.href} /> ↗</a>}</article>)}</div><p className={styles.note}>Content offers exclude GEO, SEO and AI-visibility topics. Add-ons extend the agreed scope; they do not reprice the base engagement.</p></details>}
+        {!!p.addons?.length && <div className={styles.addonsBlock}><h3 className={styles.blockHead}>Content, authority & delivery add-ons</h3><div className={`${styles.addons} ${styles.addonGrid}`}>{p.addons.map(a => <article key={a.name}><h3>{a.name}</h3><strong><BfServicePrice price={a.price} href={a.cta?.href} /> <small>{a.unit}</small></strong><p>{a.detail}</p>{a.cta && <a className={styles.textLink} data-cta-placement="addon_card" href={a.cta.href}><BfServiceLabel label={a.cta.label} href={a.cta.href} /> ↗</a>}</article>)}</div><p className={styles.note}>Content offers exclude GEO, SEO and AI-visibility topics. Add-ons extend the agreed scope; they do not reprice the base engagement.</p></div>}
         {!!p.context?.length && <details className={styles.expand}><summary>{auto ? "Skills, agents or a custom tool?" : "What the service covers, and what it doesn’t"} <span aria-hidden="true">+</span></summary><div className={styles.addons}>{p.context.map(c => <article key={c.title}><h3>{c.title}</h3><p>{c.body}</p></article>)}</div></details>}
       </div>
     </section>
@@ -156,7 +162,7 @@ export function ServiceExperience(p: Props) {
           <p className={styles.eyebrow}>Is this a fit?</p>
           <h2>{auto ? "What would you stop doing manually?" : "Find your next AI visibility win."}</h2>
           <p>{auto ? "Bring one recurring task, examples of its inputs and outputs, and access to the tools involved. We define approval points before building." : "Your buyers research before they buy, your site has real expertise, and your team can review and ship changes. Bring your domain and goals."}</p>
-          <div className={styles.actions}><a href={p.callHref} className={styles.primary} target="_blank" rel="noopener noreferrer">Book an intro call <span aria-hidden="true">↗</span></a></div>
+          <div className={styles.actions}><a href={p.callHref} data-cta-placement="closing" className={styles.primary} target="_blank" rel="noopener noreferrer">Book an intro call <span aria-hidden="true">↗</span></a></div>
         </div>
         <ul className={styles.promises}>
           {(auto

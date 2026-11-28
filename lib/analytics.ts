@@ -68,6 +68,16 @@ export type AnalyticsEvent =
   // existing GA4 explorations keep working. Params: placement ("article" | "tools"), page_path.
   | "report_cta_view"
   | "report_cta_click"
+  // SG_SERVICE_CLICKS_V1 (2026-11-28): booking and buy clicks on the done-for-you service funnel. NOT key events.
+  // Both fire from ONE delegated listener (components/analytics/cta-click-tracker.tsx, mounted in RootShell), so
+  // every Calendly or service-checkout link on the site is counted, labelled or not.
+  //   book_call_click   — any link to calendly.com
+  //   service_buy_click — any link to the direct-buy checkout (/app/?action=service_checkout&item=...)
+  // Params: placement (nearest `data-cta-placement`, else "unlabelled"), page_path, cta_target (href without
+  // query string); service_buy_click also carries `item` (report | article | cluster_sprint), since the target
+  // path is the same for all three.
+  | "book_call_click"
+  | "service_buy_click"
 
 export function trackEvent(name: AnalyticsEvent, params: GtagParams = {}): void {
   try {

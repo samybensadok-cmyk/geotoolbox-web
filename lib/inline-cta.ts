@@ -47,6 +47,7 @@ export const COMMERCIAL_INTENT_SLUGS = new Set<string>([
   "ai-rank-tracker",
   "how-to-track-ai-visibility",
   "ai-visibility-audit",
+  "white-label-seo-reports",
 ])
 
 /** Raw slug check. Prefer `isCommercialIntentPost` — it resolves twins. */

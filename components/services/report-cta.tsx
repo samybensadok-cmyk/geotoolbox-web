@@ -7,7 +7,7 @@ import { REPORT_OFFER } from "@/lib/report-offer"
 
 /**
  * SG_REPORT_PUSH_V1 (2026-09-22) — the targeted half of the Report push: a card on the pages where
- * the reader is already shopping in our category (the 13 COMMERCIAL_INTENT_SLUGS articles) or
+ * the reader is already shopping in our category (the COMMERCIAL_INTENT_SLUGS articles; 13 when this was written) or
  * running a check on their own site (/tools/*). GSC 28d to 2026-09-21: 21 + 43 clicks — few, but
  * the only readers for whom a $1,250 diagnostic is a sane next step.
  *

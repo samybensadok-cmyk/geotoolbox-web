@@ -10,6 +10,7 @@ import { BlackFridayExitPopup } from "@/components/layout/black-friday-exit-popu
 import { ReportExitPopup } from "@/components/layout/report-exit-popup"
 import { ConsentManager } from "@/components/consent/consent-manager"
 import { ImageLightbox } from "@/components/ui/image-lightbox"
+import { CtaClickTracker } from "@/components/analytics/cta-click-tracker"
 import "@/app/globals.css"
 
 // Font instances live here (module scope, as next/font requires) so BOTH root
@@ -107,6 +108,9 @@ export function RootShell({
         {/* Site-wide click-to-zoom for content images (blog figures, service/
             feature screenshots). Delegated — no per-page wiring needed. */}
         <ImageLightbox />
+        {/* SG_SERVICE_CLICKS_V1: one delegated listener counting book_call_click (calendly.com links) and
+            service_buy_click (/app/?action=service_checkout links) on every page of both root layouts. */}
+        <CtaClickTracker />
         {/* SG_PROMO_EXIT_V1: last-chance founding-offer popup, desktop-only
             exit-intent trigger. See components/layout/exit-intent-popup.tsx. */}
         <ExitIntentPopup locale={locale} />

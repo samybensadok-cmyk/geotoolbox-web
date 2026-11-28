@@ -184,6 +184,7 @@ export default async function PricingPage({
         </div>
         <Link
           href="https://calendly.com/samy-bensadok/30min-call"
+          data-cta-placement="pricing_enterprise"
           target="_blank"
           rel="noopener noreferrer"
           className={styles.enterpriseCta}

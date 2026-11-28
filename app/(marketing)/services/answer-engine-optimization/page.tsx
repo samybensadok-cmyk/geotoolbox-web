@@ -52,6 +52,7 @@ type Tier = {
   billing: string
   summary: string
   detail: string
+  deliverables?: string[]
   cta: { label: string; href: string }
   // kind drives the CTA style; chip is the billing label (the one-off Sprint
   // books a call, so the two can't be derived from each other).
@@ -66,8 +67,8 @@ const tiers: Tier[] = [
     price: "$1,250",
     billing: "One-off",
     summary: "The full baseline: the answer slots in your market, who owns them, and the pages worth building.",
-    detail:
-      "A one-off diagnostic that maps the buying-intent questions in your market, whose text owns each answer slot today, and the specific pages to restructure or build.",
+    deliverables: ["A map of the buying-intent questions in your market", "Whose text owns each answer slot today", "The specific pages to restructure or build"],
+    detail: "",
     cta: { label: "Buy the Report — $1,250", href: CHECKOUT_REPORT },
     kind: "buy",
     chip: "One-off",
@@ -78,8 +79,9 @@ const tiers: Tier[] = [
     price: "$6,500",
     billing: "One-off · scoped to project size",
     summary: "Thirty days of building: fixes shipped, priority pages restructured to be extracted.",
+    deliverables: ["Technical fixes", "Your priority pages restructured into extractable answers, with the schema and structure engines look for"],
     detail:
-      "Technical fixes, your priority pages restructured into extractable answers with the schema and structure engines look for. Scope and price depend on your site's size — we set both on the call. The Sprint counts as month one if you continue on a retainer within 30 days.",
+      "Scope and price depend on your site's size — we set both on the call. The Sprint counts as month one if you continue on a retainer within 30 days.",
     cta: { label: "Book a call", href: CALL_HREF },
     kind: "call",
     chip: "One-off",
@@ -92,8 +94,8 @@ const tiers: Tier[] = [
     cadence: "/mo",
     billing: "90-day initial commitment",
     summary: "The compounding version: new answer-ready pages, new questions, tracked every month.",
-    detail:
-      "Continuous AEO, GEO and SEO work — new extractable pages, more buying-intent questions taken one by one, and the monthly report. Then month to month.",
+    deliverables: ["New extractable pages", "More buying-intent questions taken one by one", "The monthly report"],
+    detail: "Continuous AEO, GEO and SEO work. Then month to month.",
     cta: { label: "Book a call", href: CALL_HREF },
     kind: "call",
     chip: "Retainer",
@@ -105,8 +107,8 @@ const tiers: Tier[] = [
     cadence: "/mo",
     billing: "90-day initial commitment",
     summary: "Everything in Growth, at a faster cadence — weekly builds, more pages taken each month.",
-    detail:
-      "For teams treating AI answers as a primary channel: weekly cadence, more priority pages restructured to be extracted per month, and multi-market tracking. One brand, maximum push.",
+    deliverables: ["Weekly cadence", "More priority pages restructured to be extracted per month", "Multi-market tracking"],
+    detail: "For teams treating AI answers as a primary channel. One brand, maximum push.",
     cta: { label: "Book a call", href: CALL_HREF },
     kind: "call",
     chip: "Retainer",
@@ -118,8 +120,8 @@ const tiers: Tier[] = [
     cadence: "/mo",
     billing: "Multi-brand / enterprise · scoped on a call",
     summary: "Multi-brand or enterprise — weekly cadence, multi-market, priority build capacity.",
-    detail:
-      "For agencies, portfolios, or companies past $20M revenue running several brands. Weekly cadence, multi-market tracking, and priority build capacity across brands — scoped on a call.",
+    deliverables: ["Weekly cadence", "Multi-market tracking", "Priority build capacity across brands"],
+    detail: "For agencies, portfolios, or companies past $20M revenue running several brands. Scoped on a call.",
     cta: { label: "Book a call", href: CALL_HREF },
     kind: "call",
     chip: "Retainer",
@@ -154,7 +156,7 @@ const faqs = [
   {
     question: "Why hire the founder instead of an agency?",
     answer:
-      "I built GEO Toolbox — the platform used to measure AI visibility — and I lead the work on your account, with a small senior team on delivery. Not a strategist handing off to a junior: the founder who built the measurement tool, in the code of your pages.",
+      "I built GEO Toolbox, the AI visibility platform I measure results with, and I lead the work on your account, with a small senior team on delivery. Not a strategist handing off to a junior: the founder who built the measurement tool, in the code of your pages.",
   },
 ]
 

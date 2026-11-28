@@ -155,7 +155,7 @@ export function ComparisonTable({ copy, locale = "en" }: { copy: ComparisonCopy;
         </div>
         <p className="mt-6 text-center text-[13px] text-gray-500">
           {copy.footQuestion}{" "}
-          <Link href={BOOK_CALL} target="_blank" rel="noopener noreferrer" className="font-semibold text-accent-700 hover:text-accent-800">{copy.footLink}</Link>
+          <Link href={BOOK_CALL} data-cta-placement="pricing_comparison_foot" target="_blank" rel="noopener noreferrer" className="font-semibold text-accent-700 hover:text-accent-800">{copy.footLink}</Link>
           {copy.footTail}
         </p>
       </div>
