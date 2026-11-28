@@ -83,7 +83,7 @@ const tiers: Tier[] = [
     billing: "90-day initial commitment",
     summary: "The compounding version: new pages, new prompts, tracked every month.",
     deliverables: ["New citable pages", "More buying-intent prompts taken one by one", "The monthly tracker report"],
-    detail: "Continuous GEO and SEO work. Then month to month.",
+    detail: "Continuous GEO and SEO work: 90-day initial commitment, then month to month.",
     cta: { label: "Book a call", href: TEARDOWN_HREF },
     kind: "call",
     chip: "Retainer",

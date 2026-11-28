@@ -145,6 +145,7 @@ export function ServiceExperience(p: Props) {
         <div className={styles.sectionHead}><div><p className={styles.eyebrow}>{auto ? "Engagements" : "Services & pricing"}</p><h2>{auto ? "Start with one workflow." : "Start small. Scale what works."}</h2></div><p>{auto ? "Map the opportunity, build a focused pilot, or get ongoing support for a system we built or audited." : "A one-off diagnostic, a 30-day sprint, or a monthly retainer. Each step builds on the last."}</p></div>
         <div className={styles.offers}>{p.offers.slice(0, 3).map((offer, i) => <OfferCard key={offer.name} offer={offer} step={p.steps[i]} index={i} callHref={p.callHref} lead={i === 0} auto={auto} />)}</div>
         {!auto && <ul className={styles.terms}>
+          <li><strong>Report fee credited</strong> to a Sprint or retainer within 14 days.</li>
           <li><strong>Sprint counts as month one</strong> of a retainer within 30 days.</li>
           <li><strong>Growth:</strong> 90-day commitment, then month to month.</li>
         </ul>}

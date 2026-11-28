@@ -33,7 +33,7 @@ export default function OGImage() {
             See who AI cites instead of you.
           </div>
           <div style={{ fontSize: 20, color: "#4b5563", marginTop: 20, lineHeight: 1.4 }}>
-            Co-cited domains. Content gaps. Alerts the day a rival beats you.
+            Co-cited domains. Content gaps. Alerts the week a rival beats you.
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: "auto", fontSize: 15, color: "#6b7280" }}>

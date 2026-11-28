@@ -135,7 +135,7 @@ export const PLANS: Plan[] = [
     highlights: [
       "Pick any 5 of the 8 engines (Gemini & Claude included)",
       "100 pooled prompts — split across brands or all on one",
-      "Reporting & dashboards: share of voice, citations, GSC + GA4 AI traffic",
+      "Reporting & dashboards: share of voice, citations, GSC + GA4 AI traffic (beta)",
       "Ask GeoToolBox — 10 AI analyst questions/mo",
       "Content Studio — 15 SEO briefs/mo · ~15 articles/mo",
       "Citation Interceptor + Community (Reddit & forums)",
