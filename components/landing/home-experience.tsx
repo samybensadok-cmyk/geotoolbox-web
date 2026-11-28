@@ -93,7 +93,7 @@ export async function HomeExperience() {
         <div className={s.workflowGrid}>
           <figure className={s.productShot}>
             <span className={s.smallLabel}>GEO Toolbox / Content Analyzer</span>
-            <a href="/screenshots/content-analyzer/citability-result.png" target="_blank" rel="noreferrer"><Image src="/screenshots/content-analyzer/citability-actions.png" alt={t("redesign.screenshotAlt")} width={1225} height={1134} sizes="(max-width: 640px) 90vw, 550px" /></a>
+            <a href="/screenshots/content-analyzer/citability-result-v2.png" target="_blank" rel="noreferrer"><Image src="/screenshots/content-analyzer/citability-actions-v2.png" alt={t("redesign.screenshotAlt")} width={1225} height={1134} sizes="(max-width: 640px) 90vw, 550px" /></a>
             <figcaption>{t("redesign.screenshotNote")}</figcaption>
           </figure>
           <ol className={s.benefits}>

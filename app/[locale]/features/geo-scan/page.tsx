@@ -114,7 +114,7 @@ export default async function GeoScanPage({
       >
         {/* Real scan result as proof (anonymized, brand kept unnamed) */}
         <ScreenshotFrame
-          src="/screenshots/geo-scan/ai-citation-lawyers-result.png"
+          src="/screenshots/geo-scan/ai-citation-lawyers-result-v2.png"
           alt={t("hero.screenshotAlt")}
           width={1999}
           height={1602}

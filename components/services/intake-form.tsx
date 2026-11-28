@@ -17,6 +17,7 @@ const MAX_COMPETITORS = 15
 type Verify =
   | { state: "loading" }
   | { state: "error"; message: string }
+  | { state: "nosession" }
   | { state: "done" } // already submitted
   | { state: "form"; item: string; email: string }
 
@@ -57,7 +58,7 @@ export function IntakeForm() {
 
   useEffect(() => {
     if (!sessionId.startsWith("cs_")) {
-      setVerify({ state: "error", message: "This link is missing a valid order reference." })
+      setVerify({ state: "nosession" })
       return
     }
     let active = true
@@ -145,6 +146,18 @@ export function IntakeForm() {
   // ---- states ----
   if (verify.state === "loading") {
     return <Shell><p className="text-gray-500">Loading your order…</p></Shell>
+  }
+  if (verify.state === "nosession") {
+    return (
+      <Shell>
+        <h1 className="text-2xl font-bold tracking-tight text-gray-900">This page opens after checkout</h1>
+        <p className="mt-3 text-[15px] text-gray-600">
+          If you just bought a report or a sprint, use the link in your confirmation email. Looking for done-for-you help?{" "}
+          <a href="/services/ai-seo-agency" className="font-medium text-accent-700 underline">See the services</a>{" "}
+          or <a href="/contact" className="font-medium text-accent-700 underline">contact us</a>.
+        </p>
+      </Shell>
+    )
   }
   if (verify.state === "error") {
     return (

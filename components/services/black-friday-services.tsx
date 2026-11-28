@@ -58,14 +58,14 @@ export function BfServicesBand() {
   return (
     <section aria-label="Black Friday offer on services" className="bg-neutral-950 px-4 py-5 text-white sm:py-6">
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-3 text-center md:flex-row md:justify-between md:text-left">
-        <div>
+        <div className="w-full min-w-0">
           <p className="flex flex-wrap items-center justify-center gap-2 md:justify-start">
             <span className="rounded-sm bg-yellow-400 px-2 py-0.5 text-[11px] font-extrabold tracking-[0.12em] text-neutral-950">BLACK FRIDAY</span>
             <strong className="text-xl font-extrabold sm:text-2xl">{BF_SERVICES.percentOff}% off our done-for-you services</strong>
           </p>
           <p className="mt-1.5 text-[14px] text-white/80">
             {([["Visibility Report", 1250], ["Flagship article", 450], ["Cluster sprint", 3500]] as const).map(([name, usd], i) => (
-              <span key={name} className="whitespace-nowrap">
+              <span key={name} className="sm:whitespace-nowrap">
                 {i > 0 && " · "}
                 {name} <s className="text-white/50">{fmtUsd(usd)}</s> <b className="text-yellow-300">{fmtUsd(bfServicePrice(usd))}</b>
               </span>

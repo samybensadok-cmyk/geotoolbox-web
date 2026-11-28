@@ -124,7 +124,7 @@ export default async function ContentAnalyzerPage({
       >
         {/* The real two-score analyzer result */}
         <ScreenshotFrame
-          src="/screenshots/content-analyzer/citability-result.png"
+          src="/screenshots/content-analyzer/citability-result-v2.png"
           alt={t("hero.screenshotAlt")}
           width={2108}
           height={1134}
