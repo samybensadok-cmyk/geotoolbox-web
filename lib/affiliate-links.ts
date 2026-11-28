@@ -59,7 +59,6 @@ export const AFFILIATE_LINKS: Record<string, AffiliateLink> = {
   writesonic: { url: "https://writesonic.com/", program: "Writesonic", cluster: "c1-content", pending: true },
 
   // --- C2 · Link building / digital PR / outreach --------------------------
-  collaborator: { url: "https://collaborator.pro/signup?ref=VJPwz8", program: "Collaborator.pro", cluster: "c2-linkbuilding" },
   snov: { url: "https://snov.io?fp_ref=samy17", program: "Snov.io", cluster: "c2-linkbuilding" },
   hunter: { url: "https://hunter.io/", program: "Hunter.io", cluster: "c2-linkbuilding", pending: true },
   instantly: { url: "https://instantly.ai/", program: "Instantly.ai", cluster: "c2-linkbuilding", pending: true },
